@@ -3,12 +3,13 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/player-binding-a116.yml'
       - 'development/player_binding/**'
+      - 'projects/grilling/integration/immersion_lab/**'
   pull_request:
     paths:
-      - '.github/workflows/player-binding-a116.yml'
       - 'development/player_binding/**'
+      - 'projects/grilling/integration/immersion_lab/**'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:

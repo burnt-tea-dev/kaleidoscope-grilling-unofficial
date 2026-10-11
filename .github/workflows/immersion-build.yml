@@ -2,9 +2,16 @@ name: Immersion motion build and verification
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/immersion-build.yml']
+    paths:
+      - 'development/immersion/**'
+      - 'projects/grilling/integration/immersion_lab/**'
+      - '.github/transport/immersion-a115-*.b64'
   pull_request:
-    paths: ['.github/workflows/immersion-build.yml']
+    paths:
+      - 'development/immersion/**'
+      - 'projects/grilling/integration/immersion_lab/**'
+      - '.github/transport/immersion-a115-*.b64'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:

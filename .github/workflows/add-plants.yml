@@ -3,10 +3,21 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/add-plants.yml'
+      - 'development/add_plants.py'
+      - 'development/run_plants.py'
+      - 'projects/grilling/config/asset_specs.json'
+      - 'projects/grilling/source_manifest.json'
+      - 'projects/grilling/source_snapshots/**'
+      - 'projects/grilling/tools/**'
   pull_request:
     paths:
-      - '.github/workflows/add-plants.yml'
+      - 'development/add_plants.py'
+      - 'development/run_plants.py'
+      - 'projects/grilling/config/asset_specs.json'
+      - 'projects/grilling/source_manifest.json'
+      - 'projects/grilling/source_snapshots/**'
+      - 'projects/grilling/tools/**'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
