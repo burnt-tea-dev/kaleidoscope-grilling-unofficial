@@ -10,7 +10,7 @@ import subprocess
 import tempfile
 import tarfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import publish_test_release as publish
 import package_current
@@ -315,6 +315,13 @@ class FakeGitHub:
         if endpoint == base + '/git/ref/tags/A2.8.66-test':
             return None if self.tag_sha is None else {'ref': 'refs/tags/A2.8.66-test', 'object': {'sha': self.tag_sha, 'type': 'commit'}}
         if endpoint == base + '/releases/tags/A2.8.66-test':
+            # GitHub's by-tag endpoint hides drafts even after asset upload.
+            if self.release is None or self.release['draft']:
+                return None
+            return copy.deepcopy(self.release)
+        if endpoint == base + '/releases?per_page=100&page=1' and method == 'GET':
+            return [] if self.release is None else [copy.deepcopy(self.release)]
+        if endpoint == base + '/releases/123' and method == 'GET':
             return copy.deepcopy(self.release)
         if endpoint == base + '/releases/123/assets?per_page=100':
             return copy.deepcopy(list(self.remote_assets.values()))
@@ -549,6 +556,66 @@ class PreparationTests(unittest.TestCase):
 
 
 class ApiTests(unittest.TestCase):
+    def test_release_lookup_uses_by_tag_result_or_reports_absence(self):
+        tag = 'A2.8.128-beta.1'
+        base = f'repos/{publish.REPO}/releases'
+        published = {'id': 123, 'tag_name': tag, 'draft': False}
+        for result, responses, expected_calls in (
+            (published, [published], [call(f'{base}/tags/{tag}', allow_missing=True)]),
+            (None, [None, []], [call(f'{base}/tags/{tag}', allow_missing=True),
+                               call(f'{base}?per_page=100&page=1')]),
+        ):
+            with self.subTest(result=result), patch.object(publish, 'api', side_effect=responses) as api:
+                self.assertEqual(publish.release_by_tag(tag), result)
+                self.assertEqual(api.call_args_list, expected_calls)
+
+    def test_draft_lookup_paginates_and_reads_exact_release_by_id(self):
+        tag = 'A2.8.128-beta.1'
+        base = f'repos/{publish.REPO}/releases'
+        unrelated = [{'id': i, 'tag_name': f'{tag}-other-{i}', 'draft': True} for i in range(100)]
+        draft = {'id': 123, 'tag_name': tag, 'draft': True}
+        readback = {**draft, 'body': 'Full release readback', 'assets': [{'id': 456}]}
+        with patch.object(publish, 'api', side_effect=[None, unrelated, [draft], readback]) as api:
+            self.assertEqual(publish.release_by_tag(tag), readback)
+        self.assertEqual(api.call_args_list, [
+            call(f'{base}/tags/{tag}', allow_missing=True),
+            call(f'{base}?per_page=100&page=1'),
+            call(f'{base}?per_page=100&page=2'),
+            call(f'{base}/123'),
+        ])
+
+    def test_ambiguous_or_non_draft_inventory_fails_before_id_readback(self):
+        tag = 'A2.8.128-beta.1'
+        base = f'repos/{publish.REPO}/releases'
+        draft = {'id': 123, 'tag_name': tag, 'draft': True}
+        first_page = [draft] + [{'id': i, 'tag_name': f'other-{i}'} for i in range(99)]
+        for pages, message in (
+            ([first_page, [{**draft, 'id': 456}]], 'Ambiguous release tag inventory'),
+            ([[{**draft, 'draft': False}]], 'non-draft or unidentified'),
+        ):
+            with self.subTest(message=message), patch.object(publish, 'api', side_effect=[None, *pages]) as api:
+                with self.assertRaisesRegex(ValueError, message):
+                    publish.release_by_tag(tag)
+                self.assertEqual(api.call_args_list, [
+                    call(f'{base}/tags/{tag}', allow_missing=True),
+                    *[call(f'{base}?per_page=100&page={page}') for page in range(1, len(pages) + 1)],
+                ])
+
+    def test_draft_id_readback_must_retain_identity_tag_and_draft_state(self):
+        tag = 'A2.8.128-beta.1'
+        base = f'repos/{publish.REPO}/releases'
+        draft = {'id': 123, 'tag_name': tag, 'draft': True}
+        for key, value in (('id', 456), ('tag_name', tag + '-other'), ('draft', False)):
+            with self.subTest(key=key), patch.object(publish, 'api',
+                    side_effect=[None, [draft], {**draft, key: value}]) as api:
+                with self.assertRaisesRegex(ValueError, 'Draft release changed during ID readback'):
+                    publish.release_by_tag(tag)
+                self.assertEqual(api.call_args_list, [
+                    call(f'{base}/tags/{tag}', allow_missing=True),
+                    call(f'{base}?per_page=100&page=1'),
+                    call(f'{base}/123'),
+                ])
+
     def test_only_http_404_is_absence(self):
         for stderr, absent in (('gh: Not Found (HTTP 404)\n', True), ('gh: Forbidden (HTTP 403)\n', False), ('network unavailable', False)):
             result = subprocess.CompletedProcess([], 1, '', stderr)
