@@ -587,5 +587,122 @@ class ApiTests(unittest.TestCase):
             self.assertNotIn('--draft', args)
 
 
+class CurrentPublicationTests(unittest.TestCase):
+    """Exercise CI reuse and publication boundaries with tiny local artifacts."""
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.main, self.head, self.checkout, self.tree = (letter * 40 for letter in 'abcd')
+        self.trees = {self.main: self.tree, self.head: self.tree, self.checkout: self.tree}
+        self.selected = {
+            'id': 123, 'repository': {'full_name': publish.REPO, 'id': publish.REPO_ID},
+            'path': publish.CANONICAL_WORKFLOW, 'head_sha': self.head,
+            'status': 'completed', 'conclusion': 'success', 'run_attempt': 1,
+        }
+        self.jobs = {'total_count': 2, 'jobs': [
+            {'name': name, 'status': 'completed', 'conclusion': 'success'}
+            for name in ('source', 'canonical')]}
+        self.artifact = {'id': 456, 'name': publish.REVIEW_ARTIFACT, 'expired': False,
+                         'workflow_run': {'id': 123, 'head_sha': self.head}}
+        self.api = self.enterContext(patch.object(publish, 'api', side_effect=self.github))
+        self.enterContext(patch.object(publish, 'ROOT', self.root))
+        self.request = {'version': 'A2.8.128', 'tag': 'A2.8.128-beta.1',
+                        'expected_source_tree_sha256': 'e' * 64, 'expected_artifacts': {}}
+        self.report = {'version': 'A2.8.128', 'git_sha': self.checkout,
+                       'source_tree_sha256': 'e' * 64, 'minecraft_tested': False,
+                       'bds_tested': False, 'client_visuals_tested': False}
+        self.assets = []
+        for kind in ('mcaddon', 'brproject'):
+            asset = self.root / f'Kaleidoscope_Grilling_A2.8.128_Review.{kind}'
+            asset.write_bytes(kind.encode())
+            expected = {'name': asset.name, 'sha256': hashlib.sha256(asset.read_bytes()).hexdigest()}
+            self.request['expected_artifacts'][kind] = expected
+            self.report[kind] = {'sha256': expected['sha256']}
+            self.assets.append(asset)
+        sums = self.root / 'SHA256SUMS.txt'
+        sums.write_text(''.join(f"{v['sha256']}  {v['name']}\n"
+                               for v in self.request['expected_artifacts'].values()), newline='\n')
+        report = self.root / 'build-report.json'
+        report.write_text(json.dumps(self.report))
+        self.assets += [sums, report]
+        for relative in (publish.CURRENT_REQUEST, publish.CURRENT_NOTES):
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('{}' if relative.endswith('.json') else 'Current release notes')
+
+    def github(self, endpoint, **kwargs):
+        self.assertEqual(kwargs.get('method', 'GET'), 'GET', 'Preflight must not mutate GitHub')
+        prefix = f'repos/{publish.REPO}'
+        if endpoint.startswith(prefix + '/git/commits/'):
+            sha = endpoint.rsplit('/', 1)[1]
+            return {'sha': sha, 'tree': {'sha': self.trees[sha]}}
+        if endpoint == prefix + '/actions/runs/123':
+            return self.selected
+        if endpoint.endswith('/attempts/1/jobs?per_page=100'):
+            return self.jobs
+        if endpoint.endswith(f'/artifacts?name={publish.REVIEW_ARTIFACT}&per_page=100'):
+            return {'total_count': 1, 'artifacts': [self.artifact]}
+        self.fail('Unexpected endpoint: ' + endpoint)
+
+    def test_different_commit_shas_require_the_same_complete_tree(self):
+        validation = publish.require_publication_run(123, self.main)
+        self.assertEqual(validation, {'run_id': 123, 'attempt': 1, 'artifact_id': 456,
+            'publication_head': self.main, 'run_head': self.head, 'git_tree': self.tree})
+        self.assertEqual(publish.require_current_artifacts(self.request, self.report, self.assets, self.main), self.tree)
+        self.assertEqual(self.report['git_sha'], self.checkout)
+
+    def test_other_repository_tree_skipped_job_and_stale_artifact_fail_closed(self):
+        cases = [(self.selected['repository'], 'id', 1),
+                 (self.trees, self.head, 'f' * 40),
+                 (self.selected, 'conclusion', 'failure'),
+                 (self.jobs['jobs'][1], 'conclusion', 'skipped'),
+                 (self.artifact, 'expired', True),
+                 (self.artifact['workflow_run'], 'head_sha', self.main),
+                 (self.artifact['workflow_run'], 'id', 124)]
+        for target, key, value in cases:
+            with self.subTest(key=key, value=value):
+                original = target[key]
+                target[key] = value
+                with self.assertRaises(ValueError):
+                    publish.require_publication_run(123, self.main)
+                target[key] = original
+
+    def test_report_tree_or_archive_tampering_rejected(self):
+        self.trees[self.checkout] = 'f' * 40
+        with self.assertRaisesRegex(ValueError, 'report full Git tree'):
+            publish.require_current_artifacts(self.request, self.report, self.assets, self.main)
+        self.trees[self.checkout] = self.tree
+        self.assets[0].write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, 'mcaddon hash mismatch'):
+            publish.require_current_artifacts(self.request, self.report, self.assets, self.main)
+
+    def test_publication_binding_preserves_the_original_archive_report(self):
+        original = self.assets[-1].read_bytes()
+        validation = publish.require_publication_run(123, self.main)
+        with patch.object(publish, 'publish_exact') as publish_exact:
+            publish.publish_current(self.main, self.report, self.assets, self.request, validation)
+        binding = json.loads((self.root / 'publication-binding.json').read_text())
+        self.assertEqual(binding['publication_commit'], self.main)
+        self.assertEqual(binding['archive_report_commit'], self.checkout)
+        self.assertEqual(binding['validation']['run_head'], self.head)
+        self.assertEqual(binding['archive_report_sha256'], hashlib.sha256(original).hexdigest())
+        self.assertEqual(self.assets[-1].read_bytes(), original)
+        self.assertFalse(binding['client'])
+        self.assertFalse(binding['production_ready'])
+        self.assertIn(self.root / 'publication-binding.json', publish_exact.call_args.args[4])
+        publish_exact.call_args.args[5]({})
+
+    def test_main_push_cannot_invoke_current_publication(self):
+        environment = {'GITHUB_REPOSITORY': publish.REPO, 'GITHUB_REPOSITORY_ID': str(publish.REPO_ID),
+                       'GITHUB_REF': 'refs/heads/main', 'GITHUB_SHA': self.main, 'GITHUB_EVENT_NAME': 'push'}
+        with patch.dict(publish.os.environ, environment), patch.object(publish, 'call', return_value=self.main), \
+                patch('sys.argv', ['publish_test_release.py', '--publication', 'publish']), \
+                self.assertRaisesRegex(ValueError, 'explicit manual dispatch'):
+            publish.main()
+        self.api.assert_not_called()
+
+
 if __name__ == '__main__':
     unittest.main()
