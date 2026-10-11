@@ -1,10 +1,12 @@
 name: Immersion motion build and verification
 on:
   push:
+    branches: [main]
     paths: ['.github/workflows/immersion-build.yml']
-  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/immersion-build.yml']
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: grilling-immersion-build
   cancel-in-progress: false
@@ -103,23 +105,6 @@ jobs:
           for p in [lab/'builds',lab/'.bridge']:
               if p.exists():shutil.rmtree(p)
           PY
-      - name: Publish canonical source and verified new outputs only
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
-          test "$GITHUB_REPOSITORY_ID" = '1377218440'
-          git add -- development/immersion projects/grilling/integration/immersion_lab projects/grilling/reports/immersion_a115 artifacts/Grilling_Immersion_Lab_A1.15.mcaddon
-          if test -f .github/transport/immersion-a115-0.b64; then git rm -- .github/transport/immersion-a115-0.b64 .github/transport/immersion-a115-1.b64; fi
-          git diff --cached --name-only | python -c 'import sys; paths=sys.stdin.read().splitlines(); prefixes=("development/immersion/","projects/grilling/integration/immersion_lab/","projects/grilling/reports/immersion_a115/",".github/transport/immersion-a115-"); assert paths and all(p.startswith(prefixes) or p=="artifacts/Grilling_Immersion_Lab_A1.15.mcaddon" for p in paths)'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'feat: immersive rehearsal with original motion timings, audio, tests and verified Dash outputs'
-          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" push origin HEAD:main
-          unset AUTH
       - name: Export verified test pack and review artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
