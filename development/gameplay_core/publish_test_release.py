@@ -1,4 +1,4 @@
-"""Publish tested main; G66 requires an explicit immutable draft/readback gate."""
+"""Publish exact tested main archives through an explicit draft/readback gate."""
 from pathlib import Path
 import argparse
 import hashlib
@@ -12,6 +12,10 @@ REPO = 'casama233/kaleidoscope-grilling-unofficial'
 REPO_ID = 1377218440
 G66 = 'A2.8.66'
 REQUEST = '.github/g66-test-release-request.json'
+CURRENT_REQUEST = '.github/release-request.json'
+CURRENT_NOTES = 'docs/PUBLICATION.md'
+CANONICAL_WORKFLOW = '.github/workflows/gameplay-core.yml'
+REVIEW_ARTIFACT = 'Kaleidoscope-Grilling-Canonical-Review'
 EVIDENCE = (
     'docs/STATUS-A2.8.66.md',
     'docs/NATIVE-SECRET-6504-20261004.json',
@@ -205,9 +209,22 @@ def verify_release_assets(release, assets, *, complete, snapshot=None):
 
 def publish_g66(sha, report, assets, source_validation):
     request, assets, notes_path = prepare_g66_assets(sha, report, assets, source_validation)
+
+    def final_validation(snapshot):
+        from verify_current import require_source_validation
+        final_receipt = require_source_validation(source_validation)
+        require(final_receipt.get('version') == [2, 8, 66] and final_receipt['source']['head'] == sha,
+                'G66 final functional receipt version/HEAD mismatch')
+        require(sha256(source_validation) == snapshot['grilling-source-validation.json']['sha256'],
+                'G66 functional receipt bytes changed during staging')
+
+    publish_exact(sha, request['tag'], f'Kaleidoscope Grilling {G66} Integrated Test',
+                  notes_path, assets, final_validation)
+
+
+def publish_exact(sha, tag, title, notes_path, assets, final_validation):
+    """Share the existing immutable draft/upload/readback path, including G66."""
     snapshot = asset_snapshot(assets)
-    tag = request['tag']
-    title = f'Kaleidoscope Grilling {G66} Integrated Test'
     notes = notes_path.read_text(encoding='utf-8')
     target = json.loads((ROOT / '.repo-target.json').read_text(encoding='utf-8-sig'))
     require(target.get('repository') == REPO and target.get('repository_id') == REPO_ID, 'Checkout repository identity mismatch')
@@ -242,16 +259,11 @@ def publish_g66(sha, report, assets, source_validation):
         api(f'repos/{REPO}/git/refs', method='POST', payload={'ref': f'refs/tags/{tag}', 'sha': sha})
     require(tag_target(tag) == sha, 'Actual remote tag target does not match tested GitHub SHA')
     require(api(f'repos/{REPO}/git/ref/heads/main')['object']['sha'] == sha, 'GitHub main changed before publication')
-    # Refuse raced edits and revalidate the source receipt immediately before publish.
+    # Refuse raced edits and revalidate the selected evidence before publishing.
     release = release_by_tag(tag)
     verify_release_metadata(release, tag, sha, title, notes, draft=True)
     verify_release_assets(release, assets, complete=True, snapshot=snapshot)
-    from verify_current import require_source_validation
-    final_receipt = require_source_validation(source_validation)
-    require(final_receipt.get('version') == [2, 8, 66] and final_receipt['source']['head'] == sha,
-            'G66 final functional receipt version/HEAD mismatch')
-    require(sha256(source_validation) == snapshot['grilling-source-validation.json']['sha256'],
-            'G66 functional receipt bytes changed during staging')
+    final_validation(snapshot)
     require_asset_snapshot(assets, snapshot)
     require(tag_target(tag) == sha, 'Remote tag changed before publication')
     api(f"repos/{REPO}/releases/{release['id']}", method='PATCH',
@@ -261,7 +273,7 @@ def publish_g66(sha, report, assets, source_validation):
     verify_release_assets(published, assets, complete=True, snapshot=snapshot)
     require(tag_target(tag) == sha, 'Published remote tag target mismatch')
     latest = api(f'repos/{REPO}/releases/latest', allow_missing=True)
-    require(latest is None or latest.get('id') != published['id'], 'G66 was unexpectedly made latest')
+    require(latest is None or latest.get('id') != published['id'], 'Prerelease was unexpectedly made latest')
     print('Published exact non-latest prerelease', tag, 'from tested GitHub main', sha)
 
 
@@ -301,6 +313,141 @@ def reviewed_cookery_requirement(version, root=ROOT):
     return 'Cookery ' + '.'.join(map(str, hosts['BP']['version']))
 
 
+def current_request(sha, confirmed_tag):
+    request = json.loads((ROOT / CURRENT_REQUEST).read_text(encoding='utf-8'))
+    require(type(request.get('schema')) is int and request['schema'] == 1, 'Unsupported publication request')
+    require(request.get('repository') == REPO and request.get('repository_id') == REPO_ID,
+            'Wrong publication repository')
+    require(request.get('publication_request') is True, 'Publication is not requested')
+    require(request.get('prerelease') is True and request.get('make_latest') == 'false',
+            'Current publication must remain a non-latest prerelease')
+    version = request.get('version', '')
+    tag = request.get('tag', '')
+    require(re.fullmatch(r'A\d+\.\d+\.\d+', version) is not None
+            and re.fullmatch(re.escape(version) + r'-beta\.[1-9]\d*', tag) is not None,
+            'Invalid current release version/tag')
+    require(confirmed_tag == tag, 'Manual tag confirmation does not match the request')
+    require(request.get('client') is False and request.get('production_ready') is False,
+            'Publication cannot promote client acceptance')
+    require(re.fullmatch(r'[0-9a-f]{64}', request.get('expected_source_tree_sha256', '')) is not None,
+            'Missing exact canonical runtime digest')
+    expected = request.get('expected_artifacts', {})
+    require(set(expected) == {'mcaddon', 'brproject'}, 'Missing exact artifact expectations')
+    for kind, artifact in expected.items():
+        require(artifact.get('name') == f'Kaleidoscope_Grilling_{version}_Review.{kind}'
+                and re.fullmatch(r'[0-9a-f]{64}', artifact.get('sha256', '')) is not None,
+                'Invalid requested artifact')
+    source = request.get('integrated_source', {})
+    commit = source.get('commit', '')
+    require(re.fullmatch(r'[0-9a-f]{40}', commit) is not None, 'Missing integrated source commit')
+    require(call('git', 'merge-base', commit, sha) == commit, 'Integrated source is not an ancestor of main')
+    require(call('git', 'rev-parse', commit + '^{tree}') == source.get('tree'), 'Integrated source tree changed')
+    reviewed_cookery_requirement(version, ROOT)
+    return request
+
+
+def remote_git_tree(sha):
+    require(isinstance(sha, str) and re.fullmatch(r'[0-9a-f]{40}', sha) is not None,
+            'Invalid checked Git commit')
+    commit = api(f'repos/{REPO}/git/commits/{sha}')
+    tree = commit.get('tree', {}).get('sha', '')
+    require(commit.get('sha') == sha and re.fullmatch(r'[0-9a-f]{40}', tree) is not None,
+            'Checked Git commit/tree is absent from the publication repository')
+    return tree
+
+
+def require_publication_run(run_id, sha):
+    """Reuse successful CI only when its complete Git tree matches frozen main."""
+    require(type(run_id) is int and run_id > 0, 'A successful validation run ID is required')
+    base = f'repos/{REPO}/actions/runs/{run_id}'
+    selected = api(base)
+    repository = selected.get('repository', {})
+    require(repository.get('full_name') == REPO and repository.get('id') == REPO_ID,
+            'Validation run repository mismatch')
+    require(selected.get('id') == run_id and selected.get('path') == CANONICAL_WORKFLOW,
+            'Validation run workflow mismatch')
+    run_head = selected.get('head_sha')
+    tree = remote_git_tree(sha)
+    require(remote_git_tree(run_head) == tree, 'Validation run full Git tree differs from main')
+    require(selected.get('status') == 'completed' and selected.get('conclusion') == 'success',
+            'Validation run has not succeeded')
+    attempt = selected.get('run_attempt')
+    require(type(attempt) is int and attempt > 0, 'Validation run attempt is missing')
+    jobs = api(f'{base}/attempts/{attempt}/jobs?per_page=100')
+    require(jobs.get('total_count', 101) < 100, 'Unexpected validation job inventory')
+    for name in ('source', 'canonical'):
+        matches = [job for job in jobs.get('jobs', []) if job.get('name') == name]
+        require(len(matches) == 1 and matches[0].get('status') == 'completed'
+                and matches[0].get('conclusion') == 'success',
+                f'Validation {name} job did not actually pass')
+    artifacts = api(f'{base}/artifacts?name={REVIEW_ARTIFACT}&per_page=100')
+    require(artifacts.get('total_count') == 1 and len(artifacts.get('artifacts', [])) == 1,
+            'Expected one canonical review artifact')
+    artifact = artifacts['artifacts'][0]
+    require(artifact.get('name') == REVIEW_ARTIFACT and artifact.get('expired') is False
+            and artifact.get('workflow_run', {}).get('head_sha') == run_head
+            and artifact.get('workflow_run', {}).get('id') == run_id,
+            'Canonical review artifact is expired or belongs to another HEAD')
+    require(type(artifact.get('id')) is int, 'Canonical review artifact ID is missing')
+    return {'run_id': run_id, 'attempt': attempt, 'artifact_id': artifact['id'],
+            'publication_head': sha, 'run_head': run_head, 'git_tree': tree}
+
+
+def require_current_artifacts(request, report, assets, sha):
+    require(report.get('version') == request['version'], 'Current report version differs from the request')
+    checked_tree = remote_git_tree(report.get('git_sha'))
+    require(checked_tree == remote_git_tree(sha), 'Archive report full Git tree differs from main')
+    require(report.get('source_tree_sha256') == request['expected_source_tree_sha256'],
+            'Current report runtime digest differs from the request')
+    for key in ('minecraft_tested', 'bds_tested', 'client_visuals_tested'):
+        require(report.get(key) is False, 'Packaging cannot promote native/client acceptance')
+    for kind, asset in zip(('mcaddon', 'brproject'), assets[:2]):
+        expected = request['expected_artifacts'][kind]
+        require(asset.name == expected['name'] and sha256(asset) == expected['sha256']
+                and report[kind]['sha256'] == expected['sha256'], f'Current {kind} hash mismatch')
+    sums = ''.join(f"{request['expected_artifacts'][kind]['sha256']}  {request['expected_artifacts'][kind]['name']}\n"
+                   for kind in ('mcaddon', 'brproject'))
+    require((assets[0].parent / 'SHA256SUMS.txt').read_bytes() == sums.encode(),
+            'Current archive checksum manifest mismatch')
+    return checked_tree
+
+
+def publish_current(sha, report, assets, request, validation):
+    checked_tree = require_current_artifacts(request, report, assets, sha)
+    require(checked_tree == validation['git_tree'], 'Archive and validation Git trees differ')
+    metadata = {path: sha256(ROOT / path) for path in (CURRENT_REQUEST, CURRENT_NOTES)}
+    binding = assets[0].parent / 'publication-binding.json'
+    binding.write_text(json.dumps({
+        'schema': 1, 'repository': REPO, 'repository_id': REPO_ID,
+        'publication_commit': sha, 'validation': validation,
+        'archive_report_commit': report['git_sha'], 'git_tree': checked_tree,
+        'archive_report_sha256': sha256(assets[0].parent / 'build-report.json'),
+        'source_tree_sha256': report['source_tree_sha256'],
+        'artifacts': request['expected_artifacts'], 'metadata_sha256': metadata,
+        'client': False, 'production_ready': False,
+    }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    assets = assets + [binding]
+    notes = assets[0].parent / 'release-notes.md'
+    notes.write_text(
+        f"# Kaleidoscope Grilling {request['version']} beta\n\n"
+        f"Source and tag target: `{sha}`. Canonical validation and archive source: "
+        f"https://github.com/{REPO}/actions/runs/{validation['run_id']} "
+        f"(attempt {validation['attempt']}).\n\n"
+        f"CI run head: `{validation['run_head']}`; actual archive report commit: `{report['git_sha']}`. "
+        f"All three commits have the same complete Git tree `{checked_tree}`. "
+        "The original build report is attached unchanged; publication-binding.json records this relationship.\n\n"
+        + (ROOT / CURRENT_NOTES).read_text(encoding='utf-8'), encoding='utf-8', newline='\n')
+
+    def final_validation(snapshot):
+        require({path: sha256(ROOT / path) for path in metadata} == metadata,
+                'Publication metadata changed during staging')
+        require(require_publication_run(validation['run_id'], sha) == validation,
+                'Selected validation run or artifact changed during staging')
+
+    publish_exact(sha, request['tag'], f"Kaleidoscope Grilling {request['version']} Beta",
+                  notes, assets, final_validation)
+
+
 def publish_legacy(version, sha, assets):
     """Keep unique-per-attempt publication, with the current reviewed host requirement."""
     host_requirement = reviewed_cookery_requirement(version, ROOT)
@@ -320,15 +467,31 @@ def publish_legacy(version, sha, assets):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-validation', type=Path)
+    parser.add_argument('--publication', choices=('check-run', 'publish'))
+    parser.add_argument('--validation-run', type=int)
+    parser.add_argument('--confirm-tag', default='')
     args = parser.parse_args()
     require(os.environ.get('GITHUB_REPOSITORY') == REPO, 'Wrong GitHub repository')
     require(os.environ.get('GITHUB_REPOSITORY_ID') == str(REPO_ID), 'Wrong GitHub repository ID')
     require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'Only tested main can publish')
     sha = call('git', 'rev-parse', 'HEAD')
     require(sha == os.environ['GITHUB_SHA'] and re.fullmatch(r'[0-9a-f]{40}', sha), 'GitHub tested SHA mismatch')
+    request = validation = None
+    if args.publication:
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch',
+                'Current publication requires explicit manual dispatch')
+        require(args.source_validation is None, 'Current publication cannot relabel a source receipt')
+        request = current_request(sha, args.confirm_tag)
+        validation = require_publication_run(args.validation_run, sha)
+        if args.publication == 'check-run':
+            print(json.dumps(validation, sort_keys=True))
+            return
+    else:
+        require(not (ROOT / CURRENT_REQUEST).exists(), 'Current release requires the manual publication mode')
     out = ROOT / 'artifacts/review'
     report = json.loads((out / 'build-report.json').read_text(encoding='utf-8-sig'))
-    require(report['git_sha'] == sha, 'Release tag and tested source must identify the same commit')
+    if not args.publication:
+        require(report['git_sha'] == sha, 'Release tag and tested source must identify the same commit')
     version = report['version']
     require(re.fullmatch(r'A\d+\.\d+\.\d+', version), 'Invalid release version')
     assets = []
@@ -340,7 +503,9 @@ def main():
         assets.append(asset)
     assets += [out / 'SHA256SUMS.txt', out / 'build-report.json']
     require(all(p.is_file() for p in assets), 'Missing release asset')
-    if version == G66:
+    if args.publication == 'publish':
+        publish_current(sha, report, assets, request, validation)
+    elif version == G66:
         receipt = args.source_validation
         if receipt is None and os.environ.get('RUNNER_TEMP'):
             receipt = Path(os.environ['RUNNER_TEMP']) / 'grilling-source-validation.json'

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "repository": "casama233/kaleidoscope-grilling-unofficial",
+  "repository_id": 1377218440,
+  "version": "A2.8.128",
+  "tag": "A2.8.128-beta.1",
+  "publication_request": true,
+  "prerelease": true,
+  "make_latest": "false",
+  "client": false,
+  "production_ready": false,
+  "expected_source_tree_sha256": "39eed2083acce34aabc8ec3458849ddfc4766e5cbcd031658cca64632d8f5bb2",
+  "expected_artifacts": {
+    "mcaddon": {
+      "name": "Kaleidoscope_Grilling_A2.8.128_Review.mcaddon",
+      "sha256": "c9d1ce3b22474389218994a40cf6a4c8beaa28fef2e1e3b5d33dc25757843ca8"
+    },
+    "brproject": {
+      "name": "Kaleidoscope_Grilling_A2.8.128_Review.brproject",
+      "sha256": "5a8462d89ddcf7f6974a84600426d5db30a3a4f918ab2cff8a30c6e5df707c75"
+    }
+  },
+  "integrated_source": {
+    "commit": "ff452251cf62632d88b17237b6ea9e4fa49c4c83",
+    "tree": "12f60ff11e420f826dda71d9b07845e66dcc7d52",
+    "pull_requests": [193, 194]
+  },
+  "runtime_validation_reference": {
+    "head": "ef9df743d9d7fce8895e8997423f8ffa11d1cc86",
+    "checkout": "57c26eeb76e4e94450a4914e764131fedef0d80a",
+    "canonical_run": 38123426665,
+    "bridge_run": 38123426661,
+    "baseline_run": 38123426690,
+    "family_candidate_run": 38123426664,
+    "scope": "Historical exact G128 runtime and archive evidence. Publication additionally requires a completed canonical run whose complete Git tree matches current main and the original archive report commit; this reference does not relabel its source receipt."
+  }
+}

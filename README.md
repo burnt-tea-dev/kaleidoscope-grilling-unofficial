@@ -2,11 +2,13 @@
 
 ## Current maintained baseline: 2.8.128
 
-[G128 調料 Uses 與 Numb schema 修補草稿](docs/STATUS-A2.8.128.md)：承接並保留 G127，修正 Cookery 撒料後 Uses 舊行累積及 Numb stop 的空 bones schema。身份 2.8.128／指南 0.3.58；Uses 只有 G125 隔離 DIAG1 的 16→15→14 窄原生證據，Numb 原生复驗及新整包／家族驗收仍 pending。
+G128 來源已經 [PR193](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/193) 與 [PR194](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/194) 合併到 main。身份 **2.8.128／指南 0.3.58**，保留熟毛蟲、熟饅頭片與熟末影珍珠的限定進食動畫，以及原圖形 HUD Atlas；修正 Cookery 撒料後 Uses 舊行累積與 Numb stop 空 bones schema。歷史範圍仍見 [G126](docs/STATUS-A2.8.126.md)、[G127](docs/STATUS-A2.8.127.md) 與 [G128](docs/STATUS-A2.8.128.md)，不改寫原草稿紀錄。
 
-[G127 兩食品動畫與 Atlas HUD 後繼草稿](docs/STATUS-A2.8.127.md)：承接 G126，僅加入熟饅頭片 TWO／熟末影珍珠 THREE 的 exact-ID 第一人稱 player clips，以及原圖形 HUD 的單張 Atlas。身份 2.8.127／指南 0.3.57；原 G126 歷史與 UUID 保留。完整功能門檻需由本版正式入口完成；合併包原生、完整家族、近嘴放大與真人畫面仍未驗收，尚未發布或部署。
+本版固定下載入口：[A2.8.128-beta.1](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.1)／[mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.1/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon)。此入口在本次家族／保存／LIVE 流程通過後開放；固定 tag 與 SHA 見 [PUBLICATION.md](docs/PUBLICATION.md)，請勿用 latest／stable 取得舊版 G125。公開包直接來自 canonical BP/RP，和家族安裝的煙火自有檔案一致。
 
-[G126 熟毛蟲雙手與 HUD 候選](docs/STATUS-A2.8.126.md)：只承接已錄影的 canonical 熟毛蟲、右手、站立、空副手外層座標修正。雙手與取消／結束恢復有窄實機證據；近嘴放大、Java 實片與其他食品／皮膚／FOV／第三人稱仍未驗收。另將原圖形 HUD hold 75ms→100ms；單次受控 no-clear 錄影連續 89 幀，自然食用／完整家族與合併包仍待驗證。此分支為 draft，未發布或部署。
+相依須使用官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 並修改 API，尚未納入本版。煙火指南資料已隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，公開適配請依[家族組裝說明](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/docs/PUBLICATION-T147-G128-W124.md)重現。獨立私有料理／AMW 額外能力不包含。
+
+目前真人證據仍有範圍限制：進食動畫只覆蓋指定皮膚、FOV、站姿與主手；Uses 的隔離 DIAG1 證據為唯一一行 16→15→14、Ingredients 3/8 保留。Numb 原生复驗、新合併包客戶端、近嘴放大及完整 Java 聲畫仍待驗收。`client=false`、`production_ready=false`。
 
 離線來源草稿另見[熟饅頭片 TWO／熟末影珍珠 THREE 整合](docs/evidence/two-route-source-integration-20261010.md)：新增兩條 exact-ID player clips，保留 G126 與其他食品。該凍結證據仍是未編版的歷史草稿；本版以獨立 G127 身份及新增 reviewed witness 承接，不改寫原 G126 身份或門檻。
 
@@ -35,8 +37,8 @@
 森羅物語：煙火的非官方基岩版移植。目標是跟隨 Java 原作，保留其玩法與沉浸體驗；**完整一比一移植與現行真人驗收仍未完成**。
 
 當前版本、UUID、相依與來源身份以 [baseline.json](baseline.json) 為準。
-依賴作者 **Cookery 1.6.0**；最低 engine 宣告 1.26.50，當前驗證使用 BDS 1.26.51.1、
-`@minecraft/server` 2.9.0 與 `@minecraft/server-ui` 2.2.0。
+依賴作者 **Cookery 1.6.0**；最低 engine 宣告 1.26.50，
+`@minecraft/server` 2.9.0 與 `@minecraft/server-ui` 2.2.0；原生證據的引擎版本與範圍以各次紀錄為準。
 家族整合提供的砧板／油壺／炒鍋與酒館指南交接能力，不能當作只安裝作者 Cookery 就有的功能。
 
 查看 [Java 移植對照表](docs/PARITY-MATRIX.md) 了解已實作、平台替代與未完成項；
