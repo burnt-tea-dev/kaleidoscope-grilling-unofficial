@@ -11,7 +11,7 @@ def eating_dispatch_source(script, version):
     unrelated edits, duplicate/partial wrappers and altered fallbacks fail.
     """
     dedicated = RP / 'animations/kg_isolated_two_route_player.animation.json'
-    if tuple(version) == (2, 8, 127) or (tuple(version) == (2, 8, 126) and dedicated.is_file()):
+    if tuple(version) >= (2, 8, 127) or (tuple(version) == (2, 8, 126) and dedicated.is_file()):
         import sys
         sys.path.insert(0, str(RP.parents[3] / 'tools'))
         import hashlib

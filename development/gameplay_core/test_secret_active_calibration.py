@@ -86,7 +86,7 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    allowed.add(str(bottle.relative_to(ROOT)))
   # G125 changes only the Numb phase units/lifecycle and adds its own empty
   # stop clip. Rebuild that exact delta from the complete public preimage;
-  # both the existing reviewed source and the checkout must match full bytes.
+  # the immutable reviewed G125 source must still match its complete bytes.
   numb=RP/'animations/a22_numb.animation.json';numb_path=str(numb.relative_to(ROOT))
   before=subprocess.check_output(['git','show',PUBLIC_SOURCE_BASE+':'+numb_path],cwd=ROOT)
   expected=json.loads(before)
@@ -108,7 +108,14 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   repaired=(json.dumps(expected,indent=2)+'\n').encode()
   reviewed=subprocess.check_output(['git','show',REVIEWED_SCENE_INTERACTION_BASE+':'+numb_path],cwd=ROOT)
   self.assertEqual(reviewed,repaired,'Reviewed G125 Numb differs outside the exact phase/lifecycle delta')
-  self.assertEqual(numb.read_bytes(),reviewed,'Numb animation must match the complete reviewed G125 source')
+  # The client schema accepts omitted bones, but rejects an empty bones map.
+  # Admit only that deletion from the complete immutable G125 preimage; all
+  # active-clip expressions, fields, clip IDs and serialization stay pinned.
+  current=json.loads(reviewed)
+  stop=current['animations']['animation.kg_a22.player.numb_stop']
+  self.assertEqual(stop,{'animation_length':0.05,'bones':{}})
+  del stop['bones']
+  self.assertEqual(numb.read_bytes(),(json.dumps(current,indent=2)+'\n').encode(),'Numb differs outside the exact empty-bones schema repair')
   allowed.add(numb_path)
   # G126 adds two exact scoped clips without changing the shared secret curves.
   # Admit only complete immutable reviewed bytes, never a namespace wildcard.

@@ -3,6 +3,15 @@ import {test} from 'node:test';
 import fs from 'node:fs';
 import {updateNumbVisual,forgetNumbVisual,suppressNumbVisual} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/numb_visual_runtime.js';
 const animations=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/a22_numb.animation.json',import.meta.url),'utf8')).animations;
+test('Numb clips omit optional bones rather than declaring an empty bone map',()=>{
+ for(const [name,clip] of Object.entries(animations)){
+  if(!Object.hasOwn(clip,'bones'))continue;
+  assert.ok(clip.bones&&typeof clip.bones==='object'&&!Array.isArray(clip.bones),name);
+  const names=Object.keys(clip.bones);
+  assert.ok(names.length>0,`${name}: a present bones map requires a named child`);
+  assert.ok(names.every(bone=>/^[a-zA-Z0-9_.-]+$/.test(bone)),name);
+ }
+});
 test('Numb completes the Java age-tick cycle in under one second, not twenty seconds',()=>{
  const clip=animations['animation.kg_a22.player.numb'];
  const rotation=Function('q','math','return '+clip.bones.rightarm.rotation[0]);
@@ -21,7 +30,7 @@ test('resync and release own one Numb controller without fading or resetting ano
  for(const {animation,options} of calls){assert.equal(animation,'animation.kg_a22.player.numb');assert.equal(options.controller,'kg_numb');assert.equal(options.blendOutTime,0);assert.equal(options.stopExpression,'0')}
  updateNumbVisual(player,false,37);updateNumbVisual(player,false,38);
  assert.equal(calls.length,5);assert.equal(calls[4].animation,'animation.kg_a22.player.numb_stop');assert.equal(calls[4].options.controller,'kg_numb');
- assert.deepEqual(animations[calls[4].animation].bones,{});
+ assert.deepEqual(animations[calls[4].animation],{animation_length:0.05});
  updateNumbVisual(player,true,39);assert.equal(calls.length,6);
  forgetNumbVisual(player.id);
 });

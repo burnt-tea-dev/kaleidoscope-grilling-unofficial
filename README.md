@@ -1,6 +1,8 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.127
+## Current maintained baseline: 2.8.128
+
+[G128 調料 Uses 與 Numb schema 修補草稿](docs/STATUS-A2.8.128.md)：承接並保留 G127，修正 Cookery 撒料後 Uses 舊行累積及 Numb stop 的空 bones schema。身份 2.8.128／指南 0.3.58；Uses 只有 G125 隔離 DIAG1 的 16→15→14 窄原生證據，Numb 原生复驗及新整包／家族驗收仍 pending。
 
 [G127 兩食品動畫與 Atlas HUD 後繼草稿](docs/STATUS-A2.8.127.md)：承接 G126，僅加入熟饅頭片 TWO／熟末影珍珠 THREE 的 exact-ID 第一人稱 player clips，以及原圖形 HUD 的單張 Atlas。身份 2.8.127／指南 0.3.57；原 G126 歷史與 UUID 保留。完整功能門檻需由本版正式入口完成；合併包原生、完整家族、近嘴放大與真人畫面仍未驗收，尚未發布或部署。
 

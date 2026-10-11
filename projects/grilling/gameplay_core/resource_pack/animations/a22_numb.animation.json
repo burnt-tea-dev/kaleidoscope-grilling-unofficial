@@ -38,8 +38,7 @@
       "blend_weight": "math.clamp(q.modified_move_speed * 1.8, 0.0, 1.0) >= 0.04"
     },
     "animation.kg_a22.player.numb_stop": {
-      "animation_length": 0.05,
-      "bones": {}
+      "animation_length": 0.05
     }
   }
 }
