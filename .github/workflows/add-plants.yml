@@ -1,11 +1,25 @@
 name: Verify and add plant assets
 on:
   push:
+    branches: [main]
     paths:
-      - '.github/workflows/add-plants.yml'
+      - 'development/add_plants.py'
+      - 'development/run_plants.py'
+      - 'projects/grilling/config/asset_specs.json'
+      - 'projects/grilling/source_manifest.json'
+      - 'projects/grilling/source_snapshots/**'
+      - 'projects/grilling/tools/**'
+  pull_request:
+    paths:
+      - 'development/add_plants.py'
+      - 'development/run_plants.py'
+      - 'projects/grilling/config/asset_specs.json'
+      - 'projects/grilling/source_manifest.json'
+      - 'projects/grilling/source_snapshots/**'
+      - 'projects/grilling/tools/**'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: grilling-asset-import
   cancel-in-progress: false
@@ -31,19 +45,10 @@ jobs:
         run: python -m pip install 'numpy==2.3.5' 'Pillow==12.3.0'
       - name: Add sources, lower templates, preserve baseline and run eight-view comparisons
         run: python development/run_plants.py
-      - name: Commit verified plant assets only
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
-          test "$GITHUB_REPOSITORY_ID" = '1377218440'
-          find projects/grilling -type d -name __pycache__ -prune -exec rm -rf {} +
-          git add -- projects/grilling
-          git diff --cached --name-only | python -c 'import sys; p=sys.stdin.read().splitlines(); assert p and all(n.startswith("projects/grilling/") for n in p)'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'assets: add 11 fish-mint stages and 4 pepper parts with 120 eight-view comparisons'
-          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" push origin HEAD:main
-          unset AUTH
+      - name: Upload plant review reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Grilling-Plant-Asset-Review
+          path: projects/grilling/reports/plants/
+          retention-days: 14
+          if-no-files-found: error

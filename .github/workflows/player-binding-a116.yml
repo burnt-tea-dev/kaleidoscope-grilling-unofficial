@@ -1,12 +1,17 @@
 name: Cookery-linked player animation A1.16
 on:
   push:
+    branches: [main]
     paths:
-      - '.github/workflows/player-binding-a116.yml'
       - 'development/player_binding/**'
+      - 'projects/grilling/integration/immersion_lab/**'
+  pull_request:
+    paths:
+      - 'development/player_binding/**'
+      - 'projects/grilling/integration/immersion_lab/**'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: grilling-player-binding-a116
   cancel-in-progress: false
@@ -99,22 +104,6 @@ jobs:
           for p in [lab/'builds',lab/'.bridge']:
               if p.exists():shutil.rmtree(p)
           '@ | python -
-      - name: Publish verified A1.16 outputs only
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
-          test "$GITHUB_REPOSITORY_ID" = '1377218440'
-          git add -- projects/grilling/integration/immersion_lab projects/grilling/reports/player_binding_a116 artifacts/Grilling_Immersion_Lab_A1.16.mcaddon artifacts/Grilling_Immersion_Lab_A1.16.brproject
-          git diff --cached --name-only | python -c 'import sys; p=sys.stdin.read().splitlines(); ok=("projects/grilling/integration/immersion_lab/","projects/grilling/reports/player_binding_a116/","artifacts/Grilling_Immersion_Lab_A1.16."); assert p and all(x.startswith(ok) for x in p)'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'feat: Cookery-linked six-profile player animation binding with main/off-hand recovery'
-          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" push origin HEAD:main
-          unset AUTH
       - name: Upload A1.16 test packs and reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

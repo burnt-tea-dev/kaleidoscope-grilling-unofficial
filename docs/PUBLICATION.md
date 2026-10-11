@@ -1,6 +1,8 @@
 # G128 public beta
 
-The fixed download entry is [**A2.8.128-beta.1**](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.1), with Grilling **2.8.128** and its built-in guide **0.3.58**: [download the mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.1/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon). It becomes available after the family/save/LIVE sequence below succeeds. Use this fixed beta link; latest/stable can still resolve to older G125. The authoritative publication request is [`.github/release-request.json`](../.github/release-request.json). This remains a non-latest prerelease, with `client=false` and `production_ready=false`.
+The fixed download entry is [**A2.8.128-beta.2**](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2), with Grilling **2.8.128** and its built-in guide **0.3.58**: [download the mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.2/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon). Use this fixed beta link; latest/stable can still resolve to older G125. The authoritative publication request is [`.github/release-request.json`](../.github/release-request.json). This remains a non-latest prerelease, with `client=false` and `production_ready=false`.
+
+Beta.2 repairs publication tooling while retaining the exact G128 archives and completed family/save/LIVE evidence. Beta.1 remains an unpublished draft with its [failed publication run](https://github.com/casama233/kaleidoscope-grilling-unofficial/actions/runs/38161893352) intact. Draft lookup now uses an exact release ID fallback. The four historical asset-import, plant, immersion and A1.16 workflows run automatically only for their actual lab source changes on main/PRs, or through explicit manual dispatch; they upload review artifacts and cannot commit generated outputs to main. Tag pushes and publication-only changes do not invoke those builders. The already generated historical outputs and diagnostics are preserved. This tool repair does not create another game candidate or restart LIVE.
 
 The `.mcaddon` contains the maintained canonical Grilling BP and RP. These are the same owned files used by the family assembler and installed in luosen; packaging does not add server-only gameplay patches. Install it with official [**Cookery 1.6.0, file 9054164**](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164), whose author archive SHA256 is `da12fe6d39d7514aff1de3c963d69899324d771be5ca0fc3da1ccb759c7ad458`. Cookery 1.6.1 changes pack UUIDs and APIs and needs separate adaptation; it is not supported by this release.
 
@@ -25,7 +27,7 @@ Ordinary PRs and main pushes validate source and produce review artifacts; they 
 
 - `mode`: `publish`
 - `validated_run_id`: the completed canonical validation run whose complete Git tree matches current main
-- `confirm_tag`: `A2.8.128-beta.1`
+- `confirm_tag`: `A2.8.128-beta.2`
 
 The default mode is `validate`. Publication rejects another repository, a different complete Git tree or workflow, pending or failed runs, skipped source/Windows jobs, expired artifacts, another tag or changed archive hashes. It reuses only that exact run's review archives; it does not rebuild from a historical package or edit a source receipt. The original report keeps its actual CI commit; a separate `publication-binding.json` records the checked commits, publication commit, shared tree, run/attempt and exact artifact hashes. A publication dispatch has a separate concurrency group so it cannot cancel an in-progress validation run.
 

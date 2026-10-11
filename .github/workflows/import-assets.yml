@@ -1,11 +1,15 @@
 name: Import verified Grilling assets
 on:
   push:
+    branches: [main]
     paths:
-      - '.github/workflows/import-assets.yml'
+      - 'migration/**'
+  pull_request:
+    paths:
+      - 'migration/**'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: grilling-asset-import
   cancel-in-progress: false
@@ -33,19 +37,12 @@ jobs:
         run: python migration/bootstrap.py
       - name: Validate notebook independently
         run: node notebook/test.mjs
-      - name: Commit only the verified project and result
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
-          test "$GITHUB_REPOSITORY_ID" = '1377218440'
-          find projects/grilling -type d -name __pycache__ -prune -exec rm -rf {} +
-          git add -- projects/grilling migration/result.json
-          git diff --cached --name-only | python -c 'import sys; paths=sys.stdin.read().splitlines(); assert paths and all(p.startswith("projects/grilling/") or p=="migration/result.json" for p in paths)'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'import: verified A1.12 source assets, 366 model pairs, 156 atlases and guide runtime'
-          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" push origin HEAD:main
-          unset AUTH
+      - name: Upload verified import reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Grilling-Asset-Import-Review
+          path: |
+            migration/result.json
+            projects/grilling/reports/migration-verification.json
+          retention-days: 14
+          if-no-files-found: error

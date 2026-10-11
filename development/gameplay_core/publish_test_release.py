@@ -70,7 +70,32 @@ def download_asset(asset_id):
 
 
 def release_by_tag(tag):
-    return api(f'repos/{REPO}/releases/tags/{tag}', allow_missing=True)
+    release = api(f'repos/{REPO}/releases/tags/{tag}', allow_missing=True)
+    if release is not None:
+        return release
+    # GitHub's by-tag endpoint omits drafts, including drafts with an existing
+    # Git tag. Locate one exact draft in the authenticated inventory, then read
+    # it by ID. All callers still verify its metadata, assets and tag target.
+    matches = []
+    page = 1
+    while True:
+        releases = api(f'repos/{REPO}/releases?per_page=100&page={page}')
+        require(isinstance(releases, list) and len(releases) <= 100,
+                'Unexpected release inventory')
+        matches.extend(item for item in releases if item.get('tag_name') == tag)
+        if len(releases) < 100:
+            break
+        page += 1
+    if not matches:
+        return None
+    require(len(matches) == 1, 'Ambiguous release tag inventory')
+    draft = matches[0]
+    require(draft.get('draft') is True and type(draft.get('id')) is int,
+            'Tag lookup omitted a non-draft or unidentified release')
+    release = api(f"repos/{REPO}/releases/{draft['id']}")
+    require(release.get('id') == draft['id'] and release.get('tag_name') == tag
+            and release.get('draft') is True, 'Draft release changed during ID readback')
+    return release
 
 
 def tag_target(tag):

@@ -4,7 +4,7 @@
 
 G128 來源已經 [PR193](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/193) 與 [PR194](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/194) 合併到 main。身份 **2.8.128／指南 0.3.58**，保留熟毛蟲、熟饅頭片與熟末影珍珠的限定進食動畫，以及原圖形 HUD Atlas；修正 Cookery 撒料後 Uses 舊行累積與 Numb stop 空 bones schema。歷史範圍仍見 [G126](docs/STATUS-A2.8.126.md)、[G127](docs/STATUS-A2.8.127.md) 與 [G128](docs/STATUS-A2.8.128.md)，不改寫原草稿紀錄。
 
-本版固定下載入口：[A2.8.128-beta.1](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.1)／[mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.1/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon)。此入口在本次家族／保存／LIVE 流程通過後開放；固定 tag 與 SHA 見 [PUBLICATION.md](docs/PUBLICATION.md)，請勿用 latest／stable 取得舊版 G125。公開包直接來自 canonical BP/RP，和家族安裝的煙火自有檔案一致。
+本版固定下載入口：[A2.8.128-beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2)／[mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.2/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon)。固定 tag 與 SHA 見 [PUBLICATION.md](docs/PUBLICATION.md)，請勿用 latest／stable 取得舊版 G125。公開包直接來自 canonical BP/RP，和家族安裝的煙火自有檔案一致；beta.2 修復發版工具，沿用相同 G128 包內容與已完成的家族／保存／LIVE 驗證。
 
 相依須使用官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 並修改 API，尚未納入本版。煙火指南資料已隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，公開適配請依[家族組裝說明](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/docs/PUBLICATION-T147-G128-W124.md)重現。獨立私有料理／AMW 額外能力不包含。
 
