@@ -1,6 +1,6 @@
 {
   "type": "minecraftBedrock",
-  "name": "Kaleidoscope Grilling 2.8.125 Canonical Baseline",
+  "name": "Kaleidoscope Grilling 2.8.126 Canonical Baseline",
   "description": "Unofficial Bedrock port; canonical release runtime. See README.md for attribution and dependency requirements.",
   "authors": [
     "Unofficial port contributors"
@@ -24,7 +24,7 @@
       [
         "simpleRewrite",
         {
-          "packName": "Kaleidoscope_Grilling_2_8_125_Canonical"
+          "packName": "Kaleidoscope_Grilling_2_8_126_Canonical"
         }
       ]
     ]

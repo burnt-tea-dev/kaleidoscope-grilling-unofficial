@@ -33,6 +33,24 @@ class HandAnchorTests(unittest.TestCase):
         pieces={g['description']['identifier'] for p in (RP/'models/entity/java_eating_piece').glob('*.geo.json') for g in load(p)['minecraft:geometry']}
         if (RP/'render_controllers/java_eating_piece.render_controllers.json').exists():
             self.assertEqual(pieces,{'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'})
+        if VERSION>=(2,8,126):
+            helper_ref='geometry.kg_probe_caterpillar.piece'
+            owners=[load(p)['minecraft:attachable']['description']['identifier']
+                    for p in (RP/'attachables').glob('*.json')
+                    if helper_ref in load(p)['minecraft:attachable']['description']['geometry'].values()]
+            self.assertEqual(owners,['kaleidoscope_grilling:grilled_caterpillar_skewer'])
+            helpers=load(RP/'models/entity/kg_probe_caterpillar_piece.geo.json')['minecraft:geometry']
+            self.assertEqual(len(helpers),1)
+            helper=helpers[0]
+            self.assertEqual(helper['description']['identifier'],helper_ref)
+            self.assertEqual(len(helper['bones']),2)
+            self.assertEqual(helper['bones'][0],{'name':'grip','pivot':[0,24,0],'binding':"q.item_slot_to_bone_name('off_hand')"})
+            self.assertEqual(helper['bones'][1]['name'],'dual_piece')
+            self.assertEqual(helper['bones'][1]['parent'],'grip')
+            self.assertNotIn('binding',helper['bones'][1])
+            self.assertEqual(helper['bones'][1]['pivot'],[0,24,0])
+            self.assertEqual(len(helper['bones'][1]['cubes']),1)
+            pieces=pieces|{helper_ref}
         self.assertEqual(refs,seen|pieces)
     def test_secret_ingredients_share_the_existing_grip_and_stable_two_sided_faces(self):
         geometries=load(RP/'models/entity/secret_held.geo.json')['minecraft:geometry']

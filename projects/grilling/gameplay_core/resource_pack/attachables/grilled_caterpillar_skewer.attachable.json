@@ -11,23 +11,26 @@
         "stage1": "textures/a22_bites/grilled_caterpillar_skewer_stage1",
         "stage2": "textures/a22_bites/grilled_caterpillar_skewer_stage2",
         "stage3": "textures/a22_bites/grilled_caterpillar_skewer_stage2",
-        "stage4": "textures/a22_bites/grilled_caterpillar_skewer_stage2"
+        "stage4": "textures/a22_bites/grilled_caterpillar_skewer_stage2",
+        "probe_piece": "textures/kg_probe_caterpillar/piece"
       },
       "geometry": {
         "stage0": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage0",
         "stage1": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage1",
         "stage2": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
         "stage3": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2"
+        "stage4": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
+        "probe_piece": "geometry.kg_probe_caterpillar.piece"
       },
       "scripts": {
         "pre_animation": [
           "v.kg_eat_seconds = (c.is_first_person == 1 ? (q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0));",
-          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (v.kg_eat_seconds >= 3.08333 ? 2 : (v.kg_eat_seconds >= 1.16667 ? 1 : 0)) : 0;"
+          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (v.kg_eat_seconds >= 3.08333 ? 2 : (v.kg_eat_seconds >= 1.16667 ? 1 : 0)) : 0;",
+          "v.kg_probe_piece_visible = c.is_first_person == 1 && c.item_slot == 'main_hand' && q.has_property('kaleidoscope_grilling:eat_projection') && q.is_using_item && q.property('kaleidoscope_grilling:eat_projection') == 1 && q.property('kaleidoscope_grilling:eat_profile') == 1 && q.property('kaleidoscope_grilling:eat_hand') == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && q.is_item_equipped('off_hand') == 0 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_caterpillar_skewer');"
         ],
         "animate": [
           {
-            "fp_right": "c.is_first_person == 1 && c.item_slot == 'main_hand'"
+            "fp_right": "(c.is_first_person == 1 && c.item_slot == 'main_hand') && (c.is_first_person == 1 && c.item_slot == 'main_hand' && q.has_property('kaleidoscope_grilling:eat_projection') && q.is_using_item && q.property('kaleidoscope_grilling:eat_projection') == 1 && q.property('kaleidoscope_grilling:eat_profile') == 1 && q.property('kaleidoscope_grilling:eat_hand') == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && q.is_item_equipped('off_hand') == 0 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_caterpillar_skewer')) == 0"
           },
           {
             "fp_left": "c.is_first_person == 1 && c.item_slot == 'off_hand'"
@@ -39,15 +42,19 @@
             "tp_left": "c.is_first_person == 0 && c.item_slot == 'off_hand'"
           },
           {
-            "eat_right": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand'"
+            "eat_right": "(c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand') && (c.is_first_person == 1 && c.item_slot == 'main_hand' && q.has_property('kaleidoscope_grilling:eat_projection') && q.is_using_item && q.property('kaleidoscope_grilling:eat_projection') == 1 && q.property('kaleidoscope_grilling:eat_profile') == 1 && q.property('kaleidoscope_grilling:eat_hand') == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && q.is_item_equipped('off_hand') == 0 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_caterpillar_skewer')) == 0"
           },
           {
             "eat_left": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand'"
+          },
+          {
+            "probe_one_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && q.has_property('kaleidoscope_grilling:eat_projection') && q.is_using_item && q.property('kaleidoscope_grilling:eat_projection') == 1 && q.property('kaleidoscope_grilling:eat_profile') == 1 && q.property('kaleidoscope_grilling:eat_hand') == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && q.is_item_equipped('off_hand') == 0 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_caterpillar_skewer')"
           }
         ]
       },
       "render_controllers": [
-        "controller.render.kg_a22.bite"
+        "controller.render.kg_a22.bite",
+        "controller.render.kg_probe_caterpillar.piece"
       ],
       "animations": {
         "fp_right": "animation.kg_a287.skewer_fp_right",
@@ -55,7 +62,8 @@
         "tp_right": "animation.kg_a287.skewer_tp_right",
         "tp_left": "animation.kg_a287.skewer_tp_left",
         "eat_right": "animation.kg_eating.item.one.right",
-        "eat_left": "animation.kg_eating.item.one.left"
+        "eat_left": "animation.kg_eating.item.one.left",
+        "probe_one_right": "animation.kg_probe_caterpillar.item.one.right"
       }
     }
   }

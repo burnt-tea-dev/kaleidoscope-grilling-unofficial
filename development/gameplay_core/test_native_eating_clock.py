@@ -35,7 +35,10 @@ class NativeEatingClock(unittest.TestCase):
         self.assertAlmostEqual(evaluate(100,60,.5),(40+.5-1)/20)
     def test_generated_channels_and_property(self):
         p=ROOT/'projects/grilling/gameplay_core';rp=p/'resource_pack';bp=p/'behavior_pack'
-        for name in ('eating_motion.animation.json','java_eating_projection.animation.json','java_eating_player.animation.json'):
+        names=['eating_motion.animation.json','java_eating_projection.animation.json','java_eating_player.animation.json']
+        version=tuple(json.loads((bp/'manifest.json').read_text())['header']['version'])
+        if version>=(2,8,126):names+=['kg_probe_caterpillar_item.animation.json','kg_probe_caterpillar_player.animation.json']
+        for name in names:
             for a in json.loads((rp/'animations'/name).read_text())['animations'].values():self.assertEqual(a['anim_time_update'],SECONDS)
         props=json.loads((bp/'entities/player.json').read_text())['minecraft:entity']['description']['properties']
         self.assertEqual(props['kaleidoscope_grilling:eat_native_ticks'],{'type':'int','range':[0,72000],'default':0,'client_sync':True})
@@ -51,7 +54,11 @@ class NativeEatingClock(unittest.TestCase):
         subprocess.run(['node','--input-type=module','-e',js],check=True)
         s=(module.parent/'main.js').read_text()
         self.assertIn('eatingNativeTicks(a.nativeDuration)',s)
-        self.assertIn("if(eatingNativeTicks(a.nativeDuration)>0&&supportsJavaEatingProjection(e.itemStack.typeId,profile)",s)
+        version=tuple(json.loads((module.parent.parent/'manifest.json').read_text())['header']['version'])
+        admitted="supportsJavaEatingProjection(e.itemStack.typeId,profile)"
+        if version>=(2,8,126):
+            admitted="("+admitted+"||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))"
+        self.assertEqual(s.count("if(eatingNativeTicks(a.nativeDuration)>0&&"+admitted),1)
         for key in ('itemStartUse','itemCompleteUse','itemStopUse','playerSpawn'):
             section=s.split('world.afterEvents.'+key+'.subscribe',1)[1].split('world.',1)[0]
             self.assertIn('EAT_NATIVE_TICKS_PROPERTY',section,key)

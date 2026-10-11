@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[2];RP=ROOT/'projects/grilling/gameplay_cor
 from held_pose_frames import point
 from secret_active_calibration import calibrated_target,PROFILE_IDS
 from bottle_pose_review import historical_bytes
-from public_source_witness import PUBLIC_SOURCE_BASE,REVIEWED_SCENE_INTERACTION_BASE,public_json,assert_public_bytes
+from public_source_witness import PUBLIC_SOURCE_BASE,REVIEWED_SCENE_INTERACTION_BASE,REVIEWED_CATERPILLAR_CAMERA_BASE,public_json,assert_public_bytes
 from build_plate_display import build as plate_display_assets
 from build_plate_held import build as plate_held_assets
 import java_dual_eating_frames as dual
@@ -110,6 +110,18 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   self.assertEqual(reviewed,repaired,'Reviewed G125 Numb differs outside the exact phase/lifecycle delta')
   self.assertEqual(numb.read_bytes(),reviewed,'Numb animation must match the complete reviewed G125 source')
   allowed.add(numb_path)
+  # G126 adds two exact scoped clips without changing the shared secret curves.
+  # Admit only complete immutable reviewed bytes, never a namespace wildcard.
+  version=tuple(json.loads((RP.parent/'behavior_pack/manifest.json').read_text())['header']['version'])
+  if version>=(2,8,126):
+   for kind in ('item','player'):
+    path=RP/'animations'/('kg_probe_caterpillar_'+kind+'.animation.json');relative=str(path.relative_to(ROOT))
+    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True)
+    self.assertNotEqual(old.returncode,0,'caterpillar exception must only admit a new file')
+    reviewed=subprocess.check_output(['git','show',REVIEWED_CATERPILLAR_CAMERA_BASE+':'+relative],cwd=ROOT)
+    self.assertEqual(path.read_bytes(),reviewed,'Scoped caterpillar clip differs from complete reviewed G126 source')
+    self.assertEqual(set(json.loads(reviewed)['animations']),{'animation.kg_probe_caterpillar.'+kind+'.one.right'})
+    allowed.add(relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

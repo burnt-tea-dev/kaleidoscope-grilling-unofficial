@@ -9572,7 +9572,7 @@
   },
   "kg_eating_hold": {
     "anim_type": "wait",
-    "duration": 0.075,
+    "duration": 0.1,
     "next": "@hud.kg_eating_expire"
   }
 }

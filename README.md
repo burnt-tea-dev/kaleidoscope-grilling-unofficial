@@ -1,6 +1,8 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.125
+## Current maintained baseline: 2.8.126
+
+[G126 熟毛蟲雙手與 HUD 候選](docs/STATUS-A2.8.126.md)：只承接已錄影的 canonical 熟毛蟲、右手、站立、空副手外層座標修正。雙手與取消／結束恢復有窄實機證據；近嘴放大、Java 實片與其他食品／皮膚／FOV／第三人稱仍未驗收。另將原圖形 HUD hold 75ms→100ms；單次受控 no-clear 錄影連續 89 幀，自然食用／完整家族與合併包仍待驗證。此分支為 draft，未發布或部署。
 
 家族目前的 LIVE 配套、部署與逐檔收據、保存演練及指南接收範圍，統一見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。本倉庫的版本記錄保留各次修補及當時的驗證範圍。
 

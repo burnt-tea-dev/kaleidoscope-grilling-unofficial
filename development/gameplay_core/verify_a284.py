@@ -13,7 +13,12 @@ def eating_gate():
     if 'playAnimation' in food_start:
         if version >= (2, 8, 58):
             assert food_start.count('playAnimation') == 2
-            assert "playAnimation('animation.kg_java_eating.player.'" in food_start
+            if version >= (2, 8, 126):
+                # Keep the normal Java fallback and the one exact reviewed route.
+                dispatch = "playAnimation(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))),{"
+                assert food_start.count(dispatch) == 1
+            else:
+                assert "playAnimation('animation.kg_java_eating.player.'" in food_start
             assert 'supportsJavaEatingProjection(e.itemStack.typeId,profile)' in food_start
             projected = json.loads((RP / 'animations/java_eating_player.animation.json').read_text())['animations']
             dual=(RP/'render_controllers/java_eating_piece.render_controllers.json').exists()

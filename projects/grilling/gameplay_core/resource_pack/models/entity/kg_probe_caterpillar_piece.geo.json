@@ -1,0 +1,125 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.kg_probe_caterpillar.piece",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 8,
+        "visible_bounds_height": 8,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "binding": "q.item_slot_to_bone_name('off_hand')"
+        },
+        {
+          "name": "dual_piece",
+          "parent": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.1999999999999993,
+                30.8,
+                -1.1999999999999993
+              ],
+              "size": [
+                2.3999999999999995,
+                2.3999999999999995,
+                2.4000000000000004
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    9.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    6.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    9.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    6.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    3.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    6.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -3.0
+                  ]
+                }
+              },
+              "pivot": [
+                -0.3000000000000007,
+                31.675,
+                0.3000000000000007
+              ],
+              "rotation": [
+                0,
+                0,
+                -22.5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

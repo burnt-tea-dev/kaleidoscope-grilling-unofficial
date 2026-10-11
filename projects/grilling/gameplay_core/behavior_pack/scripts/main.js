@@ -1056,10 +1056,10 @@ world.afterEvents.itemStartUse.subscribe(e=>{
  try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
  // Separate Java NONE-context first-person path. Do not replace the RP player
  // definition or reset body/head channels. The JSON branch gates upright use.
- if(eatingNativeTicks(a.nativeDuration)>0&&supportsJavaEatingProjection(e.itemStack.typeId,profile)&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
+ if(eatingNativeTicks(a.nativeDuration)>0&&(supportsJavaEatingProjection(e.itemStack.typeId,profile)||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
   try{
    e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
-   e.source.playAnimation('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'),{
+   e.source.playAnimation(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))),{
     // Do not stop on a client-synced property before its update packet arrives.
     // The animation blend gate still masks inactive projection immediately.
     controller:'kg_java_eating_first_person',blendOutTime:0,

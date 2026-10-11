@@ -12,7 +12,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':30,'commits':30})
+  self.assertEqual(verify(),{'refs':32,'commits':32})
   self.assertEqual(set(inventory()),literal_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
@@ -208,6 +208,22 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   with patch.object(public,'_reviewed_cuisine_source',return_value=repaired+b'\n'):
    with self.assertRaisesRegex(AssertionError,'G122 public source differs'):
     public.expected_main_bytes((2,8,122))
+ def test_g126_caterpillar_keeps_g125_and_rejects_unreviewed_main_changes(self):
+  load=public._main_delta;delta=load('g126-main-reviewed-delta.json')
+  before=public.expected_main_bytes((2,8,125));repaired=public.expected_main_bytes((2,8,126))
+  self.assertEqual(delta['previous_public_commit'],public.REVIEWED_SCENE_INTERACTION_BASE)
+  self.assertEqual(delta['reviewed_commit'],public.REVIEWED_CATERPILLAR_CAMERA_BASE)
+  self.assertIn(public.REVIEWED_CATERPILLAR_CAMERA_BASE,inventory())
+  self.assertEqual(len(delta['operations']),2)
+  self.assertEqual(public._apply_main_operations(before,delta),repaired)
+  self.assertEqual((ROOT/public.MAIN_PATH).read_bytes(),repaired)
+  with self.assertRaisesRegex(AssertionError,'wrong public preimage'):
+   public._g126_caterpillar_camera_bytes(before+b'\n')
+  changed=copy.deepcopy(delta);op=changed['operations'][-1];original=op['after'];op['after']+='\n'
+  changed['after_sha256']=hashlib.sha256(repaired.replace(original.encode(),op['after'].encode(),1)).hexdigest()
+  with patch.object(public,'_main_delta',side_effect=lambda name:changed if name=='g126-main-reviewed-delta.json' else load(name)):
+   with self.assertRaisesRegex(AssertionError,'G126 public source differs outside'):
+    public.expected_main_bytes((2,8,126))
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)

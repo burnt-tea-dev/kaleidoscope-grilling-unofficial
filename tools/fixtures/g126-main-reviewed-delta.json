@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "path": "projects/grilling/gameplay_core/behavior_pack/scripts/main.js",
+  "release": [
+    2,
+    8,
+    126
+  ],
+  "previous_public_commit": "2ef4b7b6ffa782316378dc5d8fef3f9217b098bf",
+  "reviewed_commit": "488b4402434447f516dfa5bf87f1d5e7e1e9f483",
+  "main_predecessor": "d10d3b12b6cbbf922b0e940fbf174c7b24edf223",
+  "before_sha256": "a542cc1227ceca16535ae064f25d86d056f24b7a02e519d5b27e1e732b95d96d",
+  "after_sha256": "fe80e92759e63dd791586734a749f06d7386fb55eaaa4a6c29e4e885252fa4ce",
+  "operations": [
+    {
+      "start": 78697,
+      "end": 78753,
+      "before": "supportsJavaEatingProjection(e.itemStack.typeId,profile)",
+      "after": "(supportsJavaEatingProjection(e.itemStack.typeId,profile)||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))"
+    },
+    {
+      "start": 78931,
+      "end": 79021,
+      "before": "'animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right')",
+      "after": "((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right')))"
+    }
+  ]
+}

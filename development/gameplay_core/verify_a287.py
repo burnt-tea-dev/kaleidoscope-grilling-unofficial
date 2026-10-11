@@ -12,7 +12,7 @@ from verify_a284 import eating_gate
 from verify_a283 import main as previous_gate
 RP=repair.RP;BP=repair.BP
 def load(p):return json.loads(p.read_text())
-def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,projection=None,posture=None,season_hand=0,season_phase=0,pending_hand=0):
+def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,projection=None,posture=None,season_hand=0,season_phase=0,pending_hand=0,has_projection=True,offhand=0):
  # Only the simple boolean Molang subset used by held pose dispatch is accepted.
  expr=expr.replace('q.item_slot_to_bone_name(context.item_slot)',repr(bone))
  for prefix in ('context','c'):
@@ -26,10 +26,12 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
  for name,value,maximum in [('season_hand',season_hand,2),('season_phase',season_phase,10),('pending_hand',pending_hand,2)]:
   assert type(value) is int and 0 <= value <= maximum,(name,value)
   expr=re.sub(r'\bv\.kg_season_'+name+r'\b',str(value),expr)
+ assert type(has_projection) is bool and type(offhand) is int and offhand in (0,1)
+ expr=expr.replace("q.has_property('kaleidoscope_grilling:eat_projection')",str(has_projection))
  expr=expr.replace('q.is_using_item',str(bool(using))).replace("q.property('kaleidoscope_grilling:eat_profile')",str(eat_profile))
  expr=expr.replace("q.property('kaleidoscope_grilling:eat_projection')",str(int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)))
  expr=re.sub(r"q\.is_item_name_any\([^)]*\)",'True',expr)
- expr=re.sub(r"q\.is_item_equipped\([^)]*\)",'0',expr)
+ expr=re.sub(r"q\.is_item_equipped\([^)]*\)",str(offhand),expr)
  for state in ('is_sneaking','is_swimming','is_gliding','is_riding'):expr=expr.replace('q.'+state,str(int(state==posture)))
  expr=expr.replace('&&',' and ').replace('||',' or ')
  tree=ast.parse(expr,mode='eval')
@@ -61,6 +63,15 @@ def binding_assets():
  for p in sorted((RP/'attachables').glob('*.json')):
   if p.stem.endswith('_java_three_alt.attachable'):continue
   d=load(p)['minecraft:attachable']['description'];selected=[]
+  scoped_caterpillar=version>=(2,8,126) and d['identifier']=='kaleidoscope_grilling:grilled_caterpillar_skewer'
+  if scoped_caterpillar:
+   # A reviewed immutable payload, not a broad exemption from legacy bindings.
+   from public_source_witness import REVIEWED_CATERPILLAR_CAMERA_BASE
+   from build_caterpillar_eating_projection import ACTIVE,ANIMATION,PIECE,piece_assets
+   relative=p.relative_to(Path(__file__).resolve().parents[2]).as_posix()
+   assert p.read_bytes()==subprocess.check_output(['git','show',REVIEWED_CATERPILLAR_CAMERA_BASE+':'+relative]),p
+   assert d['animations']['probe_one_right']==ANIMATION,p
+   assert controllers[PIECE]=={'geometry':'Geometry.probe_piece','materials':[{'*':'Material.default'}],'textures':['Texture.probe_piece'],'part_visibility':[{'*':'v.kg_probe_piece_visible == 1'}]},p
   pose_routes=d['scripts']['animate']
   if d['identifier']=='kaleidoscope_grilling:skewer_plate':
    # One explicit new family: compare the entire source-derived payload before
@@ -82,11 +93,16 @@ def binding_assets():
       eating='eat_alt_'+hand if profile==4 and 'eat_alt_'+hand in d['animations'] else 'eat_'+hand
       projected='fp_eat_'+hand
       projected_code={'one':1,'two':2,'three':3,'three_alt':4,'four':5}.get(d['animations'].get(projected,'').split('.')[-2] if projected in d['animations'] else '')
+      if scoped_caterpillar and hand=='right':projected='probe_one_right';projected_code=1
       # .61 corrects the renderer context: Java renderArmWithItem curves are
       # first-person-only. Older immutable candidates retain their old guard.
       local_eating=[eating] if eating in d['animations'] and (first or version<(2,8,61)) else []
       expected_using=([projected] if first and profile==projected_code else [expected]+local_eating) if version>=(2,8,58) else [expected]+local_eating
       assert using_matches==expected_using,(p,profile,using_matches,expected_using)
+      if scoped_caterpillar:
+       for omitted in ({'has_projection':False},{'offhand':1}):
+        blocked=[key for row in pose_routes for key,expr in row.items() if expression(expr,first,slot,bone,True,profile,**omitted)]
+        assert blocked==[expected]+local_eating,(p,profile,omitted,blocked)
       # Projection is independently synchronized, and every excluded posture
       # falls back to the native display. Local authored motion is FP-only in
       # .61; third-person never inherits a camera-space item displacement.
@@ -108,6 +124,10 @@ def binding_assets():
   for ref in d['geometry'].values():
    refs.add(ref);g=idx[ref]
    b=g['bones'][0];assert b['name']=='grip' and b['pivot']==[0,24,0]
+   if ref=='geometry.kg_probe_caterpillar.piece':
+    assert scoped_caterpillar and ref==d['geometry']['probe_piece'],(p,ref)
+    assert g==piece_assets()[0]['minecraft:geometry'][0],(p,ref)
+    continue
    if ref.startswith('geometry.kg_java_dual.piece.'):
     from build_java_dual_eating_projection import PIECE_BINDING,REPRESENTATIVES
     assert d['identifier'] in REPRESENTATIVES and ref==d['geometry']['java_piece']
@@ -142,6 +162,7 @@ def binding_assets():
     for alias,anim in d['animations'].items():
      expected_bones={'skewer_model'} if alias.startswith('eat_') else {'skewer_pose','skewer_model'}
      if alias.startswith('fp_eat_') and 'java_piece' in d['geometry']:expected_bones.add('dual_piece')
+     if scoped_caterpillar and alias=='probe_one_right':expected_bones.add('dual_piece')
      assert set(animations[anim]['bones'])==expected_bones,anim
     oldref=ref.replace('kg_a287.','kg_a283.');old=idx[oldref]
     assert model['cubes']==[c for bone in old['bones'] for c in bone.get('cubes',[])],ref
@@ -177,6 +198,9 @@ def binding_assets():
    profiles=json.loads(re.search(r'PROFILE_BY_ITEM=Object.freeze\((\{.*?\})\)',(BP/'scripts/data.js').read_text()).group(1))
    from native_eating_clock import VARIABLE,ASSIGNMENT
    pre=d['scripts']['pre_animation']
+   if scoped_caterpillar:
+    assert pre[-1]=='v.kg_probe_piece_visible = '+ACTIVE+';',p
+    pre=pre[:-1]
    if 'java_piece' in d['geometry']:
     assert pre[-1].startswith('v.kg_java_piece_visible = ') and pre[-1].endswith(';')
     pre=pre[:-1]
@@ -186,7 +210,11 @@ def binding_assets():
    if profiles.get(d['identifier'])=='THREE_RANDOM':assert "q.property('kaleidoscope_grilling:eat_profile')" in pre[0]
    else:
     assert [row.replace(_motion.ACTIVE_HAND,'q.is_using_item') for row in pre]==old['scripts']['pre_animation']
-   if 'java_piece' in d['geometry']:
+   if scoped_caterpillar:
+    assert d['render_controllers']==old['render_controllers']+[PIECE],p
+    assert {k:v for k,v in d['textures'].items() if k!='probe_piece'}==old['textures'],p
+    assert set(d['geometry'])==set(old['geometry'])|{'probe_piece'},p
+   elif 'java_piece' in d['geometry']:
     from build_java_dual_eating_projection import PIECE_CONTROLLER
     assert d['render_controllers']==old['render_controllers']+[PIECE_CONTROLLER]
     assert {k:v for k,v in d['textures'].items() if k!='java_piece'}==old['textures']

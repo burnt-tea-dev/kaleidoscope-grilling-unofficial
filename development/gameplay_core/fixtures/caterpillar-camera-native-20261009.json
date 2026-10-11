@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "scope": "Exact cooked caterpillar ONE right/main FP standing empty offhand; other food routes unchanged",
+  "native_client": "1.26.52.3",
+  "java_revision": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_predecessor": "d10d3b12b6cbbf922b0e940fbf174c7b24edf223",
+  "tested_pose_rp_sha256": "95b3343fc13a1f8dcf15d876fb76403057c3f4e9fd1bba2c1146ace39dd35c3b",
+  "full_use_movie_sha256": "1d9cd30595e837018b1dab3c06f08567a61e52a34e474584f2049a02be640bd3",
+  "cancel_movie_sha256": "177e2973005f18532780169ed90bd7a3d50b90e0c086a227898c8b460fe67208",
+  "params": {
+    "scale": 0.9375,
+    "eye_pixels": 25.92,
+    "effective_origin": 27.648,
+    "actual_installed_constants_retrieved": false
+  },
+  "native_observations": [
+    "Coherent main/helper hands visible during the authored two-hand interval.",
+    "One full use count1 to0 and normal empty-hand restoration.",
+    "One requested350ms cancel returns to prior held pose with count1."
+  ],
+  "still_open": [
+    "Main skewer grows very large near the camera; source-space eye-plane crossing is calculated around authored2.8\u20133.08s, while installed Bedrock near-plane clipping is unverified.",
+    "Exact Java native video and full rendered parity.",
+    "Other foods, third person, other skins/slim/armor/FOV and actual LIVE player owner."
+  ],
+  "runtime_file_sha256": {
+    "resource_pack/animations/kg_probe_caterpillar_item.animation.json": "8ef90bc537933609feac8eb3a0368fdb7333b36633acae801dbc159e873ecb3e",
+    "resource_pack/animations/kg_probe_caterpillar_player.animation.json": "4d4cfcc8d7c66c19da090a3d14044210248ece7ee91e4186a82e27b35fb552c2",
+    "resource_pack/attachables/grilled_caterpillar_skewer.attachable.json": "4c16a2ec2960a5c7b25e0e695e99e84bfe460c3c15ac1565824b25b317be8db4",
+    "resource_pack/models/entity/kg_probe_caterpillar_piece.geo.json": "7e54df33ac3aa16de757a133df51fb8e20e1935acb21958a4ace927253906c22",
+    "resource_pack/render_controllers/java_eating_player.render_controllers.json": "5c62f06bedfdbc77735d9ebd2838f156b82151393cb6e8a7d459871669328450",
+    "resource_pack/render_controllers/kg_probe_caterpillar_piece.render_controllers.json": "06abd9d4eb737aa0405ebd29d56c06ce4b5a5c394184c0279a42656444296c93",
+    "resource_pack/textures/kg_probe_caterpillar/piece.png": "10b21bf10ae778fefc888b589cf1bfb387fa946e159a3385cb78906e6734017b"
+  },
+  "main_delta": "Exact two admission/dispatch expressions only; preserve every other current-main byte.",
+  "runtime_closure": [
+    "behavior_pack/scripts/main.js",
+    "resource_pack/animations/kg_probe_caterpillar_item.animation.json",
+    "resource_pack/animations/kg_probe_caterpillar_player.animation.json",
+    "resource_pack/attachables/grilled_caterpillar_skewer.attachable.json",
+    "resource_pack/models/entity/kg_probe_caterpillar_piece.geo.json",
+    "resource_pack/render_controllers/java_eating_player.render_controllers.json",
+    "resource_pack/render_controllers/kg_probe_caterpillar_piece.render_controllers.json",
+    "resource_pack/textures/kg_probe_caterpillar/piece.png"
+  ]
+}

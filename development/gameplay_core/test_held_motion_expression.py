@@ -15,6 +15,20 @@ class HeldMotionExpression(unittest.TestCase):
         self.assertFalse(self.evaluate(source))
         self.assertTrue(self.evaluate(source, using=True))
 
+    def test_exact_projection_property_and_scoped_fallback(self):
+        source = "q.has_property('kaleidoscope_grilling:eat_projection')"
+        self.assertTrue(self.evaluate(source))
+        self.assertFalse(self.evaluate(source, has_projection=False))
+        with self.assertRaises(AssertionError):
+            self.evaluate("q.has_property('kaleidoscope_grilling:unknown')")
+        description = json.loads((RP / 'attachables/grilled_caterpillar_skewer.attachable.json').read_text())['minecraft:attachable']['description']
+        for state, expected in (({}, ['probe_one_right']),
+                                ({'has_projection': False}, ['fp_right', 'eat_right']),
+                                ({'offhand': 1}, ['fp_right', 'eat_right'])):
+            selected = [key for row in description['scripts']['animate'] for key, query in row.items()
+                        if self.evaluate(query, using=True, eat_profile=1, **state)]
+            self.assertEqual(selected, expected)
+
     def test_legacy_use_query_and_default_inactive_motion(self):
         self.assertTrue(self.evaluate('q.is_using_item', using=True))
         self.assertFalse(self.evaluate('q.is_using_item'))

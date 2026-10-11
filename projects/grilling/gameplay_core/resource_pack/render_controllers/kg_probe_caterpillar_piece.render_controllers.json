@@ -1,0 +1,21 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.kg_probe_caterpillar.piece": {
+      "geometry": "Geometry.probe_piece",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.probe_piece"
+      ],
+      "part_visibility": [
+        {
+          "*": "v.kg_probe_piece_visible == 1"
+        }
+      ]
+    }
+  }
+}

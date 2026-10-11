@@ -36,7 +36,7 @@ def main():
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
  ui={'namespace':'hud',
  'kg_eating_start':{'anim_type':'alpha','duration':0,'from':0,'to':1,'next':'@hud.kg_eating_hold'},
- 'kg_eating_hold':{'anim_type':'wait','duration':.075,'next':'@hud.kg_eating_expire'},
+ 'kg_eating_hold':{'anim_type':'wait','duration':.1,'next':'@hud.kg_eating_expire'},
  'kg_eating_expire':{'anim_type':'alpha','duration':.001,'from':1,'to':0,'destroy_at_end':'kg_eating_packet'},
  'kg_eating_packet':{'type':'panel','$kg_text':'$actionbar_text','size':['100%','100%'],'visible':contains(PREFIX),'alpha':'@hud.kg_eating_start','propagate_alpha':True,'controls':controls},
  'kg_eating_factory':{'type':'panel','size':['100%','100%'],'factory':{'name':'hud_actionbar_text_factory','control_ids':{'hud_actionbar_text':'kg_eating_packet@hud.kg_eating_packet'}}},

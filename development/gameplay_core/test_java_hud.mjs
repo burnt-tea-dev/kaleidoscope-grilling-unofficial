@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {javaEatingHudFrame} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_core.js';
 import {javaInteractionMessage,JAVA_INTERACTION_KEYS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/interaction_feedback_core.js';
 const root=new URL('../../',import.meta.url),rp=new URL('projects/grilling/gameplay_core/resource_pack/',root);
@@ -39,7 +41,7 @@ test('GUI copies all pinned original assets and preserves own packet expiry',()=
  const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
  assert.equal(f.machine_hud_default,false);assert.equal(ui.kg_eating_expire.destroy_at_end,'kg_eating_packet');
  assert.equal(ui.kg_eating_expire.duration,.001);
- assert.equal(ui.kg_eating_hold.duration,.075);
+ assert.equal(ui.kg_eating_hold.duration,.1);
  assert.equal(ui.kg_eating_hold.anim_type,'wait');
  assert.equal(ui.kg_eating_hold.next,'@hud.kg_eating_expire');
  assert.equal(ui.kg_eating_start.next,'@hud.kg_eating_hold');
@@ -54,4 +56,31 @@ assert.equal(ui.kg_eating_packet.controls.length,405);
  assert.ok(ui.hud_actionbar_text.visible.includes('§r[KT]'));
  const script=fs.readFileSync(new URL('projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_runtime.js',root),'utf8');
  assert.ok(!script.includes("setActionBar('')"));assert.ok(!script.includes('runInterval'));
+});
+
+// Source-level samples only; client arrivals and rendering require separate native QA.
+test('bounded 100 ms hold retains the original intro and 1 ms owned fade',()=>{
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ assert.deepEqual(ui.kg_eating_start,{anim_type:'alpha',duration:0,from:0,to:1,next:'@hud.kg_eating_hold'});
+ assert.deepEqual(ui.kg_eating_hold,{anim_type:'wait',duration:.1,next:'@hud.kg_eating_expire'});
+ assert.deepEqual(ui.kg_eating_expire,{anim_type:'alpha',duration:.001,from:1,to:0,destroy_at_end:'kg_eating_packet'});
+ const alphaAt=t=>t<ui.kg_eating_hold.duration?1:Math.max(0,1-(t-ui.kg_eating_hold.duration)/ui.kg_eating_expire.duration);
+ for(const t of [0,.05,.075,.099,.1])assert.equal(alphaAt(t),1);
+ for(const t of [.102,.15,1,30])assert.equal(alphaAt(t),0);
+ assert(!('loop' in ui.kg_eating_hold));assert(!('next' in ui.kg_eating_expire));
+});
+test('HUD authoring generator preserves the committed lifetime declarations',()=>{
+ // Read only the literal curve dicts from the generator AST; do not run asset authoring.
+ const py=String.raw`import ast,json,sys
+from pathlib import Path
+module=ast.parse(Path(sys.argv[1]).read_text())
+ui=[n.value for n in ast.walk(module) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='ui' for t in n.targets)]
+assert len(ui)==1 and isinstance(ui[0],ast.Dict)
+wanted={'kg_eating_start','kg_eating_hold','kg_eating_expire'}
+curves={k.value:ast.literal_eval(v) for k,v in zip(ui[0].keys,ui[0].values) if isinstance(k,ast.Constant) and k.value in wanted}
+assert set(curves)==wanted
+print(json.dumps(curves))`;
+ const generated=JSON.parse(execFileSync('python3',['-c',py,fileURLToPath(new URL('tools/build_java_eating_hud.py',root))],{encoding:'utf8'}));
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ for(const key of ['kg_eating_start','kg_eating_hold','kg_eating_expire'])assert.deepEqual(generated[key],ui[key],key);
 });

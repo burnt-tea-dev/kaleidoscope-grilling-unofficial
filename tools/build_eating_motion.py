@@ -121,7 +121,11 @@ def build(attachable_overrides=None):
   output=augment(output,table)
  from secret_idle_calibration import augment as augment_idle
  from secret_terminal_visibility import augment as augment_terminal
- return augment_terminal(augment_idle(output))
+ output=augment_terminal(augment_idle(output))
+ if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,126):
+  from build_caterpillar_eating_projection import augment as augment_caterpillar
+  output=augment_caterpillar(output)
+ return output
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):

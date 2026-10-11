@@ -70,6 +70,19 @@ class HeldPoseFrameTests(unittest.TestCase):
                 for bone in bones.values():combined=chain(combined,bone_matrix(bone))
                 combined=chain(combined,translate([0,-24,0]))
                 for ref in set(desc['geometry'].values()):
+                    if ref=='geometry.kg_probe_caterpillar.piece':
+                        # The exact new helper is use-only, never an idle mesh.
+                        from build_caterpillar_eating_projection import ACTIVE,PIECE
+                        from verify_a287 import expression
+                        self.assertEqual(desc['identifier'],'kaleidoscope_grilling:grilled_caterpillar_skewer')
+                        self.assertEqual(desc['geometry']['probe_piece'],ref)
+                        self.assertIn(PIECE,desc['render_controllers'])
+                        self.assertEqual(desc['scripts']['pre_animation'][-1],'v.kg_probe_piece_visible = '+ACTIVE+';')
+                        self.assertFalse(expression(ACTIVE,1,'main_hand','rightitem',using=False,eat_profile=1))
+                        controller=json.loads((RP/'render_controllers/kg_probe_caterpillar_piece.render_controllers.json').read_text())['render_controllers'][PIECE]
+                        self.assertEqual(controller['geometry'],'Geometry.probe_piece')
+                        self.assertEqual(controller['part_visibility'],[{'*':'v.kg_probe_piece_visible == 1'}])
+                        continue
                     if ref.startswith('geometry.kg_java_dual.piece.'):
                         # The second RC hides food pieces while idle. Their use
                         # frame, helper socket and visibility are checked by the

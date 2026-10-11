@@ -43,7 +43,7 @@ is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0};
 const c={is_first_person:0,item_slot:'main_hand'};
 for(const rows of documents)for(const row of rows)for(const [alias,expr] of Object.entries(row)){
  const active=Boolean(new Function('q','c','return '+expr)(q,c));
- if((alias.startsWith('eat_')||alias.startsWith('fp_eat_'))&&active)throw Error('FP displacement in TP: '+alias);
+ if((alias.startsWith('eat_')||alias.startsWith('fp_eat_')||alias==='probe_one_right')&&active)throw Error('FP displacement in TP: '+alias);
  if(alias==='tp_right'&&!active)throw Error('Native TP display suppressed');
 }
 ''')
@@ -166,9 +166,16 @@ for(const row of cases)for(const hand of [1,2]){
         for old,new in zip(original['part_visibility'],current['part_visibility']):
             for bone,expression in old.items():
                 if bone in ('rightArm','rightSleeve','leftArm','leftSleeve'):
-                    self.assertTrue(new[bone].endswith(' : ('+expression+')'))
-                    self.assertIn('q.is_item_name_any',new[bone])
-                    self.assertIn("q.property('kaleidoscope_grilling:eat_profile')",new[bone])
+                    current_expression=new[bone]
+                    version=tuple(json.loads((BP/'manifest.json').read_text())['header']['version'])
+                    if version>=(2,8,126):
+                        from build_caterpillar_eating_projection import GATE
+                        prefix='('+GATE+') ? 1 : ('
+                        self.assertTrue(current_expression.startswith(prefix) and current_expression.endswith(')'))
+                        current_expression=current_expression[len(prefix):-1]
+                    self.assertTrue(current_expression.endswith(' : ('+expression+')'))
+                    self.assertIn('q.is_item_name_any',current_expression)
+                    self.assertIn("q.property('kaleidoscope_grilling:eat_profile')",current_expression)
                 else:self.assertEqual(new[bone],expression)
 
     def test_replicated_elapsed_property_and_lifecycle(self):
