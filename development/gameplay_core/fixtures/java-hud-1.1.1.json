@@ -235,5 +235,34 @@
     ],
     "pending_alpha": 0.86
   },
-  "machine_hud_default": false
+  "machine_hud_default": false,
+  "derived_assets": {
+    "textures/ui/kg_java/skewer_eating_progress_atlas.png": {
+      "sha256": "b327a3f8caf020a77e1394c400044694b86d7caf05b48ef371027a9686f15a34",
+      "kind": "lossless_rgba_sprite_atlas",
+      "size": [
+        204,
+        5
+      ],
+      "regions": {
+        "yellow": [
+          0,
+          0,
+          102,
+          5
+        ],
+        "green": [
+          102,
+          0,
+          102,
+          5
+        ]
+      },
+      "source_sha256": {
+        "yellow": "5dac33d46a4c77efef31ce753e0a006b9e176be80dfb465217f390cddd021f5e",
+        "green": "9fab4371af32f52557e57220fbcf5034d30251b2976e6c6c83d11fa4634b2561"
+      },
+      "sampling": "bilinear false; integer pixel uv/uv_size"
+    }
+  }
 }

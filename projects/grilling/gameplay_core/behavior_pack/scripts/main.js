@@ -1059,7 +1059,7 @@ world.afterEvents.itemStartUse.subscribe(e=>{
  if(eatingNativeTicks(a.nativeDuration)>0&&(supportsJavaEatingProjection(e.itemStack.typeId,profile)||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
   try{
    e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
-   e.source.playAnimation(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))),{
+   e.source.playAnimation(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_bun_slice_skewer'&&profile==='TWO'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.bun_two.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.pearl_three.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))))),{
     // Do not stop on a client-synced property before its update packet arrives.
     // The animation blend gate still masks inactive projection immediately.
     controller:'kg_java_eating_first_person',blendOutTime:0,

@@ -3,9 +3,30 @@ import json, re
 from verify_a283 import BP, RP, main as previous_gate
 
 
+def eating_dispatch_source(script, version):
+    """Check the exact reviewed two-route wrapper before legacy assertions.
+
+    This source-only continuation does not change any release identity witness.
+    Reverse one exact selector and require the complete frozen G126 preimage;
+    unrelated edits, duplicate/partial wrappers and altered fallbacks fail.
+    """
+    dedicated = RP / 'animations/kg_isolated_two_route_player.animation.json'
+    if tuple(version) >= (2, 8, 127) or (tuple(version) == (2, 8, 126) and dedicated.is_file()):
+        import sys
+        sys.path.insert(0, str(RP.parents[3] / 'tools'))
+        import hashlib
+        from build_two_route_eating_projection import NATIVE_CLIPS_SHA256, patch_main, restore_main
+        assert hashlib.sha256(dedicated.read_bytes()).hexdigest() == NATIVE_CLIPS_SHA256, 'Dedicated two-route clip bytes drifted'
+        restored = restore_main(script)
+        assert patch_main(restored) == script, 'Dedicated two-route clips require the exact dispatcher'
+        return restored
+    return script
+
+
 def eating_gate():
     script = (BP / 'scripts/main.js').read_text()
     version = tuple(json.loads((BP / 'manifest.json').read_text())['header']['version'])
+    script = eating_dispatch_source(script, version)
     start = script.split('world.afterEvents.itemStartUse.subscribe', 1)[1].split('world.afterEvents.itemCompleteUse.subscribe', 1)[0]
     # Pending seasoning has its separate shake. Food may only supply the
     # third-person native rotation fallback; legacy translated limbs stay banned.

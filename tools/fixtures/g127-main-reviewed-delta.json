@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "path": "projects/grilling/gameplay_core/behavior_pack/scripts/main.js",
+  "release": [
+    2,
+    8,
+    127
+  ],
+  "previous_public_commit": "488b4402434447f516dfa5bf87f1d5e7e1e9f483",
+  "reviewed_commit": "72e0da67201ce3563fcae07438eb6512f481bcf6",
+  "main_predecessor": "8d4f773dc8ef0e6b2c965f7982b0d69e283997d8",
+  "before_sha256": "fe80e92759e63dd791586734a749f06d7386fb55eaaa4a6c29e4e885252fa4ce",
+  "after_sha256": "84d0f1d892aebf036a7166f86a0303f57044eed9de68bbdf8ee78c477298ac3c",
+  "operations": [
+    {
+      "start": 79039,
+      "end": 79288,
+      "before": "((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right')))",
+      "after": "((e.itemStack.typeId==='kaleidoscope_grilling:grilled_bun_slice_skewer'&&profile==='TWO'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.bun_two.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.pearl_three.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right')))))"
+    }
+  ]
+}

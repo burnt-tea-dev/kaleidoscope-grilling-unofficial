@@ -1,6 +1,7 @@
 """Regress the actual missing route, overwritten generation and native camera scope."""
 from pathlib import Path
 import copy,hashlib,json,subprocess,sys,unittest
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
@@ -16,7 +17,11 @@ class CaterpillarProjectionTests(unittest.TestCase):
    self.assertEqual(hashlib.sha256((P/relative).read_bytes()).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
   current=(scoped.BP/'scripts/main.js').read_text()
-  self.assertEqual(scoped.patch_main(original),current)
+  # Preserve the original two-edit G126 comparison after verifying and
+  # reversing only the exact bounded two-route continuation, when present.
+  from verify_a284 import eating_dispatch_source
+  version=json.loads((scoped.BP/'manifest.json').read_text())['header']['version']
+  self.assertEqual(scoped.patch_main(original),eating_dispatch_source(current,version))
   self.assertEqual(scoped.patch_main(current),current)
   for bad in ('',original+original,current+current):
    with self.assertRaises(ValueError):scoped.patch_main(bad)
@@ -26,14 +31,17 @@ class CaterpillarProjectionTests(unittest.TestCase):
   first=motion.build({path:source});second=motion.build(first)
   self.assertEqual({str(k):encoded(v)for k,v in first.items()},{str(k):encoded(v)for k,v in second.items()})
   for k,v in first.items():self.assertEqual(k.read_bytes(),encoded(v),str(k))
-  # Remove only the final new augment, retaining every earlier shared builder.
-  original=scoped.augment
-  try:
-   scoped.augment=lambda output:output
-   previous=motion.build({path:source})
-  finally:scoped.augment=original
+  # Compare the exact G126 pipeline prefix before the registered G127 layer.
+  # Keep current full-build idempotency above and require full recomposition;
+  # the later layer must not mask the original main.js presence delta.
+  import build_two_route_eating_projection as two_route
+  with patch.object(two_route,'augment',side_effect=lambda output:output):
+   retained=motion.build({path:source})
+   with patch.object(scoped,'augment',side_effect=lambda output:output):
+    previous=motion.build({path:source})
+  self.assertEqual({str(k):encoded(v)for k,v in two_route.augment(retained).items()},{str(k):encoded(v)for k,v in first.items()})
   closure={P/relative for relative in FIX['runtime_closure']}
-  delta={p for p in set(previous)|set(first)if p not in previous or p not in first or encoded(previous[p])!=encoded(first[p])}
+  delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)
  def test_player_item_visibility_gate_has_exact_target_and_safe_rejections(self):
   player=scoped.animations()[1]['animations'][scoped.PLAYER]

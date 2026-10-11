@@ -115,6 +115,7 @@ REVIEWED_CUISINE_BASE = '9fd92988f872ec1128aa071f2e045d54dbcdd4f4'
 REVIEWED_SEASONING_DATA_BASE = '469441bc6556b5e91adedfd44876ac072572012a'
 REVIEWED_SCENE_INTERACTION_BASE = '2ef4b7b6ffa782316378dc5d8fef3f9217b098bf'
 REVIEWED_CATERPILLAR_CAMERA_BASE = '488b4402434447f516dfa5bf87f1d5e7e1e9f483'
+REVIEWED_TWO_ROUTE_ATLAS_BASE = '72e0da67201ce3563fcae07438eb6512f481bcf6'
 NUTRITION_G114 = b"""function addSecretNutrition(player,stack,meta){
  const d=dynamicFood(stack),h=player.getComponent('minecraft:player.hunger'),sat=player.getComponent('minecraft:player.saturation');if(!d||!h||!sat)return;
  const hunger=Math.min(h.effectiveMax,h.currentValue+d.nutrition);h.setCurrentValue(hunger);
@@ -303,6 +304,20 @@ def _g126_caterpillar_camera_bytes(expected):
     return repaired
 
 
+def _g127_two_route_bytes(expected):
+    # One exact selector continuation, preserving the complete G126 preimage.
+    # This independent source commit predates this witness and its lock update.
+    delta = _main_delta('g127-main-reviewed-delta.json')
+    assert delta['path'] == MAIN_PATH and delta['release'] == [2, 8, 127]
+    assert delta['previous_public_commit'] == REVIEWED_CATERPILLAR_CAMERA_BASE
+    assert delta['reviewed_commit'] == REVIEWED_TWO_ROUTE_ATLAS_BASE
+    assert len(delta['operations']) == 1, 'G127 two-route main scope changed'
+    repaired = _apply_main_operations(expected, delta)
+    reviewed = subprocess.check_output(['git', 'show', REVIEWED_TWO_ROUTE_ATLAS_BASE + ':' + MAIN_PATH], cwd=ROOT)
+    assert repaired == reviewed, 'G127 public source differs outside exact two-route selector delta'
+    return repaired
+
+
 def _local_bottle_main_bytes(expected, version):
     # These are local candidate identities, distinct from published G72/G73.
     for patch_version, filename in (
@@ -415,6 +430,8 @@ def expected_main_bytes(version, *, local_bottles=False, proposal=None):
             expected = _g125_scene_interaction_bytes(expected)
         if version >= (2, 8, 126):
             expected = _g126_caterpillar_camera_bytes(expected)
+        if version >= (2, 8, 127):
+            expected = _g127_two_route_bytes(expected)
         return expected
     if local_bottles:
         return _local_bottle_main_bytes(original, version)

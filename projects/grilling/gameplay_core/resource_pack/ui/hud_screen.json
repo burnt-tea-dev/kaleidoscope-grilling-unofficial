@@ -1,5 +1,17 @@
 {
   "namespace": "hud",
+  "kg_eating_start": {
+    "anim_type": "alpha",
+    "duration": 0,
+    "from": 0,
+    "to": 1,
+    "next": "@hud.kg_eating_hold"
+  },
+  "kg_eating_hold": {
+    "anim_type": "wait",
+    "duration": 0.1,
+    "next": "@hud.kg_eating_expire"
+  },
   "kg_eating_expire": {
     "anim_type": "alpha",
     "duration": 0.001,
@@ -15,6 +27,7 @@
       "100%"
     ],
     "visible": "(not (($kg_text - '§r§0§r§0') = $kg_text))",
+    "alpha": "@hud.kg_eating_start",
     "propagate_alpha": true,
     "controls": [
       {
@@ -41,7 +54,7 @@
             1,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -67,7 +80,7 @@
             2,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -93,7 +106,7 @@
             3,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -119,7 +132,7 @@
             4,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -145,7 +158,7 @@
             5,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -171,7 +184,7 @@
             6,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -197,7 +210,7 @@
             7,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -223,7 +236,7 @@
             8,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -249,7 +262,7 @@
             9,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -275,7 +288,7 @@
             10,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -301,7 +314,7 @@
             11,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -327,7 +340,7 @@
             12,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -353,7 +366,7 @@
             13,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -379,7 +392,7 @@
             14,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -405,7 +418,7 @@
             15,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -431,7 +444,7 @@
             16,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -457,7 +470,7 @@
             17,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -483,7 +496,7 @@
             18,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -509,7 +522,7 @@
             19,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -535,7 +548,7 @@
             20,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -561,7 +574,7 @@
             21,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -587,7 +600,7 @@
             22,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -613,7 +626,7 @@
             23,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -639,7 +652,7 @@
             24,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -665,7 +678,7 @@
             25,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -691,7 +704,7 @@
             26,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -717,7 +730,7 @@
             27,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -743,7 +756,7 @@
             28,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -769,7 +782,7 @@
             29,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -795,7 +808,7 @@
             30,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -821,7 +834,7 @@
             31,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -847,7 +860,7 @@
             32,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -873,7 +886,7 @@
             33,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -899,7 +912,7 @@
             34,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -925,7 +938,7 @@
             35,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -951,7 +964,7 @@
             36,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -977,7 +990,7 @@
             37,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1003,7 +1016,7 @@
             38,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1029,7 +1042,7 @@
             39,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1055,7 +1068,7 @@
             40,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1081,7 +1094,7 @@
             41,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1107,7 +1120,7 @@
             42,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1133,7 +1146,7 @@
             43,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1159,7 +1172,7 @@
             44,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1185,7 +1198,7 @@
             45,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1211,7 +1224,7 @@
             46,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1237,7 +1250,7 @@
             47,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1263,7 +1276,7 @@
             48,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1289,7 +1302,7 @@
             49,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1315,7 +1328,7 @@
             50,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1341,7 +1354,7 @@
             51,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1367,7 +1380,7 @@
             52,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1393,7 +1406,7 @@
             53,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1419,7 +1432,7 @@
             54,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1445,7 +1458,7 @@
             55,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1471,7 +1484,7 @@
             56,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1497,7 +1510,7 @@
             57,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1523,7 +1536,7 @@
             58,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1549,7 +1562,7 @@
             59,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1575,7 +1588,7 @@
             60,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1601,7 +1614,7 @@
             61,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1627,7 +1640,7 @@
             62,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1653,7 +1666,7 @@
             63,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1679,7 +1692,7 @@
             64,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1705,7 +1718,7 @@
             65,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1731,7 +1744,7 @@
             66,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1757,7 +1770,7 @@
             67,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1783,7 +1796,7 @@
             68,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1809,7 +1822,7 @@
             69,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1835,7 +1848,7 @@
             70,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1861,7 +1874,7 @@
             71,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1887,7 +1900,7 @@
             72,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1913,7 +1926,7 @@
             73,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1939,7 +1952,7 @@
             74,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1965,7 +1978,7 @@
             75,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -1991,7 +2004,7 @@
             76,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2017,7 +2030,7 @@
             77,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2043,7 +2056,7 @@
             78,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2069,7 +2082,7 @@
             79,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2095,7 +2108,7 @@
             80,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2121,7 +2134,7 @@
             81,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2147,7 +2160,7 @@
             82,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2173,7 +2186,7 @@
             83,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2199,7 +2212,7 @@
             84,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2225,7 +2238,7 @@
             85,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2251,7 +2264,7 @@
             86,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2277,7 +2290,7 @@
             87,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2303,7 +2316,7 @@
             88,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2329,7 +2342,7 @@
             89,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2355,7 +2368,7 @@
             90,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2381,7 +2394,7 @@
             91,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2407,7 +2420,7 @@
             92,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2433,7 +2446,7 @@
             93,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2459,7 +2472,7 @@
             94,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2485,7 +2498,7 @@
             95,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2511,7 +2524,7 @@
             96,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2537,7 +2550,7 @@
             97,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2563,7 +2576,7 @@
             98,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2589,7 +2602,7 @@
             99,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2615,7 +2628,7 @@
             100,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2641,7 +2654,7 @@
             101,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2667,7 +2680,7 @@
             102,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_yellow",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2693,7 +2706,7 @@
             1,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2702,7 +2715,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2719,7 +2732,7 @@
             2,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2728,7 +2741,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2745,7 +2758,7 @@
             3,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2754,7 +2767,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2771,7 +2784,7 @@
             4,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2780,7 +2793,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2797,7 +2810,7 @@
             5,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2806,7 +2819,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2823,7 +2836,7 @@
             6,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2832,7 +2845,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2849,7 +2862,7 @@
             7,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2858,7 +2871,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2875,7 +2888,7 @@
             8,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2884,7 +2897,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2901,7 +2914,7 @@
             9,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2910,7 +2923,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2927,7 +2940,7 @@
             10,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2936,7 +2949,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2953,7 +2966,7 @@
             11,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2962,7 +2975,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -2979,7 +2992,7 @@
             12,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -2988,7 +3001,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3005,7 +3018,7 @@
             13,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3014,7 +3027,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3031,7 +3044,7 @@
             14,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3040,7 +3053,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3057,7 +3070,7 @@
             15,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3066,7 +3079,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3083,7 +3096,7 @@
             16,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3092,7 +3105,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3109,7 +3122,7 @@
             17,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3118,7 +3131,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3135,7 +3148,7 @@
             18,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3144,7 +3157,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3161,7 +3174,7 @@
             19,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3170,7 +3183,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3187,7 +3200,7 @@
             20,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3196,7 +3209,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3213,7 +3226,7 @@
             21,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3222,7 +3235,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3239,7 +3252,7 @@
             22,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3248,7 +3261,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3265,7 +3278,7 @@
             23,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3274,7 +3287,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3291,7 +3304,7 @@
             24,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3300,7 +3313,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3317,7 +3330,7 @@
             25,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3326,7 +3339,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3343,7 +3356,7 @@
             26,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3352,7 +3365,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3369,7 +3382,7 @@
             27,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3378,7 +3391,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3395,7 +3408,7 @@
             28,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3404,7 +3417,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3421,7 +3434,7 @@
             29,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3430,7 +3443,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3447,7 +3460,7 @@
             30,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3456,7 +3469,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3473,7 +3486,7 @@
             31,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3482,7 +3495,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3499,7 +3512,7 @@
             32,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3508,7 +3521,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3525,7 +3538,7 @@
             33,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3534,7 +3547,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3551,7 +3564,7 @@
             34,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3560,7 +3573,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3577,7 +3590,7 @@
             35,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3586,7 +3599,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3603,7 +3616,7 @@
             36,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3612,7 +3625,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3629,7 +3642,7 @@
             37,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3638,7 +3651,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3655,7 +3668,7 @@
             38,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3664,7 +3677,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3681,7 +3694,7 @@
             39,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3690,7 +3703,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3707,7 +3720,7 @@
             40,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3716,7 +3729,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3733,7 +3746,7 @@
             41,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3742,7 +3755,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3759,7 +3772,7 @@
             42,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3768,7 +3781,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3785,7 +3798,7 @@
             43,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3794,7 +3807,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3811,7 +3824,7 @@
             44,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3820,7 +3833,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3837,7 +3850,7 @@
             45,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3846,7 +3859,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3863,7 +3876,7 @@
             46,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3872,7 +3885,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3889,7 +3902,7 @@
             47,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3898,7 +3911,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3915,7 +3928,7 @@
             48,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3924,7 +3937,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3941,7 +3954,7 @@
             49,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3950,7 +3963,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3967,7 +3980,7 @@
             50,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -3976,7 +3989,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -3993,7 +4006,7 @@
             51,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4002,7 +4015,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4019,7 +4032,7 @@
             52,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4028,7 +4041,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4045,7 +4058,7 @@
             53,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4054,7 +4067,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4071,7 +4084,7 @@
             54,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4080,7 +4093,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4097,7 +4110,7 @@
             55,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4106,7 +4119,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4123,7 +4136,7 @@
             56,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4132,7 +4145,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4149,7 +4162,7 @@
             57,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4158,7 +4171,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4175,7 +4188,7 @@
             58,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4184,7 +4197,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4201,7 +4214,7 @@
             59,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4210,7 +4223,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4227,7 +4240,7 @@
             60,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4236,7 +4249,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4253,7 +4266,7 @@
             61,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4262,7 +4275,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4279,7 +4292,7 @@
             62,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4288,7 +4301,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4305,7 +4318,7 @@
             63,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4314,7 +4327,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4331,7 +4344,7 @@
             64,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4340,7 +4353,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4357,7 +4370,7 @@
             65,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4366,7 +4379,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4383,7 +4396,7 @@
             66,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4392,7 +4405,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4409,7 +4422,7 @@
             67,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4418,7 +4431,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4435,7 +4448,7 @@
             68,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4444,7 +4457,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4461,7 +4474,7 @@
             69,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4470,7 +4483,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4487,7 +4500,7 @@
             70,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4496,7 +4509,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4513,7 +4526,7 @@
             71,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4522,7 +4535,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4539,7 +4552,7 @@
             72,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4548,7 +4561,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4565,7 +4578,7 @@
             73,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4574,7 +4587,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4591,7 +4604,7 @@
             74,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4600,7 +4613,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4617,7 +4630,7 @@
             75,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4626,7 +4639,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4643,7 +4656,7 @@
             76,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4652,7 +4665,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4669,7 +4682,7 @@
             77,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4678,7 +4691,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4695,7 +4708,7 @@
             78,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4704,7 +4717,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4721,7 +4734,7 @@
             79,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4730,7 +4743,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4747,7 +4760,7 @@
             80,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4756,7 +4769,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4773,7 +4786,7 @@
             81,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4782,7 +4795,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4799,7 +4812,7 @@
             82,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4808,7 +4821,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4825,7 +4838,7 @@
             83,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4834,7 +4847,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4851,7 +4864,7 @@
             84,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4860,7 +4873,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4877,7 +4890,7 @@
             85,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4886,7 +4899,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4903,7 +4916,7 @@
             86,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4912,7 +4925,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4929,7 +4942,7 @@
             87,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4938,7 +4951,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4955,7 +4968,7 @@
             88,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4964,7 +4977,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -4981,7 +4994,7 @@
             89,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -4990,7 +5003,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5007,7 +5020,7 @@
             90,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5016,7 +5029,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5033,7 +5046,7 @@
             91,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5042,7 +5055,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5059,7 +5072,7 @@
             92,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5068,7 +5081,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5085,7 +5098,7 @@
             93,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5094,7 +5107,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5111,7 +5124,7 @@
             94,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5120,7 +5133,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5137,7 +5150,7 @@
             95,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5146,7 +5159,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5163,7 +5176,7 @@
             96,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5172,7 +5185,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5189,7 +5202,7 @@
             97,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5198,7 +5211,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5215,7 +5228,7 @@
             98,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5224,7 +5237,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5241,7 +5254,7 @@
             99,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5250,7 +5263,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5267,7 +5280,7 @@
             100,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5276,7 +5289,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5293,7 +5306,7 @@
             101,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5302,7 +5315,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -5319,7 +5332,7 @@
             102,
             5
           ],
-          "texture": "textures/ui/kg_java/skewer_eating_progress_green",
+          "texture": "textures/ui/kg_java/skewer_eating_progress_atlas",
           "bilinear": false,
           "anchor_from": "bottom_middle",
           "anchor_to": "bottom_left",
@@ -5328,7 +5341,7 @@
             -49
           ],
           "uv": [
-            0,
+            102,
             0
           ],
           "uv_size": [
@@ -9526,8 +9539,7 @@
           "visible": "(not (($kg_text - '§r§1§6§4§f§f§0§1') = $kg_text))"
         }
       }
-    ],
-    "alpha": "@hud.kg_eating_start"
+    ]
   },
   "kg_eating_factory": {
     "type": "panel",
@@ -9562,17 +9574,5 @@
   "hud_actionbar_text/actionbar_message": {
     "$kg_actionbar_text": "$actionbar_text",
     "visible": "((($kg_actionbar_text - '§r§0§r§0') = $kg_actionbar_text) and (($kg_actionbar_text - '§r[KT] 1:§') = $kg_actionbar_text) and (($kg_actionbar_text - '§r[KT] §b') = $kg_actionbar_text) and (not (('%.4s' * $kg_actionbar_text) = '!js.')))"
-  },
-  "kg_eating_start": {
-    "anim_type": "alpha",
-    "duration": 0,
-    "from": 0,
-    "to": 1,
-    "next": "@hud.kg_eating_hold"
-  },
-  "kg_eating_hold": {
-    "anim_type": "wait",
-    "duration": 0.1,
-    "next": "@hud.kg_eating_expire"
   }
 }

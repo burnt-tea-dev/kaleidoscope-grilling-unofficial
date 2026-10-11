@@ -38,6 +38,11 @@ class NativeEatingClock(unittest.TestCase):
         names=['eating_motion.animation.json','java_eating_projection.animation.json','java_eating_player.animation.json']
         version=tuple(json.loads((bp/'manifest.json').read_text())['header']['version'])
         if version>=(2,8,126):names+=['kg_probe_caterpillar_item.animation.json','kg_probe_caterpillar_player.animation.json']
+        dedicated=rp/'animations/kg_isolated_two_route_player.animation.json'
+        if dedicated.is_file():
+            clips=json.loads(dedicated.read_text())['animations']
+            self.assertEqual(set(clips),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
+            names.append(dedicated.name)
         for name in names:
             for a in json.loads((rp/'animations'/name).read_text())['animations'].values():self.assertEqual(a['anim_time_update'],SECONDS)
         props=json.loads((bp/'entities/player.json').read_text())['minecraft:entity']['description']['properties']

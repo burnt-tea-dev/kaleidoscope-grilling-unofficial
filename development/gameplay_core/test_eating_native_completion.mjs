@@ -230,7 +230,11 @@ for(const hand of ['main','off'])for(const [mealId,profile,duration] of [['kalei
   const f=fixture({mealId,profile,duration,hand,helperEmpty}),before=f.state.stack.clone(),other=f.state.other?.clone();
   f.startUse();
   assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),helperEmpty);
-  assert.equal(f.animations.some(([name])=>name===`animation.kg_java_eating.player.${profile.toLowerCase()}.${hand==='off'?'left':'right'}`),helperEmpty);
+  const sharedClip=`animation.kg_java_eating.player.${profile.toLowerCase()}.${hand==='off'?'left':'right'}`;
+  const selectedClip=mealId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'
+   ?'animation.kg_isolated_two_route_v1.player.pearl_three.right':sharedClip;
+  assert.equal(f.animations.some(([name])=>name===selectedClip),helperEmpty);
+  if(selectedClip!==sharedClip)assert.equal(f.animations.some(([name])=>name===sharedClip),false);
   assert.equal(f.counts.manualWrites,0);assert.deepEqual(f.state.stack,before);assert.deepEqual(f.state.other,other);
   f.complete({nativeDebit:true});f.stop();f.flush();
   assert.deepEqual(f.counts,{nativeDebits:1,manualWrites:0,nativeRewards:1,manualRewards:0});
@@ -276,19 +280,30 @@ for(const row of [
 });
 test('production projection admission agrees with every serialized item/profile blend gate at its JSON duration',()=>{
  const animations=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json',import.meta.url),'utf8')).animations;
+ const dedicated=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/kg_isolated_two_route_player.animation.json',import.meta.url),'utf8')).animations;
+ const routes={
+  'kaleidoscope_grilling:grilled_bun_slice_skewer':{profile:'TWO',clip:'animation.kg_isolated_two_route_v1.player.bun_two.right'},
+  'kaleidoscope_grilling:grilled_ender_pearl_skewer':{profile:'THREE',clip:'animation.kg_isolated_two_route_v1.player.pearl_three.right'}
+ };
+ assert.deepEqual(Object.keys(dedicated).sort(),Object.values(routes).map(row=>row.clip).sort());
  for(const [declared,items] of Object.entries(JAVA_FP_EATING_ITEMS_BY_PROFILE))for(const mealId of items)for(const hand of ['main','off']){
   const item=JSON.parse(fs.readFileSync(new URL(`../../projects/grilling/gameplay_core/behavior_pack/items/${mealId.split(':')[1]}.json`,import.meta.url),'utf8'))['minecraft:item'];
   const duration=Math.round(item.components['minecraft:use_modifiers'].use_duration*20);
   const f=fixture({mealId,duration,hand,helperEmpty:true}),before=f.state.stack.clone(),a=f.startUse();
   const name=`animation.kg_java_eating.player.${a.profile.toLowerCase()}.${hand==='off'?'left':'right'}`;
-  const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
+  const route=routes[mealId],selectedClip=route&&route.profile===a.profile&&hand==='main'?route.clip:name;
+  const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,has_property:key=>f.properties.has(key),
    property:key=>f.properties.get(key),is_item_name_any:(slot,...ids)=>slot===(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')&&ids.includes(mealId)};
   // Supply projection=1 to ask whether the client's exact item/profile gate
   // can admit the request, rather than letting a false server flag mask it.
   const clientQuery={...q,property:key=>key===presentation.EAT_PROJECTION_PROPERTY?1:q.property(key)};
   const expected=Boolean(new Function('q','variable','return '+animations[name].blend_weight)(clientQuery,{is_first_person:true}));
   assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),expected,`${mealId} ${declared} -> ${a.profile} ${duration}`);
-  assert.equal(f.animations.some(([animation])=>animation===name),expected);
+  if(selectedClip!==name){
+   assert.equal(Boolean(new Function('q','variable','return '+dedicated[selectedClip].blend_weight)(clientQuery,{is_first_person:true})),expected);
+   assert.equal(f.animations.some(([animation])=>animation===name),false);
+  }
+  assert.equal(f.animations.some(([animation])=>animation===selectedClip),expected);
   assert.equal(supportsJavaEatingProjection(mealId,a.profile),expected);
   assert.deepEqual(f.state.stack,before);assert.equal(f.state.other,undefined);assert.equal(f.counts.manualWrites,0);
  }

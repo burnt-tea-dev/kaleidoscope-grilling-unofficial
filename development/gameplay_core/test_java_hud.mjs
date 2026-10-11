@@ -84,3 +84,7 @@ print(json.dumps(curves))`;
  const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
  for(const key of ['kg_eating_start','kg_eating_hold','kg_eating_expire'])assert.deepEqual(generated[key],ui[key],key);
 });
+
+test('shared progress atlas preserves all original yellow and green crops',()=>{
+ execFileSync('python3',[fileURLToPath(new URL('tools/test_java_eating_hud_atlas.py',root))],{stdio:'pipe',env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
+});

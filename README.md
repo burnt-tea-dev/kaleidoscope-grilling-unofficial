@@ -1,8 +1,14 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.126
+## Current maintained baseline: 2.8.128
+
+[G128 調料 Uses 與 Numb schema 修補草稿](docs/STATUS-A2.8.128.md)：承接並保留 G127，修正 Cookery 撒料後 Uses 舊行累積及 Numb stop 的空 bones schema。身份 2.8.128／指南 0.3.58；Uses 只有 G125 隔離 DIAG1 的 16→15→14 窄原生證據，Numb 原生复驗及新整包／家族驗收仍 pending。
+
+[G127 兩食品動畫與 Atlas HUD 後繼草稿](docs/STATUS-A2.8.127.md)：承接 G126，僅加入熟饅頭片 TWO／熟末影珍珠 THREE 的 exact-ID 第一人稱 player clips，以及原圖形 HUD 的單張 Atlas。身份 2.8.127／指南 0.3.57；原 G126 歷史與 UUID 保留。完整功能門檻需由本版正式入口完成；合併包原生、完整家族、近嘴放大與真人畫面仍未驗收，尚未發布或部署。
 
 [G126 熟毛蟲雙手與 HUD 候選](docs/STATUS-A2.8.126.md)：只承接已錄影的 canonical 熟毛蟲、右手、站立、空副手外層座標修正。雙手與取消／結束恢復有窄實機證據；近嘴放大、Java 實片與其他食品／皮膚／FOV／第三人稱仍未驗收。另將原圖形 HUD hold 75ms→100ms；單次受控 no-clear 錄影連續 89 幀，自然食用／完整家族與合併包仍待驗證。此分支為 draft，未發布或部署。
+
+離線來源草稿另見[熟饅頭片 TWO／熟末影珍珠 THREE 整合](docs/evidence/two-route-source-integration-20261010.md)：新增兩條 exact-ID player clips，保留 G126 與其他食品。該凍結證據仍是未編版的歷史草稿；本版以獨立 G127 身份及新增 reviewed witness 承接，不改寫原 G126 身份或門檻。
 
 家族目前的 LIVE 配套、部署與逐檔收據、保存演練及指南接收範圍，統一見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。本倉庫的版本記錄保留各次修補及當時的驗證範圍。
 

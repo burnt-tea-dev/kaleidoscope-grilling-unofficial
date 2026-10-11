@@ -54,7 +54,7 @@ def motion_frame(profile,hand,t):
  basis=bone_matrix({**held,'scale':1});delta=chain(item_frame(profile,hand,t),rigid_inverse(item_frame(profile,hand,0)))
  local=chain(rigid_inverse(basis),delta,basis);r=bedrock_rotation(local)
  return [-local[0][3]/.8,local[1][3]/.8,local[2][3]/.8],r
-def build(attachable_overrides=None):
+def build(attachable_overrides=None, *, two_route_camera=False):
  overrides={} if attachable_overrides is None else attachable_overrides
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
@@ -125,6 +125,11 @@ def build(attachable_overrides=None):
  if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,126):
   from build_caterpillar_eating_projection import augment as augment_caterpillar
   output=augment_caterpillar(output)
+ if two_route_camera or tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,127):
+  # G127 composes the exact reviewed two routes after the retained G126 layer.
+  # The explicit preview remains available for historical source-only checks.
+  from build_two_route_eating_projection import augment as augment_two_route
+  output=augment_two_route(output)
  return output
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
@@ -154,8 +159,10 @@ def mismatch_details(expected, actual, limit=20):
   lines.append(f'{pointer}: committed={a!r}; generated={b!r} ({kind})')
  return '\n'.join(lines)
 def main():
- p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');args=p.parse_args()
- for path,value in build().items():
+ p=argparse.ArgumentParser();p.add_argument('--check',action='store_true')
+ p.add_argument('--two-route-camera',action='store_true',help='Unversioned bun/pearl source preview; not a release identity')
+ args=p.parse_args()
+ for path,value in build(two_route_camera=args.two_route_camera).items():
   if isinstance(value,bytes):
    if args.check:assert path.read_bytes()==value,path
    else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(value)

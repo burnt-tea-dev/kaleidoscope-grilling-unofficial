@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[2];RP=ROOT/'projects/grilling/gameplay_cor
 from held_pose_frames import point
 from secret_active_calibration import calibrated_target,PROFILE_IDS
 from bottle_pose_review import historical_bytes
-from public_source_witness import PUBLIC_SOURCE_BASE,REVIEWED_SCENE_INTERACTION_BASE,REVIEWED_CATERPILLAR_CAMERA_BASE,public_json,assert_public_bytes
+from public_source_witness import PUBLIC_SOURCE_BASE,REVIEWED_SCENE_INTERACTION_BASE,REVIEWED_CATERPILLAR_CAMERA_BASE,REVIEWED_TWO_ROUTE_ATLAS_BASE,public_json,assert_public_bytes
 from build_plate_display import build as plate_display_assets
 from build_plate_held import build as plate_held_assets
 import java_dual_eating_frames as dual
@@ -86,7 +86,7 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    allowed.add(str(bottle.relative_to(ROOT)))
   # G125 changes only the Numb phase units/lifecycle and adds its own empty
   # stop clip. Rebuild that exact delta from the complete public preimage;
-  # both the existing reviewed source and the checkout must match full bytes.
+  # the immutable reviewed G125 source must still match its complete bytes.
   numb=RP/'animations/a22_numb.animation.json';numb_path=str(numb.relative_to(ROOT))
   before=subprocess.check_output(['git','show',PUBLIC_SOURCE_BASE+':'+numb_path],cwd=ROOT)
   expected=json.loads(before)
@@ -108,7 +108,14 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   repaired=(json.dumps(expected,indent=2)+'\n').encode()
   reviewed=subprocess.check_output(['git','show',REVIEWED_SCENE_INTERACTION_BASE+':'+numb_path],cwd=ROOT)
   self.assertEqual(reviewed,repaired,'Reviewed G125 Numb differs outside the exact phase/lifecycle delta')
-  self.assertEqual(numb.read_bytes(),reviewed,'Numb animation must match the complete reviewed G125 source')
+  # The client schema accepts omitted bones, but rejects an empty bones map.
+  # Admit only that deletion from the complete immutable G125 preimage; all
+  # active-clip expressions, fields, clip IDs and serialization stay pinned.
+  current=json.loads(reviewed)
+  stop=current['animations']['animation.kg_a22.player.numb_stop']
+  self.assertEqual(stop,{'animation_length':0.05,'bones':{}})
+  del stop['bones']
+  self.assertEqual(numb.read_bytes(),(json.dumps(current,indent=2)+'\n').encode(),'Numb differs outside the exact empty-bones schema repair')
   allowed.add(numb_path)
   # G126 adds two exact scoped clips without changing the shared secret curves.
   # Admit only complete immutable reviewed bytes, never a namespace wildcard.
@@ -122,6 +129,14 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
     self.assertEqual(path.read_bytes(),reviewed,'Scoped caterpillar clip differs from complete reviewed G126 source')
     self.assertEqual(set(json.loads(reviewed)['animations']),{'animation.kg_probe_caterpillar.'+kind+'.one.right'})
     allowed.add(relative)
+  if version>=(2,8,127):
+   path=RP/'animations/kg_isolated_two_route_player.animation.json';relative=str(path.relative_to(ROOT))
+   old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True)
+   self.assertNotEqual(old.returncode,0,'two-route exception must only admit a new file')
+   reviewed=subprocess.check_output(['git','show',REVIEWED_TWO_ROUTE_ATLAS_BASE+':'+relative],cwd=ROOT)
+   self.assertEqual(path.read_bytes(),reviewed,'Two-route clips differ from complete reviewed G127 source')
+   self.assertEqual(set(json.loads(reviewed)['animations']),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
+   allowed.add(relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)
