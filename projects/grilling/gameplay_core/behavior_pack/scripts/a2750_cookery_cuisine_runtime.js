@@ -1,6 +1,7 @@
 import {grillingConfig} from './server_config_runtime.js';
 import {beginSeasoningMotion} from './seasoning_motion_runtime.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from './itemData.js';
+import {replaceSeasoningUsesLore} from './bottle_lore_core.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from './itemData.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from './a283_interaction_feedback.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {EMPTY_SEASONING_ID} from './eating_data_lookup.js';
@@ -135,8 +136,7 @@ function applySeasoning(player,block){
   next=plan.replaceEmpty?new ItemStack(EMPTY_SEASONING_ID,1):retargetSpecialSeasoningStack(held,plan.nextUses,specialSeasoningVariant(held));
   if(!next){interactionFailure(player,'§c調料外觀狀態同步失敗，操作已取消');return true}
   if(!plan.replaceEmpty)try{
-   const lore=next.getRawLore().filter(x=>typeof x!=='string'||!x.startsWith('§7Uses:'));
-   lore.unshift('§7Uses: '+(SEASONING_MAX_USES-plan.nextUses)+'/'+SEASONING_MAX_USES);setItemLore(next,lore);
+   setItemLore(next,replaceSeasoningUsesLore(getItemRawLore(next),SEASONING_MAX_USES-plan.nextUses));
   }catch{interactionFailure(player,'§c調料資料準備失敗，操作已取消');return true}
  }
  const key=cuisineStateKey(block),beforeRaw=world.getDynamicProperty(key);

@@ -1,3 +1,4 @@
+import {seasoningLore} from './localized_lore_core.js';
 // Only documented RawMessage serialization equivalences are recognized here.
 // Unknown/mixed custom messages remain structural values, never flattened text.
 const OWNED=new Set(['ingredients','ready','missing_base'].map(k=>'tooltip.kaleidoscope_grilling.seasoning.'+k));
@@ -42,4 +43,16 @@ export function bottleLoreMismatch(expected,actual){
   return 'line '+i+' ('+shape(expected[i])+' -> '+shape(actual[i])+')';
  }
  return 'line count';
+}
+
+// Cookery used to prepend an English string without removing translated or
+// engine-wrapped prior Uses lines. Match only our known single-node forms;
+// preserve custom/mixed RawMessages and every non-Uses line unchanged.
+export function isOwnedSeasoningUsesLore(line){
+ const node=knownMessage(line);
+ return node?.translate==='tooltip.kaleidoscope_grilling.seasoning.uses'
+  ||(typeof node?.text==='string'&&/^§7Uses: (?:[0-9]|1[0-6])\/16$/.test(node.text));
+}
+export function replaceSeasoningUsesLore(lines,remaining){
+ return [...seasoningLore(remaining),...lines.filter(line=>!isOwnedSeasoningUsesLore(line))];
 }
