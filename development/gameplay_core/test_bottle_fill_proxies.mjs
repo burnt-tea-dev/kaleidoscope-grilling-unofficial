@@ -79,7 +79,7 @@ test('inventory/offhand refresh skips active use and clears scan history on leav
 test('all pending proxies start and complete native use; partial proxies do not shake',()=>{
  const events={},uses=new Map(),animations=[],sounds=[];let completed=0;
  const world={afterEvents:Object.fromEntries(['itemStartUse','itemCompleteUse'].map(k=>[k,{subscribe(f){events[k]=f}}]))};
- const context=vm.createContext({...core,world,canonicalFoodId,PENDING_USES:uses,stopSoundHandle,playSeasoningShakeAudio,seasoningFinishSoundOrigin,captureInteractionIntent:()=>({hand:'off'}),captureEatingIdentity:s=>({identity:s.typeId}),syncSeasoningMotion(){},completePending(){completed++},PLATE_ID:N+'skewer_plate',CUISINE_FOOD_SET:new Set(),FOOD_DATA:{},SECRET_ID:N+'secret_skewer',dangerousPreservation(){}});
+ const context=vm.createContext({...core,world,canonicalFoodId,PENDING_USES:uses,stopSoundHandle,playSeasoningShakeAudio,seasoningFinishSoundOrigin,captureInteractionIntent:()=>({hand:'off'}),captureEatingIdentity:s=>({identity:s.typeId}),hideJavaEatingHud(){},syncSeasoningMotion(){},completePending(){completed++},PLATE_ID:N+'skewer_plate',CUISINE_FOOD_SET:new Set(),FOOD_DATA:{},SECRET_ID:N+'secret_skewer',dangerousPreservation(){}});
  // Keep the real runtime wrapper and its pure audio/origin dependencies; only
  // the native Player sound request/handle is doubled in this extracted fixture.
  vm.runInContext(body(read('immersion_audio_runtime.js'),'seasoningShakeSound'),context);
