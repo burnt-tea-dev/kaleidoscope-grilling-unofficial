@@ -38,31 +38,32 @@ test('slime and failed icons follow original four-tick/five-frame cycle',()=>{
 test('GUI copies all pinned original assets and preserves own packet expiry',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('development/gameplay_core/fixtures/java-hud-1.1.1.json',root)));
  for(const [name,row] of Object.entries(f.assets))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(new URL(name,rp))).digest('hex'),row.sha256,name);
- const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
  assert.equal(f.machine_hud_default,false);assert.equal(ui.kg_eating_expire.destroy_at_end,'kg_eating_packet');
  assert.equal(ui.kg_eating_expire.duration,.001);
  assert.equal(ui.kg_eating_hold.duration,.1);
  assert.equal(ui.kg_eating_hold.anim_type,'wait');
- assert.equal(ui.kg_eating_hold.next,'@hud.kg_eating_expire');
- assert.equal(ui.kg_eating_start.next,'@hud.kg_eating_hold');
+ assert.equal(ui.kg_eating_hold.next,'@kaleidoscope_grilling_hud.kg_eating_expire');
+ assert.equal(ui.kg_eating_start.next,'@kaleidoscope_grilling_hud.kg_eating_hold');
  assert.equal(ui.kg_eating_start.duration,0);
  assert.equal(ui.kg_eating_expire.to,0);
  assert.equal(ui.kg_eating_expire.anim_type,'alpha');
  assert.equal(ui.kg_eating_packet.anims,undefined);
- assert.equal(ui.kg_eating_packet.alpha,'@hud.kg_eating_start');
+ assert.equal(ui.kg_eating_packet.alpha,'@kaleidoscope_grilling_hud.kg_eating_start');
  assert.equal(ui.kg_eating_expire.end_event,undefined);
  assert.equal(ui.kg_eating_packet.propagate_alpha,true);
 assert.equal(ui.kg_eating_packet.controls.length,405);
- assert.ok(ui.hud_actionbar_text.visible.includes('§r[KT]'));
+ const mount=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ assert.ok(mount.hud_actionbar_text.visible.includes('§r[KT]'));
  const script=fs.readFileSync(new URL('projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_runtime.js',root),'utf8');
  assert.ok(!script.includes("setActionBar('')"));assert.ok(!script.includes('runInterval'));
 });
 
 // Source-level samples only; client arrivals and rendering require separate native QA.
 test('bounded 100 ms hold retains the original intro and 1 ms owned fade',()=>{
- const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
- assert.deepEqual(ui.kg_eating_start,{anim_type:'alpha',duration:0,from:0,to:1,next:'@hud.kg_eating_hold'});
- assert.deepEqual(ui.kg_eating_hold,{anim_type:'wait',duration:.1,next:'@hud.kg_eating_expire'});
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
+ assert.deepEqual(ui.kg_eating_start,{anim_type:'alpha',duration:0,from:0,to:1,next:'@kaleidoscope_grilling_hud.kg_eating_hold'});
+ assert.deepEqual(ui.kg_eating_hold,{anim_type:'wait',duration:.1,next:'@kaleidoscope_grilling_hud.kg_eating_expire'});
  assert.deepEqual(ui.kg_eating_expire,{anim_type:'alpha',duration:.001,from:1,to:0,destroy_at_end:'kg_eating_packet'});
  const alphaAt=t=>t<ui.kg_eating_hold.duration?1:Math.max(0,1-(t-ui.kg_eating_hold.duration)/ui.kg_eating_expire.duration);
  for(const t of [0,.05,.075,.099,.1])assert.equal(alphaAt(t),1);
@@ -81,10 +82,41 @@ curves={k.value:ast.literal_eval(v) for k,v in zip(ui[0].keys,ui[0].values) if i
 assert set(curves)==wanted
 print(json.dumps(curves))`;
  const generated=JSON.parse(execFileSync('python3',['-c',py,fileURLToPath(new URL('tools/build_java_eating_hud.py',root))],{encoding:'utf8'}));
- const ui=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
  for(const key of ['kg_eating_start','kg_eating_hold','kg_eating_expire'])assert.deepEqual(generated[key],ui[key],key);
 });
 
 test('shared progress atlas preserves all original yellow and green crops',()=>{
  execFileSync('python3',[fileURLToPath(new URL('tools/test_java_eating_hud_atlas.py',root))],{stdio:'pipe',env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
+});
+
+test('eating controls remain registered outside the shared native HUD catalog',()=>{
+ // Static load/mount closure only. A selected shared hud_screen file must not
+ // own the 405 Grilling states; their independent catalog survives that choice.
+ const mount=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
+ const defs=JSON.parse(fs.readFileSync(new URL('ui/_ui_defs.json',rp))).ui_defs;
+ const globals=JSON.parse(fs.readFileSync(new URL('ui/_global_variables.json',rp)));
+ assert.deepEqual(defs,['ui/kg_grilling_hud.json']);
+ const ui=JSON.parse(fs.readFileSync(new URL(defs[0],rp)));
+ assert.equal(ui.namespace,'kaleidoscope_grilling_hud');
+ assert.equal(globals.$kg_grilling_hud_root,ui.namespace+'.root');
+ assert.equal(ui.root.type,'panel');
+ assert.deepEqual(ui.root.controls,[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_factory':{}}]);
+ assert.equal(ui.kg_eating_factory.factory.control_ids.hud_actionbar_text,'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet');
+ assert.equal(ui.kg_eating_packet.controls.length,405);
+ assert(!('kg_eating_packet' in mount));assert(!('root_panel' in ui));
+ const nativeRoot=mount.root_panel;
+ assert.equal(nativeRoot['$kg_grilling_hud_root|default'],'hud.kt_family_empty');
+ assert.equal(nativeRoot['$kt_tavern_hud_root|default'],'hud.kt_family_empty');
+ assert.deepEqual(nativeRoot.modifications,[{array_name:'controls',operation:'insert_back',value:[
+  {'kt_family_tavern@$kt_tavern_hud_root':{}},
+  {'kt_family_grilling@$kg_grilling_hud_root':{}}
+ ]}]);
+ assert.equal(mount.kt_family_empty.type,'panel');
+ assert.deepEqual(mount.kt_family_empty.size,[0,0]);
+ for(const key of ['hud_actionbar_text','hud_actionbar_text/actionbar_message']){
+  const leaf=mount[key];assert.equal(leaf.$kt_family_actionbar_text,'$actionbar_text');
+  for(const marker of ['§r§0§r§0','§r[KT] 1:§','§r[KT] §b','!js.'])assert.ok(leaf.visible.includes(marker),marker);
+ }
+ assert.deepEqual(mount.hud_actionbar_text,mount['hud_actionbar_text/actionbar_message']);
 });
