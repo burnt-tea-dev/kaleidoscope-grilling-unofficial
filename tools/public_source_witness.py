@@ -432,6 +432,9 @@ def expected_main_bytes(version, *, local_bottles=False, proposal=None):
             expected = _g126_caterpillar_camera_bytes(expected)
         if version >= (2, 8, 127):
             expected = _g127_two_route_bytes(expected)
+        if version >= (2, 8, 130):
+            from eating_hud_source_witness import apply_hud_display_hooks
+            expected = apply_hud_display_hooks(expected)
         return expected
     if local_bottles:
         return _local_bottle_main_bytes(original, version)
