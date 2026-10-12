@@ -4,18 +4,28 @@
   "repository_id": 1377218440,
   "version": "A2.8.129",
   "tag": "A2.8.129-beta.1",
-  "publication_request": false,
+  "publication_request": true,
   "prerelease": true,
   "make_latest": "false",
   "client": false,
   "production_ready": false,
   "expected_artifacts": {
     "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.129_Review.mcaddon"
+      "name": "Kaleidoscope_Grilling_A2.8.129_Review.mcaddon",
+      "sha256": "aaff6df290c760a75507f8f7815c413a35c72d015d6e735e765cc2a177fa2ca6"
     },
     "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.129_Review.brproject"
+      "name": "Kaleidoscope_Grilling_A2.8.129_Review.brproject",
+      "sha256": "0979970c3d509fd3682013997052aa7974b4e6e3a62b5c0804a58d575a9146a8"
     }
   },
-  "status": "awaiting_exact_source_ci_family_save_admission_and_live_readback"
+  "status": "awaiting_exact_source_ci_family_save_admission_and_live_readback",
+  "expected_source_tree_sha256": "5aa81a21a211c5a89ec5ee408acd47be5ecf6919b74633eebdd9170bde0642fc",
+  "integrated_source": {
+    "commit": "23d14fcc7c4d250151becc2ef4fd33048fba1794",
+    "tree": "6e7da9727382b76efae7e92ec6b9e8d1d9790ffd",
+    "pull_requests": [
+      197
+    ]
+  }
 }

@@ -4,7 +4,7 @@
 
 G129 將原圖形進食 HUD 的 405 個 sprite 狀態移到獨立 `kaleidoscope_grilling_hud` catalog，並和酒館共用同一份最小原生 HUD 掛載檔，修正兩個移植包共同宣告 `hud_screen.json`／root 掛載時的來源相容缺口。102×5 原圖、16×16 icon、25 tick 檢查點、90／100 tick 進度及 100 ms／1 ms 壽命保持不變。身份 **2.8.129／指南 0.3.59**，保留 G128 的 Uses／Numb 修補及 G126／G127 動畫。見 [G129 狀態](docs/STATUS-A2.8.129.md)和[來源機制與限制](docs/evidence/hud-catalog-compatibility-20261012.md)。
 
-本候選尚待精確來源 CI、家族與停服存檔副本驗證、准入及 LIVE 讀回；[發佈請求](.github/release-request.json)目前 `publication_request=false`，不沿用 G128 的 archive digest 或成功證據。[發佈狀態](docs/PUBLICATION.md)會記錄正式下載身份。已發佈的上一版仍是 [A2.8.128-beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2)。
+本候選尚待精確來源 CI、家族與停服存檔副本驗證、准入及 LIVE 讀回；[發佈請求](.github/release-request.json)目前已登記本候選直接 canonical 封裝的 archive digest，`publication_request=true` 僅允許完成驗證後的明確手動發佈；不沿用 G128 的 digest 或成功 CI。[發佈狀態](docs/PUBLICATION.md)會記錄正式下載身份。已發佈的上一版仍是 [A2.8.128-beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2)。
 
 相依仍須使用官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 並修改 API，尚未納入。煙火指南資料已隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，公開適配請依[家族組裝說明](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/docs/PUBLICATION-T147-G128-W124.md)重現。獨立私有料理／AMW 額外能力不包含。
 
