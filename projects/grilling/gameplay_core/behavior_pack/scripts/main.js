@@ -52,7 +52,7 @@ import {EquipmentSlot,GameMode,EnchantmentType} from '@minecraft/server';
 import {captureEatingIdentity,eatingStillCurrent,eatingEventMatches,commitEating} from './a285_eating_transaction.js';
 import {completedUseStillCurrent} from './a2810_use_transaction.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback,javaInteractionChat} from './a283_interaction_feedback.js';
-import {showJavaEatingHud} from './java_eating_hud_runtime.js';
+import {showJavaEatingHud,hideJavaEatingHud,forgetJavaEatingHud} from './java_eating_hud_runtime.js';
 import {refreshPlacedBottleAfterPickup} from './a2770_placed_visual_runtime.js';
 import './guide/main.js';
 import {world,system,ItemStack,BlockPermutation} from '@minecraft/server';
@@ -1091,7 +1091,7 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
  if(id===SECRET_ID)try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
- stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);forgetEatingItem(e.source.id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
+ stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
  if(id===SECRET_ID){addSecretNutrition(e.source,e.itemStack,{hot:false})}
  if(RAW_NAUSEA[id])try{e.source.addEffect('nausea',60,{showParticles:true})}catch{};if(id===MYSTERIOUS_ID)try{e.source.addEffect('nausea',100,{showParticles:true})}catch{};if(id===DARK_ID)try{e.source.addEffect('blindness',200,{showParticles:true})}catch{}
  if(id===SECRET_ID)secretRemainders(e.source,e.itemStack);
@@ -1112,7 +1112,7 @@ world.afterEvents.itemStopUse.subscribe(e=>{
  // Capture elapsed at release, not in the deferred callback: a 23-tick release
  // must not become eligible merely because cleanup runs a tick later.
  // Let native completion win either event order; never delete a newer session.
- const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
+ const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
  // A proven nonterminal stop cannot race native completion. Settle in this
  // writable after-event, like Java releaseUsing, before leave clears the session.
  // Terminal/unknown clocks retain deferred completion ownership; before-leave
@@ -1124,7 +1124,7 @@ world.afterEvents.itemStopUse.subscribe(e=>{
 });
 // Native use poses cancel with the use action; no global zero-pose reset may override
 // the next held item. Release server bookkeeping as well when a player disconnects.
-world.afterEvents.playerLeave.subscribe(e=>{forgetProjectileDodge(e.playerId);forgetHeavyMetalRescue(e.playerId);forgetEatingItem(e.playerId);stopSoundHandle(PENDING_USES.get(e.playerId)?.audio);stopSoundHandle(ACTIVE_EATS.get(e.playerId)?.audio);for(const map of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,PENDING_USES,SETTLED])map.delete(e.playerId)});
+world.afterEvents.playerLeave.subscribe(e=>{forgetJavaEatingHud(e.playerId);forgetProjectileDodge(e.playerId);forgetHeavyMetalRescue(e.playerId);forgetEatingItem(e.playerId);stopSoundHandle(PENDING_USES.get(e.playerId)?.audio);stopSoundHandle(ACTIVE_EATS.get(e.playerId)?.audio);for(const map of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,PENDING_USES,SETTLED])map.delete(e.playerId)});
 world.afterEvents.entityDie.subscribe(e=>{forgetProjectileDodge(e.deadEntity);forgetHeavyMetalRescue(e.deadEntity)});
 world.afterEvents.entityRemove.subscribe(e=>{forgetProjectileDodge(e.removedEntityId);forgetHeavyMetalRescue(e.removedEntityId)});
 world.beforeEvents.entityHurt.subscribe(e=>{
@@ -1140,7 +1140,7 @@ world.beforeEvents.entityHurt.subscribe(e=>{
  if(fxGet(target,'invincible')&&cause!=='selfDestruct'&&cause!=='override'){e.cancel=true;invincibleDamageFeedback(target);return}
  handleHeavyMetalBeforeHurt(e);
 });
-world.afterEvents.playerSpawn.subscribe(e=>{forgetProjectileDodge(e.player);try{e.player.setProperty(EAT_PROJECTION_PROPERTY,false);e.player.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.player.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{};if(!e.initialSpawn){forgetHeavyMetalRescue(e.player.id);try{clearEffects(e.player)}catch{};stopSoundHandle(ACTIVE_EATS.get(e.player.id)?.audio);stopSoundHandle(PENDING_USES.get(e.player.id)?.audio);for(const cache of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,PENDING_USES,SETTLED,VIGOR_LAST,SNEAK_LAST])cache.delete(e.player.id);forgetNumbVisual(e.player.id);try{e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{}}});
+world.afterEvents.playerSpawn.subscribe(e=>{hideJavaEatingHud(e.player);forgetProjectileDodge(e.player);try{e.player.setProperty(EAT_PROJECTION_PROPERTY,false);e.player.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.player.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{};if(!e.initialSpawn){forgetHeavyMetalRescue(e.player.id);try{clearEffects(e.player)}catch{};stopSoundHandle(ACTIVE_EATS.get(e.player.id)?.audio);stopSoundHandle(PENDING_USES.get(e.player.id)?.audio);for(const cache of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,PENDING_USES,SETTLED,VIGOR_LAST,SNEAK_LAST])cache.delete(e.player.id);forgetNumbVisual(e.player.id);try{e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{}}});
 world.afterEvents.entityHurt.subscribe(e=>{
  // Cookery HinderEvent follows damage from a living attacker, including its
  // projectile; a melee contact event cannot represent that source contract.
@@ -1264,11 +1264,12 @@ system.runInterval(()=>{
    // Do not assume a remote custom-item countdown matches the owner's clock.
    // Replicate source session time; native food debit/reward stays event-owned.
    p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,eatingElapsedTicks(active.start,system.currentTick,active.nativeDuration));
-   if(!active.plain&&!active.audioStarted&&(active.audioAttempts??0)<3&&system.currentTick%5===0)startEatingSound(p,active);!active.plain&&advanceBites(p,active);!active.plain&&grillingConfig().graphicalEatingHud&&showJavaEatingHud(p,active,system.currentTick);
+   if(!active.plain&&!active.audioStarted&&(active.audioAttempts??0)<3&&system.currentTick%5===0)startEatingSound(p,active);!active.plain&&advanceBites(p,active);if(!active.plain&&grillingConfig().graphicalEatingHud)showJavaEatingHud(p,active,system.currentTick);else hideJavaEatingHud(p);
   }else if(active){
+   hideJavaEatingHud(p);
    // A replaced/switching serving must not leave a projected arm on another item.
    p.setProperty(EAT_PROFILE_PROPERTY,0);p.setProperty(EAT_HAND_PROPERTY,0);p.setProperty(EAT_PROJECTION_PROPERTY,false);p.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);
-  } // Presentation never debits food.
+  }else hideJavaEatingHud(p); // Presentation never debits food.
   if(system.currentTick%10===0&&fxGet(p,'invincible'))invincibleAmbientFeedback(p);
   writeFx(p,readFx(p));const hunger=p.getComponent('minecraft:player.hunger'),sat=p.getComponent('minecraft:player.saturation');
   if(fxGet(p,'vigor')&&hunger&&sat){const prev=VIGOR_LAST.get(p.id);if(p.isSprinting&&prev){if(hunger.currentValue<prev.hunger)hunger.setCurrentValue(prev.hunger);if(sat.currentValue<prev.sat)sat.setCurrentValue(prev.sat)}VIGOR_LAST.set(p.id,{hunger:hunger.currentValue,sat:sat.currentValue})}else VIGOR_LAST.delete(p.id);

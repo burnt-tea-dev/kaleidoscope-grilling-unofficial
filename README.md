@@ -1,14 +1,12 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.129
+## Current maintained baseline: 2.8.130
 
-G129 將原圖形進食 HUD 的 405 個 sprite 狀態移到獨立 `kaleidoscope_grilling_hud` catalog，並和酒館共用同一份最小原生 HUD 掛載檔，修正兩個移植包共同宣告 `hud_screen.json`／root 掛載時的來源相容缺口。102×5 原圖、16×16 icon、25 tick 檢查點、90／100 tick 進度及 100 ms／1 ms 壽命保持不變。身份 **2.8.129／指南 0.3.59**，保留 G128 的 Uses／Numb 修補及 G126／G127 動畫。見 [G129 狀態](docs/STATUS-A2.8.129.md)和[來源機制與限制](docs/evidence/hud-catalog-compatibility-20261012.md)。
+G130 將進食圖形移離共享 Actionbar，使用可選 UI Queue 的獨立 key 與 title binding 快照；取消／完成只終結自己的圖形。原 Atlas、25 tick 判定、90／100 tick 食用時間、動畫與物品結算保持。身份 **2.8.130／指南 0.3.60**，保留 G129 的獨立 catalog 與 G128 Uses／Numb 修補。有限 6 tick 遺失封包回退、相容範圍及真人場景見 [G130 狀態](docs/STATUS-A2.8.130.md)。
 
-本候選尚待精確來源 CI、家族與停服存檔副本驗證、准入及 LIVE 讀回；[發佈請求](.github/release-request.json)目前已登記本候選直接 canonical 封裝的 archive digest，`publication_request=true` 僅允許完成驗證後的明確手動發佈；不沿用 G128 的 digest 或成功 CI。[發佈狀態](docs/PUBLICATION.md)會記錄正式下載身份。已發佈的上一版仍是 [A2.8.128-beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2)。
+本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
-相依仍須使用官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 並修改 API，尚未納入。煙火指南資料已隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，公開適配請依[家族組裝說明](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/docs/PUBLICATION-T147-G128-W124.md)重現。獨立私有料理／AMW 額外能力不包含。
-
-本次是 catalog／掛載來源修補，尚未取得完整家族的真人畫面驗收。其他 addon 共用 actionbar 的寫入競爭須從實測另行診斷，不能宣稱幾乎所有 UI 問題已解決。既有有限進食動畫與 Uses DIAG1 證據維持原範圍；近嘴放大、Numb 原生復驗、其他手持／視角、Classic／Pocket／touch 及完整 Java 聲畫仍待驗收。`client=false`、`production_ready=false`。
+相依仍為官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 與 API，尚未納入。煙火指南隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，適配依[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)記錄。真人畫面、完整 Java 聲畫及其他視角／操作仍待驗收；`client=false`、`production_ready=false`。
 
 離線來源草稿另見[熟饅頭片 TWO／熟末影珍珠 THREE 整合](docs/evidence/two-route-source-integration-20261010.md)：新增兩條 exact-ID player clips，保留 G126 與其他食品。該凍結證據仍是未編版的歷史草稿；本版以獨立 G127 身份及新增 reviewed witness 承接，不改寫原 G126 身份或門檻。
 

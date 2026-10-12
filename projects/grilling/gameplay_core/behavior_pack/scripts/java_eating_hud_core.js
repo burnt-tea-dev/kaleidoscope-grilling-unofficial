@@ -1,5 +1,6 @@
 import {JAVA_EATING_ICONS} from './java_eating_hud_data.js';
 export const EATING_PACKET_PREFIX='§r§0§r§0';
+export const EATING_PACKET_END=EATING_PACKET_PREFIX+'§r§f§f§r';
 const code=n=>[...Math.trunc(n).toString(16).padStart(2,'0')].map(c=>'§'+c).join('');
 export function javaEatingHudFrame({id,elapsed,duration,tick=0}){
  if(!Number.isFinite(elapsed)||elapsed<0||!Number.isFinite(duration)||duration<=0)return undefined;

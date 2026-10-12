@@ -115,7 +115,9 @@ def restore_main(text):
         restored = text
     else:
         raise ValueError('Unsupported or ambiguous canonical eating dispatch')
-    if hashlib.sha256(restored.encode('utf-8')).hexdigest() != G126_MAIN_SHA256:
+    from eating_hud_source_witness import dispatcher_witness_source
+    witness = dispatcher_witness_source(restored)
+    if hashlib.sha256(witness.encode('utf-8')).hexdigest() != G126_MAIN_SHA256:
         raise ValueError('Main differs outside the exact two-route dispatch wrapper')
     return restored
 
