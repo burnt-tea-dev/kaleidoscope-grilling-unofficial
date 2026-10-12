@@ -232,7 +232,10 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertIn(public.REVIEWED_TWO_ROUTE_ATLAS_BASE,inventory())
   self.assertEqual(len(delta['operations']),1)
   self.assertEqual(public._apply_main_operations(before,delta),repaired)
-  self.assertEqual((ROOT/public.MAIN_PATH).read_bytes(),repaired)
+  from eating_hud_source_witness import dispatcher_witness_source
+  current=(ROOT/public.MAIN_PATH).read_text()
+  self.assertEqual(dispatcher_witness_source(current).encode(),repaired)
+  self.assertEqual((ROOT/public.MAIN_PATH).read_bytes(),public.expected_main_bytes(json.loads((ROOT/'baseline.json').read_text())['version']))
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):
    public._g127_two_route_bytes(before+b'\n')
   changed=copy.deepcopy(delta);op=changed['operations'][0];original=op['after'];op['after']+='\n'
@@ -240,6 +243,15 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   with patch.object(public,'_main_delta',side_effect=lambda name:changed if name=='g127-main-reviewed-delta.json' else load(name)):
    with self.assertRaisesRegex(AssertionError,'G127 public source differs outside'):
     public.expected_main_bytes((2,8,127))
+ def test_g130_display_hooks_remain_a_bounded_delta(self):
+  from eating_hud_source_witness import apply_hud_display_hooks,dispatcher_witness_source,HUD_DISPLAY_DELTA
+  before=public.expected_main_bytes((2,8,129));current=(ROOT/public.MAIN_PATH).read_bytes()
+  self.assertEqual(apply_hud_display_hooks(before),current)
+  self.assertEqual(dispatcher_witness_source(current.decode()).encode(),before)
+  with self.assertRaisesRegex(AssertionError,'wrong public preimage'):apply_hud_display_hooks(before+b'\n')
+  from build_two_route_eating_projection import restore_main
+  for _,after in HUD_DISPLAY_DELTA:
+   with self.assertRaises(ValueError):restore_main(current.decode().replace(after,after.replace('hideJavaEatingHud','changedHideHook',1) if 'hideJavaEatingHud' in after else after.replace('forgetJavaEatingHud','changedForgetHook',1),1))
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)

@@ -1,47 +1,34 @@
-# G129 publication staging
+# G130 publication staging
 
-Grilling **2.8.129**, guide **0.3.59**, is a new candidate for the shared HUD
-catalog repair. The intended non-latest prerelease is **A2.8.129-beta.1**.
-[`.github/release-request.json`](../.github/release-request.json) requests an
-explicit manual publication after this candidate's exact source CI and
-family/save/admission/LIVE readback succeed. Ordinary PR/main runs cannot
-publish. No successful source CI reference is inherited from G128 or the first
-failed G129 run.
+The intended non-latest prerelease is **A2.8.130-beta.1**, Grilling **2.8.130**,
+guide **0.3.60**. The request is reset for this new immutable candidate. Exact
+runtime/archive digests and the frozen source ancestor are recorded after
+canonical direct packaging. No G129 artifact or successful CI is reused.
 
-Canonical direct packaging binds frozen runtime ancestor
-`23d14fcc7c4d250151becc2ef4fd33048fba1794`, Git tree
-`6e7da9727382b76efae7e92ec6b9e8d1d9790ffd`, with source runtime digest
-`5aa81a21a211c5a89ec5ee408acd47be5ecf6919b74633eebdd9170bde0642fc`.
+Canonical frozen ancestor `10d4fc387724c6b60d1dc0af579a318a664bdc04` / tree
+`12001602f1429dd3a9aa7b8e709584ec39740148` produced runtime digest
+`cd11c20b6f28b28963b30b6d5cd4b4539a32bb10052ef799592ba111e543fd85`. These are local direct packaging checks, not
+CI, BDS, gameplay or rendered-client acceptance.
 
 | Artifact | SHA256 |
 | --- | --- |
-| `Kaleidoscope_Grilling_A2.8.129_Review.mcaddon` | `aaff6df290c760a75507f8f7815c413a35c72d015d6e735e765cc2a177fa2ca6` |
-| `Kaleidoscope_Grilling_A2.8.129_Review.brproject` | `0979970c3d509fd3682013997052aa7974b4e6e3a62b5c0804a58d575a9146a8` |
+| `Kaleidoscope_Grilling_A2.8.130_Review.mcaddon` | `acdeef990da652898cd9c3d50932820243a68efa2283fd8cb7946504d7247855` |
+| `Kaleidoscope_Grilling_A2.8.130_Review.brproject` | `32f33d81c458952eb8947f2f4f3a3a906a45b581caa6b398e58504f124448ec5` |
 
-These are canonical packager digests, not Dash, BDS or client acceptance. The
-verifier dispatch correction changes tools only and preserves these frozen
-outputs. Publication must use the completed canonical run whose full Git tree
-matches final main, with its original archive report and actual checkout; a
-separate publication binding records that check without rewriting the report.
 
-The `.mcaddon` will contain the direct canonical Grilling BP/RP. Family
-installation must use those same owned bytes. Its dependency remains official
-[Cookery 1.6.0, file 9054164](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)
-with the already registered public family API 0.2.10 adapters. Separate private
-integration and third-party packs are not included in the Grilling download.
+Publication remains an explicit `publish` workflow dispatch after this source's
+successful canonical CI, full family/save/admission and LIVE readback. Ordinary
+PR/main runs only produce review artifacts. The publisher consumes that run's
+original archive/report and binds its complete checked Git tree; no historical
+builder, receipt rewrite or client acceptance shortcut is used.
 
-Ordinary PR/main validation produces review artifacts. Publishing requires
-successful exact-source canonical CI, family/save/admission and LIVE readback,
-then explicit `publish` workflow dispatch with that successful run ID and exact
-confirmed tag. The publisher reuses the run's original archives and source
-report, checks the complete Git tree, uploaded bytes and tag target, and records
-a separate publication binding. It does not rebuild historical packages.
+The public `.mcaddon` contains only the direct canonical Grilling BP/RP.
+[Cookery 1.6.0](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)
+and the registered family API adapters remain dependencies. AMW, Java Saturation
+and UI Queue repairs are separately reviewed private family variants and are not
+included here. The previously published release is
+[G129 beta.1](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.129-beta.1).
 
-This candidate changes catalog registration and mounts while preserving the
-original eating textures, dimensions, timing and producer. See
-[G129 status](STATUS-A2.8.129.md) and the
-[scope and verification record](evidence/hud-catalog-compatibility-20261012.md).
-Human rendering and full Java parity remain pending: `client=false` and
-`production_ready=false`. The last published release is
-[G128 beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2);
-its original source, diagnostics and receipts remain unchanged.
+The [G130 source scope](STATUS-A2.8.130.md) preserves food timing, atlas and
+settlement. Actual client rendering remains pending: `client=false`,
+`production_ready=false`.

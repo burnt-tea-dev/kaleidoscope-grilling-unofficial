@@ -41,7 +41,7 @@ test('GUI copies all pinned original assets and preserves own packet expiry',()=
  const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
  assert.equal(f.machine_hud_default,false);assert.equal(ui.kg_eating_expire.destroy_at_end,'kg_eating_packet');
  assert.equal(ui.kg_eating_expire.duration,.001);
- assert.equal(ui.kg_eating_hold.duration,.1);
+ assert.equal(ui.kg_eating_hold.duration,.3);
  assert.equal(ui.kg_eating_hold.anim_type,'wait');
  assert.equal(ui.kg_eating_hold.next,'@kaleidoscope_grilling_hud.kg_eating_expire');
  assert.equal(ui.kg_eating_start.next,'@kaleidoscope_grilling_hud.kg_eating_hold');
@@ -52,22 +52,22 @@ test('GUI copies all pinned original assets and preserves own packet expiry',()=
  assert.equal(ui.kg_eating_packet.alpha,'@kaleidoscope_grilling_hud.kg_eating_start');
  assert.equal(ui.kg_eating_expire.end_event,undefined);
  assert.equal(ui.kg_eating_packet.propagate_alpha,true);
-assert.equal(ui.kg_eating_packet.controls.length,405);
+assert.equal(ui.kg_eating_packet.controls.length,407);
  const mount=JSON.parse(fs.readFileSync(new URL('ui/hud_screen.json',rp)));
- assert.ok(mount.hud_actionbar_text.visible.includes('§r[KT]'));
+ assert.ok(!mount.hud_actionbar_text.visible.includes('§r[KT]'));
  const script=fs.readFileSync(new URL('projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_runtime.js',root),'utf8');
- assert.ok(!script.includes("setActionBar('')"));assert.ok(!script.includes('runInterval'));
+ assert.ok(!script.includes('setActionBar'));assert.ok(!script.includes('runInterval'));
 });
 
 // Source-level samples only; client arrivals and rendering require separate native QA.
-test('bounded 100 ms hold retains the original intro and 1 ms owned fade',()=>{
+test('bounded queue fallback retains the original intro and 1 ms owned fade',()=>{
  const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
  assert.deepEqual(ui.kg_eating_start,{anim_type:'alpha',duration:0,from:0,to:1,next:'@kaleidoscope_grilling_hud.kg_eating_hold'});
- assert.deepEqual(ui.kg_eating_hold,{anim_type:'wait',duration:.1,next:'@kaleidoscope_grilling_hud.kg_eating_expire'});
+ assert.deepEqual(ui.kg_eating_hold,{anim_type:'wait',duration:.3,next:'@kaleidoscope_grilling_hud.kg_eating_expire'});
  assert.deepEqual(ui.kg_eating_expire,{anim_type:'alpha',duration:.001,from:1,to:0,destroy_at_end:'kg_eating_packet'});
  const alphaAt=t=>t<ui.kg_eating_hold.duration?1:Math.max(0,1-(t-ui.kg_eating_hold.duration)/ui.kg_eating_expire.duration);
  for(const t of [0,.05,.075,.099,.1])assert.equal(alphaAt(t),1);
- for(const t of [.102,.15,1,30])assert.equal(alphaAt(t),0);
+ for(const t of [.302,.35,1,30])assert.equal(alphaAt(t),0);
  assert(!('loop' in ui.kg_eating_hold));assert(!('next' in ui.kg_eating_expire));
 });
 test('HUD authoring generator preserves the committed lifetime declarations',()=>{
@@ -102,21 +102,47 @@ test('eating controls remain registered outside the shared native HUD catalog',(
  assert.equal(globals.$kg_grilling_hud_root,ui.namespace+'.root');
  assert.equal(ui.root.type,'panel');
  assert.deepEqual(ui.root.controls,[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_factory':{}}]);
- assert.equal(ui.kg_eating_factory.factory.control_ids.hud_actionbar_text,'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet');
- assert.equal(ui.kg_eating_packet.controls.length,405);
+ assert.equal(ui.kg_eating_factory.factory.control_ids.hud_title_text,'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet');
+ assert.equal(ui.kg_eating_packet.controls.length,407);
  assert(!('kg_eating_packet' in mount));assert(!('root_panel' in ui));
  const nativeRoot=mount.root_panel;
  assert.equal(nativeRoot['$kg_grilling_hud_root|default'],'hud.kt_family_empty');
  assert.equal(nativeRoot['$kt_tavern_hud_root|default'],'hud.kt_family_empty');
  assert.deepEqual(nativeRoot.modifications,[{array_name:'controls',operation:'insert_back',value:[
   {'kt_family_tavern@$kt_tavern_hud_root':{}},
-  {'kt_family_grilling@$kg_grilling_hud_root':{}}
+  {'kt_family_grilling@$kg_grilling_hud_root':{}},
+  {'kt_optional_amw@$senluo_amw_hud_root':{}},
+  {'kt_optional_amw_boss@$senluo_amw_boss_root':{}}
  ]}]);
  assert.equal(mount.kt_family_empty.type,'panel');
  assert.deepEqual(mount.kt_family_empty.size,[0,0]);
  for(const key of ['hud_actionbar_text','hud_actionbar_text/actionbar_message']){
   const leaf=mount[key];assert.equal(leaf.$kt_family_actionbar_text,'$actionbar_text');
-  for(const marker of ['§r§0§r§0','§r[KT] 1:§','§r[KT] §b','!js.'])assert.ok(leaf.visible.includes(marker),marker);
+  assert.ok(leaf.visible.includes('!js.'));
+  for(const marker of ['§r§0§r§0','§r[KT]'])assert.ok(!leaf.visible.includes(marker));
  }
  assert.deepEqual(mount.hud_actionbar_text,mount['hud_actionbar_text/actionbar_message']);
+});
+
+// Test the production sender, never a simulated Minecraft player.
+const {createFormattingHudTransport}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/formatting_hud_transport_core.js');
+const {EATING_PACKET_PREFIX,EATING_PACKET_END}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_core.js');
+test('eating frames and terminal event never write or clear an Actionbar',()=>{
+ for(const mode of ['ui_queue','embedded_queue','standalone']){
+  const sent=[],display={setActionBar(){throw Error('Foreign Actionbar touched');},setTitle:(...args)=>sent.push(args),updateSubtitle(){throw Error('Foreign subtitle touched');}},player={onScreenDisplay:display};
+  const sender=createFormattingHudTransport({prefix:EATING_PACKET_PREFIX,maxLength:36,queueAvailable:()=>mode==='ui_queue',embeddedAvailable:()=>mode==='embedded_queue',queueSend:(p,packet)=>sent.push([packet]),legacySend:(p,packet)=>sent.push([packet])});
+  for(const packet of [javaEatingHudFrame({id:'grilled_fish_skewer',elapsed:0,duration:90}).packet,javaEatingHudFrame({id:'grilled_fish_skewer',elapsed:25,duration:100}).packet,EATING_PACKET_END])assert.equal(sender.send(player,packet),mode);
+  assert.equal(sent.length,3);assert.throws(()=>sender.send(player,EATING_PACKET_PREFIX+'text'),/Invalid graphical/);
+  if(mode==='standalone')for(const [packet,timing] of sent)assert.deepEqual(timing,{fadeInDuration:0,fadeOutDuration:0,stayDuration:0});
+ }
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp))),rows=Object.fromEntries(ui.kg_eating_packet.controls.flatMap(row=>Object.entries(row)));
+ assert.equal(ui.kg_eating_factory.factory.name,'hud_title_text_factory');
+ assert.equal(rows.kg_eating_frame.bindings[0].binding_condition,'once');
+ assert(rows.kg_eating_channel.bindings.at(-1).source_property_name.includes("'%.12s'"));
+ for(const sprite of Object.values(rows).filter(row=>row.type==='image')){
+  assert.equal(sprite.bindings[0].source_control_name,'kg_eating_frame');assert.equal(sprite.bindings[0].resolve_sibling_scope,true);
+  assert(!sprite.bindings.some(b=>b.binding_name==='#hud_title_text_string'));
+  assert(sprite.bindings.at(-1).source_property_name.includes('#kg_text_latest = #kg_text'));
+  assert(sprite.bindings.at(-1).source_property_name.includes(EATING_PACKET_END));
+ }
 });

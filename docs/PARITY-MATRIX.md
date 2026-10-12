@@ -1,6 +1,6 @@
 # 煙火現況對照表
 
-更新：2026-10-12；當前維護來源 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)，保留 [G128 調料 Uses 與 Numb schema 修補草稿](STATUS-A2.8.128.md)，保留 [G127 兩食品動畫與 Atlas HUD 後繼草稿](STATUS-A2.8.127.md)，保留 [G126 熟毛蟲雙手與 HUD 候選](STATUS-A2.8.126.md)，保留 [G125場景聲畫與操作守恆](STATUS-A2.8.125.md)，保留 [G124調料資料映射](STATUS-A2.8.124.md)、[G123指南正文鍵修補](STATUS-A2.8.123.md)、[G122炒鍋、品質與所有權](STATUS-A2.8.122.md)及 [G121酒館指南橋接](STATUS-A2.8.121.md)。
+更新：2026-10-12；當前維護來源 [G130 圖形通道隔離與終結快照](STATUS-A2.8.130.md)，保留 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)，保留 [G128 調料 Uses 與 Numb schema 修補草稿](STATUS-A2.8.128.md)，保留 [G127 兩食品動畫與 Atlas HUD 後繼草稿](STATUS-A2.8.127.md)，保留 [G126 熟毛蟲雙手與 HUD 候選](STATUS-A2.8.126.md)，保留 [G125場景聲畫與操作守恆](STATUS-A2.8.125.md)，保留 [G124調料資料映射](STATUS-A2.8.124.md)、[G123指南正文鍵修補](STATUS-A2.8.123.md)、[G122炒鍋、品質與所有權](STATUS-A2.8.122.md)及 [G121酒館指南橋接](STATUS-A2.8.121.md)。
 家族目前的 LIVE 配套、部署／保存／指南接收收據統一見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)，本頁不另複製部署版本及驗收狀態。
 下列標註舊版本的操作觀察仍保留當時範圍，家族載入、資料保存及指南接收不等於原生玩家事件或真人聲畫驗收。
 先前未合併機制候選 `f27d40a7c1bab951398e3fc3d3906bcc416c5c3f` 的修補納入 G122；正式 G121 的指南橋接與歷史保持。

@@ -18,10 +18,12 @@ class CaterpillarProjectionTests(unittest.TestCase):
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
   current=(scoped.BP/'scripts/main.js').read_text()
   # Preserve the original two-edit G126 comparison after verifying and
-  # reversing only the exact bounded two-route continuation, when present.
+  # reversing only the exact bounded two-route continuation and the reviewed
+  # G130 display hooks. Their independent full-source preimages stay enforced.
   from verify_a284 import eating_dispatch_source
+  from eating_hud_source_witness import dispatcher_witness_source
   version=json.loads((scoped.BP/'manifest.json').read_text())['header']['version']
-  self.assertEqual(scoped.patch_main(original),eating_dispatch_source(current,version))
+  self.assertEqual(scoped.patch_main(original),dispatcher_witness_source(eating_dispatch_source(current,version)))
   self.assertEqual(scoped.patch_main(current),current)
   for bad in ('',original+original,current+current):
    with self.assertRaises(ValueError):scoped.patch_main(bad)
