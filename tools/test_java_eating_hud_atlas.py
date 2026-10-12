@@ -9,7 +9,7 @@ class AtlasTests(unittest.TestCase):
  def setUp(self):
   self.src={c:(RP/f'textures/ui/kg_java/skewer_eating_progress_{c}.png').read_bytes() for c in SOURCE_PINS}
   self.png=(RP/ATLAS_REL).read_bytes();self.atlas=Image.open(io.BytesIO(self.png)).convert('RGBA')
-  self.ui=json.loads((RP/'ui/hud_screen.json').read_text());self.controls={k:v for row in self.ui['kg_eating_packet']['controls'] for k,v in row.items()}
+  self.ui=json.loads((RP/'ui/kg_grilling_hud.json').read_text());self.controls={k:v for row in self.ui['kg_eating_packet']['controls'] for k,v in row.items()}
  def test_pinned_sources_and_dimensions(self):
   for c,b in self.src.items():
    self.assertEqual(hashlib.sha256(b).hexdigest(),SOURCE_PINS[c]);im=Image.open(io.BytesIO(b));self.assertEqual(im.mode,'RGBA');self.assertEqual(im.size,(102,5))
@@ -40,11 +40,11 @@ class AtlasTests(unittest.TestCase):
  def test_complete_generator_ui_bytes_match_committed(self):
   tree=ast.parse((ROOT/'tools/build_java_eating_hud.py').read_text());main=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='main')
   start=next(i for i,n in enumerate(main.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='controls' for t in n.targets))
-  end=next(i for i,n in enumerate(main.body) if isinstance(n,ast.For) and isinstance(n.target,ast.Name) and n.target.id=='key')
+  end=next(i for i,n in enumerate(main.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='ui' for t in n.targets))
   defs=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ['code','contains']]
   source=(ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_data.js').read_text();index=json.loads(source.split('Object.freeze(',1)[1].split(');',1)[0])
   ns={'PREFIX':'§r§0§r§0','ATLAS_REL':ATLAS_REL,'icon_index':index};exec(compile(ast.fix_missing_locations(ast.Module(body=defs+main.body[start:end+1],type_ignores=[])),'<actual UI constructor>','exec'),ns)
-  self.assertEqual((json.dumps(ns['ui'],ensure_ascii=False,indent=2)+'\n').encode(),(RP/'ui/hud_screen.json').read_bytes())
+  self.assertEqual((json.dumps(ns['ui'],ensure_ascii=False,indent=2)+'\n').encode(),(RP/'ui/kg_grilling_hud.json').read_bytes())
  def test_generator_fixture_shape_and_order_match_committed(self):
   # Metadata-shape test only: use the already declared JAR digest, never a fake archive/hash bypass.
   tree=ast.parse((ROOT/'tools/build_java_eating_hud.py').read_text());fixtures=[n for n in ast.walk(tree) if isinstance(n,ast.Dict) and any(isinstance(k,ast.Constant) and k.value=='jar_sha256' for k in n.keys)];self.assertEqual(len(fixtures),1)

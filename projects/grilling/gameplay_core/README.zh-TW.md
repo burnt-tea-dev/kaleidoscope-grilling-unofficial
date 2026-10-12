@@ -1,6 +1,6 @@
 # Kaleidoscope Grilling Gameplay Core
 
-本分支 canonical runtime：**A2.8.10 Use Repair**。見 [本批修復與驗證邊界](../../../docs/STATUS-A2.8.10.md)；歷史版本紀錄保留供追溯。
+本分支 canonical runtime：**A2.8.129 Shared HUD Catalog Repair**。見 [本批修復與驗證邊界](../../../docs/STATUS-A2.8.129.md)；歷史版本紀錄保留供追溯。
 
 這個目錄下的 `behavior_pack/` 與 `resource_pack/` 是目前真正要編譯、驗證與打包的來源。歷史 `development/gameplay_core/aXX*`、`verify_aXX*` 與已封存的版本 workflow 保留作追溯；**不要再從舊 augment/workflow 生成回來覆寫 canonical runtime**。
 
@@ -20,7 +20,7 @@ projects/grilling/gameplay_core/resource_pack
            artifacts/review/SHA256SUMS.txt
 ```
 
-GitHub canonical gate 為 `.github/workflows/gameplay-core.yml`，直接監聽正式來源。通過驗證且 PR head 提交主旨以 `release:` 開頭時，工作流程建立附有測試包的 GitHub Prerelease；這不等於穩定版或實機驗收。
+GitHub canonical gate 為 `.github/workflows/gameplay-core.yml`，直接監聽正式來源。普通 PR／main 驗證會產生 review artifacts；正式發佈須經精確來源 CI 與家族驗證後，以手動 publish 模式及 `.github/release-request.json` 執行。Prerelease 不等於穩定版或實機驗收。
 
 ## 互動架構
 

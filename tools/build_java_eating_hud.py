@@ -38,17 +38,18 @@ def main():
     image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('§r§1'+code(duration)+code(index)+code(int(ready)))}
     if not ready and name!='fallback':image.update({'color':[.36,.36,.36],'alpha':.86})
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
- ui={'namespace':'hud',
- 'kg_eating_start':{'anim_type':'alpha','duration':0,'from':0,'to':1,'next':'@hud.kg_eating_hold'},
- 'kg_eating_hold':{'anim_type':'wait','duration':.1,'next':'@hud.kg_eating_expire'},
+ ui={'namespace':'kaleidoscope_grilling_hud',
+ 'kg_eating_start':{'anim_type':'alpha','duration':0,'from':0,'to':1,'next':'@kaleidoscope_grilling_hud.kg_eating_hold'},
+ 'kg_eating_hold':{'anim_type':'wait','duration':.1,'next':'@kaleidoscope_grilling_hud.kg_eating_expire'},
  'kg_eating_expire':{'anim_type':'alpha','duration':.001,'from':1,'to':0,'destroy_at_end':'kg_eating_packet'},
- 'kg_eating_packet':{'type':'panel','$kg_text':'$actionbar_text','size':['100%','100%'],'visible':contains(PREFIX),'alpha':'@hud.kg_eating_start','propagate_alpha':True,'controls':controls},
- 'kg_eating_factory':{'type':'panel','size':['100%','100%'],'factory':{'name':'hud_actionbar_text_factory','control_ids':{'hud_actionbar_text':'kg_eating_packet@hud.kg_eating_packet'}}},
- 'root_panel':{'modifications':[{'array_name':'controls','operation':'insert_back','value':[{'kg_java_eating@hud.kg_eating_factory':{}}]}]}}
- # Preserve the current family text filters while hiding only our format-only packets.
- text_visible="((($kg_actionbar_text - '§r§0§r§0') = $kg_actionbar_text) and (($kg_actionbar_text - '§r[KT] 1:§') = $kg_actionbar_text) and (($kg_actionbar_text - '§r[KT] §b') = $kg_actionbar_text) and (not (('%.4s' * $kg_actionbar_text) = '!js.')))"
- for key in ['hud_actionbar_text','hud_actionbar_text/actionbar_message']:ui[key]={'$kg_actionbar_text':'$actionbar_text','visible':text_visible}
- p=RP/'ui/hud_screen.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')
+ 'kg_eating_packet':{'type':'panel','$kg_text':'$actionbar_text','size':['100%','100%'],'visible':contains(PREFIX),'alpha':'@kaleidoscope_grilling_hud.kg_eating_start','propagate_alpha':True,'controls':controls},
+ 'kg_eating_factory':{'type':'panel','size':['100%','100%'],'factory':{'name':'hud_actionbar_text_factory','control_ids':{'hud_actionbar_text':'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet'}}},
+ 'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_factory':{}}]}}
+ # Shared native hud_screen mount stays byte-identical to Tavern. Keep every
+ # Grilling-owned definition in its independently registered catalog file.
+ p=RP/'ui/kg_grilling_hud.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')
+ (p.parent/'_ui_defs.json').write_text(json.dumps({'ui_defs':['ui/kg_grilling_hud.json']},indent=2)+'\n')
+ (p.parent/'_global_variables.json').write_text(json.dumps({'$kg_grilling_hud_root':'kaleidoscope_grilling_hud.root'},indent=2)+'\n')
  (ROOT/'development/gameplay_core/fixtures/java-hud-1.1.1.json').write_text(json.dumps({'jar_sha256':hashlib.sha256(a.jar.read_bytes()).hexdigest(),'assets':assets,'source_classes':['skewer.SkewerEatingHud','skewer.SkewerGuiIconCache'],'bar':{'width':102,'height':5,'left_from_center':-1,'top_from_bottom':-54,'ready_ticks':25,'pending_rgb':[.36,.36,.36],'pending_alpha':.86},'machine_hud_default':False,'derived_assets':derived_assets},indent=2)+'\n')
  print('Pinned original HUD textures:',len(assets),'controls:',len(controls))
 if __name__=='__main__':main()

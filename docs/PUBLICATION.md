@@ -1,38 +1,47 @@
-# G128 public beta
+# G129 publication staging
 
-The fixed download entry is [**A2.8.128-beta.2**](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2), with Grilling **2.8.128** and its built-in guide **0.3.58**: [download the mcaddon](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/download/A2.8.128-beta.2/Kaleidoscope_Grilling_A2.8.128_Review.mcaddon). Use this fixed beta link; latest/stable can still resolve to older G125. The authoritative publication request is [`.github/release-request.json`](../.github/release-request.json). This remains a non-latest prerelease, with `client=false` and `production_ready=false`.
+Grilling **2.8.129**, guide **0.3.59**, is a new candidate for the shared HUD
+catalog repair. The intended non-latest prerelease is **A2.8.129-beta.1**.
+[`.github/release-request.json`](../.github/release-request.json) requests an
+explicit manual publication after this candidate's exact source CI and
+family/save/admission/LIVE readback succeed. Ordinary PR/main runs cannot
+publish. No successful source CI reference is inherited from G128 or the first
+failed G129 run.
 
-Beta.2 repairs publication tooling while retaining the exact G128 archives and completed family/save/LIVE evidence. Beta.1 remains an unpublished draft with its [failed publication run](https://github.com/casama233/kaleidoscope-grilling-unofficial/actions/runs/38161893352) intact. Draft lookup now uses an exact release ID fallback. The four historical asset-import, plant, immersion and A1.16 workflows run automatically only for their actual lab source changes on main/PRs, or through explicit manual dispatch; they upload review artifacts and cannot commit generated outputs to main. Tag pushes and publication-only changes do not invoke those builders. The already generated historical outputs and diagnostics are preserved. This tool repair does not create another game candidate or restart LIVE.
-
-The `.mcaddon` contains the maintained canonical Grilling BP and RP. These are the same owned files used by the family assembler and installed in luosen; packaging does not add server-only gameplay patches. Install it with official [**Cookery 1.6.0, file 9054164**](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164), whose author archive SHA256 is `da12fe6d39d7514aff1de3c963d69899324d771be5ca0fc3da1ccb759c7ad458`. Cookery 1.6.1 changes pack UUIDs and APIs and needs separate adaptation; it is not supported by this release.
-
-The Grilling guide data ships inside Grilling. Clean Cookery does not include family API 0.2.10 or the locale, cutting-board, oil-pot and stockpot hooks. These public adapters can be reproduced through the existing `family_bundle.py` without a private `--extension`, following the [public family assembly instructions](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/docs/PUBLICATION-T147-G128-W124.md). Independent private cooking integration, additional AMW capabilities and third-party packages are not included in the Grilling download.
-
-## Exact archive identity
+Canonical direct packaging binds frozen runtime ancestor
+`23d14fcc7c4d250151becc2ef4fd33048fba1794`, Git tree
+`6e7da9727382b76efae7e92ec6b9e8d1d9790ffd`, with source runtime digest
+`5aa81a21a211c5a89ec5ee408acd47be5ecf6919b74633eebdd9170bde0642fc`.
 
 | Artifact | SHA256 |
 | --- | --- |
-| `Kaleidoscope_Grilling_A2.8.128_Review.mcaddon` | `c9d1ce3b22474389218994a40cf6a4c8beaa28fef2e1e3b5d33dc25757843ca8` |
-| `Kaleidoscope_Grilling_A2.8.128_Review.brproject` | `5a8462d89ddcf7f6974a84600426d5db30a3a4f918ab2cff8a30c6e5df707c75` |
+| `Kaleidoscope_Grilling_A2.8.129_Review.mcaddon` | `aaff6df290c760a75507f8f7815c413a35c72d015d6e735e765cc2a177fa2ca6` |
+| `Kaleidoscope_Grilling_A2.8.129_Review.brproject` | `0979970c3d509fd3682013997052aa7974b4e6e3a62b5c0804a58d575a9146a8` |
 
-Normal `development/gameplay_core/package_current.py` packaging reproduced both hashes from integrated G128 main `ff452251cf62632d88b17237b6ea9e4fa49c4c83`. The canonical runtime digest is `39eed2083acce34aabc8ec3458849ddfc4766e5cbcd031658cca64632d8f5bb2`.
+These are canonical packager digests, not Dash, BDS or client acceptance. The
+verifier dispatch correction changes tools only and preserves these frozen
+outputs. Publication must use the completed canonical run whose full Git tree
+matches final main, with its original archive report and actual checkout; a
+separate publication binding records that check without rewriting the report.
 
-Original G128 source and Dash evidence remains [run 38123426665](https://github.com/casama233/kaleidoscope-grilling-unofficial/actions/runs/38123426665), head `ef9df743d9d7fce8895e8997423f8ffa11d1cc86`, actual CI checkout `57c26eeb76e4e94450a4914e764131fedef0d80a`. That checkout and the integrated source have Git tree `12f60ff11e420f826dda71d9b07845e66dcc7d52`. This historical receipt is not rewritten for later metadata commits. The new publisher/workflow changes require their own successful source and Windows canonical validation. For publication, the selected run head, original archive report commit and frozen main commit must share the same **complete Git tree**, including tools and workflows. Equal runtime bytes alone do not qualify.
+The `.mcaddon` will contain the direct canonical Grilling BP/RP. Family
+installation must use those same owned bytes. Its dependency remains official
+[Cookery 1.6.0, file 9054164](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)
+with the already registered public family API 0.2.10 adapters. Separate private
+integration and third-party packs are not included in the Grilling download.
 
-The package report's `compiled_export_verified=false` describes direct canonical packaging. The selected CI run separately supplies the actual Dash compilation and compiled/source comparison. Source, BDS, saved-world and human client evidence retain their separate scopes.
+Ordinary PR/main validation produces review artifacts. Publishing requires
+successful exact-source canonical CI, family/save/admission and LIVE readback,
+then explicit `publish` workflow dispatch with that successful run ID and exact
+confirmed tag. The publisher reuses the run's original archives and source
+report, checks the complete Git tree, uploaded bytes and tag target, and records
+a separate publication binding. It does not rebuild historical packages.
 
-## Explicit publication
-
-Ordinary PRs and main pushes validate source and produce review artifacts; they do not publish. Keep the existing family static, fresh stopped-save rehearsal, admission and LIVE readback sequence. After that sequence succeeds, dispatch **Grilling Gameplay Core — Canonical** on `main` with:
-
-- `mode`: `publish`
-- `validated_run_id`: the completed canonical validation run whose complete Git tree matches current main
-- `confirm_tag`: `A2.8.128-beta.2`
-
-The default mode is `validate`. Publication rejects another repository, a different complete Git tree or workflow, pending or failed runs, skipped source/Windows jobs, expired artifacts, another tag or changed archive hashes. It reuses only that exact run's review archives; it does not rebuild from a historical package or edit a source receipt. The original report keeps its actual CI commit; a separate `publication-binding.json` records the checked commits, publication commit, shared tree, run/attempt and exact artifact hashes. A publication dispatch has a separate concurrency group so it cannot cancel an in-progress validation run.
-
-The existing draft/upload/readback gate checks uploaded bytes and the exact tag target before publishing a non-latest beta. An already published release is immutable. The GitHub release body records the actual source commit and selected validation run.
-
-## Remaining client scope
-
-G126/G127 recordings cover limited right-hand, standing, empty-offhand, Makena/wide and FOV70 scenes. Uses was observed on an isolated G125 diagnostic with two exact script postimages: one Uses row at 16→15→14, retaining Ingredients 3/8. Numb native verification, the combined G128 client matrix, near-mouth enlargement, broader inputs/viewpoints and full Java visuals/audio remain pending. These bounded observations do not become complete acceptance through publication. See the unchanged [G128 status](STATUS-A2.8.128.md) and [Uses evidence](evidence/cookery-uses-lore-native-20261011.md).
+This candidate changes catalog registration and mounts while preserving the
+original eating textures, dimensions, timing and producer. See
+[G129 status](STATUS-A2.8.129.md) and the
+[scope and verification record](evidence/hud-catalog-compatibility-20261012.md).
+Human rendering and full Java parity remain pending: `client=false` and
+`production_ready=false`. The last published release is
+[G128 beta.2](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.128-beta.2);
+its original source, diagnostics and receipts remain unchanged.
