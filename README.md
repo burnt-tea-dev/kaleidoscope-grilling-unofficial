@@ -1,8 +1,8 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.130
+## Current maintained baseline: 2.8.131
 
-G130 將進食圖形移離共享 Actionbar，使用可選 UI Queue 的獨立 key 與 title binding 快照；取消／完成只終結自己的圖形。原 Atlas、25 tick 判定、90／100 tick 食用時間、動畫與物品結算保持。身份 **2.8.130／指南 0.3.60**，保留 G129 的獨立 catalog 與 G128 Uses／Numb 修補。有限 6 tick 遺失封包回退、相容範圍及真人場景見 [G130 狀態](docs/STATUS-A2.8.130.md)。
+G131 將傳送落地判斷中不被玩法使用的來源診斷資料移至開發 fixture，減少啟動時17,410個物件的建立／凍結；runtime catalog由1,129,402降至354,022 bytes。954筆實際判斷、完整Java來源證據、未知狀態拒絕、G130圖形通道與食物結算保持。身份 **2.8.131／指南0.3.61**；來源等價已核對，原生watchdog改善仍須本候選量測，見 [G131狀態](docs/STATUS-A2.8.131.md)。
 
 本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
