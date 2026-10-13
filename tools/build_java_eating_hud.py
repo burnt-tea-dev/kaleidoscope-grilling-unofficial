@@ -2,7 +2,7 @@
 """Copy pinned Java GUI assets and emit a graphical eating HUD (no text bar)."""
 from pathlib import Path
 import argparse,hashlib,json,zipfile
-from formatting_hud_ui import snapshot_panel,packet_visibility
+from formatting_hud_ui import bind_channel
 from java_eating_hud_atlas import ATLAS_REL,build_progress_atlas,atlas_metadata
 ROOT=Path(__file__).resolve().parents[1]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
@@ -40,14 +40,9 @@ def main():
     if not ready and name!='fallback':image.update({'color':[.36,.36,.36],'alpha':.86})
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
  ui={'namespace':'kaleidoscope_grilling_hud',
- 'kg_eating_start':{'anim_type':'alpha','duration':0,'from':0,'to':1,'next':'@kaleidoscope_grilling_hud.kg_eating_hold'},
- 'kg_eating_hold':{'anim_type':'wait','duration':.3,'next':'@kaleidoscope_grilling_hud.kg_eating_expire'},
- 'kg_eating_expire':{'anim_type':'alpha','duration':.001,'from':1,'to':0,'destroy_at_end':'kg_eating_packet'},
- 'kg_eating_packet':{'type':'panel','$kg_text':'$actionbar_text','size':['100%','100%'],'visible':contains(PREFIX),'alpha':'@kaleidoscope_grilling_hud.kg_eating_start','propagate_alpha':True,'controls':controls},
- 'kg_eating_factory':{'type':'panel','size':['100%','100%'],'factory':{'name':'hud_title_text_factory','control_ids':{'hud_title_text':'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet'}}},
- 'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_factory':{}}]}}
- snapshot_panel(ui['kg_eating_packet'],'kg_eating',PREFIX,PREFIX+'§r§f§f§r','kg_text')
- packet_visibility(ui['kg_eating_packet'],'kg_text',PREFIX,PREFIX+'§r§f§f§r')
+ 'kg_eating_packet':{'type':'panel','size':['100%','100%'],'controls':controls},
+ 'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}]}}
+ bind_channel(ui['kg_eating_packet'],'kg_eating',PREFIX,PREFIX+'§r§f§f§r','kg_text')
  # Shared native hud_screen mount stays byte-identical to Tavern. Keep every
  # Grilling-owned definition in its independently registered catalog file.
  p=RP/'ui/kg_grilling_hud.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')

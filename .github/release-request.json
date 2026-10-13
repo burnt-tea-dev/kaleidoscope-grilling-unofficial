@@ -2,30 +2,15 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.132",
-  "tag": "A2.8.132-beta.1",
-  "publication_request": true,
+  "version": "A2.8.133",
+  "tag": "A2.8.133-beta.1",
+  "publication_request": false,
   "prerelease": true,
   "make_latest": "false",
   "client": false,
   "production_ready": false,
-  "expected_artifacts": {
-    "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.132_Review.mcaddon",
-      "sha256": "e923b13903a4f1d4ce70ede946ec7194436657611fe16fab14b3720d3315e6d3"
-    },
-    "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.132_Review.brproject",
-      "sha256": "289a7bbc1e4fe162f0e78d4aae934eb98611dd8256f7b8fa61b7ca09b2677c07"
-    }
-  },
-  "status": "awaiting_exact_source_ci_family_save_admission_and_live_readback",
-  "expected_source_tree_sha256": "f543be6b5148e94f9e334364add85778c1f2ea522ee8a16f807136b895623df6",
-  "integrated_source": {
-    "commit": "7b4df989b6e5f93fd3a42eefe92274aba7e25a6a",
-    "tree": "f98964299333ff4511f0dfdbe79bded13d3f85da",
-    "pull_requests": [
-      199
-    ]
-  }
+  "status": "awaiting_source_ci_family_save_admission_and_live_readback",
+  "saved_world_migration": "pending",
+  "live_deployment": false,
+  "validation_evidence": "docs/STATUS-A2.8.133.md"
 }
