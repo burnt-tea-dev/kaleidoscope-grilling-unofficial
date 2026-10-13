@@ -1,5 +1,7 @@
 # 煙火現況對照表
 
+2026-10-13 UI repair candidate: permanent channel receivers replace the zero-duration title factory snapshots; original assets and gameplay retained. [Scope and pending client result](STATUS-A2.8.133.md).
+
 更新：2026-10-13；當前維護來源 [G132 進度獎勵所有權](STATUS-A2.8.132.md)，保留 [G131 啟動資料分離](STATUS-A2.8.131.md)，保留 [G130 圖形通道隔離與終結快照](STATUS-A2.8.130.md)，保留 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)，保留 [G128 調料 Uses 與 Numb schema 修補草稿](STATUS-A2.8.128.md)，保留 [G127 兩食品動畫與 Atlas HUD 後繼草稿](STATUS-A2.8.127.md)，保留 [G126 熟毛蟲雙手與 HUD 候選](STATUS-A2.8.126.md)，保留 [G125場景聲畫與操作守恆](STATUS-A2.8.125.md)，保留 [G124調料資料映射](STATUS-A2.8.124.md)、[G123指南正文鍵修補](STATUS-A2.8.123.md)、[G122炒鍋、品質與所有權](STATUS-A2.8.122.md)及 [G121酒館指南橋接](STATUS-A2.8.121.md)。
 [當前啟動資料修補](evidence/ground-catalog-startup-20261013.md)將未使用的地面診斷資訊留在來源 fixture，runtime 只載入既有954筆判斷；來源等價與九項既有邊界測試通過，原生watchdog改善仍待本候選觀察，沒有新增Java聲畫驗收。
 
