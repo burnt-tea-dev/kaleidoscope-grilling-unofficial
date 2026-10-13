@@ -3,6 +3,7 @@
 from pathlib import Path
 import argparse,hashlib,json,zipfile
 from formatting_hud_ui import bind_channel
+from hud_mount_contract import global_catalog
 from java_eating_hud_atlas import ATLAS_REL,build_progress_atlas,atlas_metadata
 ROOT=Path(__file__).resolve().parents[1]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
@@ -47,7 +48,7 @@ def main():
  # Grilling-owned definition in its independently registered catalog file.
  p=RP/'ui/kg_grilling_hud.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')
  (p.parent/'_ui_defs.json').write_text(json.dumps({'ui_defs':['ui/kg_grilling_hud.json']},indent=2)+'\n')
- (p.parent/'_global_variables.json').write_text(json.dumps({'$kg_grilling_hud_root':'kaleidoscope_grilling_hud.root'},indent=2)+'\n')
+ (p.parent/'_global_variables.json').write_text(json.dumps(global_catalog('grilling'),indent=2)+'\n')
  (ROOT/'development/gameplay_core/fixtures/java-hud-1.1.1.json').write_text(json.dumps({'jar_sha256':hashlib.sha256(a.jar.read_bytes()).hexdigest(),'assets':assets,'source_classes':['skewer.SkewerEatingHud','skewer.SkewerGuiIconCache'],'bar':{'width':102,'height':5,'left_from_center':-1,'top_from_bottom':-54,'ready_ticks':25,'pending_rgb':[.36,.36,.36],'pending_alpha':.86},'machine_hud_default':False,'derived_assets':derived_assets},indent=2)+'\n')
  print('Pinned original HUD textures:',len(assets),'controls:',len(controls))
 if __name__=='__main__':main()

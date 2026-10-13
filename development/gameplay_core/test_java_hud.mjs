@@ -66,8 +66,10 @@ test('eating controls remain registered outside the shared native HUD catalog',(
  assert.equal(ui.kg_eating_packet.controls.length,406);
  assert(!('kg_eating_packet' in mount));assert(!('root_panel' in ui));
  const nativeRoot=mount.root_panel;
- assert.equal(nativeRoot['$kg_grilling_hud_root|default'],'hud.kt_family_empty');
- assert.equal(nativeRoot['$kt_tavern_hud_root|default'],'hud.kt_family_empty');
+ for(const variable of ['$kg_grilling_hud_root','$kt_tavern_hud_root']){
+  assert(!Object.hasOwn(nativeRoot,variable+'|default'),'Local empty value shadows installed HUD provider');
+  assert.equal(globals[variable+'|default'],'hud.kt_family_empty');
+ }
  assert.deepEqual(nativeRoot.modifications,[{array_name:'controls',operation:'insert_back',value:[
   {'kt_family_tavern@$kt_tavern_hud_root':{}},
   {'kt_family_grilling@$kg_grilling_hud_root':{}},
