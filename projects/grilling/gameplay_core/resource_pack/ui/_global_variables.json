@@ -1,3 +1,11 @@
 {
+  "$kt_tavern_hud_root|default": "hud.kt_family_empty",
+  "$kg_grilling_hud_root|default": "hud.kt_family_empty",
+  "$senluo_amw_hud_root|default": "hud.kt_family_empty",
+  "$senluo_amw_boss_root|default": "hud.kt_family_empty",
+  "$senluo_saturation_non_centered|default": "hud.kt_family_empty",
+  "$senluo_saturation_centered|default": "hud.kt_family_empty",
+  "$senluo_saturation_touch|default": "hud.kt_family_empty",
+  "$kt_world_liquor_effect_panel|default": "hud.kt_family_empty",
   "$kg_grilling_hud_root": "kaleidoscope_grilling_hud.root"
 }

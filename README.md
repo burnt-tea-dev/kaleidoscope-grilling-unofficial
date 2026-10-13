@@ -1,8 +1,8 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.133
+## Current maintained baseline: 2.8.134
 
-G133 修復進食圖形接收層，保留 G132 進度獎勵防重與原作材質／時間。身份 **2.8.133／指南0.3.62**；[修補範圍與待驗畫面](docs/STATUS-A2.8.133.md)。CI、家族准入與真人渲染分開記錄。
+G134修正進食HUD掛載處的本地空面板預設，與T161共用不遮蔽全域provider的橋接；保留原作進食材質、時間與結算。身份 **2.8.134／指南0.3.62**；[修補範圍](docs/STATUS-A2.8.134.md)。真人畫面待確認。
 
 本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
