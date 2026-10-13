@@ -1,9 +1,11 @@
 /** Newly affected source-mapping behavior; API adapters are not Native clients. */
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {classifyProjectileDodgeGroundCell} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_core.js';
 import {resolveProjectileDodgeGround} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_runtime.js';
-import {PROJECTILE_DODGE_GROUND_FACTS,PROJECTILE_DODGE_GROUND_ROWS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_catalog.js';
+import {PROJECTILE_DODGE_GROUND_ROWS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_catalog.js';
+const {PROJECTILE_DODGE_GROUND_FACTS}=JSON.parse(readFileSync(new URL('./fixtures/projectile-dodge-ground-diagnostics.json',import.meta.url),'utf8'));
 const cell=(typeId,states=typeId==='minecraft:stone'?{stone_type:'stone'}:{})=>({typeId,states});
 function column(read){
  const seen=[],writes=[];const entity={location:{x:5.25,y:80,z:6.75},dimension:{id:'minecraft:overworld',heightRange:{min:-64,max:320},isChunkLoaded:()=>true,getBlock(point){

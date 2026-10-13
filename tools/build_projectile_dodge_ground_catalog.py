@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 FIXTURE=ROOT/'development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json'
 NATIVE_ALIAS_FIXTURE=ROOT/'development/gameplay_core/fixtures/java-projectile-dodge-native-alias-abi.json'
 OUTPUT=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_catalog.js'
+DIAGNOSTICS=ROOT/'development/gameplay_core/fixtures/projectile-dodge-ground-diagnostics.json'
 VERSIONS=['1.20.1','1.21.1']
 
 def build():
@@ -96,16 +97,23 @@ def build():
  summary['movementIntegrated']=data['limitations']['movement_integrated']
  header='// Generated owned source facts; no default native solidity or gameplay admission.\n// Source: development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json\n'
  freeze="function freeze(v){if(v&&typeof v==='object'){for(const child of Object.values(v))freeze(child);Object.freeze(v)}return v}\n"
- exported={'PROJECTILE_DODGE_GROUND_SCOPE':summary,'PROJECTILE_DODGE_GROUND_FACTS':facts,'PROJECTILE_DODGE_GROUND_ROWS':lookup,'PROJECTILE_DODGE_GROUND_HELD_IDENTITIES':identity_held,'PROJECTILE_DODGE_GROUND_HELD_BRANCHES':all_branch_unavailable,'PROJECTILE_DODGE_GROUND_UNKNOWN_IDS':sorted(unknown)}
- text=header+freeze
- for name,value in exported.items():text+='export const '+name+'=freeze('+json.dumps(value,separators=(',',':'))+');\n'
- return text,summary
+ # Source-only audit facts are not loaded or recursively frozen by Bedrock.
+ # Keep them generated beside the source fixtures for the existing audit checks.
+ diagnostics={'PROJECTILE_DODGE_GROUND_SCOPE':summary,'PROJECTILE_DODGE_GROUND_FACTS':facts,'PROJECTILE_DODGE_GROUND_HELD_IDENTITIES':identity_held,'PROJECTILE_DODGE_GROUND_HELD_BRANCHES':all_branch_unavailable,'PROJECTILE_DODGE_GROUND_UNKNOWN_IDS':sorted(unknown)}
+ # Encode the same JSON text as a string to avoid compiling thousands of
+ # object-literal expressions. Values, key order and recursive freeze stay exact.
+ raw=json.dumps(lookup,separators=(',',':'))
+ text=header+freeze+'export const PROJECTILE_DODGE_GROUND_ROWS=freeze(JSON.parse('+json.dumps(raw)+'));\n'
+ return text,summary,json.dumps(diagnostics,separators=(',',':'))+'\n'
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--check',action='store_true');args=p.parse_args()
- output,summary=build()
+ output,summary,diagnostics=build()
  if args.check:
   if not OUTPUT.exists() or OUTPUT.read_text()!=output:raise SystemExit('Owned ground catalog differs from the source fixture')
- else:OUTPUT.write_text(output)
+  if not DIAGNOSTICS.exists() or DIAGNOSTICS.read_text()!=diagnostics:raise SystemExit('Owned ground diagnostics differ from the source fixture')
+ else:
+  OUTPUT.write_text(output)
+  DIAGNOSTICS.write_text(diagnostics)
  print(json.dumps(summary))
 if __name__=='__main__':main()

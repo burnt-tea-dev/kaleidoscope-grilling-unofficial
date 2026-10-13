@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "source_base": "a567e17c0316f7f2175dfef07004bb944634ca90",
+  "runtime_rows": 954,
+  "runtime_recursive_frozen_objects": 13539,
+  "removed_eager_diagnostic_objects": 12640,
+  "preserved_diagnostic_exports": [
+    "PROJECTILE_DODGE_GROUND_SCOPE",
+    "PROJECTILE_DODGE_GROUND_FACTS",
+    "PROJECTILE_DODGE_GROUND_HELD_IDENTITIES",
+    "PROJECTILE_DODGE_GROUND_HELD_BRANCHES",
+    "PROJECTILE_DODGE_GROUND_UNKNOWN_IDS"
+  ],
+  "equivalence": {
+    "runtime_values": true,
+    "key_order": true,
+    "prototypes": true,
+    "property_descriptors": true,
+    "recursive_freeze": true,
+    "diagnostic_values_and_order": true,
+    "consumer_classifications": 955
+  },
+  "runtime_source": {
+    "before_bytes": 1129402,
+    "after_bytes": 592979,
+    "before_sha256": "d46d484a80acc64dbee14eb891ab4b26c968277318186157d6324d2c7de74fa4",
+    "after_sha256": "b9837a5ab114c7ecffcc46954e8ad9ccea82769827de322a2b762e23abb870b0"
+  },
+  "limits": {
+    "native": false,
+    "client": false,
+    "watchdog_reduction_measured": false,
+    "full_java_parity": false
+  }
+}
