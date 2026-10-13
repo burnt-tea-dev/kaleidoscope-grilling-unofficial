@@ -1,4 +1,5 @@
 import {canonicalFoodId} from './eating_profile_ids.js';
+import {canonicalLoreForComparison} from './bottle_lore_core.js';
 // Versioned, fail-closed projection of metadata exposed by the stable ItemStack API.
 // This is not a serializer for inaccessible Java NBT or other packs' private data.
 import {getItemProperty,getItemPropertyIds,setItemProperty,getItemRawLore,setItemLore} from './itemDataCore.js';
@@ -8,7 +9,14 @@ function stable(value){
  if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,stable(value[k])]));
  return value;
 }
-export function metadataSignature(value){return JSON.stringify(stable(value));}
+export function metadataSignature(value){
+ // ItemStack may return equivalent RawMessages in different legal wrappers.
+ // Reuse the bottle codec's bounded rules ONLY for the snapshot's lore field;
+ // opaque properties, mixed messages and every other datum remain exact.
+ const comparable=value&&typeof value==='object'&&!Array.isArray(value)&&Array.isArray(value.rawLore)
+  ?{...value,rawLore:canonicalLoreForComparison(value.rawLore)}:value;
+ return JSON.stringify(stable(comparable));
+}
 function clone(value){return JSON.parse(JSON.stringify(value));}
 function property(value){
  if(typeof value==='string'||typeof value==='boolean'||(typeof value==='number'&&Number.isFinite(value)))return value;
