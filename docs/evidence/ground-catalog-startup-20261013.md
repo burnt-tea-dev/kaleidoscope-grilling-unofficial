@@ -8,15 +8,15 @@
 未採納身份、分支範圍和未知方塊 ID。這五個 exports 在 canonical production 中沒有 consumer；
 唯一直接讀取 facts 的用途是來源回歸測試。
 
-生成器現把這五份來源資料輸出到
+生成器現把這五份來源資料，以及954筆rows中production未讀的 `sourceSets`／`identityKind` 來源欄位，輸出到
 `development/gameplay_core/fixtures/projectile-dodge-ground-diagnostics.json`，由原有來源測試讀取。
-原始 Java facts、身份證據、未採納範圍及原 fixture 全部保留，`--check` 同時核對 runtime 和 diagnostic 產物。
-發布包只保留實際使用的 954 筆 rows，並把相同 JSON 字面內容編碼為 `JSON.parse` 字串，避免編譯大量物件運算式。
+完整原始rows、Java facts、身份證據、未採納範圍及原 fixture 全部保留，`--check` 同時核對 runtime 和 diagnostic 產物。
+發布包只保留實際使用的954筆rows之 `typeId`／`blocksMotion`／`states`／`nativeAliases`，並把相同 JSON 字面內容編碼為 `JSON.parse` 字串，避免編譯大量物件運算式。
 原有遞迴 freeze、查找表、alias tuple 驗證與未知狀態拒絕規則保持。
 
-[完整来源差分](ground-catalog-startup-20261013.json)核對相同值、鍵順序、原型、屬性描述符與凍結深度；
-954 個已知分類與一個未知分類均相同。從載入路徑移除 **12,640 個 diagnostic 物件／陣列**，
-runtime catalog 從 **1,129,402** 降至 **592,979 bytes**。
+[完整来源差分](ground-catalog-startup-20261013.json)核對所有實際consumer欄位的相同值、鍵順序、原型、屬性描述符與凍結深度；
+954 個已知分類與一個未知分類均相同。從載入路徑移除 **17,410 個 diagnostic 物件／陣列**，
+runtime catalog 從 **1,129,402** 降至 **354,022 bytes**。
 這是確定的來源工作量減少；不是 Bedrock 記憶體用量或原生耗時的推算。
 現有九個地面分類／落地邊界測試通過，沒有新增加玩法或任意放寬地面支撐。
 

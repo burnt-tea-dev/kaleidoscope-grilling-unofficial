@@ -99,10 +99,11 @@ def build():
  freeze="function freeze(v){if(v&&typeof v==='object'){for(const child of Object.values(v))freeze(child);Object.freeze(v)}return v}\n"
  # Source-only audit facts are not loaded or recursively frozen by Bedrock.
  # Keep them generated beside the source fixtures for the existing audit checks.
- diagnostics={'PROJECTILE_DODGE_GROUND_SCOPE':summary,'PROJECTILE_DODGE_GROUND_FACTS':facts,'PROJECTILE_DODGE_GROUND_HELD_IDENTITIES':identity_held,'PROJECTILE_DODGE_GROUND_HELD_BRANCHES':all_branch_unavailable,'PROJECTILE_DODGE_GROUND_UNKNOWN_IDS':sorted(unknown)}
+ diagnostics={'PROJECTILE_DODGE_GROUND_SCOPE':summary,'PROJECTILE_DODGE_GROUND_FACTS':facts,'PROJECTILE_DODGE_GROUND_HELD_IDENTITIES':identity_held,'PROJECTILE_DODGE_GROUND_HELD_BRANCHES':all_branch_unavailable,'PROJECTILE_DODGE_GROUND_UNKNOWN_IDS':sorted(unknown),'PROJECTILE_DODGE_GROUND_SOURCE_ROWS':lookup}
  # Encode the same JSON text as a string to avoid compiling thousands of
  # object-literal expressions. Values, key order and recursive freeze stay exact.
- raw=json.dumps(lookup,separators=(',',':'))
+ runtime_rows=[{key:value for key,value in row.items() if key not in ('sourceSets','identityKind')} for row in lookup]
+ raw=json.dumps(runtime_rows,separators=(',',':'))
  text=header+freeze+'export const PROJECTILE_DODGE_GROUND_ROWS=freeze(JSON.parse('+json.dumps(raw)+'));\n'
  return text,summary,json.dumps(diagnostics,separators=(',',':'))+'\n'
 
