@@ -1,6 +1,6 @@
 # 煙火現況對照表
 
-更新：2026-10-13；當前維護來源 [G131 啟動資料分離](STATUS-A2.8.131.md)，保留 [G130 圖形通道隔離與終結快照](STATUS-A2.8.130.md)，保留 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)，保留 [G128 調料 Uses 與 Numb schema 修補草稿](STATUS-A2.8.128.md)，保留 [G127 兩食品動畫與 Atlas HUD 後繼草稿](STATUS-A2.8.127.md)，保留 [G126 熟毛蟲雙手與 HUD 候選](STATUS-A2.8.126.md)，保留 [G125場景聲畫與操作守恆](STATUS-A2.8.125.md)，保留 [G124調料資料映射](STATUS-A2.8.124.md)、[G123指南正文鍵修補](STATUS-A2.8.123.md)、[G122炒鍋、品質與所有權](STATUS-A2.8.122.md)及 [G121酒館指南橋接](STATUS-A2.8.121.md)。
+更新：2026-10-13；當前維護來源 [G132 進度獎勵所有權](STATUS-A2.8.132.md)，保留 [G131 啟動資料分離](STATUS-A2.8.131.md)，保留 [G130 圖形通道隔離與終結快照](STATUS-A2.8.130.md)，保留 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)，保留 [G128 調料 Uses 與 Numb schema 修補草稿](STATUS-A2.8.128.md)，保留 [G127 兩食品動畫與 Atlas HUD 後繼草稿](STATUS-A2.8.127.md)，保留 [G126 熟毛蟲雙手與 HUD 候選](STATUS-A2.8.126.md)，保留 [G125場景聲畫與操作守恆](STATUS-A2.8.125.md)，保留 [G124調料資料映射](STATUS-A2.8.124.md)、[G123指南正文鍵修補](STATUS-A2.8.123.md)、[G122炒鍋、品質與所有權](STATUS-A2.8.122.md)及 [G121酒館指南橋接](STATUS-A2.8.121.md)。
 [當前啟動資料修補](evidence/ground-catalog-startup-20261013.md)將未使用的地面診斷資訊留在來源 fixture，runtime 只載入既有954筆判斷；來源等價與九項既有邊界測試通過，原生watchdog改善仍待本候選觀察，沒有新增Java聲畫驗收。
 
 家族目前的 LIVE 配套、部署／保存／指南接收收據統一見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)，本頁不另複製部署版本及驗收狀態。
@@ -59,3 +59,7 @@ PR欄採用 **2026-10-08 G116重新核對的固定runtime差異**；「未入基
 沒有相關新變更或新失敗時重用有效證據，不為這張表新增測試或重新啟動BDS。
 固定牛肉串下一輪以正常取得→穿製→油→四翻→同瓶撒料→取出→食用→保存為單一路徑；
 所需C只補原生／保存缺口，D由使用者實際客戶端對照。來源／發版／備份／家族准入邊界仍保留，禁止模擬玩家。
+
+## 進度獎勵失敗邊界（G132）
+
+[Java 原作及修補證據](evidence/advancement-claim-20261013.md)：先持久 claim 及確認讀回，再作單次 XP 嘗試，未知結果不 fallback／重試。既有 boolean true 保留。這是 at-most-once attempt 的平台適配；跨 API 原子性、unknown 未發 XP 的人工恢復及原生／真人驗收仍未完成。

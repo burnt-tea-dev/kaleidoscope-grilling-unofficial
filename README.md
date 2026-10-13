@@ -1,8 +1,8 @@
 # Kaleidoscope Grilling — unofficial Bedrock port
 
-## Current maintained baseline: 2.8.131
+## Current maintained baseline: 2.8.132
 
-G131 將傳送落地判斷中不被玩法使用的來源診斷資料移至開發 fixture，減少啟動時17,410個物件的建立／凍結；runtime catalog由1,129,402降至354,022 bytes。954筆實際判斷、完整Java來源證據、未知狀態拒絕、G130圖形通道與食物結算保持。身份 **2.8.131／指南0.3.61**；來源等價已核對，原生watchdog改善仍須本候選量測，見 [G131狀態](docs/STATUS-A2.8.131.md)。
+G132 在發出進度獎勵前先確認持久 claim，避免寫入失敗、API 結果不明或重試導致重複 XP；正常 25 XP／0 XP 及 legacy completion 保持。保留 G131 啟動資料精簡及 G130 圖形通道。身份 **2.8.132／指南0.3.62**；原生 watchdog 改善及真人畫面仍待本候選驗證，見 [G132狀態](docs/STATUS-A2.8.132.md)。
 
 本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
