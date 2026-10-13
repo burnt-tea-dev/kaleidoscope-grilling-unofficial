@@ -1,34 +1,15 @@
-# G130 publication staging
+# G132 publication staging
 
-The intended non-latest prerelease is **A2.8.130-beta.1**, Grilling **2.8.130**,
-guide **0.3.60**. The request is reset for this new immutable candidate. Exact
-runtime/archive digests and the frozen source ancestor are recorded after
-canonical direct packaging. No G129 artifact or successful CI is reused.
+Intended non-latest prerelease: **A2.8.132-beta.1**, Grilling **2.8.132**, guide **0.3.62**.
+G132 claims advancement ownership before attempting XP and retains G131's startup catalog reduction. G131 remains an immutable historical claim; only final G132 is intended for this family publication/deployment.
 
-Canonical frozen ancestor `10d4fc387724c6b60d1dc0af579a318a664bdc04` / tree
-`12001602f1429dd3a9aa7b8e709584ec39740148` produced runtime digest
-`cd11c20b6f28b28963b30b6d5cd4b4539a32bb10052ef799592ba111e543fd85`. These are local direct packaging checks, not
-CI, BDS, gameplay or rendered-client acceptance.
+Frozen source ancestor `7b4df989b6e5f93fd3a42eefe92274aba7e25a6a` / tree `f98964299333ff4511f0dfdbe79bded13d3f85da` produced runtime digest `f543be6b5148e94f9e334364add85778c1f2ea522ee8a16f807136b895623df6`.
 
 | Artifact | SHA256 |
 | --- | --- |
-| `Kaleidoscope_Grilling_A2.8.130_Review.mcaddon` | `acdeef990da652898cd9c3d50932820243a68efa2283fd8cb7946504d7247855` |
-| `Kaleidoscope_Grilling_A2.8.130_Review.brproject` | `32f33d81c458952eb8947f2f4f3a3a906a45b581caa6b398e58504f124448ec5` |
+| `Kaleidoscope_Grilling_A2.8.132_Review.mcaddon` | `e923b13903a4f1d4ce70ede946ec7194436657611fe16fab14b3720d3315e6d3` |
+| `Kaleidoscope_Grilling_A2.8.132_Review.brproject` | `289a7bbc1e4fe162f0e78d4aae934eb98611dd8256f7b8fa61b7ca09b2677c07` |
 
+ Publication remains explicit `publish` dispatch after exact-source CI, full family/save/admission and LIVE readback. PR/main runs produce review artifacts only. Public archives contain canonical Grilling BP/RP; Cookery 1.6.0 and private family adapters remain separate dependencies.
 
-Publication remains an explicit `publish` workflow dispatch after this source's
-successful canonical CI, full family/save/admission and LIVE readback. Ordinary
-PR/main runs only produce review artifacts. The publisher consumes that run's
-original archive/report and binds its complete checked Git tree; no historical
-builder, receipt rewrite or client acceptance shortcut is used.
-
-The public `.mcaddon` contains only the direct canonical Grilling BP/RP.
-[Cookery 1.6.0](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)
-and the registered family API adapters remain dependencies. AMW, Java Saturation
-and UI Queue repairs are separately reviewed private family variants and are not
-included here. The previously published release is
-[G129 beta.1](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.129-beta.1).
-
-The [G130 source scope](STATUS-A2.8.130.md) preserves food timing, atlas and
-settlement. Actual client rendering remains pending: `client=false`,
-`production_ready=false`.
+[G132 scope and limitations](STATUS-A2.8.132.md). `client=false`, `production_ready=false`; native watchdog improvement, uncertain XP delivery and complete Java/rendered-client parity remain unverified.
