@@ -99,6 +99,8 @@ test('eating frames and terminal event never write or clear an Actionbar',()=>{
  assert.equal(rows.kg_eating_channel.visible,false);
  assert.equal(rows.kg_eating_channel.bindings[0].binding_condition,'always');
  assert.equal(rows.kg_eating_channel.bindings[1].binding_condition,'visibility_changed');
+ assert.equal(rows.kg_eating_channel.bindings[1].binding_name,'#hud_title_text_string');
+ assert.equal(rows.kg_eating_channel.bindings[1].binding_name_override,'#kg_text');
  for(const sprite of Object.values(rows).filter(row=>row.type==='image')){
   assert.equal(sprite.bindings[0].source_control_name,'kg_eating_channel');assert.equal(sprite.bindings[0].resolve_sibling_scope,true);
   assert(!sprite.bindings.some(b=>b.binding_name==='#hud_title_text_string'));
