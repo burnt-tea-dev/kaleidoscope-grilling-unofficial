@@ -15,5 +15,20 @@
   "validation_evidence": "CHANGELOG.md",
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
-  "public_notes_inline": "A2.8.142 在原生 Actionbar 實例建立時裁剪未選中的進食圖像，減少控制樹負擔。保留完整食物時長、結算、動畫、Java 素材與位置，以及原生剩餘時間和立即首幀。正式標籤 A2.8.142，輸出後綴 baseline1。客戶端延遲與性能驗收仍獨立記錄。"
+  "public_notes_inline": "A2.8.142 在原生 Actionbar 實例建立時裁剪未選中的進食圖像，減少控制樹負擔。保留完整食物時長、結算、動畫、Java 素材與位置，以及原生剩餘時間和立即首幀。正式標籤 A2.8.142，輸出後綴 baseline1。客戶端延遲與性能驗收仍獨立記錄。",
+  "expected_source_tree_sha256": "b12247f422b73e2decd76d3eeb8190465e160161a272138c6c1c7418653e3b81",
+  "expected_artifacts": {
+    "mcaddon": {
+      "name": "Kaleidoscope_Grilling_A2.8.142_baseline1.mcaddon",
+      "sha256": "a760773c96fe6fd2b892f22f57c1188f0237b19f0e609742ff37cd1e55d65ce9"
+    },
+    "brproject": {
+      "name": "Kaleidoscope_Grilling_A2.8.142_baseline1.brproject",
+      "sha256": "2e3d50091a7f1adabeb6cdeb05a8391637e10b18cb4e70b1e5a388694905b5ad"
+    }
+  },
+  "integrated_source": {
+    "commit": "8e9aa398418622eb0b3eb4ad180f7c7d1c0fae18",
+    "tree": "cf85f767d5267abc275165464407f78e5025dda4"
+  }
 }
