@@ -2,30 +2,33 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.138",
-  "tag": "A2.8.138-beta.1",
+  "version": "A2.8.139",
+  "tag": "A2.8.139",
   "publication_request": true,
-  "prerelease": true,
+  "prerelease": false,
   "make_latest": "false",
   "client": false,
   "production_ready": false,
   "status": "awaiting_source_ci_family_save_admission_and_live_readback",
   "saved_world_migration": "pending",
   "live_deployment": false,
-  "validation_evidence": "docs/STATUS-A2.8.138.md",
-  "expected_source_tree_sha256": "b57257e2c6bbf1f72e2bc0605f75081fb9e5694140f3f40b8c228ee96f3fecfa",
+  "validation_evidence": "CHANGELOG.md",
+  "expected_source_tree_sha256": "5dbb2a225b156dc2d67ae142f10e980ca7c3e81b842ab8466ddefa11884fe36f",
   "expected_artifacts": {
     "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.138_Review.mcaddon",
-      "sha256": "bd2d3abe0190027a0ba47de95eaef9dd88657647b0c586431863fceb5c4a5a71"
+      "name": "Kaleidoscope_Grilling_A2.8.139_baseline1.mcaddon",
+      "sha256": ""
     },
     "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.138_Review.brproject",
-      "sha256": "6ed348ba149d221692ef632b59d13b0bad2c49ae4da7ba2ba011d037637b19a5"
+      "name": "Kaleidoscope_Grilling_A2.8.139_baseline1.brproject",
+      "sha256": ""
     }
   },
   "integrated_source": {
-    "commit": "e4cbaf48411013d2a9ffcb926225d4a751f65070",
-    "tree": "604455e6577f3af21d58a70dac41b034c9caff34"
-  }
+    "commit": "",
+    "tree": ""
+  },
+  "artifact_suffix": "baseline1",
+  "public_notes_path": "CHANGELOG.md",
+  "public_notes_inline": "A2.8.139 修正進食圖形的錨點方向、填色與第 25 tick 圖示位置，觸控時整組圖形上移 26 邏輯像素避開原生使用按鈕，Desktop 保留 Java 座標。共用原生 Actionbar 僅隱藏自有資料碼，保留飽和度及一般提示。保留 G138 原生進食入口、食物營養、時間、結算、動畫與素材。正式標籤 A2.8.139，輸出後綴 baseline1。真人畫面驗收與來源／存檔准入分開記錄。"
 }
