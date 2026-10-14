@@ -1,8 +1,8 @@
-## Current maintained baseline: 2.8.135
+## Current maintained baseline: 2.8.136
 
-G135 sends readable bounded eating-HUD tokens and adds manual-only renderer probes, retaining original GUI assets, tick-25 checkpoint and eating mechanics. G134 did not restore the reported UI; client recovery remains unverified. [Scope](docs/STATUS-A2.8.135.md).
+G136 aligns eating fills and checkpoint icons with the original Java HUD on a full-screen panel. The previous bottom-left/middle anchors placed part of the fill outside the viewport. The readable G135 carrier and manual renderer probes remain available; actual client recovery is unverified. [Scope](docs/STATUS-A2.8.136.md).
 
-G135將進食圖形資料改為可識別的ASCII封包，並加入僅手動觸發的掛載／面板／快取診斷；保留原作102px進度與第25tick狀態。身份 **2.8.135／指南0.3.62**；[修補範圍](docs/STATUS-A2.8.135.md)。G134玩家回報仍無UI，本版真人畫面待確認。
+G136修正全螢幕HUD的填色／圖示錨點，使填色起點和原作中央右側底條重合，圖示中心對準第25tick檢查點。身份 **2.8.136／指南0.3.62**；[範圍](docs/STATUS-A2.8.136.md)。材質、進食時間及結算不變，真人画面仍待確認。
 
 本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
