@@ -28,16 +28,20 @@ def main():
  (BP/'scripts/java_eating_hud_data.js').write_text('// Pinned original Java 1.1.1 eating HUD icons.\nexport const JAVA_EATING_ICONS=Object.freeze('+json.dumps(icon_index,sort_keys=True)+');\n')
  controls=[]
  base={'type':'image','size':[102,5],'texture':'textures/ui/kg_java/skewer_eating_base','bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_middle','offset':[50,-49]}
+ # Keep the outer packet/expiry alive, but omit the images for other actionbars.
+ base['ignored']=f"(not (not (($kg_text - '{PREFIX}') = $kg_text) and (($kg_text - '{PREFIX}END;') = $kg_text)))"
  controls.append({'base':base})
  for ready in [False,True]:
   for width in range(1,103):
    image={**base,'size':[width,5],'uv':[102 if ready else 0,0],'uv_size':[width,5],'texture':ATLAS_REL.removesuffix('.png'),'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[-1,-49], 'visible':contains(PREFIX+'F:'+code(width)+str(int(ready)))}
+   image['ignored']=f"({base['ignored']} or (not {image['visible']}))"
    controls.append({f'fill_{int(ready)}_{width}':image})
  for duration in [90,100]:
   x=-1+int(2550/duration+.5)-8
   for ready in [False,True]:
    for name,index in [*icon_index.items(),('fallback',255)]:
     image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('I:'+code(duration)+code(index)+str(int(ready))+';')}
+    image['ignored']=f"({base['ignored']} or (not {image['visible']}))"
     if not ready and name!='fallback':image.update({'color':[.36,.36,.36],'alpha':.86})
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
  ui={'namespace':'kaleidoscope_grilling_hud',

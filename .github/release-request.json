@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.141",
-  "tag": "A2.8.141",
+  "version": "A2.8.142",
+  "tag": "A2.8.142",
   "publication_request": true,
   "prerelease": false,
   "make_latest": "false",
@@ -13,22 +13,7 @@
   "saved_world_migration": "pending",
   "live_deployment": false,
   "validation_evidence": "CHANGELOG.md",
-  "expected_source_tree_sha256": "5fbc66cec724ef5a5f096b5732ca6f38ac23476e8777720b0c854e48050ccfed",
-  "expected_artifacts": {
-    "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.141_baseline1.mcaddon",
-      "sha256": "191a831ca18b8be607cbff2b0c2ea7c9629000af8c470309e9e080436d54350c"
-    },
-    "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.141_baseline1.brproject",
-      "sha256": "eb481ffbadd582a85de0f98a60bdc74d45bc47d23ef4cb75ddd5011c744b33df"
-    }
-  },
-  "integrated_source": {
-    "commit": "8fd01d5fdfe15aaeb9acf40b76832710728e6c2e",
-    "tree": "d4be2cad34dc85d754803bbb471f8c0b655a531d"
-  },
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
-  "public_notes_inline": "A2.8.141 將進食條對齊原生剩餘使用時間，保留完整 90／100 tick 刻度及第 25 tick 檢查點，開始事件立即送出首幀。保留食物時間、結算、動作、音效、素材與 G140 觸控／Desktop 布局。正式標籤 A2.8.141，輸出後綴 baseline1。真人畫面與延遲驗收仍獨立記錄。"
+  "public_notes_inline": "A2.8.142 在原生 Actionbar 實例建立時裁剪未選中的進食圖像，減少控制樹負擔。保留完整食物時長、結算、動畫、Java 素材與位置，以及原生剩餘時間和立即首幀。正式標籤 A2.8.142，輸出後綴 baseline1。客戶端延遲與性能驗收仍獨立記錄。"
 }

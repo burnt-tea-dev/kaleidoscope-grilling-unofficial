@@ -164,6 +164,73 @@ test('complete END tokens hide the unconditional base bar with native formatting
  for(const text of ['', 'ordinary message', 'KT_HUD!END;'])assert.equal(packetVisible(text),false);
 });
 
+test('factory creation pruning preserves every shipped fill/icon predicate and drops foreign content',()=>{
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp))),packet=ui.kg_eating_packet;
+ assert(!('ignored' in packet),'Outer packet must retain its expiry lifecycle');
+ const controls=packet.controls.flatMap(row=>Object.entries(row));
+ const base=controls.find(([name])=>name==='base')[1];
+ assert.equal(base.ignored,`(not ${packet.visible})`);
+ const predicates=new Map();
+ function predicate(expression,text){
+  if(expression===undefined)return true;
+  if(!predicates.has(expression)){
+   const fragments=[];
+   let body=expression.replace(/\(\(\$kg_text - '([^']*)'\) = \$kg_text\)/g,(_,fragment)=>{
+    fragments.push(fragment);return `values[${fragments.length-1}]`;
+   }).replace(/\bnot\b/g,'!').replace(/\band\b/g,'&&').replace(/\bor\b/g,'||');
+   assert(/^[()\s!&|\[\]0-9values]+$/.test(body),'Unexpected factory predicate');
+   const evaluate=Function('values','return '+body);
+   predicates.set(expression,text=>evaluate(fragments.map(fragment=>!text.includes(fragment))));
+  }
+  return predicates.get(expression)(text);
+ }
+ function project(text,prune){
+  const images=[],retained=['packet'],parentVisible=predicate(packet.visible,text);
+  for(const [name,image] of controls){
+   if(prune&&predicate(image.ignored,text))continue;
+   retained.push(name);
+   if(parentVisible&&predicate(image.visible,text))images.push(name);
+  }
+  return {images,retained};
+ }
+ const fills=controls.filter(([name])=>name.startsWith('fill_')),icons=controls.filter(([name])=>name.startsWith('icon_'));
+ for(const [name,image] of [...fills,...icons]){
+  assert.equal(image.ignored,`(${base.ignored} or (not ${image.visible}))`);
+  const fragment=/^\(not \(\(\$kg_text - '([^']*)'\) = \$kg_text\)\)$/.exec(image.visible)?.[1];
+  assert(fragment,'Expected a fixed substring predicate on '+name);
+  assert(name.startsWith('fill_')?/^KG_HUD!F:[0-9a-f]{2}[01]$/.test(fragment):/^I:(5a|64)[0-9a-f]{2}[01];$/.test(fragment),
+   'F and I selections must remain independent to cover their full domains separately');
+ }
+ let cases=0,maxSelectedControls=0;
+ function conserved(text,expected){
+  const before=project(text,false),after=project(text,true);
+  assert.deepEqual(after.images,before.images,'Creation pruning changed visible output for '+text);
+  assert.deepEqual(after.images,expected);
+  assert.equal(after.retained.length,1+expected.length,'Hidden images survived construction pruning');
+  maxSelectedControls=Math.max(maxSelectedControls,after.retained.length);cases++;
+ }
+ const hex=n=>n.toString(16).padStart(2,'0'),iconNames=new Map(icons.map(([name])=>{
+  const [,duration,ready,index]=name.split('_');return [`${hex(+duration)}${hex(+index)}${ready}`,name];
+ }));
+ // The production predicates above prove F/I independence. Exercise every
+ // legal token in each full domain instead of repeating their Cartesian product.
+ for(const prefix of ['', '§r', '§r§f', '§a§r', '§r§0§r§0']){
+  for(let width=0;width<=102;width++)for(const ready of [0,1]){
+   const raw=`KG_HUD!F:${hex(width)}${ready}I:5aff${ready};`;
+   assert(validEatingHudPacket(raw));
+   conserved(prefix+raw+'§r',['base',...(width?[`fill_${ready}_${width}`]:[]),`icon_90_${ready}_255`]);
+  }
+  for(const duration of [90,100])for(let icon=0;icon<=255;icon++)for(const ready of [0,1]){
+   const token=`${hex(duration)}${hex(icon)}${ready}`,raw=`KG_HUD!F:33${ready}I:${token};`;
+   assert(validEatingHudPacket(raw));
+   conserved(prefix+raw+'§r',['base',`fill_${ready}_51`,...(iconNames.has(token)?[iconNames.get(token)]:[])]);
+  }
+  for(const text of [EATING_PACKET_END, 'ordinary message', 'KT_HUD!P:20;', 'foreign I:5aff1;'])conserved(prefix+text+'§r',[]);
+ }
+ assert.equal(maxSelectedControls,4);
+ console.log(JSON.stringify({eatingPruningCases:cases,packetDefinitionControls:406,maxSelectedControls,clientTested:false}));
+});
+
 // Test the production event route with a display handle, never a Minecraft player.
 const {createGraphicalActionbarTransport}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/graphical_actionbar_transport_core.js');
 test('eating frames use the original graphical event and never touch title or subtitle routers',()=>{
