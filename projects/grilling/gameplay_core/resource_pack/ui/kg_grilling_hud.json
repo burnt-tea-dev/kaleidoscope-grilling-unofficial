@@ -9532,7 +9532,7 @@
       }
     ],
     "$kg_text": "$actionbar_text",
-    "visible": "(not (($kg_text - 'KG_HUD!') = $kg_text) and (not ($kg_text = 'KG_HUD!END;')))",
+    "visible": "(not (($kg_text - 'KG_HUD!') = $kg_text) and (($kg_text - 'KG_HUD!END;') = $kg_text))",
     "alpha": "@kaleidoscope_grilling_hud.kg_eating_expire",
     "propagate_alpha": true
   },

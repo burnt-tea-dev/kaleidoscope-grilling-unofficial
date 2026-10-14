@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.139",
-  "tag": "A2.8.139",
+  "version": "A2.8.140",
+  "tag": "A2.8.140",
   "publication_request": true,
   "prerelease": false,
   "make_latest": "false",
@@ -13,14 +13,14 @@
   "saved_world_migration": "pending",
   "live_deployment": false,
   "validation_evidence": "CHANGELOG.md",
-  "expected_source_tree_sha256": "5dbb2a225b156dc2d67ae142f10e980ca7c3e81b842ab8466ddefa11884fe36f",
+  "expected_source_tree_sha256": "",
   "expected_artifacts": {
     "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.139_baseline1.mcaddon",
+      "name": "Kaleidoscope_Grilling_A2.8.140_baseline1.mcaddon",
       "sha256": ""
     },
     "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.139_baseline1.brproject",
+      "name": "Kaleidoscope_Grilling_A2.8.140_baseline1.brproject",
       "sha256": ""
     }
   },
@@ -30,5 +30,5 @@
   },
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
-  "public_notes_inline": "A2.8.139 修正進食圖形的錨點方向、填色與第 25 tick 圖示位置，觸控時整組圖形上移 26 邏輯像素避開原生使用按鈕，Desktop 保留 Java 座標。共用原生 Actionbar 僅隱藏自有資料碼，保留飽和度及一般提示。保留 G138 原生進食入口、食物營養、時間、結算、動畫與素材。正式標籤 A2.8.139，輸出後綴 baseline1。真人畫面驗收與來源／存檔准入分開記錄。"
+  "public_notes_inline": "A2.8.140 修正進食圖形的錨點方向、填色與第 25 tick 圖示位置，觸控時整組圖形上移 26 邏輯像素避開原生使用按鈕，Desktop 保留 Java 座標。共用原生 Actionbar 僅隱藏自有資料碼，保留飽和度及一般提示。保留 G138 原生進食入口、食物營養、時間、結算、動畫與素材。正式標籤 A2.8.140，輸出後綴 baseline1。真人畫面驗收與來源／存檔准入分開記錄。 完整 END 標記即使帶原生格式前綴，也會關閉整組進食圖形及底條。"
 }

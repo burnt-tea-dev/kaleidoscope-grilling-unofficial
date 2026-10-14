@@ -88,6 +88,29 @@ test('eating controls remain registered outside the shared native HUD catalog',(
  assert.deepEqual(mount.hud_actionbar_text,mount['hud_actionbar_text/actionbar_message']);
 });
 
+test('complete END tokens hide the unconditional base bar with native formatting prefixes',()=>{
+ const ui=JSON.parse(fs.readFileSync(new URL('ui/kg_grilling_hud.json',rp)));
+ const expression=ui.kg_eating_packet.visible;
+ // Evaluate the production text equality/subtraction clauses with native UI
+ // string subtraction, then reduce only the restricted boolean expression.
+ const packetVisible=text=>{
+  let value=expression.replace(/\(\(\$kg_text - '([^']*)'\) = \$kg_text\)/g,
+   (_,fragment)=>String(text.replace(fragment,'')===text));
+  value=value.replace(/\(\$kg_text = '([^']*)'\)/g,(_,literal)=>String(text===literal));
+  value=value.replace(/\bnot\b/g,'!').replace(/\band\b/g,'&&');
+  assert.ok(/^[()\s!&truefals]+$/.test(value),'Unexpected UI boolean expression');
+  return Function('return '+value)();
+ };
+ const base=ui.kg_eating_packet.controls.find(row=>row.base).base;
+ assert.ok(!('visible' in base),'Original base bar remains parent-gated');
+ const frame=javaEatingHudFrame({id:'kaleidoscope_grilling:grilled_fish_skewer',elapsed:25,duration:90}).packet;
+ for(const prefix of ['', '§r', '§r§f']){
+  assert.equal(packetVisible(prefix+frame),true);
+  assert.equal(packetVisible(prefix+EATING_PACKET_END),false,'Completion must hide every child, including the base bar');
+ }
+ for(const text of ['', 'ordinary message', 'KT_HUD!END;'])assert.equal(packetVisible(text),false);
+});
+
 // Test the production event route with a display handle, never a Minecraft player.
 const {createGraphicalActionbarTransport}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/graphical_actionbar_transport_core.js');
 test('eating frames use the original graphical event and never touch title or subtitle routers',()=>{

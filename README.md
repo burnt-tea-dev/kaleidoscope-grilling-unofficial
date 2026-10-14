@@ -1,6 +1,6 @@
-## Current maintained baseline: 2.8.139
+## Current maintained baseline: 2.8.140
 
-G139 corrects eating HUD anchors and lifts the complete touch HUD above the native Use Item button while preserving Java desktop coordinates. It retains G138's native touch eating action, nutrition, timing, settlement, animations and assets. The formal release uses tag `A2.8.139` and `baseline1` artifacts. [Changes](CHANGELOG.md).
+G140 corrects eating HUD anchors and lifts the complete touch HUD above the native Use Item button while preserving Java desktop coordinates. It retains G138's native touch eating action, nutrition, timing, settlement, animations and assets. The formal release uses tag `A2.8.140` and `baseline1` artifacts. [Changes](CHANGELOG.md).
 
 G136修正全螢幕HUD的填色／圖示錨點，使填色起點和原作中央右側底條重合，圖示中心對準第25tick檢查點。身份 **2.8.136／指南0.3.62**；[範圍](docs/STATUS-A2.8.136.md)。材質、進食時間及結算不變，真人画面仍待確認。
 
