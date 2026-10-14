@@ -13,20 +13,20 @@
   "saved_world_migration": "pending",
   "live_deployment": false,
   "validation_evidence": "CHANGELOG.md",
-  "expected_source_tree_sha256": "",
+  "expected_source_tree_sha256": "fd0cb739f5bdfe9fd4e8427e1d2fb668bc2c22527dccd0bd2ce3dcf7cbb2e461",
   "expected_artifacts": {
     "mcaddon": {
       "name": "Kaleidoscope_Grilling_A2.8.140_baseline1.mcaddon",
-      "sha256": ""
+      "sha256": "57b18d16186c51ea8cd2525d6bb6ab767b262985d44febb3df05e911f5a0cb97"
     },
     "brproject": {
       "name": "Kaleidoscope_Grilling_A2.8.140_baseline1.brproject",
-      "sha256": ""
+      "sha256": "d0224f4631075f2006c80620ffee7c7b67644bd8260d8c52d39735a689a64fde"
     }
   },
   "integrated_source": {
-    "commit": "",
-    "tree": ""
+    "commit": "abbfe3a9b68a460dafd158d5a8dc766e2d2bee30",
+    "tree": "1568593a075a62b2f4f3ffda65b86558f361cdde"
   },
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
