@@ -1,4 +1,4 @@
-## Current maintained baseline: A2.8.135
+## Current maintained baseline: 2.8.135
 
 G135 sends readable bounded eating-HUD tokens and adds manual-only renderer probes, retaining original GUI assets, tick-25 checkpoint and eating mechanics. G134 did not restore the reported UI; client recovery remains unverified. [Scope](docs/STATUS-A2.8.135.md).
 
