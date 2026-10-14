@@ -2,7 +2,7 @@
 def install_actionbar_factory(hud, owner, variable, prefix, end, lifetime):
     name='kt_mixology' if owner=='tavern' else 'kg_eating'
     namespace=hud['namespace'];packet=hud[name+'_packet']
-    packet.update({'$'+variable:'$actionbar_text','visible':f"(not ((${variable} - '{prefix}') = ${variable}) and (not (${variable} = '{end}')))",
+    packet.update({'$'+variable:'$actionbar_text','visible':f"(not ((${variable} - '{prefix}') = ${variable}) and ((${variable} - '{end}') = ${variable}))",
                    'alpha':'@'+namespace+'.'+name+'_expire','propagate_alpha':True})
     hud[name+'_expire']={'anim_type':'alpha','duration':lifetime,'from':1,'to':1,'destroy_at_end':name+'_packet'}
     hud[name+'_factory']={'type':'panel','size':['100%','100%'],'factory':{'name':'hud_actionbar_text_factory','max_children_size':1,

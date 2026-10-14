@@ -31,17 +31,22 @@ def main():
  controls.append({'base':base})
  for ready in [False,True]:
   for width in range(1,103):
-   image={**base,'size':[width,5],'uv':[102 if ready else 0,0],'uv_size':[width,5],'texture':ATLAS_REL.removesuffix('.png'),'anchor_from':'bottom_left','anchor_to':'bottom_middle','offset':[-1,-49], 'visible':contains(PREFIX+'F:'+code(width)+str(int(ready)))}
+   image={**base,'size':[width,5],'uv':[102 if ready else 0,0],'uv_size':[width,5],'texture':ATLAS_REL.removesuffix('.png'),'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[-1,-49], 'visible':contains(PREFIX+'F:'+code(width)+str(int(ready)))}
    controls.append({f'fill_{int(ready)}_{width}':image})
  for duration in [90,100]:
   x=-1+int(2550/duration+.5)-8
   for ready in [False,True]:
    for name,index in [*icon_index.items(),('fallback',255)]:
-    image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_left','anchor_to':'bottom_middle','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('I:'+code(duration)+code(index)+str(int(ready))+';')}
+    image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('I:'+code(duration)+code(index)+str(int(ready))+';')}
     if not ready and name!='fallback':image.update({'color':[.36,.36,.36],'alpha':.86})
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
  ui={'namespace':'kaleidoscope_grilling_hud',
- 'kg_eating_packet':{'type':'panel','size':['100%','100%'],'controls':controls},
+ 'kg_eating_packet':{'type':'panel','size':['100%','100%'],
+  # Mojang ui_common.json at pinned 46ba6ea uses requires:$touch for native touch layout.
+  # Lift the owned panel clear of Use Item; desktop retains the Java offsets.
+  '$kg_hud_offset|default':[0,0],
+  'variables':[{'requires':'$touch','$kg_hud_offset':[0,-26]}],
+  'offset':'$kg_hud_offset','controls':controls},
  'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}]}}
  install_actionbar_factory(ui,'grilling','kg_text',PREFIX,PREFIX+'END;',.2)
  # Shared native hud_screen mount stays byte-identical to Tavern. Keep every

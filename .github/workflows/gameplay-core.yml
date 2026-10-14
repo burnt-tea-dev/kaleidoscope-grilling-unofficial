@@ -283,5 +283,5 @@ jobs:
           path: artifacts/review
           run-id: ${{ inputs.validated_run_id }}
           github-token: ${{ github.token }}
-      - name: Verify exact archives, stage a draft, read it back and publish the requested beta
+      - name: Verify exact archives, stage a draft, read it back and publish the requested release
         run: python development/gameplay_core/publish_test_release.py --publication publish --validation-run "$VALIDATED_RUN_ID" --confirm-tag "$CONFIRMED_TAG"
