@@ -290,6 +290,7 @@ class FakeGitHub:
         self.identity = {'full_name': publish.REPO, 'id': publish.REPO_ID}
         self.commit_sha = sha
         self.remote_assets = {}
+        self.latest_id = 42
         self.events = []
         self.corrupt = None
 
@@ -332,7 +333,7 @@ class FakeGitHub:
             self.release.update({k: v for k, v in payload.items() if k != 'make_latest'})
             return copy.deepcopy(self.release)
         if endpoint == base + '/releases/latest':
-            return {'id': 42}
+            return {'id': self.latest_id}
         raise AssertionError((endpoint, method, payload))
 
     def run(self, *args):
@@ -408,6 +409,7 @@ class PublicationTests(unittest.TestCase):
     def test_stable_publication_keeps_the_same_draft_asset_and_tag_checks(self):
         metadata = self.remote.metadata
         self.remote.metadata = lambda: {**metadata(), 'prerelease': False}
+        self.remote.latest_id = 123  # A requested formal release can be latest.
         publish.publish_exact(self.sha, 'A2.8.66-test', self.remote.title,
                               self.notes, self.assets, lambda snapshot: None, prerelease=False)
         writes = self.remote.writes()
@@ -415,6 +417,14 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(writes[-1][2], {'draft': False, 'prerelease': False, 'make_latest': 'false'})
         self.assertEqual(self.remote.tag_sha, self.sha)
         self.assertFalse(self.remote.release['prerelease'])
+
+    def test_prerelease_accidentally_returned_as_latest_remains_rejected(self):
+        self.remote.latest_id = 123
+        with self.assertRaisesRegex(ValueError, 'unexpectedly made latest'):
+            self.publish()
+        self.assertTrue(self.remote.release['prerelease'])
+        self.assertEqual(self.remote.writes()[-1][2],
+                         {'draft': False, 'prerelease': True, 'make_latest': 'false'})
 
     def test_published_matching_release_is_never_overwritten(self):
         self.remote.release = self.remote.metadata()
