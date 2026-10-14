@@ -5,7 +5,7 @@
   "version": [
     2,
     8,
-    134
+    135
   ],
   "runtime": {
     "BP": "projects/grilling/gameplay_core/behavior_pack",
@@ -20,7 +20,7 @@
           "version": [
             2,
             8,
-            134
+            135
           ]
         },
         {

@@ -1,10 +1,11 @@
 import {EntityTypes,system,world} from '@minecraft/server';
+import {EATING_PACKET_PREFIX,EATING_PACKET_END,validEatingHudPacket} from './java_eating_hud_core.js';
 import {createFormattingHudTransport} from './formatting_hud_transport_core.js';
 // Observe an existing embedded router; never participate in its election.
 const peers=new Set(),pending=new Map();let ready=false,queue=false,embedded=false;
 const observe=e=>{if(e.id==='ui_queue_module:setup')peers.add(e.message);};
 system.afterEvents.scriptEventReceive.subscribe(observe,{namespaces:['ui_queue_module']});
-const transport=createFormattingHudTransport({prefix:'§r§0§r§0',maxLength:36,
+const transport=createFormattingHudTransport({prefix:EATING_PACKET_PREFIX,endPacket:EATING_PACKET_END,validatePacket:validEatingHudPacket,maxLength:36,
  schedule:(callback,ticks)=>system.runTimeout(callback,ticks),cancel:handle=>system.clearRun(handle),idleTicks:6,
  queueAvailable:()=>queue,embeddedAvailable:()=>embedded,
  queueSend:(player,packet)=>system.sendScriptEvent('ui_load_script:kg_eating_hud',player.id+'|'+packet),

@@ -1,8 +1,8 @@
-# Kaleidoscope Grilling — unofficial Bedrock port
+## Current maintained baseline: A2.8.135
 
-## Current maintained baseline: 2.8.134
+G135 sends readable bounded eating-HUD tokens and adds manual-only renderer probes, retaining original GUI assets, tick-25 checkpoint and eating mechanics. G134 did not restore the reported UI; client recovery remains unverified. [Scope](docs/STATUS-A2.8.135.md).
 
-G134修正進食HUD掛載處的本地空面板預設，與T161共用不遮蔽全域provider的橋接；保留原作進食材質、時間與結算。身份 **2.8.134／指南0.3.62**；[修補範圍](docs/STATUS-A2.8.134.md)。真人畫面待確認。
+G135將進食圖形資料改為可識別的ASCII封包，並加入僅手動觸發的掛載／面板／快取診斷；保留原作102px進度與第25tick狀態。身份 **2.8.135／指南0.3.62**；[修補範圍](docs/STATUS-A2.8.135.md)。G134玩家回報仍無UI，本版真人畫面待確認。
 
 本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 

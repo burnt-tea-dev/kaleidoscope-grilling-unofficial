@@ -1,6 +1,6 @@
 /** Bounded formatting packets and an owned stop; never clear a shared channel. */
-export function createFormattingHudTransport({prefix,maxLength,queueAvailable,embeddedAvailable,queueSend,legacySend,schedule,cancel,idleTicks}){
- const armed=new Map(),endPacket=prefix+'§r§f§f§r';
+export function createFormattingHudTransport({prefix,maxLength,queueAvailable,embeddedAvailable,queueSend,legacySend,schedule,cancel,idleTicks,endPacket=prefix+'§r§f§f§r',validatePacket=packet=>/^(?:§[0-9a-fr])+$/.test(packet)}){
+ const armed=new Map();
  const mode=()=>queueAvailable()?'ui_queue':embeddedAvailable()?'embedded_queue':'standalone';
  function dispatch(player,packet){
   const route=mode();
@@ -15,7 +15,7 @@ export function createFormattingHudTransport({prefix,maxLength,queueAvailable,em
  }
  return {mode,forget,
   send(player,packet){
-   if(typeof packet!=='string'||!packet.startsWith(prefix)||packet.length>maxLength||!/^(?:§[0-9a-fr])+$/.test(packet))throw new Error('Invalid graphical HUD packet');
+   if(typeof packet!=='string'||!packet.startsWith(prefix)||packet.length>maxLength||!validatePacket(packet))throw new Error('Invalid graphical HUD packet');
    const route=dispatch(player,packet);
    forget(player.id);
    if(packet!==endPacket&&schedule){
