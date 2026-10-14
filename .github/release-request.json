@@ -12,5 +12,20 @@
   "status": "awaiting_source_ci_family_save_admission_and_live_readback",
   "saved_world_migration": "pending",
   "live_deployment": false,
-  "validation_evidence": "docs/STATUS-A2.8.138.md"
+  "validation_evidence": "docs/STATUS-A2.8.138.md",
+  "expected_source_tree_sha256": "b57257e2c6bbf1f72e2bc0605f75081fb9e5694140f3f40b8c228ee96f3fecfa",
+  "expected_artifacts": {
+    "mcaddon": {
+      "name": "Kaleidoscope_Grilling_A2.8.138_Review.mcaddon",
+      "sha256": "bd2d3abe0190027a0ba47de95eaef9dd88657647b0c586431863fceb5c4a5a71"
+    },
+    "brproject": {
+      "name": "Kaleidoscope_Grilling_A2.8.138_Review.brproject",
+      "sha256": "6ed348ba149d221692ef632b59d13b0bad2c49ae4da7ba2ba011d037637b19a5"
+    }
+  },
+  "integrated_source": {
+    "commit": "e4cbaf48411013d2a9ffcb926225d4a751f65070",
+    "tree": "604455e6577f3af21d58a70dac41b034c9caff34"
+  }
 }
