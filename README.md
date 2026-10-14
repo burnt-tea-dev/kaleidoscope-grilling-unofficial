@@ -1,6 +1,6 @@
-## Current maintained baseline: 2.8.136
+## Current maintained baseline: 2.8.137
 
-G136 aligns eating fills and checkpoint icons with the original Java HUD on a full-screen panel. The previous bottom-left/middle anchors placed part of the fill outside the viewport. The readable G135 carrier and manual renderer probes remain available; actual client recovery is unverified. [Scope](docs/STATUS-A2.8.136.md).
+G137 restores the original bounded actionbar event for eating graphics and retains corrected Java fill/checkpoint anchors. G136 was frozen but not published or deployed; its identity remains reserved. Actual client recovery remains unverified. [Scope](docs/STATUS-A2.8.137.md).
 
 G136修正全螢幕HUD的填色／圖示錨點，使填色起點和原作中央右側底條重合，圖示中心對準第25tick檢查點。身份 **2.8.136／指南0.3.62**；[範圍](docs/STATUS-A2.8.136.md)。材質、進食時間及結算不變，真人画面仍待確認。
 

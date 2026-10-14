@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.136",
-  "tag": "A2.8.136-beta.1",
+  "version": "A2.8.137",
+  "tag": "A2.8.137-beta.1",
   "publication_request": true,
   "prerelease": true,
   "make_latest": "false",
@@ -12,20 +12,5 @@
   "status": "awaiting_source_ci_family_save_admission_and_live_readback",
   "saved_world_migration": "pending",
   "live_deployment": false,
-  "validation_evidence": "docs/STATUS-A2.8.136.md",
-  "expected_source_tree_sha256": "9131fd5967e5629350fcad17994cd9ec786d208a4a486bf8b3a8cbe16a2e2c60",
-  "expected_artifacts": {
-    "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.136_Review.mcaddon",
-      "sha256": "adfa2ff236ef3899d4d083914d24261177331dca9ffd61d5fb04fdc8ac4611c3"
-    },
-    "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.136_Review.brproject",
-      "sha256": "3948536205bfc6351405969ab30d5e7f2e5c091940d2f425f6630be129706aad"
-    }
-  },
-  "integrated_source": {
-    "commit": "78c0de535a99d8dfc06e18ee546730bdca4ae3d5",
-    "tree": "a5bbe7dfac4cfc20028e071e150bb8e3b64ce785"
-  }
+  "validation_evidence": "docs/STATUS-A2.8.137.md"
 }

@@ -2,8 +2,7 @@
 """Copy pinned Java GUI assets and emit a graphical eating HUD (no text bar)."""
 from pathlib import Path
 import argparse,hashlib,json,zipfile
-from formatting_hud_ui import bind_channel
-from hud_channel_probe import install_catalog_probe
+from actionbar_hud_ui import install_actionbar_factory
 from hud_mount_contract import global_catalog
 from java_eating_hud_atlas import ATLAS_REL,build_progress_atlas,atlas_metadata
 ROOT=Path(__file__).resolve().parents[1]
@@ -44,8 +43,7 @@ def main():
  ui={'namespace':'kaleidoscope_grilling_hud',
  'kg_eating_packet':{'type':'panel','size':['100%','100%'],'controls':controls},
  'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}]}}
- bind_channel(ui['kg_eating_packet'],'kg_eating',PREFIX,PREFIX+'END;','kg_text')
- install_catalog_probe(ui,'grilling',ui['kg_eating_packet'],'kg_eating_channel','#kg_text')
+ install_actionbar_factory(ui,'grilling','kg_text',PREFIX,PREFIX+'END;',.2)
  # Shared native hud_screen mount stays byte-identical to Tavern. Keep every
  # Grilling-owned definition in its independently registered catalog file.
  p=RP/'ui/kg_grilling_hud.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')
