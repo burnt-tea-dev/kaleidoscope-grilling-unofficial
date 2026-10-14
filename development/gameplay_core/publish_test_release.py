@@ -300,8 +300,9 @@ def publish_exact(sha, tag, title, notes_path, assets, final_validation, *, prer
     verify_release_assets(published, assets, complete=True, snapshot=snapshot)
     require(tag_target(tag) == sha, 'Published remote tag target mismatch')
     latest = api(f'repos/{REPO}/releases/latest', allow_missing=True)
-    require(latest is None or latest.get('id') != published['id'], 'Release was unexpectedly made latest')
-    print('Published exact non-latest', 'prerelease' if prerelease else 'release', tag, 'from tested GitHub main', sha)
+    if prerelease:
+        require(latest is None or latest.get('id') != published['id'], 'Release was unexpectedly made latest')
+    print('Published exact', 'non-latest prerelease' if prerelease else 'release', tag, 'from tested GitHub main', sha)
 
 
 def reviewed_cookery_requirement(version, root=ROOT):
