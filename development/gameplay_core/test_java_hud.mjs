@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {javaEatingHudFrame,validEatingHudPacket,EATING_PACKET_PREFIX,EATING_PACKET_END} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_core.js';
+import {showJavaEatingHud,forgetJavaEatingHud} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_runtime.js';
 import {javaInteractionMessage,JAVA_INTERACTION_KEYS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/interaction_feedback_core.js';
 const root=new URL('../../',import.meta.url),rp=new URL('projects/grilling/gameplay_core/resource_pack/',root);
 test('original keys and argument order; invented hints rejected',()=>{
@@ -27,6 +28,58 @@ test('90/100 tick progress uses 102 pixels and changes at tick 25',()=>{
   }
  }
  assert.equal(javaEatingHudFrame({elapsed:NaN,duration:90}),undefined);
+});
+test('active eating adapter aligns partial native countdowns with the full Java bar',()=>{
+ const sent=[],handle={id:'partial-countdown',onScreenDisplay:{setActionBar:packet=>sent.push(packet)}};
+ const project=(session,tick)=>{
+  const before=structuredClone(session),count=sent.length;
+  showJavaEatingHud(handle,session,tick);
+  assert.equal(sent.length,count+1,'Each call sends synchronously without a queue');
+  assert.deepEqual(session,before,'HUD projection must not alter the native eating session');
+  const packet=sent.at(-1);assert(validEatingHudPacket(packet));
+  return {width:parseInt(packet.slice(9,11),16),ready:packet[11]==='1'};
+ };
+ try{
+  const one={id:'grilled_fish_skewer',profile:'ONE',start:100,nativeDuration:60};
+  assert.deepEqual(project(one,100),{width:34,ready:true});
+  assert.deepEqual(project(one,159),{width:101,ready:true});
+  assert.deepEqual(project(one,160),{width:102,ready:true});
+  const three={id:'grilled_fish_skewer',profile:'THREE',start:200,nativeDuration:80};
+  assert.deepEqual(project(three,200),{width:20,ready:false});
+  assert.deepEqual(project(three,205),{width:26,ready:true});
+  assert.deepEqual(project(three,280),{width:102,ready:true});
+ }finally{forgetJavaEatingHud(handle.id);}
+});
+test('active eating adapter preserves full and invalid native duration session clocks',()=>{
+ const sent=[],handle={id:'session-countdown',onScreenDisplay:{setActionBar:packet=>sent.push(packet)}};
+ try{
+  for(const [profile,duration] of [['ONE',90],['THREE',100]]){
+   for(const nativeDuration of [duration,undefined,null,0,-1,duration+1,60.5,NaN,Infinity,'60']){
+    const session={id:'grilled_fish_skewer',profile,start:500,nativeDuration};
+    for(const elapsed of [0,24,25,duration]){
+     const count=sent.length;showJavaEatingHud(handle,session,500+elapsed);
+     assert.equal(sent.length,count+1);
+     assert.equal(sent.at(-1),javaEatingHudFrame({id:session.id,elapsed,duration,tick:500+elapsed}).packet,
+      `${profile} nativeDuration=${String(nativeDuration)} elapsed=${elapsed}`);
+    }
+   }
+  }
+ }finally{forgetJavaEatingHud(handle.id);}
+});
+test('eating start publishes an immediate frame only for the configured custom HUD',()=>{
+ const main=fs.readFileSync(new URL('projects/grilling/gameplay_core/behavior_pack/scripts/main.js',root),'utf8');
+ const start=main.indexOf(' if(a.plain)return;'),end=main.indexOf(' try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code)',start);
+ assert.ok(start>0&&end>start,'Native eating start gate must remain identifiable');
+ const begin=Function('a','e','system','grillingConfig','showJavaEatingHud',main.slice(start,end));
+ const sent=[],handle={id:'immediate-frame',onScreenDisplay:{setActionBar:packet=>sent.push(packet)}};
+ try{
+  const session={id:'grilled_fish_skewer',profile:'ONE',start:100,nativeDuration:60,plain:false};
+  for(const [plain,enabled,count] of [[true,true,0],[false,false,0],[false,true,1]]){
+   begin({...session,plain},{source:handle},{currentTick:100},()=>({graphicalEatingHud:enabled}),showJavaEatingHud);
+   assert.equal(sent.length,count,'Plain food and disabled HUD must not publish a custom frame');
+  }
+  assert.equal(parseInt(sent[0].slice(9,11),16),34);
+ }finally{forgetJavaEatingHud(handle.id);}
 });
 test('slime and failed icons follow original four-tick/five-frame cycle',()=>{
  for(const id of ['grilled_slime_skewer','mysterious_skewer']){
