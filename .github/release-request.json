@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.137",
-  "tag": "A2.8.137-beta.1",
+  "version": "A2.8.138",
+  "tag": "A2.8.138-beta.1",
   "publication_request": true,
   "prerelease": true,
   "make_latest": "false",
@@ -12,20 +12,20 @@
   "status": "awaiting_source_ci_family_save_admission_and_live_readback",
   "saved_world_migration": "pending",
   "live_deployment": false,
-  "validation_evidence": "docs/STATUS-A2.8.137.md",
-  "expected_source_tree_sha256": "9c916300e971bc01da34c5dd5047519a210444de41cba0ac114ec6d8dcce21c2",
+  "validation_evidence": "docs/STATUS-A2.8.138.md",
+  "expected_source_tree_sha256": "b57257e2c6bbf1f72e2bc0605f75081fb9e5694140f3f40b8c228ee96f3fecfa",
   "expected_artifacts": {
     "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.137_Review.mcaddon",
-      "sha256": "e961137e88b583cf793ca5405e502172dfa6ac18652d6138b480919149de69de"
+      "name": "Kaleidoscope_Grilling_A2.8.138_Review.mcaddon",
+      "sha256": "bd2d3abe0190027a0ba47de95eaef9dd88657647b0c586431863fceb5c4a5a71"
     },
     "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.137_Review.brproject",
-      "sha256": "409aa66848d5c9e615014760215ff914ad61c8335ed1acfe2f83a237895277db"
+      "name": "Kaleidoscope_Grilling_A2.8.138_Review.brproject",
+      "sha256": "6ed348ba149d221692ef632b59d13b0bad2c49ae4da7ba2ba011d037637b19a5"
     }
   },
   "integrated_source": {
-    "commit": "12fb93a4b2f2dc7ada1a8692a9d1680ca5887cc6",
-    "tree": "5fc4f44ebc8420cd6dd6b0511aae4ad05c2af0c2"
+    "commit": "e4cbaf48411013d2a9ffcb926225d4a751f65070",
+    "tree": "604455e6577f3af21d58a70dac41b034c9caff34"
   }
 }

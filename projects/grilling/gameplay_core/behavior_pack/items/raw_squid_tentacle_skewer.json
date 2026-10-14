@@ -38,7 +38,8 @@
           "minecraft:is_food",
           "kaleidoscope_grilling:food_raw_squid_tentacle_skewer"
         ]
-      }
+      },
+      "minecraft:interact_button": true
     }
   }
 }

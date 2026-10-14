@@ -34,7 +34,8 @@
           "minecraft:is_food",
           "kaleidoscope_grilling:food_grilled_caterpillar_skewer"
         ]
-      }
+      },
+      "minecraft:interact_button": true
     }
   }
 }

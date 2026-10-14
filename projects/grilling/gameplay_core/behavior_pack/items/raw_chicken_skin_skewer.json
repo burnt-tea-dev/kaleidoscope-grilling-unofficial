@@ -38,7 +38,8 @@
           "minecraft:is_food",
           "kaleidoscope_grilling:food_raw_chicken_skin_skewer"
         ]
-      }
+      },
+      "minecraft:interact_button": true
     }
   }
 }
