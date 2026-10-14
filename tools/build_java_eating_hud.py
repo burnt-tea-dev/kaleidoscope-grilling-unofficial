@@ -3,13 +3,14 @@
 from pathlib import Path
 import argparse,hashlib,json,zipfile
 from formatting_hud_ui import bind_channel
+from hud_channel_probe import install_catalog_probe
 from hud_mount_contract import global_catalog
 from java_eating_hud_atlas import ATLAS_REL,build_progress_atlas,atlas_metadata
 ROOT=Path(__file__).resolve().parents[1]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
 BP=ROOT/'projects/grilling/gameplay_core/behavior_pack'
-PREFIX='§r§0§r§0'
-def code(n):return ''.join('§'+c for c in f'{n:02x}')
+PREFIX='KG_HUD!'
+def code(n):return f'{n:02x}'
 def contains(fragment):return f"(not (($kg_text - '{fragment}') = $kg_text))"
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--jar',type=Path,required=True);a=ap.parse_args()
@@ -31,19 +32,20 @@ def main():
  controls.append({'base':base})
  for ready in [False,True]:
   for width in range(1,103):
-   image={**base,'size':[width,5],'uv':[102 if ready else 0,0],'uv_size':[width,5],'texture':ATLAS_REL.removesuffix('.png'),'anchor_to':'bottom_left','offset':[-1,-49], 'visible':contains(PREFIX+code(width)+code(int(ready)))}
+   image={**base,'size':[width,5],'uv':[102 if ready else 0,0],'uv_size':[width,5],'texture':ATLAS_REL.removesuffix('.png'),'anchor_to':'bottom_left','offset':[-1,-49], 'visible':contains(PREFIX+'F:'+code(width)+str(int(ready)))}
    controls.append({f'fill_{int(ready)}_{width}':image})
  for duration in [90,100]:
   x=-1+int(2550/duration+.5)-8
   for ready in [False,True]:
    for name,index in [*icon_index.items(),('fallback',255)]:
-    image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('§r§1'+code(duration)+code(index)+code(int(ready)))}
+    image={'type':'image','size':[16,16],'bilinear':False,'anchor_from':'bottom_middle','anchor_to':'bottom_left','offset':[x,-43], 'texture':'textures/ui/kg_java/'+(name if name!='fallback' else 'skewer_eating_ready_fallback' if ready else 'skewer_eating_pending'),'visible':contains('I:'+code(duration)+code(index)+str(int(ready))+';')}
     if not ready and name!='fallback':image.update({'color':[.36,.36,.36],'alpha':.86})
     controls.append({f'icon_{duration}_{int(ready)}_{index}':image})
  ui={'namespace':'kaleidoscope_grilling_hud',
  'kg_eating_packet':{'type':'panel','size':['100%','100%'],'controls':controls},
  'root':{'type':'panel','size':['100%','100%'],'controls':[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}]}}
- bind_channel(ui['kg_eating_packet'],'kg_eating',PREFIX,PREFIX+'§r§f§f§r','kg_text')
+ bind_channel(ui['kg_eating_packet'],'kg_eating',PREFIX,PREFIX+'END;','kg_text')
+ install_catalog_probe(ui,'grilling',ui['kg_eating_packet'],'kg_eating_channel','#kg_text')
  # Shared native hud_screen mount stays byte-identical to Tavern. Keep every
  # Grilling-owned definition in its independently registered catalog file.
  p=RP/'ui/kg_grilling_hud.json';p.parent.mkdir(exist_ok=True);p.write_text(json.dumps(ui,ensure_ascii=False,indent=2)+'\n')

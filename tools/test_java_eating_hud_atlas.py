@@ -3,6 +3,7 @@ import ast,copy,hashlib,io,json,struct,unittest,zlib
 from pathlib import Path
 from PIL import Image
 from formatting_hud_ui import bind_channel
+from hud_channel_probe import install_catalog_probe
 from java_eating_hud_atlas import ATLAS_REL,SOURCE_PINS,build_progress_atlas,atlas_metadata
 ROOT=Path(__file__).resolve().parents[1]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
@@ -31,14 +32,14 @@ class AtlasTests(unittest.TestCase):
   for ready in [0,1]:
    for width in range(1,103):
     c=fills[f'fill_{ready}_{width}'];self.assertEqual(c['texture'],ATLAS_REL.removesuffix('.png'));self.assertEqual(c['uv'],[102*ready,0]);self.assertEqual(c['size'],[width,5]);self.assertIs(c['bilinear'],False)
-    code=lambda n:''.join('§'+x for x in f'{n:02x}');fragment='§r§0§r§0'+code(width)+code(ready);self.assertIn(f"(not ((#kg_text - '{fragment}') = #kg_text))",c['bindings'][-1]['source_property_name'])
+    fragment='KG_HUD!F:'+f'{width:02x}{ready}';self.assertIn(f"(not ((#kg_text - '{fragment}') = #kg_text))",c['bindings'][-1]['source_property_name'])
   self.assertNotIn('fill_0_0',fills);self.assertNotIn('fill_1_0',fills)
  def test_actual_generator_fill_loop_matches_committed_controls(self):
   tree=ast.parse((ROOT/'tools/build_java_eating_hud.py').read_text());main=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='main');loop=[n for n in main.body if isinstance(n,ast.For) and isinstance(n.target,ast.Name) and n.target.id=='ready'];self.assertEqual(len(loop),1)
   defs=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ['code','contains']]
   base=copy.deepcopy(self.controls['base']);base.pop('bindings');base.pop('property_bag')
-  ns={'controls':[],'base':base,'PREFIX':'§r§0§r§0','ATLAS_REL':ATLAS_REL};module=ast.Module(body=defs+loop,type_ignores=[]);exec(compile(ast.fix_missing_locations(module),'<actual generator fill loop>','exec'),ns)
-  panel={'controls':ns['controls']};bind_channel(panel,'kg_eating','§r§0§r§0','§r§0§r§0§r§f§f§r','kg_text')
+  ns={'controls':[],'base':base,'PREFIX':'KG_HUD!','ATLAS_REL':ATLAS_REL};module=ast.Module(body=defs+loop,type_ignores=[]);exec(compile(ast.fix_missing_locations(module),'<actual generator fill loop>','exec'),ns)
+  panel={'controls':ns['controls']};bind_channel(panel,'kg_eating','KG_HUD!','KG_HUD!END;','kg_text')
   self.assertEqual(panel['controls'][:-1],[r for r in self.ui['kg_eating_packet']['controls'] if next(iter(r)).startswith('fill_')])
  def test_complete_generator_ui_bytes_match_committed(self):
   tree=ast.parse((ROOT/'tools/build_java_eating_hud.py').read_text());main=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='main')
@@ -46,7 +47,7 @@ class AtlasTests(unittest.TestCase):
   end=next(i for i,n in enumerate(main.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='ui' for t in n.targets))
   defs=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ['code','contains']]
   source=(ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_data.js').read_text();index=json.loads(source.split('Object.freeze(',1)[1].split(');',1)[0])
-  ns={'PREFIX':'§r§0§r§0','ATLAS_REL':ATLAS_REL,'icon_index':index,'bind_channel':bind_channel};exec(compile(ast.fix_missing_locations(ast.Module(body=defs+main.body[start:end+2],type_ignores=[])),'<actual UI constructor>','exec'),ns)
+  ns={'PREFIX':'KG_HUD!','ATLAS_REL':ATLAS_REL,'icon_index':index,'bind_channel':bind_channel,'install_catalog_probe':install_catalog_probe};exec(compile(ast.fix_missing_locations(ast.Module(body=defs+main.body[start:end+3],type_ignores=[])),'<actual UI constructor>','exec'),ns)
   self.assertEqual((json.dumps(ns['ui'],ensure_ascii=False,indent=2)+'\n').encode(),(RP/'ui/kg_grilling_hud.json').read_bytes())
  def test_generator_fixture_shape_and_order_match_committed(self):
   # Metadata-shape test only: use the already declared JAR digest, never a fake archive/hash bypass.
@@ -59,8 +60,8 @@ class AtlasTests(unittest.TestCase):
   f=json.loads((ROOT/'development/gameplay_core/fixtures/java-hud-1.1.1.json').read_text());self.assertNotIn(ATLAS_REL,f['assets']);self.assertEqual(f['derived_assets'],{ATLAS_REL:atlas_metadata(self.png)})
   for color,h in SOURCE_PINS.items():self.assertEqual(f['assets'][f'textures/ui/kg_java/skewer_eating_progress_{color}.png']['sha256'],h)
  def test_permanent_channel_control_count(self):
-  self.assertEqual(len(self.controls),406)
-  self.assertEqual(self.ui['root']['controls'],[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}])
+  self.assertEqual(len(self.controls),407)
+  self.assertEqual(self.ui['root']['controls'][:1],[{'kg_java_eating@kaleidoscope_grilling_hud.kg_eating_packet':{}}])
   self.assertNotIn('factory',json.dumps(self.ui));self.assertNotIn('once',json.dumps(self.ui));self.assertNotIn('destroy_at_end',json.dumps(self.ui))
  def test_bad_source_rejected(self):
   with self.assertRaises(ValueError):build_progress_atlas(self.src['yellow']+b'x',self.src['green'])
