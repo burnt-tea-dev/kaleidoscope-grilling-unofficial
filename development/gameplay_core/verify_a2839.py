@@ -10,7 +10,7 @@ def main():
  scripts=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts'
  writers=[p.name for p in scripts.rglob('*.js') if 'setActionBar' in p.read_text()]
  version=tuple(json.loads((scripts.parent/'manifest.json').read_text())['header']['version'])
- expected=['a283_interaction_feedback.js'] if version >= (2,8,130) else ['a283_interaction_feedback.js','java_eating_hud_runtime.js']
+ expected=['a283_interaction_feedback.js','graphical_actionbar_transport_core.js'] if version >= (2,8,137) else ['a283_interaction_feedback.js'] if version >= (2,8,130) else ['a283_interaction_feedback.js','java_eating_hud_runtime.js']
  assert sorted(writers)==expected,writers
  assert 'eatingProgress' not in (scripts/'main.js').read_text()
  print('A2.8.39 immersion source contract PASS; no real-client acceptance claim')
