@@ -13,15 +13,15 @@
   "saved_world_migration": "pending",
   "live_deployment": false,
   "validation_evidence": "CHANGELOG.md",
-  "expected_source_tree_sha256": "PENDING",
+  "expected_source_tree_sha256": "5fbc66cec724ef5a5f096b5732ca6f38ac23476e8777720b0c854e48050ccfed",
   "expected_artifacts": {
     "mcaddon": {
       "name": "Kaleidoscope_Grilling_A2.8.141_baseline1.mcaddon",
-      "sha256": "PENDING"
+      "sha256": "191a831ca18b8be607cbff2b0c2ea7c9629000af8c470309e9e080436d54350c"
     },
     "brproject": {
       "name": "Kaleidoscope_Grilling_A2.8.141_baseline1.brproject",
-      "sha256": "PENDING"
+      "sha256": "eb481ffbadd582a85de0f98a60bdc74d45bc47d23ef4cb75ddd5011c744b33df"
     }
   },
   "integrated_source": {

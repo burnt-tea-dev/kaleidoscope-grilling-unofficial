@@ -1,4 +1,4 @@
-"""Reverse only the reviewed G130 display hooks for the immutable dispatcher witness.
+"""Reverse only the reviewed G130/G141 HUD hooks for the immutable dispatcher witness.
 
 The runtime is never modified here. Returned authoring text retains these hooks;
 normalization is used only before the unchanged whole-G126-source hash check.
