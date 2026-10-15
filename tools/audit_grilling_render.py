@@ -602,6 +602,9 @@ def check_current_display_contracts(findings, geometry_index, animations):
             item=load_json(BP/"items/unfinished_skewer.json")["minecraft:item"]
             if desc.get("geometry")!=expected_geometry or "minecraft:food" in item.get("components",{}):
                 add(findings,"error","held_partial_contract",desc["identifier"],"nonedible partial must retain exact partial-state references")
+        if version >= (2,8,143):
+            from eating_owner_context import owner_expression
+            required_selectors = {alias:owner_expression(query) for alias,query in required_selectors.items()}
         actual_selectors = {}
         malformed = False
         for row in selectors:

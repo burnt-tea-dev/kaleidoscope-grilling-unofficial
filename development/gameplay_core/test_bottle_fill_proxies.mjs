@@ -76,6 +76,20 @@ test('inventory/offhand refresh skips active use and clears scan history on leav
  f.api.prepareBottleFillItems(f.player,false);assert.equal(f.inventory.rows[0].typeId,N+'partial_seasoning_f1');assert.equal(f.inventory.rows[2].typeId,PENDING+'_f4');assert.equal(f.off.typeId,PENDING+'_f2');
  for(const event of ['playerLeave','playerSpawn']){f.inventory.rows[2]=decorated(PENDING,3);f.events[event]({player:f.player,playerId:f.player.id});f.api.prepareBottleFillItems(f.player);assert.equal(f.inventory.rows[2].typeId,PENDING+'_f3');}
 });
+test('one unreadable bottle preserves its data without blocking other slots, food preparation or bounding scans',()=>{
+ const f=fixture(),bad=decorated(PENDING,1);bad.props[core.SEASONING_LIST_KEY]='broken';
+ f.inventory.rows[0]=bad;f.inventory.rows[2]=decorated(PENDING,4);f.off=decorated(PENDING,2);
+ const reads=[],originalRead=f.inventory.getItem;f.inventory.getItem=function(slot){reads.push(slot);return originalRead.call(this,slot)};
+ assert.throws(()=>f.api.prepareBottleFillItems(f.player),error=>error.name==='SyntaxError');
+ assert.deepEqual(plain(f.inventory.rows[0]),plain(bad));assert.equal(f.inventory.rows[2].typeId,PENDING+'_f4');assert.equal(f.off.typeId,PENDING+'_f2');
+ f.inventory.rows[2]=decorated(PENDING,3);f.system.currentTick++;reads.length=0;
+ assert.throws(()=>f.api.prepareBottleFillItems(f.player),error=>error.name==='SyntaxError');assert.deepEqual(reads,[0],'failed sweep must retain its twenty-tick budget');assert.equal(f.inventory.rows[2].typeId,PENDING);
+ const main=read('main.js'),start=main.indexOf('  try{prepareBottleFillItems(p,'),end=main.indexOf('  if(active&&',start);let foodPrepares=0;
+ assert.ok(start>0&&end>start);
+ vm.runInNewContext(main.slice(start,end),{p:f.player,active:undefined,PENDING_USES:new Map(),system:{currentTick:1},
+  prepareBottleFillItems(){throw Error('unreadable bottle')},prepareEatingItems(){foodPrepares++},grillingConfig:()=>({enableEatingAnimations:true}),console:{warn(){}}});
+ assert.equal(foodPrepares,1,'independent native food animation preparation must still run');
+});
 test('all pending proxies start and complete native use; partial proxies do not shake',()=>{
  const events={},uses=new Map(),animations=[],sounds=[];let completed=0;
  const world={afterEvents:Object.fromEntries(['itemStartUse','itemCompleteUse'].map(k=>[k,{subscribe(f){events[k]=f}}]))};

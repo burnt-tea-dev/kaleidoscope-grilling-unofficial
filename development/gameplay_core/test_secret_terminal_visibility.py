@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from public_source_witness import public_json, assert_public_bytes
 import secret_terminal_visibility as terminal
 from test_eating_observer_projection import node
+from eating_owner_context import document
 
 
 class SecretTerminalVisibility(unittest.TestCase):
@@ -27,6 +28,7 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
  const code=d.identifier.endsWith('_java_three_alt')?4:3,ticks=code===4?90:100;
  const owner={has_property:()=>true,property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
  const q={is_using_item:false,main_hand_item_use_duration:ticks,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,property:n=>({eat_hand:hand==='main_hand'?1:2,eat_profile:code,eat_native_ticks:ticks,eat_elapsed_ticks:0,eat_projection:1})[n.split(':')[1]],is_item_name_any:()=>true};
+ const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={is_first_person:1,item_slot:hand,owning_entity:owner},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n)),floor:Math.floor};
  // Bare objects intentionally return undefined for missing reads. Do not use
  // the general harness's implicit-zero proxy for this startup regression.
@@ -52,8 +54,8 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
             self.assertEqual(sum(row.startswith('v.kg_secret_owner_occupied = ') for row in rows), 1)
             description['scripts']['pre_animation'] = [owner_occupancy(description['identifier']) if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]
             terminal.apply(description)
-            self.assertEqual(after, source)
-            self.assertEqual(terminal.apply(deepcopy(after['minecraft:attachable']['description'])), after['minecraft:attachable']['description'])
+            self.assertEqual(after, document(source,attachable=True))
+            self.assertEqual(document(terminal.apply(deepcopy(after['minecraft:attachable']['description'])),attachable=True), after['minecraft:attachable']['description'])
         assert_public_bytes(self, RP / 'render_controllers/secret_held.render_controllers.json')
 
     def test_terminal_use_gate_gap_and_all_authoritative_or_fresh_serving_exits(self):
@@ -68,6 +70,7 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
   is_item_name_any:(slot,...ids)=>slot===(hand==='main_hand'?'slot.weapon.mainhand':'slot.weapon.offhand')&&ids.includes(held)};
  const q={get is_using_item(){return using},main_hand_item_use_duration:0,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
   property:n=>props[n.split(':')[1]],is_item_name_any:(slot,...ids)=>owner.is_item_name_any(slot,...ids)};
+ const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={get is_first_person(){return first},item_slot:hand,owning_entity:owner},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n))};let v={};
  const update=()=>evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);
  const shaft=()=>Boolean(new Function('v','return '+controllers['controller.render.kg_secret_held.stick'].part_visibility[1].skewer_model)(v));
@@ -92,17 +95,18 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
  // Creative or a retained/new identical serving stays nonzero when the
  // authoritative phase clears. No new property or arbitrary timeout needed.
  clear=false;update();if(v.kg_secret_terminal_wait||!shaft()||v.kg_bite_stage!==0)throw Error('Retained/Creative/same-ID serving remained hidden');
- for(const reset of ['fresh-use','snapshot-change','owner-change','hand-change','phase-clear','third-person','fresh-instance']){
+ for(const reset of ['fresh-use','snapshot-change','snapshot-restart','owner-change','hand-change','phase-clear','third-person','fresh-instance']){
   beginTerminal();using=false;update();
   if(reset==='fresh-use'){using=true;q.main_hand_item_use_duration=ticks;props.eat_elapsed_ticks=1;}
   if(reset==='snapshot-change')changed=true;
+  if(reset==='snapshot-restart'){changed=true;using=true;}
   if(reset==='owner-change')held='minecraft:apple';
   if(reset==='hand-change')props.eat_hand=hand==='main_hand'?2:1;
   if(reset==='phase-clear')props.eat_native_ticks=0;
   if(reset==='third-person')first=0;
   if(reset==='fresh-instance')v={};
   update();if(v.kg_secret_terminal_wait)throw Error('Completion ownership survived '+reset);
-  if(['fresh-use','snapshot-change','phase-clear','fresh-instance'].includes(reset)&&!shaft())throw Error('Fresh serving hidden '+reset);
+  if(['fresh-use','snapshot-change','snapshot-restart','phase-clear','fresh-instance'].includes(reset)&&!shaft())throw Error('Fresh serving hidden '+reset);
  }
  // A pre-25-tick interruption has not reached terminal stage and must resume idle.
  beginTerminal();q.main_hand_item_use_duration=ticks-10;props.eat_elapsed_ticks=10;update();using=false;update();
@@ -116,6 +120,7 @@ for(const d of descriptions){
  const props={eat_hand:1,eat_profile:code,eat_native_ticks:ticks,eat_elapsed_ticks:ticks-1,eat_projection:1};
  const owner={has_property:()=>true,property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
  const q={get is_using_item(){return using},main_hand_item_use_duration:0,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,property:n=>props[n.split(':')[1]],is_item_name_any:()=>true};
+ const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={is_first_person:1,get item_slot(){return hand},owning_entity:owner},v={},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n))};
  const update=()=>evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);
  update();hand='off_hand';update();using=false;hand='main_hand';update();

@@ -16,7 +16,12 @@ def eating_dispatch_source(script, version):
         sys.path.insert(0, str(RP.parents[3] / 'tools'))
         import hashlib
         from build_two_route_eating_projection import NATIVE_CLIPS_SHA256, patch_main, restore_main
-        assert hashlib.sha256(dedicated.read_bytes()).hexdigest() == NATIVE_CLIPS_SHA256, 'Dedicated two-route clip bytes drifted'
+        from eating_owner_context import reference_bytes
+        try:
+            captured = reference_bytes(dedicated)
+        except AssertionError as error:
+            raise AssertionError('Dedicated two-route clip bytes drifted') from error
+        assert hashlib.sha256(captured).hexdigest() == NATIVE_CLIPS_SHA256, 'Dedicated two-route clip bytes drifted'
         restored = restore_main(script)
         assert patch_main(restored) == script, 'Dedicated two-route clips require the exact dispatcher'
         return restored

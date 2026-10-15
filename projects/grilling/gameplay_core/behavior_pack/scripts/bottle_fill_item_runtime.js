@@ -40,10 +40,15 @@ export function prepareBottleFillItems(player,using=false){
  if(using)return;
  const inventory=playerInventory(player);
  const all=system.currentTick-(scanned.get(player.id)??-20)>=20;
+ // A failed bottle must not turn the bounded inventory sweep into a full scan
+ // every tick or prevent independent slots/offhand from being prepared.
+ if(all)scanned.set(player.id,system.currentTick);
+ let failure;
+ const refresh=(read,write)=>{try{refreshBottleFillSlot(read,write)}catch(error){failure??=error}};
  if(inventory){
   const slots=all?Array.from({length:inventory.size},(_,i)=>i):[player.selectedSlotIndex];
-  for(const slot of slots)refreshBottleFillSlot(()=>inventory.getItem(slot),item=>inventory.setItem(slot,item));
+  for(const slot of slots)refresh(()=>inventory.getItem(slot),item=>inventory.setItem(slot,item));
  }
- refreshBottleFillSlot(()=>getOffHand(player),item=>setOffHand(player,item));
- if(all)scanned.set(player.id,system.currentTick);
+ refresh(()=>getOffHand(player),item=>setOffHand(player,item));
+ if(failure)throw failure;
 }

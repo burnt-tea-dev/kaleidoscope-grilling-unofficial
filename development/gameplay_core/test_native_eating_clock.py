@@ -2,6 +2,9 @@
 import ast,json,subprocess,unittest
 from pathlib import Path
 from native_eating_clock import SECONDS,TICKS,ASSIGNMENT
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
+from eating_owner_context import PLAYER_SECONDS,ATTACHABLE_SECONDS,expression
 ROOT=Path(__file__).resolve().parents[2]
 def evaluate(ticks,remaining,alpha,using=True):
     text=SECONDS.replace(TICKS,repr(ticks)).replace('q.is_using_item',str(int(using))).replace('q.main_hand_item_use_duration',repr(remaining)).replace('q.frame_alpha',repr(alpha))
@@ -44,13 +47,14 @@ class NativeEatingClock(unittest.TestCase):
             self.assertEqual(set(clips),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
             names.append(dedicated.name)
         for name in names:
-            for a in json.loads((rp/'animations'/name).read_text())['animations'].values():self.assertEqual(a['anim_time_update'],SECONDS)
+            for a in json.loads((rp/'animations'/name).read_text())['animations'].values():
+                self.assertEqual(a['anim_time_update'],PLAYER_SECONDS if 'player' in name else ATTACHABLE_SECONDS)
         props=json.loads((bp/'entities/player.json').read_text())['minecraft:entity']['description']['properties']
         self.assertEqual(props['kaleidoscope_grilling:eat_native_ticks'],{'type':'int','range':[0,72000],'default':0,'client_sync':True})
         checked=0
         for path in (rp/'attachables').glob('*.json'):
             pre=json.loads(path.read_text())['minecraft:attachable']['description']['scripts'].get('pre_animation',[])
-            if pre and pre[0]==ASSIGNMENT:
+            if pre and pre[0]==expression(ASSIGNMENT,attachable=True):
                 checked+=1;self.assertNotIn('q.item_in_use_duration',' '.join(pre))
         self.assertGreater(checked,30)
     def test_duration_input_and_cleanup_source(self):

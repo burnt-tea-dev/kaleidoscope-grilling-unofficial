@@ -22,8 +22,8 @@
       },
       "scripts": {
         "pre_animation": [
-          "v.kg_eat_seconds = (c.is_first_person == 1 ? (q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0));",
-          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (q.property('kaleidoscope_grilling:eat_profile') == 4 ? (v.kg_eat_seconds >= 3.5 ? 3 : (v.kg_eat_seconds >= 2.16667 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0))) : (v.kg_eat_seconds >= 3.54167 ? 3 : (v.kg_eat_seconds >= 2.33333 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0)))) : 0;"
+          "v.kg_eat_seconds = (c.is_first_person == 1 ? (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)) : (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0));",
+          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') == 4 ? (v.kg_eat_seconds >= 3.5 ? 3 : (v.kg_eat_seconds >= 2.16667 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0))) : (v.kg_eat_seconds >= 3.54167 ? 3 : (v.kg_eat_seconds >= 2.33333 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0)))) : 0;"
         ],
         "animate": [
           {
@@ -39,16 +39,16 @@
             "tp_left": "c.is_first_person == 0 && c.item_slot == 'off_hand'"
           },
           {
-            "eat_right": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand' && q.property('kaleidoscope_grilling:eat_profile') != 4"
+            "eat_right": "c.is_first_person == 1 && q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') != 4"
           },
           {
-            "eat_alt_right": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand' && q.property('kaleidoscope_grilling:eat_profile') == 4"
+            "eat_alt_right": "c.is_first_person == 1 && q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') == 4"
           },
           {
-            "eat_left": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand' && q.property('kaleidoscope_grilling:eat_profile') != 4"
+            "eat_left": "c.is_first_person == 1 && q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') != 4"
           },
           {
-            "eat_alt_left": "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand' && q.property('kaleidoscope_grilling:eat_profile') == 4"
+            "eat_alt_left": "c.is_first_person == 1 && q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') == 4"
           }
         ]
       },

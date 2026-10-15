@@ -320,9 +320,12 @@ for(const [mealId,duration] of [['kaleidoscope_grilling:grilled_fish_skewer',90]
  const math={clamp:(value,lo,hi)=>Math.max(lo,Math.min(hi,value))};
  const evaluate=(remaining,using=true)=>{
   const v={},q={is_using_item:using,main_hand_item_use_duration:remaining,frame_alpha:.5,
-   is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,property:key=>f.properties.get(key),
+   is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,property:()=>0,
    is_item_name_any:()=>true,is_item_equipped:()=>0};
-  new Function('q','c','math','v',desc.scripts.pre_animation.join('\n'))(q,c,math,v);return v;
+  // Event snapshots belong to the player, not this attachable's query object.
+  c.owning_entity={property:key=>f.properties.get(key),has_property:key=>f.properties.has(key)};
+  const code=desc.scripts.pre_animation.join('\n').replaceAll('c.owning_entity->q.','c.owning_entity.');
+  new Function('q','c','math','v',code)(q,c,math,v);return v;
  };
  const ticks=[0,...a.biteTimes.flatMap(t=>[Math.ceil(t*20)-1,Math.ceil(t*20)]),duration-1];
  for(const elapsed of ticks){

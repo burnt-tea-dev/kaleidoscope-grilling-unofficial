@@ -118,7 +118,8 @@ for(const [id,d] of Object.entries(descriptions))for(const hand of [1,2]){
  const q={get is_using_item(){return using},is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,
  property:name=>({eat_profile:profile,eat_hand:eatHand,eat_projection:projection})[name.split(':')[1]],
  is_item_name_any:(_slot,...names)=>names.includes(held),is_item_equipped:s=>s===other&&helper?1:0};
- const v={}; const evaluate=()=>{new Function('q','c','v',d.scripts.pre_animation.at(-1))(q,c,v);return Boolean(v.kg_java_piece_visible)};
+ c.owning_entity=q;
+ const v={}; const evaluate=()=>{new Function('q','c','v',d.scripts.pre_animation.at(-1).replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,v);return Boolean(v.kg_java_piece_visible)};
  if(!evaluate())throw Error('Representative piece not wired');
  for(const change of [()=>using=false,()=>first=0,()=>held='minecraft:apple',()=>helper=true,()=>profile=4,()=>projection=0,()=>eatHand=0]){
   change();if(evaluate())throw Error('Piece leaked after changed state');

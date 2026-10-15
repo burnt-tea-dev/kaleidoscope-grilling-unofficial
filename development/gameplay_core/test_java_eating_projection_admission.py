@@ -10,6 +10,7 @@ sys.path.insert(0,str(ROOT/'tools'))
 import build_java_eating_projection as generator
 from public_source_witness import public_json,assert_public_bytes
 from test_eating_observer_projection import node
+from eating_owner_context import expression
 
 
 class ProjectionAdmission(unittest.TestCase):
@@ -65,10 +66,10 @@ for(const {id,profile,description:d} of rows)for(const hand of ['right','left'])
  const slot=hand==='right'?'slot.weapon.mainhand':'slot.weapon.offhand';
  const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
  property:name=>p[name.split(':')[1]],is_item_name_any:(s,...ids)=>s===slot&&ids.includes(held)};
- const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand'},variable={is_first_person:1};
+ const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand',owning_entity:q},variable={is_first_person:1};
  const item=d.scripts.animate.find(row=>row['fp_eat_'+hand])['fp_eat_'+hand];
  const player=players['animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+hand].blend_weight;
- const active=expression=>Boolean(new Function('q','c','variable','return '+expression)(q,c,variable));
+ const active=expression=>Boolean(new Function('q','c','variable','return '+expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,variable));
  if(!supportsJavaEatingProjection(id,profile)||!active(item)||!active(player))throw Error('Actual renderer missing '+id);
  for(const other of ['minecraft:apple','kaleidoscope_grilling:secret_skewer_native_plain',id.replace('_java_three_alt','')]){
   if(other===id)continue;held=other;
@@ -149,8 +150,8 @@ for(const {id,code,d} of rows)for(const hand of ['right','left']){
  const q={get is_using_item(){return using},get is_sneaking(){return posture},is_swimming:0,is_gliding:0,is_riding:0,
  property:n=>({eat_projection:projection,eat_profile:code,eat_hand:hand==='right'?1:2})[n.split(':')[1]],
  is_item_name_any:(s,...ids)=>s===slot&&ids.includes(held),is_item_equipped:()=>helper};
- const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand'};
- const evaluate=alias=>Boolean(new Function('q','c','return '+d.scripts.animate.find(r=>alias in r)[alias])(q,c));
+ const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand',owning_entity:q};
+ const evaluate=alias=>Boolean(new Function('q','c','return '+d.scripts.animate.find(r=>alias in r)[alias].replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c));
  const active=()=>evaluate('fp_eat_'+hand),idle=()=>evaluate('fp_'+hand),legacy=()=>evaluate((code===4?'eat_alt_':'eat_')+hand);
  if(!active()||idle()||legacy())throw Error('Secret active/idle/legacy layered');
  helper=1;if(active()||!idle()||!legacy())throw Error('Secret suppressed occupied helper or lost fallback');helper=0;
@@ -170,7 +171,7 @@ for(const {id,code,d} of rows)for(const hand of ['right','left']){
             self.assertFalse(any(key.startswith('fp_eat_') for key in canonical['animations']))
             self.assertEqual(canonical['geometry'],alt['geometry'])
             self.assertEqual(canonical['textures'],alt['textures'])
-            self.assertEqual(alt['scripts']['pre_animation'][0],ASSIGNMENT)
+            self.assertEqual(alt['scripts']['pre_animation'][0],expression(ASSIGNMENT,attachable=True))
             self.assertNotIn('q.item_in_use_duration',' '.join(alt['scripts']['pre_animation']))
             for hand,slot in [('right','main_hand'),('left','off_hand')]:
                 row=next(row for row in canonical['scripts']['animate'] if 'fp_'+hand in row)

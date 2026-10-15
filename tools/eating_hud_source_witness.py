@@ -15,12 +15,18 @@ HUD_START_SOURCE_BASE = '8fd01d5fdfe15aaeb9acf40b76832710728e6c2e'
 HUD_START_AFTER_SHA256 = '057a7f4d34c8633798dc2c20dec30bb0cda80b0665c8facb0f55b456972170e6'
 HUD_START_BEFORE = ' if(a.plain)return; // JSON owns 25-tick vanilla use; no custom motion, sound or HUD.\n'
 HUD_START_AFTER = HUD_START_BEFORE + ' if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);\n'
+PREPARATION_BEFORE = "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id));prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}\n"
+PREPARATION_AFTER = "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}\n" + "  try{prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}\n"
 
 def dispatcher_witness_source(text):
     marker = "import {showJavaEatingHud,hideJavaEatingHud,forgetJavaEatingHud}"
     if marker not in text:
         return text
     result = text
+    if PREPARATION_AFTER in result:
+        if result.count(PREPARATION_AFTER) != 1:
+            raise ValueError('Ambiguous independent eating preparation hooks')
+        result = result.replace(PREPARATION_AFTER, PREPARATION_BEFORE, 1)
     if HUD_START_AFTER in result:
         if result.count(HUD_START_AFTER) != 1:
             raise ValueError('Ambiguous reviewed G141 start hook')

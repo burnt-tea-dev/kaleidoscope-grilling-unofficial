@@ -1559,10 +1559,10 @@
         ],
         "animate": [
           {
-            "fp_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand')"
+            "fp_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand')"
           },
           {
-            "fp_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand')"
+            "fp_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand')"
           },
           {
             "tp_right": "c.is_first_person == 0 && c.item_slot == 'main_hand'"
@@ -1571,10 +1571,10 @@
             "tp_left": "c.is_first_person == 0 && c.item_slot == 'off_hand'"
           },
           {
-            "fp_idle_calibrated_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand') == 0"
+            "fp_idle_calibrated_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1 && c.item_slot == 'main_hand') == 0"
           },
           {
-            "fp_idle_calibrated_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand') == 0"
+            "fp_idle_calibrated_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 && c.item_slot == 'off_hand') == 0"
           }
         ],
         "initialize": [
