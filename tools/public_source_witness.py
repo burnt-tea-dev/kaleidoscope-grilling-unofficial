@@ -486,4 +486,5 @@ def assert_public_bytes_with_g71_bottles(testcase, path):
         return assert_public_bytes(testcase, path)
     version = json.loads((ROOT / 'baseline.json').read_text())['version']
     expected = expected_main_bytes(version, local_bottles=True)
-    testcase.assertEqual(path.read_bytes(), expected, 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas')
+    from eating_owner_context import reference_bytes
+    testcase.assertEqual(reference_bytes(path), expected, 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas')

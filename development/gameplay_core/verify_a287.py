@@ -31,7 +31,7 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
   assert type(value) is int and 0 <= value <= maximum,(name,value)
   expr=re.sub(r'\bv\.kg_season_'+name+r'\b',str(value),expr)
  assert type(has_projection) is bool and type(offhand) is int and offhand in (0,1)
- expr=expr.replace("q.has_property('kaleidoscope_grilling:eat_projection')",str(has_projection))
+ for prop in ('eat_projection','eat_profile','eat_hand'):expr=expr.replace("q.has_property('kaleidoscope_grilling:"+prop+"')",str(has_projection))
  expr=expr.replace('q.is_using_item',str(bool(using))).replace("q.property('kaleidoscope_grilling:eat_profile')",str(eat_profile))
  expr=expr.replace("q.property('kaleidoscope_grilling:eat_projection')",str(int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)))
  expr=re.sub(r"q\.is_item_name_any\([^)]*\)",'True',expr)
@@ -101,12 +101,16 @@ def binding_assets():
       projected='fp_eat_'+hand
       projected_code={'one':1,'two':2,'three':3,'three_alt':4,'four':5}.get(d['animations'].get(projected,'').split('.')[-2] if projected in d['animations'] else '')
       if scoped_caterpillar and hand=='right':projected='probe_one_right';projected_code=1
+      if 'review_three_right' in d['animations']:
+       from build_review_three_eating_projection import ids as reviewed_three_ids
+       assert d['identifier'] in reviewed_three_ids(),p
+       if hand=='right':projected='review_three_right';projected_code=3
       # .61 corrects the renderer context: Java renderArmWithItem curves are
       # first-person-only. Older immutable candidates retain their old guard.
       local_eating=[eating] if eating in d['animations'] and (first or version<(2,8,61)) else []
       expected_using=([projected] if first and profile==projected_code else [expected]+local_eating) if version>=(2,8,58) else [expected]+local_eating
       assert using_matches==expected_using,(p,profile,using_matches,expected_using)
-      if scoped_caterpillar:
+      if scoped_caterpillar or 'review_three_right' in d['animations']:
        for omitted in ({'has_projection':False},{'offhand':1}):
         blocked=[key for row in pose_routes for key,expr in row.items() if expression(expr,first,slot,bone,True,profile,**omitted)]
         assert blocked==[expected]+local_eating,(p,profile,omitted,blocked)
@@ -137,7 +141,8 @@ def binding_assets():
     continue
    if ref.startswith('geometry.kg_java_dual.piece.'):
     from build_java_dual_eating_projection import PIECE_BINDING,REPRESENTATIVES
-    assert d['identifier'] in REPRESENTATIVES and ref==d['geometry']['java_piece']
+    from build_review_three_eating_projection import ids as reviewed_three_ids
+    assert (d['identifier'] in REPRESENTATIVES or d['identifier'] in reviewed_three_ids()) and ref==d['geometry']['java_piece']
     assert b['binding']==PIECE_BINDING and 'parent' not in b
     assert len(g['bones'])==2 and not b.get('cubes')
     assert g['bones'][1]['name']=='dual_piece' and g['bones'][1]['parent']=='grip' and g['bones'][1]['pivot']==[0,24,0] and g['bones'][1]['cubes']
@@ -168,7 +173,7 @@ def binding_assets():
     assert model['name']=='skewer_model' and model['parent']=='skewer_pose' and model['pivot']==[0,24,0]
     for alias,anim in d['animations'].items():
      expected_bones={'skewer_model'} if alias.startswith('eat_') else {'skewer_pose','skewer_model'}
-     if alias.startswith('fp_eat_') and 'java_piece' in d['geometry']:expected_bones.add('dual_piece')
+     if (alias.startswith('fp_eat_') or alias=='review_three_right') and 'java_piece' in d['geometry']:expected_bones.add('dual_piece')
      if scoped_caterpillar and alias=='probe_one_right':expected_bones.add('dual_piece')
      assert set(animations[anim]['bones'])==expected_bones,anim
     oldref=ref.replace('kg_a287.','kg_a283.');old=idx[oldref]

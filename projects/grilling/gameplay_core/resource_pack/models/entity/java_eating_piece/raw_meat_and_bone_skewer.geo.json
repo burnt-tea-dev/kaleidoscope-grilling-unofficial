@@ -1,0 +1,115 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.kg_java_dual.piece.raw_meat_and_bone_skewer",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 8,
+        "visible_bounds_height": 8,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "binding": "q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')"
+        },
+        {
+          "name": "dual_piece",
+          "parent": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                30.75,
+                -1.5
+              ],
+              "size": [
+                3.0,
+                2.5,
+                3.0
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    0.0,
+                    0.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    0.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    3.0,
+                    0.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    3.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    0.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    6.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -3.0
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

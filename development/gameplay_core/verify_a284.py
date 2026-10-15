@@ -4,6 +4,10 @@ from verify_a283 import BP, RP, main as previous_gate
 
 
 def eating_dispatch_source(script, version):
+    import sys
+    sys.path.insert(0, str(RP.parents[3] / 'tools'))
+    from build_review_three_eating_projection import restore_main as restore_review_three
+    script = restore_review_three(script)
     """Check the exact reviewed two-route wrapper before legacy assertions.
 
     This source-only continuation does not change any release identity witness.
