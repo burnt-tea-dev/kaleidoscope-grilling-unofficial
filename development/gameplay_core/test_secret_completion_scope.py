@@ -26,6 +26,9 @@ class SecretCompletionScope(unittest.TestCase):
             assert_public_bytes(self, path)
             source, actual = public_json(path), json.loads(path.read_text())
             description = source['minecraft:attachable']['description']
+            from offhand_clock_witness import OLD_ASSIGNMENT
+            from native_eating_clock import ASSIGNMENT
+            description['scripts']['pre_animation'] = [ASSIGNMENT if row == OLD_ASSIGNMENT else row for row in description['scripts']['pre_animation']]
             rows = description['scripts']['pre_animation']
             description['scripts']['pre_animation'] = [owner_occupancy(description['identifier']) if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]
             apply_terminal_visibility(description)

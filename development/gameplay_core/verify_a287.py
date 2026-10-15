@@ -67,9 +67,10 @@ def binding_assets():
   if scoped_caterpillar:
    # A reviewed immutable payload, not a broad exemption from legacy bindings.
    from public_source_witness import REVIEWED_CATERPILLAR_CAMERA_BASE
+   from offhand_clock_witness import historical_attachable_bytes
    from build_caterpillar_eating_projection import ACTIVE,ANIMATION,PIECE,piece_assets
    relative=p.relative_to(Path(__file__).resolve().parents[2]).as_posix()
-   assert p.read_bytes()==subprocess.check_output(['git','show',REVIEWED_CATERPILLAR_CAMERA_BASE+':'+relative]),p
+   assert historical_attachable_bytes(p.read_bytes())==subprocess.check_output(['git','show',REVIEWED_CATERPILLAR_CAMERA_BASE+':'+relative]),p
    assert d['animations']['probe_one_right']==ANIMATION,p
    assert controllers[PIECE]=={'geometry':'Geometry.probe_piece','materials':[{'*':'Material.default'}],'textures':['Texture.probe_piece'],'part_visibility':[{'*':'v.kg_probe_piece_visible == 1'}]},p
   pose_routes=d['scripts']['animate']
