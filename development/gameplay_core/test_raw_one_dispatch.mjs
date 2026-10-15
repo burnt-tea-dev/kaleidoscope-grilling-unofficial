@@ -1,3 +1,5 @@
+import {supportsFailureEating,failureEatingAnimation} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_projection.js';
+import {isFailureSkewer} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 /** Actual production subscribers with API doubles; this is not native visual proof. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -22,7 +24,7 @@ function fixture({id=ids[0],hand='main',helper=false,duration=90,profile}={}){
  const callbacks={},queue=[],properties=new Map(),animations=[],sounds=[],settlements=[];
  const item=stack(id),other=helper?stack('minecraft:torch'):undefined;
  const player={id:'raw-one-holder',selectedSlotIndex:3,setProperty:(k,v)=>properties.set(k,v),playAnimation:(name,options)=>animations.push({name,options}),getComponent:()=>undefined};
- const ctx={...presentation,canonicalFoodId,isPlainEatingId,isAlternateEatingId,RANDOM_EATING_IDS,FOOD_DATA,PROFILE_BY_ITEM:{...PROFILE_BY_ITEM},supportsRawOne,rawOneAnimation,supportsReviewedThree,reviewedThreeAnimation,supportsJavaEatingProjection,captureEatingIdentity,eatingEventMatches,
+ const ctx={supportsFailureEating,failureEatingAnimation,isFailureSkewer,...presentation,canonicalFoodId,isPlainEatingId,isAlternateEatingId,RANDOM_EATING_IDS,FOOD_DATA,PROFILE_BY_ITEM:{...PROFILE_BY_ITEM},supportsRawOne,rawOneAnimation,supportsReviewedThree,reviewedThreeAnimation,supportsJavaEatingProjection,captureEatingIdentity,eatingEventMatches,
  world:{afterEvents:Object.fromEntries(['itemStartUse','itemStopUse'].map(k=>[k,{subscribe:f=>callbacks[k]=f}]))},system:{currentTick:100,run:f=>queue.push(f)},
  ACTIVE_EATS:new Map(),SETTLED:new Map(),PLATE_EATS:new Map(),PENDING_USES:new Map(),CUISINE_EATS:new Map(),CUISINE_FOOD_SET:new Set(),PLATE_ID:'plate',SECRET_ID:'secret',
  isPendingSeasoningId:()=>false,captureInteractionIntent:()=>({hand}),stackMeta:()=>({hot:false}),syncSecretHeld(){},stopSoundHandle(){},grillingConfig:()=>({graphicalEatingHud:false}),heldByHand:(_p,h)=>h===hand?item:other,

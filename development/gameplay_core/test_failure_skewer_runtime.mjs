@@ -58,7 +58,7 @@ function runtime(stack){
  const held={main:stack},values={},writes=[],callbacks={},queue=[];let fail;
  const player={id:'failure-holder',selectedSlotIndex:0,setProperty(k,v){writes.push([k,v]);if(fail?.(k,v))throw Error('injected write');values[k]=v;}};
  const ctx={...failure,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretVisualState,partialVisualState,eatingStillCurrent,getMainHand:()=>held.main,getOffHand:()=>held.off,isCreative:()=>!!held.creative,console:{warn(){}},world:{getAllPlayers:()=>[player],afterEvents:Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(k=>[k,{subscribe:f=>callbacks[k]=f}]))},system:{currentTick:100,run:f=>queue.push(f),runInterval(){}}};
- vm.runInNewContext(stripped('held_visual_transport.js')+'\n'+stripped('held_visual_dispatch_runtime.js')+'\n'+stripped('secret_held_runtime.js')+'\nthis.api={configureSecretHeldReader,syncSecretHeld,writeHeldVisual,heldVisualKind};',ctx);
+ vm.runInNewContext(stripped('slime_frame_core.js')+'\n'+stripped('held_visual_transport.js')+'\n'+stripped('held_visual_dispatch_runtime.js')+'\n'+stripped('secret_held_runtime.js')+'\nthis.api={configureSecretHeldReader,syncSecretHeld,writeHeldVisual,heldVisualKind};',ctx);
  ctx.api.configureSecretHeldReader(s=>s.raw,s=>s.raw);return {held,values,writes,player,callbacks,queue,api:ctx.api,fail:f=>fail=f};
 }
 test('actual shared provider owns six identities and both hands without stack mutation or extra player scan',()=>{
