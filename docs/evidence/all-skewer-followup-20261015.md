@@ -31,3 +31,13 @@ Focused preflight: 37 composed/raw/THREE/failure/two-route/secret inverse tests 
 Effect limits retained: native vanilla addEffect hidden-chain parity, suspicious-stew per-stack payloads and unregistered external callbacks are excluded. The existing32,767-byte state limit rejects oversized writes without truncation or speculative Dragon Blood health. No speculative stew transport or native-engine changes were added.
 
 Final focused rerun: 676 effects/completion/ingredient/damage/heavy-metal/parity/projectile-dodge/cross-lane Node tests pass; 20 combined native-icon/held-render Python tests pass (plus inherited six failure-asset checks). Actual guide checker passes. Original18 orientation tests and36 receipt/ref tests rerun successfully on this bundle.
+
+## Dedicated generator preflight correction
+
+The first frozen e93a0dab canonical attempt stopped before historical checks at standalone slime installation: the reviewed effects import preceded slime's original leading-import assertion. No receipt was produced. Standalone install now first validates/inverts the complete reviewed effects postimage, applies its unchanged strict slime wrapper, then reapplies effects only against the complete exact predecessor. The historical slime error contract remains assertion-based and mutation tests still reject altered bytes.
+
+An enumerated sweep of 30 unique generator --check entry points (including the native-icon generator) found two additional source-authoring assumptions: the placed palette omitted the two now-iconless foods, and the scene generator reconstructed fluid flipbooks without the separately owned icon rows. Both are tooling-only corrections. Original particle keys are recovered only for the two exact generator-validated native routes. Scene output reconstructs the original exact fluid list and appends only the two independently validated native rows. Existing runtime palettes, tint indices, fluids and all other BP/RP bytes are unchanged from e93a0dab.
+
+Added current-source mutation tests exercise palette deletion/tint-index drift, fluid-row deletion/reordering/extra rows through the actual CLI checker helper, and malformed native frame admission. The 20 icon/slime/composed witness tests and 10 existing bottle/palette tests pass; the complete dedicated slime verifier passes. Before-repair logs and the enumerated command/exit manifest are preserved outside source. These diagnostics never count as full-source acceptance.
+
+Final enumerated generator sweep: all 30 commands passed. Runtime diff from e93a0dab is empty.

@@ -79,6 +79,9 @@ class SlimeFrameSelector(unittest.TestCase):
         sys.path.insert(0, str(ROOT / 'tools'))
         from build_slime_frame_selector import strip_main, install_main, MAIN_SAMPLE, MAIN_SYNC
         current = (P / 'gameplay_core/behavior_pack/scripts/main.js').read_text()
+        self.assertEqual(install_main(current), current)
+        from effect_merge_source_witness import restore_main as restore_effect
+        current = restore_effect(current)
         plain = strip_main(current)
         self.assertEqual(install_main(plain), current)
         self.assertEqual(install_main(current), current)

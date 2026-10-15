@@ -58,10 +58,14 @@ def strip_main(text):
     return text
 
 def install_main(text):
-    text = strip_main(text)
+    from effect_merge_source_witness import restore_main as restore_effect, reapply_main
+    restored = restore_effect(text)
+    effects = restored != text
+    text = strip_main(restored)
     if text.count(MAIN_LOOP) != 1:
         raise ValueError('Slime requires exactly one existing one-tick player loop')
-    return MAIN_IMPORT + text.replace(MAIN_LOOP, MAIN_LOOP.replace(' for(', MAIN_SAMPLE+' for(')+MAIN_SYNC, 1)
+    text = MAIN_IMPORT + text.replace(MAIN_LOOP, MAIN_LOOP.replace(' for(', MAIN_SAMPLE+' for(')+MAIN_SYNC, 1)
+    return reapply_main(text) if effects else text
 
 def augment(output):
     result = dict(output)

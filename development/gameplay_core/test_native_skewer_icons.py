@@ -5,6 +5,8 @@ import sys
 from unittest.mock import patch
 import json
 import os
+import re
+import subprocess
 from pathlib import Path
 import unittest
 from PIL import Image
@@ -111,6 +113,48 @@ class NativeSkewerIcons(unittest.TestCase):
                 return doc
             with self.subTest(file=filename), patch.object(native,'read',changed), self.assertRaises(ValueError):
                 native.check_or_write(SOURCE_ROOT)
+
+    def test_native_gui_preserves_complete_particle_palette_and_tint_indices(self):
+        import a2770_placed_visual_assets as placed
+        palette=placed.ingredient_palette()
+        path=BP/'scripts/a2770_placed_visual_data.js';current=path.read_bytes()
+        expected=json.loads(re.search(rb'INGREDIENT_COLORS=Object.freeze\((\{.*?\})\)',current).group(1))
+        indices=json.loads(re.search(rb'PLACED_TINT_INDEX=Object.freeze\((\{.*?\})\)',current).group(1))
+        self.assertEqual(palette,expected)
+        colors=sorted({0xB86B45,0xE0A56A,*[c for pair in palette.values() for c in pair]})
+        self.assertEqual({str(c):i for i,c in enumerate(colors)},indices)
+        # An accidental deletion/reordering must fail the existing complete-byte guard.
+        bad=copy.deepcopy(expected);bad.pop(NS+'mysterious_skewer')
+        changed=current.replace(json.dumps(expected,ensure_ascii=False,sort_keys=True).encode(),json.dumps(bad,ensure_ascii=False,sort_keys=True).encode())
+        self.assertNotEqual(changed,current)
+        with self.assertRaises(AssertionError):placed.assert_generated(current,changed,str(path))
+        wrong=dict(indices);key=next(iter(wrong));wrong[key]+=1
+        with self.assertRaises(AssertionError):placed.assert_generated(json.dumps(indices).encode(),json.dumps(wrong).encode(),str(path))
+
+    def test_fluid_rows_remain_exact_and_unowned_rows_are_rejected(self):
+        sys.path.insert(0,str(ROOT/'tools'))
+        import build_scene_visuals as scene
+        from effect_merge_source_witness import PREVIOUS_EFFECT_BASE
+        path=RP/'textures/flipbook_textures.json'
+        original=json.loads(subprocess.check_output(['git','show',PREVIOUS_EFFECT_BASE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT))
+        generated=json.loads(scene.oil_assets()[path])
+        tiles={'kg_native_icon_'+name for name in SOURCES}
+        self.assertEqual([r for r in generated if r.get('atlas_tile') not in tiles],original)
+        self.assertEqual(generated,read(path))
+        scene.assert_generated(path,scene.dump(generated))
+        reader=Path.read_bytes
+        for changed in (generated[1:], list(reversed(generated)), generated+[{'atlas_tile':'unreviewed'}]):
+            def mutated(p):return scene.dump(changed) if p==path else reader(p)
+            with patch.object(Path,'read_bytes',mutated),self.assertRaises(AssertionError):
+                scene.assert_generated(path,scene.dump(generated))
+        import native_skewer_icons as native
+        loader=native.read
+        def bad(path):
+            doc=loader(path)
+            if path.name=='flipbook_textures.json':
+                next(r for r in doc if r.get('atlas_tile')=='kg_native_icon_mysterious_skewer')['frames']=[4,3,2,1,0]
+            return doc
+        with patch.object(native,'read',bad),self.assertRaises(ValueError):scene.oil_assets()
 
     def test_frame_revealed_edges_are_not_lost_to_alpha_union(self):
         first = Image.new('RGBA',(2,1)); first.putpixel((0,0),(255,255,255,255))
