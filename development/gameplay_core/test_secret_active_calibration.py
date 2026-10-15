@@ -178,6 +178,12 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   self.assertEqual(json.loads(PLAYER_FILE.read_text()),{'format_version':'1.8.0','animations':clips})
   self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
   allowed.add(relative)
+  from build_ordinary_relative_calibration import PLAYER as ORDINARY_PLAYER, CONTEXTS, animation as ordinary_animation, player_id as ordinary_id
+  ordinary_doc={'format_version':'1.8.0','animations':{ordinary_id(p,h):ordinary_animation(p,h)for p,h in CONTEXTS}}
+  self.assertEqual(json.loads(ORDINARY_PLAYER.read_text()),ordinary_doc)
+  ordinary_relative=str(ORDINARY_PLAYER.relative_to(ROOT))
+  self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+ordinary_relative],cwd=ROOT,capture_output=True).returncode,0)
+  allowed.add(ordinary_relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

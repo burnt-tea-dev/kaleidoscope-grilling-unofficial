@@ -80,7 +80,7 @@ def augment(output):
             result[path] = document(value, attachable=True)
         elif path.parent.name == 'animations' and path.name in {
                 'eating_motion.animation.json', 'java_eating_projection.animation.json',
-                'java_eating_player.animation.json', 'failure_skewer_player.animation.json', 'kg_probe_caterpillar_item.animation.json',
+                'java_eating_player.animation.json', 'ordinary_relative_player.animation.json', 'failure_skewer_player.animation.json', 'kg_probe_caterpillar_item.animation.json',
                 'kg_probe_caterpillar_player.animation.json', 'kg_isolated_two_route_player.animation.json', 'review_three_player.animation.json', 'raw_one_player.animation.json'}:
             result[path] = document(value, attachable='player' not in path.name)
     return result

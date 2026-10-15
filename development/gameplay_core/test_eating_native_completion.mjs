@@ -8,6 +8,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+const ordinaryRelativeContract=JSON.parse(fs.readFileSync(new URL('./fixtures/ordinary-relative-calibration.json',import.meta.url),'utf8'));
+function ordinaryRelativeClip(id,profile,hand){return (profile==='THREE_ALT'&&ordinaryRelativeContract.three_alt_ids.includes(id))||(profile==='THREE'&&hand==='off'&&ordinaryRelativeContract.three_left_ids.includes(id))?'animation.kg_ordinary_relative.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'):null;}
+
 import * as presentation from '../../projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js';
 import {captureEatingIdentity,eatingEventMatches,eatingStillCurrent,commitEating} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
 import {activeEffects,mergeEffectApplication} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect_lifecycle_core.js';
@@ -254,7 +257,7 @@ for(const hand of ['main','off'])for(const [mealId,profile,duration] of [['kalei
   assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),helperEmpty);
   const sharedClip=`animation.kg_java_eating.player.${profile.toLowerCase()}.${hand==='off'?'left':'right'}`;
   const selectedClip=mealId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'
-   ?'animation.kg_isolated_two_route_v1.player.pearl_three.right':sharedClip;
+   ?'animation.kg_isolated_two_route_v1.player.pearl_three.right':(ordinaryRelativeClip(mealId,profile,hand)||sharedClip);
   assert.equal(f.animations.some(([name])=>name===selectedClip),helperEmpty);
   if(selectedClip!==sharedClip)assert.equal(f.animations.some(([name])=>name===sharedClip),false);
   assert.equal(f.counts.manualWrites,0);assert.deepEqual(f.state.stack,before);assert.deepEqual(f.state.other,other);
@@ -303,6 +306,8 @@ for(const row of [
 test('production projection admission agrees with every serialized item/profile blend gate at its JSON duration',()=>{
  const animations=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json',import.meta.url),'utf8')).animations;
  const dedicated=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/kg_isolated_two_route_player.animation.json',import.meta.url),'utf8')).animations;
+ const ordinary=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/animations/ordinary_relative_player.animation.json',import.meta.url),'utf8')).animations;
+ assert.deepEqual(Object.keys(ordinary).sort(),['animation.kg_ordinary_relative.player.three.left','animation.kg_ordinary_relative.player.three_alt.left','animation.kg_ordinary_relative.player.three_alt.right']);
  const routes={
   'kaleidoscope_grilling:grilled_bun_slice_skewer':{profile:'TWO',clip:'animation.kg_isolated_two_route_v1.player.bun_two.right'},
   'kaleidoscope_grilling:grilled_ender_pearl_skewer':{profile:'THREE',clip:'animation.kg_isolated_two_route_v1.player.pearl_three.right'}
@@ -313,7 +318,7 @@ test('production projection admission agrees with every serialized item/profile 
   const duration=Math.round(item.components['minecraft:use_modifiers'].use_duration*20);
   const f=fixture({mealId,duration,hand,helperEmpty:true}),before=f.state.stack.clone(),a=f.startUse();
   const name=`animation.kg_java_eating.player.${a.profile.toLowerCase()}.${hand==='off'?'left':'right'}`;
-  const route=routes[mealId],selectedClip=route&&route.profile===a.profile&&hand==='main'?route.clip:name;
+  const route=routes[mealId],selectedClip=route&&route.profile===a.profile&&hand==='main'?route.clip:(ordinaryRelativeClip(mealId,a.profile,hand)||name);
   const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,has_property:key=>f.properties.has(key),
    property:key=>f.properties.get(key),is_item_name_any:(slot,...ids)=>slot===(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')&&ids.includes(mealId)};
   // Supply projection=1 to ask whether the client's exact item/profile gate
@@ -322,7 +327,7 @@ test('production projection admission agrees with every serialized item/profile 
   const expected=Boolean(new Function('q','variable','return '+animations[name].blend_weight)(clientQuery,{is_first_person:true}));
   assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),expected,`${mealId} ${declared} -> ${a.profile} ${duration}`);
   if(selectedClip!==name){
-   assert.equal(Boolean(new Function('q','variable','return '+dedicated[selectedClip].blend_weight)(clientQuery,{is_first_person:true})),expected);
+   assert.equal(Boolean(new Function('q','variable','return '+({...dedicated,...ordinary}[selectedClip]).blend_weight)(clientQuery,{is_first_person:true})),expected);
    assert.equal(f.animations.some(([animation])=>animation===name),false);
   }
   assert.equal(f.animations.some(([animation])=>animation===selectedClip),expected);

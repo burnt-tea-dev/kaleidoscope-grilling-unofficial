@@ -10,6 +10,7 @@ import build_raw_one_eating_projection as raw_one
 import build_eating_motion as motion
 import build_slime_frame_selector as slime
 import build_failure_skewer_held as failure
+import build_ordinary_relative_calibration as ordinary_relative
 from eating_owner_context import reference_bytes,augment as current_context
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
@@ -46,7 +47,13 @@ class CaterpillarProjectionTests(unittest.TestCase):
    retained=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
     previous=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
-  self.assertEqual({str(k):encoded(v)for k,v in slime.augment(current_context(failure.augment(raw_one.augment(review.augment(two_route.augment(retained)))))).items()},{str(k):encoded(v)for k,v in first.items()})
+  recomposed=slime.augment(current_context(failure.augment(raw_one.augment(review.augment(two_route.augment(retained))))))
+  from effect_merge_source_witness import reapply_main
+  main=scoped.BP/'scripts/main.js'
+  recomposed[main]=reapply_main(recomposed[main])
+  recomposed=ordinary_relative.augment(recomposed)
+  self.assertEqual(set(recomposed),set(first))
+  for k in first:self.assertEqual(encoded(recomposed[k]),encoded(first[k]),str(k))
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)

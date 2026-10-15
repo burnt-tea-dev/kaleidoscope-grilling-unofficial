@@ -156,6 +156,9 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  if review_three_routes and slime_frames and failure_skewers and 'mergeEffectApplication' in main_path.read_text():
   from effect_merge_source_witness import reapply_main
   output[main_path]=reapply_main(output[main_path])
+ if review_three_routes and slime_frames and failure_skewers:
+  from build_ordinary_relative_calibration import augment as augment_ordinary_relative
+  output=augment_ordinary_relative(output)
  return output
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""

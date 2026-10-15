@@ -121,6 +121,8 @@ def state_changes():
  ('if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}','if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}')]
 
 def restore_main(text):
+ from build_ordinary_relative_calibration import restore_main as restore_ordinary_relative
+ text=restore_ordinary_relative(text)
  from effect_merge_source_witness import restore_main as restore_effect
  text=restore_effect(text)
  if PROJECTION_IMPORT in text:

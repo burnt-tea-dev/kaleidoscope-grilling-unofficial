@@ -14,6 +14,9 @@ def pinned(commit,relative):
 def reference_bytes(path,current):
     path=Path(path);relative=path.relative_to(ROOT).as_posix() if path.is_absolute() else path.as_posix()
     if relative not in PATHS:return current
+    if relative==PREFIX+'main.js':
+        from build_ordinary_relative_calibration import restore_main as restore_ordinary_relative
+        current=restore_ordinary_relative(current.decode()).encode()
     before=pinned(PREVIOUS_EFFECT_BASE,relative)
     if current==before:return current
     if current!=pinned(REVIEWED_EFFECT_BASE,relative):
