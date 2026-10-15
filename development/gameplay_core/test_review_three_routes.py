@@ -30,6 +30,13 @@ class ReviewThreeTests(unittest.TestCase):
   with patch.object(pathlib.Path,'read_bytes',return_value=(json.dumps(bad,ensure_ascii=False,indent=2)+'\n').encode()):
    with self.assertRaises(AssertionError):context.reference_bytes(p)
 
+ def test_alt_variant_generation_preserves_every_existing_output(self):
+  from build_native_eating_variants import build
+  output=build()
+  for p,value in output.items():
+   self.assertEqual((json.dumps(value,ensure_ascii=False,indent=2)+'\n').encode(),p.read_bytes(),str(p))
+   if p.parent==r.RP/'attachables':
+    self.assertNotIn(r.ALIAS,value['minecraft:attachable']['description']['animations'])
  def test_actual_owner_context_and_clock_are_preserved(self):
   for item in r.ids():
    p=r.RP/'attachables'/(item.split(':')[1]+'.attachable.json')

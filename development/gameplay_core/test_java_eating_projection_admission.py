@@ -166,7 +166,9 @@ for(const {id,code,d} of rows)for(const hand of ['right','left']){
     def test_canonical_random_legacy_hold_and_hidden_alt_clock_are_both_preserved(self):
         from native_eating_clock import ASSIGNMENT
         for name in ('grilled_gluten_skewer','ordinary_skewer'):
-            canonical=json.loads((generator.RP/'attachables'/(name+'.attachable.json')).read_text())['minecraft:attachable']['description']
+            from build_review_three_eating_projection import predecessor_document
+            path=generator.RP/'attachables'/(name+'.attachable.json')
+            canonical=predecessor_document(path,json.loads(path.read_text()))['minecraft:attachable']['description']
             alt=json.loads((generator.RP/'attachables'/(name+generator.ALT_SUFFIX+'.attachable.json')).read_text())['minecraft:attachable']['description']
             self.assertFalse(any(key.startswith('fp_eat_') for key in canonical['animations']))
             self.assertEqual(canonical['geometry'],alt['geometry'])

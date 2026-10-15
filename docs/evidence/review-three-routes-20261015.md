@@ -17,11 +17,12 @@ A live gate common to player blend, item motion, legacy suppression, helper visi
 - ONE, other active profiles, offhand, helper occupied, sneak/swim/glide/ride and third-person retain prior behavior.
 - Java refuses a sneaking start before selecting a profile (MultiBiteSkewerItem.use). The existing Bedrock afterEvents use subscriber does not enforce that rule. This initiation mismatch remains separate from standing-start then crouching during use.
 - Official Blockbench representative cooked-lamb stage1 at 1.0s, stage2 at 2.35s and stage3 at 3.55s were captured with corresponding remaining-food meshes. Stage3 shows the bare stick and helper-hand piece. Together with the seven stage0 captures, these close the representative editor/source check, without claiming native-game acceptance or all 20 models visually tested.
+- A guarded official-editor slim-arm stage3 capture at 3.55s also shows coherent two-arm meat/stick placement. This is one representative frame, not acceptance of every skin or time.
 - Official editor camera and native game camera are not interchangeable. Native equip/bob/FOV, transitions, renderer replacement, skins and all-state parity remain unaccepted.
 
 ## Local tests
 
-- New exact-route suite: nine tests, 640 actual generated Molang state contexts; generated registry branch rejection; exact main inverse; unchanged G127 channels; all old modified document fields reversible; missing/model drift rejection.
+- New exact-route suite: ten tests, 640 actual generated Molang state contexts; generated registry branch rejection; exact main inverse; unchanged G127 channels; all old modified document fields reversible; missing/model drift rejection.
 - Actual production event/settlement harness: 379 passing cases, including all 20 IDs x both hands x helper occupied/empty; no food or helper writes introduced.
 - Existing G127 source suite: five passing tests; G126 source suite: four passing tests. Historical witnesses remain immutable and compare after exact new-route inversion.
 - Full generation followed by --check passes; full canonical source run is pending. Only exact owner-qualified new route fields are inverted; unrelated existing property/clock strings remain untouched and mutation-rejected.

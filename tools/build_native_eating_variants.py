@@ -20,7 +20,8 @@ def build():
   outputs[BP/'items'/f'{name}{SUFFIX}.json']=alt
   src=RP/'attachables'/f'{name}.attachable.json'
   if src.exists():
-   alt=json.loads(src.read_text());alt['minecraft:attachable']['description']['identifier']=id+SUFFIX
+   from build_review_three_eating_projection import predecessor_document
+   alt=predecessor_document(src,json.loads(src.read_text()));alt['minecraft:attachable']['description']['identifier']=id+SUFFIX
    outputs[RP/'attachables'/f'{name}{SUFFIX}.attachable.json']=alt
  # Native crafting must accept a held/dropped alternate-profile item too.
  def ingredients(v):
