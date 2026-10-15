@@ -59,16 +59,18 @@ def apply(description):
     for hand, state in states.items():
         selected = "c.item_slot == '" + hand + "_hand'"
         unchanged = '(' + ' && '.join(a + ' == ' + retained_read(b) for a, b in zip(values, state['snapshots'])) + ')'
-        old_terminal = '(' + phase + ' && ' + present + ' && ' + unchanged + ' && ' + retained_read(state['seen']) + ' == 1 && ' + authoritative_terminal + ' && ' + authoritative_elapsed + ' >= ' + retained_read(state['elapsed']) + ')'
+        old_terminal = '(' + phase + ' && ' + present + ' && ' + unchanged + ' && ' + retained_read(state['seen']) + ' > 0 && ' + authoritative_terminal + ' && ' + authoritative_elapsed + ' >= ' + retained_read(state['elapsed']) + ')'
         # A local countdown restart is not an authoritative new serving. Keep
         # terminal ownership until its server elapsed time resets or another
         # existing ownership/snapshot boundary invalidates the old session.
-        reset = '(' + retained_read(state['seen']) + ' == 1 && ' + authoritative_elapsed + ' < ' + retained_read(state['elapsed']) + ')'
-        update = '(q.is_using_item && ' + phase + ' && v.kg_bite_stage >= 3 && ' + authoritative_terminal + ' && ' + reset + ' == 0) ? 1 : (' + old_terminal + ' ? 1 : 0)'
+        reset = '(' + retained_read(state['seen']) + ' > 0 && ' + authoritative_elapsed + ' < ' + retained_read(state['elapsed']) + ')'
+        # State 2 retains a terminal hide across a local use restart until the
+        # owning server phase resets; offhand has no main-hand countdown edge.
+        update = '(q.is_using_item && ' + phase + ' && v.kg_bite_stage >= 3 && ' + authoritative_terminal + ' && ' + reset + ' == 0) ? (' + present + ' && ' + unchanged + ' && ' + retained_read(state['seen']) + ' == 2 ? 2 : 1) : (' + old_terminal + ' ? 2 : 0)'
         terminal.append(state['seen'] + ' = ' + selected + ' ? (' + update + ') : ' + retained_read(state['seen']) + ';')
     terminal += [
         PREFIX + "seen = c.item_slot == 'off_hand' ? " + retained_read(states['off']['seen']) + ' : ' + retained_read(states['main']['seen']) + ';',
-        PREFIX + 'wait = ' + phase + ' && (q.is_using_item == 0 || v.kg_bite_stage < 3) && ' + retained_read(PREFIX + 'seen') + ' == 1;',
+        PREFIX + 'wait = ' + phase + ' && (q.is_using_item == 0 || v.kg_bite_stage < 3 || ' + retained_read(PREFIX + 'seen') + ' == 2) && ' + retained_read(PREFIX + 'seen') + ' > 0;',
         STAGE,
     ]
     for hand, state in states.items():
