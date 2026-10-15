@@ -14,6 +14,7 @@ RUNTIME = 'projects/grilling/gameplay_core/'
 sys.path.insert(0, str(ROOT / 'tools'))
 from public_source_witness import assert_public_bytes_with_g71_bottles as assert_public_bytes, public_json
 from secret_terminal_visibility import apply as apply_terminal_visibility
+from eating_owner_context import document
 
 
 class SecretCompletionScope(unittest.TestCase):
@@ -29,7 +30,7 @@ class SecretCompletionScope(unittest.TestCase):
             rows = description['scripts']['pre_animation']
             description['scripts']['pre_animation'] = [owner_occupancy(description['identifier']) if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]
             apply_terminal_visibility(description)
-            self.assertEqual(actual, source)
+            self.assertEqual(actual, document(source,attachable=True))
 
     def test_native_debit_reward_checkpoint_cleanup_and_repaired_calls_are_conserved(self):
         path = ROOT / RUNTIME / 'behavior_pack/scripts/main.js'

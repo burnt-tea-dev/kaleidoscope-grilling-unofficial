@@ -72,6 +72,7 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
   is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
   property:n=>({eat_native_ticks:ticks,eat_elapsed_ticks:75,eat_profile:code,eat_hand:hand==='main_hand'?1:2,eat_projection:1})[n.split(':')[1]],
   is_item_name_any:(slot,...names)=>slot===(hand==='main_hand'?'slot.weapon.mainhand':'slot.weapon.offhand')&&names.includes(d.identifier)};
+ const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={is_first_person:1,item_slot:hand,owning_entity:owner},v={},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n))};
  const update=()=>evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);
  const visible=(controller,bone)=>Boolean(new Function('v','return '+controllers[controller].part_visibility.find(row=>bone in row)[bone])(v));

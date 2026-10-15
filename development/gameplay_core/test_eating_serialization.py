@@ -9,6 +9,7 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_java_eating_projection as generator
+from eating_owner_context import reference_bytes
 
 
 class EatingSerialization(unittest.TestCase):
@@ -66,7 +67,7 @@ class EatingSerialization(unittest.TestCase):
         for name,animations in [('java_eating_projection',item),('java_eating_player',player)]:
             path=ROOT/f'projects/grilling/gameplay_core/resource_pack/animations/{name}.animation.json'
             expected=json.dumps({'format_version':'1.8.0','animations':animations},ensure_ascii=False,indent=2)+'\n'
-            self.assertEqual(path.read_text(),expected)
+            self.assertEqual(reference_bytes(path).decode(),expected)
 
     def test_one_ulp_trig_variation_keeps_exact_serialization(self):
         expected=json.dumps(generator.animations())

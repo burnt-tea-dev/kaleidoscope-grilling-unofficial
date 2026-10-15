@@ -33,7 +33,7 @@ class HeldRenderContracts(unittest.TestCase):
  def test_active_pose_requires_eligibility(self):
   def mutate(d):
    for row in d['scripts']['animate']:
-    if 'fp_eat_right' in row:row['fp_eat_right']=row['fp_eat_right'].replace("q.property('kaleidoscope_grilling:eat_projection') == 1",'1')
+    if 'fp_eat_right' in row:row['fp_eat_right']=row['fp_eat_right'].replace("c.owning_entity->q.property('kaleidoscope_grilling:eat_projection') == 1",'1')
   if any('fp_eat_right' in row for row in audit.load_json(audit.RP/'attachables/raw_beef_skewer.attachable.json')['minecraft:attachable']['description']['scripts']['animate']):
    self.assertIn('held_pose_selectors',self.check(mutate))
  def test_active_and_idle_cannot_layer(self):
