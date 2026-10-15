@@ -111,8 +111,9 @@ def eating_gate():
     assert foods == required, required - foods
     # Native arm animation must still carry the same attachable/bite stages.
     skewers = 0
+    from slime_frame_source_witness import reference_bytes as slime_reference_bytes
     for file in (RP / 'attachables').glob('*_skewer.attachable.json'):
-        d = json.loads(file.read_text())['minecraft:attachable']['description']
+        d = json.loads(slime_reference_bytes(file, file.read_bytes()))['minecraft:attachable']['description']
         if version >= (2,8,68) and d['identifier']=='kaleidoscope_grilling:unfinished_skewer':
             assert d['identifier'] not in required, file
             assert d['render_controllers']==['controller.render.kg_secret_held.stick']+[f'controller.render.kg_partial_held.{i}' for i in range(2)],file

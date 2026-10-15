@@ -63,6 +63,7 @@ function fixture(){
  vm.runInContext('configureItemDataWorld(world)',context);
  // Load the production shared writer and dispatcher. These existing adapter
  // regressions must exercise the real cache/owner path after the G119 split.
+ vm.runInContext(strip(read('slime_frame_core.js')),context);
  vm.runInContext(strip(read('held_visual_transport.js')),context);
  vm.runInContext(strip(read('held_visual_dispatch_runtime.js')),context);
  vm.runInContext(strip(read('bottle_held_visual_runtime.js')),context);

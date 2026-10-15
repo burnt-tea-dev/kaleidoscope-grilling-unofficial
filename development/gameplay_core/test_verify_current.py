@@ -206,6 +206,14 @@ class SourceReceiptTests(unittest.TestCase):
                 self.main("--write-source-validation", self.receipt)
         self.assertFalse(self.receipt.exists())
 
+    def test_current_slime_checks_are_required_before_receipt(self):
+        with patch.object(gate, "generic_gate", return_value=(2, 8, 143, 1)), self.mock_functional_commands() as commands:
+            self.main("--write-source-validation", self.receipt)
+        self.assertEqual(commands.run.call_count, 3)
+        self.assertTrue(str(commands.run.call_args_list[1].args[0][-1]).endswith("verify_slime_frames.py"))
+        self.assertTrue(str(commands.run.call_args_list[2].args[0][-1]).endswith("verify_a28143.py"))
+        gate.require_source_validation(self.receipt)
+
     def test_full_success_writes_receipt_after_both_functional_commands(self):
         with patch.object(gate, "generic_gate", return_value=(2, 8, 47, 1)), self.mock_functional_commands() as commands:
             self.main("--write-source-validation", self.receipt)

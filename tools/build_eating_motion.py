@@ -54,7 +54,7 @@ def motion_frame(profile,hand,t):
  basis=bone_matrix({**held,'scale':1});delta=chain(item_frame(profile,hand,t),rigid_inverse(item_frame(profile,hand,0)))
  local=chain(rigid_inverse(basis),delta,basis);r=bedrock_rotation(local)
  return [-local[0][3]/.8,local[1][3]/.8,local[2][3]/.8],r
-def build(attachable_overrides=None, *, two_route_camera=False, review_three_routes=True):
+def build(attachable_overrides=None, *, two_route_camera=False, review_three_routes=True, slime_frames=True):
  from eating_owner_context import legacy_document
  from build_review_three_eating_projection import restore_main,strip_attachable
  overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
@@ -147,7 +147,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  # Nonedible partial skewers still use the player's eating-hand idle guard.
  partial=RP/'attachables/unfinished_skewer.attachable.json'
  if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
- return augment_owner_context(output)
+ from build_slime_frame_selector import augment as augment_slime
+ return augment_slime(augment_owner_context(output)) if slime_frames else augment_owner_context(output)
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):

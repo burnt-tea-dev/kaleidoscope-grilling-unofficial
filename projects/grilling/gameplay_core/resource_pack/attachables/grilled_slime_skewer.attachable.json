@@ -11,19 +11,52 @@
         "stage1": "textures/a22_bites/grilled_slime_skewer_stage1",
         "stage2": "textures/a22_bites/grilled_slime_skewer_stage2",
         "stage3": "textures/a22_bites/grilled_slime_skewer_stage2",
-        "stage4": "textures/a22_bites/grilled_slime_skewer_stage2"
+        "stage4": "textures/a22_bites/grilled_slime_skewer_stage2",
+        "slime_s0_f0": "textures/slime_frames/slime_frame_0",
+        "slime_s0_f1": "textures/slime_frames/slime_frame_0",
+        "slime_s0_f2": "textures/slime_frames/slime_frame_0",
+        "slime_s0_f3": "textures/slime_frames/slime_frame_0",
+        "slime_s0_f4": "textures/slime_frames/slime_frame_0",
+        "slime_s1_f0": "textures/slime_frames/slime_frame_0",
+        "slime_s1_f1": "textures/slime_frames/slime_frame_0",
+        "slime_s1_f2": "textures/slime_frames/slime_frame_0",
+        "slime_s1_f3": "textures/slime_frames/slime_frame_0",
+        "slime_s1_f4": "textures/slime_frames/slime_frame_0",
+        "slime_s2_f0": "textures/slime_frames/beef_stick",
+        "slime_s2_f1": "textures/slime_frames/beef_stick",
+        "slime_s2_f2": "textures/slime_frames/beef_stick",
+        "slime_s2_f3": "textures/slime_frames/beef_stick",
+        "slime_s2_f4": "textures/slime_frames/beef_stick"
       },
       "geometry": {
         "stage0": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage0",
         "stage1": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage1",
         "stage2": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage2",
         "stage3": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage2",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage2"
+        "stage4": "geometry.kg_a287.kg_a22.grilled_slime_skewer.stage2",
+        "slime_s0_f0": "geometry.kg_slime.stage0.frame0",
+        "slime_s0_f1": "geometry.kg_slime.stage0.frame1",
+        "slime_s0_f2": "geometry.kg_slime.stage0.frame2",
+        "slime_s0_f3": "geometry.kg_slime.stage0.frame3",
+        "slime_s0_f4": "geometry.kg_slime.stage0.frame4",
+        "slime_s1_f0": "geometry.kg_slime.stage1.frame0",
+        "slime_s1_f1": "geometry.kg_slime.stage1.frame1",
+        "slime_s1_f2": "geometry.kg_slime.stage1.frame2",
+        "slime_s1_f3": "geometry.kg_slime.stage1.frame3",
+        "slime_s1_f4": "geometry.kg_slime.stage1.frame4",
+        "slime_s2_f0": "geometry.kg_slime.stage2.frame0",
+        "slime_s2_f1": "geometry.kg_slime.stage2.frame1",
+        "slime_s2_f2": "geometry.kg_slime.stage2.frame2",
+        "slime_s2_f3": "geometry.kg_slime.stage2.frame3",
+        "slime_s2_f4": "geometry.kg_slime.stage2.frame4"
       },
       "scripts": {
         "pre_animation": [
           "v.kg_eat_seconds = (c.is_first_person == 1 ? (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)) : (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0));",
-          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (v.kg_eat_seconds >= 4.00000 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0)) : 0;"
+          "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 1) || (c.item_slot == 'off_hand' && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2))) ? (v.kg_eat_seconds >= 4.00000 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0)) : 0;",
+          "v.kg_slime_marker = (c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_off_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_off_piece') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_main_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_main_piece') : 0));",
+          "v.kg_slime_frame = (((c.item_slot == 'main_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_slime_skewer')) || (c.item_slot == 'off_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.offhand','kaleidoscope_grilling:grilled_slime_skewer'))) && v.kg_slime_marker >= 215 && v.kg_slime_marker <= 219) ? v.kg_slime_marker - 215 : 0;",
+          "v.kg_slime_index = math.clamp(math.floor(v.kg_bite_stage), 0, 2) * 5 + v.kg_slime_frame;"
         ],
         "animate": [
           {
@@ -53,7 +86,7 @@
         ]
       },
       "render_controllers": [
-        "controller.render.kg_a22.bite"
+        "controller.render.kg_slime.frame"
       ],
       "animations": {
         "fp_right": "animation.kg_a287.skewer_fp_right",

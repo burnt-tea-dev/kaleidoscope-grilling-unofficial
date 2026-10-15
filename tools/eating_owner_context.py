@@ -112,6 +112,8 @@ def reference_bytes(path):
     route_paths = {RP/'attachables'/(item.split(':')[1]+'.attachable.json') for item in ids()+raw_one_ids()} | {RP/'render_controllers/java_eating_player.render_controllers.json'}
     if path in route_paths:
         current = (json.dumps(predecessor_document(path,json.loads(current)),ensure_ascii=False,indent=2)+'\n').encode()
+    from slime_frame_source_witness import reference_bytes as slime_reference_bytes
+    current = slime_reference_bytes(path,current)
     relative = path.relative_to(ROOT).as_posix()
     if relative not in reviewed_changes() or '/resource_pack/' not in relative:
         return current

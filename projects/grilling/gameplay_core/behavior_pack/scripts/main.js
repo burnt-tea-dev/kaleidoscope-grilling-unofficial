@@ -1,3 +1,4 @@
+import {readSlimeWorldFrame,syncSlimeHeld} from './slime_frame_runtime.js';
 import {isOwnedBottleLore,bottleLoreSignature,bottleLoreMismatch} from './bottle_lore_core.js';
 import {flatulenceSoundOrigin,flatulenceSoundPitch} from './flatulence_sound_runtime.js';
 import {tryProjectileDodgeMovement} from './projectile_dodge_movement_runtime.js';
@@ -1259,7 +1260,9 @@ function tickGrill(block){
 }
 function tundraFactor(id){if(id==='minecraft:blue_ice')return 1.1055;if(['minecraft:ice','minecraft:packed_ice','minecraft:frosted_ice'].includes(id))return 1.11;return 1.3}
 system.runInterval(()=>{
+ const slimeFrame=readSlimeWorldFrame(world);
  for(const p of world.getAllPlayers()){try{
+  syncSlimeHeld(p,slimeFrame);
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}
   const active=ACTIVE_EATS.get(p.id);
   try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}
