@@ -13,6 +13,7 @@ import {FOOD_DATA,PROFILE_BY_ITEM,COOKED_EFFECTS,RAW_NAUSEA,MYSTERIOUS_ID,DARK_I
 import {seasoningEffectCounts} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_contract_core.js';
 import {replaceSeasoningData} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/seasoning_registry_core.js';
 import {canonicalFoodId,RANDOM_EATING_IDS,isAlternateEatingId,eatingItemId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {supportsReviewedThree,reviewedThreeAnimation,REVIEWED_THREE_IDS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/review_three_projection.js';
 import {supportsJavaEatingProjection,JAVA_FP_EATING_ITEMS_BY_PROFILE} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_projection_items.js';
 const eatingItemSource=fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_item_runtime.js',import.meta.url),'utf8');
 const selectedProfileSource=eatingItemSource.match(/export function selectedEatingProfile[^\n]+/)[0].replace(/^export /,'');
@@ -43,7 +44,7 @@ function fixture({creative=false,duration=90,profile='FOUR',requested,hand='main
  if(helperEmpty)state.other=undefined;
  const animations=[],nativeEffects=new Map(),customEffects={};
  const player={id:'native-holder',selectedSlotIndex:3,setProperty:(key,value)=>properties.set(key,value),playAnimation:(...args)=>animations.push(args),playSound(){return 1},getEffects:()=>[...nativeEffects.values()],removeEffect:name=>nativeEffects.delete(name),addEffect:(name,ticks,options)=>{effects.push(structuredClone([name,ticks,options]));nativeEffects.set(name,{typeId:name,duration:ticks,amplifier:options?.amplifier??0})},getComponent:type=>type.endsWith('hunger')?hunger:type.endsWith('saturation')?saturation:type.endsWith('equippable')?equipment:undefined};
- const ctx={isPendingSeasoningId,isPlainEatingId,canonicalFoodId,RANDOM_EATING_IDS,isAlternateEatingId,supportsJavaEatingProjection,forgetEatingItem(){},hideJavaEatingHud(){},forgetJavaEatingHud(){},prepareEatingItems(){},...presentation,world:{afterEvents:Object.fromEntries(['itemStartUse','itemCompleteUse','itemStopUse'].map(name=>[name,{subscribe:fn=>callbacks[name]=fn}]))},system:{currentTick:start,run:fn=>queue.push(fn)},ACTIVE_EATS:new Map(),SETTLED:new Map(),PLATE_EATS:new Map(),PENDING_USES:new Map(),CUISINE_EATS:new Map(),CUISINE_FOOD_SET:new Set(),FOOD_DATA,PROFILE_BY_ITEM:{...PROFILE_BY_ITEM},PENDING_SEASONING:'pending',PLATE_ID:'plate',SECRET_ID:'kaleidoscope_grilling:secret_skewer',MYSTERIOUS_ID,DARK_ID,RAW_NAUSEA,captureEatingIdentity,eatingEventMatches,eatingStillCurrent,commitEating,finishedFoodMeta,
+ const ctx={isPendingSeasoningId,isPlainEatingId,canonicalFoodId,RANDOM_EATING_IDS,isAlternateEatingId,supportsJavaEatingProjection,supportsReviewedThree,reviewedThreeAnimation,forgetEatingItem(){},hideJavaEatingHud(){},forgetJavaEatingHud(){},prepareEatingItems(){},...presentation,world:{afterEvents:Object.fromEntries(['itemStartUse','itemCompleteUse','itemStopUse'].map(name=>[name,{subscribe:fn=>callbacks[name]=fn}]))},system:{currentTick:start,run:fn=>queue.push(fn)},ACTIVE_EATS:new Map(),SETTLED:new Map(),PLATE_EATS:new Map(),PENDING_USES:new Map(),CUISINE_EATS:new Map(),CUISINE_FOOD_SET:new Set(),FOOD_DATA,PROFILE_BY_ITEM:{...PROFILE_BY_ITEM},PENDING_SEASONING:'pending',PLATE_ID:'plate',SECRET_ID:'kaleidoscope_grilling:secret_skewer',MYSTERIOUS_ID,DARK_ID,RAW_NAUSEA,captureEatingIdentity,eatingEventMatches,eatingStillCurrent,commitEating,finishedFoodMeta,
   EquipmentSlot:{Offhand:'off'},now:()=>ctx.system.currentTick,captureInteractionIntent:()=>({hand}),syncSecretHeld(){},resolvedProfile:presentation.eatingProfile.bind(null),nativeSnapshot:()=>Object.fromEntries(nativeEffects),fxSnapshot:()=>structuredClone(customEffects),stackMeta:()=>({hot,seasonings,hotUntil:hot?hotUntil:0}),heldByHand:(_player,selectedHand)=>selectedHand===hand?state.stack?.clone():state.other?.clone(),copyOne:stack=>{const one=stack.clone();one.amount=1;return one},mainContainer:()=>bag,creative:()=>state.creative,grillingConfig:()=>({saturationMultiplier}),advanceBites(){},dangerousPreservation(){},stopSoundHandle(){},stopEatSound(){},soundFor:()=>'',secretRemainders(){},afterCommitted(_player,_id,_meta,_active,fullNative){counts[fullNative?'nativeRewards':'manualRewards']++}};
  // Production resolvedProfile returns a string, while the imported selector
  // returns its validated descriptor. Keep the real selector and source shape.
@@ -475,4 +476,13 @@ test('stored seasoning ingredients resolve the reloaded mapping through the prod
   f.effects.length=0;replaceSeasoningData([{seasoning_effects:[{ingredient:'test:spice',kind:'numbness'}]}]);f.ctx.applySeasoning(f.player,stored);
   assert.deepEqual(f.effects,[['numb',1800]]);
  }finally{replaceSeasoningData([]);}
+});
+
+for(const mealId of REVIEWED_THREE_IDS)for(const hand of ['main','off'])for(const helperEmpty of [false,true])test(`exact review THREE admission ${mealId} ${hand} helperEmpty=${helperEmpty}`,()=>{
+ const f=fixture({mealId,profile:'THREE',duration:100,hand,helperEmpty}),before=f.state.stack.clone(),other=f.state.other?.clone();
+ f.startUse();const expected=hand==='main'&&helperEmpty;
+ assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),expected);
+ assert.equal(f.animations.some(([n])=>n==='animation.kg_review_three.player.three.right'),expected);
+ assert.equal(f.counts.manualWrites,0);assert.deepEqual(f.state.stack,before);assert.deepEqual(f.state.other,other);
+ f.stop();f.flush();assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),false);
 });

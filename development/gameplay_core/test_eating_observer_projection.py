@@ -16,6 +16,7 @@ import build_java_eating_projection as generator
 
 OWNER_CONTEXT_HARNESS = r"""
 function evaluatePreAnimation(rows,q,c,math,v){
+ q={has_property:()=>false,is_item_equipped:()=>false,is_item_name_any:()=>false,...q};
  const owner={has_property:()=>false,property:()=>0,is_item_name_any:()=>false,...(c.owning_entity??{})};
  const text=rows.join('\n').replaceAll('c.owning_entity->q.','owner.');
  if(text.includes('->'))throw Error('Unsupported Molang entity context');
@@ -162,7 +163,9 @@ for(const row of cases)for(const hand of [1,2]){
 
     def test_native_visibility_fallback_is_preserved_outside_owned_projection(self):
         original=json.loads((ROOT/'development/gameplay_core/fixtures/native-first-person-controller-1.26.50.4.json').read_text())['controller']
-        current=json.loads((RP/'render_controllers/java_eating_player.render_controllers.json').read_text())['render_controllers']['controller.render.player.first_person']
+        from build_review_three_eating_projection import historical_document
+        path=RP/'render_controllers/java_eating_player.render_controllers.json'
+        current=historical_document(path,json.loads(path.read_text()))['render_controllers']['controller.render.player.first_person']
         for old,new in zip(original['part_visibility'],current['part_visibility']):
             for bone,expression in old.items():
                 if bone in ('rightArm','rightSleeve','leftArm','leftSleeve'):

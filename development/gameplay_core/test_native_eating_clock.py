@@ -1,5 +1,5 @@
 """Evaluate the generated timer expression, independent of native visual QA."""
-import ast,json,subprocess,unittest
+import ast,json,subprocess,unittest,sys
 from pathlib import Path
 from native_eating_clock import SECONDS,TICKS,ASSIGNMENT
 import sys
@@ -61,7 +61,9 @@ class NativeEatingClock(unittest.TestCase):
         module=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js'
         js="import {eatingNativeTicks} from "+json.dumps(module.as_uri())+"; for(const [a,b] of [[90,90],[100,100],[0,0],[-1,0],[90.5,0],[72001,0],[NaN,0],[Infinity,0],[undefined,0]]) if(eatingNativeTicks(a)!==b) throw Error('Invalid duration');"
         subprocess.run(['node','--input-type=module','-e',js],check=True)
-        s=(module.parent/'main.js').read_text()
+        sys.path.insert(0,str(ROOT/'tools'))
+        from build_review_three_eating_projection import restore_main
+        s=restore_main((module.parent/'main.js').read_text())
         self.assertIn('eatingNativeTicks(a.nativeDuration)',s)
         version=tuple(json.loads((module.parent.parent/'manifest.json').read_text())['header']['version'])
         admitted="supportsJavaEatingProjection(e.itemStack.typeId,profile)"

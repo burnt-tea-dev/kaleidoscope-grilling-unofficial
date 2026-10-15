@@ -109,6 +109,8 @@ def restore_main(text):
     This is composition, not an exemption: extra edits, partial wrappers,
     duplicate calls or altered fallback routes always fail closed.
     """
+    from build_review_three_eating_projection import restore_main as restore_review_three
+    text = restore_review_three(text)
     old_call = 'e.source.playAnimation(' + OLD_SELECTOR + ',{'
     new_call = 'e.source.playAnimation(' + new_selector() + ',{'
     if text.count(new_call) == 1:
@@ -154,7 +156,11 @@ def main():
     for path, value in current_context(augment({})).items():
         data = encoded(value)
         if args.check:
-            if path.read_bytes() != data:
+            actual = path.read_bytes()
+            if path == MAIN:
+                from build_review_three_eating_projection import restore_main as restore_review_three
+                actual = restore_review_three(actual.decode()).encode()
+            if actual != data:
                 raise AssertionError(path)
         else:
             path.parent.mkdir(parents=True, exist_ok=True)

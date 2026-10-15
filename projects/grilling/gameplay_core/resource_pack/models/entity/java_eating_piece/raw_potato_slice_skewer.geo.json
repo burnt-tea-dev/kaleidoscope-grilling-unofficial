@@ -1,0 +1,209 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.kg_java_dual.piece.raw_potato_slice_skewer",
+        "texture_width": 32,
+        "texture_height": 16,
+        "visible_bounds_width": 8,
+        "visible_bounds_height": 8,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "binding": "q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')"
+        },
+        {
+          "name": "dual_piece",
+          "parent": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.75,
+                31.75,
+                -1.75
+              ],
+              "size": [
+                3.5,
+                0.5,
+                2.25
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    8.0,
+                    1.0
+                  ],
+                  "uv_size": [
+                    4.0,
+                    1.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    8.0,
+                    8.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    8.0,
+                    2.0
+                  ],
+                  "uv_size": [
+                    4.0,
+                    1.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    0.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    0.0,
+                    4.0
+                  ],
+                  "uv_size": [
+                    4.0,
+                    2.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    4.0,
+                    2.0
+                  ],
+                  "uv_size": [
+                    4.0,
+                    -2.0
+                  ]
+                }
+              },
+              "pivot": [
+                -0.25,
+                32.125,
+                -0.25
+              ],
+              "rotation": [
+                -45,
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -1.75,
+                31.75,
+                -0.5
+              ],
+              "size": [
+                3.5,
+                0.5,
+                2.25
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    18.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    1.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    16.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    23.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    1.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    21.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    18.0,
+                    4.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    2.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    21.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -2.0
+                  ]
+                }
+              },
+              "pivot": [
+                -0.25,
+                32.125,
+                1
+              ],
+              "rotation": [
+                -45,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

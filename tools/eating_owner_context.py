@@ -81,7 +81,7 @@ def augment(output):
         elif path.parent.name == 'animations' and path.name in {
                 'eating_motion.animation.json', 'java_eating_projection.animation.json',
                 'java_eating_player.animation.json', 'kg_probe_caterpillar_item.animation.json',
-                'kg_probe_caterpillar_player.animation.json', 'kg_isolated_two_route_player.animation.json'}:
+                'kg_probe_caterpillar_player.animation.json', 'kg_isolated_two_route_player.animation.json', 'review_three_player.animation.json'}:
             result[path] = document(value, attachable='player' not in path.name)
     return result
 
@@ -105,6 +105,10 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from build_review_three_eating_projection import predecessor_document, ids, RP
+    route_paths = {RP/'attachables'/(item.split(':')[1]+'.attachable.json') for item in ids()} | {RP/'render_controllers/java_eating_player.render_controllers.json'}
+    if path in route_paths:
+        current = (json.dumps(predecessor_document(path,json.loads(current)),ensure_ascii=False,indent=2)+'\n').encode()
     relative = path.relative_to(ROOT).as_posix()
     if relative not in reviewed_changes() or '/resource_pack/' not in relative:
         return current

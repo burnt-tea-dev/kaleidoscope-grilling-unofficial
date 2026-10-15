@@ -5,6 +5,7 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
+import build_review_three_eating_projection as review
 import build_eating_motion as motion
 from eating_owner_context import reference_bytes,augment as current_context
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
@@ -17,7 +18,7 @@ class CaterpillarProjectionTests(unittest.TestCase):
   for relative,sha in FIX['runtime_file_sha256'].items():
    self.assertEqual(hashlib.sha256(reference_bytes(P/relative)).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
-  current=(scoped.BP/'scripts/main.js').read_text()
+  current=review.restore_main((scoped.BP/'scripts/main.js').read_text())
   # Preserve the original two-edit G126 comparison after verifying and
   # reversing only the exact bounded two-route continuation and the reviewed
   # G130 display hooks. Their independent full-source preimages stay enforced.
@@ -39,10 +40,10 @@ class CaterpillarProjectionTests(unittest.TestCase):
   # the later layer must not mask the original main.js presence delta.
   import build_two_route_eating_projection as two_route
   with patch.object(two_route,'augment',side_effect=lambda output:output):
-   retained=motion.build({path:source})
+   retained=motion.build({path:source},review_three_routes=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
-    previous=motion.build({path:source})
-  self.assertEqual({str(k):encoded(v)for k,v in current_context(two_route.augment(retained)).items()},{str(k):encoded(v)for k,v in first.items()})
+    previous=motion.build({path:source},review_three_routes=False)
+  self.assertEqual({str(k):encoded(v)for k,v in current_context(review.augment(two_route.augment(retained))).items()},{str(k):encoded(v)for k,v in first.items()})
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)
