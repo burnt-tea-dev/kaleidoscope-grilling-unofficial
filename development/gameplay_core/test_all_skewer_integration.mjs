@@ -1,3 +1,4 @@
+import {admitEatingProjection,selectEatingProjection} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_projection_routes.js';
 /** Combined production modules/subscribers with native API doubles. No native Minecraft client or visual acceptance is claimed. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -30,7 +31,7 @@ function items(){return {slime:stack(slime.SLIME_ID),failure:stack(failure.FAILU
 function fixture(){
  const held={},values=new Map(),writes=[],animations=[],queue=[],callbacks={},intervals=[],commits=[],settlements=[],warnings=[];let fail;
  const player={id:'combined-holder',selectedSlotIndex:3,getComponent(){},addEffect(){},setProperty(k,v){writes.push([k,v]);if(fail?.(k,v))throw Error('injected native property failure');values.set(k,v)},playAnimation:(name,options)=>animations.push({name,options})};
- const ctx={...failure,...projection,...slime,...presentation,...profiles,...transaction,...bottle,...seasonings,...rawOne,...reviewed,supportsJavaEatingProjection,FOOD_DATA,PROFILE_BY_ITEM,getItemProperty,secretVisualState,partialVisualState,secretVisualIndex,plateHeldVisualPlan,decodePlateStorage,PLATE_ID,PLATE_SKEWERS_KEY,
+ const ctx={admitEatingProjection,selectEatingProjection,...failure,...projection,...slime,...presentation,...profiles,...transaction,...bottle,...seasonings,...rawOne,...reviewed,supportsJavaEatingProjection,FOOD_DATA,PROFILE_BY_ITEM,getItemProperty,secretVisualState,partialVisualState,secretVisualIndex,plateHeldVisualPlan,decodePlateStorage,PLATE_ID,PLATE_SKEWERS_KEY,
   world:{getAbsoluteTime:()=>1000000009,getAllPlayers:()=>[player],afterEvents:Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave','itemStartUse','itemCompleteUse','itemStopUse'].map(k=>[k,{subscribe:f=>(callbacks[k]??=[]).push(f)}]))},
   system:{currentTick:100,run:f=>queue.push(f),runInterval:(f,n)=>intervals.push({f,n})},console:{warn:x=>warnings.push(x)},getMainHand:()=>held.main,getOffHand:()=>held.off,isCreative:()=>false,
   ACTIVE_EATS:new Map(),SETTLED:new Map(),PLATE_EATS:new Map(),PENDING_USES:new Map(),CUISINE_EATS:new Map(),CUISINE_FOOD_SET:new Set(),SECRET_ID:N+'secret_skewer',MYSTERIOUS_ID:failure.FAILURE_IDS[0],DARK_ID:failure.FAILURE_IDS[1],RAW_NAUSEA:{},
@@ -77,7 +78,7 @@ const routes=[
 ];
 for(const hand of ['main','off'])for(const [id,prefix] of routes)test(`actual main dispatch retains route and native clock: ${id} ${hand}`,()=>{
  const f=fixture(),item=stack(id);f.start(item,hand,100);const a=f.ctx.ACTIVE_EATS.get(f.player.id);assert.ok(a);assert.equal(a.start,100);assert.equal(a.nativeDuration,100);assert.equal(f.ctx.system.currentTick,100);assert.equal(f.values.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
- const projected=f.animations.find(x=>x.options.controller==='kg_java_eating_first_person');const expected=prefix?prefix+(hand==='main'?'right':'left'):hand==='main'?'animation.kg_review_three.player.three.right':undefined;assert.equal(projected?.name,expected);
+ const projected=f.animations.find(x=>x.options.controller==='kg_java_eating_first_person');const expected=prefix?prefix+(hand==='main'?'right':'left'):hand==='main'?'animation.kg_review_three.player.three.right':'animation.kg_offhand_projection.player.three.left';assert.equal(projected?.name,expected);
  assert.equal(f.values.get(presentation.EAT_NATIVE_TICKS_PROPERTY),100);if(projected){assert.match(projected.options.stopExpression,/!q.is_using_item/);assert.ok(projected.options.stopExpression.includes(id));}
  f.ctx.system.currentTick=101;f.emit('itemStopUse',{itemStack:item,useDuration:99});f.flush();assert.equal(f.ctx.ACTIVE_EATS.size,0);assert.equal(f.values.get(presentation.EAT_PROJECTION_PROPERTY),false);assert.equal(f.settlements.length,0);assert.equal(item.amount,1);
 });
