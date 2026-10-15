@@ -51,7 +51,30 @@ class HandAnchorTests(unittest.TestCase):
             self.assertEqual(helper['bones'][1]['pivot'],[0,24,0])
             self.assertEqual(len(helper['bones'][1]['cubes']),1)
             pieces=pieces|{helper_ref}
-        self.assertEqual(refs,seen|pieces)
+        # The cooked-slime continuation adds exactly fifteen owned frame meshes.
+        import sys
+        sys.path.insert(0,str(ROOT/'tools'))
+        from build_slime_frame_selector import frame_aliases,owned_frame_aliases,ID
+        slime_refs=set(frame_aliases().values())
+        owners=[load(p)['minecraft:attachable']['description']
+                for p in (RP/'attachables').glob('*.json')
+                if slime_refs & set(load(p)['minecraft:attachable']['description']['geometry'].values())]
+        self.assertEqual(len(owners),1)
+        self.assertEqual(owners[0]['identifier'],ID)
+        self.assertTrue(owned_frame_aliases(owners[0]))
+        frame_paths=list((RP/'models/entity/slime_frames').glob('*.geo.json'))
+        self.assertEqual(len(frame_paths),15)
+        frames=[load(p)['minecraft:geometry'][0] for p in frame_paths]
+        self.assertEqual({g['description']['identifier'] for g in frames},slime_refs)
+        for g in frames:
+            anchor,pose,model=g['bones']
+            self.assertEqual(anchor,{'name':'grip','pivot':[0,24,0],'binding':'q.item_slot_to_bone_name(context.item_slot)'})
+            self.assertEqual(pose,{'name':'skewer_pose','parent':'grip','pivot':[0,24,0]})
+            self.assertEqual(model['name'],'skewer_model')
+            self.assertEqual(model['parent'],'skewer_pose')
+            self.assertEqual(model['pivot'],[0,24,0])
+            self.assertNotIn('binding',model)
+        self.assertEqual(refs,seen|pieces|slime_refs)
     def test_secret_ingredients_share_the_existing_grip_and_stable_two_sided_faces(self):
         geometries=load(RP/'models/entity/secret_held.geo.json')['minecraft:geometry']
         refs=set(load(RP/'attachables/secret_skewer.attachable.json')['minecraft:attachable']['description']['geometry'].values())
