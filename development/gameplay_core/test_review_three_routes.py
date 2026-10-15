@@ -8,6 +8,7 @@ import build_java_eating_projection as g
 import eating_owner_context as context
 import build_raw_one_eating_projection as raw_one
 import build_failure_skewer_held as failure
+import build_offhand_eating_projection as offhand
 from build_slime_frame_selector import strip_main as strip_slime
 from slime_frame_source_witness import reference_bytes as slime_reference
 def route_main_view(text):
@@ -27,10 +28,10 @@ class ReviewThreeTests(unittest.TestCase):
  def test_predecessor_never_rewrites_secret_terminal_layer(self):
   p=r.RP/'attachables/secret_skewer.attachable.json';raw=json.loads(p.read_text())
   self.assertEqual(r.predecessor_document(p,raw),raw)
-  p=r.RP/'attachables'/(r.ids()[0].split(':')[1]+'.attachable.json');raw=json.loads(p.read_text());raw['minecraft:attachable']['description']['materials']['unexpected']='mutated'
+  p=r.RP/'attachables'/(r.ids()[0].split(':')[1]+'.attachable.json');raw=offhand.strip_document(json.loads(p.read_text()));raw['minecraft:attachable']['description']['materials']['unexpected']='mutated'
   restored=r.predecessor_document(p,raw)
   self.assertEqual(restored['minecraft:attachable']['description']['materials']['unexpected'],'mutated')
-  pristine=json.loads(p.read_text());bad=copy.deepcopy(pristine)
+  pristine=offhand.strip_document(json.loads(p.read_text()));bad=copy.deepcopy(pristine)
   pre=bad['minecraft:attachable']['description']['scripts']['pre_animation']
   pre[0]=pre[0].replace("c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks')","q.property('kaleidoscope_grilling:eat_native_ticks')",1)
   self.assertNotEqual(r.predecessor_document(p,bad),r.predecessor_document(p,pristine))
@@ -53,7 +54,7 @@ class ReviewThreeTests(unittest.TestCase):
  def test_actual_owner_context_and_clock_are_preserved(self):
   for item in r.ids():
    p=r.RP/'attachables'/(item.split(':')[1]+'.attachable.json')
-   raw=json.loads(p.read_text())
+   raw=offhand.strip_document(json.loads(p.read_text()))
    self.assertEqual(context.document(current_json(p),attachable=True),raw)
    route=next(x[r.ALIAS]for x in raw['minecraft:attachable']['description']['scripts']['animate']if r.ALIAS in x)
    self.assertEqual(route,context.owner_expression(r.gate([item],True)))

@@ -31,5 +31,9 @@ console.log(n);'''
   count=int(subprocess.check_output(['node','-e',js,json.dumps(data)],text=True));self.assertEqual(count,68*2*2*16)
  def test_only_one_runtime_file_changes(self):
   base=layer.contract()['base_commit'];changed=subprocess.check_output(['git','diff','--name-only',base],cwd=ROOT,text=True).splitlines()
-  self.assertLessEqual({p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))})
+  import build_offhand_eating_projection as offhand
+  owned=offhand.augment({})
+  for path,expected in owned.items():
+   actual=path.read_bytes();expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
+  self.assertLessEqual({p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|{str(p.relative_to(ROOT))for p in owned})
 if __name__=='__main__':unittest.main()

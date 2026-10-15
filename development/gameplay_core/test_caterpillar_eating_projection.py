@@ -37,7 +37,8 @@ class CaterpillarProjectionTests(unittest.TestCase):
   path=scoped.RP/'attachables/grilled_caterpillar_skewer.attachable.json'
   source=json.loads(subprocess.check_output(['git','show',FIX['source_predecessor']+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT))
   first=motion.build({path:source});second=motion.build(first)
-  self.assertEqual({str(k):encoded(v)for k,v in first.items()},{str(k):encoded(v)for k,v in second.items()})
+  self.assertEqual(set(first),set(second))
+  for k in first:self.assertEqual(hashlib.sha256(encoded(first[k])).hexdigest(),hashlib.sha256(encoded(second[k])).hexdigest(),str(k))
   for k,v in first.items():self.assertEqual(k.read_bytes(),encoded(v),str(k))
   # Compare the exact G126 pipeline prefix before the registered G127 layer.
   # Keep current full-build idempotency above and require full recomposition;
@@ -52,6 +53,8 @@ class CaterpillarProjectionTests(unittest.TestCase):
   main=scoped.BP/'scripts/main.js'
   recomposed[main]=reapply_main(recomposed[main])
   recomposed=ordinary_relative.augment(recomposed)
+  import build_offhand_eating_projection as offhand
+  recomposed=offhand.augment(recomposed)
   self.assertEqual(set(recomposed),set(first))
   for k in first:self.assertEqual(encoded(recomposed[k]),encoded(first[k]),str(k))
   closure={P/relative for relative in FIX['runtime_closure']}

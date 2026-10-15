@@ -19,6 +19,8 @@ def selector():
  c=contract();alt=json.dumps(c['three_alt_ids'],separators=(',',':'))
  return "((profile==='THREE_ALT'&&"+alt+".includes(e.itemStack.typeId))||(profile==='THREE'&&hand==='off'&&e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer')?'animation.kg_ordinary_relative.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'):"+OLD+")"
 def restore_main(text):
+ from build_offhand_eating_projection import restore_main as restore_offhand
+ text=restore_offhand(text)
  if 'kg_ordinary_relative' not in text:return text
  new=selector()
  if new in text:

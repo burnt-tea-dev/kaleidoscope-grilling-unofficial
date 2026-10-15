@@ -41,7 +41,7 @@ console.log(count);''',rows());self.assertGreater(int(result),100000)
     d['blend_weight']='preserved';owned=layer.transform(d,p,h);self.assertEqual(layer.transform(owned,p,h,True),d);self.assertEqual(owned['blend_weight'],'preserved')
     self.assertEqual(document(owned,attachable=False)['bones'],actual['bones'])
  def test_actual_selector_39_routes_and_pearl_right_exclusion(self):
-  main=(BP/'main.js').read_text();line=next(l for l in main.splitlines()if 'e.source.playAnimation((failureEatingAnimation(e.itemStack'in l);selector=line.split('e.source.playAnimation(',1)[1].rsplit(',{',1)[0]
+  main=(BP/'main.js').read_text();line=next(l for l in main.splitlines()if 'e.source.playAnimation('in l and 'failureEatingAnimation(e.itemStack'in l);selector=line.split('e.source.playAnimation(',1)[1].rsplit(',{',1)[0]
   pre="import {failureEatingAnimation} from './projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_projection.js';import {rawOneAnimation} from './projects/grilling/gameplay_core/behavior_pack/scripts/raw_one_projection.js';import {reviewedThreeAnimation} from './projects/grilling/gameplay_core/behavior_pack/scripts/review_three_projection.js';"
   cases=[{'id':i,'profile':p,'hand':'main'if h=='right'else'off','expected':layer.player_id(p,h)}for p,h in layer.CONTEXTS for i in layer.ids(p,h)]
   cases += [{'id':'kaleidoscope_grilling:grilled_ender_pearl_skewer','profile':'THREE','hand':'main','expected':'animation.kg_isolated_two_route_v1.player.pearl_three.right'},{'id':'kaleidoscope_grilling:secret_skewer_java_three_alt','profile':'THREE_ALT','hand':'main','expected':'animation.kg_java_eating.player.three_alt.right'},{'id':'kaleidoscope_grilling:raw_fish_skewer','profile':'ONE','hand':'off','expected':'animation.kg_raw_one.player.one.left'},{'id':'kaleidoscope_grilling:dark_grilling','profile':'THREE','hand':'main','expected':'animation.kg_failure_held.player.three.right'}]
@@ -72,20 +72,25 @@ for(const row of rows)for(const id of row.ids)for(let flags=0;flags<128;flags++)
    for old,new in [('3.41','3.40'),('slot.weapon.','wrong.slot.'),(layer.ids(p,h)[0],'kaleidoscope_grilling:unrelated')]:
     bad=copy.deepcopy(good);bad['bones'][arm]['position'][time][1]=bad['bones'][arm]['position'][time][1].replace(old,new)
     with self.assertRaises(ValueError):layer.transform(bad,p,h,True)
-  main=(BP/'main.js').read_text();self.assertEqual(layer.patch_main(main),main);self.assertEqual(layer.patch_main(layer.restore_main(main)),main)
+  from build_offhand_eating_projection import restore_main as restore_offhand
+  main=restore_offhand((BP/'main.js').read_text());self.assertEqual(layer.patch_main(main),main);self.assertEqual(layer.patch_main(layer.restore_main(main)),main)
   with self.assertRaises(ValueError):layer.restore_main(main.replace('animation.kg_ordinary_relative.player.','animation.kg_ordinary_relative.player.broken',1))
  def test_only_owned_runtime_files_changed(self):
   import hashlib
   import build_tp_java_item_fallback as tp
+  import build_offhand_eating_projection as offhand
+  offhand_paths={str(p.relative_to(ROOT))for p in offhand.augment({})}
   changed=subprocess.check_output(['git','diff','--name-only',BASE],cwd=ROOT,text=True).splitlines();runtime=[p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p]
-  self.assertLessEqual(set(runtime),{str(layer.MAIN.relative_to(ROOT)),str(layer.PLAYER.relative_to(ROOT)),str(tp.PLAYER.relative_to(ROOT))})
+  self.assertLessEqual(set(runtime),{str(layer.MAIN.relative_to(ROOT)),str(layer.PLAYER.relative_to(ROOT)),str(tp.PLAYER.relative_to(ROOT))}|offhand_paths)
   untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines()
-  self.assertLessEqual({p for p in untracked if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))})
+  self.assertLessEqual({p for p in untracked if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|offhand_paths)
   paths=subprocess.check_output(['git','ls-tree','-r',BASE,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines()
   for row in paths:
    meta,p=row.split('\t');expected=meta.split()[2]
    if p==str(layer.MAIN.relative_to(ROOT)):continue
    data=(ROOT/p).read_bytes()
+   if p in offhand.contract()['predecessors']:
+    data=(json.dumps(offhand.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    if p==str(tp.PLAYER.relative_to(ROOT)):
     restored=tp.transform(json.loads(data),inverse=True);data=(json.dumps(restored,indent=2)+'\n').encode()
    actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,expected,p)

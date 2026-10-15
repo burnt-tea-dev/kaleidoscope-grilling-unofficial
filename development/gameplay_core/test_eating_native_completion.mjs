@@ -507,7 +507,8 @@ test('stored seasoning ingredients resolve the reloaded mapping through the prod
 for(const mealId of REVIEWED_THREE_IDS)for(const hand of ['main','off'])for(const helperEmpty of [false,true])test(`exact review THREE admission ${mealId} ${hand} helperEmpty=${helperEmpty}`,()=>{
  const f=fixture({mealId,profile:'THREE',duration:100,hand,helperEmpty}),before=f.state.stack.clone(),other=f.state.other?.clone();
  f.startUse();const expected=hand==='main'&&helperEmpty;
- assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),expected);
+ assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),helperEmpty);
+ assert.equal(f.animations.some(([n])=>n==='animation.kg_offhand_projection.player.three.left'),hand==='off'&&helperEmpty);
  assert.equal(f.animations.some(([n])=>n==='animation.kg_review_three.player.three.right'),expected);
  assert.equal(f.counts.manualWrites,0);assert.deepEqual(f.state.stack,before);assert.deepEqual(f.state.other,other);
  f.stop();f.flush();assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),false);

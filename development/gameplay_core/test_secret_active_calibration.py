@@ -184,6 +184,16 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   ordinary_relative=str(ORDINARY_PLAYER.relative_to(ROOT))
   self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+ordinary_relative],cwd=ROOT,capture_output=True).returncode,0)
   allowed.add(ordinary_relative)
+  import build_offhand_eating_projection as offhand
+  offhand_doc={'format_version':'1.8.0','animations':{offhand.player_id(p):offhand.clip(p)for p in ['ONE','THREE']}}
+  self.assertEqual(json.loads(offhand.PLAYER.read_text()),offhand_doc)
+  offhand_relative=str(offhand.PLAYER.relative_to(ROOT))
+  self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+offhand_relative],cwd=ROOT,capture_output=True).returncode,0)
+  allowed.add(offhand_relative)
+  import build_tp_java_item_fallback as tp_item
+  tp_doc=json.loads(tp_item.PLAYER.read_text())
+  self.assertEqual(tp_item.transform(tp_doc,inverse=True),tp_item.contract()['predecessor'])
+  allowed.add(str(tp_item.PLAYER.relative_to(ROOT)))
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

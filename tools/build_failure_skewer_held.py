@@ -170,6 +170,8 @@ def controller_prefix(bone):
  return ''.join(branches),')'*len(branches)
 
 def predecessor_document(path,doc):
+ from build_offhand_eating_projection import strip_document as strip_offhand
+ doc=strip_offhand(doc)
  if path!=PLAYER_CONTROLLER:return doc
  doc=copy.deepcopy(doc)
  fields=[(row,bone)for row in doc['render_controllers']['controller.render.player.first_person']['part_visibility']for bone in ['rightArm','rightSleeve','leftArm','leftSleeve']if bone in row]

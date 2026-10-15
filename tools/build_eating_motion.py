@@ -159,6 +159,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  if review_three_routes and slime_frames and failure_skewers:
   from build_ordinary_relative_calibration import augment as augment_ordinary_relative
   output=augment_ordinary_relative(output)
+  from build_offhand_eating_projection import augment as augment_offhand
+  output=augment_offhand(output)
  return output
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""

@@ -49,6 +49,9 @@ def legacy_document(value):
     Only this layer's property qualification and complete clock expression are
     reversed. Existing native/source hashes continue to reject unrelated changes.
     """
+    if isinstance(value, dict):
+        from build_offhand_eating_projection import strip_document
+        value = strip_document(value)
     if isinstance(value, str):
         value = OWNER.sub(r'q.\1(\2)', value)
         if value.startswith('v.kg_secret_terminal_'):
@@ -80,7 +83,7 @@ def augment(output):
             result[path] = document(value, attachable=True)
         elif path.parent.name == 'animations' and path.name in {
                 'eating_motion.animation.json', 'java_eating_projection.animation.json',
-                'java_eating_player.animation.json', 'ordinary_relative_player.animation.json', 'failure_skewer_player.animation.json', 'kg_probe_caterpillar_item.animation.json',
+                'java_eating_player.animation.json', 'offhand_eating_player.animation.json', 'ordinary_relative_player.animation.json', 'failure_skewer_player.animation.json', 'kg_probe_caterpillar_item.animation.json',
                 'kg_probe_caterpillar_player.animation.json', 'kg_isolated_two_route_player.animation.json', 'review_three_player.animation.json', 'raw_one_player.animation.json'}:
             result[path] = document(value, attachable='player' not in path.name)
     return result
@@ -105,6 +108,9 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from build_offhand_eating_projection import contract as offhand_contract, strip_document as strip_offhand
+    if path.relative_to(ROOT).as_posix() in offhand_contract()['predecessors']:
+        current = (json.dumps(strip_offhand(json.loads(current)),ensure_ascii=False,indent=2)+'\n').encode()
     from effect_merge_source_witness import reference_bytes as effect_reference
     current = effect_reference(path,current)
     if path.suffix == '.js':
