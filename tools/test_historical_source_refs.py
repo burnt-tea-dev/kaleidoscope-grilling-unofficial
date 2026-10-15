@@ -3,6 +3,7 @@ import copy,hashlib,io,json,subprocess,tempfile,unittest
 from unittest.mock import patch
 from historical_source_refs import ROOT,encoded_listing,inventory,literal_refs,verify
 import public_source_witness as public
+from offhand_clock_witness import historical_animation_bytes, historical_attachable_bytes
 
 class HistoricalSourceRefsTests(unittest.TestCase):
  def fixture(self,text,rows):
@@ -17,7 +18,16 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
   self.assertIn(meta['commit'],inventory());self.assertEqual(meta['tree'],public.PUBLIC_SOURCE_TREE)
-  source=public.public_bytes(path);self.assertEqual(path.read_bytes(),source)
+  source=public.public_bytes(path);self.assertEqual(historical_animation_bytes(path.read_bytes()),source)
+  current=json.loads(path.read_bytes())
+  from native_eating_clock import OFF_HAND_SECONDS
+  changed=copy.deepcopy(current)
+  changed['animations']['animation.kg_java_eating.player.two.right']['anim_time_update']=OFF_HAND_SECONDS
+  with self.assertRaisesRegex(AssertionError,'non-left clip'):
+   historical_animation_bytes(json.dumps(changed).encode())
+  changed=copy.deepcopy(current)
+  changed['animations']['animation.kg_java_eating.player.two.left']['anim_time_update']='q.life_time'
+  self.assertNotEqual(historical_animation_bytes(json.dumps(changed).encode()),source)
   with patch.object(Path,'read_bytes',return_value=source+b'\n'):
    with self.assertRaises(AssertionError):public.assert_public_bytes(self,path)
   wrong=dict(meta,files=dict(meta['files']));wrong['files'][path.relative_to(ROOT).as_posix()]='0'*64
@@ -168,7 +178,9 @@ class HistoricalSourceRefsTests(unittest.TestCase):
     original=public.public_bytes(relative);repaired=public.reviewed_held_bytes(relative)
     self.assertNotEqual(original,repaired)
     self.assertEqual(hashlib.sha256(original).hexdigest(),public.witness()['files'][relative])
-    self.assertEqual((ROOT/relative).read_bytes(),repaired)
+    actual=(ROOT/relative).read_bytes()
+    if (ROOT/relative).parent.name=='attachables':actual=historical_attachable_bytes(actual)
+    self.assertEqual(actual,repaired)
     public.assert_public_bytes(self,ROOT/relative)
     with patch.object(Path,'read_bytes',return_value=repaired+b'\n'):
      with self.assertRaisesRegex(AssertionError,'outside reviewed scope'):

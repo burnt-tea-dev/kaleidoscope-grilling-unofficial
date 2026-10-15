@@ -463,6 +463,9 @@ def assert_public_bytes(testcase, path):
     if path.parent.name == 'attachables':
         from offhand_clock_witness import historical_attachable_bytes
         actual = historical_attachable_bytes(actual)
+    elif path.parent.name == 'animations':
+        from offhand_clock_witness import historical_animation_bytes
+        actual = historical_animation_bytes(actual)
     testcase.assertEqual(actual, expected, 'Repaired public-source bytes changed outside reviewed scope: ' + str(path.relative_to(ROOT)))
 
 

@@ -18,3 +18,13 @@ def historical_attachable_bytes(data):
     for new, old in ((ASSIGNMENT, OLD_ASSIGNMENT), (NEW_WAIT, OLD_WAIT)):
         data = data.replace(json.dumps(new)[1:-1].encode(), json.dumps(old)[1:-1].encode())
     return data
+
+def historical_animation_bytes(data):
+    """Only left-hand animation clocks may be reversed; never reserialize JSON."""
+    from native_eating_clock import OFF_HAND_SECONDS
+    document = json.loads(data)
+    for name, clip in document.get('animations', {}).items():
+        if clip.get('anim_time_update') == OFF_HAND_SECONDS:
+            assert name.endswith('.left'), 'Offhand clock on a non-left clip is outside reviewed scope'
+    return data.replace(json.dumps(OFF_HAND_SECONDS)[1:-1].encode(),
+                        json.dumps(SECONDS)[1:-1].encode())
