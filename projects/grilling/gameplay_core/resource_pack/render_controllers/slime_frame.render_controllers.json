@@ -1,0 +1,56 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.kg_slime.frame": {
+      "arrays": {
+        "geometries": {
+          "Array.kg_slime_geo": [
+            "Geometry.slime_s0_f0",
+            "Geometry.slime_s0_f1",
+            "Geometry.slime_s0_f2",
+            "Geometry.slime_s0_f3",
+            "Geometry.slime_s0_f4",
+            "Geometry.slime_s1_f0",
+            "Geometry.slime_s1_f1",
+            "Geometry.slime_s1_f2",
+            "Geometry.slime_s1_f3",
+            "Geometry.slime_s1_f4",
+            "Geometry.slime_s2_f0",
+            "Geometry.slime_s2_f1",
+            "Geometry.slime_s2_f2",
+            "Geometry.slime_s2_f3",
+            "Geometry.slime_s2_f4"
+          ]
+        },
+        "textures": {
+          "Array.kg_slime_tex": [
+            "Texture.slime_s0_f0",
+            "Texture.slime_s0_f1",
+            "Texture.slime_s0_f2",
+            "Texture.slime_s0_f3",
+            "Texture.slime_s0_f4",
+            "Texture.slime_s1_f0",
+            "Texture.slime_s1_f1",
+            "Texture.slime_s1_f2",
+            "Texture.slime_s1_f3",
+            "Texture.slime_s1_f4",
+            "Texture.slime_s2_f0",
+            "Texture.slime_s2_f1",
+            "Texture.slime_s2_f2",
+            "Texture.slime_s2_f3",
+            "Texture.slime_s2_f4"
+          ]
+        }
+      },
+      "geometry": "Array.kg_slime_geo[v.kg_slime_index]",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Array.kg_slime_tex[v.kg_slime_index]"
+      ]
+    }
+  }
+}

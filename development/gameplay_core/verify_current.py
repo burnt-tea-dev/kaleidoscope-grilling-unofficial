@@ -343,6 +343,8 @@ def main() -> None:
     major, minor, patch, imports = generic_gate()
     subprocess.run([sys.executable, str(DEV / "verify_visual_refs.py")], check=True)
     version = (major, minor, patch)
+    if version >= (2, 8, 143):
+        subprocess.run([sys.executable, str(DEV / "verify_slime_frames.py")], check=True)
     verifier = VERIFIERS.get(version)
     if verifier is None:
         known = ", ".join(".".join(map(str, v)) for v in sorted(VERIFIERS))

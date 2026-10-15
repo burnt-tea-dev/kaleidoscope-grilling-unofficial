@@ -499,6 +499,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
     counts = Counter()
     bottle_ids = set()
     skewer_refs = set()
+    slime_frame_refs = set()
     aliases = {"fp_right", "fp_left", "tp_right", "tp_left"}
     admitted = projection_items()
     for path in sorted((RP / "attachables").glob("*.json")):
@@ -520,6 +521,8 @@ def check_current_display_contracts(findings, geometry_index, animations):
                     add(findings,'error','held_plate_source_contract',str(target.relative_to(ROOT)),
                         'held plate differs from its current mesh/palette/owner and Java frame generator')
             continue
+        from build_slime_frame_selector import owned_frame_aliases,frame_aliases
+        if owned_frame_aliases(desc):slime_frame_refs.update(frame_aliases().values())
         scoped_caterpillar=version>=(2,8,126) and desc['identifier']==caterpillar.ITEM
         ids = desc.get("animations", {})
         canonical_id = desc["identifier"].removesuffix("_java_three_alt")
@@ -657,7 +660,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
     expected_counts={"skewer":40,"bottle":len(expected_bottles)}
     if version>=(2,8,68):expected_counts["partial"]=1
     if version>=(2,8,119):expected_counts['plate']=1
-    if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs) != 150:
+    if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs - slime_frame_refs) != 150 or not slime_frame_refs <= skewer_refs:
         add(findings, "error", "held_inventory_contract", "attachables", "unexpected held family/bite-stage coverage", dict(counts))
 
 

@@ -57,6 +57,9 @@ def motion_frame(profile,hand,t):
 def build(attachable_overrides=None, *, two_route_camera=False):
  from eating_owner_context import legacy_document
  overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
+ from build_slime_frame_selector import strip_main as strip_slime_main
+ main_path=BP/'scripts/main.js'
+ overrides[main_path]=strip_slime_main(overrides.get(main_path,main_path.read_text()))
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
@@ -136,7 +139,8 @@ def build(attachable_overrides=None, *, two_route_camera=False):
  # Nonedible partial skewers still use the player's eating-hand idle guard.
  partial=RP/'attachables/unfinished_skewer.attachable.json'
  if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
- return augment_owner_context(output)
+ from build_slime_frame_selector import augment as augment_slime
+ return augment_slime(augment_owner_context(output))
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):
