@@ -370,6 +370,8 @@ def main() -> None:
     subprocess.run([sys.executable, str(DEV / "test_ordinary_relative_calibration.py")], check=True)
     subprocess.run([sys.executable, str(DEV / "test_tp_java_item_fallback.py")], check=True)
     subprocess.run([sys.executable, str(DEV / "test_offhand_eating_projection.py")], check=True)
+    subprocess.run(["node", "--test", str(DEV / "test_eating_route_resolver.mjs")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_eating_route_extraction.py")], check=True)
     subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_composed_skewer_witnesses.py")], check=True)
     subprocess.run(["node", "--test", str(DEV / "test_all_skewer_integration.mjs")], check=True)
     if args.compiled:

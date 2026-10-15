@@ -41,7 +41,7 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
    else:bad['render_controllers']['controller.render.player.first_person']['part_visibility'][0]['unrelated']=True
    with self.assertRaises(ValueError):layer.strip_document(bad)
   text=layer.MAIN.read_text();old=layer.restore_main(text);self.assertEqual(layer.patch_main(old),text);self.assertEqual(layer.patch_main(text),text)
-  with self.assertRaises(ValueError):layer.restore_main(text.replace('animation.kg_offhand_projection.player.','animation.kg_offhand_projection.broken',1))
+  with self.assertRaises(ValueError):layer.restore_main(text.replace('selectEatingProjection(e,profile,hand,heldByHand)','selectEatingProjection(e,profile,hand,undefined)',1))
  def test_helpers_pinned_java_geometry_texture_and_all_stages(self):
   import build_java_eating_projection as g,build_java_dual_eating_projection as dual
   from PIL import Image
@@ -61,5 +61,7 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
    if p==str(layer.MAIN.relative_to(ROOT)):data=layer.restore_main(data.decode()).encode()
    elif p in layer.contract()['predecessors']:data=(json.dumps(layer.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,meta.split()[2],p)
+  from eating_route_extraction import validate_resolver
+  owned.add(validate_resolver())
   untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines();self.assertLessEqual({p for p in untracked if '/resource_pack/'in p or'/behavior_pack/'in p},owned)
 if __name__=='__main__':unittest.main()

@@ -35,5 +35,7 @@ console.log(n);'''
   owned=offhand.augment({})
   for path,expected in owned.items():
    actual=path.read_bytes();expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
+  from eating_route_extraction import validate_resolver
+  owned[ROOT/validate_resolver()]=(ROOT/validate_resolver()).read_bytes()
   self.assertLessEqual({p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|{str(p.relative_to(ROOT))for p in owned})
 if __name__=='__main__':unittest.main()

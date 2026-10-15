@@ -91,7 +91,8 @@ class RawOneTests(unittest.TestCase):
    elif mutate=='controller':d['render_controllers'].append(r.PIECE)
    else:d['identifier']='kaleidoscope_grilling:raw_fish_skewer_java_three_alt'
    with self.assertRaises(ValueError):r.historical_document(p,x,owned=True)
-  with self.assertRaises(ValueError):r.restore_main(r.MAIN.read_text().replace(r.IMPORT,''))
+  from eating_route_extraction import restore_main as extraction_preimage
+  with self.assertRaises(ValueError):r.restore_main(extraction_preimage(r.MAIN.read_text()).replace(r.IMPORT,''))
   x=failure.predecessor_document(r.CONTROLLER,json.loads(r.CONTROLLER.read_text()));rows=x['render_controllers']['controller.render.player.first_person']['part_visibility'];next(row for row in rows if 'rightArm'in row)['rightArm']='1'
   with self.assertRaises(ValueError):r.historical_document(r.CONTROLLER,x)
  def test_source_hash_fail_closed(self):

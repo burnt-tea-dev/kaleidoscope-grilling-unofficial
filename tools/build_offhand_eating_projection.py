@@ -16,6 +16,8 @@ def pairs():
  old=contract()['old_selector'];new='('+condition()+"?'animation.kg_offhand_projection.player.'+profile.toLowerCase()+'.left':"+old+')'
  return [(ADMIT,'('+ADMIT+'||('+condition()+'))'),('e.source.playAnimation('+old+',{','e.source.playAnimation('+new+',{')]
 def restore_main(text):
+ from eating_route_extraction import restore_main as restore_extraction
+ text=restore_extraction(text)
  if MARK not in text:return text
  for old,new in reversed(pairs()):
   if text.count(new)!=1:raise ValueError('Partial or ambiguous offhand main layer')
@@ -27,7 +29,8 @@ def patch_main(text):
  for old,new in pairs():
   if text.count(old)!=1:raise ValueError('Unknown offhand main predecessor')
   text=text.replace(old,new,1)
- return text
+ from eating_route_extraction import extract_main
+ return extract_main(text)
 def gate(profile,items=None,attachable=False):
  items=ids(profile)if items is None else items
  if profile not in ['ONE','THREE']or not items or any(i not in ids(profile)for i in items):raise ValueError('Unowned offhand route')
