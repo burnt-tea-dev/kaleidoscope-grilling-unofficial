@@ -50,3 +50,5 @@ Ran against the complete canonical scripts, without `KG_CODEC_SCRIPTS` or a part
 - `python tools/baseline_gate.py check --release`: failed as expected with `BASELINE: runtime changed without a reviewed version/hash update`.
 
 Manifests, runtime version, baseline and release history are byte-identical to current main. This remains an unreleased draft source repair. The existing gate is retained; no package export, publication, deployment, BDS, saved-world or client acceptance is claimed. Required CI results must be checked on the updated remote commit separately.
+
+The existing Linux source-regression CI step now explicitly invokes the Python entry; `verify_current.py` does not auto-discover `development/tests`. This connects the focused regression to required CI without introducing a parallel workflow or weakening any release gate.

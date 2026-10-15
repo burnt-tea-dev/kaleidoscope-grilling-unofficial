@@ -12,6 +12,7 @@ on:
       - 'baseline.json'
       - 'projects/grilling/gameplay_core/**'
       - 'development/gameplay_core/**'
+      - 'development/tests/**'
       - 'docs/STATUS-A*.md'
       - 'docs/legacy_workflows/**'
       - 'tools/**'
@@ -25,6 +26,7 @@ on:
       - 'baseline.json'
       - 'projects/grilling/gameplay_core/**'
       - 'development/gameplay_core/**'
+      - 'development/tests/**'
       - 'docs/STATUS-A*.md'
       - 'docs/legacy_workflows/**'
       - 'tools/**'
@@ -117,6 +119,7 @@ jobs:
           python development/gameplay_core/test_verify_current.py
           python development/gameplay_core/test_package_current.py
           python development/gameplay_core/test_publish_test_release.py
+          python -m unittest discover -s development/tests -p test_snapshot_raw_lore_roundtrip_20261013.py -v
 
       - name: Verify full canonical source once and record exact inputs
         shell: bash
