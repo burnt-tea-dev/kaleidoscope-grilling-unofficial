@@ -77,7 +77,7 @@ def server(**faults):
                     if faults.get('tool_error'):
                         result = {'isError': True, 'content': [{'type': 'text', 'text': 'private-server-secret'}]}
                 else:
-                    result = {'content': []}
+                    result = {'isError': True} if tool == 'delete_offscreen_view' and faults.get('cleanup_error') else {'content': []}
                     if tool == 'create_offscreen_view' and faults.get('switch_on_create'):
                         state['changed'] = True
             else:
@@ -216,6 +216,14 @@ class CaptureTests(unittest.TestCase):
         model = copy.deepcopy(MODEL); model['animations'][0]['selected'] = False
         with self.assertRaisesRegex(capture.Rejected, 'primary clip'):
             capture.check_model(model, plan())
+
+    def test_cleanup_failure_is_a_distinct_incomplete_status(self):
+        with server(cleanup_error=True) as (url, calls):
+            receipt = capture.run(url, self.fixture, self.output, plan())
+        self.assertEqual(receipt['status'], 'captured_editor_cleanup_failed')
+        self.assertEqual(len(receipt['frames']), 3)
+        self.assertIn('failed', receipt['cleanup'])
+        self.assertEqual(json.loads((self.output / 'receipt.json').read_text())['status'], receipt['status'])
 
     def test_refuse_existing_output(self):
         self.output.mkdir()

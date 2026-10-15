@@ -301,6 +301,8 @@ def run(url, fixture, output, plan=None, inspect_name=None):
                 receipt['cleanup'] = 'offscreen_view_deleted'
             except Exception:
                 receipt['cleanup'] = 'failed; close the owned offscreen view manually'
+                if receipt['status'] == 'captured_editor_only':
+                    receipt['status'] = 'captured_editor_cleanup_failed'
         save()
 
 
@@ -317,7 +319,10 @@ def main():
         plan = json.loads(args.plan.read_text()) if args.plan else None
         receipt = run(args.endpoint, args.fixture, args.output, plan, args.inspect_project)
         print(json.dumps({'status': receipt['status'], 'fixture_sha256': receipt['fixture_sha256'],
-                          'live_sha256': receipt['live_sha256'], 'frames': len(receipt['frames'])}))
+                          'live_sha256': receipt['live_sha256'], 'frames': len(receipt['frames']),
+                          'cleanup': receipt.get('cleanup', 'not_needed')}))
+        if receipt['status'] == 'captured_editor_cleanup_failed':
+            parser.exit(2, 'Capture frames retained, but offscreen cleanup failed; manual cleanup required\n')
     except Exception as error:
         parser.exit(1, (str(error) if isinstance(error, Rejected) else 'Local input or capture failure') + '\n')
 
