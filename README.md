@@ -1,6 +1,6 @@
-## Current maintained source: 2.8.143 (integration candidate)
+## Current maintained baseline: 2.8.143
 
-G143 scopes attachable eating properties to the owning player, keeps offhand animation off the main-hand counter, and retains terminal hiding until the server acknowledges a fresh serving. Bottle metadata round trips compare equivalent RawMessage lore without rewriting it; a malformed bottle cannot repeatedly scan every slot or block food-animation preparation. Java curves, assets, eating/HUD duration, nutrition and the 25-tick checkpoint remain unchanged. Source and native client acceptance remain separate. [Changes](CHANGELOG.md).
+G143 is the integration candidate. It scopes attachable eating properties to the owning player, keeps offhand animation off the main-hand counter, and retains terminal hiding until the server acknowledges a fresh serving. Bottle metadata round trips compare equivalent RawMessage lore without rewriting it; a malformed bottle cannot repeatedly scan every slot or block food-animation preparation. Java curves, assets, eating/HUD duration, nutrition and the 25-tick checkpoint remain unchanged. Source and native client acceptance remain separate. [Changes](CHANGELOG.md).
 
 2026-10-14 的玩家回報及截圖已納入[目前缺口](docs/BUGS.md#client-hud食用入口圖形缺失與延遲)：保留森羅 HUD 缺失、原始資料碼外露及串沒有進食動作的失敗；後續截圖已見進食姿勢、數量減少與圖形，但位置與延遲仍被回報。G138 補原生觸控使用入口，G140 修正錨點／觸控布局及 END 隱藏，G141 接回原生剩餘時間與同步首幀，G142 裁剪未選圖像；這些來源修補不等於全部客戶端驗收。
 
