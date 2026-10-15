@@ -290,6 +290,7 @@ class FakeGitHub:
         self.identity = {'full_name': publish.REPO, 'id': publish.REPO_ID}
         self.commit_sha = sha
         self.remote_assets = {}
+        self.latest_id = 42
         self.events = []
         self.corrupt = None
 
@@ -332,7 +333,7 @@ class FakeGitHub:
             self.release.update({k: v for k, v in payload.items() if k != 'make_latest'})
             return copy.deepcopy(self.release)
         if endpoint == base + '/releases/latest':
-            return {'id': 42}
+            return {'id': self.latest_id}
         raise AssertionError((endpoint, method, payload))
 
     def run(self, *args):
@@ -404,6 +405,26 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(len(downloaded), len(self.assets) * 2)
         self.assertEqual(self.remote.tag_sha, self.sha)
         self.validate.assert_called_once_with(self.source)
+
+    def test_stable_publication_keeps_the_same_draft_asset_and_tag_checks(self):
+        metadata = self.remote.metadata
+        self.remote.metadata = lambda: {**metadata(), 'prerelease': False}
+        self.remote.latest_id = 123  # A requested formal release can be latest.
+        publish.publish_exact(self.sha, 'A2.8.66-test', self.remote.title,
+                              self.notes, self.assets, lambda snapshot: None, prerelease=False)
+        writes = self.remote.writes()
+        self.assertIn('--prerelease=false', writes[0][1])
+        self.assertEqual(writes[-1][2], {'draft': False, 'prerelease': False, 'make_latest': 'false'})
+        self.assertEqual(self.remote.tag_sha, self.sha)
+        self.assertFalse(self.remote.release['prerelease'])
+
+    def test_prerelease_accidentally_returned_as_latest_remains_rejected(self):
+        self.remote.latest_id = 123
+        with self.assertRaisesRegex(ValueError, 'unexpectedly made latest'):
+            self.publish()
+        self.assertTrue(self.remote.release['prerelease'])
+        self.assertEqual(self.remote.writes()[-1][2],
+                         {'draft': False, 'prerelease': True, 'make_latest': 'false'})
 
     def test_published_matching_release_is_never_overwritten(self):
         self.remote.release = self.remote.metadata()
@@ -675,7 +696,7 @@ class CurrentPublicationTests(unittest.TestCase):
                          'workflow_run': {'id': 123, 'head_sha': self.head}}
         self.api = self.enterContext(patch.object(publish, 'api', side_effect=self.github))
         self.enterContext(patch.object(publish, 'ROOT', self.root))
-        self.request = {'version': 'A2.8.128', 'tag': 'A2.8.128-beta.1',
+        self.request = {'version': 'A2.8.128', 'tag': 'A2.8.128-beta.1', 'prerelease': True,
                         'expected_source_tree_sha256': 'e' * 64, 'expected_artifacts': {}}
         self.report = {'version': 'A2.8.128', 'git_sha': self.checkout,
                        'source_tree_sha256': 'e' * 64, 'minecraft_tested': False,
@@ -719,6 +740,22 @@ class CurrentPublicationTests(unittest.TestCase):
             'publication_head': self.main, 'run_head': self.head, 'git_tree': self.tree})
         self.assertEqual(publish.require_current_artifacts(self.request, self.report, self.assets, self.main), self.tree)
         self.assertEqual(self.report['git_sha'], self.checkout)
+
+    def test_stable_identity_is_exact_and_does_not_relax_beta_identity(self):
+        stable = {'version': 'A2.8.139', 'tag': 'A2.8.139', 'prerelease': False, 'artifact_suffix': 'baseline1'}
+        self.assertEqual(publish.release_classification(stable), ('baseline1', False))
+        self.assertEqual(publish.release_classification(self.request), ('Review', True))
+        for key, value in [('tag', 'A2.8.138'), ('tag', 'A2.8.139-beta.1'),
+                           ('prerelease', 'false'), ('artifact_suffix', 'Review')]:
+            with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                publish.release_classification({**stable, key: value})
+
+    def test_stable_archive_names_follow_the_validated_request(self):
+        request = {'version': 'A2.8.139', 'tag': 'A2.8.139', 'prerelease': False, 'artifact_suffix': 'baseline1'}
+        (self.root / publish.CURRENT_REQUEST).write_text(json.dumps(request))
+        self.assertEqual(package_current.publication_artifact_suffix('A2.8.139', self.root), 'baseline1')
+        with self.assertRaises(AssertionError):
+            package_current.publication_artifact_suffix('A2.8.140', self.root)
 
     def test_other_repository_tree_skipped_job_and_stale_artifact_fail_closed(self):
         cases = [(self.selected['repository'], 'id', 1),

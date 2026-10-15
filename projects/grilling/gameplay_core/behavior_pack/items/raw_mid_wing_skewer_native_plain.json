@@ -34,7 +34,8 @@
           "minecraft:is_food",
           "kaleidoscope_grilling:food_raw_mid_wing_skewer"
         ]
-      }
+      },
+      "minecraft:interact_button": true
     }
   }
 }

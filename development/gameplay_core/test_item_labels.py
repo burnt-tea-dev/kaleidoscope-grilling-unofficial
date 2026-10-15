@@ -114,6 +114,10 @@ def current_behavior_expectation(before, kind, stem, version):
         # including unchanged materials/permutations, must match public source.
         reviewed['minecraft:block']['components']['minecraft:display_name'] = block['components']['minecraft:display_name']
         assert reviewed == expected, 'G125 block witness differs outside reviewed delta: ' + stem
+    if version >= (2, 8, 138) and kind == 'item':
+        touch = json.loads((ROOT / 'data/touch-skewer-native-reference.json').read_text())['items']
+        if stem + '.json' in touch:
+            expected['minecraft:item']['components']['minecraft:interact_button'] = True
     return expected
 
 

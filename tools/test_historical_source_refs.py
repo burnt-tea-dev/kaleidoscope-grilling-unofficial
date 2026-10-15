@@ -12,7 +12,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':33,'commits':33})
+  self.assertEqual(verify(),{'refs':34,'commits':34})
   self.assertEqual(set(inventory()),literal_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
@@ -245,13 +245,24 @@ class HistoricalSourceRefsTests(unittest.TestCase):
     public.expected_main_bytes((2,8,127))
  def test_g130_display_hooks_remain_a_bounded_delta(self):
   from eating_hud_source_witness import apply_hud_display_hooks,dispatcher_witness_source,HUD_DISPLAY_DELTA
-  before=public.expected_main_bytes((2,8,129));current=(ROOT/public.MAIN_PATH).read_bytes()
+  before=public.expected_main_bytes((2,8,129));current=public.expected_main_bytes((2,8,140))
   self.assertEqual(apply_hud_display_hooks(before),current)
   self.assertEqual(dispatcher_witness_source(current.decode()).encode(),before)
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):apply_hud_display_hooks(before+b'\n')
   from build_two_route_eating_projection import restore_main
   for _,after in HUD_DISPLAY_DELTA:
    with self.assertRaises(ValueError):restore_main(current.decode().replace(after,after.replace('hideJavaEatingHud','changedHideHook',1) if 'hideJavaEatingHud' in after else after.replace('forgetJavaEatingHud','changedForgetHook',1),1))
+ def test_g141_start_frame_keeps_plain_food_config_and_settlement_conserved(self):
+  from eating_hud_source_witness import apply_hud_start_hook,dispatcher_witness_source,HUD_START_BEFORE,HUD_START_AFTER,HUD_START_SOURCE_BASE
+  before=public.expected_main_bytes((2,8,140));current=public.expected_main_bytes((2,8,141))
+  self.assertIn(HUD_START_SOURCE_BASE,inventory())
+  self.assertEqual(current,before.replace(HUD_START_BEFORE.encode(),HUD_START_AFTER.encode(),1))
+  self.assertEqual(current,(ROOT/public.MAIN_PATH).read_bytes())
+  self.assertEqual(dispatcher_witness_source(current.decode()).encode(),public.expected_main_bytes((2,8,129)))
+  with self.assertRaisesRegex(AssertionError,'wrong public preimage'):apply_hud_start_hook(before+b'\n')
+  from build_two_route_eating_projection import restore_main
+  for changed in (current.replace(b'if(a.plain)return;',b'if(false)return;',1),current.replace(b'if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);',b'showJavaEatingHud(e.source,a,system.currentTick);',1),current.replace(b'MINIMUM_EAT_TICKS=25',b'MINIMUM_EAT_TICKS=1',1),current+b'\n'):
+   with self.assertRaises(ValueError):restore_main(changed.decode())
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)

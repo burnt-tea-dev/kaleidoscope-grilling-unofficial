@@ -1,9 +1,10 @@
 /** Newly affected source-mapping behavior; API adapters are not Native clients. */
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {classifyProjectileDodgeGroundCell} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_core.js';
 import {resolveProjectileDodgeGround} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_runtime.js';
-import {PROJECTILE_DODGE_GROUND_FACTS,PROJECTILE_DODGE_GROUND_ROWS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_catalog.js';
+const {PROJECTILE_DODGE_GROUND_FACTS,PROJECTILE_DODGE_GROUND_SOURCE_ROWS}=JSON.parse(readFileSync(new URL('./fixtures/projectile-dodge-ground-diagnostics.json',import.meta.url),'utf8'));
 const cell=(typeId,states=typeId==='minecraft:stone'?{stone_type:'stone'}:{})=>({typeId,states});
 function column(read){
  const seen=[],writes=[];const entity={location:{x:5.25,y:80,z:6.75},dimension:{id:'minecraft:overworld',heightRange:{min:-64,max:320},isChunkLoaded:()=>true,getBlock(point){
@@ -31,14 +32,14 @@ test('explicit normal-stone stair/slab identities use reviewed source motion acr
 });
 test('bed permission carries all-color original proof without accessing an opaque Native color',()=>{
  const a=column(()=>cell('minecraft:bed',{direction:3,head_piece_bit:true,occupied_bit:false}));const r=a.run();assert.equal(r.found,true);assert.equal(r.destination.y,80.75);
- const source=PROJECTILE_DODGE_GROUND_ROWS.find(r=>r.typeId==='minecraft:bed').sourceSets;
+ const source=PROJECTILE_DODGE_GROUND_SOURCE_ROWS.find(r=>r.typeId==='minecraft:bed').sourceSets;
  for(const version of ['1.20.1','1.21.1']){assert.ok(source[version].ids.includes('minecraft:black_bed'));assert.ok(source[version].ids.includes('minecraft:white_bed'));assert.ok(source[version].ids.includes('minecraft:red_bed'))}
  const guessedColor=classifyProjectileDodgeGroundCell(cell('minecraft:bed',{direction:3,head_piece_bit:true,occupied_bit:false,color:'red'}));assert.equal(guessedColor.supported,false);
 });
 test('known compound contents use whole original unions while preserving Native state keys',()=>{
  const cauldron=column(()=>cell('minecraft:cauldron',{cauldron_liquid:'lava',fill_level:6}));assert.equal(cauldron.run().found,true);
  const pot=column(p=>p.y===79?cell('minecraft:flower_pot',{update_bit:true}):cell('minecraft:stone'));assert.equal(pot.run().destination.y,79.75);
- const sources=PROJECTILE_DODGE_GROUND_ROWS.find(r=>r.typeId==='minecraft:cauldron').sourceSets;
+ const sources=PROJECTILE_DODGE_GROUND_SOURCE_ROWS.find(r=>r.typeId==='minecraft:cauldron').sourceSets;
  assert.ok(sources['1.20.1'].ids.includes('minecraft:lava_cauldron'));assert.ok(sources['1.21.1'].ids.includes('minecraft:powder_snow_cauldron'));
 });
 test('original21-only evidence cannot silently grant the default two-branch consumer permission',()=>{

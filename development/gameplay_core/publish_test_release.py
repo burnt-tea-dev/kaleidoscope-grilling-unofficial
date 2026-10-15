@@ -195,11 +195,11 @@ def prepare_g66_assets(sha, report, assets, source_validation):
     return request, assets + [manifest], notes
 
 
-def verify_release_metadata(release, tag, sha, title, notes, *, draft):
+def verify_release_metadata(release, tag, sha, title, notes, *, draft, prerelease=True):
     require(release.get('draft') is draft, 'Refusing to overwrite a published release or unexpected draft state')
     require(release.get('tag_name') == tag and release.get('target_commitish') == sha, 'Differing release tag/target')
     require(release.get('name') == title and release.get('body') == notes, 'Differing release title/notes')
-    require(release.get('prerelease') is True, 'Release is not a prerelease')
+    require(release.get('prerelease') is prerelease, 'Release class differs from the request')
     require(type(release.get('id')) is int, 'Missing release ID')
 
 
@@ -247,9 +247,10 @@ def publish_g66(sha, report, assets, source_validation):
                   notes_path, assets, final_validation)
 
 
-def publish_exact(sha, tag, title, notes_path, assets, final_validation):
+def publish_exact(sha, tag, title, notes_path, assets, final_validation, *, prerelease=True):
     """Share the existing immutable draft/upload/readback path, including G66."""
     snapshot = asset_snapshot(assets)
+    require(type(prerelease) is bool, 'Release class must be boolean')
     notes = notes_path.read_text(encoding='utf-8')
     target = json.loads((ROOT / '.repo-target.json').read_text(encoding='utf-8-sig'))
     require(target.get('repository') == REPO and target.get('repository_id') == REPO_ID, 'Checkout repository identity mismatch')
@@ -262,7 +263,7 @@ def publish_exact(sha, tag, title, notes_path, assets, final_validation):
     release = release_by_tag(tag)
     if release is not None:
         # Published releases are immutable here, even if their bytes happen to match.
-        verify_release_metadata(release, tag, sha, title, notes, draft=True)
+        verify_release_metadata(release, tag, sha, title, notes, draft=True, prerelease=prerelease)
         missing = verify_release_assets(release, assets, complete=False, snapshot=snapshot)
         if missing:
             require_asset_snapshot(assets, snapshot)
@@ -270,11 +271,12 @@ def publish_exact(sha, tag, title, notes_path, assets, final_validation):
     else:
         require_asset_snapshot(assets, snapshot)
         run('gh', 'release', 'create', tag, *map(str, assets), '--repo', REPO, '--target', sha,
-            '--title', title, '--notes-file', str(notes_path), '--draft', '--prerelease', '--latest=false')
+            '--title', title, '--notes-file', str(notes_path), '--draft',
+            '--prerelease' if prerelease else '--prerelease=false', '--latest=false')
     # Always fetch/download the staged assets, rather than trusting upload success.
     release = release_by_tag(tag)
     require(release is not None, 'Created draft is missing on readback')
-    verify_release_metadata(release, tag, sha, title, notes, draft=True)
+    verify_release_metadata(release, tag, sha, title, notes, draft=True, prerelease=prerelease)
     verify_release_assets(release, assets, complete=True, snapshot=snapshot)
     actual_tag = tag_target(tag)
     if actual_tag is None:
@@ -286,20 +288,21 @@ def publish_exact(sha, tag, title, notes_path, assets, final_validation):
     require(api(f'repos/{REPO}/git/ref/heads/main')['object']['sha'] == sha, 'GitHub main changed before publication')
     # Refuse raced edits and revalidate the selected evidence before publishing.
     release = release_by_tag(tag)
-    verify_release_metadata(release, tag, sha, title, notes, draft=True)
+    verify_release_metadata(release, tag, sha, title, notes, draft=True, prerelease=prerelease)
     verify_release_assets(release, assets, complete=True, snapshot=snapshot)
     final_validation(snapshot)
     require_asset_snapshot(assets, snapshot)
     require(tag_target(tag) == sha, 'Remote tag changed before publication')
     api(f"repos/{REPO}/releases/{release['id']}", method='PATCH',
-        payload={'draft': False, 'prerelease': True, 'make_latest': 'false'})
+        payload={'draft': False, 'prerelease': prerelease, 'make_latest': 'false'})
     published = release_by_tag(tag)
-    verify_release_metadata(published, tag, sha, title, notes, draft=False)
+    verify_release_metadata(published, tag, sha, title, notes, draft=False, prerelease=prerelease)
     verify_release_assets(published, assets, complete=True, snapshot=snapshot)
     require(tag_target(tag) == sha, 'Published remote tag target mismatch')
     latest = api(f'repos/{REPO}/releases/latest', allow_missing=True)
-    require(latest is None or latest.get('id') != published['id'], 'Prerelease was unexpectedly made latest')
-    print('Published exact non-latest prerelease', tag, 'from tested GitHub main', sha)
+    if prerelease:
+        require(latest is None or latest.get('id') != published['id'], 'Release was unexpectedly made latest')
+    print('Published exact', 'non-latest prerelease' if prerelease else 'release', tag, 'from tested GitHub main', sha)
 
 
 def reviewed_cookery_requirement(version, root=ROOT):
@@ -338,19 +341,54 @@ def reviewed_cookery_requirement(version, root=ROOT):
     return 'Cookery ' + '.'.join(map(str, hosts['BP']['version']))
 
 
+def release_classification(request):
+    version, tag = request.get('version', ''), request.get('tag', '')
+    prerelease = request.get('prerelease')
+    require(type(prerelease) is bool, 'Publication class must be boolean')
+    require(re.fullmatch(r'A\d+\.\d+\.\d+', version) is not None, 'Invalid current release version')
+    suffix = request.get('artifact_suffix', 'Review')
+    if prerelease:
+        require(re.fullmatch(re.escape(version) + r'-beta\.[1-9]\d*', tag) is not None and suffix == 'Review',
+                'Invalid current prerelease tag/artifact suffix')
+    else:
+        require(tag == version and suffix == 'baseline1', 'Stable release requires the exact version tag and baseline1 artifacts')
+    return suffix, prerelease
+
+
+def current_notes(request):
+    relative = request.get('public_notes_path', CURRENT_NOTES)
+    require(isinstance(relative, str), 'Invalid public notes path')
+    path = Path(relative)
+    require(not path.is_absolute() and '..' not in path.parts and '\\' not in relative
+            and (path.parts and path.parts[0] == 'docs' or relative == 'CHANGELOG.md')
+            and path.suffix == '.md', 'Public notes must use existing docs or CHANGELOG.md')
+    source = ROOT / path
+    require(source.is_file() and not source.is_symlink() and source.resolve().is_relative_to(ROOT.resolve()),
+            'Public notes source is missing or outside the repository')
+    return relative
+
+def current_notes_text(request):
+    inline = request.get('public_notes_inline')
+    if inline is not None:
+        require(isinstance(inline, str) and bool(inline.strip()) and len(inline) <= 4096
+                and '\x00' not in inline and not re.search(r'/root/|/var/|file://', inline),
+                'Inline public notes must be short public text without private filesystem paths')
+        return inline.strip() + '\n'
+    return (ROOT / current_notes(request)).read_text(encoding='utf-8')
+
+
 def current_request(sha, confirmed_tag):
     request = json.loads((ROOT / CURRENT_REQUEST).read_text(encoding='utf-8'))
     require(type(request.get('schema')) is int and request['schema'] == 1, 'Unsupported publication request')
     require(request.get('repository') == REPO and request.get('repository_id') == REPO_ID,
             'Wrong publication repository')
     require(request.get('publication_request') is True, 'Publication is not requested')
-    require(request.get('prerelease') is True and request.get('make_latest') == 'false',
-            'Current publication must remain a non-latest prerelease')
+    require(request.get('make_latest') == 'false', 'Current publication must remain non-latest')
     version = request.get('version', '')
     tag = request.get('tag', '')
-    require(re.fullmatch(r'A\d+\.\d+\.\d+', version) is not None
-            and re.fullmatch(re.escape(version) + r'-beta\.[1-9]\d*', tag) is not None,
-            'Invalid current release version/tag')
+    suffix, _ = release_classification(request)
+    current_notes(request)
+    current_notes_text(request)
     require(confirmed_tag == tag, 'Manual tag confirmation does not match the request')
     require(request.get('client') is False and request.get('production_ready') is False,
             'Publication cannot promote client acceptance')
@@ -359,7 +397,7 @@ def current_request(sha, confirmed_tag):
     expected = request.get('expected_artifacts', {})
     require(set(expected) == {'mcaddon', 'brproject'}, 'Missing exact artifact expectations')
     for kind, artifact in expected.items():
-        require(artifact.get('name') == f'Kaleidoscope_Grilling_{version}_Review.{kind}'
+        require(artifact.get('name') == f'Kaleidoscope_Grilling_{version}_{suffix}.{kind}'
                 and re.fullmatch(r'[0-9a-f]{64}', artifact.get('sha256', '')) is not None,
                 'Invalid requested artifact')
     source = request.get('integrated_source', {})
@@ -440,7 +478,8 @@ def require_current_artifacts(request, report, assets, sha):
 def publish_current(sha, report, assets, request, validation):
     checked_tree = require_current_artifacts(request, report, assets, sha)
     require(checked_tree == validation['git_tree'], 'Archive and validation Git trees differ')
-    metadata = {path: sha256(ROOT / path) for path in (CURRENT_REQUEST, CURRENT_NOTES)}
+    notes_source = current_notes(request)
+    metadata = {path: sha256(ROOT / path) for path in (CURRENT_REQUEST, notes_source)}
     binding = assets[0].parent / 'publication-binding.json'
     binding.write_text(json.dumps({
         'schema': 1, 'repository': REPO, 'repository_id': REPO_ID,
@@ -453,15 +492,17 @@ def publish_current(sha, report, assets, request, validation):
     }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     assets = assets + [binding]
     notes = assets[0].parent / 'release-notes.md'
+    prerelease = request['prerelease']
+    label = 'Beta' if prerelease else 'Stable'
     notes.write_text(
-        f"# Kaleidoscope Grilling {request['version']} beta\n\n"
+        f"# Kaleidoscope Grilling {request['version']} {label}\n\n"
         f"Source and tag target: `{sha}`. Canonical validation and archive source: "
         f"https://github.com/{REPO}/actions/runs/{validation['run_id']} "
         f"(attempt {validation['attempt']}).\n\n"
         f"CI run head: `{validation['run_head']}`; actual archive report commit: `{report['git_sha']}`. "
         f"All three commits have the same complete Git tree `{checked_tree}`. "
         "The original build report is attached unchanged; publication-binding.json records this relationship.\n\n"
-        + (ROOT / CURRENT_NOTES).read_text(encoding='utf-8'), encoding='utf-8', newline='\n')
+        + current_notes_text(request), encoding='utf-8', newline='\n')
 
     def final_validation(snapshot):
         require({path: sha256(ROOT / path) for path in metadata} == metadata,
@@ -469,8 +510,8 @@ def publish_current(sha, report, assets, request, validation):
         require(require_publication_run(validation['run_id'], sha) == validation,
                 'Selected validation run or artifact changed during staging')
 
-    publish_exact(sha, request['tag'], f"Kaleidoscope Grilling {request['version']} Beta",
-                  notes, assets, final_validation)
+    publish_exact(sha, request['tag'], f"Kaleidoscope Grilling {request['version']} {label}",
+                  notes, assets, final_validation, prerelease=prerelease)
 
 
 def publish_legacy(version, sha, assets):

@@ -37,3 +37,16 @@ python -m unittest discover -s development/tests -p test_snapshot_raw_lore_round
 No grill state-machine, ingredients, use count, shake duration, event/session ownership, item IDs, assets, UUIDs, manifests, or deployment files were changed. The repair is not yet an exported pack release; do not install different bytes under the existing pack version. Required release identity, full-family checks, BDS/saved-world rehearsal and exact-candidate deployment remain outstanding.
 
 Remaining game verification: carry the same self-filled bottle through take-back, full shake and seasoning application; verify early release and hotbar switching do not finish a different bottle; verify custom/localized lore and remaining uses after storage/reload. Include main/offhand and the full family pack combination. No BDS, live-world, resource rendering or human-client run occurred for this patch. Keep existing client acceptance and production-readiness flags unchanged.
+
+## 2026-10-15: current G142 source revalidation
+
+Reconciled the existing PR #200 with current main `014aeb89d2352a1725666a8b7dd3207cceefe2b2`, preserving its original head `d828f0a5d669d971d18b3b6e49e4ac7bc6d891b5` in history. The two runtime changes remain identical to the original narrow repair. No competing repair branch or release was created.
+
+Ran against the complete canonical scripts, without `KG_CODEC_SCRIPTS` or a partial `data.js` stub. Added a restore-corruption control with unchanged lore, independently proving dropped dynamic properties, placement/destruction restrictions and unavailable durability still abort restoration.
+
+- Same final 24-case suite with G142's old `metadataSignature`: 17 pass, 7 fail, 0 skipped.
+- Final repaired suite: 24 pass, 0 fail, 0 skipped.
+- Python unittest entry: passed; both changed runtime modules: `node --check` passed.
+- `python tools/baseline_gate.py check --release`: failed as expected with `BASELINE: runtime changed without a reviewed version/hash update`.
+
+Manifests, runtime version, baseline and release history are byte-identical to current main. This remains an unreleased draft source repair. The existing gate is retained; no package export, publication, deployment, BDS, saved-world or client acceptance is claimed. Required CI results must be checked on the updated remote commit separately.

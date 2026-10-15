@@ -144,6 +144,18 @@ VERIFIERS = {
     (2, 8, 128): "verify_a28128.py",
     (2, 8, 129): "verify_a28129.py",
     (2, 8, 130): "verify_a28130.py",
+    (2, 8, 131): "verify_a28131.py",
+    (2, 8, 132): "verify_a28132.py",
+    (2, 8, 133): "verify_a28133.py",
+    (2, 8, 134): "verify_a28134.py",
+    (2, 8, 135): "verify_a28135.py",
+    (2, 8, 136): "verify_a28136.py",
+    (2, 8, 137): "verify_a28137.py",
+    (2, 8, 138): "verify_a28138.py",
+    (2, 8, 139): "verify_a28139.py",
+    (2, 8, 140): "verify_a28140.py",
+    (2, 8, 141): "verify_a28141.py",
+    (2, 8, 142): "verify_a28142.py",
     (2, 8, 8): "verify_a288_local.py",
 }
 

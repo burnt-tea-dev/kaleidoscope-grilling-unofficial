@@ -23,6 +23,18 @@ ZIP_TIME = (2020, 1, 1, 0, 0, 0)
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
+def publication_artifact_suffix(version, root=ROOT):
+    request_path = root / '.github/release-request.json'
+    if not request_path.is_file():
+        return 'Review'
+    request = load(request_path)
+    if request.get('prerelease') is not False:
+        return 'Review'
+    from publish_test_release import release_classification
+    suffix, _ = release_classification(request)
+    assert request['version'] == version, 'Stable publication request is for another runtime version'
+    return suffix
+
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -94,7 +106,8 @@ def main() -> None:
     version = tuple(bp_manifest["header"]["version"])
     assert version == tuple(rp_manifest["header"]["version"])
     label = ".".join(map(str, version))
-    stem = f"Kaleidoscope_Grilling_A{label}_Review"
+    suffix = publication_artifact_suffix('A' + label)
+    stem = f"Kaleidoscope_Grilling_A{label}_{suffix}"
     out = ROOT / args.output_dir
 
     compiled_bp = compiled_pack(BP) if args.compiled else BP

@@ -1,10 +1,10 @@
-# Kaleidoscope Grilling — unofficial Bedrock port
+## Current maintained baseline: 2.8.142
 
-## Current maintained baseline: 2.8.130
+G142 prunes unselected eating HUD images when each actionbar instance is created. It preserves the native event transport and expiry, all Java assets and layout, G141 countdown timing, food settlement and animations. The formal release uses tag `A2.8.142` and `baseline1` artifacts. Static selected-control projections are separate from client performance acceptance. [Changes](CHANGELOG.md).
 
-G130 將進食圖形移離共享 Actionbar，使用可選 UI Queue 的獨立 key 與 title binding 快照；取消／完成只終結自己的圖形。原 Atlas、25 tick 判定、90／100 tick 食用時間、動畫與物品結算保持。身份 **2.8.130／指南 0.3.60**，保留 G129 的獨立 catalog 與 G128 Uses／Numb 修補。有限 6 tick 遺失封包回退、相容範圍及真人場景見 [G130 狀態](docs/STATUS-A2.8.130.md)。
+2026-10-14 的玩家回報及截圖已納入[目前缺口](docs/BUGS.md#client-hud食用入口圖形缺失與延遲)：保留森羅 HUD 缺失、原始資料碼外露及串沒有進食動作的失敗；後續截圖已見進食姿勢、數量減少與圖形，但位置與延遲仍被回報。G138 補原生觸控使用入口，G140 修正錨點／觸控布局及 END 隱藏，G141 接回原生剩餘時間與同步首幀，G142 裁剪未選圖像；這些來源修補不等於全部客戶端驗收。
 
-本候選待精確來源 CI、家族准入、停服存檔副本驗證及 LIVE 讀回；[發佈請求](.github/release-request.json)以本版實際 canonical archive 身份登記，不沿用上一版 digest 或 CI。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
+G142 已經 [PR209](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/209) 的來源／Windows 匯出檢查合併，於 2026-10-14 21:41:21 HKT 隨完整家族部署 LIVE；停服存檔副本、准入、啟動讀回及正式下載內容核對通過。[發佈請求](.github/release-request.json)保留本版實際 canonical archive 身份，沒有因本次文件同步重建或升包。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
 相依仍為官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 與 API，尚未納入。煙火指南隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，適配依[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)記錄。真人畫面、完整 Java 聲畫及其他視角／操作仍待驗收；`client=false`、`production_ready=false`。
 
@@ -87,6 +87,7 @@ CI 的當前入口是 `development/gameplay_core/verify_current.py`；
 - [重整變更](CHANGELOG.md)：當前工具／文件調整。
 - [Phase 0 決策](docs/audit/AUDIT.md)保留原始稽核快照；[PR 處置與保留工作](docs/audit/PR-TRIAGE.md)已重新比對G116，保留各原型的固定來源。
 - [release-history.json](release-history.json) 與 `docs/STATUS-A*.md`：各版身份與當時的證據範圍。
+- [CURRENT-REPAIR-STATUS.json](docs/CURRENT-REPAIR-STATUS.json)：2.8.51 的歷史來源審查快照，保留當時 bytes 與驗收欄位；目前狀態見上述對照表與缺口頁，不用舊快照代表 G142 或 LIVE 驗收。
 - [重整前 README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a/README.md)：完整歷史敘述，舊命令不作為今天的建置指示。
 
 ## 來源、授權與資料保護

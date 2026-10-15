@@ -171,3 +171,23 @@ test('bottle lore ownership is unchanged and does not swallow custom messages', 
   assert.equal(isOwnedBottleLore({rawtext: [lines[0], {text: 'custom'}]}), false);
   assert.equal(isOwnedBottleLore({translate: 'example:custom', with: ['3', '8']}), false);
 });
+
+// Use identical lore on both sides: these failures must be caused by the
+// unrelated metadata loss, not by the RawMessage bug under test.
+test('restoration rejects dropped metadata even with unchanged lore', () => {
+  for (const corrupt of [
+    stack => { stack.setDynamicProperty = () => {}; },
+    stack => { stack.setCanDestroy = () => {}; },
+    stack => { stack.setCanPlaceOn = () => {}; },
+    stack => { stack.getComponent = () => undefined; }
+  ]) {
+    const before = snapshot();
+    before.damage = 2;
+    before.enchantments = [{id: 'unbreaking', level: 1}];
+    assert.throws(() => restoreSkewerMetadata(before, (id, amount) => {
+      const stack = new Stack(id, amount, 1, rows => rows);
+      corrupt(stack);
+      return stack;
+    }, id => ({id})), /metadata readback differs|ingredient durability unavailable/);
+  }
+});

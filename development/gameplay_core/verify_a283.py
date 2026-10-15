@@ -60,7 +60,7 @@ def feedback():
  assert 'runInterval' not in hud and 'setActionBar' not in hud
  owners=[p.name for p in (BP/'scripts').rglob('*.js') if 'setActionBar' in p.read_text()]
  version=tuple(load(BP/'manifest.json')['header']['version'])
- expected=['a283_interaction_feedback.js'] if version >= (2,8,130) else (['a283_interaction_feedback.js','java_eating_hud_runtime.js'] if (BP/'scripts/java_eating_hud_runtime.js').exists() else ['a283_interaction_feedback.js'])
+ expected=['a283_interaction_feedback.js','graphical_actionbar_transport_core.js'] if version >= (2,8,137) else ['a283_interaction_feedback.js'] if version >= (2,8,130) else (['a283_interaction_feedback.js','java_eating_hud_runtime.js'] if (BP/'scripts/java_eating_hud_runtime.js').exists() else ['a283_interaction_feedback.js'])
  assert sorted(owners)==expected,owners
  if version >= (2,8,130):
   assert 'sendFormattingHud' in (BP/'scripts/java_eating_hud_runtime.js').read_text()

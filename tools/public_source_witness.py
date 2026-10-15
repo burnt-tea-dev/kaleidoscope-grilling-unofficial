@@ -435,6 +435,9 @@ def expected_main_bytes(version, *, local_bottles=False, proposal=None):
         if version >= (2, 8, 130):
             from eating_hud_source_witness import apply_hud_display_hooks
             expected = apply_hud_display_hooks(expected)
+        if version >= (2, 8, 141):
+            from eating_hud_source_witness import apply_hud_start_hook
+            expected = apply_hud_start_hook(expected)
         return expected
     if local_bottles:
         return _local_bottle_main_bytes(original, version)

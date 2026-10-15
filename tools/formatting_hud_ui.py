@@ -1,24 +1,25 @@
-"""Owned factory snapshots, with a prefix latch used only for bounded stop events."""
-def capture(prefix,packet):
- return {'type':'panel','size':[0,0],'property_bag':{packet:''},'bindings':[
-  {'binding_name':'#hud_title_text_string','binding_type':'global'},
+"""Persistent, channel-local title receivers; no title factory or creation snapshot.
+
+The zero-duration transport updates a binding, not a visible title's lifetime.
+Keep the receiver mounted and retain only this channel's packets. The sender
+supplies an owned terminal packet on stop and on missed refresh.
+"""
+def contains(text, fragment):
+ return f"(not (({text} - '{fragment}') = {text}))"
+
+def capture(prefix, packet):
+ return {'type':'panel','size':[0,0],'visible':False,'property_bag':{packet:''},'bindings':[
+  {'binding_name':'#hud_title_text_string','binding_type':'global','binding_condition':'always'},
   {'binding_name':'#hud_title_text_string','binding_name_override':packet,'binding_type':'global','binding_condition':'visibility_changed'},
-  {'binding_type':'view','source_property_name':f"(not (#hud_title_text_string = {packet}) and (('%.{len(prefix.encode("utf-8"))}s' * #hud_title_text_string) = '{prefix}'))",'target_property_name':'#visible'}]}
-def snapshot_panel(panel,kind,prefix,end,variable):
- frame=kind+'_frame';channel=kind+'_channel';text='#'+variable;latest=text+'_latest'
- frame_control={'type':'panel','size':[0,0],'property_bag':{text:''},'bindings':[{'binding_name':'#hud_title_text_string','binding_name_override':text,'binding_type':'global','binding_condition':'once'}]}
+  {'binding_type':'view','source_property_name':f"(not (#hud_title_text_string = {packet}) and {contains('#hud_title_text_string',prefix)})",'target_property_name':'#visible','binding_condition':'always'}]}
+
+def bind_channel(panel, kind, prefix, end, variable):
+ channel=kind+'_channel';text='#'+variable
  for row in panel['controls']:
-  for name,image in row.items():
+  for image in row.values():
    expression=image.pop('visible','true').replace('$'+variable,text)
-   image['property_bag']={text:'',latest:''}
+   image['property_bag']={text:''}
    image['bindings']=[
-    {'binding_type':'view','source_control_name':frame,'resolve_sibling_scope':True,'source_property_name':text,'target_property_name':text},
-    {'binding_type':'view','source_control_name':channel,'resolve_sibling_scope':True,'source_property_name':latest,'target_property_name':latest},
-    {'binding_type':'view','source_property_name':f"({expression} and (({latest} = '') or ({latest} = {text})) and (not ({latest} = '{end}')))",'target_property_name':'#visible'}]
- panel['controls'] += [{frame:frame_control},{channel:capture(prefix,latest)}]
-def packet_visibility(packet,variable,prefix,end):
- text='#'+variable
- packet.pop('$'+variable,None);packet.pop('visible',None)
- packet['property_bag']={text:''}
- packet['bindings']=[{'binding_name':'#hud_title_text_string','binding_name_override':text,'binding_type':'global','binding_condition':'once'},
- {'binding_type':'view','source_property_name':f"((('%.{len(prefix.encode("utf-8"))}s' * {text}) = '{prefix}') and (not ({text} = '{end}')))",'target_property_name':'#visible'}]
+    {'binding_type':'view','source_control_name':channel,'resolve_sibling_scope':True,'source_property_name':text,'target_property_name':text,'binding_condition':'always'},
+    {'binding_type':'view','source_property_name':f"({expression} and {contains(text,prefix)} and (not ({text} = '{end}')))",'target_property_name':'#visible','binding_condition':'always'}]
+ panel['controls'].append({channel:capture(prefix,text)})

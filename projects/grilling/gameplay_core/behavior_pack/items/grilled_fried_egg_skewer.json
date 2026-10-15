@@ -38,7 +38,8 @@
           "minecraft:is_food",
           "kaleidoscope_grilling:food_grilled_fried_egg_skewer"
         ]
-      }
+      },
+      "minecraft:interact_button": true
     }
   }
 }
