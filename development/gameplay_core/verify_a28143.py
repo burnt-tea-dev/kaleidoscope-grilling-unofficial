@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def main(expected_version=(2, 8, 143)):
     previous(expected_version=expected_version)
     subprocess.run([sys.executable, '-B', 'development/gameplay_core/test_eating_owner_context.py'], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, '-B', 'development/gameplay_core/test_offhand_eating_clock.py'], cwd=ROOT, check=True)
     print('G143 owning-player eating context and isolated preparation source checks PASS; client visuals remain separate')
 
 if __name__ == '__main__':

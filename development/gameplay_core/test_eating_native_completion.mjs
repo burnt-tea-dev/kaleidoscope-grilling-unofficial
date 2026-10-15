@@ -486,3 +486,32 @@ for(const mealId of REVIEWED_THREE_IDS)for(const hand of ['main','off'])for(cons
  assert.equal(f.counts.manualWrites,0);assert.deepEqual(f.state.stack,before);assert.deepEqual(f.state.other,other);
  f.stop();f.flush();assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),false);
 });
+
+// Preserved from PR213; runtime remains the G143 owning-player implementation.
+for(const hand of ['main','off'])test(`selected-hand clock clears on cancel, replacement and restart: ${hand}`,()=>{
+ const f=fixture({hand});f.startUse();f.tickPresentation(120);
+ assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),20);
+ f.stop({tick:120,remaining:70});f.flush();
+ assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
+ assert.equal(f.counts.manualWrites,0,'Before checkpoint, cancellation cannot commit');
+ f.startUse();assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
+ f.tickPresentation(131);assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),10);
+ if(hand==='main')f.player.selectedSlotIndex++;else f.state.stack.nameTag='replacement serving';
+ f.tickPresentation(132);assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
+ assert.equal(f.properties.get(presentation.EAT_HAND_PROPERTY),0);
+ f.startUse();assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
+});
+
+test('alternating hands start independent clocks and queued old cleanup cannot erase the new session',()=>{
+ const f=fixture({hand:'off'});f.startUse();f.tickPresentation(110);
+ f.stop({tick:110,remaining:80}); // Below checkpoint: cleanup is deferred.
+ f.ctx.captureInteractionIntent=()=>({hand:'main'});
+ f.ctx.heldByHand=(_player,hand)=>hand==='main'?f.state.stack.clone():f.state.other.clone();
+ f.ctx.system.currentTick=111;f.startUse();
+ assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),0);
+ assert.equal(f.properties.get(presentation.EAT_HAND_PROPERTY),1);
+ f.flush(112);f.tickPresentation(113);
+ assert.equal(f.properties.get(presentation.EAT_ELAPSED_TICKS_PROPERTY),2);
+ assert.equal(f.properties.get(presentation.EAT_HAND_PROPERTY),1);
+ assert.equal(f.counts.manualWrites,0);
+});
