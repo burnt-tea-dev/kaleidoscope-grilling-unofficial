@@ -6,6 +6,7 @@ from pathlib import Path
 import copy
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import unittest
@@ -19,6 +20,12 @@ import build_two_route_eating_projection as scoped
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
+    def test_standalone_generator_resolves_clock_without_inherited_pythonpath(self):
+        environment = dict(os.environ)
+        environment.pop("PYTHONPATH", None)
+        subprocess.run([sys.executable, "tools/build_two_route_eating_projection.py", "--check"],
+                       cwd=ROOT, env=environment, check=True)
+
     @classmethod
     def setUpClass(cls):
         cls.current = scoped.MAIN.read_text()

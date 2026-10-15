@@ -11,8 +11,10 @@ import copy
 import hashlib
 import json
 import re
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'development/gameplay_core'))
 P = ROOT / 'projects/grilling/gameplay_core'
 BP, RP = P / 'behavior_pack', P / 'resource_pack'
 SHARED = RP / 'animations/java_eating_player.animation.json'
