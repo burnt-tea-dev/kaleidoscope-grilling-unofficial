@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "base_commit": "83940e178378a1756839cebe2748c508a6db6bff",
+  "owned_ids": [
+    "kaleidoscope_grilling:grilled_beef_skewer",
+    "kaleidoscope_grilling:grilled_bun_slice_skewer",
+    "kaleidoscope_grilling:grilled_caterpillar_skewer",
+    "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+    "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+    "kaleidoscope_grilling:grilled_fish_skewer",
+    "kaleidoscope_grilling:grilled_fried_egg_skewer",
+    "kaleidoscope_grilling:grilled_gluten_skewer",
+    "kaleidoscope_grilling:grilled_gluten_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_golden_skewer",
+    "kaleidoscope_grilling:grilled_golden_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_lamb_skewer",
+    "kaleidoscope_grilling:grilled_lamb_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+    "kaleidoscope_grilling:grilled_meat_and_bone_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_meatball_skewer",
+    "kaleidoscope_grilling:grilled_meatball_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_mid_wing_skewer",
+    "kaleidoscope_grilling:grilled_mid_wing_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_mushroom_skewer",
+    "kaleidoscope_grilling:grilled_mushroom_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_pork_belly_skewer",
+    "kaleidoscope_grilling:grilled_potato_slice_skewer",
+    "kaleidoscope_grilling:grilled_potato_slice_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_slime_skewer",
+    "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+    "kaleidoscope_grilling:grilled_squid_tentacle_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+    "kaleidoscope_grilling:mysterious_skewer",
+    "kaleidoscope_grilling:mysterious_skewer_java_three_alt",
+    "kaleidoscope_grilling:ordinary_skewer",
+    "kaleidoscope_grilling:ordinary_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_beef_skewer",
+    "kaleidoscope_grilling:raw_bun_slice_skewer",
+    "kaleidoscope_grilling:raw_caterpillar_skewer",
+    "kaleidoscope_grilling:raw_chicken_skin_skewer",
+    "kaleidoscope_grilling:raw_ender_pearl_skewer",
+    "kaleidoscope_grilling:raw_fish_skewer",
+    "kaleidoscope_grilling:raw_fried_egg_skewer",
+    "kaleidoscope_grilling:raw_gluten_skewer",
+    "kaleidoscope_grilling:raw_gluten_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_golden_skewer",
+    "kaleidoscope_grilling:raw_golden_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_lamb_skewer",
+    "kaleidoscope_grilling:raw_lamb_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+    "kaleidoscope_grilling:raw_meat_and_bone_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_meatball_skewer",
+    "kaleidoscope_grilling:raw_meatball_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_mid_wing_skewer",
+    "kaleidoscope_grilling:raw_mid_wing_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_mushroom_skewer",
+    "kaleidoscope_grilling:raw_mushroom_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_pork_belly_skewer",
+    "kaleidoscope_grilling:raw_potato_slice_skewer",
+    "kaleidoscope_grilling:raw_potato_slice_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_slime_skewer",
+    "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+    "kaleidoscope_grilling:raw_squid_tentacle_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+    "kaleidoscope_grilling:secret_skewer",
+    "kaleidoscope_grilling:secret_skewer_java_three_alt"
+  ],
+  "predecessor_sha256": "b783388b8ca3f44694e22423405c91337eb983a7b09749d20b2cae8b7b9ff21d",
+  "predecessor": {
+    "format_version": "1.8.0",
+    "animations": {
+      "animation.kg_eating.player.native_right": {
+        "loop": true,
+        "animation_length": 5.0,
+        "blend_weight": "!variable.is_first_person && query.is_using_item && variable.use_item_startup_progress <= 0.0 && variable.use_item_interval_progress <= 0.0",
+        "bones": {
+          "rightarm": {
+            "rotation": [
+              -60.0,
+              -22.5,
+              -5.625
+            ]
+          }
+        }
+      },
+      "animation.kg_eating.player.native_left": {
+        "loop": true,
+        "animation_length": 5.0,
+        "blend_weight": "!variable.is_first_person && query.is_using_item && variable.use_item_startup_progress <= 0.0 && variable.use_item_interval_progress <= 0.0",
+        "bones": {
+          "leftarm": {
+            "rotation": [
+              -60.0,
+              22.5,
+              5.625
+            ]
+          }
+        }
+      }
+    }
+  },
+  "java_source_revision": "9a1acdab27698457bec16c9362678e574895a28c",
+  "java_sources": [
+    {
+      "path": "skewer/MultiBiteSkewerItem.java",
+      "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5"
+    },
+    {
+      "path": "skewer/GoldenSkewerItem.java",
+      "sha256": "726093777c2136e85f0c1da5ab134de181faf638a23be02b88a9643be9e740c4"
+    },
+    {
+      "path": "skewer/CursedSkewerItem.java",
+      "sha256": "d51c62c3f3b7e7e3530967747233b12a44caab095d71cb00366907414126fc3a"
+    },
+    {
+      "path": "skewer/SecretSkewerItem.java",
+      "sha256": "0f1a8df25476a2ea0b06a115a77a31656cdd91c214e1bc7e9949786f3832170b"
+    },
+    {
+      "path": "registry/ModItems.java",
+      "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e"
+    }
+  ],
+  "scope": "Suppress only native-style fallback addition for exact Java EAT -> ITEM identities. Native positive progress, bob and locomotion remain uncorrected."
+}

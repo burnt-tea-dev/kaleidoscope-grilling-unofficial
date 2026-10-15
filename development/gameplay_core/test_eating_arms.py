@@ -2,6 +2,9 @@
 from pathlib import Path
 import json
 import unittest
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
+import build_tp_java_item_fallback as tp_item
 
 ROOT = Path(__file__).resolve().parents[2]
 RP = ROOT / 'projects/grilling/gameplay_core/resource_pack'
@@ -11,7 +14,7 @@ SOURCE = json.loads((Path(__file__).parent / 'fixtures/native-third-person-eatin
 
 class EatingArms(unittest.TestCase):
     def test_only_the_selected_arm_rotation_can_change(self):
-        animations = json.loads((RP / 'animations/eating_arms.animation.json').read_text())['animations']
+        animations = tp_item.transform(json.loads((RP / 'animations/eating_arms.animation.json').read_text()),inverse=True)['animations']
         self.assertEqual(set(animations), {'animation.kg_eating.player.native_right',
                                           'animation.kg_eating.player.native_left'})
         for hand, sign in [('right', 1), ('left', -1)]:
@@ -24,7 +27,7 @@ class EatingArms(unittest.TestCase):
             self.assertEqual(bone['rotation'], [native[0], native[1]*sign, native[2]*sign])
 
     def test_native_progress_and_first_person_keep_control(self):
-        animations = json.loads((RP / 'animations/eating_arms.animation.json').read_text())['animations']
+        animations = tp_item.transform(json.loads((RP / 'animations/eating_arms.animation.json').read_text()),inverse=True)['animations']
         expected = ('!variable.is_first_person && query.is_using_item && '
                     'variable.use_item_startup_progress <= 0.0 && variable.use_item_interval_progress <= 0.0')
         for animation in animations.values():

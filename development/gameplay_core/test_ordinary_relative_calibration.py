@@ -76,13 +76,17 @@ for(const row of rows)for(const id of row.ids)for(let flags=0;flags<128;flags++)
   with self.assertRaises(ValueError):layer.restore_main(main.replace('animation.kg_ordinary_relative.player.','animation.kg_ordinary_relative.player.broken',1))
  def test_only_owned_runtime_files_changed(self):
   import hashlib
+  import build_tp_java_item_fallback as tp
   changed=subprocess.check_output(['git','diff','--name-only',BASE],cwd=ROOT,text=True).splitlines();runtime=[p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p]
-  self.assertLessEqual(set(runtime),{str(layer.MAIN.relative_to(ROOT)),str(layer.PLAYER.relative_to(ROOT))})
+  self.assertLessEqual(set(runtime),{str(layer.MAIN.relative_to(ROOT)),str(layer.PLAYER.relative_to(ROOT)),str(tp.PLAYER.relative_to(ROOT))})
   untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines()
   self.assertLessEqual({p for p in untracked if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))})
   paths=subprocess.check_output(['git','ls-tree','-r',BASE,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines()
   for row in paths:
    meta,p=row.split('\t');expected=meta.split()[2]
    if p==str(layer.MAIN.relative_to(ROOT)):continue
-   data=(ROOT/p).read_bytes();actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,expected,p)
+   data=(ROOT/p).read_bytes()
+   if p==str(tp.PLAYER.relative_to(ROOT)):
+    restored=tp.transform(json.loads(data),inverse=True);data=(json.dumps(restored,indent=2)+'\n').encode()
+   actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,expected,p)
 if __name__=='__main__':unittest.main()
