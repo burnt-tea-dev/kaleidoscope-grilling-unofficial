@@ -1,3 +1,5 @@
+import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {SLIME_ID,readSlimeWorldFrame} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/slime_frame_core.js';
 /** Source transforms and fault-injected production display; no native client evidence. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -38,7 +40,7 @@ function fixture({cap=32,budget=8,spawn='valid'}={}){
  const world={getAllPlayers:()=>players,getDimension:id=>['minecraft:overworld','overworld'].includes(id)?dim:{id,getEntities:()=>[],getBlock:()=>undefined},getDynamicPropertyIds:()=>[...dp.keys()],getAbsoluteTime:()=>tick,
   afterEvents:Object.fromEntries(['playerPlaceBlock','playerInteractWithBlock','playerBreakBlock'].map(name=>[name,{subscribe(){}}])),beforeEvents:{playerInteractWithBlock:{subscribe(){}}}};
  const system={get currentTick(){return tick},run(fn){scheduled.push(fn)},runInterval(fn,ticks){intervals.push({fn,ticks})},runJob(job){for(const _ of job){}}};
- const ctx=vm.createContext({...visual,RACK_TOOL_VISUAL_TYPE,rackToolVisualModel,VisualTargetQueue,takeStationContentsVisualDirty,captureSkewerMetadata,metadataSignature,world,system,
+ const ctx=vm.createContext({...visual,canonicalFoodId,SLIME_ID,readSlimeWorldFrame,RACK_TOOL_VISUAL_TYPE,rackToolVisualModel,VisualTargetQueue,takeStationContentsVisualDirty,captureSkewerMetadata,metadataSignature,world,system,
   console:{warn(){}},grillingConfig:()=>({contentsHelpers:cap,contentsTargetsPerTick:budget}),STORAGE_PREFIX:'storage/',registerStationProjection(){},
   a25ReadPlateBlock:b=>b.stacks,a25RestoreStack:s=>s.clone(),a25ReadRecipeDisplayStack:b=>b.result?.clone(),readPublicFood:()=>({present:false,valid:false}),stationProjection:()=>({data:0})
  });
@@ -62,7 +64,7 @@ test('all 15 Java plate slots and their independent cardinal rotations survive t
 });
 test('plate and recipe model selection canonicalizes raw/cooked aliases and keeps ordinary/foreign fallback explicit',()=>{
  for(const [raw,index] of Object.entries(GRILL_MODEL_INDEX))for(const [id,stage,icon] of [[raw,0,index*2],[RAW_TO_COOKED[raw],4,index*2+1]])for(const alias of [id,eatingItemId(id,true),eatingItemId(id,false,false)]){
-  assert.equal(visual.plateMeshPlan(new Stack(alias),readIngredients).model,index*6+stage);assert.equal(visual.recipeIconModel(new Stack(alias)),icon);
+  assert.equal(visual.plateMeshPlan(new Stack(alias),readIngredients).model,id===SLIME_ID?115:index*6+stage);assert.equal(visual.recipeIconModel(new Stack(alias)),icon);
  }
  for(const id of [NS+'ordinary_skewer','foreign:food'])assert.equal(visual.plateMeshPlan(new Stack(id),readIngredients),undefined);
  assert.equal(visual.recipeIconModel(new Stack(NS+'ordinary_skewer')),38);assert.equal(visual.recipeIconModel(new Stack('foreign:food')),undefined);
@@ -151,7 +153,18 @@ test('unrelated vanilla interactions never fill the station target queue, while 
 });
 test('display resources reuse audited meshes/palette and constrain helpers to transient render-only properties',()=>{
  const grill=json('resource_pack/entity/grill_food_visual.entity.json')['minecraft:client_entity'].description,plate=json('resource_pack/entity/plate_food_visual.entity.json')['minecraft:client_entity'].description;
- assert.deepEqual(plate.geometry,grill.geometry);assert.deepEqual(plate.textures,grill.textures);assert.deepEqual(plate.render_controllers,grill.render_controllers);assert.ok(plate.scripts.pre_animation.every(s=>!s.includes('flip')));
+ for(const [key,value] of Object.entries(grill.geometry))assert.equal(plate.geometry[key],value);
+ for(const [key,value] of Object.entries(grill.textures))assert.equal(plate.textures[key],value);
+ assert.equal(Object.keys(plate.geometry).length,Object.keys(grill.geometry).length+117);
+ assert.equal(Object.keys(plate.textures).length,Object.keys(grill.textures).length+117);
+ assert.deepEqual(plate.render_controllers.slice(1),grill.render_controllers.slice(1));
+ assert.deepEqual(plate.render_controllers[0],{'controller.render.kg_station.plate':"q.property('kaleidoscope_grilling:ready')"});
+ const original=json('resource_pack/render_controllers/grill_food_visual.render_controllers.json').render_controllers['controller.render.kg_station.grill'];
+ const extended=json('resource_pack/render_controllers/plate_food_visual.render_controllers.json').render_controllers['controller.render.kg_station.plate'];
+ for(const [kind,name] of [['geometries','Array.models'],['textures','Array.stages']]){
+  assert.deepEqual(extended.arrays[kind][name].slice(0,115),original.arrays[kind][name]);assert.equal(extended.arrays[kind][name].length,232);
+ }
+ assert.ok(plate.scripts.pre_animation.every(s=>!s.includes('flip')));
  for(const name of ['plate_food_visual','recipe_icon_visual','custom_recipe_icon_visual','vat_premium_visual']){const b=json('behavior_pack/entities/'+name+'.json')['minecraft:entity'];assert.deepEqual(b.components['minecraft:transient'],{});assert.equal(b.components['minecraft:inventory'],undefined);assert.deepEqual(b.components['minecraft:physics'],{has_gravity:false,has_collision:false});assert.equal(b.description.properties[NS+'ready'].default,false);}
  const icon=json('resource_pack/entity/recipe_icon_visual.entity.json')['minecraft:client_entity'].description;
  for(const [id,index] of Object.entries(visual.RECIPE_ICON_MODELS)){const path=icon.textures['s'+index];assert.equal(path,'textures/items/'+id.slice(NS.length));const bytes=fs.readFileSync(new URL('resource_pack/'+path+'.png',base));assert.equal(bytes.readUInt32BE(16),16);assert.equal(bytes.readUInt32BE(20),16);}
@@ -170,4 +183,21 @@ test('plate mesh transform and flattened wall fallback equal the Java FIXED tran
   java=wall?scale(rotate(scale(java,[1,1,.1/2.75]),'z',-55),.5):rotate(rotate(scale(java,.8),'x',90),'z',180);java[0]*=-1;
   for(let i=0;i<3;i++)close(bed[i],java[i],`${secret}/${wall}/axis${i}`);
  }
+});
+
+test('plate failure stacks use real source models and cooked slime follows the shared world clock without changing saved stacks',()=>{
+ const f=fixture(),b=f.add();
+ b.stacks=[new Stack(NS+'mysterious_skewer',{[NS+'failed_skewer_source']:NS+'raw_beef_skewer'}),new Stack(NS+'dark_grilling',{[SECRET_MODEL_VARIANTS_KEY]:'[4,5,6]'}),new Stack(SLIME_ID),new Stack(NS+'raw_slime_skewer')];
+ const before=b.stacks.map(s=>s.clone());
+ for(let tick=0;tick<24;tick++){
+  f.tick=tick;f.sync(b);assert.equal(f.count(),4);assert.ok(f.spawned.every(e=>e.typeId===visual.PLATE_FOOD_VISUAL_TYPE));
+  for(let i=0;i<2;i++)assert.equal(f.spawned[i].properties[NS+'model'],visual.plateMeshPlan(b.stacks[i],readIngredients).model);
+  assert.equal(f.spawned[2].properties[NS+'model'],115+Math.floor(tick/4)%5);
+  assert.equal(f.spawned[3].properties[NS+'model'],GRILL_MODEL_INDEX[NS+'raw_slime_skewer']*6);
+  assert.deepEqual(b.stacks,before);
+ }
+ assert.equal(f.commands.length,0);assert.equal(f.spawned.length,4);
+ b.stacks[0].props[NS+'failed_skewer_source']=NS+'raw_fish_skewer';f.sync(b);
+ assert.equal(f.spawned[0].properties[NS+'model'],visual.plateMeshPlan(b.stacks[0],readIngredients).model);
+ assert.equal(f.spawned.length,4);
 });
