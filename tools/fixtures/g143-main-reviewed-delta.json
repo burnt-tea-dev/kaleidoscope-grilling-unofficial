@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "path": "projects/grilling/gameplay_core/behavior_pack/scripts/main.js",
+  "release": [
+    2,
+    8,
+    143
+  ],
+  "previous_public_commit": "ce340a7d7f13cd5be0c0ff95e6556ed3187c81a8",
+  "reviewed_commit": "8e8d6fceda6bf293501964ff1698faecb8ba0cb5",
+  "before_sha256": "057a7f4d34c8633798dc2c20dec30bb0cda80b0665c8facb0f55b456972170e6",
+  "after_sha256": "437809dc4e4378fd1b5c2ee4fa6d008e0df4ae4fd88836b0655815d988d5bbbb",
+  "operations": [
+    {
+      "start": 97058,
+      "end": 97290,
+      "before": "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id));prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}\n",
+      "after": "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}\n  try{prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}\n"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # 煙火目前缺口與待重現問題
 
-Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；目前維護來源2.8.142，更新2026-10-15。
+Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；目前維護來源2.8.143（整合候選），更新2026-10-15。
 本頁不把「缺證據」全部當作已證實程式 bug，也不把舊候選觀察沿用成現行驗收。
 G116承接餐盤營養界限與防誤食；G117修復瓶爆炸取消及手持提前結算界限。
 G118補本日一比一稽核的核心、農業與容器機制差異；完整逐項狀態見[G118](STATUS-A2.8.118.md)。真人驗收仍待完成。
@@ -22,6 +22,16 @@ G119補手持盤及植物／效果提交；[G120](STATUS-A2.8.120.md)續修持�
 | 雪克杯按很久 UI 才出現，整體性能仍差。 | [PR209](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/209) 的 G142 以 `ignored` 跳過未選進食圖像；保留 native packet／容量／過期、素材、布局及結算。Tavern T166 另有預覽快取與調酒圖形裁剪。來源投影不是實測配置數、FPS 或延遲，最新真人結果仍待取得。 |
 
 G142 的 source／Windows export CI、完整家族停服存檔副本 first／restart、准入及 LIVE 讀回已通過；正式 `A2.8.142` 已發布，公開下載與 LIVE 內容一致。這些證據沒有覆蓋最新客戶端實際手感，維持 `client=false`、`production_ready=false`、`pending_client_acceptance`。使用者已要求停止畫面探針及反覆索取測試，本次同步沒有再發送探針，也沒有使用模擬玩家。後續回報應直接承接本節，不把先前失敗改寫成成功。
+
+## EATING-OWNER：手持串的進食狀態與瓶子錯誤
+
+**狀態：G143 已修正具體來源缺陷；最新 native/client 畫面尚未驗收。**
+
+自訂 `eat_*` properties 宣告在 player，舊 attachable 直接 `q.property` 卻可能查詢到 item 環境。G143 只將這組自有 properties 轉向 `c.owning_entity`，原生查詢保持原環境。主手倒數定義只涵蓋主手，副手改用既有服務端同步進度；沒有猜測另一個原生查詢的單位。秘製串末段的隱藏狀態按原有每手保存值延續至服務端重置，防止本機 use flag 重啟時重畫上一份竹籤。
+
+快照曾把等價字串／RawMessage lore 判為不同，令瓶子代理轉換失敗。G143 承接 PR200 的比較修正，保留原始 metadata；完整瓶子掃描的失敗也會節流，其他槽位與食物動畫準備繼續。這直接修正每 tick 反覆失敗掃描和被中止的 preparation，沒有宣稱已解決所有 HUD 秒級延遲。
+
+固定曲線近鏡穿過 eye plane 的放大與末段平片仍保留原失敗證據，不猜改 Java 曲線。任意秘製三色 native inventory icon 仍見 [GUI 邊界](CUSTOM-SKEWER-INVENTORY-RENDER-LIMITS.md)。
 
 ## GRILL-DEFERRED-OWNER：取消或替換後誤拆烤架
 

@@ -12,6 +12,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import secret_idle_calibration as calibration
 from public_source_witness import assert_public_bytes_with_g71_bottles as assert_public_bytes, public_json
 from test_eating_observer_projection import node
+from eating_owner_context import document,legacy_document
+from secret_terminal_visibility import apply as terminal_continuation
 
 
 def load(path):
@@ -48,9 +50,9 @@ class SecretIdleCalibration(unittest.TestCase):
             actual = load(path)['minecraft:attachable']['description']
             # The public witness already contains the repair. Re-running the
             # current generator must conserve it, not apply a historical delta.
-            once = calibration.apply_idle_calibration(deepcopy(actual))
+            once = document(terminal_continuation(calibration.apply_idle_calibration(legacy_document(deepcopy(actual)))),attachable=True)
             self.assertEqual(once, actual)
-            self.assertEqual(calibration.apply_idle_calibration(deepcopy(once)), actual)
+            self.assertEqual(document(terminal_continuation(calibration.apply_idle_calibration(legacy_document(deepcopy(once)))),attachable=True), actual)
             self.assertEqual({key for key in actual['animations'] if key.startswith('fp_idle_calibrated_')},
                              {'fp_idle_calibrated_right', 'fp_idle_calibrated_left'})
             for hand in ('right', 'left'):
@@ -82,7 +84,7 @@ for (const d of descriptions) {
  const complete = !d.identifier.endsWith(':unfinished_skewer');
  const ownProfile = d.identifier.endsWith('_java_three_alt') ? 4 : 3;
  const routes = Object.fromEntries(d.scripts.animate.flatMap(row => Object.entries(row)).map(([alias, expression]) =>
-  [alias, new Function('q', 'c', 'return ' + expression)]));
+  [alias, new Function('q', 'c', 'return ' + expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))]));
  for (const hand of ['right', 'left']) for (const itemSlot of ['main_hand', 'off_hand'])
  for (const first of [0, 1]) for (const using of [false, true]) for (const eatHand of [0, 1, 2])
  for (const projection of [0, 1]) for (const profile of [3, 4]) for (const held of [d.identifier, 'minecraft:apple'])
@@ -94,7 +96,7 @@ for (const d of descriptions) {
    is_gliding: posture === 'gliding', is_riding: posture === 'riding', is_item_equipped: () => oppositeEquipped,
    property: name => ({eat_hand: eatHand, eat_profile: profile, eat_projection: projection})[name.split(':')[1]],
    is_item_name_any: (selected, ...ids) => selected === weapon && ids.includes(held)};
-  const c = {is_first_person: first, item_slot: itemSlot};
+  const c = {is_first_person: first, item_slot: itemSlot, owning_entity: q};
   const active = alias => routes[alias] ? Boolean(routes[alias](q, c)) : false;
   const fpSlot = Boolean(first && itemSlot === slot);
   const ownUsing = using && eatHand === handCode;

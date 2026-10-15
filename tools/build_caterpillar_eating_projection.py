@@ -166,7 +166,9 @@ def augment(output):
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
-    for path,value in augment({}).items():
+    from eating_owner_context import augment as current_context, legacy_document
+    inputs={path:legacy_document(json.loads(path.read_text())) for path in [RP/'attachables/grilled_caterpillar_skewer.attachable.json',RP/'render_controllers/java_eating_player.render_controllers.json']}
+    for path,value in current_context(augment(inputs)).items():
         data=value if isinstance(value,bytes) else (value.encode() if isinstance(value,str) else dump(value))
         if args.check:
             if path.read_bytes()!=data:raise AssertionError(path)

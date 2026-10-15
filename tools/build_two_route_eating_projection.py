@@ -71,6 +71,8 @@ def target_position(expression, arm, axis, route):
 
 
 def animations(source):
+    from eating_owner_context import legacy_document
+    source = legacy_document(json.loads(encoded(source)))
     if hashlib.sha256(encoded(source)).hexdigest() != SHARED_SHA256:
         raise ValueError('Native-reviewed shared clip source drift')
     source = json.loads(encoded(source))
@@ -148,7 +150,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    for path, value in augment({}).items():
+    from eating_owner_context import augment as current_context
+    for path, value in current_context(augment({})).items():
         data = encoded(value)
         if args.check:
             if path.read_bytes() != data:

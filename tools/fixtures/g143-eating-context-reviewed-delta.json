@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "release": [
+    2,
+    8,
+    143
+  ],
+  "previous_public_commit": "ce340a7d7f13cd5be0c0ff95e6556ed3187c81a8",
+  "reviewed_commit": "83a22bbfca4ceae9c5267a282ad0a1d4b375658a",
+  "scope": "Four BP modules and sixty-seven RP JSON files: owner properties, hand-specific clock and terminal hide continuation; no Java curve, texture, geometry or settlement changes.",
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/scripts/bottle_fill_item_runtime.js": {
+      "before_sha256": "e016c1abd59a56370fdd351445902b06b10a6733e48de9c4480ed1f88a91ba64",
+      "after_sha256": "a0c2d662fed2f33d23b19548af1cf11a01e3734019ec9545f622a7d2efb81c12"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/bottle_lore_core.js": {
+      "before_sha256": "d022e0f426720a2368084e24e15771808088ac85535706657e72bc23df609b0a",
+      "after_sha256": "18b7c074924be1c089f6231fe823b3f25612277ef665d92473d15b1fba32a16d"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/main.js": {
+      "before_sha256": "057a7f4d34c8633798dc2c20dec30bb0cda80b0665c8facb0f55b456972170e6",
+      "after_sha256": "437809dc4e4378fd1b5c2ee4fa6d008e0df4ae4fd88836b0655815d988d5bbbb"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js": {
+      "before_sha256": "7166bad75bce767a21b28ff7bf160d2df29948fcec9c66a6024929af5a428298",
+      "after_sha256": "2ca9ff68038be28f8e6f81dd90499efea5fbe9a796b728ae94be0d20db90415a"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/eating_motion.animation.json": {
+      "before_sha256": "75be864ed010540671013f86f9090f73e60a724004cd69dc8cf7a26654a2c2c4",
+      "after_sha256": "a4e48f9344afd9998b703342dec43ee364bf0fd7b7cba34d4cb68d35d213e2f6"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json": {
+      "before_sha256": "4ef03575f562e32f159ebfb9ba35e5bd05047a758b7e6a6004092d17e43d72e4",
+      "after_sha256": "24698515038732b40ad8f3812cbd957f580d1b6f5251fd5708324af4d94944f4"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/java_eating_projection.animation.json": {
+      "before_sha256": "30cf8da05d3d4de9b538690feba3422465ff93c18687390e1f507461467308b1",
+      "after_sha256": "d06011d1c80d0292022c21d513a5cae00fd10511e9c96bf4957daf4373be7cea"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/kg_isolated_two_route_player.animation.json": {
+      "before_sha256": "a14a8333f6abb9eed55db1e7fa2aaa291ec83cc7dd6b0c924efe0dcdc823ef2d",
+      "after_sha256": "54e6c496d849ab38bf325775e0cb15617cb320532451aa93cb4462749e11ace3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/kg_probe_caterpillar_item.animation.json": {
+      "before_sha256": "8ef90bc537933609feac8eb3a0368fdb7333b36633acae801dbc159e873ecb3e",
+      "after_sha256": "599568421ddf92426408da55ab0f3699e89f1b61c24aa537013f51292c5187f4"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/kg_probe_caterpillar_player.animation.json": {
+      "before_sha256": "4d4cfcc8d7c66c19da090a3d14044210248ece7ee91e4186a82e27b35fb552c2",
+      "after_sha256": "ca42c7c9bbabd45c9c77277deb6d2cc420e47599762cabc484ba0e003d03cd9e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_beef_skewer.attachable.json": {
+      "before_sha256": "7e0d61e63e00afcddfc1ff73343455ecd06d8993775ee8a6a051654cdfa9fbd4",
+      "after_sha256": "a5c9a818d659880ce5f246334beef044d809bbcdb7b7eb5dc631de65bbc0fd5d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_bun_slice_skewer.attachable.json": {
+      "before_sha256": "151f654794b5893f7af0cfa7982d2fc90625703cd17652400479d25a320db341",
+      "after_sha256": "185ccb43eab3ed083b240a3ab48f43451c0c4b6a176a66606734ccf5374998b5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_caterpillar_skewer.attachable.json": {
+      "before_sha256": "4c16a2ec2960a5c7b25e0e695e99e84bfe460c3c15ac1565824b25b317be8db4",
+      "after_sha256": "8c3fa20664cbd305795add75abfe90dee9a393bb663de5a191d57e713f747b6d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_chicken_skin_skewer.attachable.json": {
+      "before_sha256": "0eb39faf91533204b0173ee9e813991e66f8be72b404b8285fab5201b4f29c16",
+      "after_sha256": "75eecae1566fb2668e9b914c33f8fbfa8a4000611e35b38ade684555b16b1b93"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_ender_pearl_skewer.attachable.json": {
+      "before_sha256": "13869f25608d3c04b9e463b62aceaa3e0fd342d75aa42e7705d7c5f9fbef04ba",
+      "after_sha256": "f1bdbfc30593b6372ac5a355039dbc5e8ba380220d79eaa435f40f46cd089954"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_fish_skewer.attachable.json": {
+      "before_sha256": "392ab783dd356616344b2e90c079ea155ec53b0fe7527dcd26fceaf21c3128e3",
+      "after_sha256": "1af1595990bdc98bebf1a6e8095c9b3e310c3067a85f4231675f64beb68b9ab7"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_fried_egg_skewer.attachable.json": {
+      "before_sha256": "a33a5b64a03eb549db04e58f23b29b948120967fb7cb9ba71a006bcdb0e0688b",
+      "after_sha256": "60f287634b965fcd15b1fdd87579e9f5cc496ae3772cd911558045eda3c27b60"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_gluten_skewer.attachable.json": {
+      "before_sha256": "48ca6c0f87aa460eb0bcc03b7b16abb232f93783affe59183ca0e3c173257a21",
+      "after_sha256": "f75da7c16cb49baab98f56d593ad18c958ed7c2d4576eb3c277c5faedf5b24a4"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_gluten_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "57277fc601970383863d768057f6644ddf5e3bb0e1885c5ef1a19eaee6e543b5",
+      "after_sha256": "8d45b67d1455bf06e57a6ac02be8fd64a7880b44c0ed635008efcd660ebd9f12"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_golden_skewer.attachable.json": {
+      "before_sha256": "2df2b4487175c705540e147c361af38e7c55ccf60d357bb0313a9aa35f6482b8",
+      "after_sha256": "f9c5fc37942499814e082a2e0525dcf9ed74577b91ba8d9556d87f890ad78d22"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_golden_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "575f144d26366bf000b3b9c2da7526cccb204855d0f4f4bee867048705c80317",
+      "after_sha256": "0abf0f955d09c285d77f113d0d21b44e5b42734f2c50081f4b60763db26000ee"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_lamb_skewer.attachable.json": {
+      "before_sha256": "d60346f07f0c101df5f795c2d163fa93993a37def8de25fc54eeacedb88f591a",
+      "after_sha256": "f02e3b6634214f7f8d452e00dc9256eda547bebcf1ae11bcd82494eda3636d98"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_lamb_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "42c36638bc5c527dc99af14e5f2acd923887c99a43e3740aede21fb4583925fd",
+      "after_sha256": "b8254b9bbba26877955c9cf79e4b813082822e068d8c260219558975e296ecce"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_meat_and_bone_skewer.attachable.json": {
+      "before_sha256": "1a4670149df0542418980e7132c1acc80b9a60e77d9dd82e63188044030b93cb",
+      "after_sha256": "5cf5ceb6aa6b2ee7ef8130b4189ac8ce8ca4ada16c46505a5678d16496b1766f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_meat_and_bone_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "50238f2c69545052df1e3f10986c4ce1c87908313bb03166610995ddb8be05c7",
+      "after_sha256": "88c56a48b84b4d67abf3ec51fb7b683618c61c99113119218604220ca202e6be"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_meatball_skewer.attachable.json": {
+      "before_sha256": "a5e5e19be7d1b6f3a82229437ba5e78c4b5e57a21b0a97ccab2337eef48918a8",
+      "after_sha256": "779c2ac9381146dfa26a7879c58a68b9437599b8479ad39a27f2997a198ce0c5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_meatball_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "a2a1ca7e857c18c0afd363b23f29d85b0a52dc427cc1f4919c15027bad5c2903",
+      "after_sha256": "53ed0a88357598b33f0565ae3dcfafecef17a59e867a230a4eeb4c334c34b22c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_mid_wing_skewer.attachable.json": {
+      "before_sha256": "d167bf113c17c5aefe2a35a7fdcee5be7b7cbfc5b7765dcb46ccb95476ed8fbc",
+      "after_sha256": "3cda478b4e52ff385176f319b7a08f7bc206dc0669d74d2e3dade7741c5c730c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_mid_wing_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "957736da6f48275bd4a08c208cd914d86b0e516df4f8639c1c63bebcb3424cc0",
+      "after_sha256": "6c1c324b65df6cb3d5b6164a70f6e7ca30ca8c9ecb7f57c2be7956ea30e0b1cd"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_mushroom_skewer.attachable.json": {
+      "before_sha256": "a6e7ddf368e8572a1b643967975a98fbc2c690e96a10606d673c193db8f3885a",
+      "after_sha256": "c9356ffc66f0bf88a8978e614432cb2cde7df7ec2449c070b0b47d38b9a31341"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_mushroom_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "5eee5d5ab08af322e5dfdab4628f432ba45cae55dd9777d849dc8f96c1761382",
+      "after_sha256": "8407477f93cabe6120fd98384391aa3a4cdd72b42ac90d318d9dbc06c048ab4d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_pork_belly_skewer.attachable.json": {
+      "before_sha256": "839e945d82cf6f348fee4e9ff89e11b2473b95fd529e3026f89b5efee32a2058",
+      "after_sha256": "202873057d70b1ba2b20d041d4187ed8ee6732f9dd8a685fac4c3ed6f81af812"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_potato_slice_skewer.attachable.json": {
+      "before_sha256": "7cd0d3f5d15c6a69027bcf3fb9995d8c02612b789a900e4c1d58eff35c468746",
+      "after_sha256": "1cc9269ce0e264626a5c8fecf957a7950249e477a98f73491636feff36eaa8bb"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_potato_slice_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "0a145aedbb812e915e22cae0a5edf8251e52d2998b8161cf2c475d64c750430c",
+      "after_sha256": "3f756780328091e2493ca52e2aad204216c748ac09b7e3403234aaddd24a4f11"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_slime_skewer.attachable.json": {
+      "before_sha256": "29ab50769c393c0f76724b83fd18cc83e51de75d3fffbb53caa9cbc36897d40c",
+      "after_sha256": "3fb5b90f603b8950c5b6553c29f44e6bba9f511a1af7f933491e19037674ef96"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_squid_tentacle_skewer.attachable.json": {
+      "before_sha256": "6eb5da70d620091de0b4b7604966eea02f6f424a3b19dc8b2a27f7481d0e71fc",
+      "after_sha256": "15d8a34d133f13b6a51833e37708618388f281dc31b4dd6f4db0a6f6b5cfc46f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_squid_tentacle_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "17afad6971354b2135e1889206a03b35d280f4ea92d04885e39c55479db50580",
+      "after_sha256": "7cfaf529cc3eb93a319096883510ad5b154c530883a6c8646a4d7ee996705b6a"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilled_sweet_potato_sheet_skewer.attachable.json": {
+      "before_sha256": "bed496bb696e90bde424a7ea612e3566e69ae96b4e375cc223b1b57c501ffb37",
+      "after_sha256": "c8e382de7933913651d6e62955d6dd0ec879e996e15fb19b1e5e9e56eab89f58"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/ordinary_skewer.attachable.json": {
+      "before_sha256": "3b6316f03f200cf854a4c41456c9ae26d5a39ca441f1fd8de64f0de82ce87ee8",
+      "after_sha256": "d5280c9f1ea508531a7e7d9301f5b33c5530a3752c43dc1af6f7b06c2a0d8a38"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/ordinary_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "85cc24151ca0d6c8c01f3e659a113c6e1b0c07cdaba60d2010f0bf99b4892095",
+      "after_sha256": "e95950a91633da27f78f2138ddcd9c2181d11c3d025a605cfa0256b06574e347"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_beef_skewer.attachable.json": {
+      "before_sha256": "1496edcd27d55730a4fc4efd2fe6f75d6bb64ae4136925a24d5bce60f7983b39",
+      "after_sha256": "93d8283f8fd69a5dfe1f937ee992ead6970a91a0e6b554d5e5902a6ea971735d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_bun_slice_skewer.attachable.json": {
+      "before_sha256": "e83aa817bffcd7cf07c7802d798e5326e2d8773134d36eca15f79cf967628fe5",
+      "after_sha256": "c311adb68ed9e34872dc0f675e461cfbd7be39b5eb2fb8f1b1a9d600fccb0e9f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_caterpillar_skewer.attachable.json": {
+      "before_sha256": "5d801424912d002a66c7438d047e6c27b668600febd4f0a853e8ecb0d2a3bfd6",
+      "after_sha256": "de2a86d798f759501c1199fa362cf29b003dbefb0aa2a65d46bf5dde28558035"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_chicken_skin_skewer.attachable.json": {
+      "before_sha256": "a789bdb13611cb7fa562b53076f867a8093ab1d7ed9074660ee5e8051e8b603b",
+      "after_sha256": "1192bde5776acc61abb159bf953f19b0a108ee397a70839769943eb589deafde"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_ender_pearl_skewer.attachable.json": {
+      "before_sha256": "a7a3fa5f40ed8003fd79c079b33a37ee91b0226b794e330420a70812ec177f32",
+      "after_sha256": "d12f2d2db685f3a21630a0e0ff67417fdfe1cca9ba189f1669742999b4b56270"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_fish_skewer.attachable.json": {
+      "before_sha256": "748e77fa8e603e609a11045c81b30bc367408c69e74c49334dc0d932bcf515bb",
+      "after_sha256": "3ef7ab670046e8851eaa2c0de0df2c3a446f57f6ebf488857288cb1e20381c5d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_fried_egg_skewer.attachable.json": {
+      "before_sha256": "8a802a7c2ffb9e739f89e82dfd6dfcdafe2944e4249fc1453551c5d286e74f88",
+      "after_sha256": "2fe53f0be63ce8054ad5f6bfb02aa04a799cb45fd8d2db65ff829aaef1412501"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_gluten_skewer.attachable.json": {
+      "before_sha256": "73d39b5ed95c9d4f5111c712f81f444475ad340c34064185db4661b3a4320604",
+      "after_sha256": "a30d4cf0b6ed6db2a4fcea29d82bd17549e89a17575f455c191bfcca26c1daf5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_gluten_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "87ade3874667c348cb2f291eab72ed16035cba91629913a03879591362f1b4fc",
+      "after_sha256": "44b509945c86be50407c05b6c83474fa1bb58299600adcebbd2417825198a72e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_golden_skewer.attachable.json": {
+      "before_sha256": "06c94a72b15aed814009b8641fd1761ec72087ffa2eac5e04a251cd42f7cc90c",
+      "after_sha256": "016d54ebb4ef047a6340735b9c6dfe17d9dbe60b3d7c56679be35c9eaacb6f67"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_golden_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "98f8136f1ecfe8d57afa94dbe12d6dda3def6e74266fa0efafed671df0c63332",
+      "after_sha256": "797490104e5221eb16b632c00b6ef70913eb7799df8461a55a5dff7af6347b42"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_lamb_skewer.attachable.json": {
+      "before_sha256": "420cb390950a66ed04c72980cf3d6529ef38996f6a3109a7eafae04c5bbcec30",
+      "after_sha256": "b0a2addc803233c3384135f13461d629d4adfa595e1acb507e8f6ddb2f56e207"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_lamb_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "bd6627f97376de4d52d2dfec9ba9cf92a2154b124486b9712820bf298f8ff2af",
+      "after_sha256": "12e492348d0f9e6979414125618f8d9a8b23abd6b89fdcc9272c27f624c1c7c0"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_meat_and_bone_skewer.attachable.json": {
+      "before_sha256": "7637a15c22be6eb8994e459d03ead7fd6a903dac8ee54580b4437296681a717b",
+      "after_sha256": "82877db0308be1782ecc98b1cc40d61cec56f7832d1b90ecc0cd78c0be81d22e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_meat_and_bone_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "6d1dd8f804134785cc949a508f9aa394ae08586dd5cdafa9ff1d503a3c8499ec",
+      "after_sha256": "9527aa518f08fb0cd2da875f3cca59aa4a71733f56c253565cc391babba49aad"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_meatball_skewer.attachable.json": {
+      "before_sha256": "ca49bae9013cc458b6ab85a0f9c9adac7ae0965434bbe13687e382a9b473fa39",
+      "after_sha256": "8cc8e11d8c674ab1c5d3448ccb76454a8712342bb40f9e36992d7c26bc364792"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_meatball_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "bb29c491ffe2c474aa7fb1409c358a6e1848b5883457caf16e77164e595ae8b8",
+      "after_sha256": "a7210ee8f83e561be460d7955e815d91adf17c481141b87e7dbb5e0bddd3a1c8"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_mid_wing_skewer.attachable.json": {
+      "before_sha256": "d7dfde30aa3f3b357266cb584b585c92ba4f2ffdbcc1efdd15fa49eb5d436cd0",
+      "after_sha256": "be1b78f2e3cd358dff7e3887728e683b911d484cc858f324e423fbf159bf38e3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_mid_wing_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "ccc22543e677684a30a9baa276e017d6fabf0b9fbabcb2c4b6b590cc4c124cdc",
+      "after_sha256": "f81a522a5e132f258b561527cedd69c80debdb40cf6b65c7ea1f46d755eb03fb"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_mushroom_skewer.attachable.json": {
+      "before_sha256": "dfa8a522f4d6a98f382f82a1b7d591c143f12e9127fb838aad0511bf965e6c04",
+      "after_sha256": "cd67c8d83408300216b16b3b0061b86f4316adbd5829e980c08d9539495c6d50"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_mushroom_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "dd3b7fa5339b818988878f4ec10e158601ec31e2c455018d36638de451c22271",
+      "after_sha256": "10aed40723750499c2a12ce17e2f2ac75e88362e4ce02c21315c28ee4124c808"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_pork_belly_skewer.attachable.json": {
+      "before_sha256": "456cf7acc3ad72b3cc0bf03c3886e750c88f43f8c31f26758882c2edc97aada8",
+      "after_sha256": "be2bbb0ae615f6408ed8d428c4a133a07bf2e675274d16978a689586d5c6446c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_potato_slice_skewer.attachable.json": {
+      "before_sha256": "19e3f2cfd8d581f642154c3d7668f0ce2e98cad0a3534c16a0f585a0f81a6b07",
+      "after_sha256": "a8783fe20a445b9f7e5a69e789924fb942f48e3b6b43d0467bdc98be99dc311f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_potato_slice_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "1f27582e07c67ee91f5599c1906bc69b6b1dfc09337fc28c96394a0678333a15",
+      "after_sha256": "98d15c548117e321ba65d843f5e3506b4d962bcd60b08b84146febad632509f3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_slime_skewer.attachable.json": {
+      "before_sha256": "f92e6fd6f4e95bd24eb026f119cc3e6c45cb33587e96190236b5d00d097b22c5",
+      "after_sha256": "053820d10f1a1a59f0e0e3155983e1b88ff39fddf6c27dd101c2a1ad2f4c6749"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_squid_tentacle_skewer.attachable.json": {
+      "before_sha256": "d2cffa9f26ff21fbe1c4ff58f6245fe8244cf74b03d3cb642a70c468409d211f",
+      "after_sha256": "15198b32c9285dd95908eb852dfccbd5b26e0146a11a912fe5a760aa979f4d42"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_squid_tentacle_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "79329264ab13f1779615e055379b906cfd2c7d906f7090d5927211cfbf8f297b",
+      "after_sha256": "39f7ad0280c0c5bb1676b4764fd9cf8f3081264476cb8ed16743e87c312701fb"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/raw_sweet_potato_sheet_skewer.attachable.json": {
+      "before_sha256": "b9a0af61103244f8632cad68d2a40d10e568dccd4ef2d8827aa38786502443f6",
+      "after_sha256": "5e4fe2c898b7aec7ebc38fc8dbff15c07bcb18d71aadeaa49a9c79fbab6b42f5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer.attachable.json": {
+      "before_sha256": "4b747bf8465a5f2da244bc54db8064a5968868d40b2f45200db2fc0410869396",
+      "after_sha256": "0c7c2aa527ce52569d66f2338dccbb0494225066078d7c7282c6951a76f07942"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer_java_three_alt.attachable.json": {
+      "before_sha256": "53be0af73651a9abc185eaa794facbb2b0520c3b41bbd31194a835ef2789cd97",
+      "after_sha256": "43ddcb8c9f4b0bdba5a46c8652a35be7e19ef4423b05f85a3da56adef263b624"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/unfinished_skewer.attachable.json": {
+      "before_sha256": "f889ab6440aab6e6c4132088aff48d08e74a9a081bdc8efdaaef2144d4cb2b14",
+      "after_sha256": "d8a71f18e0d4241880547251e2ce243040a4134ee46d761da8f0d585f8bbae42"
+    }
+  }
+}

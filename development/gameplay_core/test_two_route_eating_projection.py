@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import build_caterpillar_eating_projection as caterpillar
 import build_eating_motion as motion
 import build_two_route_eating_projection as scoped
+from eating_owner_context import reference_bytes
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
@@ -23,13 +24,13 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.current = scoped.MAIN.read_text()
         cls.original = scoped.restore_main(cls.current)
-        cls.shared = json.loads(scoped.SHARED.read_bytes())
+        cls.shared = json.loads(reference_bytes(scoped.SHARED))
         cls.clips = scoped.animations(scoped.SHARED.read_bytes())
 
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
@@ -61,9 +62,9 @@ class TwoRouteProjectionTests(unittest.TestCase):
                 eating_dispatch_source(self.current, version)
 
     def test_complete_native_clip_bytes_and_only_arm_position_scale_changes(self):
-        self.assertEqual(scoped.DEDICATED.read_bytes(), scoped.encoded(self.clips))
-        self.assertEqual(hashlib.sha256(scoped.DEDICATED.read_bytes()).hexdigest(), scoped.NATIVE_CLIPS_SHA256)
-        self.assertEqual(hashlib.sha256(scoped.SHARED.read_bytes()).hexdigest(), scoped.SHARED_SHA256)
+        self.assertEqual(reference_bytes(scoped.DEDICATED), scoped.encoded(self.clips))
+        self.assertEqual(hashlib.sha256(reference_bytes(scoped.DEDICATED)).hexdigest(), scoped.NATIVE_CLIPS_SHA256)
+        self.assertEqual(hashlib.sha256(reference_bytes(scoped.SHARED)).hexdigest(), scoped.SHARED_SHA256)
         for route in scoped.ROUTES:
             old = self.shared['animations'][route['original_clip']]
             new = self.clips['animations'][route['dedicated_clip']]
@@ -103,7 +104,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
         fixtures = json.loads((ROOT / 'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
         for relative, digest in fixtures['runtime_file_sha256'].items():
-            self.assertEqual(hashlib.sha256((scoped.P / relative).read_bytes()).hexdigest(), digest, relative)
+            self.assertEqual(hashlib.sha256(reference_bytes(scoped.P / relative)).hexdigest(), digest, relative)
         # Existing generation must not strip the scoped selector on a later run.
         self.assertEqual(motion.build()[scoped.MAIN], self.current)
 

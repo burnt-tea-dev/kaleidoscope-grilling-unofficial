@@ -55,7 +55,8 @@ def motion_frame(profile,hand,t):
  local=chain(rigid_inverse(basis),delta,basis);r=bedrock_rotation(local)
  return [-local[0][3]/.8,local[1][3]/.8,local[2][3]/.8],r
 def build(attachable_overrides=None, *, two_route_camera=False):
- overrides={} if attachable_overrides is None else attachable_overrides
+ from eating_owner_context import legacy_document
+ overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
@@ -77,6 +78,7 @@ def build(attachable_overrides=None, *, two_route_camera=False):
  paths=set((RP/'attachables').glob('*.json'))|{p for p in overrides if p.parent==RP/'attachables'}
  for p in sorted(paths):
   doc=json.loads(json.dumps(overrides[p])) if p in overrides else json.loads(p.read_text())
+  doc=legacy_document(doc)
   d=doc['minecraft:attachable']['description'];identifier=d['identifier'];suffix='_java_three_alt'
   base=identifier[:-len(suffix)] if identifier.endswith(suffix) else identifier
   profile=table.get(base)
@@ -131,6 +133,9 @@ def build(attachable_overrides=None, *, two_route_camera=False):
   from build_two_route_eating_projection import augment as augment_two_route
   output=augment_two_route(output)
  from eating_owner_context import augment as augment_owner_context
+ # Nonedible partial skewers still use the player's eating-hand idle guard.
+ partial=RP/'attachables/unfinished_skewer.attachable.json'
+ if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
  return augment_owner_context(output)
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""

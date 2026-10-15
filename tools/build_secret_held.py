@@ -52,7 +52,8 @@ def build():
  # Eating aliases/dispatch are added by the one shared motion generator.
  target=RP/'attachables/secret_skewer.attachable.json'
  if target.exists():
-  existing=json.loads(target.read_text())['minecraft:attachable']['description']
+  from eating_owner_context import legacy_document
+  existing=legacy_document(json.loads(target.read_text()))['minecraft:attachable']['description']
   for key,value in existing.get('animations',{}).items():
    if key.startswith(('eat_','fp_eat_')):attach['minecraft:attachable']['description']['animations'][key]=value
   # Shared motion owns first-person projection guards as well as eat aliases.
@@ -124,7 +125,8 @@ def build():
  # absent THREE helper remain unchanged; this avoids a stale one-pass generator.
  alt_target=RP/'attachables/secret_skewer_java_three_alt.attachable.json'
  if alt_target.exists():
-  alt=json.loads(alt_target.read_text());ad=alt['minecraft:attachable']['description'];ad['geometry']=copy.deepcopy(attach['minecraft:attachable']['description']['geometry']);ad['textures']=copy.deepcopy(textures)
+  from eating_owner_context import legacy_document
+  alt=legacy_document(json.loads(alt_target.read_text()));ad=alt['minecraft:attachable']['description'];ad['geometry']=copy.deepcopy(attach['minecraft:attachable']['description']['geometry']);ad['textures']=copy.deepcopy(textures)
   ad['render_controllers']=copy.deepcopy(attach['minecraft:attachable']['description']['render_controllers']);ad['scripts']['initialize']=copy.deepcopy(scripts['initialize'])
   ad['scripts']['pre_animation']=[r for r in ad['scripts']['pre_animation']if not r.startswith('v.kg_secret_')]+[r for r in scripts['pre_animation']if r.startswith('v.kg_secret_')and not r.startswith(('v.kg_secret_owner_occupied = ','v.kg_secret_piece_visible = '))]+[owner_occupancy(ad['identifier']),'v.kg_secret_piece_visible = 0;']
   output[alt_target]=alt
@@ -134,7 +136,8 @@ def build():
  geometries[:]=[geo for geo in geometries if geo not in helper_variants]
  output[RP/'models/entity/secret_helper_sprites.geo.json']='{"format_version":"1.21.0","minecraft:geometry":[\n'+',\n'.join(json.dumps(geo,separators=(',',':'))for geo in helper_variants)+'\n]}\n'
  output.update(build_palettes())
- return augment_terminal(augment_idle(output))
+ from eating_owner_context import augment as current_context
+ return current_context(augment_terminal(augment_idle(output)))
 
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

@@ -12,6 +12,7 @@ from build_plate_held import build as plate_held_assets
 import java_dual_eating_frames as dual
 import java_active_eating_frames as active
 from test_eating_observer_projection import node
+from eating_owner_context import reference_bytes,PREVIOUS_EATING_CONTEXT_BASE
 class SecretActiveCalibration(unittest.TestCase):
  def test_each_native_pose_matrix_preserves_orientation_and_only_changes_world_origin(self):
   for profile in PROFILE_IDS:
@@ -23,7 +24,7 @@ class SecretActiveCalibration(unittest.TestCase):
       for row in range(4):self.assertEqual(result[row][:3],target[row][:3])
       for axis,(a,b)in enumerate(zip(point(target,[0,0,0]),point(result,[0,0,0]))):self.assertAlmostEqual(b-a,3.41 if axis==1 else 0,places=10)
  def test_only_four_profile_clips_arm_y_channels_get_exact_owned_hand_guard(self):
-  p=RP/'animations/java_eating_player.animation.json';before=public_json(p.relative_to(ROOT))['animations'];after=json.loads(p.read_text())['animations'];uncalibrated=deepcopy(before);cases=[]
+  p=RP/'animations/java_eating_player.animation.json';before=public_json(p.relative_to(ROOT))['animations'];after=json.loads(reference_bytes(p))['animations'];uncalibrated=deepcopy(before);cases=[]
   # The public witness already includes the repair. Reconstruct the source
   # counterfactual only by removing each verified, exact owned Y suffix.
   # This is source conservation, not proof of an unavailable older revision.
@@ -126,7 +127,7 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
     old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True)
     self.assertNotEqual(old.returncode,0,'caterpillar exception must only admit a new file')
     reviewed=subprocess.check_output(['git','show',REVIEWED_CATERPILLAR_CAMERA_BASE+':'+relative],cwd=ROOT)
-    self.assertEqual(path.read_bytes(),reviewed,'Scoped caterpillar clip differs from complete reviewed G126 source')
+    self.assertEqual(reference_bytes(path),reviewed,'Scoped caterpillar clip differs from complete reviewed G126 source')
     self.assertEqual(set(json.loads(reviewed)['animations']),{'animation.kg_probe_caterpillar.'+kind+'.one.right'})
     allowed.add(relative)
   if version>=(2,8,127):
@@ -134,9 +135,13 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True)
    self.assertNotEqual(old.returncode,0,'two-route exception must only admit a new file')
    reviewed=subprocess.check_output(['git','show',REVIEWED_TWO_ROUTE_ATLAS_BASE+':'+relative],cwd=ROOT)
-   self.assertEqual(path.read_bytes(),reviewed,'Two-route clips differ from complete reviewed G127 source')
+   self.assertEqual(reference_bytes(path),reviewed,'Two-route clips differ from complete reviewed G127 source')
    self.assertEqual(set(json.loads(reviewed)['animations']),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
    allowed.add(relative)
+  for name in ('eating_motion.animation.json','java_eating_projection.animation.json','java_eating_player.animation.json'):
+   path=RP/'animations'/name
+   self.assertEqual(reference_bytes(path),subprocess.check_output(['git','show',PREVIOUS_EATING_CONTEXT_BASE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT))
+   allowed.add(str(path.relative_to(ROOT)))
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

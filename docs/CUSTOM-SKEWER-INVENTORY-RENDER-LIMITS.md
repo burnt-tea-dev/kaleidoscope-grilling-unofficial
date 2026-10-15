@@ -12,6 +12,8 @@ route from arbitrary ordered skewer ingredients to three independently colored
 inventory-icon layers. This is a bounded support finding, not proof that every
 undocumented or future JSON UI technique is impossible.
 
+2026-10-15 G143 整合時重新閱讀 Microsoft stable icon 與自訂物品文件：仍未找到可由每個 ItemStack 的三份任意食材分別指定 tint／variant 的受支援 native inventory 路由。本輪沒有以單一 RGB dye、手持模型或離線合成圖冒充這個缺口完成。
+
 ## Version and source boundary
 
 - Target client/BDS: **1.26.52.3**; Grilling item format: **1.26.30**

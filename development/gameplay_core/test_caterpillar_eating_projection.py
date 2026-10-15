@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
 import build_eating_motion as motion
+from eating_owner_context import reference_bytes,augment as current_context
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
 assert FIX['source_predecessor']==SOURCE_PREDECESSOR_BASE
@@ -14,7 +15,7 @@ def encoded(x):return x if isinstance(x,bytes)else x.encode()if isinstance(x,str
 class CaterpillarProjectionTests(unittest.TestCase):
  def test_complete_native_reviewed_runtime_and_only_two_main_edits(self):
   for relative,sha in FIX['runtime_file_sha256'].items():
-   self.assertEqual(hashlib.sha256((P/relative).read_bytes()).hexdigest(),sha,relative)
+   self.assertEqual(hashlib.sha256(reference_bytes(P/relative)).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
   current=(scoped.BP/'scripts/main.js').read_text()
   # Preserve the original two-edit G126 comparison after verifying and
@@ -41,7 +42,7 @@ class CaterpillarProjectionTests(unittest.TestCase):
    retained=motion.build({path:source})
    with patch.object(scoped,'augment',side_effect=lambda output:output):
     previous=motion.build({path:source})
-  self.assertEqual({str(k):encoded(v)for k,v in two_route.augment(retained).items()},{str(k):encoded(v)for k,v in first.items()})
+  self.assertEqual({str(k):encoded(v)for k,v in current_context(two_route.augment(retained)).items()},{str(k):encoded(v)for k,v in first.items()})
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)

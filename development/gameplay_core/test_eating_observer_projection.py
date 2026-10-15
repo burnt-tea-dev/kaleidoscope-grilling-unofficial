@@ -40,9 +40,9 @@ class EatingObserverProjection(unittest.TestCase):
 const documents='''+json.dumps(documents)+''';
 const q={is_using_item:true,property:name=>name.endsWith('eat_hand')?1:name.endsWith('eat_profile')?5:1,
 is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0};
-const c={is_first_person:0,item_slot:'main_hand'};
+const c={is_first_person:0,item_slot:'main_hand',owning_entity:q};
 for(const rows of documents)for(const row of rows)for(const [alias,expr] of Object.entries(row)){
- const active=Boolean(new Function('q','c','return '+expr)(q,c));
+ const active=Boolean(new Function('q','c','return '+expr.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c));
  if((alias.startsWith('eat_')||alias.startsWith('fp_eat_')||alias==='probe_one_right')&&active)throw Error('FP displacement in TP: '+alias);
  if(alias==='tp_right'&&!active)throw Error('Native TP display suppressed');
 }
@@ -58,7 +58,7 @@ for(const profile of [1,2,3,4,5])for(const elapsed of [0,5,20,25,40,65,85,90,100
  const ticks=profile===3?100:90,props={eat_native_ticks:ticks,eat_elapsed_ticks:elapsed,eat_hand:1,eat_profile:profile};
  for(const remaining of [0,17,90,100,72000])for(const rows of scripts){
   const q={is_using_item:true,main_hand_item_use_duration:remaining,frame_alpha:.5,property:name=>props[name.split(':')[1]]};
-  const c={is_first_person:0,item_slot:'main_hand'},v={};
+  const c={is_first_person:0,item_slot:'main_hand',owning_entity:q},v={};
   evaluatePreAnimation(rows,q,c,math,v);
   if(v.kg_eat_seconds!==Math.min(elapsed,ticks)/20)throw Error('Observer borrowed owner timer');
   if(elapsed===0&&v.kg_bite_stage!==0)throw Error('Observer starts already bitten');
@@ -67,7 +67,7 @@ for(const profile of [1,2,3,4,5])for(const elapsed of [0,5,20,25,40,65,85,90,100
 // First person retains the measured native countdown convention unchanged.
 for(const rows of scripts){
  const q={is_using_item:true,main_hand_item_use_duration:70,frame_alpha:.5,property:name=>({eat_native_ticks:90,eat_elapsed_ticks:85,eat_hand:1,eat_profile:5})[name.split(':')[1]]};
- const c={is_first_person:1,item_slot:'main_hand'},v={};
+ const c={is_first_person:1,item_slot:'main_hand',owning_entity:q},v={};
  evaluatePreAnimation(rows,q,c,math,v);
  if(v.kg_eat_seconds!==19.5/20)throw Error('Owner clock changed');
 }
@@ -149,7 +149,7 @@ for(const row of cases)for(const hand of [1,2]){
  for(const seconds of times){
   const props={eat_native_ticks:maximum,eat_elapsed_ticks:Math.round(seconds*20),eat_hand:hand,eat_profile:{ONE:1,TWO:2,THREE:3,THREE_ALT:4,FOUR:5}[row.profile]};
   const q={is_using_item:true,main_hand_item_use_duration:0,frame_alpha:.5,property:name=>props[name.split(':')[1]]};
-  const c={is_first_person:0,item_slot:hand===1?'main_hand':'off_hand'},v={};
+  const c={is_first_person:0,item_slot:hand===1?'main_hand':'off_hand',owning_entity:q},v={};
   evaluatePreAnimation(row.script,q,c,math,v);
   const expected=row.boundaries.filter(x=>x<=Math.round(seconds*20)/20).length;
   if(v.kg_bite_stage!==expected)throw Error(row.id+' '+row.profile+' bite boundary at '+seconds);

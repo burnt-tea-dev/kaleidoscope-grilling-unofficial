@@ -3,6 +3,7 @@ import copy,hashlib,io,json,subprocess,tempfile,unittest
 from unittest.mock import patch
 from historical_source_refs import ROOT,encoded_listing,inventory,literal_refs,verify
 import public_source_witness as public
+from eating_owner_context import reference_bytes
 
 class HistoricalSourceRefsTests(unittest.TestCase):
  def fixture(self,text,rows):
@@ -12,12 +13,12 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':34,'commits':34})
+  self.assertEqual(verify(),{'refs':37,'commits':37})
   self.assertEqual(set(inventory()),literal_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
   self.assertIn(meta['commit'],inventory());self.assertEqual(meta['tree'],public.PUBLIC_SOURCE_TREE)
-  source=public.public_bytes(path);self.assertEqual(path.read_bytes(),source)
+  source=public.public_bytes(path);self.assertEqual(reference_bytes(path),source)
   with patch.object(Path,'read_bytes',return_value=source+b'\n'):
    with self.assertRaises(AssertionError):public.assert_public_bytes(self,path)
   wrong=dict(meta,files=dict(meta['files']));wrong['files'][path.relative_to(ROOT).as_posix()]='0'*64
@@ -168,7 +169,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
     original=public.public_bytes(relative);repaired=public.reviewed_held_bytes(relative)
     self.assertNotEqual(original,repaired)
     self.assertEqual(hashlib.sha256(original).hexdigest(),public.witness()['files'][relative])
-    self.assertEqual((ROOT/relative).read_bytes(),repaired)
+    self.assertEqual(reference_bytes(ROOT/relative),repaired)
     public.assert_public_bytes(self,ROOT/relative)
     with patch.object(Path,'read_bytes',return_value=repaired+b'\n'):
      with self.assertRaisesRegex(AssertionError,'outside reviewed scope'):
@@ -257,7 +258,10 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   before=public.expected_main_bytes((2,8,140));current=public.expected_main_bytes((2,8,141))
   self.assertIn(HUD_START_SOURCE_BASE,inventory())
   self.assertEqual(current,before.replace(HUD_START_BEFORE.encode(),HUD_START_AFTER.encode(),1))
-  self.assertEqual(current,(ROOT/public.MAIN_PATH).read_bytes())
+  from eating_hud_source_witness import PREPARATION_BEFORE,PREPARATION_AFTER
+  actual=(ROOT/public.MAIN_PATH).read_bytes()
+  self.assertEqual(actual.count(PREPARATION_AFTER.encode()),1)
+  self.assertEqual(current,actual.replace(PREPARATION_AFTER.encode(),PREPARATION_BEFORE.encode(),1))
   self.assertEqual(dispatcher_witness_source(current.decode()).encode(),public.expected_main_bytes((2,8,129)))
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):apply_hud_start_hook(before+b'\n')
   from build_two_route_eating_projection import restore_main
