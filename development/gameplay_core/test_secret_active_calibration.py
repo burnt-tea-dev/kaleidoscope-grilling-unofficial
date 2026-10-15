@@ -142,6 +142,15 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    path=RP/'animations'/name
    self.assertEqual(reference_bytes(path),subprocess.check_output(['git','show',PREVIOUS_EATING_CONTEXT_BASE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT))
    allowed.add(str(path.relative_to(ROOT)))
+  # One exact new player clip reuses the current G143 G127 curve and clock.
+  # Compare every field; only its exact-ID blend gate and clip name differ.
+  from build_review_three_eating_projection import PLAYER,gate
+  path=RP/'animations/review_three_player.animation.json';relative=str(path.relative_to(ROOT))
+  template=deepcopy(json.loads((RP/'animations/kg_isolated_two_route_player.animation.json').read_text())['animations']['animation.kg_isolated_two_route_v1.player.pearl_three.right'])
+  template['blend_weight']=gate()
+  self.assertEqual(json.loads(path.read_text()),{'format_version':'1.8.0','animations':{PLAYER:template}})
+  self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
+  allowed.add(relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

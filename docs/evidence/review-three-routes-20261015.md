@@ -22,7 +22,7 @@ A live gate common to player blend, item motion, legacy suppression, helper visi
 
 ## Local tests
 
-- New exact-route suite: ten tests, 640 actual generated Molang state contexts; generated registry branch rejection; exact main inverse; unchanged G127 channels; all old modified document fields reversible; missing/model drift rejection.
+- New exact-route suite: eleven tests, 640 actual generated Molang state contexts; generated registry branch rejection; exact main inverse; unchanged G127 channels; all old modified document fields reversible; missing/model drift rejection.
 - Actual production event/settlement harness: 379 passing cases, including all 20 IDs x both hands x helper occupied/empty; no food or helper writes introduced.
 - Existing G127 source suite: five passing tests; G126 source suite: four passing tests. Historical witnesses remain immutable and compare after exact new-route inversion.
 - Full generation followed by --check passes; full canonical source run is pending. Only exact owner-qualified new route fields are inverted; unrelated existing property/clock strings remain untouched and mutation-rejected.

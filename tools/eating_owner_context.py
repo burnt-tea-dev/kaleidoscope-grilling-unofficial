@@ -105,6 +105,8 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from build_review_three_eating_projection import MAIN, restore_main
+    if path == MAIN:current = restore_main(current.decode('utf-8')).encode('utf-8')
     from build_review_three_eating_projection import predecessor_document, ids, RP
     route_paths = {RP/'attachables'/(item.split(':')[1]+'.attachable.json') for item in ids()} | {RP/'render_controllers/java_eating_player.render_controllers.json'}
     if path in route_paths:

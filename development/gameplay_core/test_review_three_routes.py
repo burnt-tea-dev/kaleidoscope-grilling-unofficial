@@ -30,6 +30,12 @@ class ReviewThreeTests(unittest.TestCase):
   with patch.object(pathlib.Path,'read_bytes',return_value=(json.dumps(bad,ensure_ascii=False,indent=2)+'\n').encode()):
    with self.assertRaises(AssertionError):context.reference_bytes(p)
 
+ def test_public_main_witness_still_rejects_unrelated_mutation(self):
+  from public_source_witness import assert_public_bytes_with_g71_bottles
+  assert_public_bytes_with_g71_bottles(self,r.MAIN)
+  original=r.MAIN.read_bytes()
+  with patch.object(pathlib.Path,'read_bytes',return_value=original+b'\n// unrelated change\n'):
+   with self.assertRaises(AssertionError):assert_public_bytes_with_g71_bottles(self,r.MAIN)
  def test_alt_variant_generation_preserves_every_existing_output(self):
   from build_native_eating_variants import build
   output=build()

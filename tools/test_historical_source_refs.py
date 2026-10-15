@@ -4,6 +4,7 @@ from unittest.mock import patch
 from historical_source_refs import ROOT,encoded_listing,inventory,literal_refs,verify
 import public_source_witness as public
 from eating_owner_context import reference_bytes
+from eating_owner_context import reference_bytes
 
 class HistoricalSourceRefsTests(unittest.TestCase):
  def fixture(self,text,rows):
@@ -13,7 +14,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':37,'commits':37})
+  self.assertEqual(verify(),{'refs':38,'commits':38})
   self.assertEqual(set(inventory()),literal_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
@@ -88,7 +89,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertIn("const currentSat=player.getComponent('minecraft:player.saturation')",delta['operations'][1]['after'])
   self.assertEqual(public._apply_main_operations(before,delta),repaired)
   self.assertEqual(repaired,public._reviewed_conservation_source())
-  source=path.read_bytes();current=json.loads((ROOT/'baseline.json').read_text())['version']
+  source=reference_bytes(path);current=json.loads((ROOT/'baseline.json').read_text())['version']
   self.assertEqual(source,public.expected_main_bytes(current))
   if tuple(current)>=(2,8,124):
    seasoning=load('g124-main-reviewed-delta.json')
@@ -234,9 +235,9 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertEqual(len(delta['operations']),1)
   self.assertEqual(public._apply_main_operations(before,delta),repaired)
   from eating_hud_source_witness import dispatcher_witness_source
-  current=(ROOT/public.MAIN_PATH).read_text()
+  current=reference_bytes(ROOT/public.MAIN_PATH).decode()
   self.assertEqual(dispatcher_witness_source(current).encode(),repaired)
-  self.assertEqual((ROOT/public.MAIN_PATH).read_bytes(),public.expected_main_bytes(json.loads((ROOT/'baseline.json').read_text())['version']))
+  self.assertEqual(reference_bytes(ROOT/public.MAIN_PATH),public.expected_main_bytes(json.loads((ROOT/'baseline.json').read_text())['version']))
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):
    public._g127_two_route_bytes(before+b'\n')
   changed=copy.deepcopy(delta);op=changed['operations'][0];original=op['after'];op['after']+='\n'
@@ -259,7 +260,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertIn(HUD_START_SOURCE_BASE,inventory())
   self.assertEqual(current,before.replace(HUD_START_BEFORE.encode(),HUD_START_AFTER.encode(),1))
   from eating_hud_source_witness import PREPARATION_BEFORE,PREPARATION_AFTER
-  actual=(ROOT/public.MAIN_PATH).read_bytes()
+  actual=reference_bytes(ROOT/public.MAIN_PATH)
   self.assertEqual(actual.count(PREPARATION_AFTER.encode()),1)
   self.assertEqual(current,actual.replace(PREPARATION_AFTER.encode(),PREPARATION_BEFORE.encode(),1))
   self.assertEqual(dispatcher_witness_source(current.decode()).encode(),public.expected_main_bytes((2,8,129)))
