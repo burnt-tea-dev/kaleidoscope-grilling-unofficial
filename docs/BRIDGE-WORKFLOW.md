@@ -1,5 +1,7 @@
 # Canonical bridge. workflow
 
+Animation, item-display and held-render repairs first follow the [official-source-first workflow](ANIMATION-ITEM-REPAIR-WORKFLOW.md). It defines native Blockbench scoped preview, repeatable camera/playback setup, and separate editor/runtime/client evidence before canonical export.
+
 Open the repository root `config.json` with **bridge. 2.7.54**. It points directly to the BP/RP paths in `baseline.json`; generated builds and historical asset workspaces are not release input.
 
 ## Before editing
