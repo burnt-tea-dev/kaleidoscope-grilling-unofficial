@@ -22,7 +22,8 @@ def dispatcher_witness_source(text):
     marker = "import {showJavaEatingHud,hideJavaEatingHud,forgetJavaEatingHud}"
     if marker not in text:
         return text
-    result = text
+    from public_source_witness import performance_witness_source
+    result = performance_witness_source(text)
     if PREPARATION_AFTER in result:
         if result.count(PREPARATION_AFTER) != 1:
             raise ValueError('Ambiguous independent eating preparation hooks')

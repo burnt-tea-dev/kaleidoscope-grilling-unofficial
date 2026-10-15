@@ -117,6 +117,7 @@ REVIEWED_SCENE_INTERACTION_BASE = '2ef4b7b6ffa782316378dc5d8fef3f9217b098bf'
 REVIEWED_CATERPILLAR_CAMERA_BASE = '488b4402434447f516dfa5bf87f1d5e7e1e9f483'
 REVIEWED_TWO_ROUTE_ATLAS_BASE = '72e0da67201ce3563fcae07438eb6512f481bcf6'
 REVIEWED_EATING_PREPARATION_BASE = '8e8d6fceda6bf293501964ff1698faecb8ba0cb5'
+REVIEWED_PERFORMANCE_BASE = 'b0267c295305a1bc6a0c1e6a0c01e3f812b149f1'
 NUTRITION_G114 = b"""function addSecretNutrition(player,stack,meta){
  const d=dynamicFood(stack),h=player.getComponent('minecraft:player.hunger'),sat=player.getComponent('minecraft:player.saturation');if(!d||!h||!sat)return;
  const hunger=Math.min(h.effectiveMax,h.currentValue+d.nutrition);h.setCurrentValue(hunger);
@@ -346,6 +347,37 @@ def _local_bottle_main_bytes(expected, version):
     return expected
 
 
+@lru_cache(maxsize=1)
+def _performance_sources():
+    return tuple(subprocess.check_output(['git', 'show', commit + ':' + MAIN_PATH], cwd=ROOT)
+                 for commit in (REVIEWED_EATING_PREPARATION_BASE, REVIEWED_PERFORMANCE_BASE))
+
+
+def _g144_performance_bytes(expected):
+    delta = _main_delta('g144-main-reviewed-delta.json')
+    assert delta['path'] == MAIN_PATH and delta['release'] == [2, 8, 144]
+    assert delta['reviewed_commit'] == REVIEWED_PERFORMANCE_BASE and len(delta['operations']) == 1
+    before, reviewed = _performance_sources()
+    assert expected == before, 'G144 performance delta has the wrong immutable preimage'
+    repaired = _apply_main_operations(expected, delta)
+    assert repaired == reviewed, 'G144 public source differs outside exact reviewed effect-pass delta'
+    return repaired
+
+
+def performance_witness_source(text):
+    """Reverse the exact reviewed effect pass for the old dispatcher witness."""
+    delta = _main_delta('g144-main-reviewed-delta.json')
+    _g144_performance_bytes(_performance_sources()[0])
+    operation = delta['operations'][0]
+    if operation['after'] in text:
+        if text.count(operation['after']) != 1:
+            raise ValueError('Ambiguous reviewed G144 effect pass')
+        return text.replace(operation['after'], operation['before'], 1)
+    if '  // One local snapshot' in text or '  const fx=readFx(p);' in text:
+        raise ValueError('Incomplete reviewed G144 effect pass')
+    return text
+
+
 def expected_main_bytes(version, *, local_bottles=False, proposal=None):
     """Published G73/G74 and local G71-G73 remain distinct; G75 adds one plate fix."""
     version = tuple(version)
@@ -446,6 +478,8 @@ def expected_main_bytes(version, *, local_bottles=False, proposal=None):
             expected = _apply_main_operations(expected, delta)
             reviewed = subprocess.check_output(['git', 'show', REVIEWED_EATING_PREPARATION_BASE + ':' + MAIN_PATH], cwd=ROOT)
             assert expected == reviewed, 'G143 public source differs outside exact preparation-isolation delta'
+        if version >= (2, 8, 144):
+            expected = _g144_performance_bytes(expected)
         return expected
     if local_bottles:
         return _local_bottle_main_bytes(original, version)

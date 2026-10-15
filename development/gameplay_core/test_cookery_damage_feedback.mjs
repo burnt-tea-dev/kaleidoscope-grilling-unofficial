@@ -37,7 +37,9 @@ function harness({legacy=false,draw=.5,worldCaptureBefore=false}={}){
   main.slice(main.indexOf('world.afterEvents.entityHurt.subscribe(e=>{'),main.indexOf('function canUseSecretSkewer('));
  vm.runInContext(handler,context);
  const line=worldCaptureBefore?flatulenceWorld.before_source.line:main.split('\n').find(x=>x.includes('const sneak=!!p.isSneaking'));
- return {callbacks,get pitchDraws(){return pitchDraws},hurt:event=>callbacks.entityHurt?.(event),tick:entity=>{context.p=entity;vm.runInContext('(()=>{'+line+'})()',context)}};
+ const snapshot=worldCaptureBefore?'':main.split('\n').find(x=>x.trim()==='const fx=readFx(p);');
+ assert.ok(worldCaptureBefore||snapshot,'Current effect feedback uses the production local snapshot');
+ return {callbacks,get pitchDraws(){return pitchDraws},hurt:event=>callbacks.entityHurt?.(event),tick:entity=>{context.p=entity;vm.runInContext('(()=>{'+snapshot+line+'})()',context)}};
 }
 function expectSlow(target){assert.equal(target.applied.length,1);const [name,ticks,options]=target.applied[0];assert.equal(name,'slowness');assert.equal(ticks,100);assert.equal(options.amplifier,1);assert.equal(options.showParticles,true)}
 test('a responsible living attacker applies authored Hinder on projectile damage; the old melee-only handler misses it',()=>{

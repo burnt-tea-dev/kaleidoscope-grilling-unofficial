@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.143",
-  "tag": "A2.8.143",
+  "version": "A2.8.144",
+  "tag": "A2.8.144",
   "publication_request": true,
   "prerelease": false,
   "make_latest": "false",
@@ -15,20 +15,20 @@
   "validation_evidence": "CHANGELOG.md",
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
-  "public_notes_inline": "A2.8.143 修正手持進食狀態的 owning-player 查詢、副手時鐘與秘製串末段隱藏；等價 RawMessage lore 保留原 metadata，瓶子失敗不再阻止食物動畫準備。保留 Java 曲線、素材、UUID、營養／結算、25 tick 與既有 HUD 布局／傳輸。近鏡、末段平片、任意三色背包 icon 及最新 HUD 延遲仍未宣稱驗收。",
-  "expected_source_tree_sha256": "789e626c81af1a0cdfac5524c9e59728766b3f36c60f9d5f260fa9611c8bf09c",
+  "public_notes_inline": "A2.8.144 限制油流／熱食提示排程的重排與取消積壓，玩家同步效果每次只讀一份狀態，無vigor時省去hunger／saturation component讀取。配方、到期時鐘、25tick與單次結算、動畫及HUD傳輸保留；來源操作次數下降不代表客戶端RTT／FPS或BDS耗時已驗收。",
+  "expected_source_tree_sha256": "f269d351760cc8fe61d5d4fc72d3db3f7dec9ffca36bfe57cc43051560c60878",
   "expected_artifacts": {
     "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.143_baseline1.mcaddon",
-      "sha256": "cf58fba370b49bc315487605146b3468ecb730fd8864ee929c9b5f2e4caef1af"
+      "name": "Kaleidoscope_Grilling_A2.8.144_baseline1.mcaddon",
+      "sha256": "0cca7863fc61437e145612f4d663d40a82ec6e274d0298854068d95fa1caf2ef"
     },
     "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.143_baseline1.brproject",
-      "sha256": "6c72c46a87e8c9f6565bd33cbc33a4ff302337e2187a554097c4c9cfb2863522"
+      "name": "Kaleidoscope_Grilling_A2.8.144_baseline1.brproject",
+      "sha256": "eace1b17cf2fef4b4d7506f5aa8d33e5493f0988d78a6d5c9d466db2b0134448"
     }
   },
   "integrated_source": {
-    "commit": "361e4b1594b2713912095485bf20c8b194fd117c",
-    "tree": "07bf115d7b97aca32eb608f7bc7e3249ebc5891d"
+    "commit": "b0267c295305a1bc6a0c1e6a0c01e3f812b149f1",
+    "tree": "12137dbd739022ee0ff748db7670d0aed173e28a"
   }
 }
