@@ -44,6 +44,8 @@ G143 is the integration candidate. It scopes attachable eating properties to the
 
 ## 日常修改與封裝
 
+動畫、物品顯示與手持修復先走[官方來源優先流程](docs/ANIMATION-ITEM-REPAIR-WORKFLOW.md)：固定版本／原生 Blockbench scopes、鏡頭與多 clip 播放，再分開 editor、BDS 與真人驗收；附可複用檢查清單與收據。
+
 現行來源只有一組：
 [canonical BP](projects/grilling/gameplay_core/behavior_pack/) 與
 [canonical RP](projects/grilling/gameplay_core/resource_pack/)。
