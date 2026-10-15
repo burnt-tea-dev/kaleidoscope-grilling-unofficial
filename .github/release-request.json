@@ -16,15 +16,19 @@
   "artifact_suffix": "baseline1",
   "public_notes_path": "CHANGELOG.md",
   "public_notes_inline": "A2.8.144 限制油流／熱食提示排程的重排與取消積壓，玩家同步效果每次只讀一份狀態，無vigor時省去hunger／saturation component讀取。配方、到期時鐘、25tick與單次結算、動畫及HUD傳輸保留；來源操作次數下降不代表客戶端RTT／FPS或BDS耗時已驗收。",
-  "expected_source_tree_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "expected_source_tree_sha256": "f269d351760cc8fe61d5d4fc72d3db3f7dec9ffca36bfe57cc43051560c60878",
   "expected_artifacts": {
     "mcaddon": {
       "name": "Kaleidoscope_Grilling_A2.8.144_baseline1.mcaddon",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "sha256": "0cca7863fc61437e145612f4d663d40a82ec6e274d0298854068d95fa1caf2ef"
     },
     "brproject": {
       "name": "Kaleidoscope_Grilling_A2.8.144_baseline1.brproject",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "sha256": "eace1b17cf2fef4b4d7506f5aa8d33e5493f0988d78a6d5c9d466db2b0134448"
     }
+  },
+  "integrated_source": {
+    "commit": "b0267c295305a1bc6a0c1e6a0c01e3f812b149f1",
+    "tree": "12137dbd739022ee0ff748db7670d0aed173e28a"
   }
 }
