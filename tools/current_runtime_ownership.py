@@ -63,10 +63,14 @@ def validate_plate_source():
  ]
  for command in commands:run_checked_once(command,cwd=ROOT)
 
+def verify_current_inventory():
+ """Byte ownership only; standalone historical proofs do not claim source acceptance."""
+ return validate_inventory(runtime_files(),manifest())
+
 def verify_current_runtime():
- result=validate_inventory(runtime_files(),manifest())
+ result=verify_current_inventory()
  validate_plate_source()
  # Do not let an invoked validator mutate the candidate unnoticed.
- validate_inventory(runtime_files(),manifest())
+ verify_current_inventory()
  return result
 if __name__=='__main__':print(json.dumps(verify_current_runtime(),sort_keys=True))

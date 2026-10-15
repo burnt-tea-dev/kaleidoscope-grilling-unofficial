@@ -55,8 +55,8 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
       # Java fixedModel chooses by item+profile, never bite stage; all stages retain this source helper.
       self.assertEqual(actual['minecraft:geometry'][0]['bones'][0]['binding'],"q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')")
  def test_all_other_runtime_blobs_unchanged_after_inverse(self):
-  from current_runtime_ownership import verify_current_runtime,frozen_runtime_bytes
-  verify_current_runtime()
+  from current_runtime_ownership import verify_current_inventory,frozen_runtime_bytes
+  verify_current_inventory()
   base=layer.contract()['base_commit'];owned={str(layer.PLAYER.relative_to(ROOT)),'projects/grilling/gameplay_core/resource_pack/models/entity/java_eating_piece/grilled_caterpillar_skewer.geo.json','projects/grilling/gameplay_core/resource_pack/textures/java_eating_piece/grilled_caterpillar_skewer.png'}
   for line in subprocess.check_output(['git','ls-tree','-r',base,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines():
    meta,p=line.split('\t');data=frozen_runtime_bytes(p)

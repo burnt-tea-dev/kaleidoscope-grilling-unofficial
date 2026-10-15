@@ -41,9 +41,9 @@ class ComposedWitnessTests(unittest.TestCase):
    self.assertEqual(slime.reference_bytes(path,current),slime.pinned_bytes(slime.PREVIOUS_SLIME_BASE,relative))
  def test_effect_postimages_inverse_and_mutations_are_exact(self):
   import effect_merge_source_witness as effect
-  from current_runtime_ownership import verify_current_runtime
+  from current_runtime_ownership import verify_current_inventory
   from build_ordinary_relative_calibration import restore_main as restore_later_layers
-  verify_current_runtime()
+  verify_current_inventory()
   for relative in effect.PATHS:
    path=ROOT/relative;current=path.read_bytes()
    reviewed=effect.pinned(effect.REVIEWED_EFFECT_BASE,relative)

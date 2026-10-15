@@ -76,8 +76,8 @@ for(const row of rows)for(const id of row.ids)for(let flags=0;flags<128;flags++)
   main=restore_offhand((BP/'main.js').read_text());self.assertEqual(layer.patch_main(main),main);self.assertEqual(layer.patch_main(layer.restore_main(main)),main)
   with self.assertRaises(ValueError):layer.restore_main(main.replace('animation.kg_ordinary_relative.player.','animation.kg_ordinary_relative.player.broken',1))
  def test_only_owned_runtime_files_changed(self):
-  from current_runtime_ownership import verify_current_runtime,frozen_runtime_bytes,BASE as frozen
-  verify_current_runtime()
+  from current_runtime_ownership import verify_current_inventory,frozen_runtime_bytes,BASE as frozen
+  verify_current_inventory()
   import hashlib
   import build_tp_java_item_fallback as tp
   import build_offhand_eating_projection as offhand

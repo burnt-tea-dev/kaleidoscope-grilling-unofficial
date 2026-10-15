@@ -77,8 +77,8 @@ class PipelineTests(unittest.TestCase):
    p.write_text('{"sentinel": "fallback"}')
    self.assertEqual(pipeline.apply_stage(stage,{},c),{p:{'sentinel':'fallback'}})
  def test_every_runtime_blob_remains_baseline(self):
-  from current_runtime_ownership import verify_current_runtime
-  verify_current_runtime()
+  from current_runtime_ownership import verify_current_inventory
+  verify_current_inventory()
   # Frozen cleanup proof: the accepted compiler extraction changed no runtime.
   AFTER_BASE='3bcb1639fad515f12e119c83b915d452a655a4ed'
   for folder in ('behavior_pack','resource_pack'):

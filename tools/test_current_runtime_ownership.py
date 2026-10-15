@@ -53,6 +53,35 @@ class RuntimeOwnership(unittest.TestCase):
   bad=dict(self.actual);bad[next(iter(bad))]+=b'changed'
   with patch.object(owner,'runtime_files',side_effect=[self.actual,bad]),patch.object(owner,'validate_plate_source'):
    with self.assertRaises(ValueError):owner.verify_current_runtime()
+ def test_five_historical_proofs_check_inventory_without_spawning_leaves(self):
+  import importlib,sys
+  sys.path.insert(0,str(owner.ROOT/'development/gameplay_core'))
+  cases=[('test_eating_route_extraction','Extraction','test_all_other_runtime_bytes_and_owned_inventory'),
+   ('test_eating_compiler_pipeline','PipelineTests','test_every_runtime_blob_remains_baseline'),
+   ('test_offhand_eating_projection','OffhandProjection','test_all_other_runtime_blobs_unchanged_after_inverse'),
+   ('test_ordinary_relative_calibration','OrdinaryRelativeCalibration','test_only_owned_runtime_files_changed'),
+   ('test_composed_skewer_witnesses','ComposedWitnessTests','test_effect_postimages_inverse_and_mutations_are_exact')]
+  tests=[]
+  for module,klass,method in cases:
+   tests.append(getattr(importlib.import_module(module),klass)(method))
+  with patch.object(owner,'validate_plate_source',side_effect=AssertionError('Historical byte proof must not spawn leaves'))as leaves,patch.object(owner,'verify_current_inventory',wraps=owner.verify_current_inventory)as inventory:
+   result=unittest.TestResult();unittest.TestSuite(tests).run(result)
+   self.assertEqual(result.testsRun,5);self.assertEqual(result.errors,[]);self.assertEqual(result.failures,[])
+   self.assertEqual(inventory.call_count,5);leaves.assert_not_called()
+ def test_full_gate_requires_inventory_before_and_after_one_leaf_phase(self):
+  calls=[]
+  with patch.object(owner,'verify_current_inventory',side_effect=lambda:calls.append('inventory')or{'ok':True}),patch.object(owner,'validate_plate_source',side_effect=lambda:calls.append('leaves')):
+   self.assertEqual(owner.verify_current_runtime(),{'ok':True})
+  self.assertEqual(calls,['inventory','leaves','inventory'])
+  import sys
+  sys.path.insert(0,str(owner.ROOT/'development/gameplay_core'));import verification_session
+  with patch.object(owner,'verify_current_inventory',return_value={'ok':True}),patch.object(verification_session,'run_checked_once')as run:
+   owner.verify_current_runtime()
+  self.assertEqual(run.call_count,4)
+  commands=[c.args[0]for c in run.call_args_list]
+  self.assertEqual([Path(c[2]).name for c in commands[:3]],['build_plate_display.py','build_plate_held.py','test_held_render_contracts.py'])
+  self.assertEqual(commands[2][-1],'PlateSpecialContracts')
+  self.assertEqual(commands[3][0:2],['node','--test'])
  def test_frozen_preimage_inventory_is_immutable(self):
   with self.assertRaises(TypeError):owner.frozen_runtime_files()['new']=b''
 if __name__=='__main__':unittest.main()
