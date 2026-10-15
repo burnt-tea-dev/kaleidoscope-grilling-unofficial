@@ -209,18 +209,33 @@ class SourceReceiptTests(unittest.TestCase):
     def test_current_slime_checks_are_required_before_receipt(self):
         with patch.object(gate, "generic_gate", return_value=(2, 8, 143, 1)), self.mock_functional_commands() as commands:
             self.main("--write-source-validation", self.receipt)
-        self.assertEqual(commands.run.call_count, 3)
-        self.assertTrue(str(commands.run.call_args_list[1].args[0][-1]).endswith("verify_slime_frames.py"))
-        self.assertTrue(str(commands.run.call_args_list[2].args[0][-1]).endswith("verify_a28143.py"))
+        self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
+            "verify_visual_refs.py", "verify_slime_frames.py", "verify_a28143.py",
+            "verify_failure_skewer.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+        ])
         gate.require_source_validation(self.receipt)
 
-    def test_full_success_writes_receipt_after_both_functional_commands(self):
+    def test_full_success_writes_receipt_after_all_functional_commands(self):
         with patch.object(gate, "generic_gate", return_value=(2, 8, 47, 1)), self.mock_functional_commands() as commands:
             self.main("--write-source-validation", self.receipt)
-        self.assertEqual(commands.run.call_count, 2)
-        self.assertTrue(str(commands.run.call_args_list[0].args[0][-1]).endswith("verify_visual_refs.py"))
-        self.assertTrue(str(commands.run.call_args_list[1].args[0][-1]).endswith("verify_a2847.py"))
+        self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
+            "verify_visual_refs.py", "verify_a2847.py", "verify_failure_skewer.py",
+            "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+        ])
         gate.require_source_validation(self.receipt)
+
+    def test_every_combined_command_failure_prevents_receipt(self):
+        for target in ["verify_visual_refs.py", "verify_slime_frames.py", "verify_a28143.py",
+                       "verify_failure_skewer.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs"]:
+            with self.subTest(target=target):
+                self.issue()
+                def fail_selected(command, **kwargs):
+                    if Path(command[-1]).name == target:
+                        raise RuntimeError("injected functional failure: " + target)
+                with patch.object(gate, "generic_gate", return_value=(2, 8, 143, 1)), self.mock_functional_commands(side_effect=fail_selected):
+                    with self.assertRaisesRegex(RuntimeError, "injected functional failure"):
+                        self.main("--write-source-validation", self.receipt)
+                self.assertFalse(self.receipt.exists())
 
 
 if __name__ == "__main__":
