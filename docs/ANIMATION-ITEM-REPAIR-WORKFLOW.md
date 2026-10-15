@@ -2,7 +2,7 @@
 
 適用：所有後續動畫、attachable、第一／第三人稱手持、放置／掉落／背包物品顯示修復。先以官方推薦、官方範例與精確版本實作確認契約，再採用已獨立重現的開發者論壇／社群方案。不得用猜測位移、縮放或鏡頭補償掩蓋 scope、binding、controller 或時鐘問題。
 
-本文件是方法與驗收清單，不是任何候選已通過 Minecraft 的證明。2026-10-15 編寫時只有本輪原生 Blockbench baseline 的有限捕獲；candidate 原生對照與當前遊戲驗收仍待完成。舊證據保留原版本／原範圍，不自動轉移到新候選。
+本文件是方法與驗收清單，不是任何候選已通過 Minecraft 的證明。2026-10-15 編寫時本輪原生 Blockbench baseline／candidate 各已取得七幀及操作收據；這些有限 editor captures 尚未建立視覺一致性，當前遊戲驗收仍待完成。舊證據保留原版本／原範圍，不自動轉移到新候選。
 
 ## 1. 來源先行，固定版本與適用範圍
 
@@ -92,7 +92,8 @@ source:
   blockbench: <version; source revision; app archive SHA256>
   references: <official URLs first; community URL/version/reproduction if used>
 fixture:
-  files: <baseline/candidate filenames and SHA256; asset source paths/hashes>
+  files: <baseline/candidate source fixture filenames and SHA256; asset source paths/hashes>
+  live_editor_snapshot: <exported live .bbmodel filename/SHA256; capture time; source fixture differences>
   ruleset: bedrock_attachable
   player: <classic/slim; scope; skin provenance>
   scopes_and_bindings: <player/item/helper; UUID mapping; original binding>
@@ -104,7 +105,8 @@ capture:
   selected_primary: <clip>
   playing_order: <clips; scope; playing/locked; Override; blend weights>
   inputs: <controller state; all relevant Molang placeholders>
-  samples: <time seconds; stage; capture path/hash for each image/video>
+  samples: <time seconds; stage; raw PNG/video path and SHA256 for each sample>
+  operation_receipt: <MCP/UI operation receipt path/hash; errors and retries>
 validation:
   source_and_structure: <pass/fail/not_run; exact check/result>
   editor_preview: <pass/fail/not_run; observed scope and evidence>
