@@ -9,7 +9,7 @@ def main():
     previous()
     root=Path(__file__).resolve().parents[2]
     subprocess.run(['python3','development/gameplay_core/test_eating_observer_projection.py'],cwd=root,check=True)
-    subprocess.run(['node','--test','development/gameplay_core/test_eating_native_completion.mjs'],cwd=root,check=True)
+    subprocess.run(['node','--test','development/gameplay_core/test_eating_native_completion.mjs','development/gameplay_core/test_effect_application_merge.mjs'],cwd=root,check=True)
     subprocess.run([sys.executable,'-B','-m','unittest','test_java_dual_eating_frames','test_java_dual_eating_renderer'],cwd=root/'development/gameplay_core',check=True)
     if session_active():
         # Earlier gates have completed these exact standalone commands. Keep

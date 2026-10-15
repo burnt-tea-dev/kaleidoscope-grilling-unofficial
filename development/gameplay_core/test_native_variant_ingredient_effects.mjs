@@ -57,7 +57,7 @@ for(const base of ['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grill
  assert(registerSecretIngredientBehavior({input:base,behavior:extension('canonical',111)}));if(actualExtension)assert(registerSecretIngredientBehavior({input:actual,behavior:extension('actual',222)}));
  const delivered=[],native=[],persistent=[],emitted=[];let ordinary=0;
  const player={addEffect:(...args)=>native.push(structuredClone(args)),removeEffect(){}};
- const ctx=vm.createContext({ItemStack:ContainerStack,setItemLore,setItemProperty,readEffectiveSkewerRows:()=>[input],rolledIngredientEffects:row=>rolledIngredientEffects(row,()=>0),fxGet:()=>undefined,fxSet:(_player,...args)=>persistent.push(args),now:()=>100,applyOrdinary:()=>ordinary++,dangerousPreservation(){},give:(_player,stack)=>delivered.push(stack),emitSecretIngredientConsumed:(_player,row)=>emitted.push(row)});
+ const ctx=vm.createContext({ItemStack:ContainerStack,setItemLore,setItemProperty,readEffectiveSkewerRows:()=>[input],rolledIngredientEffects:row=>rolledIngredientEffects(row,()=>0),fxGet:()=>undefined,fxApply:(_player,...args)=>persistent.push(args),now:()=>100,applyOrdinary:()=>ordinary++,dangerousPreservation(){},give:(_player,stack)=>delivered.push(stack),emitSecretIngredientConsumed:(_player,row)=>emitted.push(row)});
  vm.runInContext(body('behaviorRemainder')+'\n'+body('secretRemainders'),ctx);ctx.secretRemainders(player,{});
  const behavior=ingredientBehavior(input);assert.equal(ordinary,base.endsWith('ordinary_skewer')?1:0);
  assert.deepEqual(native,behavior.effects.filter(e=>e.kind!=='persistent_fx').map(e=>[e.effect,e.ticks,{...(e.options??{}),amplifier:e.amplifier??0,showParticles:true}]));

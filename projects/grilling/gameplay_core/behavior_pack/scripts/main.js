@@ -1,3 +1,4 @@
+import {mergeEffectApplication} from './effect_lifecycle_core.js';
 import {readSlimeWorldFrame,syncSlimeHeld} from './slime_frame_runtime.js';
 import {createFailedSkewer,isFailureSkewer} from './failure_skewer_visual_core.js';
 import {isOwnedBottleLore,bottleLoreSignature,bottleLoreMismatch} from './bottle_lore_core.js';
@@ -393,7 +394,7 @@ function secretRemainders(player,stack){
   const behavior=rolledIngredientEffects(row);
   for(const e of behavior.effects){
    if(e.kind==='persistent_fx'){
-    const old=fxGet(player,e.effect);fxSet(player,e.effect,Math.max(e.ticks,(old?.until??now())-now()),Math.max(e.amplifier??0,old?.amp??0));
+    fxApply(player,e.effect,e.ticks,e.amplifier??0);
    }else try{player.addEffect(e.effect,e.ticks,{...(e.options??{}),amplifier:e.amplifier??0,showParticles:true})}catch{}
   }
   if(behavior.clearPoison)try{player.removeEffect('poison')}catch{}
@@ -885,6 +886,10 @@ function readFx(entity){try{return readEffects(entity)}catch{return {}}}
 function writeFx(entity,fx,options){try{return writeEffects(entity,fx,options)}catch{return {}}}
 function fxGet(entity,name){const v=readFx(entity)[name];return v&&Number(v.until)>now()?v:null}
 function fxSet(entity,name,ticks,amp=0){const fx=readFx(entity);fx[name]={until:now()+Math.max(1,ticks|0),amp:amp|0};writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
+function fxApply(entity,name,ticks,amp=0){
+ try{const fx=readEffects(entity);fx[name]=mergeEffectApplication(fx[name],ticks,amp,now());return writeEffects(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})[name]}
+ catch(error){console.warn('[Grilling effect application] '+name+': '+error);return undefined}
+}
 function fxClear(entity,name){const fx=readFx(entity);delete fx[name];writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
 function fxReduce(entity,name,ticks){const fx=readFx(entity),v=fx[name];if(!v)return;v.until-=ticks;if(v.until<=now())delete fx[name];writeFx(entity,fx)}
 function fxSnapshot(entity){
@@ -903,6 +908,8 @@ function doubleNewFx(player,before){
   const old=before[name]?.duration??0,duration=Math.max(0,v.until-t);
   if(duration<=old)continue;
   v.until=t+old+(duration-old)*2;
+  // Java HotFoodHandler removes/re-adds the extended active instance.
+  delete v.hidden;
  }
  writeFx(player,current);
 }
@@ -910,25 +917,24 @@ function applyFixedEffect(player,id){
  id=canonicalFoodId(id);
  const e=COOKED_EFFECTS[id];if(!e||!e.effect)return;const ticks=Math.max(1,e.seconds*20);
  if(e.effect.startsWith('minecraft:')){try{player.addEffect(e.effect.split(':')[1],ticks,{showParticles:true})}catch{}return}
- if(e.effect==='kaleidoscope_grilling:invincible'){fxSet(player,'invincible',ticks);return}
- if(e.effect.startsWith('kaleidoscope_cookery:'))fxSet(player,e.effect.split(':')[1],ticks);
+ if(e.effect==='kaleidoscope_grilling:invincible'){fxApply(player,'invincible',ticks);return}
+ if(e.effect.startsWith('kaleidoscope_cookery:'))fxApply(player,e.effect.split(':')[1],ticks);
 }
 function counts(list){return seasoningEffectCounts(list)}
 function applyDragonBlood(player,ticks,amp){
- const old=fxGet(player,'dragon_blood');amp=Math.max(amp,old?.amp??0);
- fxSet(player,'dragon_blood',Math.max(ticks,old?old.until-now():0),amp);
- nativeDragonHealth(player,amp,{heal:true});
+ const applied=fxApply(player,'dragon_blood',ticks,amp);
+ if(applied)nativeDragonHealth(player,applied.amp,{heal:true});
 }
 
 function applySeasoning(player,list){
  const c=counts(list);let duration=3600;if((c.duration??0)>=4)duration*=4;else if((c.duration??0)>0)duration*=2;
  if((c.speed??0)>0)try{player.addEffect('speed',duration,{amplifier:c.speed>=4?1:0,showParticles:true})}catch{}
  if((c.strength??0)>0)try{player.addEffect('strength',duration,{amplifier:c.strength>=4?1:0,showParticles:true})}catch{}
- if((c.numbness??0)>=4)fxSet(player,'numb',900*((c.duration??0)>=4?4:(c.duration??0)>0?2:1));
+ if((c.numbness??0)>=4)fxApply(player,'numb',900*((c.duration??0)>=4?4:(c.duration??0)>0?2:1));
  if((c.totem??0)>0){
   const poisoned=!!fxGet(player,'heavy_metal_poisoning');
   if(poisoned)awardMetalToleranceFailed(player,c.totem,true);
-  else fxSet(player,'heavy_metal',duration,c.totem>=4?1:0);
+  else fxApply(player,'heavy_metal',duration,c.totem>=4?1:0);
  }
  if((c.vitality??0)>0)applyDragonBlood(player,duration,c.vitality>=4?1:0);
 }
