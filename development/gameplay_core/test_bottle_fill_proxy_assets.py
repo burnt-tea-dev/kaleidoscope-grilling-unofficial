@@ -30,6 +30,38 @@ class BottleFillProxyAssets(unittest.TestCase):
             self.assertEqual(recipe['result'],{'item':build.NS+'empty_seasoning_bottle','count':1})
             self.assertEqual(recipe['ingredients'],[{'item':build.NS+name}])
 
+    def test_every_materialized_bottle_has_single_input_discard_recipe(self):
+        # User-reported wrong-ingredient recovery: exercise the actual registered
+        # IDs/recipes, not just the 16 fill proxies or a copied craft simulator.
+        # This proves source coverage, not engine unlock/crafting-grid behavior.
+        items = {}
+        for path in (build.BP/'items').glob('*.json'):
+            item = build.load(path)['minecraft:item']
+            identifier = item['description']['identifier']
+            if identifier.startswith(build.NS) and (
+                path.stem in ('empty_seasoning_bottle', 'pending_seasoning', 'special_seasoning')
+                or path.stem.startswith(('partial_seasoning_f', 'pending_seasoning_f', 'special_seasoning_r'))
+            ):
+                items[identifier] = item
+        self.assertEqual(len(items), 83)
+        inputs = []
+        for path in (build.BP/'recipes').glob('clear_*seasoning*.json'):
+            recipe = build.load(path)['minecraft:recipe_shapeless']
+            self.assertEqual(len(recipe['ingredients']), 1, path)
+            ingredient = recipe['ingredients'][0]
+            self.assertEqual(set(ingredient), {'item'}, path)
+            inputs.append(ingredient['item'])
+            self.assertEqual(recipe['tags'], ['crafting_table'], path)
+            self.assertEqual(recipe['unlock'], [ingredient], path)
+            self.assertEqual(recipe['result'], {'item': build.NS+'empty_seasoning_bottle', 'count': 1}, path)
+            # No refund, data-copy recipe, secondary ingredient or output.
+            self.assertEqual(set(recipe), {'description', 'tags', 'ingredients', 'result', 'unlock'}, path)
+        self.assertEqual(set(inputs), set(items))
+        self.assertEqual(len(inputs), len(set(inputs)))
+        # JSON cannot predicate on dynamic ingredient data. Keep the documented
+        # base-ID self recipe so pre-proxy legacy filled EMPTY bottles can clear.
+        self.assertIn(build.NS+'empty_seasoning_bottle', inputs)
+
     def test_source_shell_and_exact_first_fill_layers_are_retained(self):
         source=build.load(build.SOURCE)
         self.assertEqual(hashlib.sha256(build.SOURCE.read_bytes()).hexdigest(),build.SOURCE_SHA256)
