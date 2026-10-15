@@ -26,7 +26,10 @@ class RawOneTests(unittest.TestCase):
    current=json.loads(p.read_text());expected=json.loads(subprocess.check_output(['git','show',r.contract()['base_commit']+':'+p.relative_to(r.ROOT).as_posix()],cwd=r.ROOT))
    self.assertEqual(r.historical_document(p,current),expected)
   text=r.MAIN.read_text();expected=subprocess.check_output(['git','show',r.contract()['base_commit']+':'+r.MAIN.relative_to(r.ROOT).as_posix()],cwd=r.ROOT).decode()
-  self.assertEqual(r.restore_main(text),expected);self.assertEqual(r.patch_main(text),text)
+  from build_slime_frame_selector import strip_main as strip_slime
+  from slime_frame_source_witness import reference_bytes as slime_reference
+  slime_reference(r.MAIN,text.encode())
+  self.assertEqual(r.restore_main(strip_slime(text)),expected);self.assertEqual(r.patch_main(text),text)
   # Preserve unrelated independent main layers through exact inverse.
   other='// other independent layer\n'+expected
   self.assertEqual(r.restore_main(r.patch_main(other)),other)

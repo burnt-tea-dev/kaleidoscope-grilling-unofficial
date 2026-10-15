@@ -25,6 +25,9 @@ def reference_bytes(path, current):
     relative = path.relative_to(ROOT).as_posix() if path.is_absolute() else path.as_posix()
     if relative not in PATHS:
         return current
+    if relative == MAIN_PATH:
+        from build_review_three_eating_projection import restore_main
+        current = restore_main(current.decode()).encode()
     reviewed = pinned_bytes(REVIEWED_SLIME_BASE, relative)
     assert current == reviewed, 'Current slime continuation differs from reviewed complete bytes: '+relative
     before = pinned_bytes(PREVIOUS_SLIME_BASE, relative)
