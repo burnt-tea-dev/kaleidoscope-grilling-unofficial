@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "project_name": "REPLACE_WITH_REVIEWED_PROJECT_NAME",
+  "fixture_sha256": "REPLACE_WITH_REVIEWED_SOURCE_FIXTURE_SHA256",
+  "live_sha256": "REPLACE_WITH_REVIEWED_LIVE_EXPORT_SHA256",
+  "primary_animation": "animation.example.player",
+  "camera": {
+    "position": [0, 27.41, 0],
+    "target": [0, 27.41, 10],
+    "fov": 70.25,
+    "width": 1600,
+    "height": 900
+  },
+  "times": [0, 0.5, 1],
+  "context": {
+    "blockbench_version": "5.2.2; replace if different and recheck workflow",
+    "source_revision": "REPLACE_WITH_EXACT_BASELINE_OR_CANDIDATE_COMMIT",
+    "mode": "attachable_first",
+    "hand": "main",
+    "playing_order": [
+      {"name": "animation.example.item", "scope": 2, "override": false, "playing": "locked"},
+      {"name": "animation.example.player", "scope": 1, "override": true, "playing": "primary"}
+    ],
+    "preview_only_changes": ["REPLACE_WITH_EACH_REVIEWED_DIFFERENCE_OR_EMPTY_LIST"],
+    "runtime_limits": "REPLACE: fixed stage, substituted clock/gates/binding, unverified controller and game scenarios"
+  }
+}
