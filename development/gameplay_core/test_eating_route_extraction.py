@@ -14,12 +14,14 @@ class Extraction(unittest.TestCase):
    with self.assertRaises(ValueError):bridge.restore_main(bad)
   self.assertIn('// unrelated drift',bridge.restore_main(new+'// unrelated drift'))
  def test_all_other_runtime_bytes_and_owned_inventory(self):
+  from current_runtime_ownership import verify_current_runtime,frozen_runtime_bytes,BASE as frozen
+  verify_current_runtime()
   c=bridge.contract();allow={'projects/grilling/gameplay_core/behavior_pack/scripts/main.js',c['resolver_path']};bridge.validate_resolver()
   for line in subprocess.check_output(['git','ls-tree','-r',c['baseline_commit'],'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines():
-   meta,path=line.split('\t');data=(ROOT/path).read_bytes()
+   meta,path=line.split('\t');data=frozen_runtime_bytes(path)
    if path.endswith('/scripts/main.js'):data=bridge.restore_main(data.decode()).encode()
    self.assertEqual(hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),meta.split()[2],path)
-  changed=set(subprocess.check_output(['git','diff','--name-only',c['baseline_commit']],cwd=ROOT,text=True).splitlines())|set(subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines())
+  changed=set(subprocess.check_output(['git','diff','--name-only',c['baseline_commit'],frozen],cwd=ROOT,text=True).splitlines())
   self.assertLessEqual({p for p in changed if '/resource_pack/'in p or '/behavior_pack/'in p},allow)
  def test_failure_current_boundary_and_legacy_supplied_input(self):
   import build_failure_skewer_held as failure

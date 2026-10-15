@@ -321,7 +321,7 @@ class SourceReceiptTests(unittest.TestCase):
             "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
             "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
             "test_eating_compiler_pipeline.py",
-            "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+            "test_current_runtime_ownership.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
         ])
         gate.require_source_validation(self.receipt)
 
@@ -349,7 +349,7 @@ class SourceReceiptTests(unittest.TestCase):
             "test_ordinary_relative_calibration.py", "test_tp_java_item_fallback.py",
             "test_offhand_eating_projection.py", "test_eating_route_resolver.mjs",
             "test_eating_route_extraction.py", "test_eating_compiler_pipeline.py",
-            "test_composed_skewer_witnesses.py",
+            "test_current_runtime_ownership.py", "test_composed_skewer_witnesses.py",
             "test_all_skewer_integration.mjs",
         ])
         gate.require_source_validation(self.receipt)
@@ -360,7 +360,7 @@ class SourceReceiptTests(unittest.TestCase):
                        "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
                        "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
                        "test_eating_compiler_pipeline.py",
-                       "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs"]:
+                       "test_current_runtime_ownership.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs"]:
             with self.subTest(target=target):
                 self.issue()
                 def fail_selected(command, **kwargs):

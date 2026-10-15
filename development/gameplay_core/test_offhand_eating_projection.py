@@ -55,13 +55,15 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
       # Java fixedModel chooses by item+profile, never bite stage; all stages retain this source helper.
       self.assertEqual(actual['minecraft:geometry'][0]['bones'][0]['binding'],"q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')")
  def test_all_other_runtime_blobs_unchanged_after_inverse(self):
+  from current_runtime_ownership import verify_current_runtime,frozen_runtime_bytes
+  verify_current_runtime()
   base=layer.contract()['base_commit'];owned={str(layer.PLAYER.relative_to(ROOT)),'projects/grilling/gameplay_core/resource_pack/models/entity/java_eating_piece/grilled_caterpillar_skewer.geo.json','projects/grilling/gameplay_core/resource_pack/textures/java_eating_piece/grilled_caterpillar_skewer.png'}
   for line in subprocess.check_output(['git','ls-tree','-r',base,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines():
-   meta,p=line.split('\t');data=(ROOT/p).read_bytes()
+   meta,p=line.split('\t');data=frozen_runtime_bytes(p)
    if p==str(layer.MAIN.relative_to(ROOT)):data=layer.restore_main(data.decode()).encode()
    elif p in layer.contract()['predecessors']:data=(json.dumps(layer.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,meta.split()[2],p)
   from eating_route_extraction import validate_resolver
   owned.add(validate_resolver())
-  untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines();self.assertLessEqual({p for p in untracked if '/resource_pack/'in p or'/behavior_pack/'in p},owned)
+  # Current additions and deletions are covered by the shared exact inventory guard.
 if __name__=='__main__':unittest.main()

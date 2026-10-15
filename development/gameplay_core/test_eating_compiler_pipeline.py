@@ -77,6 +77,13 @@ class PipelineTests(unittest.TestCase):
    p.write_text('{"sentinel": "fallback"}')
    self.assertEqual(pipeline.apply_stage(stage,{},c),{p:{'sentinel':'fallback'}})
  def test_every_runtime_blob_remains_baseline(self):
-  for line in subprocess.check_output(['git','ls-tree','-r',BASE,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines():
-   meta,p=line.split('\t');data=(ROOT/p).read_bytes();self.assertEqual(hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),meta.split()[2],p)
+  from current_runtime_ownership import verify_current_runtime
+  verify_current_runtime()
+  # Frozen cleanup proof: the accepted compiler extraction changed no runtime.
+  AFTER_BASE='3bcb1639fad515f12e119c83b915d452a655a4ed'
+  for folder in ('behavior_pack','resource_pack'):
+   path='projects/grilling/gameplay_core/'+folder
+   before_tree=subprocess.check_output(['git','rev-parse',BASE+':'+path],cwd=ROOT)
+   after_tree=subprocess.check_output(['git','rev-parse',AFTER_BASE+':'+path],cwd=ROOT)
+   self.assertEqual(before_tree,after_tree)
 if __name__=='__main__':unittest.main()

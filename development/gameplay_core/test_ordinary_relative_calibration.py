@@ -76,23 +76,24 @@ for(const row of rows)for(const id of row.ids)for(let flags=0;flags<128;flags++)
   main=restore_offhand((BP/'main.js').read_text());self.assertEqual(layer.patch_main(main),main);self.assertEqual(layer.patch_main(layer.restore_main(main)),main)
   with self.assertRaises(ValueError):layer.restore_main(main.replace('animation.kg_ordinary_relative.player.','animation.kg_ordinary_relative.player.broken',1))
  def test_only_owned_runtime_files_changed(self):
+  from current_runtime_ownership import verify_current_runtime,frozen_runtime_bytes,BASE as frozen
+  verify_current_runtime()
   import hashlib
   import build_tp_java_item_fallback as tp
   import build_offhand_eating_projection as offhand
   offhand_paths={str(p.relative_to(ROOT))for p in offhand.augment({})}
   from eating_route_extraction import validate_resolver
   offhand_paths.add(validate_resolver())
-  changed=subprocess.check_output(['git','diff','--name-only',BASE],cwd=ROOT,text=True).splitlines();runtime=[p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p]
+  changed=subprocess.check_output(['git','diff','--name-only',BASE,frozen],cwd=ROOT,text=True).splitlines();runtime=[p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p]
   self.assertLessEqual(set(runtime),{str(layer.MAIN.relative_to(ROOT)),str(layer.PLAYER.relative_to(ROOT)),str(tp.PLAYER.relative_to(ROOT))}|offhand_paths)
   from eating_route_extraction import validate_resolver
   offhand_paths.add(validate_resolver())
-  untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines()
-  self.assertLessEqual({p for p in untracked if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|offhand_paths)
+  # Current additions and deletions are covered by the shared exact inventory guard.
   paths=subprocess.check_output(['git','ls-tree','-r',BASE,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines()
   for row in paths:
    meta,p=row.split('\t');expected=meta.split()[2]
    if p==str(layer.MAIN.relative_to(ROOT)):continue
-   data=(ROOT/p).read_bytes()
+   data=frozen_runtime_bytes(p)
    if p in offhand.contract()['predecessors']:
     data=(json.dumps(offhand.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    if p==str(tp.PLAYER.relative_to(ROOT)):

@@ -41,13 +41,23 @@ class ComposedWitnessTests(unittest.TestCase):
    self.assertEqual(slime.reference_bytes(path,current),slime.pinned_bytes(slime.PREVIOUS_SLIME_BASE,relative))
  def test_effect_postimages_inverse_and_mutations_are_exact(self):
   import effect_merge_source_witness as effect
+  from current_runtime_ownership import verify_current_runtime
+  from build_ordinary_relative_calibration import restore_main as restore_later_layers
+  verify_current_runtime()
   for relative in effect.PATHS:
    path=ROOT/relative;current=path.read_bytes()
-   self.assertEqual(current,effect.pinned(effect.REVIEWED_EFFECT_BASE,relative))
-   self.assertEqual(effect.reference_bytes(path,current),effect.pinned(effect.PREVIOUS_EFFECT_BASE,relative))
-   with self.assertRaises(ValueError):effect.reference_bytes(path,current+b'\n// unreviewed\n')
-  before=effect.restore_main(three.MAIN.read_text())
-  self.assertEqual(effect.reapply_main(before),three.MAIN.read_text())
+   reviewed=effect.pinned(effect.REVIEWED_EFFECT_BASE,relative)
+   predecessor=effect.pinned(effect.PREVIOUS_EFFECT_BASE,relative)
+   # Frozen effect proof remains exact; current main is a later scoped layer.
+   self.assertEqual(effect.reference_bytes(path,reviewed),predecessor)
+   intermediate=restore_later_layers(current.decode()).encode()if relative==effect.PREFIX+'main.js'else current
+   self.assertEqual(intermediate,reviewed)
+   self.assertEqual(effect.reference_bytes(path,current),predecessor)
+   for source in (reviewed,current):
+    with self.assertRaises(ValueError):effect.reference_bytes(path,source+b'\n// unreviewed\n')
+  intermediate=restore_later_layers(three.MAIN.read_text())
+  before=effect.restore_main(intermediate)
+  self.assertEqual(effect.reapply_main(before),intermediate)
   with self.assertRaises(ValueError):effect.reapply_main(before+'\n')
  def test_all_visibility_layers_are_independently_reversible(self):
   p=raw.CONTROLLER;current=json.loads(p.read_text())

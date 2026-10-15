@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "baseline_commit": "c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f",
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/entities/plate_food_visual.json": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "fe0cf08a8696ccb5f53f16c096edd2b5866dd7782d6cffd5cb794f5ae4b9d95e",
+      "after_sha256": "d9535264512982184318271093fa26cb10b176583f9f5becea2381a27d0a2270"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_core.js": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "37683e0a6ca138d30f2929e4ee0b80e33c40eaad21765a374028e6f0881ce551",
+      "after_sha256": "e517831a1402e529b1e4bf92f0a85af94d9232904ba98ea8f0fff8048eea7b4d"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_runtime.js": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "eeda39d0928c8e4fd75e6650760cacf6d443923a3b8da7cd8395dad0c0bec94c",
+      "after_sha256": "468d7d4106d4c2443085a0627f28d713696b2c904123fdd0066f3756bd542d4c"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_recipe_visual_core.js": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "474c7e6ad5f2e55c9b02f8556502f8f82d8dc5a79582a2c57822376001797a84",
+      "after_sha256": "9551024515f454110015025716e884b8b906295879cedb626c959bcc729c436f"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_special_visual_core.js": {
+      "operation": "add",
+      "owner": "plate_special_visuals",
+      "before_sha256": null,
+      "after_sha256": "37e77764d564a8f2c044e34bb7b6aefec4fc5b32be34da573b3ebe7f8445a945"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_special_visual_data.js": {
+      "operation": "add",
+      "owner": "plate_special_visuals",
+      "before_sha256": null,
+      "after_sha256": "288e0c897a6e1c07c0dab1736beef82d63cc042797e8c1c1898c83dfe883a686"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/slime_frame_runtime.js": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "66c9b99fe33938452eb47a284fbbb910843dc0e7a9eb978c328874f82bfca673",
+      "after_sha256": "de24bde5c70dd10e7666ccd5af9b9c9c260079238837521d4f9cef6b38ccba22"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/station_contents_visual_runtime.js": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "1f9a5287aa0ec261a40f5fad2b31280710abb2950b775bab8eb38d47f0cd2493",
+      "after_sha256": "5720369122962757f298d080cb9bd88c013bc9ef2cb03cca0d372fdc09139344"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/skewer_plate.attachable.json": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "5ebf92bbb4c80d2988f0f3531f4a20dc14c6601e93cde7dd20a429d309113b4b",
+      "after_sha256": "ac93abbc1c575e93a78ba31801a78560a2ca24dddca4a2607b4aa2b5a5d48601"
+    },
+    "projects/grilling/gameplay_core/resource_pack/entity/plate_food_visual.entity.json": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "fa03f79e283f474711583b5d8254df6b9ea7e4b2cff884c8b6574061ce4ee173",
+      "after_sha256": "7770d3c062b4e90b0ff261e1799740a865e6ff8a9875b870e539418b105f3502"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/plate_held.geo.json": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "f9b6bb63cce8117059d4ae45f2b06be61ecd33f03b582719d1171329c6e0b25f",
+      "after_sha256": "c5de444f9487194eabc867e021889f7ded443408580d5cb489c5d9cd4b5803dc"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/plate_special.geo.json": {
+      "operation": "add",
+      "owner": "plate_special_visuals",
+      "before_sha256": null,
+      "after_sha256": "7fba6a6010299bbef74c9738e18f141788f6cddb77d44a8d58bf235a9d2b0fd0"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/plate_food_visual.render_controllers.json": {
+      "operation": "add",
+      "owner": "plate_special_visuals",
+      "before_sha256": null,
+      "after_sha256": "600607365240ed2d93415c928dc4c427472921374faee8862c6b4b2fb3bad8ae"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/plate_held.render_controllers.json": {
+      "operation": "modify",
+      "owner": "plate_special_visuals",
+      "before_sha256": "b2933d786110e8eb1fabafc1aad889984a7f91fbfeaa40291092b46c57f6f773",
+      "after_sha256": "7880511162623c947e8c188ae1d3d8d3cd97e0a9733209e76f0da840f6ba59b6"
+    }
+  }
+}
