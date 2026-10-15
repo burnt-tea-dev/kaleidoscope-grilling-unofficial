@@ -48,6 +48,35 @@ def check_hidden_cuisine_quality(item,owner):
     require(item==expected,'Quality variant changed identity, visibility or non-quality mechanics '+iid)
     return True
 
+def guide_item_icon_key(item):
+    """Keep the static guide illustration while validating its native GUI source."""
+    c=item['components'];iid=item['description']['identifier']
+    if 'minecraft:icon' in c:
+        icon=c['minecraft:icon']
+        return icon['textures']['default'] if isinstance(icon,dict) else icon
+    stems={'grilled_slime_skewer':'grilled_slime_skewer_cooked','mysterious_skewer':'mysterious_skewer'}
+    name=iid.removeprefix(NS)
+    require(iid==NS+name and name in stems,'Unreviewed icon-less guide item '+iid)
+    require(tuple(load(GAME/'manifest.json')['header']['version'])>=(2,8,144),'Native GUI predates G144')
+    block_id=NS+'item_visual_'+name
+    require(c.get('minecraft:block_placer')=={'block':block_id,'use_on':[{'tags':'0'}]},'Native GUI placement contract drift '+iid)
+    block=load(GAME/'blocks'/('item_visual_'+name+'.json'))['minecraft:block']
+    require(block['description']=={'identifier':block_id},'Native GUI block identity/menu drift '+iid)
+    bc=block['components'];visual=bc['minecraft:item_visual']
+    require(bc['minecraft:collision_box'] is False and bc['minecraft:selection_box'] is False,'Native GUI has physical bounds '+iid)
+    require(visual['geometry']=={'identifier':'geometry.kg_native_icon.'+name},'Native GUI geometry drift '+iid)
+    tile='kg_native_icon_'+name
+    require(visual['material_instances']['*']['texture']==tile,'Native GUI material route drift '+iid)
+    actual=load(GP/'textures/terrain_texture.json')['texture_data'][tile]['textures']
+    require(actual=='textures/ui/kg_java/'+stems[name]+'_frame_0','Native GUI first-frame source drift '+iid)
+    atlas=load(GP/'textures/item_texture.json')['texture_data']
+    require(atlas[name]['textures']=='textures/items/'+name,'Static guide illustration route drift '+iid)
+    from PIL import Image
+    with Image.open(GP/(actual+'.png')) as native, Image.open(GP/('textures/items/'+name+'.png')) as guide:
+        require(native.size==guide.size==(16,16) and native.convert('RGBA').tobytes()==guide.convert('RGBA').tobytes(),
+                'Static guide illustration differs from original native first frame '+iid)
+    return name
+
 def check_facts(s):
     owner={}
     for e in s['entries']:
@@ -135,7 +164,7 @@ def check_facts(s):
     for row in s['icon_sources'].values():
         if row.get('plant_sprite'):continue
         item=load(GAME/'items'/(row['item'].split(':')[-1]+'.json'))['minecraft:item']
-        icon=item['components']['minecraft:icon'];key=icon['textures']['default'] if isinstance(icon,dict) else icon
+        key=guide_item_icon_key(item)
         require(key==row['atlas_key'],'Wrong item icon key '+row['item'])
         actual=atlas[key]['textures'];actual=actual[0] if isinstance(actual,list) else actual
         expected=(GP/(actual if actual.endswith('.png') else actual+'.png')).relative_to(ROOT).as_posix()
