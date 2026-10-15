@@ -53,6 +53,8 @@ Mojang player 的 `scripts.scale = 0.9375` 有來源依據，但不證明自訂 
 
 當前 MCP schema 沒有 typed Bedrock Animation Mode setter，也沒有直接完整設定 playing set／scope／Override 的能力；使用原生 UI 或已核對 fixture。`trigger_action` 不等於能設定 BarSelect。`set_camera_angle` 未提供 aspect 欄位，須原生 reset 或匹配 view dimensions。以實際 schema 為準，不猜工具欄位。
 
+可使用[受保護的本機 MCP 捕獲工具](../tools/blockbench_preview/README.md)固定 source fixture／live export SHA256、project identity、camera 與 sample times；先獨立審查 pin，任何漂移即失敗。工具只產生 editor 證據，playing／locked 狀態仍須原生 UI 核對，不能代替本流程的 runtime 驗收。
+
 ## 5. 比較、證據與交付門檻
 
 依序保留 vanilla 校準、baseline、candidate 的同設定對照。至少取 idle、action start/mid/end；有逐口或中斷行為時追加每個 stage 邊界、取消及恢復。第一／第三人稱、主／副手分開；按缺陷涵蓋 classic/slim、FOV、旁觀者及平台。需要最終投影驗證時，使用同版本遊戲測試包和清楚可見的軸線／landmark cubes。
