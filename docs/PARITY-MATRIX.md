@@ -1,5 +1,7 @@
 # 煙火現況對照表
 
+後續動畫、物品顯示與手持修復統一使用[官方來源優先流程與驗收收據](ANIMATION-ITEM-REPAIR-WORKFLOW.md)。Blockbench 預覽另標 editor evidence，不升格為本表的真人客戶端驗收；現有失敗與未驗證狀態保持原範圍。
+
 更新：2026-10-15；目前維護來源 **G142**。G133 的永久 title 接收方案是歷史候選，不能當作目前 HUD 路由；G137 已恢復原生 Actionbar factory。最近的 [G138 觸控使用入口](STATUS-A2.8.138.md)、G140 錨點／觸控布局／END 隱藏、G141 原生剩餘時間與同步首幀、G142 未選圖像裁剪，見 [CHANGELOG](../CHANGELOG.md) 和[玩家回報](BUGS.md#client-hud食用入口圖形缺失與延遲)。進食時間、結算、動畫及原作素材保留；實際延遲、完整聲畫與操作仍未驗收。
 
 保留 [G132 進度獎勵所有權](STATUS-A2.8.132.md)、[G131 啟動資料分離](STATUS-A2.8.131.md)及 [G129 共用 HUD catalog 修補](STATUS-A2.8.129.md)；[G130 圖形通道](STATUS-A2.8.130.md)、[G128 調料 Uses／Numb](STATUS-A2.8.128.md)、[G127 兩食品動畫／Atlas HUD](STATUS-A2.8.127.md)、[G126 熟毛蟲雙手](STATUS-A2.8.126.md)仍保留各次原始證據範圍。更早的 [G125 場景聲畫與操作守恆](STATUS-A2.8.125.md)、[G124 調料資料映射](STATUS-A2.8.124.md)、[G123 指南正文鍵](STATUS-A2.8.123.md)、[G122 炒鍋／品質／所有權](STATUS-A2.8.122.md)及 [G121 酒館指南橋接](STATUS-A2.8.121.md)由目前來源承接。

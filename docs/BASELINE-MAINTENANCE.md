@@ -1,5 +1,7 @@
 # Baseline maintenance
 
+動畫、物品顯示與手持修補必須先遵循 [官方來源優先修復流程](ANIMATION-ITEM-REPAIR-WORKFLOW.md)，附來源版本、preview-only 差異及分層驗收收據；editor 預覽不能取代 runtime／client 門檻。
+
 1. Implement gameplay, rendering, guide and stable API fixes in canonical runtime. Do not patch them during packaging or installation.
 2. Bump the release version whenever any exported file changes. Update paired manifests, module versions, guide/payload version and dependencies together.
 3. Update `baseline.json` dependencies from verified upstream file metadata. Never infer UUIDs from a version label.
