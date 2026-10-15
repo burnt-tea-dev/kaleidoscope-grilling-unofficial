@@ -1,5 +1,6 @@
 {
   "schema": 1,
+  "view_mode": "active",
   "project_name": "REPLACE_WITH_REVIEWED_PROJECT_NAME",
   "fixture_sha256": "REPLACE_WITH_REVIEWED_SOURCE_FIXTURE_SHA256",
   "live_sha256": "REPLACE_WITH_REVIEWED_LIVE_EXPORT_SHA256",

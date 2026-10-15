@@ -64,14 +64,24 @@ def server(**faults):
                 names = capture.TOOLS | ({'risky_eval'} if faults.get('unsafe') else set())
                 result = {'tools': [{'name': name} for name in names]}
             elif method == 'resources/read':
-                result = {'contents': [{'uri': URI, 'text': RAW + (' ' if state['changed'] else '')}]}
+                result = {'contents': [{'uri': URI, 'text': RAW + (' ' if state['changed'] and not faults.get('camera_drift') else '')}]}
             elif method == 'tools/call':
                 tool = params['name']
                 if tool == 'get_project_info':
                     result = {'structuredContent': {'project': {'name': 'wrong' if faults.get('name') else 'synthetic', 'uuid': UUID}},
                               'content': [{'type': 'resource_link', 'uri': 'file:///private' if faults.get('resource') else URI}]}
+                elif tool == 'list_views':
+                    camera = copy.deepcopy(plan()['camera'])
+                    if faults.get('camera_drift') and state['changed']:
+                        camera['position'][0] = 7
+                    if faults.get('bad_dimensions'):
+                        camera['width'] = 999
+                    width, height = camera.pop('width'), camera.pop('height')
+                    result = {'structuredContent': {'views': [{'id': 'main', 'kind': 'viewport', 'active': True,
+                        'width': width, 'height': height,
+                        'camera': dict(camera, projection='perspective', locked_angle=None)}]}}
                 elif tool == 'capture_screenshot':
-                    if faults.get('switch_on_capture'):
+                    if faults.get('switch_on_capture') or faults.get('camera_drift'):
                         state['changed'] = True
                     result = {'content': [{'type': 'image', 'mimeType': 'image/png', 'data': base64.b64encode(png()).decode()}]}
                     if faults.get('tool_error'):
@@ -127,6 +137,7 @@ class CaptureTests(unittest.TestCase):
             self.assertNotIn('private-session-secret', (output / 'receipt.json').read_text())
             for frame in receipt['frames']:
                 self.assertEqual(frame['sha256'], capture.sha((output / frame['file']).read_bytes()))
+                self.assertEqual((frame['png_width'], frame['png_height']), (1, 1))
 
     def test_wrong_project_rejected_before_any_mutation(self):
         with server(name=True) as (url, calls):
@@ -201,7 +212,8 @@ class CaptureTests(unittest.TestCase):
         with server() as (url, calls):
             receipt = capture.run(url, self.fixture, self.output, inspect_name='synthetic')
         self.assertEqual(receipt['status'], 'inspected_only')
-        self.assertEqual(self.tool_names(calls), ['get_project_info'])
+        self.assertEqual(self.tool_names(calls), ['get_project_info', 'list_views'])
+        self.assertEqual(receipt['observed_views'][0]['id'], 'main')
 
     def test_unknown_plan_fields_and_clip_mismatch_rejected(self):
         p = plan(); p['tools'] = [{'tool': 'risky_eval'}]
@@ -216,6 +228,29 @@ class CaptureTests(unittest.TestCase):
         model = copy.deepcopy(MODEL); model['animations'][0]['selected'] = False
         with self.assertRaisesRegex(capture.Rejected, 'primary clip'):
             capture.check_model(model, plan())
+
+    def test_active_mode_does_not_create_or_move_or_delete_views(self):
+        p = plan(); p['view_mode'] = 'active'
+        with server() as (url, calls):
+            receipt = capture.run(url, self.fixture, self.output, p)
+        names = self.tool_names(calls)
+        self.assertEqual(receipt['status'], 'captured_editor_only')
+        self.assertEqual(receipt['verified_view']['id'], 'main')
+        self.assertFalse({'create_offscreen_view', 'set_camera_angle', 'delete_offscreen_view'} & set(names))
+        self.assertTrue(all(r['params']['arguments']['view'] == 'main' for r in calls
+                            if r['method'] == 'tools/call' and r['params']['name'] == 'capture_screenshot'))
+
+    def test_active_camera_drift_and_dimension_mismatch_fail_closed(self):
+        for fault in ('bad_dimensions', 'camera_drift'):
+            output = self.root / fault
+            p = plan(); p['view_mode'] = 'active'
+            with server(**{fault: True}) as (url, calls):
+                with self.assertRaises(capture.Rejected):
+                    capture.run(url, self.fixture, output, p)
+            self.assertFalse(list(output.glob('*.png')))
+            self.assertNotIn('create_offscreen_view', self.tool_names(calls))
+            if fault == 'bad_dimensions':
+                self.assertNotIn('animation_timeline', self.tool_names(calls))
 
     def test_cleanup_failure_is_a_distinct_incomplete_status(self):
         with server(cleanup_error=True) as (url, calls):

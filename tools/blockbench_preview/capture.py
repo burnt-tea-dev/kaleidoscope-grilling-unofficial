@@ -8,13 +8,14 @@ import json
 import math
 from pathlib import Path
 import re
+import struct
 import time
 import urllib.parse
 import urllib.request
 
 LIMIT = 32 * 1024 * 1024
 TOOLS = {'get_project_info', 'create_offscreen_view', 'delete_offscreen_view',
-         'set_camera_angle', 'animation_timeline', 'capture_screenshot'}
+         'set_camera_angle', 'animation_timeline', 'capture_screenshot', 'list_views'}
 
 
 class Rejected(RuntimeError):
@@ -168,9 +169,10 @@ def number(value):
 
 
 def validate(plan):
-    require(isinstance(plan, dict) and set(plan) == {'schema', 'project_name', 'fixture_sha256',
+    require(isinstance(plan, dict) and set(plan) - {'view_mode'} == {'schema', 'project_name', 'fixture_sha256',
             'live_sha256', 'primary_animation', 'camera', 'times', 'context'}, 'Unexpected plan fields')
     require(plan['schema'] == 1, 'Unsupported plan version')
+    require(plan.get('view_mode', 'offscreen') in {'active', 'offscreen'}, 'Invalid view mode')
     for key in ('fixture_sha256', 'live_sha256'):
         require(isinstance(plan[key], str) and re.fullmatch('[a-f0-9]{64}', plan[key]), 'Invalid SHA256 pin')
     for key in ('project_name', 'primary_animation'):
@@ -221,6 +223,40 @@ def check_model(model, plan):
                 and matches[0].get('override', False) == clip['override'], 'Clip scope/Override mismatch')
 
 
+def read_views(client):
+    result = client.tool('list_views', {})
+    data = result.get('structuredContent')
+    if not isinstance(data, dict):
+        try:
+            data = json.loads(next(x['text'] for x in result.get('content', []) if x.get('type') == 'text'))
+        except Exception:
+            raise Rejected('View metadata unavailable') from None
+    require(isinstance(data.get('views'), list), 'View list unavailable')
+    return data['views']
+
+
+def active_view(client, camera, expected_id=None):
+    matches = [v for v in read_views(client) if v.get('kind') == 'viewport' and v.get('active') is True]
+    require(len(matches) == 1, 'Exactly one active native viewport required')
+    view = matches[0]
+    require(isinstance(view.get('id'), str) and view['id'] and
+            (expected_id is None or view['id'] == expected_id), 'Active viewport changed')
+    require(view.get('width') == camera['width'] and view.get('height') == camera['height'],
+            'Native viewport dimensions differ from plan; resize manually before capture')
+    actual = view.get('camera', {})
+    require(actual.get('projection') == 'perspective' and actual.get('locked_angle') is None,
+            'Native viewport projection/lock mismatch')
+    # The plugin reports camera metadata rounded to three decimals.
+    for key in ('position', 'target'):
+        values = actual.get(key)
+        require(isinstance(values, list) and len(values) == 3 and
+                all(number(a) and abs(a - b) <= .001 for a, b in zip(values, camera[key])),
+                'Native viewport camera differs from plan')
+    require(number(actual.get('fov')) and abs(actual['fov'] - camera['fov']) <= .001,
+            'Native viewport FOV differs from plan')
+    return view
+
+
 def run(url, fixture, output, plan=None, inspect_name=None):
     """Capture after reviewed pins, or read-only inspect to obtain a live-export pin."""
     endpoint(url)
@@ -248,13 +284,21 @@ def run(url, fixture, output, plan=None, inspect_name=None):
         (output / 'initial-live.bbmodel').write_bytes(raw)
         receipt['live_sha256'] = sha(raw)
         if plan is None:
+            receipt['observed_views'] = read_views(client)
             receipt['status'] = 'inspected_only'
             return receipt
+        use_active = plan.get('view_mode', 'offscreen') == 'active'
+        camera = plan['camera']
+        view = active_view(client, camera)['id'] if use_active else 'qa_' + plan['live_sha256'][:16]
+        receipt['view_mode'] = 'active' if use_active else 'offscreen'
+        receipt['view_id'] = view
         def guard():
             require(sha(fixture.read_bytes()) == plan['fixture_sha256'], 'Source fixture changed during capture')
             _, current, current_model = client.snapshot(name, uuid)
             require(sha(current) == plan['live_sha256'], 'Live project changed during capture')
             check_model(current_model, plan)
+            if use_active:
+                receipt['verified_view'] = active_view(client, camera, view)
         def call(tool, args):
             nonlocal view_created
             guard()
@@ -265,13 +309,13 @@ def run(url, fixture, output, plan=None, inspect_name=None):
             receipt['steps'].append({'tool': tool, 'arguments': args, 'guard': 'before_and_after_passed'})
             save()
             return result
-        # Private offscreen view, no app screenshot or native-mode mutation.
-        view = 'qa_' + plan['live_sha256'][:16]
-        camera = plan['camera']
-        call('create_offscreen_view', {'id': view, 'width': camera['width'], 'height': camera['height'], 'copy_view': 'none'})
-        view_created = True
-        call('set_camera_angle', {'view': view, 'position': camera['position'], 'target': camera['target'],
-                                 'projection': 'perspective', 'fov': camera['fov'], 'format': 'png'})
+        # Active mode verifies the existing camera and never creates, moves or resizes a view.
+        if not use_active:
+            call('create_offscreen_view', {'id': view, 'width': camera['width'], 'height': camera['height'], 'copy_view': 'none'})
+            call('set_camera_angle', {'view': view, 'position': camera['position'], 'target': camera['target'],
+                                     'projection': 'perspective', 'fov': camera['fov'], 'format': 'png'})
+        else:
+            receipt['cleanup'] = 'not_needed; native viewport retained unchanged'
         call('animation_timeline', {'animation_id': plan['primary_animation'], 'action': 'pause'})
         for index, time in enumerate(plan['times']):
             call('animation_timeline', {'animation_id': plan['primary_animation'], 'action': 'set_time', 'time': time})
@@ -282,10 +326,14 @@ def run(url, fixture, output, plan=None, inspect_name=None):
                 image = base64.b64decode(images[0]['data'], validate=True)
             except Exception:
                 raise Rejected('Invalid PNG encoding') from None
-            require(image.startswith(b'\x89PNG\r\n\x1a\n'), 'Invalid PNG signature')
+            require(len(image) >= 24 and image.startswith(b'\x89PNG\r\n\x1a\n')
+                    and image[12:16] == b'IHDR', 'Invalid PNG header')
+            image_width, image_height = struct.unpack('>II', image[16:24])
+            require(0 < image_width <= 8192 and 0 < image_height <= 8192, 'Invalid PNG dimensions')
             filename = f'frame-{index:04d}.png'
             (output / filename).write_bytes(image)
-            receipt['frames'].append({'file': filename, 'time_seconds': time, 'sha256': sha(image)})
+            receipt['frames'].append({'file': filename, 'time_seconds': time, 'sha256': sha(image),
+                                      'png_width': image_width, 'png_height': image_height})
             save()
         guard()
         receipt['status'] = 'captured_editor_only'
@@ -300,7 +348,7 @@ def run(url, fixture, output, plan=None, inspect_name=None):
                 client.tool('delete_offscreen_view', {'view': view})
                 receipt['cleanup'] = 'offscreen_view_deleted'
             except Exception:
-                receipt['cleanup'] = 'failed; close the owned offscreen view manually'
+                receipt['cleanup'] = 'failed; disposal incomplete or unverified; do not repeat offscreen capture'
                 if receipt['status'] == 'captured_editor_only':
                     receipt['status'] = 'captured_editor_cleanup_failed'
         save()
@@ -322,7 +370,7 @@ def main():
                           'live_sha256': receipt['live_sha256'], 'frames': len(receipt['frames']),
                           'cleanup': receipt.get('cleanup', 'not_needed')}))
         if receipt['status'] == 'captured_editor_cleanup_failed':
-            parser.exit(2, 'Capture frames retained, but offscreen cleanup failed; manual cleanup required\n')
+            parser.exit(2, 'Capture frames retained, but offscreen cleanup failed; stop offscreen capture\n')
     except Exception as error:
         parser.exit(1, (str(error) if isinstance(error, Rejected) else 'Local input or capture failure') + '\n')
 
