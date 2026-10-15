@@ -105,6 +105,8 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from effect_merge_source_witness import reference_bytes as effect_reference
+    current = effect_reference(path,current)
     if path.suffix == '.js':
         from build_failure_skewer_held import predecessor_script
         current = predecessor_script(path,current.decode()).encode()

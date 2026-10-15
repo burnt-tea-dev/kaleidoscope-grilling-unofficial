@@ -39,6 +39,16 @@ class ComposedWitnessTests(unittest.TestCase):
    path=ROOT/relative;current=path.read_bytes()
    if relative==slime.TRANSPORT_PATH:current=failure.predecessor_script(path,current.decode()).encode()
    self.assertEqual(slime.reference_bytes(path,current),slime.pinned_bytes(slime.PREVIOUS_SLIME_BASE,relative))
+ def test_effect_postimages_inverse_and_mutations_are_exact(self):
+  import effect_merge_source_witness as effect
+  for relative in effect.PATHS:
+   path=ROOT/relative;current=path.read_bytes()
+   self.assertEqual(current,effect.pinned(effect.REVIEWED_EFFECT_BASE,relative))
+   self.assertEqual(effect.reference_bytes(path,current),effect.pinned(effect.PREVIOUS_EFFECT_BASE,relative))
+   with self.assertRaises(ValueError):effect.reference_bytes(path,current+b'\n// unreviewed\n')
+  before=effect.restore_main(three.MAIN.read_text())
+  self.assertEqual(effect.reapply_main(before),three.MAIN.read_text())
+  with self.assertRaises(ValueError):effect.reapply_main(before+'\n')
  def test_all_visibility_layers_are_independently_reversible(self):
   p=raw.CONTROLLER;current=json.loads(p.read_text())
   after_failure=failure.predecessor_document(p,current)

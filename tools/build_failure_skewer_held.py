@@ -121,6 +121,8 @@ def state_changes():
  ('if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}','if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}')]
 
 def restore_main(text):
+ from effect_merge_source_witness import restore_main as restore_effect
+ text=restore_effect(text)
  if PROJECTION_IMPORT in text:
   for before,after in reversed(main_changes("import {supportsRawOne,rawOneAnimation}" in text)):
    if text.count(after)!=1:raise ValueError('Failure projection wrapper changed')
@@ -134,12 +136,17 @@ def restore_main(text):
  return text
 
 def patch_main(text):
+ effects="mergeEffectApplication" in text
  text=restore_main(text)
  for before,after in state_changes()+main_changes("import {supportsRawOne,rawOneAnimation}" in text):
   if text.count(before)!=1:raise ValueError('Failure exact main anchor missing')
   text=text.replace(before,after,1)
  from build_slime_frame_selector import MAIN_IMPORT
- return text.replace(MAIN_IMPORT,MAIN_IMPORT+STATE_IMPORT,1) if text.startswith(MAIN_IMPORT) else STATE_IMPORT+text
+ text=text.replace(MAIN_IMPORT,MAIN_IMPORT+STATE_IMPORT,1) if text.startswith(MAIN_IMPORT) else STATE_IMPORT+text
+ if effects:
+  from effect_merge_source_witness import reapply_main
+  text=reapply_main(text)
+ return text
 
 def gate(profile,hand,identifier=None,attachable=False):
  import build_java_eating_projection as g

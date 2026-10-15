@@ -93,7 +93,8 @@ class FailureAssets(unittest.TestCase):
   for name in ['secret_held_runtime.js','held_visual_transport.js']:
    p=main.with_name(name);prior=subprocess.check_output(['git','show','b938359b:'+p.relative_to(ROOT).as_posix()],cwd=ROOT,text=True);self.assertEqual(slime_reference(p,predecessor_script(p,p.read_text()).encode()).decode(),prior)
   current=main.read_text();slime_reference(main,current.encode())
-  predecessor=raw_one.restore_main(restore_main(strip_slime(current)))
+  from effect_merge_source_witness import restore_main as restore_effect
+  predecessor=raw_one.restore_main(restore_main(strip_slime(restore_effect(current))))
   self.assertEqual(predecessor,base)
   failure_only=patch_main(predecessor)
   self.assertEqual(restore_main(failure_only),base);self.assertEqual(patch_main(failure_only),failure_only)

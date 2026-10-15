@@ -88,7 +88,8 @@ class ReviewThreeTests(unittest.TestCase):
   bad=copy.deepcopy(original);d=bad['minecraft:attachable']['description']
   next(row for row in d['scripts']['animate']if r.ALIAS in row)[r.ALIAS]='1'
   with self.assertRaises(ValueError):r.historical_document(p,bad)
-  main=r.MAIN.read_text();mutation=main+'\n// unrelated mutation retained\n'
+  from effect_merge_source_witness import restore_main as restore_effect
+  main=restore_effect(r.MAIN.read_text());mutation=main+'\n// unrelated mutation retained\n'
   self.assertEqual(r.restore_main(mutation),r.restore_main(main)+'\n// unrelated mutation retained\n')
   ctrl=r.RP/'render_controllers/java_eating_player.render_controllers.json';bad=json.loads(ctrl.read_text())
   rows=bad['render_controllers']['controller.render.player.first_person']['part_visibility'];next(row for row in rows if 'rightArm' in row)['rightArm']='1'

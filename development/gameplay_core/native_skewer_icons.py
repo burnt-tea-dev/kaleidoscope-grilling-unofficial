@@ -228,4 +228,3 @@ if __name__ == '__main__':
     routed = check_or_write(args.root.resolve(), args.write)
     print('Native animated GUI routes:', ', '.join(routed))
     print('Source/pixels only; Minecraft placement/use/rendering acceptance remains pending.')
-
