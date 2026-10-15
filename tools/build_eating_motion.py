@@ -58,6 +58,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  from eating_owner_context import legacy_document
  from build_review_three_eating_projection import restore_main,strip_attachable
  overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
+ from build_failure_skewer_held import base_assets as failure_assets
+ overrides.update(failure_assets())
  main_path=BP/'scripts/main.js'
  if main_path in overrides:overrides[main_path]=restore_main(overrides[main_path])
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
@@ -116,7 +118,7 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
    # Secret ingredient owner reads are an independent held-render contract.
    # Keep them when rebuilding the shared random-profile bite clock, including
    # the native ALT clone. Otherwise a generator run silently hides the food.
-   secret_reads=[row for row in d['scripts']['pre_animation'] if row.startswith('v.kg_secret_')]
+   secret_reads=[row for row in d['scripts']['pre_animation'] if row.startswith(('v.kg_secret_','v.kg_failure_'))]
    d['scripts']['pre_animation']=["v.kg_bite_stage = q.is_using_item ? (q.property('kaleidoscope_grilling:eat_profile') == 4 ? ("+alt+") : ("+normal+")) : 0;"]+secret_reads
   d['scripts']['pre_animation']=[row.replace(ACTIVE_HAND,'q.is_using_item').replace('q.is_using_item',ACTIVE_HAND) for row in d['scripts']['pre_animation']]
   if modern:d['scripts']['pre_animation']=[ASSIGNMENT]+[row.replace('q.item_in_use_duration',VARIABLE) for row in d['scripts']['pre_animation']]
@@ -138,6 +140,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
   output=augment_two_route(output)
  from build_review_three_eating_projection import augment as augment_review_three
  if review_three_routes:output=augment_review_three(output)
+ from build_failure_skewer_held import augment as augment_failure
+ output=augment_failure(output)
  from eating_owner_context import augment as augment_owner_context
  # Nonedible partial skewers still use the player's eating-hand idle guard.
  partial=RP/'attachables/unfinished_skewer.attachable.json'

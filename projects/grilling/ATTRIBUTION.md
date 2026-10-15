@@ -89,3 +89,11 @@ Canola models/textures remain under the same pinned Grilling source licence. The
 ## G82 Java Cookery palette sources
 
 Default generated particle samples for 99 original foods are reviewed from KaleidoscopeMods/KaleidoscopeCookery Forge `2f4e386ce23f49a385ddf003c67fc6415c55417a` and NeoForge `4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c`. Only suspicious stir fry changes its seven derived stage atlases; 98 equal palettes remain. Original/derived resources: Copyright (c) 2025 Kaleidoscope Official Production Team, CC BY-NC-SA 4.0. Detailed source paths, identities, limited tint scope and the changed public sprite attribution are in development/gameplay_core/fixtures/java-cookery-palette-160/. No author endorsement or private Bedrock food scripts are included.
+
+## Failure-skewer source alignment candidate (2026-10-15)
+
+The mysterious-skewer and dark-grilling source closure is from [breezeth-CN/KaleidoscopeGrilling at 9a1acdab27698457bec16c9362678e574895a28c](https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab27698457bec16c9362678e574895a28c). Credit: Copyright (c) 2026, breezeth; reused Cookery resources Copyright (c) 2025, Kaleidoscope Official Production Team. No endorsement is implied.
+
+The 403 pinned files, original notices and per-file Git blob/SHA256 provenance are in `development/gameplay_core/fixtures/java-failure-skewer-9a1acdab/` at the repository root. Author Java source remains under its original BSD 3-Clause `LICENSE-CODE`. Original art and all adapted failure-skewer geometries, texture atlases and attachable/model asset data remain under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), as preserved in `LICENSE-ASSETS`; this project's tool/code license does not relicense those assets.
+
+Adaptations are Java-to-Bedrock coordinate/UV conversion, source-pixel atlas packing, ordered override selection and held/eating attachment routing. No replacement art, guessed tint or corrected upstream override is introduced. The generated files are `gameplay_core/resource_pack/models/entity/failure_skewer_held.geo.json`, `textures/failure_skewer/`, `render_controllers/failure_skewer_held.render_controllers.json`, and the six mysterious-skewer/dark-grilling canonical/ALT/plain attachables. Extracted vanilla charcoal/magma-cream research textures and the vanilla client archive are not bundled.

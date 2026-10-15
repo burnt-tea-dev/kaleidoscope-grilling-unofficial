@@ -1,3 +1,4 @@
+import {createFailedSkewer,isFailureSkewer} from './failure_skewer_visual_core.js';
 import {isOwnedBottleLore,bottleLoreSignature,bottleLoreMismatch} from './bottle_lore_core.js';
 import {flatulenceSoundOrigin,flatulenceSoundPitch} from './flatulence_sound_runtime.js';
 import {tryProjectileDodgeMovement} from './projectile_dodge_movement_runtime.js';
@@ -9,6 +10,7 @@ import {retargetBottleFillStack,prepareBottleFillItems} from './bottle_fill_item
 import {isPlainEatingId,SKEWER_EATING_IDS} from './eating_profile_ids.js';
 import {beginSeasoningMotion,syncSeasoningMotion} from './seasoning_motion_runtime.js';
 import {supportsJavaEatingProjection} from './java_eating_projection_items.js';
+import {supportsFailureEating,failureEatingAnimation} from './failure_skewer_projection.js';
 import {supportsReviewedThree,reviewedThreeAnimation} from './review_three_projection.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {prepareEatingItems,forgetEatingItem,selectedEatingProfile} from './eating_item_runtime.js';
@@ -432,14 +434,14 @@ function cookedStack(raw,state){
   stack=copyOne(raw);setCookedIngredientRows(stack,readSkewerRows(raw));setItemProperty(stack,SECRET_COOKED_KEY,true);if(!isSecretCooked(stack))throw Error('Grilling: cooked state was not saved');
  }else{
   const out=customSkewerCookedId(ingredientSnapshot(raw))||RAW_TO_COOKED[raw.typeId];
-  if(!out)return new ItemStack(MYSTERIOUS_ID,1);
+  if(!out)return failedStack(raw,MYSTERIOUS_ID);
   stack=new ItemStack(out,1);copyCustomData(raw,stack);
  }
  setHot(stack,state.heatTicks);setSeasonings(stack,state.seasonings??[]);
  try{setItemProperty(stack,'kaleidoscope_grilling:seasoned',state.seasoned)}catch{}
  return refreshHotLore(stack);
 }
-function failedStack(raw,id){const stack=new ItemStack(id,1);return copyCustomData(raw,stack)}
+function failedStack(raw,id){return createFailedSkewer(raw,id,(type,amount)=>new ItemStack(type,amount),type=>new EnchantmentType(type))}
 function outputFor(raw,state,kind){if(kind==='raw')return copyOne(raw);if(kind==='dark')return failedStack(raw,DARK_ID);if(kind==='mysterious')return failedStack(raw,MYSTERIOUS_ID);return cookedStack(raw,state)}
 function firstEmptyPlayerSlot(player){
  const c=mainContainer(player);if(!c)return -1;
@@ -1058,10 +1060,10 @@ world.afterEvents.itemStartUse.subscribe(e=>{
  try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
  // Separate Java NONE-context first-person path. Do not replace the RP player
  // definition or reset body/head channels. The JSON branch gates upright use.
- if(eatingNativeTicks(a.nativeDuration)>0&&((supportsJavaEatingProjection(e.itemStack.typeId,profile)||supportsReviewedThree(e.itemStack.typeId,profile,hand))||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
+ if(eatingNativeTicks(a.nativeDuration)>0&&(((supportsJavaEatingProjection(e.itemStack.typeId,profile)||supportsFailureEating(e.itemStack.typeId,profile))||supportsReviewedThree(e.itemStack.typeId,profile,hand))||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
   try{
    e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
-   e.source.playAnimation((reviewedThreeAnimation(e.itemStack.typeId,profile,hand)||(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_bun_slice_skewer'&&profile==='TWO'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.bun_two.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.pearl_three.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))))))),{
+   e.source.playAnimation((failureEatingAnimation(e.itemStack.typeId,profile,hand)||((reviewedThreeAnimation(e.itemStack.typeId,profile,hand)||(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_bun_slice_skewer'&&profile==='TWO'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.bun_two.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.pearl_three.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))))))))),{
     // Do not stop on a client-synced property before its update packet arrives.
     // The animation blend gate still masks inactive projection immediately.
     controller:'kg_java_eating_first_person',blendOutTime:0,
@@ -1092,7 +1094,7 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
  a.meta=finishedFoodMeta(a.meta,now());
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
- if(id===SECRET_ID)try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
+ if(id===SECRET_ID||isFailureSkewer(id))try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
  stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
  if(id===SECRET_ID){addSecretNutrition(e.source,e.itemStack,{hot:false})}
  if(RAW_NAUSEA[id])try{e.source.addEffect('nausea',60,{showParticles:true})}catch{};if(id===MYSTERIOUS_ID)try{e.source.addEffect('nausea',100,{showParticles:true})}catch{};if(id===DARK_ID)try{e.source.addEffect('blindness',200,{showParticles:true})}catch{}
@@ -1114,7 +1116,7 @@ world.afterEvents.itemStopUse.subscribe(e=>{
  // Capture elapsed at release, not in the deferred callback: a 23-tick release
  // must not become eligible merely because cleanup runs a tick later.
  // Let native completion win either event order; never delete a newer session.
- const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
+ const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
  // A proven nonterminal stop cannot race native completion. Settle in this
  // writable after-event, like Java releaseUsing, before leave clears the session.
  // Terminal/unknown clocks retain deferred completion ownership; before-leave

@@ -112,6 +112,8 @@ def eating_gate():
     # Native arm animation must still carry the same attachable/bite stages.
     skewers = 0
     for file in (RP / 'attachables').glob('*_skewer.attachable.json'):
+        from verify_failure_skewer import admit_attachable
+        if admit_attachable(file):continue
         d = json.loads(file.read_text())['minecraft:attachable']['description']
         if version >= (2,8,68) and d['identifier']=='kaleidoscope_grilling:unfinished_skewer':
             assert d['identifier'] not in required, file

@@ -1,3 +1,4 @@
+import * as failureSkewers from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 import {canonicalFoodId,eatingItemId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 import {finishedFoodMeta} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food_finish_core.js';
 import {CONFIG_DEFAULTS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/server_config_core.js';
@@ -43,7 +44,7 @@ function fixture({creative=false}={}){
  const hunger={currentValue:0,effectiveMax:20,setCurrentValue(v){this.currentValue=v}},saturation={currentValue:0,effectiveMax:20,setCurrentValue(v){this.currentValue=v}};
  const holder={id:'storage-adapter',name:'Storage adapter',selectedSlotIndex:0,isSneaking:false,dimension,location:block.location,playAnimation(){},getComponent:id=>id.endsWith('hunger')?hunger:id.endsWith('saturation')?saturation:undefined};
  const write=(hand,s)=>{if(hand==='off')off=s?.clone();else bag.setItem(0,s);if(failHand){failHand=false;throw Error('injected hand write')}};
- const ctx=vm.createContext({canonicalFoodId,forgetEatingItem(){},finishedFoodMeta,grillingConfig:()=>CONFIG_DEFAULTS,...data,...logic,...skewers,...secretShape,...items,...snapshots,...seasoning,...bottleVisuals,...oil,...tools,...heat,world,system:{get currentTick(){return tick}},ItemStack:Stack,foodFacts,primitiveStackProps,commitSteps,commitTwoParty,slotWrite,planInventoryInsert,nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction,captureEatingIdentity,eatingStillCurrent,commitEating,
+ const ctx=vm.createContext({...failureSkewers,EnchantmentType:class {constructor(id){this.id=id}},canonicalFoodId,forgetEatingItem(){},finishedFoodMeta,grillingConfig:()=>CONFIG_DEFAULTS,...data,...logic,...skewers,...secretShape,...items,...snapshots,...seasoning,...bottleVisuals,...oil,...tools,...heat,world,system:{get currentTick(){return tick}},ItemStack:Stack,foodFacts,primitiveStackProps,commitSteps,commitTwoParty,slotWrite,planInventoryInsert,nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction,captureEatingIdentity,eatingStillCurrent,commitEating,
   console:{warn(){}},COOKERY_FILLED:oil.COOKERY_FILLED_ID,SEASON_USES_KEY:seasoning.SEASONING_USES_KEY,SEASON_VARIANT_KEY:seasoning.SEASONING_VARIANT_KEY,OIL_TOOLS:{},
   ...portableOil,...portableFood,...cuisineQuality,ensureOilHandPublished:()=>true,OIL_TYPES:{canola:{heatTicks:1200},secret_chili:{heatTicks:12000},premium_chili:{heatTicks:24000}},heldMain:()=>bag.getItem(0),heldOff:()=>off,heldByHand:(_,hand)=>hand==='off'?off:bag.getItem(0),creative:()=>creative,
   captureWritableHand:(_,hand)=>({before:(hand==='off'?off:bag.getItem(0))?.clone(),read:()=>(hand==='off'?off:bag.getItem(0))?.clone(),write:s=>write(hand,s)}),mainContainer:()=>bag,inv:()=>grill,occupied:()=>grill.rows.filter(Boolean).length,
@@ -147,4 +148,15 @@ test('Creative brush still rejects insufficient oil and rolls back a failed pot 
  f.main=f.api.buildCookeryOilPot('canola',2);f.handle();assert.equal(f.api.readCookeryOilPot(f.main).count,2);assert.equal(f.state.phase,0);
  f.main=f.api.buildCookeryOilPot('canola',3);const before=f.main,sounds=f.sounds.length;f.failNextHand();f.handle();
  assert.deepEqual(f.main,before);assert.equal(f.state.phase,0);assert.equal(f.sounds.length,sounds);
+});
+
+test('actual failure and unknown-cooked fallback preserve source and all accessible metadata',()=>{
+ const f=fixture();
+ for(const inputId of ['kaleidoscope_grilling:raw_gluten_skewer','kaleidoscope_grilling:secret_skewer','foreign:raw_without_recipe'])for(const kind of ['mysterious','dark',...(inputId.startsWith('foreign:')?['cooked']:[])]){
+  const raw=new Stack(inputId,3);raw.nameTag='Failed source';raw.keepOnDeath=true;raw.lockMode='slot';raw.destroy=['minecraft:stone'];raw.place=['minecraft:dirt'];items.setItemLore(raw,[{translate:'source.lore'}]);
+  items.setItemProperty(raw,'foreign:metadata','opaque');items.setItemProperty(raw,secretShape.SECRET_MODEL_VARIANTS_KEY,'[6,5,4]');const before=snapshots.captureSkewerMetadata(raw);
+  const output=f.api.outputFor(raw,f.state,kind);assert.equal(output.typeId,kind==='dark'?data.DARK_ID:data.MYSTERIOUS_ID);assert.equal(output.amount,1);
+  const expected=structuredClone(before);expected.id=output.typeId;expected.props[failureSkewers.FAILED_SOURCE_KEY]=inputId===skewers.SECRET_ID?'custom':inputId;
+  assert.deepEqual(snapshots.captureSkewerMetadata(output),expected);assert.deepEqual(snapshots.captureSkewerMetadata(raw),before);
+ }
 });

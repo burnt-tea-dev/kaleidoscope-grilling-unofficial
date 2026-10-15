@@ -22,6 +22,8 @@ def selector_pair():
  from build_two_route_eating_projection import new_selector
  old=new_selector();return old,"(reviewedThreeAnimation(e.itemStack.typeId,profile,hand)||("+old+"))"
 def restore_main(text):
+ from build_failure_skewer_held import restore_main as restore_failure
+ text=restore_failure(text)
  if IMPORT not in text:
   if 'supportsReviewedThree(' in text or 'reviewedThreeAnimation(' in text:raise ValueError('Partial reviewed THREE wrapper')
   return text
@@ -103,7 +105,8 @@ def augment(output):
 
 def historical_document(path,document,*,owned=False):
  """Invert only this generator's exact current route delta for older witnesses."""
- doc=copy.deepcopy(document)
+ from build_failure_skewer_held import predecessor_document as failure_predecessor
+ doc=failure_predecessor(path,copy.deepcopy(document))
  if path.parent==RP/'attachables':
   d=doc['minecraft:attachable']['description'];item=d['identifier']
   if item not in ids() or ALIAS not in d['animations']:return doc

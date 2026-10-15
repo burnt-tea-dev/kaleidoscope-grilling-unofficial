@@ -17,7 +17,8 @@ def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 class HandAnchorTests(unittest.TestCase):
     def test_all_bite_stages_preserve_assets_and_bind_once(self):
-        refs={r for p in (RP/'attachables').glob('*_skewer.attachable.json') if p.name!='secret_skewer.attachable.json' and not (VERSION>=(2,8,68) and p.name=='unfinished_skewer.attachable.json') for r in load(p)['minecraft:attachable']['description']['geometry'].values()}
+        from verify_failure_skewer import admit_attachable
+        refs={r for p in (RP/'attachables').glob('*_skewer.attachable.json') if not admit_attachable(p) and p.name!='secret_skewer.attachable.json' and not (VERSION>=(2,8,68) and p.name=='unfinished_skewer.attachable.json') for r in load(p)['minecraft:attachable']['description']['geometry'].values()}
         seen=set()
         for p in (RP/'models/entity/a287_hand').glob('*.geo.json'):
             g=load(p)['minecraft:geometry'][0];seen.add(g['description']['identifier'])
