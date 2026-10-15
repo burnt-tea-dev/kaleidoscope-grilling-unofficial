@@ -1,6 +1,6 @@
 # 煙火目前缺口與待重現問題
 
-Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；目前維護來源2.8.125，2026-10-09。
+Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；目前維護來源2.8.142，更新2026-10-15。
 本頁不把「缺證據」全部當作已證實程式 bug，也不把舊候選觀察沿用成現行驗收。
 G116承接餐盤營養界限與防誤食；G117修復瓶爆炸取消及手持提前結算界限。
 G118補本日一比一稽核的核心、農業與容器機制差異；完整逐項狀態見[G118](STATUS-A2.8.118.md)。真人驗收仍待完成。
@@ -9,6 +9,19 @@ G119補手持盤及植物／效果提交；[G120](STATUS-A2.8.120.md)續修持�
 [G122](STATUS-A2.8.122.md)接通三道炒鍋備料／三翻／品質，增補紅樹與寫入所有權；具體原生操作與真人驗收仍按版本記錄保留範圍。
 [G123](STATUS-A2.8.123.md)修復原 Cookery 1.6.0 的三語正文鍵拒絕；[G124](STATUS-A2.8.124.md)修復調料資料重新載入。家族目前的 LIVE 配套、部署／保存／指南接收收據見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)；家族載入及資料接收不補成食用、鍋具或客戶端操作驗收。
 現況總表見 [PARITY-MATRIX.md](PARITY-MATRIX.md)，工具變更見 [CHANGELOG](../CHANGELOG.md)。
+
+## CLIENT-HUD：食用入口、圖形缺失與延遲
+
+**狀態：保留真實失敗；G138／G140–G142 修補已遠端合併及部署，最新客戶端延遲和完整操作仍未驗收。**
+
+| 玩家觀察（2026-10-14） | 已進 canonical 的修補與目前界線 |
+| --- | --- |
+| 原生 HUD、Java Saturation 和魔法模組的 Java 飢餓 UI 正常，森羅 UI 完全沒出現；多次分層及普通標題測試仍回覆沒有出現。 | G137 恢復原生 Actionbar factory；後來截圖仍見 `KT_HUD!S:…`／`KT_HUD!END;` 原始資料碼，否定了當時已恢復的說法。家族 host 的掛載與自有資料碼隱藏由私有整合承接；不能單靠伺服器送出成功判斷畫面。 |
+| 按住串完全沒有進食動作。G138 後「使用物品」按鈕已出現，早期數量變動本身不足以證明動畫恢復。 | [PR205](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/205) 新增食用串原生觸控入口；後續截圖 76212／76213 已見進食姿勢，串數量從 46 到 45，但沒有因此接受全部食品、主副手、取消／連吃或各平台。 |
+| 後續截圖看得到進食條與調酒色塊，但回報位置不對；76251 又回報進食條延遲很大。 | [PR206](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/206) 的 G140 修正進食錨點、觸控上移 26 邏輯像素與完整 END 隱藏，Desktop 保留 Java 座標；[PR208](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/208) 的 G141 按原生 `itemStartUse.useDuration` 剩餘 ticks 對齊並同步發首幀，其後每 tick 更新。調酒位置另由 Tavern T165 修正。沒有證據認定這已解決所有秒級延遲。 |
+| 雪克杯按很久 UI 才出現，整體性能仍差。 | [PR209](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/209) 的 G142 以 `ignored` 跳過未選進食圖像；保留 native packet／容量／過期、素材、布局及結算。Tavern T166 另有預覽快取與調酒圖形裁剪。來源投影不是實測配置數、FPS 或延遲，最新真人結果仍待取得。 |
+
+G142 的 source／Windows export CI、完整家族停服存檔副本 first／restart、准入及 LIVE 讀回已通過；正式 `A2.8.142` 已發布，公開下載與 LIVE 內容一致。這些證據沒有覆蓋最新客戶端實際手感，維持 `client=false`、`production_ready=false`、`pending_client_acceptance`。使用者已要求停止畫面探針及反覆索取測試，本次同步沒有再發送探針，也沒有使用模擬玩家。後續回報應直接承接本節，不把先前失敗改寫成成功。
 
 ## GRILL-DEFERRED-OWNER：取消或替換後誤拆烤架
 
