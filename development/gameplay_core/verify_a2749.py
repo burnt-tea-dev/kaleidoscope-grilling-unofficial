@@ -54,7 +54,7 @@ def main():
  assert runtime.count('itemCompleteUse.subscribe')==1
  main=(BP/'scripts/main.js').read_text(encoding='utf-8')
  assert main.count("import './a2732_standalone_food_effect_runtime.js';")==1
- assert "fxGet(p,'numb')" in main
+ assert "!!fx.numb" in main
 
  catalog=load(BP/'item_catalog/crafting_item_catalog.json')
  rows=catalog['minecraft:crafting_items_catalog']['categories'][0]['groups'][0]['items']
