@@ -43,6 +43,7 @@ class ComposedWitnessTests(unittest.TestCase):
   import effect_merge_source_witness as effect
   from current_runtime_ownership import verify_current_inventory
   from build_ordinary_relative_calibration import restore_main as restore_later_layers
+  from public_source_witness import performance_witness_source
   verify_current_inventory()
   for relative in effect.PATHS:
    path=ROOT/relative;current=path.read_bytes()
@@ -50,12 +51,12 @@ class ComposedWitnessTests(unittest.TestCase):
    predecessor=effect.pinned(effect.PREVIOUS_EFFECT_BASE,relative)
    # Frozen effect proof remains exact; current main is a later scoped layer.
    self.assertEqual(effect.reference_bytes(path,reviewed),predecessor)
-   intermediate=restore_later_layers(current.decode()).encode()if relative==effect.PREFIX+'main.js'else current
+   intermediate=restore_later_layers(performance_witness_source(current.decode())).encode()if relative==effect.PREFIX+'main.js'else current
    self.assertEqual(intermediate,reviewed)
    self.assertEqual(effect.reference_bytes(path,current),predecessor)
    for source in (reviewed,current):
     with self.assertRaises(ValueError):effect.reference_bytes(path,source+b'\n// unreviewed\n')
-  intermediate=restore_later_layers(three.MAIN.read_text())
+  intermediate=restore_later_layers(performance_witness_source(three.MAIN.read_text()))
   before=effect.restore_main(intermediate)
   self.assertEqual(effect.reapply_main(before),intermediate)
   with self.assertRaises(ValueError):effect.reapply_main(before+'\n')

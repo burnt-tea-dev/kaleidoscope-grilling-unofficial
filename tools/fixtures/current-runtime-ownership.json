@@ -85,6 +85,30 @@
       "owner": "plate_special_visuals",
       "before_sha256": "b2933d786110e8eb1fabafc1aad889984a7f91fbfeaa40291092b46c57f6f773",
       "after_sha256": "7880511162623c947e8c188ae1d3d8d3cd97e0a9733209e76f0da840f6ba59b6"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/main.js": {
+      "operation": "modify",
+      "owner": "g144_performance",
+      "before_sha256": "3180b0b1b957556c1b47ffed51e572d28e22132747b71490d408d3aac982c483",
+      "after_sha256": "56cf29fbf6cfaaff08b966e462c880d66c7561e55650c8495fa909f4be843cd1"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/timed_work_queue.js": {
+      "operation": "modify",
+      "owner": "g144_performance",
+      "before_sha256": "2aeac6e62d83be470730f5d43b562c1b7873a12babbc44a65167a2866cce0e61",
+      "after_sha256": "ef574012de18e7abe42983e8d8a02b33720708c9f11d258ee3041a61d160adf2"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "operation": "modify",
+      "owner": "g145_identity",
+      "before_sha256": "2c58fa0909d9bf5a9aa0fd02523e58463fb3c350bde6cbb3938c3cb543fd6a26",
+      "after_sha256": "ae9ced9cca87b40fd2c29cd35bc0bde81e4014f470b4934ae8da91c56558aa3f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "operation": "modify",
+      "owner": "g145_identity",
+      "before_sha256": "e3f290b3def67ad2a2ebc6e4db573d57db7d1f2ac90cfec96f7c7df01c94054a",
+      "after_sha256": "75de2cd1d597ee99ffc7f881e93b5b60bd6c18ba647c770017ccbe8f1a064961"
     }
   }
 }

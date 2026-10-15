@@ -4,7 +4,13 @@ import eating_route_extraction as bridge
 class Extraction(unittest.TestCase):
  def test_exact_preimage_and_idempotence(self):
   c=bridge.contract();rel='projects/grilling/gameplay_core/behavior_pack/scripts/main.js';old=subprocess.check_output(['git','show',c['baseline_commit']+':'+rel],cwd=ROOT).decode();new=(ROOT/rel).read_text()
-  self.assertEqual(bridge.restore_main(new),old);self.assertEqual(bridge.extract_main(old),new);self.assertEqual(bridge.extract_main(new),new);bridge.validate_resolver()
+  from public_source_witness import performance_witness_source,apply_performance_source
+  from current_runtime_ownership import verify_current_inventory
+  verify_current_inventory()
+  legacy=performance_witness_source(new)
+  self.assertEqual(bridge.restore_main(legacy),old);self.assertEqual(bridge.extract_main(old),legacy)
+  self.assertEqual(apply_performance_source(bridge.extract_main(old)),new)
+  self.assertEqual(bridge.extract_main(new),new);bridge.validate_resolver()
  def test_partial_and_unrelated_mutations(self):
   c=bridge.contract();new=(ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js').read_text()
   for old,token in c['replacements']:
@@ -31,7 +37,8 @@ class Extraction(unittest.TestCase):
   legacy={'__file__':failure.__file__,'__name__':'failure_pre_extraction_boundary_test'}
   exec(compile(old_source,failure.__file__,'exec'),legacy)
   historical=subprocess.check_output(['git','show','b938359b:'+main.relative_to(ROOT).as_posix()],cwd=ROOT,text=True)
-  inputs=[historical,bridge.restore_main(current)]
+  from public_source_witness import performance_witness_source
+  inputs=[historical,bridge.restore_main(performance_witness_source(current))]
   expected=[legacy['patch_main'](text) for text in inputs]
   original_read=pathlib.Path.read_text
   def supplied_only(path,*args,**kwargs):

@@ -2,33 +2,12 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.143",
-  "tag": "A2.8.143",
-  "publication_request": true,
-  "prerelease": false,
+  "version": "A2.8.145",
+  "tag": "A2.8.145",
+  "publication_request": false,
+  "prerelease": true,
   "make_latest": "false",
   "client": false,
   "production_ready": false,
-  "status": "awaiting_source_ci_family_save_admission_and_live_readback",
-  "saved_world_migration": "pending",
-  "live_deployment": false,
-  "validation_evidence": "CHANGELOG.md",
-  "artifact_suffix": "baseline1",
-  "public_notes_path": "CHANGELOG.md",
-  "public_notes_inline": "A2.8.143 修正手持進食狀態的 owning-player 查詢、副手時鐘與秘製串末段隱藏；等價 RawMessage lore 保留原 metadata，瓶子失敗不再阻止食物動畫準備。保留 Java 曲線、素材、UUID、營養／結算、25 tick 與既有 HUD 布局／傳輸。近鏡、末段平片、任意三色背包 icon 及最新 HUD 延遲仍未宣稱驗收。",
-  "expected_source_tree_sha256": "789e626c81af1a0cdfac5524c9e59728766b3f36c60f9d5f260fa9611c8bf09c",
-  "expected_artifacts": {
-    "mcaddon": {
-      "name": "Kaleidoscope_Grilling_A2.8.143_baseline1.mcaddon",
-      "sha256": "cf58fba370b49bc315487605146b3468ecb730fd8864ee929c9b5f2e4caef1af"
-    },
-    "brproject": {
-      "name": "Kaleidoscope_Grilling_A2.8.143_baseline1.brproject",
-      "sha256": "6c72c46a87e8c9f6565bd33cbc33a4ff302337e2187a554097c4c9cfb2863522"
-    }
-  },
-  "integrated_source": {
-    "commit": "361e4b1594b2713912095485bf20c8b194fd117c",
-    "tree": "07bf115d7b97aca32eb608f7bc7e3249ebc5891d"
-  }
+  "status": "draft_source_review_pending_canonical_and_native_acceptance"
 }

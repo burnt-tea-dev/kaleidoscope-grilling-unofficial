@@ -48,7 +48,7 @@ def main():
  assert "import './a2719_sweet_potato_crop_runtime.js';" in main
  assert "import './a2720_roasted_sweet_potato_runtime.js';" in main
  assert "const HOT_UNTIL_KEY='kaleidoscope_grilling:hot_until',FX_KEY='kaleidoscope_grilling:a21_fx';" in main
- assert "if(system.currentTick%20===0&&fxGet(p,'warmth'))" in main
+ assert "if(system.currentTick%20===0&&fx.warmth)" in main
 
  subprocess.run(['node',str(ROOT/'development/gameplay_core/test_a2720_core.mjs')],check=True)
  subprocess.run(['node','--experimental-vm-modules',str(ROOT/'development/gameplay_core/test_a2720_runtime.mjs')],check=True)

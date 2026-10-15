@@ -1,14 +1,17 @@
 {
   "schema": 1,
   "format": "selected_git_source_objects_no_ref_updates",
-  "pack_sha256": "fae2fc60c9bbe79afdd4c6491866f7405a11fc9ce74377e79e3ea1963b929e99",
-  "pack_bytes": 357419,
-  "object_count": 93,
+  "pack_sha256": "f1dcd91351acd6dde410fa98da5e1c639fd60661acc77d815e9678eaa557a0f2",
+  "pack_bytes": 464373,
+  "object_count": 124,
   "commits": [
     "0996f05fd63ce37098d867d14b4760dad93d2501",
-    "cba67124a710f70e015ba55d306ff9f741dae9d6"
+    "cba67124a710f70e015ba55d306ff9f741dae9d6",
+    "a092a9971ada91f16a973b01db4a3c9488f7ec1c",
+    "b38e6be99e4d1aba474ce857f3db64aa4f2b7086",
+    "3bcb1639fad515f12e119c83b915d452a655a4ed"
   ],
-  "scope": "Original code comparison evidence only: two commits, necessary source-path ancestor trees and selected JSON code blobs for unchanged owner-context/seasoning guards. No parent history, docs/history/media/archive objects or private export inventories. Sibling names/OIDs in indispensable original ancestor trees are not their contents.",
+  "scope": "Exact source comparison evidence only: the unchanged two original owner-context/seasoning commits and their selected JSON blobs, plus three original G145 comparison commits, eight guide/effect runtime blobs and the ancestor trees needed for those paths or compiler BP/RP subtree identities. No parent history, complete runtime trees, docs/history/media/archive contents or private export inventories. Sibling names/OIDs in indispensable original ancestor trees are not their contents.",
   "selected_blobs": {
     "0996f05fd63ce37098d867d14b4760dad93d2501": {
       "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer.attachable.json": {
@@ -388,16 +391,63 @@
         "sha256": "cf3b113ecb0be6913448196d8792720057307a82846bf98d24cbd29d3401aef7",
         "bytes": 2628
       }
-    }
+    },
+    "a092a9971ada91f16a973b01db4a3c9488f7ec1c": {
+      "projects/grilling/gameplay_core/resource_pack/texts/en_US.lang": {
+        "git_blob_sha1": "f2575d74b69dddafbd4bb60f1dcafa2e41caf8aa",
+        "sha256": "5aac1a16fc1d3b25f418d879774e694ff199d57f95a9c551facfeeb7026718d1",
+        "bytes": 111118
+      },
+      "projects/grilling/gameplay_core/resource_pack/texts/zh_CN.lang": {
+        "git_blob_sha1": "5cd706b0d74f1bb5600d3d53d9c5c954d4222591",
+        "sha256": "947f16ffdc22eceea20c713b1223197358ddd6fa8be7a8ac6bd081c416c65f80",
+        "bytes": 99858
+      },
+      "projects/grilling/gameplay_core/resource_pack/texts/zh_TW.lang": {
+        "git_blob_sha1": "c4dd1d7889cf9b026988db25509512ccd29ddb5e",
+        "sha256": "227b494479913f5fe60686ed0633a60fe2a9226da4894e081311db59444360f8",
+        "bytes": 99879
+      },
+      "projects/grilling/guide/catalog.a3.json": {
+        "git_blob_sha1": "3d5dd31ee44592b7e2a923bccdc0db1cfc898364",
+        "sha256": "41326f690b674a72d44a3ebaf062b4e39d5e483609100b392257bd408de3557a",
+        "bytes": 349991
+      },
+      "projects/grilling/gameplay_core/behavior_pack/scripts/guide/payload.js": {
+        "git_blob_sha1": "fc4724b789a840d02d838334475c18c93125bf1e",
+        "sha256": "dceaf4f047e80fc81874a8af0e147922a423759d2606da3925620e485bd94277",
+        "bytes": 272057
+      }
+    },
+    "b38e6be99e4d1aba474ce857f3db64aa4f2b7086": {
+      "projects/grilling/gameplay_core/behavior_pack/scripts/main.js": {
+        "git_blob_sha1": "0fd407ccad42de8a424652269e788846e07f2f37",
+        "sha256": "7329cd085320d1743a15bb29a073d367dd761ccf9e3d71cc68f8f055bc0cbf2a",
+        "bytes": 102832
+      },
+      "projects/grilling/gameplay_core/behavior_pack/scripts/effect_lifecycle_core.js": {
+        "git_blob_sha1": "413c5e10379752bfcb5cc916af85a6a717953d88",
+        "sha256": "86c226748b692a3482594aca219940423b11588bb24152d89f0df1b1315ebc65",
+        "bytes": 3569
+      },
+      "projects/grilling/gameplay_core/behavior_pack/scripts/effect_state_runtime.js": {
+        "git_blob_sha1": "5adc190fb43eda387e961c797e5735201f5ce93e",
+        "sha256": "c55d6771a4262e50a498449038534b2c79344e27c54bb90a9acc892c7d74eccb",
+        "bytes": 8638
+      }
+    },
+    "3bcb1639fad515f12e119c83b915d452a655a4ed": {}
   },
   "exact_object_ids": [
     "01e05512043c18ba0aceabc61c56540a7e80ea24",
     "0740e647d4d0b80110158940fdab160bf5f2706b",
+    "0805196c1ee29bfb9cb5b4b4958db0f7337278fc",
     "0996f05fd63ce37098d867d14b4760dad93d2501",
     "0b75853bee4aef59b018a09b69c7becbc81fb027",
     "0d9be8cd26b3023c266fffc38cbf038157510d0b",
     "0e0a93263d458378d9acdc6140a2866abce1db97",
     "0e25745c5103d447701ac540ba8539200e9d3112",
+    "0fd407ccad42de8a424652269e788846e07f2f37",
     "103150ff724736112cf810770b067a12f18c5583",
     "118ae9558f2b9443eee16d41f1f610d73539886a",
     "125e1bcef3bbda520fdb07a3f3456278e135f898",
@@ -409,26 +459,41 @@
     "2080101aea915389679c89c3fa2db6490426a515",
     "22ea3e0972d83b00e09ff0c26de262889e75cda1",
     "23d135c56cd9a7eb76172e5f5658a20f4bf9acd0",
+    "25f9d59dae7c764889bc7179ae5e2799a42d36cf",
     "2b422b30a4e335da5be355e44160ecccdfe50aff",
     "2e2199d2550dcd350e91e727ca9b7fc1fd305e29",
     "2e4cfd7d614c03c68a9aa0f084116c87b006a79e",
+    "2f9d2b13c1c09b969fafbfc386f9fd0dc9ac6a77",
     "302bc86923b3ea56ad91f0fac1dd2ebeb3f1a555",
+    "30b1b7f4a4a6dc41ae399335fdc808f9a03b6044",
     "33503fba49ce84487fd08dceb7940e548fe67f53",
+    "33c2d914bb3d88b1308d8f8660ea6e0b95177e3e",
     "3402b07014dfa6134497cf6738072309d23b8e50",
     "34be3b56a06f14c8dcc13a4be061dfa709d628e0",
+    "3bcb1639fad515f12e119c83b915d452a655a4ed",
     "3cf930f7d22cb03e1af8289715d1979f1fe45ca6",
+    "3d5dd31ee44592b7e2a923bccdc0db1cfc898364",
     "4051837608c46ebaccdb03ef77a45482f20efb47",
     "40779d67361af4f694b412c85fb9f5c7fd693ae0",
     "410aff5cc43292e791824d8d8ced840de055a99b",
+    "413c5e10379752bfcb5cc916af85a6a717953d88",
+    "4154ac07f971486378dbd5b73f63c66ef88bf960",
     "4226bc35ebb22672f503fce19a6e924d9c14beb0",
     "43f596462dd75c750817d1dbec0af82e11873c1d",
     "4a5c9592f73896c67cd46c72e2894aa899891eaf",
     "4cc245bd4e007113bcca314072aeed9336b66e0a",
     "4d9094941dd2539e0f87fb6c5ab91e7254797a1b",
+    "4e1cfd23f833c35889acab9beee5c6aeed1b2a71",
     "50ac201d3d6a0beadb3be721de398dd4a1aa4551",
+    "526c8b4d5ecd6859914125dca9e29424ab59101d",
     "545c2250b47c3f8b7a3916709d0fed7b80595d35",
     "558dddbdb6f888e96d5bf32657708f4fff312790",
     "55a17ef09f50145e482f0a543f892205bb708d6d",
+    "56dcc8d0e81384c04a0e967a3ea592cd4b811da6",
+    "5adc190fb43eda387e961c797e5735201f5ce93e",
+    "5cd706b0d74f1bb5600d3d53d9c5c954d4222591",
+    "5ee93170b99fefd2a900bfc3fd1ab834a92b51df",
+    "5fb6d6417cfdb01efeb9273227096460d5116a76",
     "62ed328568ece8f56b78ab25982414f121b276ae",
     "678206ebe8e5dac156a72d772a2c3a88070990e7",
     "6798b8c7a2cf6fe6f986499495335386773f0468",
@@ -443,14 +508,17 @@
     "915a7976bf9931287a72f447d37d35db32c632e3",
     "9331209cebe5b8f342cc86fb325c734852e5131f",
     "9931234623519c3b3f8e5b0acafa59b8c4a3e340",
+    "9983a03ba55928aab4f75768071be89e2f7811bc",
     "9a73da5f16d6664ea5e74e1c3e9e1b941397bb95",
     "9bf24b4f405f2901b33832e1a9b5be45d7d3c78e",
     "9ce7f125486a83f0e139b57e263c0a90814f2d26",
+    "a092a9971ada91f16a973b01db4a3c9488f7ec1c",
     "a3db16c6b859db90a1ef1317012692694e4d7289",
     "a85fe807a82a79375b805bf7ace555d35b015b03",
     "ac1161999e49b986717b7ed924f7a02ce574c4e2",
     "b27840f63fee1cc069a8267e55033dea928e734d",
     "b378f01daac9fa0de496afd726d045f3b41659d1",
+    "b38e6be99e4d1aba474ce857f3db64aa4f2b7086",
     "b5112462cb4d378d4558f198f4026edb988b3ff1",
     "b5a657ae353d78195833d0b169279ed05bd4a190",
     "b61c240f38d12ffaad1432d901b54067a9eda7ef",
@@ -460,6 +528,8 @@
     "c296133df9412521686a21e5d640f70250da7f8b",
     "c469caf143adc7c83a9a0468a8ad47155f697984",
     "c46ee53eb6ff211f08d8128da7385993bbb33eec",
+    "c4dd1d7889cf9b026988db25509512ccd29ddb5e",
+    "c53f40637ec0a943f3000234d996c217c5a6a3be",
     "c61b7158cd6d6eebb34bd530894da3ea460bed85",
     "ca9a5e831f59dd6c65f75a04648477295564270d",
     "cba67124a710f70e015ba55d306ff9f741dae9d6",
@@ -470,19 +540,34 @@
     "da7f5dac6ab2858dc6a78fb31794698651041f40",
     "dab1fc5685a231d69a8d27f304f2a49d0e417b4d",
     "de01086c3968619b046e24cb5a3cae321646f38f",
+    "de76188c0673356556e620cd1a6f4513643f2e81",
     "e2083a53d1f1ac8c3fa1617b8524d448f38dc76b",
     "e20d4d080d479fd239726478ddb9503a1520194d",
+    "e3674ed7ab26b8bb8d524a8c9f40ac5ce8d12dee",
+    "e4b55cb59d0eec45ddf40ac35e1fad39018feff8",
     "e8f42e86295ea0185a2b6665bf54cdfc2011949e",
     "e9301e8ca1217d123448e9d5174a6562de0c9ac9",
     "ea06eb47e3a58f78b282f35026b9011f3caab0be",
     "ec26f7ff567d84ff6754ee3577c9faaed37b8698",
+    "f158ba9beaf3e76914a20f24581054a3f6b7cb23",
+    "f2575d74b69dddafbd4bb60f1dcafa2e41caf8aa",
     "f3bdeac1401821a1dec0ad03c231d21fd9d6d222",
+    "f597028de1cbc5213130973f9272393c7b207e51",
     "f839bd12f19b90ac37a536d9f12ddde35b741b55",
     "f9153d34e4021545040a9080ce13e61c311d2be9",
     "f943133b3aa13dd28d48e32c10244af9fe3ddcdd",
     "fabfcb0cf20448fa8a0a2da92bd96aee9fce8822",
     "fb4f37b492d8ef610bbef81c4a3d5f1fa1022979",
+    "fc4724b789a840d02d838334475c18c93125bf1e",
+    "fcaf6e75fe9e9160360d5aba350b7854eaf44550",
+    "fcb54bc20c57adc276510a77969d0d7ff8e58980",
     "fd0cf3b13dcd48baea52b9d15301da3535e14cff",
     "fee471a2320caf13c4996a3982ff65acfe2e9f26"
-  ]
+  ],
+  "selected_trees": {
+    "3bcb1639fad515f12e119c83b915d452a655a4ed": {
+      "projects/grilling/gameplay_core/behavior_pack": "814457eb0b9a4b7f952eb0b8569e6f25ba753f61",
+      "projects/grilling/gameplay_core/resource_pack": "4b3173bf961ef19ba01c470f51fcf42307ab1947"
+    }
+  }
 }

@@ -8,7 +8,7 @@ BASE='c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f'
 PREFIXES=('projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack')
 MANIFEST=ROOT/'tools/fixtures/current-runtime-ownership.json'
 # Reviewed scope/postimages are code-owned, not authority supplied by a manifest.
-MANIFEST_SHA256='5bad0bb91a3dfec6aec499485de9ca88b4b38b093942ebe466d4fc95a8402595'
+MANIFEST_SHA256='1916462983237cda710ec5a70728704065a17d5a6bb54a5c3be41ea8749758b7'
 def sha(data):return hashlib.sha256(data).hexdigest()
 @lru_cache(maxsize=1)
 def frozen_runtime_files():
@@ -44,7 +44,7 @@ def validate_inventory(actual,document):
  if changed!=set(changes):raise ValueError('Missing or undeclared runtime delta')
  for p,row in changes.items():
   path=Path(p)
-  if path.is_absolute()or'..'in path.parts or row['owner']!='plate_special_visuals':raise ValueError('Unowned runtime path')
+  if path.is_absolute()or'..'in path.parts or row['owner'] not in {'plate_special_visuals','g144_performance','g145_identity'}:raise ValueError('Unowned runtime path')
   old=baseline.get(p)
   operation='add'if old is None else'modify'
   if row['operation']!=operation or row['before_sha256']!=(None if old is None else sha(old)):raise ValueError('Runtime predecessor mismatch: '+p)
@@ -63,6 +63,22 @@ def validate_plate_source():
  ]
  for command in commands:run_checked_once(command,cwd=ROOT)
 
+def validate_merged_performance_and_identity():
+ # Independent source semantics for the two additional exact owners.
+ from public_source_witness import apply_performance_source, REVIEWED_PERFORMANCE_BASE
+ main=PREFIXES[0]+'/scripts/main.js';queue=PREFIXES[0]+'/scripts/timed_work_queue.js'
+ assert (ROOT/main).read_bytes()==apply_performance_source(frozen_runtime_bytes(main).decode()).encode()
+ reviewed_queue=subprocess.check_output(['git','show',REVIEWED_PERFORMANCE_BASE+':'+queue],cwd=ROOT)
+ assert (ROOT/queue).read_bytes()==reviewed_queue
+ for prefix in PREFIXES:
+  path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
+  before['header']['version']=[2,8,145]
+  for module in before['modules']:module['version']=[2,8,145]
+  for dependency in before.get('dependencies',[]):
+   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=[2,8,145]
+  assert after==before,'G145 identity changes fields outside exact owned versions: '+path
+
+
 def verify_current_inventory():
  """Byte ownership only; standalone historical proofs do not claim source acceptance."""
  return validate_inventory(runtime_files(),manifest())
@@ -70,6 +86,7 @@ def verify_current_inventory():
 def verify_current_runtime():
  result=verify_current_inventory()
  validate_plate_source()
+ validate_merged_performance_and_identity()
  # Do not let an invoked validator mutate the candidate unnoticed.
  verify_current_inventory()
  return result

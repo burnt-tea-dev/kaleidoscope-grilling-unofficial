@@ -19,7 +19,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
    path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':51,'commits':51})
+  self.assertEqual(verify(),{'refs':52,'commits':52})
   for ref in ('b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
               '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
               'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
@@ -272,12 +272,28 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   from eating_hud_source_witness import PREPARATION_BEFORE,PREPARATION_AFTER
   actual=reference_bytes(ROOT/public.MAIN_PATH)
   self.assertEqual(actual.count(PREPARATION_AFTER.encode()),1)
-  self.assertEqual(current,actual.replace(PREPARATION_AFTER.encode(),PREPARATION_BEFORE.encode(),1))
+  legacy=public.performance_witness_source(actual.decode()).encode()
+  self.assertEqual(current,legacy.replace(PREPARATION_AFTER.encode(),PREPARATION_BEFORE.encode(),1))
   self.assertEqual(dispatcher_witness_source(current.decode()).encode(),public.expected_main_bytes((2,8,129)))
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):apply_hud_start_hook(before+b'\n')
   from build_two_route_eating_projection import restore_main
   for changed in (current.replace(b'if(a.plain)return;',b'if(false)return;',1),current.replace(b'if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);',b'showJavaEatingHud(e.source,a,system.currentTick);',1),current.replace(b'MINIMUM_EAT_TICKS=25',b'MINIMUM_EAT_TICKS=1',1),current+b'\n'):
    with self.assertRaises(ValueError):restore_main(changed.decode())
+ def test_g144_effect_pass_is_exactly_reviewed_and_cannot_widen_old_source_admission(self):
+  before=public.expected_main_bytes((2,8,143));current=public.expected_main_bytes((2,8,144))
+  self.assertEqual(current,reference_bytes(ROOT/public.MAIN_PATH))
+  self.assertEqual(public.performance_witness_source(current.decode()).encode(),before)
+  self.assertIn(public.REVIEWED_PERFORMANCE_BASE,inventory())
+  with self.assertRaisesRegex(AssertionError,'wrong immutable preimage'):public._g144_performance_bytes(before+b'\n')
+  with self.assertRaises(ValueError):public.performance_witness_source(current.decode().replace('const fx=readFx(p);','const fx={};',1))
+  self.assertEqual(public.apply_performance_source(before.decode()),current.decode())
+  self.assertEqual(public.apply_performance_source(current.decode()),current.decode())
+  for bad in (before.decode().replace("writeFx(p,readFx(p));","writeFx(p,{});",1),current.decode()+current.decode()):
+   with self.assertRaises(ValueError):public.apply_performance_source(bad)
+  load=public._main_delta;delta=copy.deepcopy(load('g144-main-reviewed-delta.json'));op=delta['operations'][0]
+  op['after']+='\n';delta['after_sha256']=hashlib.sha256(current.replace(load('g144-main-reviewed-delta.json')['operations'][0]['after'].encode(),op['after'].encode(),1)).hexdigest()
+  with patch.object(public,'_main_delta',side_effect=lambda name:delta if name=='g144-main-reviewed-delta.json' else load(name)):
+   with self.assertRaisesRegex(AssertionError,'G144 public source differs outside'):public.expected_main_bytes((2,8,144))
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)

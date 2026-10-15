@@ -7,7 +7,7 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':14})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':18})
  def test_unrelated_mutation_addition_and_deletions(self):
   unchanged=next(p for p in self.actual if p not in self.doc['changes'])
   for operation in ('mutate','add','delete','delete_owned','revert_owned'):
@@ -82,6 +82,17 @@ class RuntimeOwnership(unittest.TestCase):
   self.assertEqual([Path(c[2]).name for c in commands[:3]],['build_plate_display.py','build_plate_held.py','test_held_render_contracts.py'])
   self.assertEqual(commands[2][-1],'PlateSpecialContracts')
   self.assertEqual(commands[3][0:2],['node','--test'])
+ def test_new_owner_semantics_reject_performance_queue_and_manifest_drift(self):
+  read=Path.read_bytes
+  main=owner.ROOT/owner.PREFIXES[0]/'scripts/main.js'
+  queue=owner.ROOT/owner.PREFIXES[0]/'scripts/timed_work_queue.js'
+  manifest=owner.ROOT/owner.PREFIXES[0]/'manifest.json'
+  changed=json.loads(read(manifest));changed['header']['uuid']='unowned'
+  cases=[(main,read(main).replace(b'const fx=readFx(p);',b'const fx={};',1)),
+         (queue,read(queue)+b'\n'),(manifest,json.dumps(changed).encode())]
+  for path,data in cases:
+   with self.subTest(path=path),patch.object(Path,'read_bytes',side_effect=lambda p: data if p==path else read(p),autospec=True):
+    with self.assertRaises((AssertionError,ValueError)):owner.validate_merged_performance_and_identity()
  def test_frozen_preimage_inventory_is_immutable(self):
   with self.assertRaises(TypeError):owner.frozen_runtime_files()['new']=b''
 if __name__=='__main__':unittest.main()

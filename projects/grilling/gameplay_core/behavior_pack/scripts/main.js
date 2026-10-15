@@ -1286,15 +1286,19 @@ system.runInterval(()=>{
    // A replaced/switching serving must not leave a projected arm on another item.
    p.setProperty(EAT_PROFILE_PROPERTY,0);p.setProperty(EAT_HAND_PROPERTY,0);p.setProperty(EAT_PROJECTION_PROPERTY,false);p.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);
   }else hideJavaEatingHud(p); // Presentation never debits food.
-  if(system.currentTick%10===0&&fxGet(p,'invincible'))invincibleAmbientFeedback(p);
-  writeFx(p,readFx(p));const hunger=p.getComponent('minecraft:player.hunger'),sat=p.getComponent('minecraft:player.saturation');
-  if(fxGet(p,'vigor')&&hunger&&sat){const prev=VIGOR_LAST.get(p.id);if(p.isSprinting&&prev){if(hunger.currentValue<prev.hunger)hunger.setCurrentValue(prev.hunger);if(sat.currentValue<prev.sat)sat.setCurrentValue(prev.sat)}VIGOR_LAST.set(p.id,{hunger:hunger.currentValue,sat:sat.currentValue})}else VIGOR_LAST.delete(p.id);
-  const sneak=!!p.isSneaking,was=SNEAK_LAST.get(p.id)??false;if(sneak&&!was&&fxGet(p,'flatulence')){p.applyImpulse({x:0,y:.75,z:0});const dimension=p.dimension;interactionParticleBurst(dimension,p.location,'flatulence');try{const origin=flatulenceSoundOrigin(p);if(origin){const pitch=flatulenceSoundPitch();if(pitch!==undefined)dimension.playSound(FLATULENCE_SOUND_ID,origin,{volume:1,pitch})}}catch{}}SNEAK_LAST.set(p.id,sneak);
-  if(system.currentTick%5===0){if(fxGet(p,'mustard'))fleeCreepers(p);if(fxGet(p,'sulfur'))repelPhantoms(p)}
-  if(fxGet(p,'tundra_strider')){try{const b=p.getBlockStandingOn();if(b&&TUNDRA_BLOCKS.has(b.typeId)){const v=p.getVelocity(),factor=tundraFactor(b.typeId);p.applyImpulse({x:v.x*(factor-1),y:0,z:v.z*(factor-1)});if(b.typeId==='minecraft:powder_snow'&&v.y<.02)p.applyImpulse({x:0,y:Math.min(.16,Math.max(.04,-v.y+.04)),z:0})}}catch{}}
-  if(system.currentTick%20===0&&fxGet(p,'warmth')){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
-  const db=fxGet(p,'dragon_blood');nativeDragonHealth(p,db?.amp);
-  updateNumbVisual(p,!!fxGet(p,'numb')&&!ACTIVE_EATS.has(p.id)&&!PENDING_USES.has(p.id)&&!(p.getProperty('kaleidoscope_grilling:season_phase')>0),system.currentTick);
+  // One local snapshot for this synchronous effect pass. Event/transaction
+  // helpers still read and acknowledge their own current effect state.
+  const fx=readFx(p);
+  if(system.currentTick%10===0&&fx.invincible)invincibleAmbientFeedback(p);
+  writeFx(p,fx);
+  const hunger=fx.vigor?p.getComponent('minecraft:player.hunger'):undefined,sat=fx.vigor?p.getComponent('minecraft:player.saturation'):undefined;
+  if(fx.vigor&&hunger&&sat){const prev=VIGOR_LAST.get(p.id);if(p.isSprinting&&prev){if(hunger.currentValue<prev.hunger)hunger.setCurrentValue(prev.hunger);if(sat.currentValue<prev.sat)sat.setCurrentValue(prev.sat)}VIGOR_LAST.set(p.id,{hunger:hunger.currentValue,sat:sat.currentValue})}else VIGOR_LAST.delete(p.id);
+  const sneak=!!p.isSneaking,was=SNEAK_LAST.get(p.id)??false;if(sneak&&!was&&fx.flatulence){p.applyImpulse({x:0,y:.75,z:0});const dimension=p.dimension;interactionParticleBurst(dimension,p.location,'flatulence');try{const origin=flatulenceSoundOrigin(p);if(origin){const pitch=flatulenceSoundPitch();if(pitch!==undefined)dimension.playSound(FLATULENCE_SOUND_ID,origin,{volume:1,pitch})}}catch{}}SNEAK_LAST.set(p.id,sneak);
+  if(system.currentTick%5===0){if(fx.mustard)fleeCreepers(p);if(fx.sulfur)repelPhantoms(p)}
+  if(fx.tundra_strider){try{const b=p.getBlockStandingOn();if(b&&TUNDRA_BLOCKS.has(b.typeId)){const v=p.getVelocity(),factor=tundraFactor(b.typeId);p.applyImpulse({x:v.x*(factor-1),y:0,z:v.z*(factor-1)});if(b.typeId==='minecraft:powder_snow'&&v.y<.02)p.applyImpulse({x:0,y:Math.min(.16,Math.max(.04,-v.y+.04)),z:0})}}catch{}}
+  if(system.currentTick%20===0&&fx.warmth){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
+  const db=fx.dragon_blood;nativeDragonHealth(p,db?.amp);
+  updateNumbVisual(p,!!fx.numb&&!ACTIVE_EATS.has(p.id)&&!PENDING_USES.has(p.id)&&!(p.getProperty('kaleidoscope_grilling:season_phase')>0),system.currentTick);
 
  }catch{}}
 },1);

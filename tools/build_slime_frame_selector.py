@@ -58,6 +58,10 @@ def strip_main(text):
     return text
 
 def install_main(text):
+    from public_source_witness import performance_witness_source, apply_performance_source
+    performance = performance_witness_source(text) != text
+    from eating_route_extraction import restore_main as restore_extraction
+    extracted = restore_extraction(text) != text
     from effect_merge_source_witness import restore_main as restore_effect, reapply_main
     restored = restore_effect(text)
     effects = restored != text
@@ -65,7 +69,12 @@ def install_main(text):
     if text.count(MAIN_LOOP) != 1:
         raise ValueError('Slime requires exactly one existing one-tick player loop')
     text = MAIN_IMPORT + text.replace(MAIN_LOOP, MAIN_LOOP.replace(' for(', MAIN_SAMPLE+' for(')+MAIN_SYNC, 1)
-    return reapply_main(text) if effects else text
+    if effects:text = reapply_main(text)
+    if extracted:
+        from build_ordinary_relative_calibration import patch_main as patch_ordinary
+        from build_offhand_eating_projection import patch_main as patch_offhand
+        text = patch_offhand(patch_ordinary(text))
+    return apply_performance_source(text) if performance else text
 
 def augment(output):
     result = dict(output)

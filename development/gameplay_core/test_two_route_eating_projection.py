@@ -31,7 +31,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
@@ -119,9 +119,19 @@ class TwoRouteProjectionTests(unittest.TestCase):
         self.assertEqual(review.restore_main(motion.build()[scoped.MAIN]), self.current)
 
     def test_supplied_generated_sources_do_not_require_disk_fallbacks(self):
+        # Immutable continuation metadata is required even for supplied source;
+        # MAIN/SHARED and every other source fallback must remain unavailable.
+        read_text = Path.read_text
+        witness = ROOT / 'tools/fixtures/g144-main-reviewed-delta.json'
+        def metadata_only(path, *args, **kwargs):
+            if path == witness:
+                return read_text(path, *args, **kwargs)
+            raise AssertionError('Unexpected source disk fallback: ' + str(path))
         with patch.object(Path, 'read_bytes', side_effect=AssertionError('Unexpected disk read')), \
-             patch.object(Path, 'read_text', side_effect=AssertionError('Unexpected disk read')):
+             patch.object(Path, 'read_text', autospec=True, side_effect=metadata_only):
             result = scoped.augment({scoped.SHARED: self.shared, scoped.MAIN: self.original})
+            with self.assertRaisesRegex(AssertionError, 'Unexpected disk read'):
+                scoped.augment({})
         self.assertEqual(result[scoped.MAIN], self.current)
         self.assertEqual(scoped.encoded(result[scoped.DEDICATED]), scoped.encoded(self.clips))
 

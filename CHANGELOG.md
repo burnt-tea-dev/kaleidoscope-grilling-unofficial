@@ -1,4 +1,18 @@
+# G145 composed skewer Java-source repair candidate
+
+- Preserve merged G144 indexed deadline work and synchronous effect snapshots.
+- Compose reviewed THREE/raw ONE/failure/offhand projections, third-person item exclusion, cooked slime world-clock frames, saved failure/slime plate visuals, initial grill facing, native GUI icon families, finite custom-effect merging and bottle-clear guide clarification.
+- Preserve UUIDs, saved ownership, settlement, all 83 bottle-clear recipes and original source witnesses. G144 performance and all local effect/resolver runtime bytes are composition-tested.
+- This is a draft source candidate. No full canonical/Windows package, native client, saved-world or deployment acceptance is claimed. Source-left offscreen motion is preserved where independently confirmed from the original Java call chain; editor captures are not engine acceptance.
+- Suspicious-stew variants, native vanilla hidden-effect chains and unregistered external callbacks remain outside this custom-effect repair. PR217 grill/rack shape changes remain separate.
+
 # 維護變更
+
+## 2.8.144：限制排程積壓與玩家效果重複工作
+
+油流／熱食提示共用的 deadline queue 改為每個 key 只保留一個 heap node，重排與取消直接移除舊工作，避免一次有限額的 `take` 額外清掃大量失效節點。20,000 次同槽重排後取消的來源場景，下一次空工作清掃由20,000次降為0次。
+
+玩家同步效果迴圈只取一次局部快照；100個idle tick的效果讀取由555次降至100次，hunger／saturation component各100次降至0次。事件交易仍各自讀回目前狀態，效果到期與vigor保護不降頻。保留配方、油流期限、原作時間、進食第25tick／單次結算、動畫素材與HUD傳輸。操作次數是來源證據；當前候選的BDS耗時、客戶端RTT／FPS與完整玩法尚未驗收。[證據及範圍](docs/evidence/performance-bounded-work-20261015.md)。
 
 ## 2.8.143：進食玩家狀態與瓶子準備隔離
 

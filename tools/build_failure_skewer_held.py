@@ -138,6 +138,8 @@ def restore_main(text):
  return text
 
 def patch_main(text):
+ from public_source_witness import performance_witness_source, apply_performance_source
+ performance=performance_witness_source(text)!=text
  # Current callers supply the extracted whole-pipeline boundary. Historical
  # callers still receive exactly the failure-era layer, without disk main reads.
  from eating_route_extraction import restore_main as restore_extraction
@@ -157,6 +159,7 @@ def patch_main(text):
   from build_ordinary_relative_calibration import patch_main as patch_ordinary
   from build_offhand_eating_projection import patch_main as patch_offhand
   text=patch_offhand(patch_ordinary(text))
+ if performance:text=apply_performance_source(text)
  return text
 
 def gate(profile,hand,identifier=None,attachable=False):

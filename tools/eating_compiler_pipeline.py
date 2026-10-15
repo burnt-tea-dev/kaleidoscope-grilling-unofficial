@@ -40,6 +40,7 @@ STAGES=(
  Stage('effects','effect_merge_source_witness',('slime',),'complete'),
  Stage('ordinary_relative','build_ordinary_relative_calibration',('effects',),'complete'),
  Stage('offhand','build_offhand_eating_projection',('ordinary_relative',),'complete'),
+ Stage('performance','public_source_witness',('offhand',),'performance'),
 )
 
 def validate_stages(stages=None):
@@ -48,14 +49,15 @@ def validate_stages(stages=None):
  for stage in stages:
   if stage.name in seen:raise ValueError('Duplicate compiler stage: '+stage.name)
   if not set(stage.after)<=seen:raise ValueError('Missing/out-of-order compiler prerequisite: '+stage.name)
-  if stage.gate not in {'always','modern','g126','g127','review','failure','slime','complete'}:raise ValueError('Unknown compiler gate: '+stage.gate)
+  if stage.gate not in {'always','modern','g126','g127','review','failure','slime','complete','performance'}:raise ValueError('Unknown compiler gate: '+stage.gate)
   seen.add(stage.name)
 
 def enabled(stage,c):
  return {'always':True,'modern':c.version>=(2,8,58),'g126':c.version>=(2,8,126),
   'g127':c.two_route_camera or c.version>=(2,8,127),'review':c.review_three_routes,
   'failure':c.failure_skewers,'slime':c.slime_frames,
-  'complete':c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
+  'complete':c.review_three_routes and c.slime_frames and c.failure_skewers,
+  'performance':c.version>=(2,8,144) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
 
 def apply_stage(stage,output,c):
  if stage.name=='partial_attachable':
@@ -63,6 +65,9 @@ def apply_stage(stage,output,c):
   if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
   return output
  module=import_module(stage.module)
+ if stage.name=='performance':
+  output[c.main]=module.apply_performance_source(output[c.main])
+  return output
  if stage.name=='effects':
   # Retain the original live-source ownership check at its original stage.
   if 'mergeEffectApplication' in c.main.read_text():output[c.main]=module.reapply_main(output[c.main])

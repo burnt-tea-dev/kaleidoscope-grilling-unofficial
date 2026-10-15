@@ -108,6 +108,8 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from public_source_witness import performance_witness_source, apply_performance_source
+    performance = path.name == "main.js" and performance_witness_source(current.decode()) != current.decode()
     from build_offhand_eating_projection import contract as offhand_contract, strip_document as strip_offhand
     if path.relative_to(ROOT).as_posix() in offhand_contract()['predecessors']:
         current = (json.dumps(strip_offhand(json.loads(current)),ensure_ascii=False,indent=2)+'\n').encode()
@@ -126,6 +128,7 @@ def reference_bytes(path):
     from slime_frame_source_witness import reference_bytes as slime_reference_bytes
     current = slime_reference_bytes(path,current)
     relative = path.relative_to(ROOT).as_posix()
+    if performance:current = apply_performance_source(current.decode()).encode()
     if relative not in reviewed_changes() or '/resource_pack/' not in relative:
         return current
     reviewed = subprocess.check_output(['git', 'show', REVIEWED_EATING_CONTEXT_BASE + ':' + relative], cwd=ROOT)
