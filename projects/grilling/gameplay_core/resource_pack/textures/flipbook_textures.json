@@ -29,5 +29,31 @@
     "atlas_tile": "kg_a23_premium_chili_oil_flow",
     "ticks_per_frame": 10,
     "replicate": 2
+  },
+  {
+    "flipbook_texture": "textures/native_skewer_icons/grilled_slime_skewer",
+    "atlas_tile": "kg_native_icon_grilled_slime_skewer",
+    "ticks_per_frame": 4,
+    "frames": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "blend_frames": false
+  },
+  {
+    "flipbook_texture": "textures/native_skewer_icons/mysterious_skewer",
+    "atlas_tile": "kg_native_icon_mysterious_skewer",
+    "ticks_per_frame": 4,
+    "frames": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "blend_frames": false
   }
 ]

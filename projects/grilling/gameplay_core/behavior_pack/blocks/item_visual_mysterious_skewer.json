@@ -1,0 +1,38 @@
+{
+  "format_version": "1.26.50",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_grilling:item_visual_mysterious_skewer"
+    },
+    "components": {
+      "minecraft:geometry": {
+        "identifier": "geometry.kg_native_icon.mysterious_skewer"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kg_native_icon_mysterious_skewer",
+          "render_method": "alpha_test_single_sided",
+          "ambient_occlusion": 0.0,
+          "face_dimming": false
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": false,
+      "minecraft:light_dampening": 0,
+      "minecraft:loot": "loot_tables/native_item_visual_empty.json",
+      "minecraft:item_visual": {
+        "geometry": {
+          "identifier": "geometry.kg_native_icon.mysterious_skewer"
+        },
+        "material_instances": {
+          "*": {
+            "texture": "kg_native_icon_mysterious_skewer",
+            "render_method": "alpha_test_single_sided",
+            "ambient_occlusion": 0.0,
+            "face_dimming": false
+          }
+        }
+      }
+    }
+  }
+}

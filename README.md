@@ -1,4 +1,4 @@
-## Current maintained baseline: 2.8.143
+## Current maintained baseline: 2.8.144
 
 G143 is the integration candidate. It scopes attachable eating properties to the owning player, keeps offhand animation off the main-hand counter, and retains terminal hiding until the server acknowledges a fresh serving. Bottle metadata round trips compare equivalent RawMessage lore without rewriting it; a malformed bottle cannot repeatedly scan every slot or block food-animation preparation. Java curves, assets, eating/HUD duration, nutrition and the 25-tick checkpoint remain unchanged. Source and native client acceptance remain separate. [Changes](CHANGELOG.md).
 

@@ -8,11 +8,6 @@
       "minecraft:display_name": {
         "value": "kaleidoscope_grilling.display.item.grilled_slime_skewer"
       },
-      "minecraft:icon": {
-        "textures": {
-          "default": "grilled_slime_skewer"
-        }
-      },
       "minecraft:max_stack_size": 64,
       "minecraft:allow_off_hand": true,
       "minecraft:hand_equipped": true,
@@ -35,7 +30,15 @@
           "kaleidoscope_grilling:food_grilled_slime_skewer"
         ]
       },
-      "minecraft:interact_button": true
+      "minecraft:interact_button": true,
+      "minecraft:block_placer": {
+        "block": "kaleidoscope_grilling:item_visual_grilled_slime_skewer",
+        "use_on": [
+          {
+            "tags": "0"
+          }
+        ]
+      }
     }
   }
 }
