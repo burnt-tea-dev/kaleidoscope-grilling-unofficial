@@ -489,6 +489,8 @@ def check_current_display_contracts(findings, geometry_index, animations):
     import build_caterpillar_eating_projection as caterpillar
     import build_review_three_eating_projection as review_three
     reviewed_three=set(review_three.ids())
+    import build_raw_one_eating_projection as raw_one
+    raw_one_ids=set(raw_one.ids())
     from build_java_eating_projection import held_profile_condition, projection_items, SECRET_PROFILES, secret_item_animation_id
     version=tuple(load_json(BP/"manifest.json")["header"]["version"])
     from secret_idle_calibration import OWNED as CALIBRATED_ITEMS,animation_document,clip_id,owning_hand_using
@@ -524,6 +526,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
             continue
         scoped_caterpillar=version>=(2,8,126) and desc['identifier']==caterpillar.ITEM
         reviewed_route=desc['identifier'] in reviewed_three
+        raw_one_route=desc['identifier'] in raw_one_ids
         ids = desc.get("animations", {})
         canonical_id = desc["identifier"].removesuffix("_java_three_alt")
         family = "skewer" if canonical_id.endswith("_skewer") else "rack" if desc["identifier"] == "kaleidoscope_grilling:advanced_rack" else "bottle"
@@ -551,6 +554,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
                 projected=SECRET_PROFILES[desc['identifier']]
                 expected_ids.update({f'fp_eat_{hand}':secret_item_animation_id(projected,hand) for hand in ('right','left')})
         if reviewed_route:expected_ids[review_three.ALIAS]='animation.kg_java_eating.item.three.right'
+        if raw_one_route:expected_ids.update({'raw_one_'+hand:'animation.kg_java_eating.item.one.'+hand for hand in ('right','left')})
         if scoped_caterpillar:
             expected_ids['probe_one_right']=caterpillar.ANIMATION
             expected_geometry=caterpillar.piece_assets()[0]['minecraft:geometry'][0]
@@ -598,6 +602,11 @@ def check_current_display_contracts(findings, geometry_index, animations):
             for alias in ('fp_right','eat_right','eat_alt_right'):
                 if alias in required_selectors:required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
             required_selectors[review_three.ALIAS]=active
+        if raw_one_route:
+            for hand in ('right','left'):
+                active=raw_one.gate(hand,[desc['identifier']],True)
+                for alias in ('fp_'+hand,'eat_'+hand):required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
+                required_selectors['raw_one_'+hand]=active
         if seasoning_expected is not None:
             required_selectors = {k:v for row in seasoning_expected['scripts']['animate'] for k,v in row.items()}
         if calibrated:
@@ -632,7 +641,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
             geo = geometry_index.get(ref, {}).get("geo", {})
             bound = [b for b in geo.get("bones", []) if b.get("binding")]
             scoped_piece=scoped_caterpillar and alias=='probe_piece' and ref=='geometry.kg_probe_caterpillar.piece'
-            piece=scoped_piece or (alias=='java_piece' and (desc['identifier'] in REPRESENTATIVES or reviewed_route)) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
+            piece=scoped_piece or (alias=='java_piece' and (desc['identifier'] in REPRESENTATIVES or reviewed_route or raw_one_route)) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
             if version>=(2,8,68) and re.fullmatch(r'piece_[1-9][0-9]*',alias):
                 piece=desc['identifier'] in SECRET_PROFILES and ref=='geometry.kg_secret_held.'+alias
                 if not piece:add(findings,'error','held_binding_contract',ref,'helper variant requires exact complete secret owner and namespace')
@@ -653,7 +662,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
                 targets = set(animations.get(anim_id, {}).get("body", {}).get("bones", {}))
                 # One attachable may render multiple geometries. The animation
                 # component addresses their union, validated above individually.
-                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar or reviewed_route else set()
+                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar or reviewed_route or raw_one_route else set()
                 missing = (targets - set(bones) - complementary) | (targets-available_bones)
                 if missing:
                     add(findings, "error", "held_animation_missing_bone", ref,

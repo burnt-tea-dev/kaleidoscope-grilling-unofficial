@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
 import build_review_three_eating_projection as review
+import build_raw_one_eating_projection as raw_one
 import build_eating_motion as motion
 from eating_owner_context import reference_bytes,augment as current_context
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
@@ -43,7 +44,7 @@ class CaterpillarProjectionTests(unittest.TestCase):
    retained=motion.build({path:source},review_three_routes=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
     previous=motion.build({path:source},review_three_routes=False)
-  self.assertEqual({str(k):encoded(v)for k,v in current_context(review.augment(two_route.augment(retained))).items()},{str(k):encoded(v)for k,v in first.items()})
+  self.assertEqual({str(k):encoded(v)for k,v in current_context(raw_one.augment(review.augment(two_route.augment(retained)))).items()},{str(k):encoded(v)for k,v in first.items()})
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)

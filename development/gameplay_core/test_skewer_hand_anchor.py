@@ -37,6 +37,8 @@ class HandAnchorTests(unittest.TestCase):
             from build_review_three_eating_projection import ids as reviewed_three_ids
             expected={'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'}
             expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in reviewed_three_ids()}
+            from build_raw_one_eating_projection import ids as raw_one_ids
+            expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in raw_one_ids()}
             self.assertEqual(pieces,expected)
         if VERSION>=(2,8,126):
             helper_ref='geometry.kg_probe_caterpillar.piece'

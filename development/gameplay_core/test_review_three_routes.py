@@ -6,6 +6,7 @@ import build_review_three_eating_projection as r
 import build_two_route_eating_projection as old
 import build_java_eating_projection as g
 import eating_owner_context as context
+import build_raw_one_eating_projection as raw_one
 BASE="e8da20b1f4f135543c16a604c92c60cfe3093eca"
 def current_json(p):return context.legacy_document(json.loads(p.read_text()))
 class ReviewThreeTests(unittest.TestCase):
@@ -60,7 +61,7 @@ class ReviewThreeTests(unittest.TestCase):
   self.assertEqual(hashlib.sha256(old.encoded(current_json(old.DEDICATED))).hexdigest(),old.NATIVE_CLIPS_SHA256)
  def test_main_delta_reversible_and_incomplete_wrappers_rejected(self):
   current=r.MAIN.read_text();baseline=subprocess.check_output(['git','show',BASE+':'+str(r.MAIN.relative_to(ROOT))],cwd=ROOT,text=True)
-  self.assertEqual(r.restore_main(current),baseline);self.assertEqual(r.patch_main(baseline),current)
+  self.assertEqual(r.restore_main(current),baseline);self.assertEqual(r.patch_main(baseline),raw_one.restore_main(current))
   with self.assertRaises(ValueError):r.restore_main(current.replace(r.IMPORT,''))
  def test_every_old_runtime_byte_is_preserved_outside_exact_delta(self):
   paths=[r.MAIN,r.RP/'render_controllers/java_eating_player.render_controllers.json']+[r.RP/'attachables'/(i.split(':')[1]+'.attachable.json')for i in r.ids()]
@@ -96,7 +97,7 @@ class ReviewThreeTests(unittest.TestCase):
   payload=[]
   player=current_json(r.RP/'animations/review_three_player.animation.json')['animations'][r.PLAYER]['blend_weight']
   self.assertEqual(player,r.gate())
-  ctrl=json.loads((r.RP/'render_controllers/java_eating_player.render_controllers.json').read_text())['render_controllers']['controller.render.player.first_person']
+  ctrl=raw_one.historical_document(raw_one.CONTROLLER,json.loads(raw_one.CONTROLLER.read_text()))['render_controllers']['controller.render.player.first_person']
   for item in r.ids():
    d=current_json(r.RP/'attachables'/(item.split(':')[1]+'.attachable.json'))['minecraft:attachable']['description']
    routes={k:v for row in d['scripts']['animate']for k,v in row.items()};active=routes[r.ALIAS]

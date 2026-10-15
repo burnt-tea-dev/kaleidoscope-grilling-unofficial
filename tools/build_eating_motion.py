@@ -82,6 +82,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  for p in sorted(paths):
   doc=json.loads(json.dumps(overrides[p])) if p in overrides else json.loads(p.read_text())
   doc=legacy_document(doc)
+  from build_raw_one_eating_projection import historical_document as strip_raw_one
+  doc=strip_raw_one(p,doc)
   strip_attachable(doc)
   d=doc['minecraft:attachable']['description'];identifier=d['identifier'];suffix='_java_three_alt'
   base=identifier[:-len(suffix)] if identifier.endswith(suffix) else identifier
@@ -137,7 +139,10 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
   from build_two_route_eating_projection import augment as augment_two_route
   output=augment_two_route(output)
  from build_review_three_eating_projection import augment as augment_review_three
- if review_three_routes:output=augment_review_three(output)
+ if review_three_routes:
+  output=augment_review_three(output)
+  from build_raw_one_eating_projection import augment as augment_raw_one
+  output=augment_raw_one(output)
  from eating_owner_context import augment as augment_owner_context
  # Nonedible partial skewers still use the player's eating-hand idle guard.
  partial=RP/'attachables/unfinished_skewer.attachable.json'

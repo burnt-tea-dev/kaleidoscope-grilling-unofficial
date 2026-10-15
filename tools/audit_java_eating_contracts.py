@@ -20,6 +20,8 @@ def audit():
     profiles = json.loads(re.search(r'PROFILE_BY_ITEM=Object.freeze\((\{.*?\})\)',
                                    (bp/'scripts/data.js').read_text())[1])
     admitted = generator.projection_items()
+    from build_raw_one_eating_projection import ids as raw_one_ids
+    admitted['ONE'] = sorted(set(admitted['ONE']) | set(raw_one_ids()))
     rows = []
     for path in sorted((bp/'items').glob('*.json')):
         item = read(path)['minecraft:item']
@@ -48,7 +50,7 @@ def audit():
         for geo in read(path).get('minecraft:geometry', []):
             mesh_index[geo['description']['identifier']] = geo
     renderer = []
-    for name in ('grilled_fish_skewer', 'grilled_ender_pearl_skewer'):
+    for name in ('grilled_fish_skewer', 'grilled_ender_pearl_skewer', 'raw_fish_skewer', 'raw_caterpillar_skewer'):
         desc = read(rp/'attachables'/f'{name}.attachable.json')['minecraft:attachable']['description']
         main = mesh_index[desc['geometry']['stage0']]['bones'][0]
         piece = mesh_index[desc['geometry']['java_piece']]['bones'][0]
