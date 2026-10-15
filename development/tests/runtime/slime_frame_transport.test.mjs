@@ -114,3 +114,24 @@ test('main integration keeps one world read outside the existing player scan',as
  const code=await fs.readFile(path.join(scripts,'slime_frame_runtime.js'),'utf8');
  assert.doesNotMatch(code,/runInterval|getAllPlayers|system\.currentTick|q\.time_stamp/);
 });
+
+test('actual exported Molang selects owned hand, validates stale markers, and reaches all15 states',async()=>{
+ const rp=path.resolve(scripts,'../../resource_pack');
+ const description=JSON.parse(await fs.readFile(path.join(rp,'attachables/grilled_slime_skewer.attachable.json'),'utf8'))['minecraft:attachable'].description;
+ const rows=description.scripts.pre_animation.filter(row=>row.startsWith('v.kg_slime_'));
+ assert.equal(rows.length,3);
+ const evaluate=new Function('c','owner','v','math',rows.join('\n').replaceAll('c.owning_entity->q.','owner.')+'\nreturn v;');
+ for(const hand of ['main','off'])for(let stage=0;stage<3;stage++)for(let frame=0;frame<5;frame++){
+  let held=SLIME_ID,missing=false,ownMarker=215+frame;
+  const expectedSlot=hand==='main'?'slot.weapon.mainhand':'slot.weapon.offhand';
+  const owner={has_property:()=>!missing,property:name=>name===`kaleidoscope_grilling:secret_${hand}_piece`?ownMarker:219,
+   is_item_name_any:(slot,id)=>slot===expectedSlot&&id===held};
+  const c={item_slot:hand==='main'?'main_hand':'off_hand'},math={floor:Math.floor,clamp:(v,a,b)=>Math.max(a,Math.min(b,v))};
+  const run=()=>evaluate(c,owner,{kg_bite_stage:stage},math);
+  assert.equal(run().kg_slime_index,stage*5+frame);
+  for(const marker of [0,213,214,220,254,255]){ownMarker=marker;assert.equal(run().kg_slime_frame,0);}
+  ownMarker=215+frame;missing=true;assert.equal(run().kg_slime_frame,0);
+  missing=false;held='kaleidoscope_grilling:raw_slime_skewer';assert.equal(run().kg_slime_frame,0);
+  held=SLIME_ID;c.item_slot='head';assert.equal(run().kg_slime_frame,0);
+ }
+});

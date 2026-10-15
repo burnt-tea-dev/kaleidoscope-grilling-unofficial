@@ -87,6 +87,25 @@ class SlimeFrameSelector(unittest.TestCase):
             with self.assertRaises(ValueError):
                 strip_main(bad)
 
+    def test_historical_witness_rejects_unreviewed_bytes_before_recovery(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from slime_frame_source_witness import reference_bytes, pinned_bytes, PREVIOUS_SLIME_BASE, MAIN_PATH, ATTACHABLE_PATH
+        for relative in (MAIN_PATH, ATTACHABLE_PATH):
+            path = ROOT / relative
+            current = path.read_bytes()
+            self.assertEqual(reference_bytes(path, current), pinned_bytes(PREVIOUS_SLIME_BASE, relative))
+            for corrupted in (current + b' ', pinned_bytes(PREVIOUS_SLIME_BASE, relative)):
+                with self.assertRaisesRegex(AssertionError, 'reviewed complete bytes'):
+                    reference_bytes(path, corrupted)
+        doc = read(ROOT / ATTACHABLE_PATH)
+        d = doc['minecraft:attachable']['description']
+        for key in ('fp_right', 'tp_right'):
+            changed = copy.deepcopy(doc)
+            changed['minecraft:attachable']['description']['animations'][key] = 'animation.unrelated'
+            with self.assertRaises(AssertionError):
+                reference_bytes(ROOT / ATTACHABLE_PATH, (json.dumps(changed, indent=2)+'\n').encode())
+
     def test_projection_admission_preserved_and_extra_alias_mutations_rejected(self):
         import sys
         sys.path.insert(0, str(ROOT / 'tools'))

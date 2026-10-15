@@ -486,4 +486,10 @@ def assert_public_bytes_with_g71_bottles(testcase, path):
         return assert_public_bytes(testcase, path)
     version = json.loads((ROOT / 'baseline.json').read_text())['version']
     expected = expected_main_bytes(version, local_bottles=True)
-    testcase.assertEqual(path.read_bytes(), expected, 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas')
+    from slime_frame_source_witness import reference_bytes as slime_reference_bytes
+    message = 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas'
+    try:
+        current = slime_reference_bytes(path, path.read_bytes())
+    except AssertionError as error:
+        testcase.fail(message + '; ' + str(error))
+    testcase.assertEqual(current, expected, message)

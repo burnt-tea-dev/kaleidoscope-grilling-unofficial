@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
 import build_eating_motion as motion
+import build_slime_frame_selector as slime
 from eating_owner_context import reference_bytes,augment as current_context
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
@@ -39,10 +40,10 @@ class CaterpillarProjectionTests(unittest.TestCase):
   # the later layer must not mask the original main.js presence delta.
   import build_two_route_eating_projection as two_route
   with patch.object(two_route,'augment',side_effect=lambda output:output):
-   retained=motion.build({path:source})
+   retained=motion.build({path:source},slime_frames=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
-    previous=motion.build({path:source})
-  self.assertEqual({str(k):encoded(v)for k,v in current_context(two_route.augment(retained)).items()},{str(k):encoded(v)for k,v in first.items()})
+    previous=motion.build({path:source},slime_frames=False)
+  self.assertEqual({str(k):encoded(v)for k,v in slime.augment(current_context(two_route.augment(retained))).items()},{str(k):encoded(v)for k,v in first.items()})
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)

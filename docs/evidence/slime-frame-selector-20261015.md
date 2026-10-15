@@ -27,7 +27,7 @@ These checks establish arithmetic, source ownership and selected-asset fidelity.
 
 ## Reproducible checks
 
-The canonical `verify_current.py` source path (and its existing CI caller) now invokes `verify_slime_frames.py` before the historical full suite for G143 and later. A receipt-order unit test ensures this cannot be skipped. No historical source hash or release gate is relaxed.
+The canonical `verify_current.py` source path (and its existing CI caller) now invokes `verify_slime_frames.py` before the historical full suite for G143 and later. A receipt-order unit test ensures this cannot be skipped. No historical source hash or release gate is relaxed. The reviewed runtime layer is pinned to local commit `5c088cd1d5025c395b30d7a7f05268b9b7c2de70`; historical witnesses first require its complete main/attachable bytes, reverse only the exact slime additions, and require the original complete preimages before the existing assertions. An initial full source run failed at that historical continuation boundary and produced no PASS receipt; the adaptation requires a fresh full run.
 
 Run from repository root:
 
