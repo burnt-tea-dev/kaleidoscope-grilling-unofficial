@@ -91,18 +91,23 @@ class TwoRouteProjectionTests(unittest.TestCase):
             scoped.animations(drift)
 
     def test_two_full_generations_preserve_every_non_target_output_and_caterpillar(self):
-        first = motion.build(two_route_camera=True, review_three_routes=False)
-        second = motion.build(first, two_route_camera=True, review_three_routes=False)
+        first = motion.build(two_route_camera=True, review_three_routes=False, failure_skewers=False)
+        second = motion.build(first, two_route_camera=True, review_three_routes=False, failure_skewers=False)
         # Remove only the newly registered layer to compare the full G126 output.
         with patch.object(scoped, 'augment', side_effect=lambda output: output):
-            before = motion.build({scoped.MAIN: self.original}, review_three_routes=False)
+            before = motion.build({scoped.MAIN: self.original}, review_three_routes=False, failure_skewers=False)
         encode = lambda rows: {path: scoped.encoded(value) for path, value in rows.items()}
         self.assertEqual(encode(first), encode(second))
         delta = {path for path in set(before) | set(first)
                  if path not in before or path not in first or scoped.encoded(before[path]) != scoped.encoded(first[path])}
         self.assertEqual(delta, {scoped.MAIN, scoped.DEDICATED})
+        import build_failure_skewer_held as failure
+        final = motion.build()
+        failure_paths = set(failure.base_assets()) | {failure.PLAYER_FILE, failure.PLAYER_CONTROLLER}
         for path, value in first.items():
-            if path == scoped.MAIN:
+            if path in failure_paths:
+                self.assertEqual(path.read_bytes(), scoped.encoded(final[path]), str(path))
+            elif path == scoped.MAIN:
                 self.assertEqual(review.restore_main(path.read_text()).encode(),scoped.encoded(value),str(path))
             elif path.suffix == '.json':
                 self.assertEqual(scoped.encoded(review.predecessor_document(path,json.loads(path.read_bytes()))),scoped.encoded(value),str(path))

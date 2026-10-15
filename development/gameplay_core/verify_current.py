@@ -366,6 +366,9 @@ def main() -> None:
     }:
         environment[SESSION_ENV] = verifier
     subprocess.run(command, check=True, env=environment)
+    subprocess.run([sys.executable, str(DEV / "verify_failure_skewer.py")], check=True)
+    subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_composed_skewer_witnesses.py")], check=True)
+    subprocess.run(["node", "--test", str(DEV / "test_all_skewer_integration.mjs")], check=True)
     if args.compiled:
         verify_compiled_exact()
     if args.write_source_validation is not None:

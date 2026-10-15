@@ -66,6 +66,8 @@ def binding_assets():
   for key,body in load(p).get('render_controllers',{}).items():assert key not in controllers,key;controllers[key]=body
  for p in sorted((RP/'attachables').glob('*.json')):
   if p.stem.endswith('_java_three_alt.attachable'):continue
+  from verify_failure_skewer import admit_attachable
+  if admit_attachable(p):continue
   # Preserve this historical pose gate on captured bytes only after the exact
   # current owning-context continuation has been validated independently.
   from eating_owner_context import reference_bytes

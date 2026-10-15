@@ -13,7 +13,8 @@ REVIEWED_SLIME_BASE = '5c088cd1d5025c395b30d7a7f05268b9b7c2de70'
 PREVIOUS_SLIME_BASE = '23031fc67ac96542d47d4a99295427e3a69af5c5'
 MAIN_PATH = 'projects/grilling/gameplay_core/behavior_pack/scripts/main.js'
 ATTACHABLE_PATH = 'projects/grilling/gameplay_core/resource_pack/attachables/grilled_slime_skewer.attachable.json'
-PATHS = frozenset((MAIN_PATH, ATTACHABLE_PATH))
+TRANSPORT_PATH = 'projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js'
+PATHS = frozenset((MAIN_PATH, ATTACHABLE_PATH, TRANSPORT_PATH))
 
 @lru_cache(maxsize=None)
 def pinned_bytes(commit, relative):
@@ -34,6 +35,9 @@ def reference_bytes(path, current):
     if relative == MAIN_PATH:
         from build_slime_frame_selector import strip_main
         restored = strip_main(current.decode()).encode()
+    elif relative == TRANSPORT_PATH:
+        # Full postimage equality above admits only the immutable reviewed layer.
+        restored = before
     else:
         from build_slime_frame_selector import frame_aliases, CONTROLLER
         document = deepcopy(json.loads(current))

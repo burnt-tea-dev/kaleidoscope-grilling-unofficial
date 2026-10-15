@@ -35,7 +35,8 @@ class SecretCompletionScope(unittest.TestCase):
     def test_native_debit_reward_checkpoint_cleanup_and_repaired_calls_are_conserved(self):
         path = ROOT / RUNTIME / 'behavior_pack/scripts/main.js'
         assert_public_bytes(self, path)
-        current = path.read_text()
+        from build_failure_skewer_held import restore_main as failure_predecessor
+        current = failure_predecessor(path.read_text())
         begin = "  try{syncSecretHeld(e.source,{beginHand:hand})}catch(error){console.warn('[Grilling held ingredients] '+error)}"
         complete = "if(id===SECRET_ID)try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}"
         self.assertEqual(current.count(begin), 1)

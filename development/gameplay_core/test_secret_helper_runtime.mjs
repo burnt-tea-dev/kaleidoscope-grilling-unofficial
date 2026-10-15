@@ -1,3 +1,4 @@
+import * as failureSkewers from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import test from 'node:test';
@@ -18,7 +19,7 @@ function fixture(main,off){
  const held={main,off},properties={},writes=[];
  const callbacks={},events=Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(name=>[name,{subscribe:f=>callbacks[name]=f}]));
  const player={id:'owner',selectedSlotIndex:3,setProperty(k,v){properties[k]=v;writes.push([k,v]);}};
- const context={canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretVisualState,partialVisualState,eatingStillCurrent,isCreative:()=>!!held.creative,getMainHand:()=>held.main,getOffHand:()=>held.off,world:{afterEvents:events,getAllPlayers:()=>[player]},system:{currentTick:100,run:f=>f(),runInterval(){}},console};
+ const context={...failureSkewers,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretVisualState,partialVisualState,eatingStillCurrent,isCreative:()=>!!held.creative,getMainHand:()=>held.main,getOffHand:()=>held.off,world:{afterEvents:events,getAllPlayers:()=>[player]},system:{currentTick:100,run:f=>f(),runInterval(){}},console};
  vm.runInNewContext(shared('slime_frame_core.js')+'\n'+shared('held_visual_transport.js')+'\n'+shared('held_visual_dispatch_runtime.js')+'\n'+source+'\nthis.api={configureSecretHeldReader,syncSecretHeld};',context);
  const api=context.api;api.configureSecretHeldReader(s=>s.cooked,s=>s.raw);
  return {api,player,held,properties,writes,callbacks};

@@ -38,6 +38,14 @@ def held_plate_assets():
     return build()
 
 
+@lru_cache(maxsize=1)
+def failure_source_contract():
+    # Exact new family, checked independently before legacy family accounting.
+    import subprocess
+    subprocess.run([sys.executable, str(ROOT/'development/gameplay_core/verify_failure_skewer.py')],
+                   cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
+
+
 def geometry_ref(value):
     if isinstance(value, str):
         return value
@@ -508,6 +516,11 @@ def check_current_display_contracts(findings, geometry_index, animations):
     admitted = projection_items()
     for path in sorted((RP / "attachables").glob("*.json")):
         desc = load_json(path)["minecraft:attachable"]["description"]
+        from verify_failure_skewer import FAILURE_ATTACHABLES
+        if path.name in FAILURE_ATTACHABLES:
+            failure_source_contract()
+            counts['failure']+=1
+            continue
         if desc['identifier']=='kaleidoscope_grilling:skewer_plate' and version>=(2,8,119):
             counts['plate']+=1
             for target,content in held_plate_assets().items():
@@ -675,7 +688,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
     expected_bottles|={f'kaleidoscope_grilling:special_seasoning_r{remaining}_v{variant}' for remaining in range(1,9) for variant in range(8)}
     if version>=(2,8,71):
         expected_bottles|={f'kaleidoscope_grilling:{kind}_seasoning_f{fill}' for kind in ('partial','pending') for fill in range(1,9)}
-    expected_counts={"skewer":40,"bottle":len(expected_bottles)}
+    expected_counts={"skewer":40,"bottle":len(expected_bottles),"failure":6}
     if version>=(2,8,68):expected_counts["partial"]=1
     if version>=(2,8,119):expected_counts['plate']=1
     if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs - slime_frame_refs) != 150 or not slime_frame_refs <= skewer_refs:

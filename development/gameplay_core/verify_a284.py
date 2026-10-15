@@ -113,6 +113,8 @@ def eating_gate():
     skewers = 0
     from slime_frame_source_witness import reference_bytes as slime_reference_bytes
     for file in (RP / 'attachables').glob('*_skewer.attachable.json'):
+        from verify_failure_skewer import admit_attachable
+        if admit_attachable(file):continue
         d = json.loads(slime_reference_bytes(file, file.read_bytes()))['minecraft:attachable']['description']
         if version >= (2,8,68) and d['identifier']=='kaleidoscope_grilling:unfinished_skewer':
             assert d['identifier'] not in required, file
