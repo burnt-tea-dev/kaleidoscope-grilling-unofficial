@@ -21,13 +21,37 @@ export function verifiedPlateStep({read,write,before,after,signature=JSON.string
  }
  return {
   apply(){if(signature(read())!==expectedBefore)throw Error('Grilling: plate input changed');attempted=true;put(after,expectedAfter)},
-  rollback(){if(attempted)put(before,expectedBefore)}
+  rollback(){
+   if(!attempted)return;
+   const current=signature(read());
+   if(current===expectedBefore)return;
+   if(current!==expectedAfter)throw Error('Grilling: plate rollback ownership changed');
+   let failure;
+   try{write(before)}catch(error){failure=error}
+   // A void native setter can finish before throwing. Exact readback, not
+   // the exception or the setter return value, establishes restoration.
+   if(signature(read())!==expectedBefore)throw failure??Error('Grilling: plate rollback was not acknowledged');
+  }
  };
 }
 
 /** Synchronous rollback only. Ambiguous ownership must block further transfers. */
 export function commitPlateSteps(steps,quarantine){
- const result=commitSteps(steps);
+ let rollbackBlocked=false;
+ const guarded=steps.map(step=>({
+  apply(){return step.apply()},
+  rollback(){
+   // Do not refund an earlier source after an unresolved delivery/rollback.
+   // Leave its captured state in the existing station recovery boundary.
+   if(rollbackBlocked)throw Error('Grilling: plate rollback retained for recovery');
+   try{
+    const restored=step.rollback();
+    if(restored===false)throw Error('Grilling: plate rollback rejected');
+    return restored;
+   }catch(error){rollbackBlocked=true;throw error}
+  }
+ }));
+ const result=commitSteps(guarded);
  if(!result.ok&&result.rollbackErrors){
   quarantine('plate transaction rollback incomplete');
   throw Error('Grilling: plate transaction recovery required');

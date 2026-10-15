@@ -10,6 +10,7 @@ import {
  nextSaplingAction,pepperTreeHeight,pepperLogAxis,pepperLeafBreakPlan,pepperTreePlan
 } from './a2748_pepper_tree_core.js';
 import {awardMountainFragrance} from './a2753_advancement_runtime.js';
+import {createOwnedPlantWrite,plantFertilizerSteps} from './plant_fertilizer_transaction_core.js';
 
 const STING_UNTIL='kaleidoscope_grilling:pepper_sting_until';
 const REPLACEABLE=new Set(['minecraft:air','minecraft:short_grass','minecraft:tall_grass','minecraft:snow_layer','minecraft:vine']);
@@ -37,9 +38,44 @@ function state(block,key,fallback){
 function setState(block,key,value){
  try{block.setPermutation(block.permutation.withState(key,value));return true}catch{return false}
 }
-function drop(block,id,count=1){
- if(!block||count<=0)return;
- try{block.dimension.spawnItem(new ItemStack(id,count),{x:block.x+.5,y:block.y+.4,z:block.z+.5})}catch{}
+function harvestPepper(block){
+ if(!block||block.typeId!==PEPPER_LEAVES_ID||!plantMutationAllowed(block))return false;
+ const before=block.permutation;
+ if(before.getState(HAS_PEPPER_STATE)!==true)return false;
+ const clear=createOwnedPlantWrite({
+  read:()=>block.permutation,write:value=>block.setPermutation(value),
+  same:samePlantPermutation,before,after:before.withState(HAS_PEPPER_STATE,false)
+ });
+ const count=harvestedPepperCount(Math.random()),tileDrops=world.gameRules.doTileDrops,drops=[];
+ if(typeof tileDrops!=='boolean')throw Error('Pepper harvest game rule unavailable');
+ if(tileDrops){
+  const stack=new ItemStack(SICHUAN_PEPPER_ID,count);
+  let entityId,attempted=false,acknowledged=false;
+  const owned=entity=>{
+   const item=entity?.getComponent('minecraft:item')?.itemStack;
+   return entity?.isValid===true&&item?.typeId===stack.typeId&&item?.amount===stack.amount&&item.isStackableWith(stack);
+  };
+  drops.push({
+   apply(){
+    attempted=true;
+    const entity=block.dimension.spawnItem(stack,{x:block.x+.5,y:block.y+.4,z:block.z+.5});
+    entityId=entity?.id;
+    acknowledged=typeof entityId==='string'&&world.getEntity(entityId)?.id===entityId&&owned(entity);
+    if(!acknowledged)throw Error('Pepper harvest drop was not acknowledged');
+   },
+   rollback(){
+    if(!attempted)return;
+    if(!acknowledged)throw Error('Pepper harvest drop outcome unknown');
+    const current=world.getEntity(entityId);
+    if(current?.id!==entityId||!owned(current))throw Error('Pepper harvest drop ownership changed');
+    let failure;try{current.remove()}catch(error){failure=error}
+    if(world.getEntity(entityId)!==undefined)throw failure??Error('Pepper harvest drop removal was not acknowledged');
+   }
+  });
+ }
+ // The fruit state is the cost of this harvest. An unknown delivery must
+ // retain that cost and quarantine the leaf, not restore repeatable fruit.
+ return commitPlantSteps(block,plantFertilizerSteps(clear,drops));
 }
 function lightAbove(block){
  try{return Number(block.dimension.getLightLevel({x:block.x,y:block.y+1,z:block.z}))||0}catch{return 0}
@@ -239,11 +275,8 @@ system.beforeEvents.startup.subscribe(init=>{
   onPlayerInteract(event){
    try{
     const block=event.block,player=event.player;if(!player||getMainHand(player))return;
-    if(!plantMutationAllowed(block))return;
-    if(!state(block,HAS_PEPPER_STATE,false))return;
-    drop(block,SICHUAN_PEPPER_ID,harvestedPepperCount(Math.random()));
+    if(!harvestPepper(block))return;
     awardMountainFragrance(player);
-    setState(block,HAS_PEPPER_STATE,false);
     block.dimension.playSound('block.sweet_berry_bush.pick',block.location,{volume:1,pitch:.8+Math.random()*.4});
    }catch{}
   },
