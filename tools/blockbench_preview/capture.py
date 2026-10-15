@@ -12,6 +12,7 @@ import struct
 import time
 import urllib.parse
 import urllib.request
+import zlib
 
 LIMIT = 32 * 1024 * 1024
 TOOLS = {'get_project_info', 'create_offscreen_view', 'delete_offscreen_view',
@@ -235,15 +236,18 @@ def read_views(client):
     return data['views']
 
 
-def active_view(client, camera, expected_id=None):
-    matches = [v for v in read_views(client) if v.get('kind') == 'viewport' and v.get('active') is True]
-    require(len(matches) == 1, 'Exactly one active native viewport required')
+def verify_view(client, camera, expected_id=None, kind="viewport"):
+    matches = [v for v in read_views(client) if v.get('kind') == kind and
+               (v.get('active') is True if kind == 'viewport' else v.get('id') == expected_id)]
+    require(len(matches) == 1, 'Exactly one expected render view required')
     view = matches[0]
     require(isinstance(view.get('id'), str) and view['id'] and
             (expected_id is None or view['id'] == expected_id), 'Active viewport changed')
     require(view.get('width') == camera['width'] and view.get('height') == camera['height'],
             'Native viewport dimensions differ from plan; resize manually before capture')
     actual = view.get('camera', {})
+    require(isinstance(actual, dict) and {'position', 'target', 'fov', 'projection', 'locked_angle'} <= set(actual),
+            'Required camera metadata missing')
     require(actual.get('projection') == 'perspective' and actual.get('locked_angle') is None,
             'Native viewport projection/lock mismatch')
     # The plugin reports camera metadata rounded to three decimals.
@@ -255,6 +259,57 @@ def active_view(client, camera, expected_id=None):
     require(number(actual.get('fov')) and abs(actual['fov'] - camera['fov']) <= .001,
             'Native viewport FOV differs from plan')
     return view
+
+
+def verify_png(image):
+    """Validate bounded canvas PNG bytes without accepting an image-header-only result."""
+    require(len(image) <= LIMIT and image.startswith(b'\x89PNG\r\n\x1a\n'), 'Invalid PNG signature/size')
+    offset, count, dimensions, compressed, ended, idat_ended = 8, 0, None, [], False, False
+    while offset < len(image):
+        require(offset + 12 <= len(image), 'Truncated PNG chunk')
+        length = struct.unpack('>I', image[offset:offset + 4])[0]
+        kind = image[offset + 4:offset + 8]
+        end = offset + 12 + length
+        require(end <= len(image), 'Truncated PNG chunk payload')
+        payload = image[offset + 8:offset + 8 + length]
+        crc = struct.unpack('>I', image[offset + 8 + length:end])[0]
+        require(zlib.crc32(kind + payload) == crc, 'PNG chunk CRC mismatch')
+        require(all(65 <= c <= 90 or 97 <= c <= 122 for c in kind), 'Invalid PNG chunk type')
+        count += 1
+        require(count <= 4096 and (count != 1 or kind == b'IHDR'), 'Invalid PNG chunk order')
+        if kind == b'IHDR':
+            require(count == 1 and length == 13, 'Invalid PNG IHDR')
+            width, height, depth, color, compression, filtering, interlace = struct.unpack('>IIBBBBB', payload)
+            require(0 < width <= 8192 and 0 < height <= 8192 and depth == 8 and color in (2, 6)
+                    and compression == filtering == interlace == 0, 'Unsupported canvas PNG format')
+            dimensions = width, height, (3 if color == 2 else 4)
+        elif kind == b'IDAT':
+            require(dimensions is not None and not idat_ended, 'Invalid PNG IDAT order')
+            compressed.append(payload)
+        elif kind == b'IEND':
+            require(length == 0 and compressed and end == len(image), 'Invalid PNG IEND')
+            ended = True
+        else:
+            if kind == b'PLTE':
+                require(not compressed and 0 < length <= 768 and length % 3 == 0, 'Invalid PNG palette')
+            require(kind == b'PLTE' or (len(kind) == 4 and kind[0] & 32), 'Unsupported critical PNG chunk')
+            if compressed:
+                idat_ended = True
+        offset = end
+    require(ended and dimensions is not None, 'Incomplete PNG image')
+    width, height, channels = dimensions
+    stride = 1 + width * channels
+    expected = stride * height
+    require(expected <= 64 * 1024 * 1024, 'PNG decoded image exceeds memory bound')
+    try:
+        decoder = zlib.decompressobj()
+        pixels = decoder.decompress(b''.join(compressed), expected + 1)
+        require(decoder.eof and not decoder.unconsumed_tail and not decoder.unused_data
+                and len(pixels) == expected, 'Invalid or oversized PNG compressed pixels')
+        require(all(pixels[row * stride] <= 4 for row in range(height)), 'Invalid PNG scanline filter')
+    except zlib.error:
+        raise Rejected('Invalid PNG compressed pixels') from None
+    return width, height
 
 
 def run(url, fixture, output, plan=None, inspect_name=None):
@@ -289,22 +344,26 @@ def run(url, fixture, output, plan=None, inspect_name=None):
             return receipt
         use_active = plan.get('view_mode', 'offscreen') == 'active'
         camera = plan['camera']
-        view = active_view(client, camera)['id'] if use_active else 'qa_' + plan['live_sha256'][:16]
+        view = verify_view(client, camera)['id'] if use_active else 'qa_' + plan['live_sha256'][:16]
         receipt['view_mode'] = 'active' if use_active else 'offscreen'
         receipt['view_id'] = view
+        camera_ready = use_active
         def guard():
             require(sha(fixture.read_bytes()) == plan['fixture_sha256'], 'Source fixture changed during capture')
             _, current, current_model = client.snapshot(name, uuid)
             require(sha(current) == plan['live_sha256'], 'Live project changed during capture')
             check_model(current_model, plan)
-            if use_active:
-                receipt['verified_view'] = active_view(client, camera, view)
+            if camera_ready:
+                receipt['verified_view'] = verify_view(client, camera, view,
+                    'viewport' if use_active else 'offscreen')
         def call(tool, args):
-            nonlocal view_created
+            nonlocal view_created, camera_ready
             guard()
             result = client.tool(tool, args)
             if tool == 'create_offscreen_view':
                 view_created = True
+            if tool == 'set_camera_angle':
+                camera_ready = True
             guard()
             receipt['steps'].append({'tool': tool, 'arguments': args, 'guard': 'before_and_after_passed'})
             save()
@@ -326,13 +385,10 @@ def run(url, fixture, output, plan=None, inspect_name=None):
                 image = base64.b64decode(images[0]['data'], validate=True)
             except Exception:
                 raise Rejected('Invalid PNG encoding') from None
-            require(len(image) >= 24 and image.startswith(b'\x89PNG\r\n\x1a\n')
-                    and image[12:16] == b'IHDR', 'Invalid PNG header')
-            image_width, image_height = struct.unpack('>II', image[16:24])
-            require(0 < image_width <= 8192 and 0 < image_height <= 8192, 'Invalid PNG dimensions')
+            image_width, image_height = verify_png(image)
             filename = f'frame-{index:04d}.png'
             (output / filename).write_bytes(image)
-            receipt['frames'].append({'file': filename, 'time_seconds': time, 'sha256': sha(image),
+            receipt['frames'].append({'file': filename, 'requested_time_seconds': time, 'sha256': sha(image),
                                       'png_width': image_width, 'png_height': image_height})
             save()
         guard()

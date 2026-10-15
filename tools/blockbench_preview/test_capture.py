@@ -41,7 +41,7 @@ def plan():
 @contextmanager
 def server(**faults):
     calls = []
-    state = {'changed': False}
+    state = {'changed': False, 'view': None, 'clamped': False}
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
             pass
@@ -72,22 +72,28 @@ def server(**faults):
                               'content': [{'type': 'resource_link', 'uri': 'file:///private' if faults.get('resource') else URI}]}
                 elif tool == 'list_views':
                     camera = copy.deepcopy(plan()['camera'])
-                    if faults.get('camera_drift') and state['changed']:
+                    if (faults.get('camera_drift') and state['changed']) or state['clamped']:
                         camera['position'][0] = 7
                     if faults.get('bad_dimensions'):
                         camera['width'] = 999
                     width, height = camera.pop('width'), camera.pop('height')
-                    result = {'structuredContent': {'views': [{'id': 'main', 'kind': 'viewport', 'active': True,
+                    result = {'structuredContent': {'views': [{'id': state['view'] or 'main', 'kind': 'offscreen' if state['view'] else 'viewport', 'active': not bool(state['view']),
                         'width': width, 'height': height,
                         'camera': dict(camera, projection='perspective', locked_angle=None)}]}}
+                    if faults.get('missing_camera_field'):
+                        result['structuredContent']['views'][0]['camera'].pop('locked_angle')
                 elif tool == 'capture_screenshot':
                     if faults.get('switch_on_capture') or faults.get('camera_drift'):
                         state['changed'] = True
-                    result = {'content': [{'type': 'image', 'mimeType': 'image/png', 'data': base64.b64encode(png()).decode()}]}
+                    result = {'content': [{'type': 'image', 'mimeType': 'image/png', 'data': base64.b64encode(png()[:24] if faults.get('truncated_png') else png()).decode()}]}
                     if faults.get('tool_error'):
                         result = {'isError': True, 'content': [{'type': 'text', 'text': 'private-server-secret'}]}
                 else:
                     result = {'isError': True} if tool == 'delete_offscreen_view' and faults.get('cleanup_error') else {'content': []}
+                    if tool == 'create_offscreen_view':
+                        state['view'] = params['arguments']['id']
+                    if tool == 'set_camera_angle' and faults.get('clamped_offscreen'):
+                        state['clamped'] = True
                     if tool == 'create_offscreen_view' and faults.get('switch_on_create'):
                         state['changed'] = True
             else:
@@ -131,7 +137,7 @@ class CaptureTests(unittest.TestCase):
             with server(sse=sse) as (url, calls):
                 receipt = capture.run(url, self.fixture, output, plan())
             self.assertEqual(receipt['status'], 'captured_editor_only')
-            self.assertEqual([f['time_seconds'] for f in receipt['frames']], [0, .5, 1])
+            self.assertEqual([f['requested_time_seconds'] for f in receipt['frames']], [0, .5, 1])
             self.assertEqual((output / 'initial-live.bbmodel').read_text(), RAW)
             self.assertEqual(self.tool_names(calls)[-1], 'delete_offscreen_view')
             self.assertNotIn('private-session-secret', (output / 'receipt.json').read_text())
@@ -251,6 +257,37 @@ class CaptureTests(unittest.TestCase):
             self.assertNotIn('create_offscreen_view', self.tool_names(calls))
             if fault == 'bad_dimensions':
                 self.assertNotIn('animation_timeline', self.tool_names(calls))
+
+    def test_partial_png_cannot_be_a_successful_frame(self):
+        with server(truncated_png=True) as (url, calls):
+            with self.assertRaisesRegex(capture.Rejected, 'Truncated PNG'):
+                capture.run(url, self.fixture, self.output, plan())
+        self.assertFalse(list(self.output.glob('*.png')))
+        self.assertEqual(json.loads((self.output / 'receipt.json').read_text())['frames'], [])
+
+    def test_png_crc_pixels_and_memory_bounds(self):
+        def chunk(kind, payload):
+            return struct.pack('>I', len(payload)) + kind + payload + struct.pack('>I', zlib.crc32(kind + payload))
+        signature = b'\x89PNG\r\n\x1a\n'
+        def sample(width, height, payload):
+            return signature + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0)) + chunk(b'IDAT', payload) + chunk(b'IEND', b'')
+        bad_crc = bytearray(png()); bad_crc[29] ^= 1
+        for image in (bytes(bad_crc), sample(1, 1, b'not-zlib'),
+                      sample(8192, 8192, zlib.compress(b'x')),
+                      sample(1, 1, zlib.compress(b'x' * 100000)),
+                      sample(1, 1, zlib.compress(b'\x09abcd'))):
+            with self.assertRaises(capture.Rejected):
+                capture.verify_png(image)
+        self.assertEqual(capture.verify_png(png()), (1, 1))
+
+    def test_applied_offscreen_camera_and_explicit_camera_fields(self):
+        for fault in ('clamped_offscreen', 'missing_camera_field'):
+            output = self.root / fault
+            with server(**{fault: True}) as (url, calls):
+                with self.assertRaises(capture.Rejected):
+                    capture.run(url, self.fixture, output, plan())
+            self.assertNotIn('capture_screenshot', self.tool_names(calls))
+            self.assertEqual(self.tool_names(calls)[-1], 'delete_offscreen_view')
 
     def test_cleanup_failure_is_a_distinct_incomplete_status(self):
         with server(cleanup_error=True) as (url, calls):
