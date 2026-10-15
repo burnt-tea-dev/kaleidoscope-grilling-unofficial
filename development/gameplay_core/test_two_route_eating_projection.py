@@ -16,13 +16,14 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import build_caterpillar_eating_projection as caterpillar
 import build_eating_motion as motion
 import build_two_route_eating_projection as scoped
+import build_review_three_eating_projection as review
 from eating_owner_context import reference_bytes
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.current = scoped.MAIN.read_text()
+        cls.current = review.restore_main(scoped.MAIN.read_text())
         cls.original = scoped.restore_main(cls.current)
         cls.shared = json.loads(reference_bytes(scoped.SHARED))
         cls.clips = scoped.animations(scoped.SHARED.read_bytes())
@@ -90,23 +91,27 @@ class TwoRouteProjectionTests(unittest.TestCase):
             scoped.animations(drift)
 
     def test_two_full_generations_preserve_every_non_target_output_and_caterpillar(self):
-        first = motion.build(two_route_camera=True)
-        second = motion.build(first, two_route_camera=True)
+        first = motion.build(two_route_camera=True, review_three_routes=False)
+        second = motion.build(first, two_route_camera=True, review_three_routes=False)
         # Remove only the newly registered layer to compare the full G126 output.
         with patch.object(scoped, 'augment', side_effect=lambda output: output):
-            before = motion.build({scoped.MAIN: self.original})
+            before = motion.build({scoped.MAIN: self.original}, review_three_routes=False)
         encode = lambda rows: {path: scoped.encoded(value) for path, value in rows.items()}
         self.assertEqual(encode(first), encode(second))
         delta = {path for path in set(before) | set(first)
                  if path not in before or path not in first or scoped.encoded(before[path]) != scoped.encoded(first[path])}
         self.assertEqual(delta, {scoped.MAIN, scoped.DEDICATED})
         for path, value in first.items():
-            self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
+            if path == scoped.MAIN:
+                self.assertEqual(review.restore_main(path.read_text()).encode(),scoped.encoded(value),str(path))
+            elif path.suffix == '.json':
+                self.assertEqual(scoped.encoded(review.predecessor_document(path,json.loads(path.read_bytes()))),scoped.encoded(value),str(path))
+            else:self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
         fixtures = json.loads((ROOT / 'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
         for relative, digest in fixtures['runtime_file_sha256'].items():
             self.assertEqual(hashlib.sha256(reference_bytes(scoped.P / relative)).hexdigest(), digest, relative)
         # Existing generation must not strip the scoped selector on a later run.
-        self.assertEqual(motion.build()[scoped.MAIN], self.current)
+        self.assertEqual(review.restore_main(motion.build()[scoped.MAIN]), self.current)
 
     def test_supplied_generated_sources_do_not_require_disk_fallbacks(self):
         with patch.object(Path, 'read_bytes', side_effect=AssertionError('Unexpected disk read')), \

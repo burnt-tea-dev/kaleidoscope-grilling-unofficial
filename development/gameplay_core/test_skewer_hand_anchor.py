@@ -3,9 +3,11 @@ import hashlib
 import json
 import math
 import unittest
+import sys
 from held_pose_frames import make_pose,chain,translate,rotate,xyz,scale,point,bone_matrix
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools'))
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
 ANIM='animations/a287_skewer_held.animation.json'
 VERSION=tuple(json.loads((ROOT/'projects/grilling/gameplay_core/behavior_pack/manifest.json').read_text())['header']['version'])
@@ -32,7 +34,10 @@ class HandAnchorTests(unittest.TestCase):
         self.assertEqual(len(seen),150)
         pieces={g['description']['identifier'] for p in (RP/'models/entity/java_eating_piece').glob('*.geo.json') for g in load(p)['minecraft:geometry']}
         if (RP/'render_controllers/java_eating_piece.render_controllers.json').exists():
-            self.assertEqual(pieces,{'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'})
+            from build_review_three_eating_projection import ids as reviewed_three_ids
+            expected={'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'}
+            expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in reviewed_three_ids()}
+            self.assertEqual(pieces,expected)
         if VERSION>=(2,8,126):
             helper_ref='geometry.kg_probe_caterpillar.piece'
             owners=[load(p)['minecraft:attachable']['description']['identifier']

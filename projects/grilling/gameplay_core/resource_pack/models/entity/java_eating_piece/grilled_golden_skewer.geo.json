@@ -1,0 +1,189 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.kg_java_dual.piece.grilled_golden_skewer",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 8,
+        "visible_bounds_height": 8,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "binding": "q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')"
+        },
+        {
+          "name": "dual_piece",
+          "parent": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.6999999999999993,
+                30.4875,
+                -0.5499999999999998
+              ],
+              "size": [
+                3.3999999999999995,
+                3.000000000000001,
+                2.8
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    2.0,
+                    2.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    2.0,
+                    5.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    5.0,
+                    2.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    5.0,
+                    5.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    2.0,
+                    8.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    8.0,
+                    5.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -3.0
+                  ]
+                }
+              }
+            },
+            {
+              "origin": [
+                -1.25,
+                30.8375,
+                -1.0999999999999996
+              ],
+              "size": [
+                2.5,
+                2.3499999999999996,
+                0.5
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    8.0,
+                    7.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    2.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    4.0,
+                    14.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    2.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    8.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    2.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    5.0,
+                    14.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    2.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    13.0,
+                    1.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    1.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    13.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -1.0
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -88,6 +88,8 @@ def piece_assets():
     return geo,png
 
 def patch_main(text):
+    from build_review_three_eating_projection import restore_main
+    text=restore_main(text)
     # The modern canonical script is authoritative. Historical A2.0 seed
     # scripts are intentionally unsupported, rather than partially upgraded.
     probe="(e.itemStack.typeId==='"+ITEM+"'&&profile==='ONE'&&hand!=='off')"
@@ -112,7 +114,8 @@ def augment(output):
     output=dict(output)
     def document(path):
         value=output.get(path)
-        return copy.deepcopy(value) if value is not None else json.loads(path.read_text())
+        from build_review_three_eating_projection import historical_document
+        return historical_document(path,copy.deepcopy(value) if value is not None else json.loads(path.read_text()))
     path=RP/'attachables/grilled_caterpillar_skewer.attachable.json'
     doc=document(path);d=doc['minecraft:attachable']['description']
     if d['identifier']!=ITEM: raise ValueError('Wrong canonical caterpillar identifier')
@@ -171,7 +174,14 @@ def main():
     for path,value in current_context(augment(inputs)).items():
         data=value if isinstance(value,bytes) else (value.encode() if isinstance(value,str) else dump(value))
         if args.check:
-            if path.read_bytes()!=data:raise AssertionError(path)
+            actual=path.read_bytes()
+            if path==BP/'scripts/main.js':
+                from build_review_three_eating_projection import restore_main
+                actual=restore_main(actual.decode()).encode()
+            if path.suffix=='.json':
+                from build_review_three_eating_projection import historical_document
+                actual=dump(historical_document(path,json.loads(actual)))
+            if actual!=data:raise AssertionError(path)
         else:
             path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
     print('Scoped cooked-caterpillar camera adaptation verified; near-mouth/client parity remains separate')

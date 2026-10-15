@@ -54,9 +54,12 @@ def motion_frame(profile,hand,t):
  basis=bone_matrix({**held,'scale':1});delta=chain(item_frame(profile,hand,t),rigid_inverse(item_frame(profile,hand,0)))
  local=chain(rigid_inverse(basis),delta,basis);r=bedrock_rotation(local)
  return [-local[0][3]/.8,local[1][3]/.8,local[2][3]/.8],r
-def build(attachable_overrides=None, *, two_route_camera=False):
+def build(attachable_overrides=None, *, two_route_camera=False, review_three_routes=True):
  from eating_owner_context import legacy_document
+ from build_review_three_eating_projection import restore_main,strip_attachable
  overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
+ main_path=BP/'scripts/main.js'
+ if main_path in overrides:overrides[main_path]=restore_main(overrides[main_path])
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
@@ -79,6 +82,7 @@ def build(attachable_overrides=None, *, two_route_camera=False):
  for p in sorted(paths):
   doc=json.loads(json.dumps(overrides[p])) if p in overrides else json.loads(p.read_text())
   doc=legacy_document(doc)
+  strip_attachable(doc)
   d=doc['minecraft:attachable']['description'];identifier=d['identifier'];suffix='_java_three_alt'
   base=identifier[:-len(suffix)] if identifier.endswith(suffix) else identifier
   profile=table.get(base)
@@ -132,6 +136,8 @@ def build(attachable_overrides=None, *, two_route_camera=False):
   # The explicit preview remains available for historical source-only checks.
   from build_two_route_eating_projection import augment as augment_two_route
   output=augment_two_route(output)
+ from build_review_three_eating_projection import augment as augment_review_three
+ if review_three_routes:output=augment_review_three(output)
  from eating_owner_context import augment as augment_owner_context
  # Nonedible partial skewers still use the player's eating-hand idle guard.
  partial=RP/'attachables/unfinished_skewer.attachable.json'

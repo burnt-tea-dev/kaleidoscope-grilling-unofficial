@@ -1,0 +1,293 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.kg_java_dual.piece.grilled_gluten_skewer",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 8,
+        "visible_bounds_height": 8,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "binding": "q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')"
+        },
+        {
+          "name": "dual_piece",
+          "parent": "grip",
+          "pivot": [
+            0,
+            24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -0.75,
+                30.875,
+                0.5
+              ],
+              "size": [
+                2.25,
+                2.25,
+                1.0
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    8.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    2.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    13.0,
+                    7.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    2.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    10.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    2.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    13.0,
+                    12.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    2.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    13.0,
+                    9.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    14.0,
+                    1.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    -1.0
+                  ]
+                }
+              },
+              "pivot": [
+                0,
+                32,
+                1
+              ],
+              "rotation": [
+                0,
+                22.5,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -1.0999999999999996,
+                30.645,
+                -0.5
+              ],
+              "size": [
+                2.1999999999999993,
+                2.700000000000001,
+                1.0
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    6.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    3.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    8.0,
+                    11.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    3.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    8.0,
+                    6.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    3.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    11.0,
+                    8.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    3.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    14.0,
+                    1.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    1.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    14.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    2.0,
+                    -1.0
+                  ]
+                }
+              },
+              "pivot": [
+                0,
+                32,
+                0
+              ],
+              "rotation": [
+                0,
+                -22.5,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -1.5,
+                30.625,
+                -1.5
+              ],
+              "size": [
+                3.0,
+                2.75,
+                1.0
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    3.0,
+                    0.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    9.0,
+                    11.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    3.0
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    3.0,
+                    3.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    3.0
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    10.0,
+                    11.0
+                  ],
+                  "uv_size": [
+                    1.0,
+                    3.0
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    11.0,
+                    5.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    1.0
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    11.0,
+                    12.0
+                  ],
+                  "uv_size": [
+                    3.0,
+                    -1.0
+                  ]
+                }
+              },
+              "pivot": [
+                0,
+                32,
+                -1
+              ],
+              "rotation": [
+                0,
+                22.5,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
