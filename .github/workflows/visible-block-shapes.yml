@@ -1,0 +1,30 @@
+name: Visible block shape contracts
+on:
+  pull_request:
+    paths:
+      - 'projects/grilling/gameplay_core/behavior_pack/blocks/**'
+      - 'development/gameplay_core/test_visible_block_shapes.py'
+      - '.github/workflows/visible-block-shapes.yml'
+permissions:
+  contents: read
+jobs:
+  source-shapes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read exact candidate without checkout credentials
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
+          test "$GITHUB_REPOSITORY_ID" = '1377218440'
+          [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          git init .
+          git config core.autocrlf false
+          git remote add origin https://github.com/casama233/kaleidoscope-grilling-unofficial.git
+          git fetch --depth=1 origin "$HEAD_SHA"
+          git checkout --detach "$HEAD_SHA"
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+      - name: Validate Java source shapes, cardinal states and empty-space rays
+        run: python3 -B development/gameplay_core/test_visible_block_shapes.py
