@@ -87,6 +87,7 @@ CI 的當前入口是 `development/gameplay_core/verify_current.py`；
 - [重整變更](CHANGELOG.md)：當前工具／文件調整。
 - [Phase 0 決策](docs/audit/AUDIT.md)保留原始稽核快照；[PR 處置與保留工作](docs/audit/PR-TRIAGE.md)已重新比對G116，保留各原型的固定來源。
 - [release-history.json](release-history.json) 與 `docs/STATUS-A*.md`：各版身份與當時的證據範圍。
+- [CURRENT-REPAIR-STATUS.json](docs/CURRENT-REPAIR-STATUS.json)：2.8.51 的歷史來源審查快照，保留當時 bytes 與驗收欄位；目前狀態見上述對照表與缺口頁，不用舊快照代表 G142 或 LIVE 驗收。
 - [重整前 README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a/README.md)：完整歷史敘述，舊命令不作為今天的建置指示。
 
 ## 來源、授權與資料保護
