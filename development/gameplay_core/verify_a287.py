@@ -236,18 +236,23 @@ def binding_assets():
  old=repair.source(RP/'attachables/empty_seasoning_bottle.attachable.json')['minecraft:attachable']['description']
  assert not any(expression(expr,0,'main_hand','rightitem') for row in old['scripts']['animate'] for expr in row.values())
  # World entities and native block items must never inherit a player hand binding.
- entities=0;native=0
+ entities=0;native=0;native_ids=set()
  for p in (RP/'entity').glob('*.json'):
   d=load(p).get('minecraft:client_entity',{}).get('description',{})
   for ref in d.get('geometry',{}).values():
    if ref in idx:assert not any('binding' in b for b in idx[ref]['bones']),(p,ref)
   entities+=1
  for p in (BP/'blocks').glob('*.json'):
-  c=load(p)['minecraft:block']['components'];v=c.get('minecraft:item_visual')
+  block=load(p)['minecraft:block'];c=block['components'];v=c.get('minecraft:item_visual')
   if v:
+   native_ids.add(block['description']['identifier'])
    ref=v['geometry'];ref=ref.get('identifier') if isinstance(ref,dict) else ref
    assert not any('binding' in b for b in idx[ref]['bones']),ref;native+=1
- assert native==3
+ # Keep historical membership exact; G144 adds only its two reviewed GUI sprites.
+ expected_native={'kaleidoscope_grilling:'+name for name in ('big_vat','oil_press','grill')}
+ if version>=(2,8,144):
+  expected_native|={'kaleidoscope_grilling:item_visual_'+name for name in ('grilled_slime_skewer','mysterious_skewer')}
+ assert native_ids==expected_native and native==len(expected_native),(native_ids,native)
  return idx,refs,{'attachables':len(rows),'pose_cases':cases,'native_item_visuals':native,'client_entities':entities,'items':rows}
 def plant_gate():
  count=0;plant_refs=set()
