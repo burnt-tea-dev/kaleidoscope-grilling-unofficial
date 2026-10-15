@@ -16,7 +16,8 @@ function audience(){
 const displays=createGrillDisplayController({
  maxHelpers:()=>grillingConfig().fixedGrillHelpers,
  onCapacity(){if(system.currentTick-lastWarning>=1200){lastWarning=system.currentTick;console.warn('[Grilling grill display] render budget exceeded; storage unaffected; configure fixedGrillHelpers after workload validation')}},
- spawn:(block,location)=>block.dimension.spawnEntity(GRILL_FOOD_ENTITY,location),
+ // Birth and subsequent teleport must share yaw; clients may interpolate a late correction.
+ spawn:(block,location,rotation)=>block.dimension.spawnEntity(GRILL_FOOD_ENTITY,location,{initialRotation:-rotation}),
  remove:entity=>{if(entity.isValid){entity.setProperty(NS+'ready',false);entity.remove();}},
  apply(entity,block,pose,plan,key){
   entity.setProperty(NS+'ready',false);
