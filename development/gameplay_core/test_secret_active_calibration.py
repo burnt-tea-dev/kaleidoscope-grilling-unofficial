@@ -151,6 +151,19 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   self.assertEqual(json.loads(path.read_text()),{'format_version':'1.8.0','animations':{PLAYER:template}})
   self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
   allowed.add(relative)
+  # The isolated raw ONE layer adds exactly two generic-donor player clips.
+  # Preserve every pose/clock/override field; only exact names and gates differ.
+  from build_raw_one_eating_projection import gate as raw_gate,player_id as raw_player_id
+  path=RP/'animations/raw_one_player.animation.json';relative=str(path.relative_to(ROOT))
+  donor=json.loads((RP/'animations/java_eating_player.animation.json').read_text())
+  raw_clips={}
+  for hand in ('right','left'):
+   template=deepcopy(donor['animations']['animation.kg_java_eating.player.one.'+hand])
+   template['blend_weight']=raw_gate(hand)
+   raw_clips[raw_player_id(hand)]=template
+  self.assertEqual(json.loads(path.read_text()),{'format_version':donor['format_version'],'animations':raw_clips})
+  self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
+  allowed.add(relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)
