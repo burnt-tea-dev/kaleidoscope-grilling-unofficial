@@ -17,3 +17,5 @@ Focused coverage includes exact generation/idempotence, THREE, raw ONE, slime, f
 A clean immutable candidate must pass the canonical source receipt run and independent combined review. Windows compilation and exact compiled comparison must use that same input. Existing package/version guards remain intentionally unresolved until a later coherent identity is approved after checking current tags/index. No previous standalone receipt substitutes for combined evidence.
 
 Native camera parity, Java game-time versus Bedrock absolute-time behavior, and generic ONE camera basis remain open. Blockbench captures are editor-only evidence. No merge, release or LIVE acceptance is claimed.
+
+The bottle-guide continuation is independently pinned to a092a997 and its b66f9655 predecessor. Historical language/catalog assertions recover those prior bytes only after complete reviewed-current-byte equality; current guide generation and exact new-text checks remain active. Custom status-effect merge semantics are outside this animation/guide candidate and remain unaccepted pending a separately reviewed repair.

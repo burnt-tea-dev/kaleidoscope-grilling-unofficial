@@ -11,6 +11,17 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 from held_visual_channels import bottle_bank_ready
 
 class BottleFillProxyAssets(unittest.TestCase):
+    def test_reviewed_bottle_guide_complete_bytes_and_rejected_mutations(self):
+        import bottle_clear_guide_source_witness as guide
+        for relative in guide.PATHS:
+            path=guide.ROOT/relative
+            current=path.read_bytes()
+            self.assertEqual(guide.reference_bytes(path,current),guide.pinned_bytes(guide.PREVIOUS_BOTTLE_GUIDE_BASE,relative))
+            for changed in (current+b'\n',current.replace(b'=',b':',1),current[1:]):
+                if changed==current:continue
+                with self.subTest(path=relative),self.assertRaises(AssertionError):
+                    guide.reference_bytes(path,changed)
+
     def test_exact_hidden_item_and_clear_recipe_contract_for_all_16(self):
         docs=build.documents()
         self.assertEqual(len(docs),32)

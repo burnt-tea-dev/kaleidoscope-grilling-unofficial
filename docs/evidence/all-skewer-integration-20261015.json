@@ -43,7 +43,8 @@
     "version_changed": false,
     "publication": false,
     "native_client_accepted": false,
-    "generic_ONE_camera_resolved": false
+    "generic_ONE_camera_resolved": false,
+    "custom_effects_accepted": false
   },
   "validation": "focused suites passed; frozen canonical source receipt and independent combined review pending"
 }

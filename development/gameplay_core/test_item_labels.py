@@ -13,6 +13,7 @@ from test_bottle_item_offhand_sources import BOTTLES, check_authoring
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
+from bottle_clear_guide_source_witness import reference_bytes as bottle_guide_reference
 from public_source_witness import CUISINE_CANDIDATE_BASE, REVIEWED_SCENE_INTERACTION_BASE, cuisine_release_link
 PROJECT = ROOT / 'projects/grilling/gameplay_core'
 BASE='1cf16f39f449ee5ce95190ef9088e575d133f928'  # Merged 2.8.45 runtime, including the prior repairs.
@@ -247,7 +248,7 @@ def main():
     for locale, label in LABELS.items():
         path = PROJECT / 'resource_pack/texts' / (locale + '.lang')
         old = language(prior(path))
-        current = language(path.read_bytes())
+        current = language(bottle_guide_reference(path,path.read_bytes()))
         previous_guide = language(prior(path, PREVIOUS_GUIDE_BASE)) if version >= (2,8,119) else current
         approved = {}
         guide_added = set()
@@ -341,7 +342,7 @@ def main():
             cuisine_reviewed = language(prior(path,CUISINE_CANDIDATE_BASE))
             published = prior(path,cuisine_source)
             assert language(published) == cuisine_reviewed, 'G122 changed the exact reviewed cuisine language values'
-            assert path.read_bytes() == published, 'G122 language differs from its published source bytes'
+            assert bottle_guide_reference(path,path.read_bytes()) == published, 'G122 language differs from its published source bytes'
             assert {key for key in set(latest_reviewed) | set(cuisine_reviewed)
                 if latest_reviewed.get(key) != cuisine_reviewed.get(key)} == expected_keys, 'Cuisine candidate language witness changed outside reviewed scope'
             for key, change in changes.items():
