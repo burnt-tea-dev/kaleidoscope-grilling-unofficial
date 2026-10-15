@@ -9,6 +9,20 @@ class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
 
+    def test_workflow_propagates_native_failures(self):
+        # A later successful command must not mask a failed export/baseline guard
+        # under PowerShell (ErrorActionPreference alone does not ensure this).
+        workflow = guard.ROOT / '.github/workflows/bridge-project.yml'
+        lines = workflow.read_text(encoding='utf-8').splitlines()
+        commands = [i for i, line in enumerate(lines)
+                    if line.strip().startswith(('python ', 'git diff ', '& '))]
+        self.assertTrue(commands, 'expected native validation commands')
+        for i in commands:
+            with self.subTest(command=lines[i].strip()):
+                self.assertLess(i + 1, len(lines))
+                self.assertEqual(lines[i + 1].strip(),
+                                 'if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }')
+
     def test_duplicate_json_key(self):
         with self.assertRaises(ValueError):
             guard.parse('{"version":1,"version":2}')
