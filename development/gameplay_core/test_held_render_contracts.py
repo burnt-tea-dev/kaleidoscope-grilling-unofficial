@@ -53,7 +53,17 @@ class ItemVisualContracts(unittest.TestCase):
   with patch.object(audit,'load_json',modified):
    stats=audit.check_item_visuals(findings,audit.collect_geometries([]))
   return {row['code'] for row in findings},stats
- def test_current(self):self.assertEqual(self.check(),(set(),{'item_visuals':3}))
+ def test_current(self):
+  expected={'kaleidoscope_grilling:'+name for name in ('big_vat','oil_press','grill')}
+  native={'kaleidoscope_grilling:item_visual_'+name for name in ('grilled_slime_skewer','mysterious_skewer')}
+  actual={doc['minecraft:block']['description']['identifier'] for path in (audit.BP/'blocks').glob('*.json')
+          if (doc:=audit.load_json(path))['minecraft:block']['components'].get('minecraft:item_visual')}
+  if actual & native:
+   from native_skewer_icons import check_or_write
+   check_or_write(ROOT)
+   expected|=native
+  self.assertEqual(actual,expected)
+  self.assertEqual(self.check(),(set(),{'item_visuals':len(expected)}))
  def test_missing_geometry(self):self.assertIn('missing_item_visual_geometry',self.check(lambda v:v.update(geometry='geometry.missing'))[0])
  def test_missing_material(self):self.assertIn('missing_item_visual_material',self.check(lambda v:v.update(material_instances={}))[0])
  def test_missing_texture(self):self.assertIn('missing_item_visual_texture',self.check(lambda v:v['material_instances']['*'].update(texture='missing'))[0])

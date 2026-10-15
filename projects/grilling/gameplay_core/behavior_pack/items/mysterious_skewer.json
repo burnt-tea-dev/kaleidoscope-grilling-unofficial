@@ -12,11 +12,6 @@
       "minecraft:display_name": {
         "value": "kaleidoscope_grilling.display.item.mysterious_skewer"
       },
-      "minecraft:icon": {
-        "textures": {
-          "default": "mysterious_skewer"
-        }
-      },
       "minecraft:max_stack_size": 64,
       "minecraft:allow_off_hand": true,
       "minecraft:hand_equipped": true,
@@ -39,7 +34,15 @@
           "kaleidoscope_grilling:food_mysterious_skewer"
         ]
       },
-      "minecraft:interact_button": true
+      "minecraft:interact_button": true,
+      "minecraft:block_placer": {
+        "block": "kaleidoscope_grilling:item_visual_mysterious_skewer",
+        "use_on": [
+          {
+            "tags": "0"
+          }
+        ]
+      }
     }
   }
 }

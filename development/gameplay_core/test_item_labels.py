@@ -119,6 +119,14 @@ def current_behavior_expectation(before, kind, stem, version):
         touch = json.loads((ROOT / 'data/touch-skewer-native-reference.json').read_text())['items']
         if stem + '.json' in touch:
             expected['minecraft:item']['components']['minecraft:interact_button'] = True
+    if kind == 'item' and stem in ('grilled_slime_skewer','mysterious_skewer'):
+        current=json.loads((PROJECT/'behavior_pack/items'/(stem+'.json')).read_bytes())
+        if 'minecraft:block_placer' in current['minecraft:item']['components']:
+            from native_skewer_icons import check_or_write
+            check_or_write(ROOT)
+            c=expected['minecraft:item']['components']
+            c.pop('minecraft:icon')
+            c['minecraft:block_placer']={'block':'kaleidoscope_grilling:item_visual_'+stem,'use_on':[{'tags':'0'}]}
     return expected
 
 
@@ -139,6 +147,11 @@ def main():
     for folder, kind in [('items', 'item'), ('blocks', 'block')]:
         count = 0
         for path in sorted((PROJECT / 'behavior_pack' / folder).glob('*.json')):
+            if kind == 'block' and path.stem in ('item_visual_grilled_slime_skewer','item_visual_mysterious_skewer'):
+                from native_skewer_icons import check_or_write, planned
+                check_or_write(ROOT)
+                assert json.loads(path.read_bytes()) == json.loads(planned(ROOT)[0][path]), path
+                continue
             cuisine = re.fullmatch(r'(.+)_cuisine_q([0-3])', path.stem) if kind == 'item' else None
             if cuisine:
                 assert version >= (2,8,122) and cuisine.group(1) in QUALITY_CUISINE_ITEMS, 'Unreviewed cuisine alias: ' + str(path)
