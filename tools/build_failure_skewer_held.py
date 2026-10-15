@@ -178,13 +178,47 @@ def predecessor_document(path,doc):
  if any(present)and(not all(present)or len(fields)!=4):raise ValueError('Partial failure controller wrapper')
  return doc
 
+def calibrate_player_clip(clip,profile,hand,inverse=False):
+ """Preserve the secret donor's relative arm frame for exact failure identities.
+
+ This transfers an existing calibration, not a claim of absolute camera parity.
+ Require the complete donor payload so partial/mutated ownership cannot pass.
+ """
+ if profile not in ('THREE','THREE_ALT') or hand not in ('right','left'):
+  raise ValueError('Unsupported failure calibration context')
+ suffix='_java_three_alt' if profile=='THREE_ALT' else ''
+ slot='slot.weapon.'+('mainhand' if hand=='right' else 'offhand')
+ before="q.is_item_name_any('"+slot+"','kaleidoscope_grilling:secret_skewer"+suffix+"')"
+ after="q.is_item_name_any('"+slot+"','kaleidoscope_grilling:mysterious_skewer"+suffix+"','kaleidoscope_grilling:dark_grilling"+suffix+"')"
+ source=json.loads((RP/'animations/java_eating_player.animation.json').read_text())['animations']['animation.kg_java_eating.player.'+profile.lower()+'.'+hand]
+ from eating_owner_context import legacy_document
+ legacy=legacy_document(source)
+ # Generator runs before the existing owner-clock post-layer; accept only its
+ # exact legacy clock or the exact serialized clock, preserving either input.
+ if clip.get('anim_time_update')==legacy.get('anim_time_update'):source=legacy
+ expected=copy.deepcopy(source);count=0
+ for name,bone in expected['bones'].items():
+  if not name.endswith('arm'):continue
+  for xyz in bone['position'].values():
+   tail=' + ('+before+' ? 3.41 : 0)'
+   if not xyz[1].endswith(tail):raise ValueError('Failure calibration donor changed')
+   xyz[1]=xyz[1][:-len(tail)]+' + ('+after+' ? 3.41 : 0)';count+=1
+ if count!=(698 if profile=='THREE' else 304):raise ValueError('Failure calibration key inventory changed')
+ payload=lambda value:json.dumps({k:v for k,v in value.items() if k!='blend_weight'},sort_keys=True,separators=(',',':'))
+ if payload(clip)!=payload(expected if inverse else source):
+  raise ValueError('Failure calibration exact payload changed')
+ result=copy.deepcopy(source if inverse else expected)
+ if 'blend_weight' in clip:result['blend_weight']=clip['blend_weight']
+ else:result.pop('blend_weight',None)
+ return result
+
 def augment(output):
  import build_java_eating_projection as g
  out=dict(output);source_clip=out.get(RP/'animations/java_eating_player.animation.json')or json.loads((RP/'animations/java_eating_player.animation.json').read_text())
  clips={}
  for profile in ['THREE','THREE_ALT']:
   for hand in ['right','left']:
-   clip=copy.deepcopy(source_clip['animations'][g.player_animation_id(profile,hand)])
+   clip=calibrate_player_clip(source_clip['animations'][g.player_animation_id(profile,hand)],profile,hand)
    clip['blend_weight']=gate(profile,hand);clips[player_id(profile,hand)]=clip
  out[PLAYER_FILE]={'format_version':'1.8.0','animations':clips}
  for identifier,profile in PROFILES.items():

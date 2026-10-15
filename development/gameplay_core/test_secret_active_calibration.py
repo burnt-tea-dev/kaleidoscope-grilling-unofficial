@@ -164,14 +164,14 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
   self.assertEqual(json.loads(path.read_text()),{'format_version':donor['format_version'],'animations':raw_clips})
   self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
   allowed.add(relative)
-  # Failure adds only renamed THREE/ALT donor clips and exact identity gates.
-  from build_failure_skewer_held import PLAYER_FILE, player_id as failure_player_id, gate as failure_gate
+  # Failure owns exact donor calibration transferred to matching failure identities.
+  from build_failure_skewer_held import PLAYER_FILE, player_id as failure_player_id, gate as failure_gate, calibrate_player_clip
   from build_java_eating_projection import player_animation_id
   templates=json.loads((RP/'animations/java_eating_player.animation.json').read_text())['animations']
   clips={}
   for profile in ('THREE','THREE_ALT'):
    for hand in ('right','left'):
-    clip=deepcopy(templates[player_animation_id(profile,hand)])
+    clip=calibrate_player_clip(templates[player_animation_id(profile,hand)],profile,hand)
     clip['blend_weight']=failure_gate(profile,hand)
     clips[failure_player_id(profile,hand)]=clip
   relative=str(PLAYER_FILE.relative_to(ROOT))

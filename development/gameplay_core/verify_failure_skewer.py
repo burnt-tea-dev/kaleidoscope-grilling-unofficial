@@ -8,6 +8,7 @@ def verify_once():
  for command in [
   [sys.executable,'-B','tools/build_failure_skewer_held.py','--check'],
   [sys.executable,'-B','development/gameplay_core/test_failure_skewer_assets.py'],
+  [sys.executable,'-B','development/gameplay_core/test_failure_relative_calibration.py'],
   ['node','--test','development/gameplay_core/test_failure_skewer_runtime.mjs','development/gameplay_core/test_full_skewer_flow.mjs','development/gameplay_core/test_plate_transactions.mjs']]:
   subprocess.run(command,cwd=ROOT,check=True)
  print('Failure-skewer source/assets/runtime doubles PASS; native client and release/deployment gates remain separate')
