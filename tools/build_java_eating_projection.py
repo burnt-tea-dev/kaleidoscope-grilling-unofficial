@@ -13,7 +13,7 @@ sys.path.insert(0,str(ROOT/'development/gameplay_core'))
 from java_active_eating_frames import (PROFILES,ARRAYS,active_child_bone,
     native_arm_target)
 from held_pose_frames import bedrock_rotation,point
-from native_eating_clock import SECONDS
+from native_eating_clock import SECONDS, OFF_HAND_SECONDS
 import build_java_dual_eating_projection as dual_renderer
 from secret_active_calibration import position_expression as active_position_expression
 
@@ -180,7 +180,7 @@ def animations(items=None):
                 arm_positions[key]=[active_position_expression(profile,hand,target,i,number(at[i])+" - q.get_default_bone_pivot('"+arm+"', "+str(i)+")",number)for i in range(3)]
                 rotation=unwrap(bedrock_rotation(target),last_arm);last_arm=rotation
                 arm_rotations[key]=[rounded_channel(v)for v in rotation]
-            common={'loop':'hold_on_last_frame','animation_length':4.5,'anim_time_update':SECONDS}
+            common={'loop':'hold_on_last_frame','animation_length':4.5,'anim_time_update':OFF_HAND_SECONDS if hand=='left' else SECONDS}
             item_animations[item_animation_id(profile,hand)]={**common,'bones':{
                 'skewer_pose':{'position':positions,'rotation':rotations,'scale':[1,1,1]},
                 'skewer_model':{'position':[0,0,0],'rotation':[0,0,0],'scale':[1,1,1]}}}

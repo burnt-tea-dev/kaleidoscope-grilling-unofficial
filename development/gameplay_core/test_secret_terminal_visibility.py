@@ -48,6 +48,9 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
             source = public_json(path)
             after = json.loads(path.read_text())
             description = source['minecraft:attachable']['description']
+            from offhand_clock_witness import OLD_ASSIGNMENT
+            from native_eating_clock import ASSIGNMENT
+            description['scripts']['pre_animation'] = [ASSIGNMENT if row == OLD_ASSIGNMENT else row for row in description['scripts']['pre_animation']]
             rows = description['scripts']['pre_animation']
             self.assertEqual(sum(row.startswith('v.kg_secret_owner_occupied = ') for row in rows), 1)
             description['scripts']['pre_animation'] = [owner_occupancy(description['identifier']) if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]

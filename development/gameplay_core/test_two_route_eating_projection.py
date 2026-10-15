@@ -63,7 +63,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_complete_native_clip_bytes_and_only_arm_position_scale_changes(self):
         self.assertEqual(scoped.DEDICATED.read_bytes(), scoped.encoded(self.clips))
         self.assertEqual(hashlib.sha256(scoped.DEDICATED.read_bytes()).hexdigest(), scoped.NATIVE_CLIPS_SHA256)
-        self.assertEqual(hashlib.sha256(scoped.SHARED.read_bytes()).hexdigest(), scoped.SHARED_SHA256)
+        self.assertEqual(hashlib.sha256(scoped.encoded(scoped.native_witness_source(self.shared))).hexdigest(), scoped.SHARED_SHA256)
         for route in scoped.ROUTES:
             old = self.shared['animations'][route['original_clip']]
             new = self.clips['animations'][route['dedicated_clip']]
@@ -83,6 +83,11 @@ class TwoRouteProjectionTests(unittest.TestCase):
                 if name in found:
                     found[name].append(path)
         self.assertEqual(found, {name: [scoped.DEDICATED] for name in ids})
+        for name in ('animation.kg_java_eating.player.two.left', 'animation.kg_java_eating.player.two.right'):
+            changed_clock = copy.deepcopy(self.shared)
+            changed_clock['animations'][name]['anim_time_update'] = 'q.life_time'
+            with self.assertRaisesRegex(ValueError, 'source drift'):
+                scoped.animations(changed_clock)
         drift = copy.deepcopy(self.shared)
         drift['animations'][scoped.ROUTES[0]['original_clip']]['animation_length'] += 1
         with self.assertRaisesRegex(ValueError, 'source drift'):
@@ -103,7 +108,10 @@ class TwoRouteProjectionTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
         fixtures = json.loads((ROOT / 'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
         for relative, digest in fixtures['runtime_file_sha256'].items():
-            self.assertEqual(hashlib.sha256((scoped.P / relative).read_bytes()).hexdigest(), digest, relative)
+            from offhand_clock_witness import historical_attachable_bytes
+            data = (scoped.P / relative).read_bytes()
+            if '/attachables/' in relative:data = historical_attachable_bytes(data)
+            self.assertEqual(hashlib.sha256(data).hexdigest(), digest, relative)
         # Existing generation must not strip the scoped selector on a later run.
         self.assertEqual(motion.build()[scoped.MAIN], self.current)
 

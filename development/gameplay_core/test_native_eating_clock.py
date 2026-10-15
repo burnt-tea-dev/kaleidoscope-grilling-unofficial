@@ -1,7 +1,7 @@
 """Evaluate the generated timer expression, independent of native visual QA."""
 import ast,json,subprocess,unittest
 from pathlib import Path
-from native_eating_clock import SECONDS,TICKS,ASSIGNMENT
+from native_eating_clock import SECONDS,OFF_HAND_SECONDS,TICKS,ASSIGNMENT
 ROOT=Path(__file__).resolve().parents[2]
 def evaluate(ticks,remaining,alpha,using=True):
     text=SECONDS.replace(TICKS,repr(ticks)).replace('q.is_using_item',str(int(using))).replace('q.main_hand_item_use_duration',repr(remaining)).replace('q.frame_alpha',repr(alpha))
@@ -44,7 +44,7 @@ class NativeEatingClock(unittest.TestCase):
             self.assertEqual(set(clips),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
             names.append(dedicated.name)
         for name in names:
-            for a in json.loads((rp/'animations'/name).read_text())['animations'].values():self.assertEqual(a['anim_time_update'],SECONDS)
+            for key,a in json.loads((rp/'animations'/name).read_text())['animations'].items():self.assertEqual(a['anim_time_update'],OFF_HAND_SECONDS if key.endswith('.left') else SECONDS)
         props=json.loads((bp/'entities/player.json').read_text())['minecraft:entity']['description']['properties']
         self.assertEqual(props['kaleidoscope_grilling:eat_native_ticks'],{'type':'int','range':[0,72000],'default':0,'client_sync':True})
         checked=0

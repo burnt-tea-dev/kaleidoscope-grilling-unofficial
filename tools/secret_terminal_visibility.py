@@ -68,7 +68,7 @@ def apply(description):
         terminal.append(state['seen'] + ' = ' + selected + ' ? (' + update + ') : ' + retained_read(state['seen']) + ';')
     terminal += [
         PREFIX + "seen = c.item_slot == 'off_hand' ? " + retained_read(states['off']['seen']) + ' : ' + retained_read(states['main']['seen']) + ';',
-        PREFIX + 'wait = ' + phase + ' && (q.is_using_item == 0 || v.kg_bite_stage < 3) && ' + retained_read(PREFIX + 'seen') + ' == 1;',
+        PREFIX + 'wait = ' + phase + ' && (q.is_using_item == 0 || v.kg_bite_stage < 3 || ' + retained_read(PREFIX + 'wait') + ' == 1) && ' + retained_read(PREFIX + 'seen') + ' == 1;',
         STAGE,
     ]
     for hand, state in states.items():

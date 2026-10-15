@@ -58,7 +58,7 @@ def build(attachable_overrides=None, *, two_route_camera=False):
  overrides={} if attachable_overrides is None else attachable_overrides
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
- from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
+ from native_eating_clock import SECONDS,OFF_HAND_SECONDS,VARIABLE,ASSIGNMENT
  animations={};profiles=['ONE','TWO','THREE','THREE_ALT','FOUR']
  for profile in profiles:
   a,pt,prefix,rt,rprefix=curves(profile);duration=5 if profile=='THREE' else 4.5
@@ -71,7 +71,7 @@ def build(attachable_overrides=None, *, two_route_camera=False):
      rot=[x+360*round((previous[i]-x)/360) for i,x in enumerate(rot)]
     position[f'{t:.2f}']=[round(x,6) for x in pos]
     rotation[f'{t:.2f}']=[round(x,6) for x in rot]
-   animations[animation_id(profile,hand)]={'loop':'hold_on_last_frame','animation_length':duration,'anim_time_update':SECONDS if modern else 'q.item_in_use_duration','bones':{'skewer_model':{'position':position,'rotation':rotation}}}
+   animations[animation_id(profile,hand)]={'loop':'hold_on_last_frame','animation_length':duration,'anim_time_update':(OFF_HAND_SECONDS if hand=='left' else SECONDS) if modern else 'q.item_in_use_duration','bones':{'skewer_model':{'position':position,'rotation':rotation}}}
  output={**overrides,RP/'animations/eating_motion.animation.json':{'format_version':'1.8.0','animations':animations}}
  table=json.loads(re.search(r'PROFILE_BY_ITEM=Object.freeze\((\{.*?\})\)',(BP/'scripts/data.js').read_text()).group(1))
  paths=set((RP/'attachables').glob('*.json'))|{p for p in overrides if p.parent==RP/'attachables'}

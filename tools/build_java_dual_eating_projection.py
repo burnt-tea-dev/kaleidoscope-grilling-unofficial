@@ -12,7 +12,7 @@ import java_dual_eating_frames as dual
 from java_eating_piece_resolver import available_fixed_piece
 from held_pose_frames import (point, bedrock_rotation, chain, translate,
                               bone_matrix, native_skewer_calibration)
-from native_eating_clock import SECONDS
+from native_eating_clock import SECONDS, OFF_HAND_SECONDS
 from secret_active_calibration import position_expression as active_position_expression
 
 REPRESENTATIVES = {'kaleidoscope_grilling:grilled_fish_skewer': 'ONE',
@@ -91,7 +91,7 @@ def animations(g, items):
             if profile == 'ONE':
                 # Exact Java threshold, never a scale interpolation before it.
                 mesh['dual_piece']['scale'] = ['v.kg_eat_seconds >= 1.16667 ? 1 : 0']*3
-            common = {'loop': 'hold_on_last_frame', 'animation_length': length, 'anim_time_update': SECONDS}
+            common = {'loop': 'hold_on_last_frame', 'animation_length': length, 'anim_time_update': OFF_HAND_SECONDS if hand=='left' else SECONDS}
             item[g.item_animation_id(profile,hand)] = {**common,'bones':mesh}
             player[g.player_animation_id(profile,hand)] = {**common,'override_previous_animation':True,
                 'blend_weight':'variable.is_first_person && '+g.CONTEXT+' && '+g.held_profile_condition(profile,hand,items), 'bones':bones}

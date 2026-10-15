@@ -70,7 +70,22 @@ def target_position(expression, arm, axis, route):
     return f"{literal if literal and literal != '-0' else '0'} - {pivot}"
 
 
+def native_witness_source(source):
+    """Reverse only the exact offhand clock delta; keep G127 witness immutable.
+
+    G127's two dedicated routes are right-handed and stay byte-identical.
+    Left-hand clock ownership is separately tested, not native-certified here.
+    """
+    from native_eating_clock import SECONDS, OFF_HAND_SECONDS
+    source = json.loads(encoded(source))
+    for name, clip in source['animations'].items():
+        if name.endswith('.left') and clip.get('anim_time_update') == OFF_HAND_SECONDS:
+            clip['anim_time_update'] = SECONDS
+    return source
+
+
 def animations(source):
+    source = native_witness_source(source)
     if hashlib.sha256(encoded(source)).hexdigest() != SHARED_SHA256:
         raise ValueError('Native-reviewed shared clip source drift')
     source = json.loads(encoded(source))

@@ -14,7 +14,10 @@ def encoded(x):return x if isinstance(x,bytes)else x.encode()if isinstance(x,str
 class CaterpillarProjectionTests(unittest.TestCase):
  def test_complete_native_reviewed_runtime_and_only_two_main_edits(self):
   for relative,sha in FIX['runtime_file_sha256'].items():
-   self.assertEqual(hashlib.sha256((P/relative).read_bytes()).hexdigest(),sha,relative)
+   from offhand_clock_witness import historical_attachable_bytes
+   data=(P/relative).read_bytes()
+   if '/attachables/' in relative:data=historical_attachable_bytes(data)
+   self.assertEqual(hashlib.sha256(data).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
   current=(scoped.BP/'scripts/main.js').read_text()
   # Preserve the original two-edit G126 comparison after verifying and
