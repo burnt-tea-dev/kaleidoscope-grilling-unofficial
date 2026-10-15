@@ -125,43 +125,10 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
   d['scripts']['pre_animation']=[row.replace(ACTIVE_HAND,'q.is_using_item').replace('q.is_using_item',ACTIVE_HAND) for row in d['scripts']['pre_animation']]
   if modern:d['scripts']['pre_animation']=[ASSIGNMENT]+[row.replace('q.item_in_use_duration',VARIABLE) for row in d['scripts']['pre_animation']]
   d['scripts']['animate']=animate;output[p]=doc
- if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58):
-  sys.path.insert(0,str(ROOT/'tools'))
-  from build_java_eating_projection import augment
-  output=augment(output,table)
- from secret_idle_calibration import augment as augment_idle
- from secret_terminal_visibility import augment as augment_terminal
- output=augment_terminal(augment_idle(output))
- if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,126):
-  from build_caterpillar_eating_projection import augment as augment_caterpillar
-  output=augment_caterpillar(output)
- if two_route_camera or tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,127):
-  # G127 composes the exact reviewed two routes after the retained G126 layer.
-  # The explicit preview remains available for historical source-only checks.
-  from build_two_route_eating_projection import augment as augment_two_route
-  output=augment_two_route(output)
- from build_review_three_eating_projection import augment as augment_review_three
- if review_three_routes:
-  output=augment_review_three(output)
-  from build_raw_one_eating_projection import augment as augment_raw_one
-  output=augment_raw_one(output)
- from build_failure_skewer_held import augment as augment_failure
- if failure_skewers:output=augment_failure(output)
- from eating_owner_context import augment as augment_owner_context
- # Nonedible partial skewers still use the player's eating-hand idle guard.
- partial=RP/'attachables/unfinished_skewer.attachable.json'
- if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
- from build_slime_frame_selector import augment as augment_slime
- output=augment_slime(augment_owner_context(output)) if slime_frames else augment_owner_context(output)
- if review_three_routes and slime_frames and failure_skewers and 'mergeEffectApplication' in main_path.read_text():
-  from effect_merge_source_witness import reapply_main
-  output[main_path]=reapply_main(output[main_path])
- if review_three_routes and slime_frames and failure_skewers:
-  from build_ordinary_relative_calibration import augment as augment_ordinary_relative
-  output=augment_ordinary_relative(output)
-  from build_offhand_eating_projection import augment as augment_offhand
-  output=augment_offhand(output)
- return output
+ from eating_compiler_pipeline import Context,run
+ context=Context(tuple(json.loads((BP/'manifest.json').read_text())['header']['version']),table,RP,main_path,
+  two_route_camera,review_three_routes,slime_frames,failure_skewers)
+ return run(output,context)
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):

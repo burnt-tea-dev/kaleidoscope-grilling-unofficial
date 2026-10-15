@@ -6,12 +6,8 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
 import build_review_three_eating_projection as review
-import build_raw_one_eating_projection as raw_one
 import build_eating_motion as motion
-import build_slime_frame_selector as slime
-import build_failure_skewer_held as failure
-import build_ordinary_relative_calibration as ordinary_relative
-from eating_owner_context import reference_bytes,augment as current_context
+from eating_owner_context import reference_bytes
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
 assert FIX['source_predecessor']==SOURCE_PREDECESSOR_BASE
@@ -48,13 +44,9 @@ class CaterpillarProjectionTests(unittest.TestCase):
    retained=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
     previous=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
-  recomposed=slime.augment(current_context(failure.augment(raw_one.augment(review.augment(two_route.augment(retained))))))
-  from effect_merge_source_witness import reapply_main
-  main=scoped.BP/'scripts/main.js'
-  recomposed[main]=reapply_main(recomposed[main])
-  recomposed=ordinary_relative.augment(recomposed)
-  import build_offhand_eating_projection as offhand
-  recomposed=offhand.augment(recomposed)
+  from eating_compiler_pipeline import Context,run
+  context=Context(tuple(json.loads((scoped.BP/'manifest.json').read_text())['header']['version']),{},scoped.RP,scoped.BP/'scripts/main.js')
+  recomposed=run(retained,context,resume_after='g126')
   self.assertEqual(set(recomposed),set(first))
   for k in first:self.assertEqual(encoded(recomposed[k]),encoded(first[k]),str(k))
   closure={P/relative for relative in FIX['runtime_closure']}

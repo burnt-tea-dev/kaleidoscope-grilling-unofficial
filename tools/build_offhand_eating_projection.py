@@ -101,11 +101,11 @@ def validate():
 def augment(output):
  validate();out=dict(output)
  for rel,base in contract()['predecessors'].items():
-  path=ROOT/rel;actual=out.get(path,json.loads(path.read_text()));actual=strip_document(actual)
+  path=ROOT/rel;actual=out[path] if path in out else json.loads(path.read_text());actual=strip_document(actual)
   if canonical(actual)!=canonical(base):raise ValueError('Offhand predecessor changed:'+rel)
   out[path]=expected_document(path)
  out[PLAYER]={'format_version':'1.8.0','animations':{player_id(p):clip(p)for p in ['ONE','THREE']}}
- out[MAIN]=patch_main(out.get(MAIN,MAIN.read_text()))
+ out[MAIN]=patch_main(out[MAIN] if MAIN in out else MAIN.read_text())
  import build_java_eating_projection as g,build_java_dual_eating_projection as dual
  assets,_,_=dual.piece_assets(g,ids('ONE')[0],'ONE');out.update(assets)
  return out
