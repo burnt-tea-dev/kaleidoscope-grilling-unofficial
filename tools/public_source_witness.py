@@ -471,7 +471,7 @@ def assert_public_bytes(testcase, path):
     message = 'Repaired public-source bytes changed outside reviewed scope: ' + str(path.relative_to(ROOT))
     try:
         current = reference_bytes(path)
-    except AssertionError as error:
+    except (AssertionError, ValueError) as error:
         testcase.fail(message + '; ' + str(error))
     testcase.assertEqual(current, expected, message)
 
