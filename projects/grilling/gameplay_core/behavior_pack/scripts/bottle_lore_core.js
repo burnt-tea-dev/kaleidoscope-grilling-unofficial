@@ -34,7 +34,9 @@ function stable(value){
  return value;
 }
 export function isOwnedBottleLore(line){const node=knownMessage(line);return !!node&&OWNED.has(node.translate);}
-export function bottleLoreSignature(lines){return JSON.stringify(lines.map(line=>stable(knownMessage(line)??line)));}
+// Comparison only: never rewrite stored lore or broaden ownership matching.
+export function canonicalLoreForComparison(lines){return lines.map(line=>stable(knownMessage(line)??line));}
+export function bottleLoreSignature(lines){return JSON.stringify(canonicalLoreForComparison(lines));}
 export function bottleLoreMismatch(expected,actual){
  const count=Math.max(expected.length,actual.length);
  for(let i=0;i<count;i++)if(bottleLoreSignature([expected[i]])!==bottleLoreSignature([actual[i]])){

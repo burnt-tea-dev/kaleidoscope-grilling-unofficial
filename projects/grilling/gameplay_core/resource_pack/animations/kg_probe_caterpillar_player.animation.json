@@ -4,7 +4,7 @@
     "animation.kg_probe_caterpillar.player.one.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == 2 ? (q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "override_previous_animation": true,
       "blend_weight": "variable.is_first_person && q.has_property('kaleidoscope_grilling:eat_projection') && q.is_using_item && q.property('kaleidoscope_grilling:eat_projection') == 1 && q.property('kaleidoscope_grilling:eat_profile') == 1 && q.property('kaleidoscope_grilling:eat_hand') == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && q.is_item_equipped('off_hand') == 0 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_caterpillar_skewer')",
       "bones": {

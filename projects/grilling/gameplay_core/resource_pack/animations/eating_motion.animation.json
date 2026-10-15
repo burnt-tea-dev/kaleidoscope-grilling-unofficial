@@ -4,7 +4,7 @@
     "animation.kg_eating.item.one.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -927,7 +927,7 @@
     "animation.kg_eating.item.one.left": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -1850,7 +1850,7 @@
     "animation.kg_eating.item.two.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -2773,7 +2773,7 @@
     "animation.kg_eating.item.two.left": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -3696,7 +3696,7 @@
     "animation.kg_eating.item.three.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -4719,7 +4719,7 @@
     "animation.kg_eating.item.three.left": {
       "loop": "hold_on_last_frame",
       "animation_length": 5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -5742,7 +5742,7 @@
     "animation.kg_eating.item.three_alt.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -6665,7 +6665,7 @@
     "animation.kg_eating.item.three_alt.left": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -7588,7 +7588,7 @@
     "animation.kg_eating.item.four.right": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {
@@ -8511,7 +8511,7 @@
     "animation.kg_eating.item.four.left": {
       "loop": "hold_on_last_frame",
       "animation_length": 4.5,
-      "anim_time_update": "(q.is_using_item && q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0)",
+      "anim_time_update": "(q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') == 2 ? (c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 && c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') > 0 ? math.clamp(c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0) : (q.is_using_item && c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') > 0 ? math.clamp((c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') - (q.main_hand_item_use_duration - q.frame_alpha + 1.0)) / 20.0, 0, c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') / 20.0) : 0))",
       "bones": {
         "skewer_model": {
           "position": {

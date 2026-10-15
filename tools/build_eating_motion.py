@@ -130,7 +130,8 @@ def build(attachable_overrides=None, *, two_route_camera=False):
   # The explicit preview remains available for historical source-only checks.
   from build_two_route_eating_projection import augment as augment_two_route
   output=augment_two_route(output)
- return output
+ from eating_owner_context import augment as augment_owner_context
+ return augment_owner_context(output)
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):
