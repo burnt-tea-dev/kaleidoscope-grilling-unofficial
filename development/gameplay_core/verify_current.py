@@ -354,17 +354,14 @@ def main() -> None:
         )
 
     command = [sys.executable, str(DEV / verifier)]
+    if source_before is not None:
+        # This common runner owns the receipt-session capability, independent
+        # of release numbers. Only explicit exact-command helpers opt in.
+        command.insert(1, str(DEV / "verification_session_runner.py"))
     if args.compiled:
         command.append("--compiled")
     environment = dict(os.environ)
     environment.pop(SESSION_ENV, None)
-    # Only this current source-receipt run has the existing immutable-input
-    # boundary. Standalone/full historical verifiers retain every command.
-    if source_before is not None and verifier in {
-        "verify_a28114.py", "verify_a28115.py", "verify_a28116.py",
-        "verify_a28117.py", "verify_a28118.py", "verify_a28119.py", "verify_a28120.py", "verify_a28121.py", "verify_a28122.py", "verify_a28123.py", "verify_a28124.py",
-    }:
-        environment[SESSION_ENV] = verifier
     subprocess.run(command, check=True, env=environment)
     subprocess.run([sys.executable, str(DEV / "verify_failure_skewer.py")], check=True)
     subprocess.run([sys.executable, str(DEV / "test_ordinary_relative_calibration.py")], check=True)
@@ -372,6 +369,7 @@ def main() -> None:
     subprocess.run([sys.executable, str(DEV / "test_offhand_eating_projection.py")], check=True)
     subprocess.run(["node", "--test", str(DEV / "test_eating_route_resolver.mjs")], check=True)
     subprocess.run([sys.executable, str(DEV / "test_eating_route_extraction.py")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_eating_compiler_pipeline.py")], check=True)
     subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_composed_skewer_witnesses.py")], check=True)
     subprocess.run(["node", "--test", str(DEV / "test_all_skewer_integration.mjs")], check=True)
     if args.compiled:

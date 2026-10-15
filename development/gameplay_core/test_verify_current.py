@@ -2,6 +2,8 @@
 from contextlib import redirect_stdout, redirect_stderr
 import io
 import json
+import os
+import runpy
 import re
 from pathlib import Path
 import shutil
@@ -14,6 +16,7 @@ from unittest.mock import Mock, patch
 
 import verify_current as gate
 import verification_session as session
+import verification_session_runner as runner
 
 
 class CurrentSessionTests(unittest.TestCase):
@@ -43,6 +46,109 @@ class CurrentSessionTests(unittest.TestCase):
                 session.run_checked_once(command)
                 session.run_checked_once(command)
                 self.assertEqual(run.call_count, 2)
+
+
+class CurrentRunnerTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.directory = self.root / "verifiers"
+        self.directory.mkdir()
+        self.target = self.directory / "verify_a28144.py"
+        self.registered = {(2, 8, 144): self.target.name}
+        self.log = self.root / "commands.jsonl"
+        self.capture = self.root / "context.json"
+        child = (
+            "import json,os,sys; from pathlib import Path; "
+            f"p=Path({str(self.log)!r}); "
+            "row={'kind':sys.argv[1], 'cwd':os.getcwd(), "
+            f"'selector':os.environ.get({session.SESSION_ENV!r}), "
+            "'input':os.environ.get('FIXTURE_INPUT')}; "
+            "p.open('a').write(json.dumps(row)+'\\n')"
+        )
+        self.target.write_text(
+            "import json,os,subprocess,sys\nfrom pathlib import Path\n"
+            "from verification_session import SESSION_ENV,run_checked_once,session_active,current_source_validation_session\n"
+            "def main():\n"
+            f" Path({str(self.capture)!r}).write_text(json.dumps({{'argv':sys.argv,'name':__name__,'active':session_active()}}))\n"
+            f" command=[sys.executable,'-c',{child!r},'reused']\n"
+            " run_checked_once(command)\n run_checked_once(command)\n"
+            f" subprocess.run([sys.executable,'-c',{child!r},'unrelated'],check=True)\n"
+            "if __name__=='__main__':\n"
+            " if os.environ.pop(SESSION_ENV,None)==Path(__file__).name:\n"
+            "  with current_source_validation_session():main()\n"
+            " else:main()\n"
+        )
+
+    def run_target(self, target=None, arguments=()):
+        runner.run_registered_verifier(
+            target or self.target, directory=self.directory,
+            registered=self.registered, arguments=arguments,
+        )
+
+    def rows(self):
+        return [json.loads(line) for line in self.log.read_text().splitlines()]
+
+    def test_future_registered_verifier_reuses_only_exact_success_and_sanitizes_selector(self):
+        original_argv, original_path = sys.argv, sys.path[:]
+        with patch.dict(os.environ, {session.SESSION_ENV:self.target.name, "FIXTURE_INPUT":"retained"}):
+            self.run_target(arguments=["--compiled"])
+            self.assertNotIn(session.SESSION_ENV, os.environ)
+        self.assertEqual(json.loads(self.capture.read_text()), {
+            "argv":[str(self.target),"--compiled"], "name":"__main__", "active":True,
+        })
+        self.assertEqual([row["kind"] for row in self.rows()], ["reused","unrelated"])
+        for row in self.rows():
+            self.assertEqual(row, {"kind":row["kind"], "cwd":str(Path.cwd()),
+                                   "selector":None, "input":"retained"})
+        self.assertIs(sys.argv, original_argv)
+        self.assertEqual(sys.path, original_path)
+        self.assertFalse(session.session_active())
+
+    def test_standalone_historical_execution_retains_every_command(self):
+        with patch.dict(os.environ):
+            os.environ.pop(session.SESSION_ENV, None)
+            runpy.run_path(str(self.target), run_name="__main__")
+        self.assertEqual([row["kind"] for row in self.rows()], ["reused","reused","unrelated"])
+        self.assertFalse(json.loads(self.capture.read_text())["active"])
+
+    def test_only_exact_existing_registered_in_directory_target_is_allowed(self):
+        outside = self.root / self.target.name
+        outside.write_text("raise AssertionError('must not execute')")
+        unknown = self.directory / "unknown.py"
+        unknown.write_text(outside.read_text())
+        for target in (outside, unknown, Path(self.target.name), self.directory / "missing.py"):
+            with self.subTest(target=target), self.assertRaisesRegex(ValueError, "exact registered"):
+                self.run_target(target)
+        self.assertFalse(self.log.exists())
+
+    @unittest.skipIf(os.name == "nt", "symlink creation requires Windows privileges")
+    def test_registered_symlink_cannot_escape_verifier_directory(self):
+        outside = self.root / self.target.name
+        outside.write_text("raise AssertionError('must not execute')")
+        self.target.unlink()
+        self.target.symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "exact registered"):
+            self.run_target()
+        self.assertFalse(self.log.exists())
+
+    def test_failure_propagates_and_always_clears_session_and_process_arguments(self):
+        self.target.write_text("from verification_session import run_checked_once\nimport sys\nrun_checked_once([sys.executable,'-c','raise SystemExit(7)'])\n")
+        original_argv, original_path = sys.argv, sys.path[:]
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            self.run_target()
+        self.assertEqual(error.exception.returncode, 7)
+        self.assertFalse(session.session_active())
+        self.assertIs(sys.argv, original_argv)
+        self.assertEqual(sys.path, original_path)
+
+    def test_nested_context_rejected_before_verifier_executes(self):
+        with session.current_source_validation_session():
+            with self.assertRaisesRegex(RuntimeError, "already active"):
+                self.run_target()
+        self.assertFalse(self.capture.exists())
+        self.assertFalse(session.session_active())
 
 
 class WorkflowCoverageTests(unittest.TestCase):
@@ -211,22 +317,50 @@ class SourceReceiptTests(unittest.TestCase):
             self.main("--write-source-validation", self.receipt)
         self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
             "verify_visual_refs.py", "verify_slime_frames.py", "verify_a28143.py",
-            "verify_failure_skewer.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+            "verify_failure_skewer.py", "test_ordinary_relative_calibration.py",
+            "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
+            "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
+            "test_eating_compiler_pipeline.py",
+            "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
         ])
         gate.require_source_validation(self.receipt)
+
+    def test_receipt_runner_capability_and_standalone_command_keep_original_arguments(self):
+        for receipt, compiled in ((False,False), (False,True), (True,False), (True,True)):
+            with self.subTest(receipt=receipt, compiled=compiled):
+                args = (["--write-source-validation",self.receipt] if receipt else []) + (["--compiled"] if compiled else [])
+                with patch.dict(os.environ, {session.SESSION_ENV:"injected"}), patch.object(gate, "generic_gate", return_value=(2,8,143,1)), patch.object(gate,"verify_compiled_exact"), self.mock_functional_commands() as commands:
+                    self.main(*args)
+                call = next(c for c in commands.run.call_args_list if "env" in c.kwargs)
+                expected = [sys.executable]
+                if receipt:
+                    expected.append(str(gate.DEV / "verification_session_runner.py"))
+                expected.append(str(gate.DEV / "verify_a28143.py"))
+                if compiled:
+                    expected.append("--compiled")
+                self.assertEqual(call.args[0], expected)
+                self.assertNotIn(session.SESSION_ENV, call.kwargs["env"])
 
     def test_full_success_writes_receipt_after_all_functional_commands(self):
         with patch.object(gate, "generic_gate", return_value=(2, 8, 47, 1)), self.mock_functional_commands() as commands:
             self.main("--write-source-validation", self.receipt)
         self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
             "verify_visual_refs.py", "verify_a2847.py", "verify_failure_skewer.py",
-            "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+            "test_ordinary_relative_calibration.py", "test_tp_java_item_fallback.py",
+            "test_offhand_eating_projection.py", "test_eating_route_resolver.mjs",
+            "test_eating_route_extraction.py", "test_eating_compiler_pipeline.py",
+            "test_composed_skewer_witnesses.py",
+            "test_all_skewer_integration.mjs",
         ])
         gate.require_source_validation(self.receipt)
 
     def test_every_combined_command_failure_prevents_receipt(self):
         for target in ["verify_visual_refs.py", "verify_slime_frames.py", "verify_a28143.py",
-                       "verify_failure_skewer.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs"]:
+                       "verify_failure_skewer.py", "test_ordinary_relative_calibration.py",
+                       "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
+                       "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
+                       "test_eating_compiler_pipeline.py",
+                       "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs"]:
             with self.subTest(target=target):
                 self.issue()
                 def fail_selected(command, **kwargs):

@@ -1,7 +1,7 @@
 from pathlib import Path
 import copy,hashlib,io,json,subprocess,tempfile,unittest
 from unittest.mock import patch
-from historical_source_refs import ROOT,encoded_listing,inventory,literal_refs,verify
+from historical_source_refs import ROOT,FIXTURE_GIT_REFS,encoded_listing,fixture_refs,inventory,literal_refs,required_refs,verify
 import public_source_witness as public
 from eating_owner_context import reference_bytes
 from eating_owner_context import reference_bytes
@@ -12,12 +12,20 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'development/gameplay_core').mkdir(parents=True);(r/'tools/fixtures').mkdir(parents=True)
   (r/'development/gameplay_core/gate.py').write_text(text)
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;path.parent.mkdir(parents=True,exist_ok=True)
+   doc={field:next(iter(rows.values()))}
+   if schema is not None:doc['schema']=schema
+   path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':45,'commits':45})
-  for ref in ('b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8'):
+  self.assertEqual(verify(),{'refs':50,'commits':50})
+  for ref in ('b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
+              '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
+              'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
+              'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f'):
    self.assertEqual(inventory()[ref],ref)
-  self.assertEqual(set(inventory()),literal_refs())
+  self.assertEqual(set(inventory()),required_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
   self.assertIn(meta['commit'],inventory());self.assertEqual(meta['tree'],public.PUBLIC_SOURCE_TREE)
@@ -285,5 +293,30 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_invalid_full_sha_fails_closed(self):
   r=self.fixture("BASE='abcdef12'",{'abcdef12':'a'*39})
   with self.assertRaises(AssertionError):inventory(r)
+
+ def test_named_fixture_commit_fields_are_required_but_other_hashes_are_not(self):
+  ref='1'*40;other='2'*40;r=self.fixture('',{ref:ref})
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;doc=json.loads(path.read_text())
+   doc.update(java_source_revision=other,sha256='3'*64,git_blob_sha1='4'*40)
+   path.write_text(json.dumps(doc))
+  self.assertEqual(fixture_refs(r),{ref});self.assertEqual(required_refs(r),{ref});inventory(r)
+  path=r/'development/gameplay_core/fixtures/offhand-projection-contract.json'
+  doc=json.loads(path.read_text());doc['base_commit']=other;path.write_text(json.dumps(doc))
+  with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
+
+ def test_fixture_missing_files_fields_and_wrong_schema_or_commit_fail_closed(self):
+  ref='1'*40;r=self.fixture('',{ref:ref})
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;original=path.read_text();doc=json.loads(original)
+   mutations=[{k:v for k,v in doc.items() if k!=field}, {**doc,field:1}, {**doc,field:'a'*39}]
+   if schema is not None:mutations += [{**doc,'schema':True},{**doc,'schema':2}]
+   for bad in mutations:
+    with self.subTest(path=relative,bad=bad):
+     path.write_text(json.dumps(bad))
+     with self.assertRaises(AssertionError):fixture_refs(r)
+   path.unlink()
+   with self.assertRaises(FileNotFoundError):fixture_refs(r)
+   path.write_text(original)
 
 if __name__=='__main__':unittest.main()
