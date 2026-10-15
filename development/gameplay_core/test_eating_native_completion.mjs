@@ -75,7 +75,8 @@ function fixture({creative=false,duration=90,profile='FOUR',requested,hand='main
  function flush(tick=ctx.system.currentTick+1){ctx.system.currentTick=tick;while(queue.length)queue.shift()()}
  function tickPresentation(tick){
   ctx.system.currentTick=tick;ctx.tickPlayer=player;
-  const tickBegin=source.indexOf('const active=ACTIVE_EATS.get(p.id);'),tickEnd=source.indexOf('if(system.currentTick%10',tickBegin);
+  const tickBegin=source.indexOf('const active=ACTIVE_EATS.get(p.id);');
+  const tickEnd=source.indexOf('\n',source.indexOf('// Presentation never debits food.',tickBegin))+1;
   assert.ok(tickBegin>=0&&tickEnd>tickBegin);
   vm.runInNewContext('(()=>{const p=tickPlayer;'+source.slice(tickBegin,tickEnd)+'})();',ctx);
  }
