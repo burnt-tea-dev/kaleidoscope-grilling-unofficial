@@ -1,0 +1,42 @@
+# One-shot maintainer source authoring on this exact owned branch, not a build
+# transform. It commits canonical outputs to a NEW review branch, never main.
+# Remove this workflow after normal canonical CI owns the generated candidate.
+name: Author reviewed native icon candidate
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  contents: write
+jobs:
+  author-reviewed-source:
+    if: >-
+      github.repository == 'casama233/kaleidoscope-grilling-unofficial' &&
+      github.actor == 'casama233' &&
+      github.event.pull_request.user.login == 'casama233' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'maintenance/native-icon-authoring-20261015'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: casama233/kaleidoscope-grilling-unofficial
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Isolated image tooling
+        run: |
+          python3 -m venv "$RUNNER_TEMP/icon-venv"
+          "$RUNNER_TEMP/icon-venv/bin/pip" install Pillow==11.3.0
+          echo "$RUNNER_TEMP/icon-venv/bin" >> "$GITHUB_PATH"
+      - name: Author reviewed source, claim new identity and push review branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python -B development/gameplay_core/author_native_icon_candidate.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-icon-authored-source
+          path: ${{ runner.temp }}/native-icon-authored/
+          retention-days: 3
