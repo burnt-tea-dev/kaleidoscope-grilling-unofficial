@@ -138,6 +138,11 @@ def restore_main(text):
  return text
 
 def patch_main(text):
+ # Current callers supply the extracted whole-pipeline boundary. Historical
+ # callers still receive exactly the failure-era layer, without disk main reads.
+ from eating_route_extraction import restore_main as restore_extraction
+ expanded=restore_extraction(text)
+ extracted=expanded!=text
  effects="mergeEffectApplication" in text
  text=restore_main(text)
  for before,after in state_changes()+main_changes("import {supportsRawOne,rawOneAnimation}" in text):
@@ -148,6 +153,10 @@ def patch_main(text):
  if effects:
   from effect_merge_source_witness import reapply_main
   text=reapply_main(text)
+ if extracted:
+  from build_ordinary_relative_calibration import patch_main as patch_ordinary
+  from build_offhand_eating_projection import patch_main as patch_offhand
+  text=patch_offhand(patch_ordinary(text))
  return text
 
 def gate(profile,hand,identifier=None,attachable=False):

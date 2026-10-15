@@ -21,4 +21,29 @@ class Extraction(unittest.TestCase):
    self.assertEqual(hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),meta.split()[2],path)
   changed=set(subprocess.check_output(['git','diff','--name-only',c['baseline_commit']],cwd=ROOT,text=True).splitlines())|set(subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=ROOT,text=True).splitlines())
   self.assertLessEqual({p for p in changed if '/resource_pack/'in p or '/behavior_pack/'in p},allow)
+ def test_failure_current_boundary_and_legacy_supplied_input(self):
+  import build_failure_skewer_held as failure
+  from unittest.mock import patch
+  main=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js';current=main.read_text()
+  old_source=subprocess.check_output(['git','show','c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f:tools/build_failure_skewer_held.py'],cwd=ROOT,text=True)
+  legacy={'__file__':failure.__file__,'__name__':'failure_pre_extraction_boundary_test'}
+  exec(compile(old_source,failure.__file__,'exec'),legacy)
+  historical=subprocess.check_output(['git','show','b938359b:'+main.relative_to(ROOT).as_posix()],cwd=ROOT,text=True)
+  inputs=[historical,bridge.restore_main(current)]
+  expected=[legacy['patch_main'](text) for text in inputs]
+  original_read=pathlib.Path.read_text
+  def supplied_only(path,*args,**kwargs):
+   if path==main:raise AssertionError('Supplied main input must not read main from disk')
+   return original_read(path,*args,**kwargs)
+  with patch.object(pathlib.Path,'read_text',supplied_only):
+   self.assertEqual(failure.patch_main(current),current)
+   with self.assertRaises(ValueError):failure.patch_main(current+'\n// unrelated supplied suffix')
+   for text,want in zip(inputs,expected):self.assertEqual(failure.patch_main(text),want)
+ def test_failure_boundary_rejects_owned_mutations(self):
+  import build_failure_skewer_held as failure
+  current=(ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js').read_text();c=bridge.contract()
+  bad=[current.replace(c['import'],''),current+c['import'],current.replace('if(!out)return failedStack(raw,MYSTERIOUS_ID);','if(!out)return failedStack(raw,DARK_ID);')]
+  bad += [current.replace(new,new+new,1) for old,new in c['replacements']]
+  for text in bad:
+   with self.assertRaises(ValueError):failure.patch_main(text)
 if __name__=='__main__':unittest.main()
