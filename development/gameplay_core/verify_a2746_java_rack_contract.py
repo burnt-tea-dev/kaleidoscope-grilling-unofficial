@@ -22,6 +22,17 @@ FILES={
   'BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)')),
 }
 def blob(v):return hashlib.sha1(b'blob '+str(len(v)).encode()+bytes([0])+v).hexdigest()
+def check_collision_source(name,path,data,witness):
+ source_name={'block':'AdvancedRackBlock','grill':'GrillBlock','blocks':'ModBlocks'}.get(name)
+ if source_name:
+  assert witness['sources'][source_name]['path']==path
+  assert witness['sources'][source_name]['sha256']==hashlib.sha256(data).hexdigest()
+ if name in ('block','grill'):
+  boxes={key.lower():[float(x.strip()) for x in raw.split(',')]
+         for key,raw in re.findall(r'VoxelShape\s+(\w+)\s*=\s*Block\.box\(([^)]+)\)',data.decode())}
+  expected={f:boxes[f] for f in ('north','south','east','west')} if name=='block' else {
+   'north':boxes['flat_z'],'south':boxes['flat_z'],'east':boxes['flat_x'],'west':boxes['flat_x']}
+  assert witness['shape_bounds']['advanced_rack' if name=='block' else 'grill']==expected
 def main():
  witness=json.loads((Path(__file__).resolve().parents[2]/'data/java-collision-shapes-20261016.json').read_text())
  for name,(path,sha,tokens) in FILES.items():
@@ -29,15 +40,6 @@ def main():
   with urllib.request.urlopen(req,timeout=90) as r:data=r.read()
   assert blob(data)==sha,(name,blob(data),sha);s=data.decode()
   for token in tokens:assert token in s,(name,token)
-  source_name={'block':'AdvancedRackBlock','grill':'GrillBlock','blocks':'ModBlocks'}.get(name)
-  if source_name:
-   assert witness['sources'][source_name]['path']==path
-   assert witness['sources'][source_name]['sha256']==hashlib.sha256(data).hexdigest()
-  if name in ('block','grill'):
-   boxes={key.lower():[float(x.strip()) for x in raw.split(',')]
-          for key,raw in re.findall(r'VoxelShape\s+(\w+)\s*=\s*Block\.box\(([^)]+)\)',s)}
-   expected={f:boxes[f] for f in ('north','south','east','west')} if name=='block' else {
-    'north':boxes['flat_z'],'south':boxes['flat_z'],'east':boxes['flat_x'],'west':boxes['flat_x']}
-   assert witness['shape_bounds']['advanced_rack' if name=='block' else 'grill']==expected
+  check_collision_source(name,path,data,witness)
  print('A2.7.46 pinned Java Advanced Rack contract: PASS')
 if __name__=='__main__':main()
