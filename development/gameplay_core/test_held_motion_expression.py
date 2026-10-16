@@ -29,6 +29,15 @@ class HeldMotionExpression(unittest.TestCase):
                         if self.evaluate(query, using=True, eat_profile=1, **state)]
             self.assertEqual(selected, expected)
 
+    def test_exact_owner_presence_queries_for_all_three_projection_properties(self):
+        for name in ('eat_projection', 'eat_profile', 'eat_hand'):
+            source = "c.owning_entity->q.has_property('kaleidoscope_grilling:" + name + "')"
+            with self.subTest(property=name):
+                self.assertTrue(self.evaluate(source))
+                self.assertFalse(self.evaluate(source, has_projection=False))
+        with self.assertRaises((AssertionError, SyntaxError)):
+            self.evaluate("c.owning_entity->q.has_property('kaleidoscope_grilling:unknown')")
+
     def test_legacy_use_query_and_default_inactive_motion(self):
         self.assertTrue(self.evaluate('q.is_using_item', using=True))
         self.assertFalse(self.evaluate('q.is_using_item'))

@@ -29,8 +29,12 @@ for(const id of [...d.ids,'minecraft:apple','kaleidoscope_grilling:future_skewer
  const old=ev(d.before[key].blend_weight,q,v),expected=old&&!(actualSlot===slot&&d.ids.includes(id));if(ev(d.clips[key].blend_weight,q,v)!==expected)throw Error(JSON.stringify({hand,id,actualSlot,f}));n++;}}
 console.log(n);'''
   count=int(subprocess.check_output(['node','-e',js,json.dumps(data)],text=True));self.assertEqual(count,68*2*2*16)
- def test_only_one_runtime_file_changes(self):
-  base=layer.contract()['base_commit'];changed=subprocess.check_output(['git','diff','--name-only',base],cwd=ROOT,text=True).splitlines()
+ def test_historical_tp_scope_and_exact_current_runtime_ownership(self):
+  from current_runtime_ownership import BASE,verify_current_inventory
+  verify_current_inventory()
+  # Retain the frozen TP/offhand proof; later plate/performance/identity deltas
+  # must pass the shared immutable current-runtime inventory, not a path allowance.
+  base=layer.contract()['base_commit'];changed=subprocess.check_output(['git','diff','--name-only',base,BASE],cwd=ROOT,text=True).splitlines()
   import build_offhand_eating_projection as offhand
   owned=offhand.augment({})
   for path,expected in owned.items():

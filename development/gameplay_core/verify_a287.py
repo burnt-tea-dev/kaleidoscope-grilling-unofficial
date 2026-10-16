@@ -17,7 +17,8 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
  for name in ('eat_hand','eat_profile','eat_projection'):
   owned="c.owning_entity->q.property('kaleidoscope_grilling:"+name+"')"
   expr=expr.replace(owned,"q.property('kaleidoscope_grilling:"+name+"')")
- expr=expr.replace("c.owning_entity->q.has_property('kaleidoscope_grilling:eat_projection')","q.has_property('kaleidoscope_grilling:eat_projection')")
+  owned_presence="c.owning_entity->q.has_property('kaleidoscope_grilling:"+name+"')"
+  expr=expr.replace(owned_presence,"q.has_property('kaleidoscope_grilling:"+name+"')")
  expr=expr.replace('q.item_slot_to_bone_name(context.item_slot)',repr(bone))
  for prefix in ('context','c'):
   expr=expr.replace(prefix+'.is_first_person',str(int(first))).replace(prefix+'.item_slot',repr(slot))

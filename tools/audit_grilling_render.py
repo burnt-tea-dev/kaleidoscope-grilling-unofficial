@@ -501,6 +501,8 @@ def check_current_display_contracts(findings, geometry_index, animations):
     raw_one_ids=set(raw_one.ids())
     from build_java_eating_projection import held_profile_condition, projection_items, SECRET_PROFILES, secret_item_animation_id
     version=tuple(load_json(BP/"manifest.json")["header"]["version"])
+    import build_offhand_eating_projection as offhand
+    offhand_routes = {row['id']:row['profile'] for row in offhand.contract()['routes']} if version >= (2,8,145) else {}
     from secret_idle_calibration import OWNED as CALIBRATED_ITEMS,animation_document,clip_id,owning_hand_using
     expected = expected_animations()
     if version>=(2,8,68):expected.update(animation_document()["animations"])
@@ -543,6 +545,10 @@ def check_current_display_contracts(findings, geometry_index, animations):
         scoped_caterpillar=version>=(2,8,126) and desc['identifier']==caterpillar.ITEM
         reviewed_route=desc['identifier'] in reviewed_three
         raw_one_route=desc['identifier'] in raw_one_ids
+        offhand_profile=offhand_routes.get(desc['identifier'])
+        offhand_piece_ref='geometry.kg_java_dual.piece.'+desc['identifier'].split(':')[1] if offhand_profile else None
+        if offhand_profile and desc.get('geometry',{}).get('java_piece')!=offhand_piece_ref:
+            add(findings,'error','held_binding_contract',desc['identifier'],'offhand route requires its exact item-owned helper geometry')
         ids = desc.get("animations", {})
         canonical_id = desc["identifier"].removesuffix("_java_three_alt")
         family = "skewer" if canonical_id.endswith("_skewer") else "rack" if desc["identifier"] == "kaleidoscope_grilling:advanced_rack" else "bottle"
@@ -571,6 +577,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
                 expected_ids.update({f'fp_eat_{hand}':secret_item_animation_id(projected,hand) for hand in ('right','left')})
         if reviewed_route:expected_ids[review_three.ALIAS]='animation.kg_java_eating.item.three.right'
         if raw_one_route:expected_ids.update({'raw_one_'+hand:'animation.kg_java_eating.item.one.'+hand for hand in ('right','left')})
+        if offhand_profile:expected_ids[offhand.ALIAS]='animation.kg_java_eating.item.'+offhand_profile.lower()+'.left'
         if scoped_caterpillar:
             expected_ids['probe_one_right']=caterpillar.ANIMATION
             expected_geometry=caterpillar.piece_assets()[0]['minecraft:geometry'][0]
@@ -639,6 +646,13 @@ def check_current_display_contracts(findings, geometry_index, animations):
         if version >= (2,8,143):
             from eating_owner_context import owner_expression
             required_selectors = {alias:owner_expression(query) for alias,query in required_selectors.items()}
+        if offhand_profile:
+            # G145 wraps the already owner-qualified predecessor. Only these
+            # exact item/profile routes receive the actual-left projection.
+            active=offhand.gate(offhand_profile,[desc['identifier']],True)
+            for alias in ('fp_left','eat_left'):
+                required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
+            required_selectors[offhand.ALIAS]=active
         actual_selectors = {}
         malformed = False
         for row in selectors:
@@ -657,7 +671,8 @@ def check_current_display_contracts(findings, geometry_index, animations):
             geo = geometry_index.get(ref, {}).get("geo", {})
             bound = [b for b in geo.get("bones", []) if b.get("binding")]
             scoped_piece=scoped_caterpillar and alias=='probe_piece' and ref=='geometry.kg_probe_caterpillar.piece'
-            piece=scoped_piece or (alias=='java_piece' and (desc['identifier'] in REPRESENTATIVES or reviewed_route or raw_one_route)) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
+            offhand_piece=offhand_profile and alias=='java_piece' and ref==offhand_piece_ref
+            piece=scoped_piece or offhand_piece or (alias=='java_piece' and (desc['identifier'] in REPRESENTATIVES or reviewed_route or raw_one_route)) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
             if version>=(2,8,68) and re.fullmatch(r'piece_[1-9][0-9]*',alias):
                 piece=desc['identifier'] in SECRET_PROFILES and ref=='geometry.kg_secret_held.'+alias
                 if not piece:add(findings,'error','held_binding_contract',ref,'helper variant requires exact complete secret owner and namespace')
@@ -678,7 +693,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
                 targets = set(animations.get(anim_id, {}).get("body", {}).get("bones", {}))
                 # One attachable may render multiple geometries. The animation
                 # component addresses their union, validated above individually.
-                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar or reviewed_route or raw_one_route else set()
+                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar or reviewed_route or raw_one_route or offhand_profile else set()
                 missing = (targets - set(bones) - complementary) | (targets-available_bones)
                 if missing:
                     add(findings, "error", "held_animation_missing_bone", ref,

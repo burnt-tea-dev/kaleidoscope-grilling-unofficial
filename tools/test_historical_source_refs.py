@@ -19,11 +19,12 @@ class HistoricalSourceRefsTests(unittest.TestCase):
    path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':52,'commits':52})
+  self.assertEqual(verify(),{'refs':53,'commits':53})
   for ref in ('b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
               '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
               'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
-              'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f'):
+              'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f',
+              'f36e333cb629237495479fafdb8a8ac1f2edb459'):
    self.assertEqual(inventory()[ref],ref)
   self.assertEqual(set(inventory()),required_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
@@ -297,6 +298,11 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)
+ def test_frozen_calibration_base_requires_audited_inventory_entry(self):
+  ref='f36e333cb629237495479fafdb8a8ac1f2edb459'
+  r=self.fixture("FROZEN_BASE='"+ref+"'",{'1'*40:'1'*40})
+  self.assertEqual(literal_refs(r),{ref})
+  with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
  def test_missing_short_ref_fails_closed(self):
   r=self.fixture("x=['git','show',f'abcdef12:{path}']",{'1'*40:'1'*40})
   with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)

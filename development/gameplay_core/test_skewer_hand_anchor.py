@@ -40,6 +40,9 @@ class HandAnchorTests(unittest.TestCase):
             expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in reviewed_three_ids()}
             from build_raw_one_eating_projection import ids as raw_one_ids
             expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in raw_one_ids()}
+            if (RP/'animations/offhand_eating_player.animation.json').exists():
+                from build_offhand_eating_projection import ids as offhand_ids
+                expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in offhand_ids('ONE')}
             self.assertEqual(pieces,expected)
         if VERSION>=(2,8,126):
             helper_ref='geometry.kg_probe_caterpillar.piece'

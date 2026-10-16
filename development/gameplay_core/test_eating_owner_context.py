@@ -38,9 +38,13 @@ for(const row of cases)for(const hand of [1,2]){
  new Function('q','c','owner','math','v',scoped(row.pre.join('\n')))(q,c,owner,math,v);
  const expected=hand===1?19.5/20:elapsed/20;
  if(v.kg_eat_seconds!==expected)throw Error(row.name+' hand '+hand+' wrong owner clock: '+v.kg_eat_seconds);
- const current=row.animate.filter(x=>Object.keys(x).some(k=>k.startsWith('fp_eat_')||k.startsWith('eat_')||k==='probe_one_right'));
+ const current=row.animate.filter(x=>Object.keys(x).some(k=>k.startsWith('fp_eat_')||k.startsWith('eat_')||k==='probe_one_right'||k==='offhand_projection_left'));
  const evaluate=expr=>Boolean(new Function('q','c','owner','return '+scoped(expr))(q,c,owner));
  if(!current.some(x=>Object.values(x).some(evaluate)))throw Error(row.name+' active owner pose masked');
+ if(row.name==='grilled_caterpillar_skewer'&&hand===2){
+  const active=current.filter(x=>Object.values(x).some(evaluate)).flatMap(x=>Object.keys(x));
+  if(JSON.stringify(active)!==JSON.stringify(['offhand_projection_left']))throw Error('Caterpillar offhand must select only its owned projection');
+ }
  owner.property=()=>0;owner.has_property=()=>false;
  if(current.some(x=>Object.values(x).some(evaluate)))throw Error(row.name+' pose borrowed item properties');
 }

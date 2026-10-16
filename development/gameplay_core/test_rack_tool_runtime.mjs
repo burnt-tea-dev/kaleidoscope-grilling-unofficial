@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {execFileSync} from 'node:child_process';
+import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {SLIME_ID,readSlimeWorldFrame} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/slime_frame_core.js';
 import {RACK_TOOL_VISUAL_TYPE,RACK_TOOL_MODEL_INDEX,rackToolVisualModel} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack_tool_visual_data.js';
 import {TOOL_ITEM_IDS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2746_advanced_rack_core.js';
 import {PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,plateMeshPlan,recipeIconModel} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate_recipe_visual_core.js';
@@ -17,7 +19,7 @@ function fixture(){
   spawned.push(entity);return entity;
  }};
  const block={dimension};
- const ctx=vm.createContext({TYPE,RACK_TOOL_VISUAL_TYPE,rackToolVisualModel,PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,plateMeshPlan,recipeIconModel,reader:undefined,helpers:0,lastCapacityWarning:-1200,system:{currentTick:0},console,grillingConfig:()=>({contentsHelpers:32}),
+ const ctx=vm.createContext({canonicalFoodId,SLIME_ID,readSlimeWorldFrame,world:{getAbsoluteTime:()=>0},TYPE,RACK_TOOL_VISUAL_TYPE,rackToolVisualModel,PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,plateMeshPlan,recipeIconModel,reader:undefined,helpers:0,lastCapacityWarning:-1200,system:{currentTick:0},console,grillingConfig:()=>({contentsHelpers:32}),
   metadataSignature:JSON.stringify,captureSkewerMetadata:s=>structuredClone(s),renderItemType:(entity,stack)=>native.push({entity,stack}),
   discard(r,k){const old=r.parts.get(k);if(old){old.entity.remove();r.parts.delete(k);ctx.helpers--;}return true;}});
  vm.runInContext(source.slice(start,end),ctx);
@@ -42,8 +44,9 @@ test('generic tagged extension rack items preserve the native pose-zero path',()
  assert.deepEqual(f.spawned[0].properties,{'kaleidoscope_grilling:pose':0});
 });
 test('known IDs on plate/composed modes never take the rack helper branch',()=>{
+ class Stack{constructor(typeId){this.typeId=typeId;this.maxAmount=1;}getDynamicProperty(){return undefined;}}
  for(const mode of [1,2])for(const id of Object.keys(RACK_TOOL_MODEL_INDEX)){
-  const f=fixture();f.render({typeId:id},mode,'plate/0');assert.equal(f.spawned[0].typeId,TYPE);
+  const f=fixture();f.render(new Stack(id),mode,'plate/0');assert.equal(f.spawned[0].typeId,TYPE);
   assert.equal(f.native.length,1);assert.equal(f.spawned[0].properties['kaleidoscope_grilling:pose'],mode);
  }
 });

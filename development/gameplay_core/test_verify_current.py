@@ -152,6 +152,11 @@ class CurrentRunnerTests(unittest.TestCase):
 
 
 class WorkflowCoverageTests(unittest.TestCase):
+    def test_current_baseline_has_existing_registered_verifier(self):
+        version = tuple(gate.load(gate.ROOT / "baseline.json")["version"])
+        self.assertIn(version, gate.VERIFIERS)
+        self.assertTrue((gate.DEV / gate.VERIFIERS[version]).is_file())
+
     def test_family_candidate_changes_always_trigger_functional_workflow(self):
         workflows = gate.ROOT / ".github/workflows"
         family = (workflows / "family-candidate.yml").read_text(encoding="utf-8")
@@ -312,11 +317,21 @@ class SourceReceiptTests(unittest.TestCase):
                 self.main("--write-source-validation", self.receipt)
         self.assertFalse(self.receipt.exists())
 
+    def test_unregistered_version_fails_without_receipt_or_release_verifier(self):
+        version = (max(v[0] for v in gate.VERIFIERS) + 1, 0, 0)
+        self.issue()
+        with patch.object(gate, "generic_gate", return_value=(*version, 1)), self.mock_functional_commands() as commands:
+            with self.assertRaisesRegex(SystemExit, "No release verifier registered"):
+                self.main("--write-source-validation", self.receipt)
+        self.assertFalse(self.receipt.exists())
+        self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list],
+                         ["verify_visual_refs.py", "verify_slime_frames.py"])
+
     def test_current_slime_checks_are_required_before_receipt(self):
-        with patch.object(gate, "generic_gate", return_value=(2, 8, 143, 1)), self.mock_functional_commands() as commands:
+        with patch.object(gate, "generic_gate", return_value=(2, 8, 145, 1)), self.mock_functional_commands() as commands:
             self.main("--write-source-validation", self.receipt)
         self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
-            "verify_visual_refs.py", "verify_slime_frames.py", "verify_a28143.py",
+            "verify_visual_refs.py", "verify_slime_frames.py", "verify_a28145.py",
             "verify_failure_skewer.py", "test_ordinary_relative_calibration.py",
             "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
             "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",

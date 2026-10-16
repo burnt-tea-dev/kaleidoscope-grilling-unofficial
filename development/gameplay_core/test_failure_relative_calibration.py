@@ -15,7 +15,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 RP = ROOT / 'projects/grilling/gameplay_core/resource_pack'
 ANIMATIONS = RP / 'animations'
-FROZEN = 'f36e333cb629237495479fafdb8a8ac1f2edb459'
+FROZEN_BASE = 'f36e333cb629237495479fafdb8a8ac1f2edb459'
 NS = 'kaleidoscope_grilling:'
 PROFILES = ('THREE', 'THREE_ALT')
 HANDS = ('right', 'left')
@@ -28,7 +28,7 @@ def read(path):
 @lru_cache(maxsize=None)
 def frozen_bytes(path):
     return subprocess.check_output(
-        ['git', 'show', FROZEN + ':' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
+        ['git', 'show', FROZEN_BASE + ':' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
 
 
 def clips(filename, frozen=False):

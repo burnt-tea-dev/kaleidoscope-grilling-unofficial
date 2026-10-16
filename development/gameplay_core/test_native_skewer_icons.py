@@ -1,5 +1,6 @@
 """Small regressions for actual inventory animation routes, not native-client proof."""
 import io
+import contextlib
 import copy
 import sys
 from unittest.mock import patch
@@ -11,6 +12,9 @@ from pathlib import Path
 import unittest
 from PIL import Image
 from native_skewer_icons import ROOT, PROJECT, NS, SOURCES, check_or_write, spans
+
+sys.path.insert(0, str(ROOT / 'tools'))
+import check_touch_skewer_use as touch
 
 SOURCE_ROOT = Path(os.environ.get('KG_ICON_TEST_ROOT', str(ROOT)))
 BP = SOURCE_ROOT / PROJECT / 'behavior_pack'
@@ -162,6 +166,90 @@ class NativeSkewerIcons(unittest.TestCase):
         boundaries = spans([first,second])
         self.assertIn(('west',0), boundaries)  # Interior to union; exposed in first.
         self.assertIn(('east',1), boundaries)  # Interior to union; exposed in second.
+
+class TouchSkewerConservationTests(unittest.TestCase):
+    def check(self, relative=None, mutate=None):
+        read_text = Path.read_text
+
+        def changed(path, *args, **kwargs):
+            text = read_text(path, *args, **kwargs)
+            if relative is not None and path == touch.ROOT / relative:
+                data = json.loads(text)
+                mutate(data)
+                return json.dumps(data)
+            return text
+
+        with patch.object(touch, 'ROOT', SOURCE_ROOT), patch.object(Path, 'read_text', changed), contextlib.redirect_stdout(io.StringIO()):
+            touch.check()
+
+    def reject_item(self, name, mutate):
+        path = 'projects/grilling/gameplay_core/behavior_pack/items/' + name + '.json'
+        with self.assertRaises((AssertionError, ValueError)):
+            self.check(path, lambda data: mutate(data['minecraft:item']))
+
+    def test_current_items_and_native_assets_pass(self):
+        self.check()
+
+    def test_changed_placement_or_simultaneous_icon_is_rejected(self):
+        def wrong_block(item):
+            item['components']['minecraft:block_placer']['block'] = 'minecraft:stone'
+
+        def placeable(item):
+            item['components']['minecraft:block_placer']['use_on'] = [{'tags': '1'}]
+
+        def missing_restriction(item):
+            item['components']['minecraft:block_placer'].pop('use_on')
+
+        def extra_placement_key(item):
+            item['components']['minecraft:block_placer']['replace_block_item'] = True
+
+        def simultaneous_icon(item):
+            item['components']['minecraft:icon'] = {'textures': {'default': 'mysterious_skewer'}}
+
+        for mutate in (wrong_block, placeable, missing_restriction,
+                       extra_placement_key, simultaneous_icon):
+            with self.subTest(mutation=mutate.__name__):
+                self.reject_item('mysterious_skewer', mutate)
+
+    def test_gui_projection_does_not_hide_any_food_or_identity_drift(self):
+        mutations = {
+            'nutrition': lambda item: item['components']['minecraft:food'].update(nutrition=99),
+            'saturation': lambda item: item['components']['minecraft:food'].update(saturation_modifier=99),
+            'always_eat': lambda item: item['components']['minecraft:food'].update(can_always_eat=False),
+            'duration': lambda item: item['components']['minecraft:use_modifiers'].update(use_duration=99),
+            'use': lambda item: item['components']['minecraft:use_modifiers'].update(start_using='when_sprinting'),
+            'animation': lambda item: item['components'].update({'minecraft:use_animation': {'value': 'drink'}}),
+            'offhand': lambda item: item['components'].update({'minecraft:allow_off_hand': False}),
+            'stack': lambda item: item['components'].update({'minecraft:max_stack_size': 1}),
+            'tag': lambda item: item['components']['minecraft:tags']['tags'].append('unreviewed:food'),
+            'identity': lambda item: item['description'].update(identifier='kaleidoscope_grilling:unreviewed'),
+            'touch': lambda item: item['components'].update({'minecraft:interact_button': False}),
+        }
+        for name in ('mysterious_skewer_java_three_alt', 'grilled_slime_skewer_native_plain'):
+            for label, mutate in mutations.items():
+                with self.subTest(item=name, mutation=label):
+                    self.reject_item(name, mutate)
+
+    def test_unrelated_item_cannot_claim_a_native_route_by_changing_its_tags(self):
+        def mutate(item):
+            components = item['components']
+            components['minecraft:tags']['tags'].append('kaleidoscope_grilling:food_mysterious_skewer')
+            components.pop('minecraft:icon')
+            components['minecraft:block_placer'] = {
+                'block': 'kaleidoscope_grilling:item_visual_mysterious_skewer',
+                'use_on': [{'tags': '0'}],
+            }
+
+        self.reject_item('raw_beef_skewer', mutate)
+
+    def test_unrelated_item_still_requires_exact_conservation(self):
+        self.reject_item('raw_beef_skewer', lambda item: item['components']['minecraft:food'].update(nutrition=99))
+
+    def test_native_asset_drift_is_checked_before_inverse_projection(self):
+        path = 'projects/grilling/gameplay_core/behavior_pack/blocks/item_visual_mysterious_skewer.json'
+        with self.assertRaisesRegex(ValueError, 'Native animated skewer source drift'):
+            self.check(path, lambda data: data['minecraft:block']['components'].update({'minecraft:collision_box': True}))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
