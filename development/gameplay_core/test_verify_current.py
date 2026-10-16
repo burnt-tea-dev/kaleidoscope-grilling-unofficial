@@ -5,7 +5,7 @@ import json
 import os
 import runpy
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import shutil
 import subprocess
 import sys
@@ -52,7 +52,9 @@ class CurrentRunnerTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        # TEMP can contain a Windows short-name/junction or a POSIX symlink.
+        # Positive fixtures must meet the runner's exact resolved-path contract.
+        self.root = Path(self.temp.name).resolve()
         self.directory = self.root / "verifiers"
         self.directory.mkdir()
         self.target = self.directory / "verify_a28144.py"
@@ -122,6 +124,36 @@ class CurrentRunnerTests(unittest.TestCase):
             with self.subTest(target=target), self.assertRaisesRegex(ValueError, "exact registered"):
                 self.run_target(target)
         self.assertFalse(self.log.exists())
+
+    def test_posix_and_windows_aliases_require_canonical_target_spelling(self):
+        cases = (
+            (PurePosixPath, "/tmp/real/verifiers/check.py", "/tmp/alias/verifiers/check.py"),
+            (PureWindowsPath, r"C:\Users\runneradmin\Temp\verifiers\check.py",
+             r"C:\Users\RUNNER~1\Temp\verifiers\check.py"),
+            (PureWindowsPath, r"D:\temp\verifiers\check.py", r"C:\temp-link\verifiers\check.py"),
+        )
+        for flavor, canonical, alias in cases:
+            resolved = {flavor(alias): flavor(canonical),
+                        flavor(alias).parent: flavor(canonical).parent}
+
+            # Model only OS resolution/existence so both path flavors exercise
+            # the real admission guard on every platform, without link privileges.
+            class CandidatePath(flavor):
+                def resolve(self):
+                    return type(self)(resolved.get(self, self))
+
+                def is_file(self):
+                    return True
+
+            with self.subTest(path=alias), patch.object(runner, "Path", CandidatePath), \
+                    patch.object(runner.runpy, "run_path") as execute, patch.dict(os.environ):
+                options = {"directory": flavor(alias).parent, "registered": {(1, 0, 0): "check.py"}}
+                runner.run_registered_verifier(canonical, **options)
+                execute.assert_called_once_with(str(flavor(canonical)), run_name="__main__")
+                execute.reset_mock()
+                with self.assertRaisesRegex(ValueError, "exact registered"):
+                    runner.run_registered_verifier(alias, **options)
+                execute.assert_not_called()
 
     @unittest.skipIf(os.name == "nt", "symlink creation requires Windows privileges")
     def test_registered_symlink_cannot_escape_verifier_directory(self):
