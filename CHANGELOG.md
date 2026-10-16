@@ -1,3 +1,9 @@
+# G148 third-person seasoning item contributor candidate
+
+- Restore the original active main-arm SPECIAL item-local half-turn before its display transform, with converted translation and orientation.
+- Add one separate TP item clip and exclusive main-hand active/idle selection for the 65 SPECIAL attachables; preserve existing FP clips, player equations, assets and gameplay.
+- Preserve prior release identities and source witnesses. The relative source correction does not certify absolute socket, camera, native material or rendered-client parity. [Evidence scope](docs/evidence/seasoning-tp-item-inversion-g148.md).
+
 # G147 guarded owner eating properties candidate
 
 - Cache five individually guarded owning-entity eating properties once per attachable frame; preserve zero fallback and existing valid-state behavior.

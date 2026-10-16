@@ -1,4 +1,6 @@
-## Current maintained baseline: 2.8.147
+## Current maintained baseline: 2.8.148
+
+G148 restores the source-owned active third-person SPECIAL seasoning item half-turn through the existing display-frame conversion. The separate main-hand item clip is exclusive with idle hold; first-person curves, player-arm equations, geometry, textures and gameplay remain unchanged. Absolute Java/Bedrock socket composition, left-dominant mapping and native-client acceptance remain open. See [source contract and limits](docs/evidence/seasoning-tp-item-inversion-g148.md).
 
 G147 is a separate guarded-owner-property source candidate. Missing eating properties retain zero fallback without repeated unguarded reads; normal values, poses and source history are preserved. Editor/client acceptance and publication remain pending. See [scope and regression boundary](docs/evidence/owner-eating-property-guards-g147.md).
 

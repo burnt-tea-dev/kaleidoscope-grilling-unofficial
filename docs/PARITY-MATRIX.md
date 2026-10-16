@@ -2,6 +2,8 @@
 
 後續動畫、物品顯示與手持修復統一使用[官方來源優先流程與驗收收據](ANIMATION-ITEM-REPAIR-WORKFLOW.md)。Blockbench 預覽另標 editor evidence，不升格為本表的真人客戶端驗收；現有失敗與未驗證狀態保持原範圍。
 
+2026-10-16：G148 候選補上 Java 主手第三人稱 SPECIAL 調料瓶的獨立 item-local 半轉貢獻，維持 FP、玩家手臂與玩法原值。[來源／矩陣與限制](evidence/seasoning-tp-item-inversion-g148.md)。這一窄來源修補不代表下列 C／D 或完整 Java 對齊已完成；下方版本標記保留各次歷史範圍。
+
 更新：2026-10-15；目前維護來源 **G143 整合候選**。G133 的永久 title 接收方案是歷史候選，不能當作目前 HUD 路由；G137 已恢復原生 Actionbar factory。最近的 [G138 觸控使用入口](STATUS-A2.8.138.md)、G140 錨點／觸控布局／END 隱藏、G141 原生剩餘時間與同步首幀、G142 未選圖像裁剪，見 [CHANGELOG](../CHANGELOG.md) 和[玩家回報](BUGS.md#client-hud食用入口圖形缺失與延遲)。進食時間、結算、動畫及原作素材保留；實際延遲、完整聲畫與操作仍未驗收。
 
 [G143 來源與分層修復收據](evidence/eating-owner-context-20261015.md)及[具體修補](BUGS.md#eating-owner手持串的進食狀態與瓶子錯誤)接通 owning-player 進食狀態、副手同步時鐘及末段隱藏；瓶子等價 RawMessage 比較、失敗掃描節流和食物 preparation 隔離。這些來源結果不補成近鏡、末段平片、native inventory 或 HUD 延遲的真人驗收。

@@ -103,7 +103,8 @@ class HeldMotionExpression(unittest.TestCase):
                             if expression(source, first, slot, hand + 'item', using=using,
                                           season_hand=season_hand, season_phase=season_phase,
                                           pending_hand=pending_hand)]
-                expected = ('tp_' + hand if not first else
+                expected = ('tp_season_right' if not first and not pending and hand == 'right' and season_hand == code and season_phase else
+                            'tp_' + hand if not first else
                             'season_' + hand if season_hand == code and season_phase else
                             'shake_' + hand if pending and using and pending_hand == code else
                             'fp_' + hand)

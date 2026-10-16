@@ -64,6 +64,13 @@ def validate_inventory(actual,document):
  if document!=expected:raise ValueError('Forged runtime delta scope or fingerprints')
  version=json.loads(actual[PREFIXES[0]+'/manifest.json'])['header']['version']
  owner_property_changes=0
+ seasoning_tp_changes=0
+ current_count=len(actual)
+ if version==[2,8,148]:
+  from seasoning_tp_source import predecessor_runtime, ledger as seasoning_ledger
+  actual=predecessor_runtime(actual)
+  seasoning_tp_changes=len(seasoning_ledger()['changes'])
+  version=[2,8,147]
  if version==[2,8,147]:
   guarded=owner_property_expected_files()
   if actual!=guarded:raise ValueError('G147 runtime differs from exact guarded G146 source plus identity')
@@ -81,7 +88,9 @@ def validate_inventory(actual,document):
   operation='add'if old is None else'modify'
   if row['operation']!=operation or row['before_sha256']!=(None if old is None else sha(old)):raise ValueError('Runtime predecessor mismatch: '+p)
   if sha(actual[p])!=row['after_sha256']:raise ValueError('Runtime reviewed postimage mismatch: '+p)
- return {'baseline_files':len(baseline),'current_files':len(actual),'owned_changes':len(changes),'owner_property_layer_changes':owner_property_changes}
+ result={'baseline_files':len(baseline),'current_files':current_count,'owned_changes':len(changes),'owner_property_layer_changes':owner_property_changes}
+ if seasoning_tp_changes:result['seasoning_tp_layer_changes']=seasoning_tp_changes
+ return result
 
 def validate_plate_source():
  # Fixed leaf commands, never commands/imports supplied by manifest content.
@@ -106,7 +115,7 @@ def validate_merged_performance_and_identity():
  for prefix in PREFIXES:
   path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
   version=after['header']['version']
-  assert version in ([2,8,146],[2,8,147]),'Unknown composed release identity'
+  assert version in ([2,8,146],[2,8,147],[2,8,148]),'Unknown composed release identity'
   before['header']['version']=version
   for module in before['modules']:module['version']=version
   for dependency in before.get('dependencies',[]):

@@ -129,6 +129,9 @@ class SprinkleAnchor(unittest.TestCase):
                 before=json.loads(prior);admit_shared_bottle_owner(before['minecraft:attachable']['description'])
                 self.assertEqual(json.loads(path.read_bytes()),before,path)
             elif path.name == 'a286_held.animation.json':self.assertEqual(historical_bytes(path),prior,path)
+            elif version>=(2,8,148) and path.parent==held.RP/'attachables' and path.name.startswith('special_seasoning'):
+                from seasoning_tp_source import reference_bytes
+                self.assertEqual(reference_bytes(path),prior,path)
             else:self.assertEqual(path.read_bytes(),prior,path)
 
 

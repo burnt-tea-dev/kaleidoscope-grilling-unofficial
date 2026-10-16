@@ -7,7 +7,21 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':19,'owner_property_layer_changes':70})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68})
+ def test_seasoning_layer_rejects_mutated_postimages_and_forged_ledger(self):
+  import seasoning_tp_source as tp
+  changes=tp.ledger()['changes']
+  self.assertEqual(len(changes),68)
+  for path in changes:
+   files=dict(self.actual);files[path]+=b'\n'
+   with self.subTest(path=path),self.assertRaises(ValueError):tp.predecessor_runtime(files)
+  path=next(p for p in changes if '/attachables/' in p)
+  self.assertEqual(tp.reference_bytes(path),owner.owner_property_expected_files()[path])
+  with self.assertRaises(ValueError):tp.reference_bytes(path,self.actual[path]+b'\n')
+  forged=copy.deepcopy(tp.ledger());forged['changes'][path]['after_sha256']=owner.sha(self.actual[path]+b'\n')
+  with self.assertRaises(ValueError):tp.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  with self.assertRaises(ValueError):tp.reference_bytes(owner.PREFIXES[0]+'/manifest.json')
+  with self.assertRaises(TypeError):tp.expected_files()['new']=b''
  def test_unrelated_mutation_addition_and_deletions(self):
   unchanged=next(p for p in self.actual if p not in self.doc['changes'])
   for operation in ('mutate','add','delete','delete_owned','revert_owned'):

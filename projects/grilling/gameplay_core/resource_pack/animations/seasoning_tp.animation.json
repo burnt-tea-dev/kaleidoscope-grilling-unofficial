@@ -1,0 +1,27 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.kg_seasoning.item.sprinkle.tp.right": {
+      "loop": true,
+      "bones": {
+        "grip": {
+          "position": [
+            0.0,
+            -0.74242356,
+            -0.8703557
+          ],
+          "rotation": [
+            -111.80446033,
+            20.37701641,
+            -138.96513311
+          ],
+          "scale": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      }
+    }
+  }
+}

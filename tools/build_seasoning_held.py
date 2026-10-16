@@ -11,7 +11,7 @@ import argparse,json,math,sys
 from copy import deepcopy
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'development/gameplay_core'))
-from held_pose_frames import chain,translate,xyz,scale,rigid_inverse,bedrock_rotation,bone_matrix,point,native_skewer_calibration
+from held_pose_frames import chain,translate,xyz,scale,rigid_inverse,bedrock_rotation,bone_matrix,point,native_skewer_calibration,make_pose
 P=ROOT/'projects/grilling/gameplay_core';RP=P/'resource_pack';BP=P/'behavior_pack'
 NS='kaleidoscope_grilling:'
 def load(p):return json.loads(p.read_text())
@@ -69,6 +69,12 @@ def dispatch(desc):
    selectors['shake_'+hand]=fp+' && '+shake+' && ('+season+') == 0'
   selectors['season_'+hand]=fp+' && '+season
   selectors['tp_'+hand]=f"c.is_first_person == 0 && c.item_slot == '{slot}'"
+  if not pending and hand=='right':
+   # SPECIAL main-hand TP replaces the static hold while the source owner is
+   # active. Offhand is not Java's left-dominant main arm; do not conflate them.
+   ids['tp_season_right']='animation.kg_seasoning.item.sprinkle.tp.right'
+   selectors['tp_season_right']=selectors['tp_'+hand]+' && '+season
+   selectors['tp_'+hand]+=' && ('+season+') == 0'
  desc['animations']=ids
  scripts['animate']=[{k:v}for k,v in selectors.items()]
 
@@ -101,9 +107,15 @@ def sprinkle_anchor():
  return {'format_version':'1.8.0','animations':{'animation.kg_seasoning.player.sprinkle_anchor.right':{
   'animation_length':.5,'override_previous_animation':True,'blend_weight':gate,'bones':bones}}}
 
+def tp_sprinkle():
+ # Separate document: preserve all existing FP curve bytes and idle clips.
+ return {'format_version':'1.8.0','animations':{'animation.kg_seasoning.item.sprinkle.tp.right':{
+  'loop':True,'bones':make_pose('bottle','tp','right',tp_item_inversion=True)}}}
+
 def build():
  out={RP/'animations/seasoning_held.animation.json':animations()}
  out[RP/'animations/seasoning_sprinkle_anchor.animation.json']=sprinkle_anchor()
+ out[RP/'animations/seasoning_tp.animation.json']=tp_sprinkle()
  for path in (RP/'attachables').glob('*seasoning*.json'):
   doc=load(path);dispatch(doc['minecraft:attachable']['description']);out[path]=doc
  return out
