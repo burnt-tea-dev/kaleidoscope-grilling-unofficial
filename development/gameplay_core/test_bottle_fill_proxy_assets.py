@@ -118,7 +118,10 @@ class BottleFillProxyAssets(unittest.TestCase):
             d=actual['minecraft:attachable']['description']
             self.assertEqual(d['render_controllers'],['controller.render.kg_bottle_held.dynamic'])
             self.assertEqual(d['geometry'],{'default':'geometry.kg_bottle_held.combined'})
-            if kind=='pending':self.assertIn('shake_right',d['animations']);self.assertIn('shake_left',d['animations'])
-            else:self.assertNotIn('shake_right',d['animations']);self.assertNotIn('shake_left',d['animations'])
+            if kind=='pending':
+                self.assertIn('shake_right',d['animations'])
+                self.assertEqual(d['animations']['fp_left'],'animation.kg_a286.bottle_fp_left')
+            else:self.assertNotIn('shake_right',d['animations'])
+            self.assertNotIn('shake_left',d['animations'])
 
 if __name__=='__main__':unittest.main()

@@ -1,4 +1,6 @@
-## Current maintained baseline: 2.8.148
+## Current maintained baseline: 2.8.149
+
+G149 removes the extra first-person pending-bottle shake from nine offhand attachables, preserving the explicit static hold and sprinkle precedence. Main-hand, TP/player motion, clip payloads, assets and gameplay remain unchanged. Full native host-frame and Java/client parity are still open. See [default-route source proof and limits](docs/evidence/pending-offhand-none-route-g149.md).
 
 G148 restores the source-owned active third-person SPECIAL seasoning item half-turn through the existing display-frame conversion. The separate main-hand item clip is exclusive with idle hold; first-person curves, player-arm equations, geometry, textures and gameplay remain unchanged. Absolute Java/Bedrock socket composition, left-dominant mapping and native-client acceptance remain open. See [source contract and limits](docs/evidence/seasoning-tp-item-inversion-g148.md).
 

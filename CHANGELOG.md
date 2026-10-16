@@ -1,3 +1,9 @@
+# G149 pending offhand NONE-route candidate
+
+- Remove the mirrored FP pending shake only from nine offhand attachables; retain the existing static hold and separate sprinkle precedence.
+- Preserve main-hand, TP/player/clip payloads, assets, BP lifecycle, UUIDs and prior history; use a new paired2.8.149 identity.
+- Full default-path Java evidence supports this contributor removal, while native host-frame and runtime acceptance remain open. [Source contract](docs/evidence/pending-offhand-none-route-g149.md).
+
 # G148 third-person seasoning item contributor candidate
 
 - Restore the original active main-arm SPECIAL item-local half-turn before its display transform, with converted translation and orientation.

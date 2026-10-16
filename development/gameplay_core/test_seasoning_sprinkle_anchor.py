@@ -98,6 +98,12 @@ class SprinkleAnchor(unittest.TestCase):
         paths += list((held.RP / 'attachables').glob('*seasoning*.json'))
         version=tuple(json.loads((held.BP/'manifest.json').read_text())['header']['version'])
         for path in paths:
+            current=path.read_bytes()
+            if version>=(2,8,149) and path.parent==held.RP/'attachables' and path.name.startswith('pending_seasoning'):
+                # Only the exact nine reviewed pending postimages may use G148
+                # predecessor bytes; unrelated paths or mutations fail closed.
+                from pending_offhand_source import reference_bytes as pending_reference_bytes
+                current=pending_reference_bytes(path,current)
             proxy=re.fullmatch(r'(partial|pending)_seasoning_f[1-8]\.attachable',path.stem) if path.parent==held.RP/'attachables' else None
             if proxy:
                 self.assertGreaterEqual(version,(2,8,71))
@@ -106,7 +112,7 @@ class SprinkleAnchor(unittest.TestCase):
                 before=json.loads(subprocess.check_output(['git','show','cba67124:'+original.relative_to(ROOT).as_posix()],cwd=ROOT))
                 before['minecraft:attachable']['description']['identifier']='kaleidoscope_grilling:'+path.name.removesuffix('.attachable.json')
                 if version>=(2,8,119):admit_shared_bottle_owner(before['minecraft:attachable']['description'])
-                self.assertEqual(json.loads(path.read_bytes()),before,path)
+                self.assertEqual(json.loads(current),before,path)
                 continue
             prior=subprocess.check_output(['git','show','cba67124:'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
             if version>=(2,8,68) and path==held.BP/'entities/player.json':
@@ -122,12 +128,12 @@ class SprinkleAnchor(unittest.TestCase):
                         # Same property names, type/default/sync and native
                         # player bytes; only ten owned hand ranges are wider.
                         for index in range(10):props[channel_name(hand,index)]['range']=[0,WORD_A_MAX if index%2==0 else WORD_B_MAX]
-                self.assertEqual(json.loads(path.read_bytes()),before,path)
+                self.assertEqual(json.loads(current),before,path)
             elif version>=(2,8,119) and path.parent==held.RP/'attachables' and path.name in ('empty_seasoning_bottle.attachable.json','pending_seasoning.attachable.json'):
                 # The exact owner marker/decoder delta cannot alter the old
                 # animation, pose, texture, material or renderer selections.
                 before=json.loads(prior);admit_shared_bottle_owner(before['minecraft:attachable']['description'])
-                self.assertEqual(json.loads(path.read_bytes()),before,path)
+                self.assertEqual(json.loads(current),before,path)
             elif path.name == 'a286_held.animation.json':self.assertEqual(historical_bytes(path),prior,path)
             elif version>=(2,8,148) and path.parent==held.RP/'attachables' and path.name.startswith('special_seasoning'):
                 from seasoning_tp_source import reference_bytes

@@ -3,7 +3,9 @@
 Derived from final PR125 head 769f8b2e08233e521536e93803045174baa751a5,
 tools/build_seasoning_held.py (blob f724de7b94d4af9d26e94d6651e8f4779dbc7a2c).
 Keep the established Bedrock idle anchor; no player socket compensation.
-Java main-hand curves are mirrored only as an explicit offhand fallback.
+Sprinkle retains its explicit mirrored offhand fallback. The historical left
+shake curve is preserved, but pending offhand use selects the static hold:
+Java's uncanceled OFF_HAND / UseAnim.NONE branch has no custom shake.
 This is a native-unaccepted candidate, not a camera-space parity claim.
 """
 from pathlib import Path
@@ -60,11 +62,12 @@ def dispatch(desc):
   fp=f"c.is_first_person == 1 && c.item_slot == '{slot}'"
   season=f"(v.kg_season_season_hand == {code} && v.kg_season_season_phase != 0)"
   shake=f"(c.owning_entity->q.is_using_item && v.kg_season_pending_hand == {code})" if pending else '0'
+  shaking=pending and hand=='right'
   ids['fp_'+hand]='animation.kg_a286.bottle_fp_'+hand
   ids['tp_'+hand]='animation.kg_a286.bottle_tp_'+hand
   ids['season_'+hand]='animation.kg_seasoning.item.sprinkle.'+hand
-  selectors['fp_'+hand]=fp+' && ('+season+') == 0'+(' && ('+shake+') == 0' if pending else '')
-  if pending:
+  selectors['fp_'+hand]=fp+' && ('+season+') == 0'+(' && ('+shake+') == 0' if shaking else '')
+  if shaking:
    ids['shake_'+hand]='animation.kg_seasoning.item.shake.'+hand
    selectors['shake_'+hand]=fp+' && '+shake+' && ('+season+') == 0'
   selectors['season_'+hand]=fp+' && '+season

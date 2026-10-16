@@ -7,13 +7,34 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11})
+ def test_pending_offhand_layer_rejects_mutations_and_preserves_exact_predecessor(self):
+  import pending_offhand_source as pending
+  import seasoning_tp_source as tp
+  changes=pending.ledger()['changes']
+  self.assertEqual(set(changes),pending.PATHS|{prefix+'/manifest.json'for prefix in owner.PREFIXES})
+  self.assertEqual(pending.predecessor_runtime(self.actual),tp.expected_files())
+  for path in changes:
+   files=dict(self.actual);files[path]+=b'\n'
+   with self.subTest(path=path),self.assertRaises(ValueError):pending.predecessor_runtime(files)
+  for path in pending.PATHS:
+   self.assertEqual(pending.reference_bytes(path),tp.expected_files()[path])
+   with self.subTest(path=path),self.assertRaises(ValueError):pending.reference_bytes(path,self.actual[path]+b'\n')
+  path=next(iter(pending.PATHS));forged=copy.deepcopy(pending.ledger())
+  forged['changes'][path]['after_sha256']=owner.sha(self.actual[path]+b'\n')
+  with self.assertRaises(ValueError):pending.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  for path in (owner.PREFIXES[0]+'/manifest.json',owner.PREFIXES[1]+'/attachables/special_seasoning.attachable.json'):
+   with self.assertRaises(ValueError):pending.reference_bytes(path)
+  with self.assertRaises(TypeError):pending.expected_files()['new']=b''
  def test_seasoning_layer_rejects_mutated_postimages_and_forged_ledger(self):
   import seasoning_tp_source as tp
+  from pending_offhand_source import predecessor_runtime
+  actual=predecessor_runtime(self.actual)
+  self.assertEqual(tp.predecessor_runtime(actual),owner.owner_property_expected_files())
   changes=tp.ledger()['changes']
   self.assertEqual(len(changes),68)
   for path in changes:
-   files=dict(self.actual);files[path]+=b'\n'
+   files=dict(actual);files[path]+=b'\n'
    with self.subTest(path=path),self.assertRaises(ValueError):tp.predecessor_runtime(files)
   path=next(p for p in changes if '/attachables/' in p)
   self.assertEqual(tp.reference_bytes(path),owner.owner_property_expected_files()[path])

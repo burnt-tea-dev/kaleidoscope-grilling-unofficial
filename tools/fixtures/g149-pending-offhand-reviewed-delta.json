@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "predecessor_version": [
+    2,
+    8,
+    148
+  ],
+  "version": [
+    2,
+    8,
+    149
+  ],
+  "scope": "Nine PENDING FP offhand attachables remove only shake_left dispatch and its idle exclusion, retaining explicit static hold and sprinkle precedence. Paired version identity only otherwise; all BP gameplay, clips, geometry, UV, PNG, materials, TP and main-hand source fields remain exact. Full host-frame/runtime parity is not established.",
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "operation": "modify",
+      "before_sha256": "2172e2de395f65752d320b8366f596e8d63ec405617f27909ed31cb44e7fa4b8",
+      "after_sha256": "c09083fd13e39b3b8166732b650e02429fd1016a8f22c3a6718ccc417516e148"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "80b03f616b6e6e634c4273ed5b1254a090576ac03204bf841fa3681566a61fb1",
+      "after_sha256": "ec9f750a446af56dcbd630a3beb3861094b76523e9b2c16a97d08e9e44b84a0b"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f1.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "e7f2877031c8781adb57e68098a94bd3a2407985e9bd35e9ef95126cdee59e8d",
+      "after_sha256": "135573aa643f99e91e5f374c4733d23c802959c7e4bcf447b9915e296b41e078"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f2.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "4ff839e765fdf3916c170b323ba612e6c9752ca85705fe463df6264cd02b5b70",
+      "after_sha256": "2348c58378002d355cf66f3b8729225052e582d51c9f6347ef2551388609edd1"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f3.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "29c6a4b535357d494bf00b838f1027153bc4c74b78d6598bad2a014c54b01e32",
+      "after_sha256": "cea745c77d0023a6ebbfd7d5a31f60ea8e06ad63422621f072274dd864a3e3a0"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f4.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "3d6be98ad5a0d0fbcf139e2dc529c19744286703d9d6cbd2e710328abecedce5",
+      "after_sha256": "ac01a16c167d12c744a0adef28aca14444c1baceba96507054ca38da1be64027"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f5.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "60d586b426f750e403eccb00afca0f4492a4dce7e2e20aebfe9224d1645290b2",
+      "after_sha256": "9899acdef76253c383269c2b30e482dab8a0bf5fcb938fb9d3b3548ad10bb76a"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f6.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "94464eaf90f345af0469ad104d39272e26aa0570943603debcd5b9521fa498c6",
+      "after_sha256": "c273896b331dfb895fd2e9e7aa05beb9fe0c6165484a9c26cab63f586b87e762"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f7.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "6d3e7fde3eb01f762d148c0edc9c4aa1eb7c05a5ec0dcfd021b126103a698460",
+      "after_sha256": "bda8313c254d074123f9e674804bb9dfe736e124bef4089cca655b3e0f376523"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/pending_seasoning_f8.attachable.json": {
+      "operation": "modify",
+      "before_sha256": "c82dd0fd71b73832a07fa85a0dc4b0d7f1480599f283d1c99d450cb738ae507a",
+      "after_sha256": "e765aa26e62279a2a577ec0b1eb2a368b030552ca3008733f905fc1d526852be"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "operation": "modify",
+      "before_sha256": "d6541ad33f0cbcde19f050e2afebf7c2d8fad47ad4bdcf4c21830bace3a87de9",
+      "after_sha256": "e916fb549e7195ba9f8a3b3f55fff909b7ce2975c8dc029a76caf6d2d15d53b0"
+    }
+  }
+}

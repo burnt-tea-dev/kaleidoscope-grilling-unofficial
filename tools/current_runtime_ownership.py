@@ -65,7 +65,13 @@ def validate_inventory(actual,document):
  version=json.loads(actual[PREFIXES[0]+'/manifest.json'])['header']['version']
  owner_property_changes=0
  seasoning_tp_changes=0
+ pending_offhand_changes=0
  current_count=len(actual)
+ if version==[2,8,149]:
+  from pending_offhand_source import predecessor_runtime, ledger as pending_ledger
+  actual=predecessor_runtime(actual)
+  pending_offhand_changes=len(pending_ledger()['changes'])
+  version=[2,8,148]
  if version==[2,8,148]:
   from seasoning_tp_source import predecessor_runtime, ledger as seasoning_ledger
   actual=predecessor_runtime(actual)
@@ -90,6 +96,7 @@ def validate_inventory(actual,document):
   if sha(actual[p])!=row['after_sha256']:raise ValueError('Runtime reviewed postimage mismatch: '+p)
  result={'baseline_files':len(baseline),'current_files':current_count,'owned_changes':len(changes),'owner_property_layer_changes':owner_property_changes}
  if seasoning_tp_changes:result['seasoning_tp_layer_changes']=seasoning_tp_changes
+ if pending_offhand_changes:result['pending_offhand_layer_changes']=pending_offhand_changes
  return result
 
 def validate_plate_source():
@@ -115,7 +122,7 @@ def validate_merged_performance_and_identity():
  for prefix in PREFIXES:
   path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
   version=after['header']['version']
-  assert version in ([2,8,146],[2,8,147],[2,8,148]),'Unknown composed release identity'
+  assert version in ([2,8,146],[2,8,147],[2,8,148],[2,8,149]),'Unknown composed release identity'
   before['header']['version']=version
   for module in before['modules']:module['version']=version
   for dependency in before.get('dependencies',[]):
