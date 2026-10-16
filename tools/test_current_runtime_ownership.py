@@ -15,6 +15,8 @@ class RuntimeOwnership(unittest.TestCase):
   import stable_host_source as stable
   import pending_offhand_source as pending
   self.assertEqual(self.g149,pending.expected_files())
+  self.assertEqual(stable.preceding_host_spec(),json.loads(self.g149[stable.BP+'/host-extensions/board-api.json']))
+  with self.assertRaises(ValueError):stable.preceding_host_spec((stable.ROOT/stable.BP/'host-extensions/board-api.json').read_bytes()+b'\n')
   for path in stable.RUNTIME_PATHS:
    files=dict(self.actual);files[path]+=b'\n'
    with self.subTest(path=path),self.assertRaises(ValueError):stable.predecessor_runtime(files)

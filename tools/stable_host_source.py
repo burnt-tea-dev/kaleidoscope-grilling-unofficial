@@ -88,6 +88,11 @@ def reference_bytes(path, actual=None):
     return before
 
 
+def preceding_host_spec(actual=None):
+    """Historical API gates inspect G149 only after exact G150 admission."""
+    return json.loads(reference_bytes(BP + '/host-extensions/board-api.json', actual))
+
+
 @lru_cache(maxsize=1)
 def expected_files():
     files = dict(preceding_files())
