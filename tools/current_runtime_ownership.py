@@ -8,7 +8,7 @@ BASE='c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f'
 PREFIXES=('projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack')
 MANIFEST=ROOT/'tools/fixtures/current-runtime-ownership.json'
 # Reviewed scope/postimages are code-owned, not authority supplied by a manifest.
-MANIFEST_SHA256='1916462983237cda710ec5a70728704065a17d5a6bb54a5c3be41ea8749758b7'
+MANIFEST_SHA256='69376a192431ab04d25ae03193ede570b5ead3b54aa05ba935456617a227e2b0'
 def sha(data):return hashlib.sha256(data).hexdigest()
 @lru_cache(maxsize=1)
 def frozen_runtime_files():
@@ -44,7 +44,7 @@ def validate_inventory(actual,document):
  if changed!=set(changes):raise ValueError('Missing or undeclared runtime delta')
  for p,row in changes.items():
   path=Path(p)
-  if path.is_absolute()or'..'in path.parts or row['owner'] not in {'plate_special_visuals','g144_performance','g145_identity'}:raise ValueError('Unowned runtime path')
+  if path.is_absolute()or'..'in path.parts or row['owner'] not in {'plate_special_visuals','g144_performance','g146_identity','plate_use_arm_visibility'}:raise ValueError('Unowned runtime path')
   old=baseline.get(p)
   operation='add'if old is None else'modify'
   if row['operation']!=operation or row['before_sha256']!=(None if old is None else sha(old)):raise ValueError('Runtime predecessor mismatch: '+p)
@@ -56,6 +56,7 @@ def validate_plate_source():
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from verification_session import run_checked_once
  commands=[
+  [sys.executable,'-B','tools/test_plate_use_arm_visibility.py'],
   [sys.executable,'-B','tools/build_plate_display.py','--check'],
   [sys.executable,'-B','tools/build_plate_held.py','--check'],
   [sys.executable,'-B','development/gameplay_core/test_held_render_contracts.py','PlateSpecialContracts'],
@@ -72,11 +73,11 @@ def validate_merged_performance_and_identity():
  assert (ROOT/queue).read_bytes()==reviewed_queue
  for prefix in PREFIXES:
   path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
-  before['header']['version']=[2,8,145]
-  for module in before['modules']:module['version']=[2,8,145]
+  before['header']['version']=[2,8,146]
+  for module in before['modules']:module['version']=[2,8,146]
   for dependency in before.get('dependencies',[]):
-   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=[2,8,145]
-  assert after==before,'G145 identity changes fields outside exact owned versions: '+path
+   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=[2,8,146]
+  assert after==before,'G146 identity changes fields outside exact owned versions: '+path
 
 
 def verify_current_inventory():

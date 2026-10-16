@@ -1,3 +1,10 @@
+# G146 local plate-use arm source candidate
+
+- Suppress the generic left-arm/sleeve use fallback only for active first-person main-hand skewer plate with empty offhand.
+- Preserve map branches, occupied offhand, all skewer routes, transforms, G144 performance, G145 composition and CI fixes.
+- Keep strict current/historical producer separation; no native acceptance, publication or deployment.
+- G145 fingerprints remain immutable; G146 is a separate local release identity.
+
 # G145 composed skewer Java-source repair candidate
 
 - Preserve merged G144 indexed deadline work and synchronous effect snapshots.

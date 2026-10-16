@@ -57,11 +57,13 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
  def test_all_other_runtime_blobs_unchanged_after_inverse(self):
   from current_runtime_ownership import verify_current_inventory,frozen_runtime_bytes
   verify_current_inventory()
-  base=layer.contract()['base_commit'];owned={str(layer.PLAYER.relative_to(ROOT)),'projects/grilling/gameplay_core/resource_pack/models/entity/java_eating_piece/grilled_caterpillar_skewer.geo.json','projects/grilling/gameplay_core/resource_pack/textures/java_eating_piece/grilled_caterpillar_skewer.png'}
+  from frozen_offhand_source import producer
+  historical=producer()
+  base=historical.contract()['base_commit'];owned={str(layer.PLAYER.relative_to(ROOT)),'projects/grilling/gameplay_core/resource_pack/models/entity/java_eating_piece/grilled_caterpillar_skewer.geo.json','projects/grilling/gameplay_core/resource_pack/textures/java_eating_piece/grilled_caterpillar_skewer.png'}
   for line in subprocess.check_output(['git','ls-tree','-r',base,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines():
    meta,p=line.split('\t');data=frozen_runtime_bytes(p)
    if p==str(layer.MAIN.relative_to(ROOT)):data=layer.restore_main(data.decode()).encode()
-   elif p in layer.contract()['predecessors']:data=(json.dumps(layer.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
+   elif p in historical.contract()['predecessors']:data=(json.dumps(historical.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,meta.split()[2],p)
   from eating_route_extraction import validate_resolver
   owned.add(validate_resolver())

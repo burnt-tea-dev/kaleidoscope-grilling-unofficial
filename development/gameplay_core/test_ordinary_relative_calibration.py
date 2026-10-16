@@ -89,13 +89,15 @@ for(const row of rows)for(const id of row.ids)for(let flags=0;flags<128;flags++)
   from eating_route_extraction import validate_resolver
   offhand_paths.add(validate_resolver())
   # Current additions and deletions are covered by the shared exact inventory guard.
+  from frozen_offhand_source import producer
+  historical=producer()
   paths=subprocess.check_output(['git','ls-tree','-r',BASE,'projects/grilling/gameplay_core/behavior_pack','projects/grilling/gameplay_core/resource_pack'],cwd=ROOT,text=True).splitlines()
   for row in paths:
    meta,p=row.split('\t');expected=meta.split()[2]
    if p==str(layer.MAIN.relative_to(ROOT)):continue
    data=frozen_runtime_bytes(p)
-   if p in offhand.contract()['predecessors']:
-    data=(json.dumps(offhand.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
+   if p in historical.contract()['predecessors']:
+    data=(json.dumps(historical.strip_document(json.loads(data)),ensure_ascii=False,indent=2)+'\n').encode()
    if p==str(tp.PLAYER.relative_to(ROOT)):
     restored=tp.transform(json.loads(data),inverse=True);data=(json.dumps(restored,indent=2)+'\n').encode()
    actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();self.assertEqual(actual,expected,p)

@@ -360,17 +360,18 @@ class SourceReceiptTests(unittest.TestCase):
                          ["verify_visual_refs.py", "verify_slime_frames.py"])
 
     def test_current_slime_checks_are_required_before_receipt(self):
-        with patch.object(gate, "generic_gate", return_value=(2, 8, 145, 1)), self.mock_functional_commands() as commands:
-            self.main("--write-source-validation", self.receipt)
-        self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
-            "verify_visual_refs.py", "verify_slime_frames.py", "verify_a28145.py",
-            "verify_failure_skewer.py", "test_ordinary_relative_calibration.py",
-            "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
-            "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
-            "test_eating_compiler_pipeline.py",
-            "test_current_runtime_ownership.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
-        ])
-        gate.require_source_validation(self.receipt)
+        for patch_version in (145, 146):
+            with patch.object(gate, "generic_gate", return_value=(2, 8, patch_version, 1)), self.mock_functional_commands() as commands:
+                self.main("--write-source-validation", self.receipt)
+            self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [
+                "verify_visual_refs.py", "verify_slime_frames.py", f"verify_a28{patch_version}.py",
+                "verify_failure_skewer.py", "test_ordinary_relative_calibration.py",
+                "test_tp_java_item_fallback.py", "test_offhand_eating_projection.py",
+                "test_eating_route_resolver.mjs", "test_eating_route_extraction.py",
+                "test_eating_compiler_pipeline.py",
+                "test_current_runtime_ownership.py", "test_composed_skewer_witnesses.py", "test_all_skewer_integration.mjs",
+            ])
+            gate.require_source_validation(self.receipt)
 
     def test_receipt_runner_capability_and_standalone_command_keep_original_arguments(self):
         for receipt, compiled in ((False,False), (False,True), (True,False), (True,True)):

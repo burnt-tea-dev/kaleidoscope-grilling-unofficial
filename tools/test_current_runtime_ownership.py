@@ -7,7 +7,7 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':18})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':19})
  def test_unrelated_mutation_addition_and_deletions(self):
   unchanged=next(p for p in self.actual if p not in self.doc['changes'])
   for operation in ('mutate','add','delete','delete_owned','revert_owned'):
@@ -77,11 +77,11 @@ class RuntimeOwnership(unittest.TestCase):
   sys.path.insert(0,str(owner.ROOT/'development/gameplay_core'));import verification_session
   with patch.object(owner,'verify_current_inventory',return_value={'ok':True}),patch.object(verification_session,'run_checked_once')as run:
    owner.verify_current_runtime()
-  self.assertEqual(run.call_count,4)
+  self.assertEqual(run.call_count,5)
   commands=[c.args[0]for c in run.call_args_list]
-  self.assertEqual([Path(c[2]).name for c in commands[:3]],['build_plate_display.py','build_plate_held.py','test_held_render_contracts.py'])
-  self.assertEqual(commands[2][-1],'PlateSpecialContracts')
-  self.assertEqual(commands[3][0:2],['node','--test'])
+  self.assertEqual([Path(c[2]).name for c in commands[:4]],['test_plate_use_arm_visibility.py','build_plate_display.py','build_plate_held.py','test_held_render_contracts.py'])
+  self.assertEqual(commands[3][-1],'PlateSpecialContracts')
+  self.assertEqual(commands[4][0:2],['node','--test'])
  def test_new_owner_semantics_reject_performance_queue_and_manifest_drift(self):
   read=Path.read_bytes
   main=owner.ROOT/owner.PREFIXES[0]/'scripts/main.js'

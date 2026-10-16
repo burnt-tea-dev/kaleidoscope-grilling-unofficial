@@ -100,15 +100,21 @@
     },
     "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
       "operation": "modify",
-      "owner": "g145_identity",
+      "owner": "g146_identity",
       "before_sha256": "2c58fa0909d9bf5a9aa0fd02523e58463fb3c350bde6cbb3938c3cb543fd6a26",
-      "after_sha256": "ae9ced9cca87b40fd2c29cd35bc0bde81e4014f470b4934ae8da91c56558aa3f"
+      "after_sha256": "f8cc835dc94304d90aee5cc61e6c079e170538892e250fac243f579e9c9faaef"
     },
     "projects/grilling/gameplay_core/resource_pack/manifest.json": {
       "operation": "modify",
-      "owner": "g145_identity",
+      "owner": "g146_identity",
       "before_sha256": "e3f290b3def67ad2a2ebc6e4db573d57db7d1f2ac90cfec96f7c7df01c94054a",
-      "after_sha256": "75de2cd1d597ee99ffc7f881e93b5b60bd6c18ba647c770017ccbe8f1a064961"
+      "after_sha256": "d9cb65599b8ae617df934c9033c254382132cbfbf87087dd72fb6f84e0b89f7a"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/java_eating_player.render_controllers.json": {
+      "operation": "modify",
+      "owner": "plate_use_arm_visibility",
+      "before_sha256": "2ef50ad7fee44618eef54b4b603944bf4d6e8e69cd166b4482bd34a1fe13d09a",
+      "after_sha256": "7a5015f106de1c87081b15a90fbf787148402e1b02619d097ff8e56a47a4b54e"
     }
   }
 }

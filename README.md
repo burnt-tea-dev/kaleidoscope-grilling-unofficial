@@ -1,4 +1,6 @@
-## Current maintained baseline: 2.8.145
+## Current maintained baseline: 2.8.146
+
+G146 is a local plate-use left-arm correction retaining the complete G145 composition and reviewed CI fixes. It has no publication request or native acceptance. See [source scope](docs/evidence/plate-use-arm-reconstruction-20261016.md).
 
 G145 is a composed source candidate retaining merged G144 performance. Canonical/Windows, family and native acceptance remain pending; no release is requested. See [composition scope](docs/evidence/g145-composed-source-20261015.md).
 

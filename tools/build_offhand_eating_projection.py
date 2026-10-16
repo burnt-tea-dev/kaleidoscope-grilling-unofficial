@@ -77,6 +77,9 @@ def expected_document(path):
   else:
    desc['geometry']['java_piece']='geometry.kg_java_dual.piece.grilled_caterpillar_skewer';desc['textures']['java_piece']='textures/java_eating_piece/grilled_caterpillar_skewer'
    desc['render_controllers'].append('controller.render.kg_java_eating.piece');desc['scripts']['pre_animation'].append('v.kg_java_piece_visible = ('+active+');')
+ if path==CONTROL:
+  from plate_use_arm_visibility import apply
+  d=apply(d)
  return d
 def strip_document(value):
  """Called before historical owner/context decoding; reject entire mutated payloads."""
