@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "review_date": "2026-10-16",
+  "repository": "casama233/kaleidoscope-grilling-unofficial",
+  "source_commit": "e6dea2fb2388c8d750fa309dc36dccaabff9a16c",
+  "targets": [
+    {
+      "path": "tools/formatting_hud_ui.py",
+      "source_blob": "d8ee32a883ddc2a0614ea25ad06043c3f716aeef",
+      "functions": [
+        {
+          "name": "contains",
+          "first_line": 7,
+          "last_line": 8
+        },
+        {
+          "name": "capture",
+          "first_line": 10,
+          "last_line": 14
+        },
+        {
+          "name": "bind_channel",
+          "first_line": 16,
+          "last_line": 25
+        }
+      ],
+      "decision": "remove unreferenced module"
+    },
+    {
+      "path": "tools/hud_channel_probe.py",
+      "source_blob": "e26bad27297f26fa250b36ea67940bb77a8eaac7",
+      "functions": [
+        {
+          "name": "contains",
+          "first_line": 10,
+          "last_line": 11
+        },
+        {
+          "name": "probe_label",
+          "first_line": 13,
+          "last_line": 26
+        },
+        {
+          "name": "install_catalog_probe",
+          "first_line": 28,
+          "last_line": 36
+        },
+        {
+          "name": "install_bridge_probe",
+          "first_line": 38,
+          "last_line": 47
+        }
+      ],
+      "decision": "remove unreferenced module"
+    }
+  ],
+  "reference_review": {
+    "scope": "Tracked source, tests, workflow and documentation in the three public canonical repositories plus the optional private integration; current maintenance entry was also checked. Private source is not published here.",
+    "retired_hud_module_or_entrypoint_references_outside_the_four_retired_modules": 0,
+    "private_source_kept_private": true
+  },
+  "production_reachability": {
+    "basis": "Source-to-export exclusion: these Python authoring helpers are outside the canonical BP/RP roots and absent from every pack in the admitted full-family runtime. This is structural exclusion, not a sampled zero-call result.",
+    "full_family_reviewed_receipt_sha256": "c563149cea7e4413e67da2a37777ed583aa1ed0d739b3160b7e9130bc9f91bd3",
+    "admitted_pack_count": 42,
+    "python_files_in_admitted_packs": 0,
+    "export_roots": {
+      "BP": {
+        "path": "projects/grilling/gameplay_core/behavior_pack",
+        "git_tree": "a0be99f3f3fe3912e8a07ddd90f45a2d0b39aede"
+      },
+      "RP": {
+        "path": "projects/grilling/gameplay_core/resource_pack",
+        "git_tree": "29059b46b531b0a3cab07322369101c2acadf4f6"
+      }
+    },
+    "runtime_call_counters_available": false,
+    "profile_proves_zero_calls": false
+  },
+  "preserved": {
+    "runtime_roots": true,
+    "version_and_manifests": true,
+    "release_history_and_baseline": true,
+    "existing_hud_or_geometry_contracts": true,
+    "historical_sources": true
+  },
+  "external_sources": {
+    "slack": "not_connected",
+    "statsig": "not_connected",
+    "native_profile": "Existing short samples do not establish per-function zero usage; no new profiler or telemetry changes were made."
+  },
+  "limits": [
+    "No unused gameplay, feature flag or saved-data compatibility code is deleted on the basis of missing samples.",
+    "This review covers the pinned source and admitted runtime; it is not a claim about every external manual consumer or all future tools."
+  ],
+  "validation": {
+    "targeted_existing_check": "python -B tools/test_eating_hud_layout.py",
+    "exit_code": 0,
+    "required_ci": "Actual pull request checks are authoritative; no successful unchanged suite is repeated locally.",
+    "new_tests_added": false,
+    "runtime_candidate_or_live_restart": false
+  }
+}
