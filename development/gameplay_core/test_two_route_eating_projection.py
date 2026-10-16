@@ -32,7 +32,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147), (2, 8, 148)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147), (2, 8, 148), (2, 8, 149)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
