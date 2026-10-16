@@ -23,7 +23,7 @@ class HeldMotionExpression(unittest.TestCase):
             self.evaluate("q.has_property('kaleidoscope_grilling:unknown')")
         description = json.loads((RP / 'attachables/grilled_caterpillar_skewer.attachable.json').read_text())['minecraft:attachable']['description']
         for state, expected in (({}, ['probe_one_right']),
-                                ({'has_projection': False}, ['fp_right', 'eat_right']),
+                                ({'has_projection': False}, ['fp_right']),
                                 ({'offhand': 1}, ['fp_right', 'eat_right'])):
             selected = [key for row in description['scripts']['animate'] for key, query in row.items()
                         if self.evaluate(query, using=True, eat_profile=1, **state)]
@@ -37,6 +37,16 @@ class HeldMotionExpression(unittest.TestCase):
                 self.assertFalse(self.evaluate(source, has_projection=False))
         with self.assertRaises((AssertionError, SyntaxError)):
             self.evaluate("c.owning_entity->q.has_property('kaleidoscope_grilling:unknown')")
+
+    def test_only_known_owner_cache_inputs_and_absent_property_zero(self):
+        for name, value in (('eat_profile', 3), ('eat_hand', 1), ('eat_projection', 1)):
+            source = 'v.kg_owner_' + name
+            self.assertTrue(self.evaluate(source + ' == ' + str(value), using=True))
+            self.assertTrue(self.evaluate(source + ' == 0', using=True, has_projection=False))
+        for source in ('v.kg_owner_unknown == 0', 'v.kg_owner_eat_hand_extra == 0',
+                       'variable.kg_owner_eat_hand == 0', 'other.v.kg_owner_eat_hand == 0'):
+            with self.subTest(source=source), self.assertRaises((AssertionError, SyntaxError)):
+                self.evaluate(source)
 
     def test_legacy_use_query_and_default_inactive_motion(self):
         self.assertTrue(self.evaluate('q.is_using_item', using=True))

@@ -109,6 +109,31 @@ class SlimeFrameSelector(unittest.TestCase):
             with self.assertRaises(AssertionError):
                 reference_bytes(ROOT / ATTACHABLE_PATH, (json.dumps(changed, indent=2)+'\n').encode())
 
+    def test_guarded_continuation_preserves_frozen_slime_postimage(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from eating_owner_properties import document
+        from slime_frame_source_witness import reference_bytes, pinned_bytes, REVIEWED_SLIME_BASE, PREVIOUS_SLIME_BASE, ATTACHABLE_PATH
+        path = ROOT / ATTACHABLE_PATH
+        historical = pinned_bytes(REVIEWED_SLIME_BASE, ATTACHABLE_PATH)
+        guarded = document(json.loads(historical))
+        encoded = lambda doc: (json.dumps(doc, ensure_ascii=False, indent=2)+'\n').encode()
+        self.assertEqual(reference_bytes(path, encoded(guarded)), pinned_bytes(PREVIOUS_SLIME_BASE, ATTACHABLE_PATH))
+        self.assertEqual(reference_bytes(path, historical), pinned_bytes(PREVIOUS_SLIME_BASE, ATTACHABLE_PATH))
+        for mutation in ('missing_guard', 'wrong_fallback', 'unrelated'):
+            bad = copy.deepcopy(guarded)
+            description = bad['minecraft:attachable']['description']
+            if mutation == 'missing_guard':
+                description['scripts']['pre_animation'].pop(0)
+            elif mutation == 'wrong_fallback':
+                description['scripts']['pre_animation'][0] = description['scripts']['pre_animation'][0].replace(': 0)', ': 1)')
+            else:
+                description['materials']['default'] = 'unrelated'
+            with self.subTest(mutation=mutation), self.assertRaisesRegex(AssertionError, 'reviewed complete bytes'):
+                reference_bytes(path, encoded(bad))
+        with self.assertRaisesRegex(AssertionError, 'reviewed complete bytes'):
+            reference_bytes(path, encoded(guarded)+b' ')
+
     def test_projection_admission_preserved_and_extra_alias_mutations_rejected(self):
         import sys
         sys.path.insert(0, str(ROOT / 'tools'))

@@ -11,6 +11,7 @@ import build_java_eating_projection as generator
 from public_source_witness import public_json,assert_public_bytes
 from test_eating_observer_projection import node
 from eating_owner_context import expression
+from eating_owner_properties import predecessor_document as owner_property_predecessor
 
 
 class ProjectionAdmission(unittest.TestCase):
@@ -65,11 +66,12 @@ for(const {id,profile,description:d} of rows)for(const hand of ['right','left'])
  let held=id,p={eat_projection:1,eat_profile:{ONE:1,TWO:2,THREE:3,THREE_ALT:4,FOUR:5}[profile],eat_hand:hand==='right'?1:2};
  const slot=hand==='right'?'slot.weapon.mainhand':'slot.weapon.offhand';
  const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
- property:name=>p[name.split(':')[1]],is_item_name_any:(s,...ids)=>s===slot&&ids.includes(held)};
+ has_property:name=>Object.hasOwn(p,name.split(':')[1]),property:name=>p[name.split(':')[1]],is_item_name_any:(s,...ids)=>s===slot&&ids.includes(held)};
  const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand',owning_entity:q},variable={is_first_person:1};
  const item=d.scripts.animate.find(row=>row['fp_eat_'+hand])['fp_eat_'+hand];
  const player=players['animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+hand].blend_weight;
- const active=expression=>Boolean(new Function('q','c','variable','return '+expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,variable));
+ const v={},math={clamp:(n,lo,hi)=>Math.max(lo,Math.min(hi,n))};
+ const active=expression=>{evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);return Boolean(new Function('q','c','variable','v','return '+expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,variable,v));};
  if(!supportsJavaEatingProjection(id,profile)||!active(item)||!active(player))throw Error('Actual renderer missing '+id);
  for(const other of ['minecraft:apple','kaleidoscope_grilling:secret_skewer_native_plain',id.replace('_java_three_alt','')]){
   if(other===id)continue;held=other;
@@ -148,10 +150,12 @@ for(const {id,code,d} of rows)for(const hand of ['right','left']){
  let held=id,using=true,helper=0,projection=1,posture=0;
  const slot=hand==='right'?'slot.weapon.mainhand':'slot.weapon.offhand';
  const q={get is_using_item(){return using},get is_sneaking(){return posture},is_swimming:0,is_gliding:0,is_riding:0,
+ has_property:n=>['eat_projection','eat_profile','eat_hand'].includes(n.split(':')[1]),
  property:n=>({eat_projection:projection,eat_profile:code,eat_hand:hand==='right'?1:2})[n.split(':')[1]],
  is_item_name_any:(s,...ids)=>s===slot&&ids.includes(held),is_item_equipped:()=>helper};
  const c={is_first_person:1,item_slot:hand==='right'?'main_hand':'off_hand',owning_entity:q};
- const evaluate=alias=>Boolean(new Function('q','c','return '+d.scripts.animate.find(r=>alias in r)[alias].replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c));
+ const v={},math={clamp:(n,lo,hi)=>Math.max(lo,Math.min(hi,n))};
+ const evaluate=alias=>{evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);return Boolean(new Function('q','c','v','return '+d.scripts.animate.find(r=>alias in r)[alias].replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,v));};
  const active=()=>evaluate('fp_eat_'+hand),idle=()=>evaluate('fp_'+hand),legacy=()=>evaluate((code===4?'eat_alt_':'eat_')+hand);
  if(!active()||idle()||legacy())throw Error('Secret active/idle/legacy layered');
  helper=1;if(active()||!idle()||!legacy())throw Error('Secret suppressed occupied helper or lost fallback');helper=0;
@@ -169,7 +173,7 @@ for(const {id,code,d} of rows)for(const hand of ['right','left']){
             from build_review_three_eating_projection import predecessor_document
             path=generator.RP/'attachables'/(name+'.attachable.json')
             canonical=predecessor_document(path,json.loads(path.read_text()))['minecraft:attachable']['description']
-            alt=json.loads((generator.RP/'attachables'/(name+generator.ALT_SUFFIX+'.attachable.json')).read_text())['minecraft:attachable']['description']
+            alt=owner_property_predecessor(json.loads((generator.RP/'attachables'/(name+generator.ALT_SUFFIX+'.attachable.json')).read_text()))['minecraft:attachable']['description']
             self.assertFalse(any(key.startswith('fp_eat_') for key in canonical['animations']))
             self.assertEqual(canonical['geometry'],alt['geometry'])
             self.assertEqual(canonical['textures'],alt['textures'])

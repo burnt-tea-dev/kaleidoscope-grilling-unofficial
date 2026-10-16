@@ -92,12 +92,15 @@ def strip_document(value):
   if visibility()not in canonical(value):return value
   path=CONTROL
  else:return value
+ from eating_owner_properties import predecessor_document
+ value=predecessor_document(value)
  if canonical(value)!=canonical(expected_document(path)):raise ValueError('Offhand document inverse requires exact owned payload: '+str(path))
  return copy.deepcopy(contract()['predecessors'][str(path.relative_to(ROOT))])
 def validate():
  c=contract()
+ from eating_owner_properties import reference_bytes
  for rel,digest in c['source_pins'].items():
-  if hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()!=digest:raise ValueError('Offhand source pin changed:'+rel)
+  if hashlib.sha256(reference_bytes(ROOT/rel)).hexdigest()!=digest:raise ValueError('Offhand source pin changed:'+rel)
  from java_eating_piece_resolver import available_fixed_piece
  for row in c['routes']:
   if available_fixed_piece(ROOT,row['id'],row['profile'])!=c['helper_models'][row['id']]:raise ValueError('Offhand helper source selection changed')
@@ -114,7 +117,11 @@ def augment(output):
  return out
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');a=p.parse_args()
- for path,v in augment({}).items():
+ output=augment({})
+ if tuple(json.loads((MAIN.parent.parent/'manifest.json').read_text())['header']['version']) >= (2,8,147):
+  from eating_owner_properties import augment as guard_owner_properties
+  output=guard_owner_properties(output)
+ for path,v in output.items():
   data=v if isinstance(v,bytes)else(v if isinstance(v,str)else json.dumps(v,ensure_ascii=False,indent=2)+'\n').encode()
   if a.check:assert path.read_bytes()==data,path
   else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

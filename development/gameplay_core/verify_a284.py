@@ -23,7 +23,7 @@ def eating_dispatch_source(script, version):
         from eating_owner_context import reference_bytes
         try:
             captured = reference_bytes(dedicated)
-        except AssertionError as error:
+        except (AssertionError, ValueError) as error:
             raise AssertionError('Dedicated two-route clip bytes drifted') from error
         assert hashlib.sha256(captured).hexdigest() == NATIVE_CLIPS_SHA256, 'Dedicated two-route clip bytes drifted'
         restored = restore_main(script)

@@ -36,9 +36,10 @@ console.log(n);'''
   # must pass the shared immutable current-runtime inventory, not a path allowance.
   base=layer.contract()['base_commit'];changed=subprocess.check_output(['git','diff','--name-only',base,BASE],cwd=ROOT,text=True).splitlines()
   import build_offhand_eating_projection as offhand
+  from eating_owner_properties import reference_bytes as owner_property_reference
   owned=offhand.augment({})
   for path,expected in owned.items():
-   actual=path.read_bytes();expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
+   actual=owner_property_reference(path);expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
   from eating_route_extraction import validate_resolver
   owned[ROOT/validate_resolver()]=(ROOT/validate_resolver()).read_bytes()
   self.assertLessEqual({p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|{str(p.relative_to(ROOT))for p in owned})

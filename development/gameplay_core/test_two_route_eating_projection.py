@@ -18,6 +18,7 @@ import build_eating_motion as motion
 import build_two_route_eating_projection as scoped
 import build_review_three_eating_projection as review
 from eating_owner_context import reference_bytes
+from eating_owner_properties import predecessor_document as owner_property_predecessor
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
@@ -31,7 +32,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
@@ -96,8 +97,9 @@ class TwoRouteProjectionTests(unittest.TestCase):
         # Remove only the newly registered layer to compare the full G126 output.
         with patch.object(scoped, 'augment', side_effect=lambda output: output):
             before = motion.build({scoped.MAIN: self.original}, review_three_routes=False, failure_skewers=False)
-        encode = lambda rows: {path: scoped.encoded(value) for path, value in rows.items()}
-        self.assertEqual(encode(first), encode(second))
+        self.assertEqual(set(first), set(second))
+        for path in first:
+            self.assertEqual(scoped.encoded(first[path]), scoped.encoded(second[path]), str(path))
         delta = {path for path in set(before) | set(first)
                  if path not in before or path not in first or scoped.encoded(before[path]) != scoped.encoded(first[path])}
         self.assertEqual(delta, {scoped.MAIN, scoped.DEDICATED})
@@ -110,7 +112,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
             elif path == scoped.MAIN:
                 self.assertEqual(review.restore_main(path.read_text()).encode(),scoped.encoded(value),str(path))
             elif path.suffix == '.json':
-                self.assertEqual(scoped.encoded(review.predecessor_document(path,json.loads(path.read_bytes()))),scoped.encoded(value),str(path))
+                self.assertEqual(scoped.encoded(review.predecessor_document(path,owner_property_predecessor(json.loads(path.read_bytes())))),scoped.encoded(value),str(path))
             else:self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
         fixtures = json.loads((ROOT / 'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
         for relative, digest in fixtures['runtime_file_sha256'].items():

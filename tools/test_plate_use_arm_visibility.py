@@ -7,6 +7,7 @@ from pathlib import Path
 import build_offhand_eating_projection as current
 from frozen_offhand_source import producer
 import plate_use_arm_visibility as repair
+from eating_owner_properties import predecessor_document
 
 class PlateUseArmVisibility(unittest.TestCase):
  @classmethod
@@ -55,7 +56,7 @@ class PlateUseArmVisibility(unittest.TestCase):
    if path==current.CONTROL:
     with self.assertRaises(ValueError):current.strip_document(old)
     with self.assertRaises(ValueError):historical.strip_document(actual)
-   else:self.assertEqual(actual,old)
+   else:self.assertEqual(predecessor_document(actual),old)
  def test_exported_molang_preserves_adjacent_branches(self):
   def expressions(doc):return {k:v for row in doc['render_controllers']['controller.render.player.first_person']['part_visibility']for k,v in row.items()if k in ('rightArm','rightSleeve','leftArm','leftSleeve')}
   data={'old':expressions(self.old),'new':expressions(self.new)}

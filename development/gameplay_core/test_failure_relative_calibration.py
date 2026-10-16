@@ -376,7 +376,8 @@ for(const row of rows) for(const id of row.ids) {
                          'raw_one_player.animation.json', 'review_three_player.animation.json'):
             with self.subTest(file=filename):
                 path = ANIMATIONS / filename
-                self.assertEqual(path.read_bytes(), frozen_bytes(path))
+                from eating_owner_properties import reference_bytes
+                self.assertEqual(reference_bytes(path), frozen_bytes(path))
 
 
 if __name__ == '__main__':

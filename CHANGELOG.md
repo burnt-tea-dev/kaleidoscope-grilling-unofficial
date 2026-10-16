@@ -1,3 +1,10 @@
+# G147 guarded owner eating properties candidate
+
+- Cache five individually guarded owning-entity eating properties once per attachable frame; preserve zero fallback and existing valid-state behavior.
+- Change only 65 eating attachables, three item-animation documents and paired 2.8.147 identity; runtime text shrinks by 93,380 bytes before identity changes.
+- Keep historical source pins and the G146 ownership manifest immutable, with exact reversible current-layer validation.
+- Source-expression checks are separate from editor/native/client and long-term deployment acceptance. [Evidence scope](docs/evidence/owner-eating-property-guards-g147.md).
+
 # G146 local plate-use arm source candidate
 
 - Suppress the generic left-arm/sleeve use fallback only for active first-person main-hand skewer plate with empty offhand.

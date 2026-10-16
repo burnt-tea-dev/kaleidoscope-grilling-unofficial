@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import build_raw_one_eating_projection as r
 from eating_owner_context import legacy_document,document
+from eating_owner_properties import predecessor_document,reference_bytes
 import build_failure_skewer_held as failure
 
 class RawOneTests(unittest.TestCase):
@@ -18,7 +19,7 @@ class RawOneTests(unittest.TestCase):
   with self.assertRaises(ValueError):r.gate('right',['kaleidoscope_grilling:raw_fish_skewer_java_three_alt'])
  def test_roundtrip_and_idempotence(self):
   for name in ['raw_fish_skewer','raw_caterpillar_skewer']:
-   p=r.RP/'attachables'/(name+'.attachable.json');current=json.loads(p.read_text())
+   p=r.RP/'attachables'/(name+'.attachable.json');current=predecessor_document(json.loads(p.read_text()))
    before=r.historical_document(p,legacy_document(current))
    expected=json.loads(subprocess.check_output(['git','show',r.contract()['base_commit']+':'+p.relative_to(r.ROOT).as_posix()],cwd=r.ROOT))
    self.assertEqual(before,legacy_document(expected))
@@ -43,7 +44,7 @@ class RawOneTests(unittest.TestCase):
    x.pop('blend_weight');y.pop('blend_weight');self.assertEqual(x,y);self.assertIs(y['override_previous_animation'],True)
   protected=['animations/java_eating_player.animation.json','animations/java_eating_projection.animation.json','animations/kg_probe_caterpillar_player.animation.json','animations/kg_isolated_two_route_player.animation.json','animations/review_three_player.animation.json','attachables/grilled_fish_skewer.attachable.json','attachables/grilled_caterpillar_skewer.attachable.json']
   for name in protected:
-   p=r.RP/name;actual=p.read_bytes()
+   p=r.RP/name;actual=reference_bytes(p)
    if name=='attachables/grilled_caterpillar_skewer.attachable.json':
     from build_offhand_eating_projection import strip_document
     actual=(json.dumps(strip_document(json.loads(actual)),ensure_ascii=False,indent=2)+'\n').encode()
@@ -81,7 +82,7 @@ class RawOneTests(unittest.TestCase):
    else:clip['bones']['rightarm']['position']['0'][0]='0'
    with self.assertRaisesRegex(ValueError,'donor changed'):r.augment({p:x})
  def test_fail_closed_partial_and_conflicting_layers(self):
-  p=r.RP/'attachables/raw_fish_skewer.attachable.json';base=json.loads(p.read_text())
+  p=r.RP/'attachables/raw_fish_skewer.attachable.json';base=predecessor_document(json.loads(p.read_text()))
   for mutate in ['alias','gate','fallback','texture','controller','identity']:
    x=copy.deepcopy(base);d=x['minecraft:attachable']['description']
    if mutate=='alias':del d['animations']['raw_one_left']

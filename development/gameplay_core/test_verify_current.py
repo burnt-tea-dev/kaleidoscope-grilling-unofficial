@@ -360,7 +360,7 @@ class SourceReceiptTests(unittest.TestCase):
                          ["verify_visual_refs.py", "verify_slime_frames.py"])
 
     def test_current_slime_checks_are_required_before_receipt(self):
-        for patch_version in (145, 146):
+        for patch_version in (145, 146, 147):
             with patch.object(gate, "generic_gate", return_value=(2, 8, patch_version, 1)), self.mock_functional_commands() as commands:
                 self.main("--write-source-validation", self.receipt)
             self.assertEqual([Path(call.args[0][-1]).name for call in commands.run.call_args_list], [

@@ -653,6 +653,13 @@ def check_current_display_contracts(findings, geometry_index, animations):
             for alias in ('fp_left','eat_left'):
                 required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
             required_selectors[offhand.ALIAS]=active
+        if version >= (2,8,147):
+            from eating_owner_properties import document as guard_document, predecessor_document
+            required_selectors = guard_document(required_selectors)
+            try:
+                predecessor_document({'minecraft:attachable': {'description': desc}})
+            except ValueError as error:
+                add(findings, 'error', 'held_owner_property_guard', desc['identifier'], str(error))
         actual_selectors = {}
         malformed = False
         for row in selectors:

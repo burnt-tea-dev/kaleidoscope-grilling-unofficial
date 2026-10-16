@@ -14,6 +14,7 @@ from secret_skewer_assets import held_geometries, partial_geometries, slot_cubes
 from held_visual_channels import WORD_A_MAX, WORD_B_MAX
 from test_eating_observer_projection import node
 from eating_owner_context import document
+from eating_owner_properties import predecessor_document
 
 
 def load(path):
@@ -78,7 +79,7 @@ class SecretHeldOwnerContextTests(unittest.TestCase):
         for name in ('secret_skewer', 'secret_skewer_java_three_alt', 'unfinished_skewer'):
             path = RP / f'attachables/{name}.attachable.json'
             assert_public_bytes(self, path)
-            actual = load(path)['minecraft:attachable']['description']
+            actual = predecessor_document(load(path))['minecraft:attachable']['description']
             source = document(public_json(path),attachable=True)['minecraft:attachable']['description']
             self.assertEqual(actual['animations'], source['animations'])
             self.assertEqual(actual['scripts']['animate'], source['scripts']['animate'])

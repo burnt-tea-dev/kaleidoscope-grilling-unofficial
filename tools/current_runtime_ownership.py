@@ -34,10 +34,42 @@ def runtime_files(root=ROOT):
    if p.is_file():files[p.relative_to(root).as_posix()]=p.read_bytes()
  return files
 
+OWNER_PROPERTY_BASE = '58f2fc72a286b1ddf210128017c36f14dad759a9'
+
+@lru_cache(maxsize=1)
+def owner_property_predecessor_files():
+ data=subprocess.check_output(['git','archive',OWNER_PROPERTY_BASE,*PREFIXES],cwd=ROOT)
+ with tarfile.open(fileobj=io.BytesIO(data))as archive:
+  return MappingProxyType({m.name:archive.extractfile(m).read()for m in archive if m.isfile()})
+
+@lru_cache(maxsize=1)
+def owner_property_expected_files():
+ from eating_owner_properties import document as guard_document
+ files=dict(owner_property_predecessor_files())
+ for name,data in list(files.items()):
+  if name.startswith(PREFIXES[1]+'/attachables/')or name.startswith(PREFIXES[1]+'/animations/'):
+   before=json.loads(data);after=guard_document(before)
+   if after!=before:files[name]=(json.dumps(after,ensure_ascii=False,indent=2)+'\n').encode()
+ for prefix in PREFIXES:
+  name=prefix+'/manifest.json';value=json.loads(files[name]);value['header']['version']=[2,8,147]
+  for module in value['modules']:module['version']=[2,8,147]
+  for dependency in value.get('dependencies',[]):
+   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=[2,8,147]
+  files[name]=(json.dumps(value,ensure_ascii=False,indent=2)+'\n').encode()
+ return MappingProxyType(files)
+
 def validate_inventory(actual,document):
  # Also protect direct callers from dictionaries altered after manifest loading.
  expected=manifest()
  if document!=expected:raise ValueError('Forged runtime delta scope or fingerprints')
+ version=json.loads(actual[PREFIXES[0]+'/manifest.json'])['header']['version']
+ owner_property_changes=0
+ if version==[2,8,147]:
+  guarded=owner_property_expected_files()
+  if actual!=guarded:raise ValueError('G147 runtime differs from exact guarded G146 source plus identity')
+  predecessor=owner_property_predecessor_files()
+  owner_property_changes=sum(actual[p]!=predecessor[p] for p in actual)
+  actual=predecessor
  baseline=frozen_runtime_files();changes=document['changes']
  if set(actual)!=set(baseline)|set(changes):raise ValueError('Undeclared runtime addition/deletion')
  changed={p for p in actual if p not in baseline or actual[p]!=baseline[p]}
@@ -49,7 +81,7 @@ def validate_inventory(actual,document):
   operation='add'if old is None else'modify'
   if row['operation']!=operation or row['before_sha256']!=(None if old is None else sha(old)):raise ValueError('Runtime predecessor mismatch: '+p)
   if sha(actual[p])!=row['after_sha256']:raise ValueError('Runtime reviewed postimage mismatch: '+p)
- return {'baseline_files':len(baseline),'current_files':len(actual),'owned_changes':len(changes)}
+ return {'baseline_files':len(baseline),'current_files':len(actual),'owned_changes':len(changes),'owner_property_layer_changes':owner_property_changes}
 
 def validate_plate_source():
  # Fixed leaf commands, never commands/imports supplied by manifest content.
@@ -73,10 +105,12 @@ def validate_merged_performance_and_identity():
  assert (ROOT/queue).read_bytes()==reviewed_queue
  for prefix in PREFIXES:
   path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
-  before['header']['version']=[2,8,146]
-  for module in before['modules']:module['version']=[2,8,146]
+  version=after['header']['version']
+  assert version in ([2,8,146],[2,8,147]),'Unknown composed release identity'
+  before['header']['version']=version
+  for module in before['modules']:module['version']=version
   for dependency in before.get('dependencies',[]):
-   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=[2,8,146]
+   if dependency.get('uuid') in {'c68005c5-23ff-54e8-a3ff-da6349ad43c2','bbbd2d60-52e5-53a6-8b9a-c09b0f516389'}:dependency['version']=version
   assert after==before,'G146 identity changes fields outside exact owned versions: '+path
 
 

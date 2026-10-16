@@ -26,6 +26,12 @@ def reference_bytes(path, current):
     relative = path.relative_to(ROOT).as_posix() if path.is_absolute() else path.as_posix()
     if relative not in PATHS:
         return current
+    if relative == ATTACHABLE_PATH:
+        from eating_owner_properties import reference_bytes as owner_reference_bytes
+        try:
+            current = owner_reference_bytes(path, current)
+        except ValueError as error:
+            raise AssertionError('Current slime continuation differs from reviewed complete bytes: '+relative) from error
     if relative == MAIN_PATH:
         from build_review_three_eating_projection import restore_main
         try:

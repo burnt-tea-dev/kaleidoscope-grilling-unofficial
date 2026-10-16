@@ -50,6 +50,8 @@ def legacy_document(value):
     reversed. Existing native/source hashes continue to reject unrelated changes.
     """
     if isinstance(value, dict):
+        from eating_owner_properties import predecessor_document
+        value = predecessor_document(value)
         from build_offhand_eating_projection import strip_document
         value = strip_document(value)
     if isinstance(value, str):
@@ -108,6 +110,8 @@ def reference_bytes(path):
     path = Path(path)
     path = path if path.is_absolute() else ROOT / path
     current = path.read_bytes()
+    from eating_owner_properties import reference_bytes as owner_property_reference
+    current = owner_property_reference(path, current)
     from public_source_witness import performance_witness_source, apply_performance_source
     performance = path.name == "main.js" and performance_witness_source(current.decode()) != current.decode()
     from build_offhand_eating_projection import contract as offhand_contract, strip_document as strip_offhand

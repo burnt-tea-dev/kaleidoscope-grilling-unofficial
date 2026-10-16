@@ -7,7 +7,7 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':19})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4500,'owned_changes':19,'owner_property_layer_changes':70})
  def test_unrelated_mutation_addition_and_deletions(self):
   unchanged=next(p for p in self.actual if p not in self.doc['changes'])
   for operation in ('mutate','add','delete','delete_owned','revert_owned'):

@@ -179,6 +179,8 @@ def main():
                 from build_review_three_eating_projection import restore_main
                 actual=restore_main(actual.decode()).encode()
             if path.suffix=='.json':
+                from eating_owner_properties import reference_bytes as owner_property_reference
+                actual=owner_property_reference(path,actual)
                 from build_review_three_eating_projection import historical_document
                 actual=dump(historical_document(path,json.loads(actual)))
             if actual!=data:raise AssertionError(path)

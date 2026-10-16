@@ -141,7 +141,11 @@ def build():
 
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
- for path,value in build().items():
+ output=build()
+ if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,147):
+  from eating_owner_properties import augment as guard_owner_properties
+  output=guard_owner_properties(output)
+ for path,value in output.items():
   data=value if isinstance(value,(str,bytes)) else json.dumps(value,ensure_ascii=False,indent=2)+'\n'
   data=data.encode() if isinstance(data,str) else data
   if args.check:assert path.read_bytes()==data,path

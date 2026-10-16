@@ -1,4 +1,6 @@
-## Current maintained baseline: 2.8.146
+## Current maintained baseline: 2.8.147
+
+G147 is a separate guarded-owner-property source candidate. Missing eating properties retain zero fallback without repeated unguarded reads; normal values, poses and source history are preserved. Editor/client acceptance and publication remain pending. See [scope and regression boundary](docs/evidence/owner-eating-property-guards-g147.md).
 
 G146 is a local plate-use left-arm correction retaining the complete G145 composition and reviewed CI fixes. It has no publication request or native acceptance. See [source scope](docs/evidence/plate-use-arm-reconstruction-20261016.md).
 

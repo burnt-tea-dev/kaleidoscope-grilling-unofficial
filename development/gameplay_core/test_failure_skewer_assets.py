@@ -119,7 +119,7 @@ for(const d of cases)for(const slot of ['main_hand','off_hand'])for(const fp of 
  if(v.kg_bite_stage!==expected)throw Error(d.identifier+' stage '+tick+' '+v.kg_bite_stage+' expected '+expected);
  if(Boolean(v.kg_failure_ready)!==(marker===220))throw Error('owner readiness');
  if(Boolean(v.kg_failure_helper_visible)!==(!plain&&!alt&&using&&!!fp&&marker===220))throw Error('helper gate');
- const active=d.scripts.animate.filter(row=>Object.keys(row).some(k=>k.startsWith('failure_eat_'))).flatMap(Object.values).filter(expr=>new Function('q','c','owner','return '+scoped(expr))(q,c,owner));
+ const active=d.scripts.animate.filter(row=>Object.keys(row).some(k=>k.startsWith('failure_eat_'))).flatMap(Object.values).filter(expr=>new Function('q','c','owner','v','return '+scoped(expr))(q,c,owner,v));
  if(active.length!==(!plain&&using&&fp?1:0))throw Error('active/idle route overlap');
 }
 '''.replace('CASES',json.dumps(cases))

@@ -113,13 +113,17 @@ class DualEatingRenderer(unittest.TestCase):
 const descriptions='''+json.dumps(descriptions)+''';
 for(const [id,d] of Object.entries(descriptions))for(const hand of [1,2]){
  let held=id,using=true,first=1,helper=false,profile=id.includes('fish')?1:3,projection=1,eatHand=hand;
+ const properties=()=>({eat_profile:profile,eat_hand:eatHand,eat_projection:projection,eat_native_ticks:64,eat_elapsed_ticks:20});
  const slot=hand===1?'main_hand':'off_hand',other=hand===1?'off_hand':'main_hand';
  const c={get is_first_person(){return first},item_slot:slot};
  const q={get is_using_item(){return using},is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,
- property:name=>({eat_profile:profile,eat_hand:eatHand,eat_projection:projection})[name.split(':')[1]],
+ main_hand_item_use_duration:44,frame_alpha:0,
+ has_property:name=>Object.hasOwn(properties(),name.split(':')[1]),
+ property:name=>properties()[name.split(':')[1]],
  is_item_name_any:(_slot,...names)=>names.includes(held),is_item_equipped:s=>s===other&&helper?1:0};
  c.owning_entity=q;
- const v={}; const evaluate=()=>{new Function('q','c','v',d.scripts.pre_animation.at(-1).replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,v);return Boolean(v.kg_java_piece_visible)};
+ const math={clamp:(value,min,max)=>Math.max(min,Math.min(max,value))};
+ const v={}; const evaluate=()=>{evaluatePreAnimation(d.scripts.pre_animation,q,c,math,v);return Boolean(v.kg_java_piece_visible)};
  if(!evaluate())throw Error('Representative piece not wired');
  for(const change of [()=>using=false,()=>first=0,()=>held='minecraft:apple',()=>helper=true,()=>profile=4,()=>projection=0,()=>eatHand=0]){
   change();if(evaluate())throw Error('Piece leaked after changed state');

@@ -32,6 +32,12 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
   assert type(value) is int and 0 <= value <= maximum,(name,value)
   expr=re.sub(r'\bv\.kg_season_'+name+r'\b',str(value),expr)
  assert type(has_projection) is bool and type(offhand) is int and offhand in (0,1)
+ # Current selectors consume initialized owner-property cache values. This
+ # bounded evaluator models only these three known boolean-dispatch inputs;
+ # the complete initializer programs are exercised by owner-context tests.
+ projected=int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)
+ for name,value in [('eat_hand',eat_hand),('eat_profile',eat_profile),('eat_projection',projected)]:
+  expr=re.sub(r'\bv\.kg_owner_'+name+r'\b',str(value if has_projection else 0),expr)
  for prop in ('eat_projection','eat_profile','eat_hand'):expr=expr.replace("q.has_property('kaleidoscope_grilling:"+prop+"')",str(has_projection))
  expr=expr.replace('q.is_using_item',str(bool(using))).replace("q.property('kaleidoscope_grilling:eat_profile')",str(eat_profile))
  expr=expr.replace("q.property('kaleidoscope_grilling:eat_projection')",str(int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)))

@@ -2,6 +2,8 @@
 import pathlib,sys,json,copy,subprocess,hashlib,re,unittest,io
 ROOT=pathlib.Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 import build_offhand_eating_projection as layer
+from eating_owner_properties import document as guard_document, predecessor_document
+from unittest.mock import patch
 from test_failure_relative_calibration import EVALUATOR,node
 class OffhandProjection(unittest.TestCase):
  def test_exact_ids_sources_and_left_clip_payloads(self):
@@ -28,20 +30,38 @@ class OffhandProjection(unittest.TestCase):
   rows=[]
   for r in layer.contract()['routes']:
    d=json.loads((layer.RP/'attachables'/(r['id'].split(':')[1]+'.attachable.json')).read_text())['minecraft:attachable']['description'];expr=next(x[layer.ALIAS]for x in d['scripts']['animate']if layer.ALIAS in x)
-   rows.append({**r,'item_gate':expr,'player_gate':json.loads(layer.PLAYER.read_text())['animations'][layer.player_id(r['profile'])]['blend_weight']})
-  js=r'''let count=0;function ev(s,q,owner,c,v){s=s.replaceAll('c.owning_entity->q.','owner.');return !!Function('q','owner','c','variable','return ('+s+')')(q,owner,c,v)}
-for(const r of rows)for(let flags=0;flags<1024;flags++){const props={eat_projection:1,eat_profile:r.profile==='ONE'?1:3,eat_hand:2};const owner={has_property:()=>!(flags&1),property:n=>props[n.split(':')[1]]};const q={...owner,is_using_item:!(flags&2),is_sneaking:!!(flags&4),is_swimming:!!(flags&8),is_gliding:!!(flags&16),is_riding:!!(flags&32),is_item_equipped:s=>!!(flags&64),is_item_name_any:(s,...ids)=>s==='slot.weapon.offhand'&&!(flags&128)&&ids.includes(r.id)};const c={is_first_person:!(flags&256),item_slot:flags&512?'main_hand':'off_hand'},v={is_first_person:!(flags&256)};const expected=flags===0;if(ev(r.item_gate,q,owner,c,v)!==expected)throw Error('item gate '+flags);const playerExpected=(flags&511)===0;if(ev(r.player_gate,q,owner,c,v)!==playerExpected)throw Error('player gate '+flags);count++;}
-for(const r of rows){const good={has_property:()=>true,property:n=>({eat_projection:1,eat_profile:r.profile==='ONE'?1:3,eat_hand:2})[n.split(':')[1]]},bad={has_property:()=>false,property:()=>0},q={...bad,is_using_item:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,is_item_name_any:(s,...ids)=>s==='slot.weapon.offhand'&&ids.includes(r.id)},c={is_first_person:1,item_slot:'off_hand'},v={is_first_person:1};if(!ev(r.item_gate,q,good,c,v))throw Error('owner not used');Object.assign(q,good);if(ev(r.item_gate,q,bad,c,v))throw Error('local owner leak');for(const prop of ['eat_projection','eat_profile','eat_hand']){const owner={...good,property:n=>n.endsWith(':'+prop)?99:good.property(n)};if(ev(r.item_gate,q,owner,c,v))throw Error('wrong owner property');}}console.log(count);'''
+   rows.append({**r,'cache':[row for row in d['scripts']['pre_animation'] if row.startswith('v.kg_owner_')],'item_gate':expr,'player_gate':json.loads(layer.PLAYER.read_text())['animations'][layer.player_id(r['profile'])]['blend_weight']})
+  js=r'''let count=0;function ev(s,q,owner,c,v,pre=[]){const scoped=s=>s.replaceAll('c.owning_entity->q.','owner.');Function('owner','v',scoped(pre.join('\n')))(owner,v);return !!Function('q','owner','c','variable','v','return ('+scoped(s)+')')(q,owner,c,v,v)}
+for(const r of rows)for(let flags=0;flags<1024;flags++){const props={eat_projection:1,eat_profile:r.profile==='ONE'?1:3,eat_hand:2};const owner={has_property:()=>!(flags&1),property:n=>props[n.split(':')[1]]};const q={...owner,is_using_item:!(flags&2),is_sneaking:!!(flags&4),is_swimming:!!(flags&8),is_gliding:!!(flags&16),is_riding:!!(flags&32),is_item_equipped:s=>!!(flags&64),is_item_name_any:(s,...ids)=>s==='slot.weapon.offhand'&&!(flags&128)&&ids.includes(r.id)};const c={is_first_person:!(flags&256),item_slot:flags&512?'main_hand':'off_hand'},v={is_first_person:!(flags&256)};const expected=flags===0;if(ev(r.item_gate,q,owner,c,v,r.cache)!==expected)throw Error('item gate '+flags);const playerExpected=(flags&511)===0;if(ev(r.player_gate,q,owner,c,v)!==playerExpected)throw Error('player gate '+flags);count++;}
+for(const r of rows){const good={has_property:()=>true,property:n=>({eat_projection:1,eat_profile:r.profile==='ONE'?1:3,eat_hand:2})[n.split(':')[1]]},bad={has_property:()=>false,property:()=>0},q={...bad,is_using_item:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,is_item_name_any:(s,...ids)=>s==='slot.weapon.offhand'&&ids.includes(r.id)},c={is_first_person:1,item_slot:'off_hand'},v={is_first_person:1};if(!ev(r.item_gate,q,good,c,v,r.cache))throw Error('owner not used');Object.assign(q,good);if(ev(r.item_gate,q,bad,c,v,r.cache))throw Error('local owner leak');for(const prop of ['eat_projection','eat_profile','eat_hand']){const owner={...good,property:n=>n.endsWith(':'+prop)?99:good.property(n)};if(ev(r.item_gate,q,owner,c,v,r.cache))throw Error('wrong owner property');}}console.log(count);'''
   self.assertEqual(int(node(js,rows)),21*1024)
  def test_strict_inverse_and_mutations(self):
   for rel,base in layer.contract()['predecessors'].items():
-   p=ROOT/rel;actual=json.loads(p.read_text());self.assertEqual(layer.strip_document(actual),base);self.assertEqual(layer.expected_document(p),actual)
+   p=ROOT/rel;actual=json.loads(p.read_text());self.assertEqual(layer.strip_document(actual),base);self.assertEqual(layer.expected_document(p),predecessor_document(actual))
    bad=copy.deepcopy(actual)
    if 'minecraft:attachable'in bad:bad['minecraft:attachable']['description']['materials']['default']='unrelated'
    else:bad['render_controllers']['controller.render.player.first_person']['part_visibility'][0]['unrelated']=True
    with self.assertRaises(ValueError):layer.strip_document(bad)
   text=layer.MAIN.read_text();old=layer.restore_main(text);self.assertEqual(layer.patch_main(old),text);self.assertEqual(layer.patch_main(text),text)
   with self.assertRaises(ValueError):layer.restore_main(text.replace('selectEatingProjection(e,profile,hand,heldByHand)','selectEatingProjection(e,profile,hand,undefined)',1))
+ def test_guarded_continuation_retains_exact_offhand_payload_and_source_pins(self):
+  path=layer.RP/'attachables/grilled_caterpillar_skewer.attachable.json'
+  guarded=guard_document(layer.expected_document(path))
+  self.assertEqual(layer.strip_document(guarded),layer.contract()['predecessors'][str(path.relative_to(ROOT))])
+  for mutation in ('missing_guard','wrong_fallback','unrelated'):
+   bad=copy.deepcopy(guarded);d=bad['minecraft:attachable']['description']
+   if mutation=='missing_guard':d['scripts']['pre_animation'].pop(0)
+   elif mutation=='wrong_fallback':d['scripts']['pre_animation'][0]=d['scripts']['pre_animation'][0].replace(': 0)',': 1)')
+   else:d['materials']['default']='unrelated'
+   with self.subTest(mutation=mutation),self.assertRaises(ValueError):layer.strip_document(bad)
+  source=layer.RP/'animations/java_eating_projection.animation.json'
+  data=(json.dumps(guard_document(json.loads(source.read_text())),ensure_ascii=False,indent=2)+'\n').encode()
+  self.assertIn(str(source.relative_to(ROOT)),layer.contract()['source_pins'])
+  real=pathlib.Path.read_bytes
+  with patch.object(pathlib.Path,'read_bytes',lambda p: data if p==source else real(p)):layer.validate()
+  changed=json.loads(data);next(iter(changed['animations'].values()))['animation_length']=99
+  for bad in (data+b' ',(json.dumps(changed,ensure_ascii=False,indent=2)+'\n').encode()):
+   with patch.object(pathlib.Path,'read_bytes',lambda p: bad if p==source else real(p)),self.assertRaises(ValueError):layer.validate()
  def test_helpers_pinned_java_geometry_texture_and_all_stages(self):
   import build_java_eating_projection as g,build_java_dual_eating_projection as dual
   from PIL import Image
