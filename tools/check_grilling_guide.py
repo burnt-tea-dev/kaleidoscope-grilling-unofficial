@@ -188,8 +188,9 @@ def main():
     facts=check_facts(s)
     require([c['id'] for c in s['categories'] if not c.get('parent')]==s['host_reference']['root_category_ids'],'Host taxonomy drift')
     if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,72):
-        ref=load(ROOT/'tools/fixtures/cookery-160-reference.json')
-        require(all(s['host_reference'][key]==value for key,value in ref.items()),'Cookery 1.6.0 reviewed reference differs')
+        reference='cookery-161-reference.json' if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,150) else 'cookery-160-reference.json'
+        ref=load(ROOT/'tools/fixtures'/reference)
+        require(all(s['host_reference'][key]==value for key,value in ref.items()),'Reviewed Cookery host reference differs')
     else:
         require(s['host_reference']['version']=='1.0.8' and s['host_reference']['guide_sha256']=='49ea47f9dc7511af210562118c7d2164ab5e185296a5a8c8d678e7d7ff8dc959','Host evidence drift')
         require(s['host_reference']['archive_sha256']=='9e5b617cc4c7a08ecd429fb9e42ec10e8d40a1ed5fc1f6f6687c3aff8a45a5d5' and s['host_reference']['file_id']==8983314,'Unverified original host archive')

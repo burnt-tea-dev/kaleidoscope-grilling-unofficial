@@ -56,7 +56,8 @@ def main():
         assert defs['kg_imm.'+event]['sounds']==expected,event
     catalog=json.loads((ROOT/'projects/grilling/guide/catalog.a3.json').read_text())
     if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,72):
-        ref=json.loads((ROOT/'tools/fixtures/cookery-160-reference.json').read_text())
+        reference='cookery-161-reference.json' if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,150) else 'cookery-160-reference.json'
+        ref=json.loads((ROOT/'tools/fixtures'/reference).read_text())
         assert all(catalog['host_reference'][key]==value for key,value in ref.items())
     else:
         assert catalog['host_reference']['version']=='1.0.8'

@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "repository": "breezeth-CN/KaleidoscopeGrilling",
+  "commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "minecraft": "1.21.1",
+  "loader": "NeoForge",
+  "sources": {
+    "GrillBlock": {
+      "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+      "sha256": "21bbcbf16249ab186f7e0eb29f9727214de2b0c0c52ac6cbe67fc7e9c9857c3b"
+    },
+    "AdvancedRackBlock": {
+      "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java",
+      "sha256": "b96ec9033bacff5534a0d20f432bb99b17dc662ac35aa3dddc27b49addcd566c"
+    },
+    "ModBlocks": {
+      "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java",
+      "sha256": "8f85cd761674f0e0402fc66cb58e9e00003e7e181d76ca59c6a22c5f1f4e2490"
+    }
+  },
+  "shape_bounds": {
+    "advanced_rack": {
+      "north": [
+        1,
+        5,
+        11,
+        15,
+        14,
+        16
+      ],
+      "south": [
+        1,
+        5,
+        0,
+        15,
+        14,
+        5
+      ],
+      "east": [
+        0,
+        5,
+        1,
+        5,
+        14,
+        15
+      ],
+      "west": [
+        11,
+        5,
+        1,
+        16,
+        14,
+        15
+      ]
+    },
+    "grill": {
+      "north": [
+        0,
+        0,
+        2,
+        16,
+        4,
+        14
+      ],
+      "south": [
+        0,
+        0,
+        2,
+        16,
+        4,
+        14
+      ],
+      "east": [
+        2,
+        0,
+        0,
+        14,
+        4,
+        16
+      ],
+      "west": [
+        2,
+        0,
+        0,
+        14,
+        4,
+        16
+      ]
+    }
+  },
+  "scope": "Source getShape, inherited collision-enabled properties, and shipped collision/selection/hit boxes. Geometry bounds do not define collision; native/client acceptance remains pending.",
+  "client": false
+}

@@ -66,7 +66,13 @@ def validate_inventory(actual,document):
  owner_property_changes=0
  seasoning_tp_changes=0
  pending_offhand_changes=0
+ stable_host_changes=0
  current_count=len(actual)
+ if version==[2,8,150]:
+  from stable_host_source import predecessor_runtime, RUNTIME_PATHS
+  actual=predecessor_runtime(actual)
+  stable_host_changes=len(RUNTIME_PATHS)
+  version=[2,8,149]
  if version==[2,8,149]:
   from pending_offhand_source import predecessor_runtime, ledger as pending_ledger
   actual=predecessor_runtime(actual)
@@ -97,6 +103,7 @@ def validate_inventory(actual,document):
  result={'baseline_files':len(baseline),'current_files':current_count,'owned_changes':len(changes),'owner_property_layer_changes':owner_property_changes}
  if seasoning_tp_changes:result['seasoning_tp_layer_changes']=seasoning_tp_changes
  if pending_offhand_changes:result['pending_offhand_layer_changes']=pending_offhand_changes
+ if stable_host_changes:result['stable_host_layer_changes']=stable_host_changes
  return result
 
 def validate_plate_source():
@@ -120,7 +127,11 @@ def validate_merged_performance_and_identity():
  reviewed_queue=subprocess.check_output(['git','show',REVIEWED_PERFORMANCE_BASE+':'+queue],cwd=ROOT)
  assert (ROOT/queue).read_bytes()==reviewed_queue
  for prefix in PREFIXES:
-  path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));after=json.loads((ROOT/path).read_bytes())
+  path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));raw=(ROOT/path).read_bytes()
+  if json.loads(raw)['header']['version']==[2,8,150]:
+   from stable_host_source import reference_bytes
+   raw=reference_bytes(path,raw)
+  after=json.loads(raw)
   version=after['header']['version']
   assert version in ([2,8,146],[2,8,147],[2,8,148],[2,8,149]),'Unknown composed release identity'
   before['header']['version']=version

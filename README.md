@@ -1,6 +1,8 @@
-## Current maintained baseline: 2.8.149
+## Current maintained baseline: 2.8.150
 
-Stable-channel publication of the unchanged G149 runtime is requested, subject to final exact-tree CI and package checks. [Release scope, historical editor evidence and known deferred risks](docs/RELEASE-NOTES-A2.8.149.md). Real-client gates are waived for this publication; `client=false`, `production_ready=false`, `live=false`.
+G150 adapts the reviewed public family API to stable Cookery 1.6.1 and restores the source grill/rack collision and directional rack selection bounds. It retains G149 presentation, effects and settlement repairs. Exact candidate CI and full-family stopped-save validation precede LIVE deployment; rendered-client and complete Java parity remain unverified. [Public adapter scope](docs/evidence/cookery161-public-family-api-20261016.md).
+
+The preceding G149 stable-channel publication has its own [release scope, historical editor evidence and known deferred risks](docs/RELEASE-NOTES-A2.8.149.md). Its publication waiver does not turn later candidates into client acceptance; `client=false`, `production_ready=false` remain until human verification.
 
 G149 removes the extra first-person pending-bottle shake from nine offhand attachables, preserving the explicit static hold and sprinkle precedence. Main-hand, TP/player motion, clip payloads, assets and gameplay remain unchanged. Full native host-frame and Java/client parity are still open. See [default-route source proof and limits](docs/evidence/pending-offhand-none-route-g149.md).
 
@@ -18,9 +20,9 @@ G143's integrated repairs remain: attachable eating properties read the owning p
 
 2026-10-14 的玩家回報及截圖已納入[目前缺口](docs/BUGS.md#client-hud食用入口圖形缺失與延遲)：保留森羅 HUD 缺失、原始資料碼外露及串沒有進食動作的失敗；後續截圖已見進食姿勢、數量減少與圖形，但位置與延遲仍被回報。G138 補原生觸控使用入口，G140 修正錨點／觸控布局及 END 隱藏，G141 接回原生剩餘時間與同步首幀，G142 裁剪未選圖像；這些來源修補不等於全部客戶端驗收。
 
-目前 LIVE 的 G143 已經 [PR215](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/215) 來源／Windows 匯出檢查合併，於 2026-10-15 14:47:03 HKT 隨完整家族部署 LIVE；停服存檔副本、准入、啟動讀回及正式下載內容核對通過。G144 是後續性能候選；它的必要 CI、家族保存准入與 LIVE 更新另行完成。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
+先前 LIVE 的 G144 保留 [PR215](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/215) 的顯示修補及 [PR223](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/223) 性能修補；目前完整家族的實際安裝版本與逐檔讀回以[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)為準。G145–G150 的來源修補不能沿用 G144 的存檔或客戶端結果。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
 
-相依仍為官方 [Cookery 1.6.0（file 9054164）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164)。1.6.1 更換 UUID 與 API，尚未納入。煙火指南隨包；乾淨 Cookery 不自帶家族 API 0.2.10、locale、砧板／油壺／炒鍋掛鉤，適配依[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)記錄。真人畫面、完整 Java 聲畫及其他視角／操作仍待驗收；`client=false`、`production_ready=false`。
+相依為官方穩定版 [Cookery 1.6.1（file 9123386）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9123386)。新 UUID／API 配對由 family API 0.2.11 適配；作者已修的指南語系驗證保留，移除舊 locale shadow。煙火指南隨包；乾淨 Cookery 不自帶家族的砧板／油壺／炒鍋與酒館指南掛鉤，安裝／保存遷移依[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)記錄。真人畫面、完整 Java 聲畫及其他視角／操作仍待驗收；`client=false`、`production_ready=false`。
 
 離線來源草稿另見[熟饅頭片 TWO／熟末影珍珠 THREE 整合](docs/evidence/two-route-source-integration-20261010.md)：新增兩條 exact-ID player clips，保留 G126 與其他食品。該凍結證據仍是未編版的歷史草稿；本版以獨立 G127 身份及新增 reviewed witness 承接，不改寫原 G126 身份或門檻。
 
@@ -49,7 +51,7 @@ G143's integrated repairs remain: attachable eating properties read the owning p
 森羅物語：煙火的非官方基岩版移植。目標是跟隨 Java 原作，保留其玩法與沉浸體驗；**完整一比一移植與現行真人驗收仍未完成**。
 
 當前版本、UUID、相依與來源身份以 [baseline.json](baseline.json) 為準。
-依賴作者 **Cookery 1.6.0**；最低 engine 宣告 1.26.50，
+依賴作者穩定版 **Cookery 1.6.1**；最低 engine 宣告 1.26.50，
 `@minecraft/server` 2.9.0 與 `@minecraft/server-ui` 2.2.0；原生證據的引擎版本與範圍以各次紀錄為準。
 家族整合提供的砧板／油壺／炒鍋與酒館指南交接能力，不能當作只安裝作者 Cookery 就有的功能。
 

@@ -226,7 +226,14 @@ def main():
                 assert json.loads(path.read_bytes()) == expected, path
                 continue
             before = json.loads(prior(path))
-            after = json.loads(path.read_bytes())
+            actual = path.read_bytes()
+            if version >= (2, 8, 150) and kind == 'block' and path.stem in ('advanced_rack_block', 'grill'):
+                # The original label-only guard remains unchanged below. Only
+                # exact, independently sealed G150 collision postimages may
+                # recover their immutable G149 source for this older layer.
+                from stable_host_source import reference_bytes as stable_host_reference
+                actual = stable_host_reference(path, actual)
+            after = json.loads(actual)
             old = before['minecraft:' + kind]['components'].get('minecraft:display_name')
             if old is None:
                 assert after == current_behavior_expectation(before, kind, path.stem, version), path

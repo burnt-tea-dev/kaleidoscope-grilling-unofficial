@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "predecessor_commit": "aa7431f9ea729338f75f134a9c9be8194298b968",
+  "predecessor_tree": "37470053c4c45dfe8e358daa8c6c0ec7f6af8f0d",
+  "predecessor_version": [
+    2,
+    8,
+    149
+  ],
+  "version": [
+    2,
+    8,
+    150
+  ],
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/blocks/advanced_rack_block.json": {
+      "owner": "java_collision_boxes",
+      "operation": "modify",
+      "before_sha256": "0cc864eaac7f5299d176d8f672983025b15976468b79c97991d859e4ddc55a1a",
+      "after_sha256": "d7a4050dda5610668bad5a684e1e9b1d47cb3141a0bc643de6fbfb583631cd43"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/blocks/grill.json": {
+      "owner": "java_collision_boxes",
+      "operation": "modify",
+      "before_sha256": "ae3470395025d9626bd5322ac02d5ad34cdd941362a594bda96bf2b324c3246c",
+      "after_sha256": "17f299fe5b8cb4d010f07d9fd87e957a4e58f1fbe02b86ea2a18d43f4be40ec0"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json": {
+      "owner": "cookery161_public_family_api",
+      "operation": "modify",
+      "before_sha256": "6c28f178dbecdac7e4d02e2293997909926119d8489cd373cd1717e39c5f4821",
+      "after_sha256": "a6cb35e8a8772a66825841b5bdf46ed1b5f028c99e2ea1c7cba6e4e24214a06b"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "owner": "cookery161_paired_identity",
+      "operation": "modify",
+      "before_sha256": "c09083fd13e39b3b8166732b650e02429fd1016a8f22c3a6718ccc417516e148",
+      "after_sha256": "e6ec987063b32289b1e2512610b2c9c720557a2d56772c99837fafac53c2ff79"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/rack_aim_hit.js": {
+      "owner": "directional_rack_hit",
+      "operation": "modify",
+      "before_sha256": "a72b9e52fc55113cc6d92167a86c52f4723b300bd4cefe031d48de73f7ae8bfc",
+      "after_sha256": "54ec4908e950b541fe2d2d32737aa3f7f853ab56d3786f14c8ba2a04f4c91d73"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "owner": "cookery161_paired_identity",
+      "operation": "modify",
+      "before_sha256": "e916fb549e7195ba9f8a3b3f55fff909b7ce2975c8dc029a76caf6d2d15d53b0",
+      "after_sha256": "007c5820887c7a9a24628792229f993d6a4d9e6f7870f340db44f1956b9267b3"
+    },
+    "projects/grilling/guide/catalog.a3.json": {
+      "owner": "cookery161_guide_provenance",
+      "operation": "modify",
+      "before_sha256": "41326f690b674a72d44a3ebaf062b4e39d5e483609100b392257bd408de3557a",
+      "after_sha256": "03778820e949b98f7756195ba445877dde98823d1cefaa9783acabc34e63b920"
+    }
+  }
+}

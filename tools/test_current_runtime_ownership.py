@@ -5,17 +5,44 @@ from unittest.mock import patch
 import current_runtime_ownership as owner
 class RuntimeOwnership(unittest.TestCase):
  @classmethod
- def setUpClass(cls):cls.actual=owner.runtime_files();cls.doc=owner.manifest()
+ def setUpClass(cls):
+  cls.actual=owner.runtime_files();cls.doc=owner.manifest()
+  from stable_host_source import predecessor_runtime
+  cls.g149=predecessor_runtime(cls.actual)
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6})
+ def test_stable_host_layer_rejects_changed_scope_postimage_and_predecessor(self):
+  import stable_host_source as stable
+  import pending_offhand_source as pending
+  self.assertEqual(self.g149,pending.expected_files())
+  self.assertEqual(stable.preceding_host_spec(),json.loads(self.g149[stable.BP+'/host-extensions/board-api.json']))
+  with self.assertRaises(ValueError):stable.preceding_host_spec((stable.ROOT/stable.BP/'host-extensions/board-api.json').read_bytes()+b'\n')
+  for path in stable.RUNTIME_PATHS:
+   files=dict(self.actual);files[path]+=b'\n'
+   with self.subTest(path=path),self.assertRaises(ValueError):stable.predecessor_runtime(files)
+   self.assertEqual(stable.reference_bytes(path),self.g149[path])
+  for operation in ('add','delete','old_postimage'):
+   files=dict(self.actual);path=next(iter(stable.RUNTIME_PATHS))
+   if operation=='add':files[owner.PREFIXES[0]+'/unknown.json']=b'{}'
+   elif operation=='delete':del files[path]
+   else:files[path]=self.g149[path]
+   with self.subTest(operation=operation),self.assertRaises(ValueError):stable.predecessor_runtime(files)
+  with self.assertRaises(ValueError):stable.reference_bytes(stable.GUIDE,(stable.ROOT/stable.GUIDE).read_bytes()+b'\n')
+  forged=copy.deepcopy(stable.ledger());path=next(iter(stable.RUNTIME_PATHS))
+  forged['changes'][path]['after_sha256']=owner.sha(self.actual[path]+b'\n')
+  with self.assertRaises(ValueError):stable.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  forged=copy.deepcopy(stable.ledger());forged['predecessor_commit']='0'*40
+  with self.assertRaises(ValueError):stable.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  with self.assertRaises(ValueError):stable.reference_bytes(owner.PREFIXES[0]+'/scripts/main.js')
+  with self.assertRaises(TypeError):stable.expected_files()['new']=b''
  def test_pending_offhand_layer_rejects_mutations_and_preserves_exact_predecessor(self):
   import pending_offhand_source as pending
   import seasoning_tp_source as tp
   changes=pending.ledger()['changes']
   self.assertEqual(set(changes),pending.PATHS|{prefix+'/manifest.json'for prefix in owner.PREFIXES})
-  self.assertEqual(pending.predecessor_runtime(self.actual),tp.expected_files())
+  self.assertEqual(pending.predecessor_runtime(self.g149),tp.expected_files())
   for path in changes:
-   files=dict(self.actual);files[path]+=b'\n'
+   files=dict(self.g149);files[path]+=b'\n'
    with self.subTest(path=path),self.assertRaises(ValueError):pending.predecessor_runtime(files)
   for path in pending.PATHS:
    self.assertEqual(pending.reference_bytes(path),tp.expected_files()[path])
@@ -29,7 +56,7 @@ class RuntimeOwnership(unittest.TestCase):
  def test_seasoning_layer_rejects_mutated_postimages_and_forged_ledger(self):
   import seasoning_tp_source as tp
   from pending_offhand_source import predecessor_runtime
-  actual=predecessor_runtime(self.actual)
+  actual=predecessor_runtime(self.g149)
   self.assertEqual(tp.predecessor_runtime(actual),owner.owner_property_expected_files())
   changes=tp.ledger()['changes']
   self.assertEqual(len(changes),68)

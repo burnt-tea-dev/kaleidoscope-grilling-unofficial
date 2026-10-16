@@ -24,11 +24,12 @@ EVIDENCE = (
     '.github/local-test-release-2.8.66.json',
 )
 # Reviewed public BP/RP identities: legacy compat/family/cookery-host.json and
-# the Cookery 1.6.0 adapter baseline. A new author pair requires review here;
+# the Cookery 1.6.0 and 1.6.1 adapter baselines. A new author pair requires review here;
 # the release label itself always comes from the canonical dependencies.
 REVIEWED_COOKERY_HOSTS = {
     ('d322809c-a51e-4742-bfc4-16d3c1491c9d', '8e2c6318-2f5f-4907-aad0-31d10610e405'): (1, 0, 8),
     ('5df753c9-3436-4fba-87f1-a2da3651cfcf', 'f1d333ca-2d6b-4566-8005-e6c309816324'): (1, 6, 0),
+    ('d0ca7a68-2877-4bd5-bc82-6c7b325cccf2', 'c9df2982-d72e-4bbf-a72c-b77de4ea915b'): (1, 6, 1),
 }
 
 

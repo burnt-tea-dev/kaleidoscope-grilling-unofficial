@@ -18,6 +18,10 @@ def reference_bytes(path,current):
  path=Path(path);relative=path.relative_to(ROOT).as_posix() if path.is_absolute() else path.as_posix()
  if relative not in PATHS:return current
  reviewed=pinned_bytes(BOTTLE_GUIDE_BASE,relative)
+ if relative=='projects/grilling/guide/catalog.a3.json' and current!=reviewed:
+  from stable_host_source import reference_bytes as previous_stable_bytes
+  try:current=previous_stable_bytes(relative,current)
+  except ValueError as error:raise AssertionError('Bottle guide differs from complete reviewed bytes: '+relative) from error
  assert current==reviewed,'Bottle guide differs from complete reviewed bytes: '+relative
  before=pinned_bytes(PREVIOUS_BOTTLE_GUIDE_BASE,relative)
  if relative.startswith(LANG_PREFIX):
