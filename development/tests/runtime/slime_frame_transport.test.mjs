@@ -57,8 +57,9 @@ test('throwing native write never poisons a retry cache',()=>{
  assert.equal(marker(p,'main'),219);
 });
 
-// Run the actual runtime/transport modules with only native equipment and log
-// boundaries substituted. This does not emulate native packet delivery.
+// Run the actual runtime/transport modules with native world/equipment, logging
+// and provider-registration boundaries substituted. This does not emulate native
+// packet delivery.
 import vm from 'node:vm';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -67,19 +68,26 @@ const scripts=fileURLToPath(new URL('../../../projects/grilling/gameplay_core/be
 async function runtime(){
  const context=vm.createContext({console}),cache=new Map(),errors=[];
  const stubs={
+  '@minecraft/server':{world:{}},
   'a2735_player_io.js':{getMainHand:p=>p.main,getOffHand:p=>p.off},
-  'held_visual_dispatch_runtime.js':{reportHeldVisualError:(...args)=>errors.push(args)},
+  'held_visual_dispatch_runtime.js':{registerHeldVisualProvider(){},reportHeldVisualError:(...args)=>errors.push(args)},
  };
- async function load(file){
-  if(cache.has(file))return cache.get(file);
-  let mod;
-  if(stubs[path.basename(file)]){const exports=stubs[path.basename(file)];mod=new vm.SyntheticModule(Object.keys(exports),function(){for(const [k,v]of Object.entries(exports))this.setExport(k,v);},{context,identifier:file});}
-  else mod=new vm.SourceTextModule(await fs.readFile(file,'utf8'),{context,identifier:file});
-  cache.set(file,mod);
-  await mod.link((specifier,ref)=>load(path.resolve(path.dirname(ref.identifier),specifier)));
-  return mod;
+ function load(file){
+  if(!cache.has(file))cache.set(file,(async()=>{
+   const stub=stubs[file]??stubs[path.basename(file)];
+   if(stub)return new vm.SyntheticModule(Object.keys(stub),function(){for(const [k,v]of Object.entries(stub))this.setExport(k,v);},{context,identifier:file});
+   return new vm.SourceTextModule(await fs.readFile(file,'utf8'),{context,identifier:file});
+  })());
+  return cache.get(file);
  }
- const mod=await load(path.join(scripts,'slime_frame_runtime.js'));await mod.evaluate();
+ const mod=await load(path.join(scripts,'slime_frame_runtime.js'));
+ // Link the graph once; shared dependencies must use the same pending module.
+ await mod.link((specifier,ref)=>{
+  if(specifier==='@minecraft/server')return load(specifier);
+  assert.ok(specifier.startsWith('./')||specifier.startsWith('../'),`Unexpected module: ${specifier}`);
+  return load(path.resolve(path.dirname(ref.identifier),specifier));
+ });
+ await mod.evaluate();
  return {api:mod.namespace,errors};
 }
 

@@ -23,6 +23,22 @@ class BridgeProjectTests(unittest.TestCase):
                 self.assertEqual(lines[i + 1].strip(),
                                  'if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }')
 
+    def test_required_windows_checkouts_enable_long_paths(self):
+        # Java source fixtures exceed MAX_PATH under the hosted runner prefix.
+        # Set Git's opt-in before checkout, including the downstream canonical job.
+        workflows = guard.ROOT / '.github/workflows'
+        for name, setting, checkout in (
+            ('bridge-project.yml', 'git config --global core.longpaths true',
+             '- uses: actions/checkout@'),
+            ('gameplay-core.yml', 'git config core.longpaths true',
+             'git checkout --detach'),
+        ):
+            with self.subTest(workflow=name):
+                windows = (workflows / name).read_text(encoding='utf-8').split(
+                    'runs-on: windows-latest', 1)[1]
+                self.assertIn(setting, windows)
+                self.assertLess(windows.index(setting), windows.index(checkout))
+
     def test_duplicate_json_key(self):
         with self.assertRaises(ValueError):
             guard.parse('{"version":1,"version":2}')
