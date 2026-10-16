@@ -1,10 +1,11 @@
 """Evaluate the generated timer expression, independent of native visual QA."""
-import ast,json,subprocess,unittest
+import ast,json,subprocess,unittest,sys
 from pathlib import Path
 from native_eating_clock import SECONDS,TICKS,ASSIGNMENT
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 from eating_owner_context import PLAYER_SECONDS,ATTACHABLE_SECONDS,expression
+from eating_owner_properties import predecessor_document
 ROOT=Path(__file__).resolve().parents[2]
 def evaluate(ticks,remaining,alpha,using=True):
     text=SECONDS.replace(TICKS,repr(ticks)).replace('q.is_using_item',str(int(using))).replace('q.main_hand_item_use_duration',repr(remaining)).replace('q.frame_alpha',repr(alpha))
@@ -46,14 +47,15 @@ class NativeEatingClock(unittest.TestCase):
             clips=json.loads(dedicated.read_text())['animations']
             self.assertEqual(set(clips),{'animation.kg_isolated_two_route_v1.player.bun_two.right','animation.kg_isolated_two_route_v1.player.pearl_three.right'})
             names.append(dedicated.name)
+        # Compare the complete predecessor clocks after reversing only the cache.
         for name in names:
-            for a in json.loads((rp/'animations'/name).read_text())['animations'].values():
+            for a in predecessor_document(json.loads((rp/'animations'/name).read_text()))['animations'].values():
                 self.assertEqual(a['anim_time_update'],PLAYER_SECONDS if 'player' in name else ATTACHABLE_SECONDS)
         props=json.loads((bp/'entities/player.json').read_text())['minecraft:entity']['description']['properties']
         self.assertEqual(props['kaleidoscope_grilling:eat_native_ticks'],{'type':'int','range':[0,72000],'default':0,'client_sync':True})
         checked=0
         for path in (rp/'attachables').glob('*.json'):
-            pre=json.loads(path.read_text())['minecraft:attachable']['description']['scripts'].get('pre_animation',[])
+            pre=predecessor_document(json.loads(path.read_text()))['minecraft:attachable']['description']['scripts'].get('pre_animation',[])
             if pre and pre[0]==expression(ASSIGNMENT,attachable=True):
                 checked+=1;self.assertNotIn('q.item_in_use_duration',' '.join(pre))
         self.assertGreater(checked,30)
@@ -61,7 +63,9 @@ class NativeEatingClock(unittest.TestCase):
         module=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js'
         js="import {eatingNativeTicks} from "+json.dumps(module.as_uri())+"; for(const [a,b] of [[90,90],[100,100],[0,0],[-1,0],[90.5,0],[72001,0],[NaN,0],[Infinity,0],[undefined,0]]) if(eatingNativeTicks(a)!==b) throw Error('Invalid duration');"
         subprocess.run(['node','--input-type=module','-e',js],check=True)
-        s=(module.parent/'main.js').read_text()
+        sys.path.insert(0,str(ROOT/'tools'))
+        from build_review_three_eating_projection import restore_main
+        s=restore_main((module.parent/'main.js').read_text())
         self.assertIn('eatingNativeTicks(a.nativeDuration)',s)
         version=tuple(json.loads((module.parent.parent/'manifest.json').read_text())['header']['version'])
         admitted="supportsJavaEatingProjection(e.itemStack.typeId,profile)"

@@ -1,3 +1,37 @@
+# G149 pending offhand NONE-route candidate
+
+- Remove the mirrored FP pending shake only from nine offhand attachables; retain the existing static hold and separate sprinkle precedence.
+- Preserve main-hand, TP/player/clip payloads, assets, BP lifecycle, UUIDs and prior history; use a new paired2.8.149 identity.
+- Full default-path Java evidence supports this contributor removal, while native host-frame and runtime acceptance remain open. [Source contract](docs/evidence/pending-offhand-none-route-g149.md).
+
+# G148 third-person seasoning item contributor candidate
+
+- Restore the original active main-arm SPECIAL item-local half-turn before its display transform, with converted translation and orientation.
+- Add one separate TP item clip and exclusive main-hand active/idle selection for the 65 SPECIAL attachables; preserve existing FP clips, player equations, assets and gameplay.
+- Preserve prior release identities and source witnesses. The relative source correction does not certify absolute socket, camera, native material or rendered-client parity. [Evidence scope](docs/evidence/seasoning-tp-item-inversion-g148.md).
+
+# G147 guarded owner eating properties candidate
+
+- Cache five individually guarded owning-entity eating properties once per attachable frame; preserve zero fallback and existing valid-state behavior.
+- Change only 65 eating attachables, three item-animation documents and paired 2.8.147 identity; runtime text shrinks by 93,380 bytes before identity changes.
+- Keep historical source pins and the G146 ownership manifest immutable, with exact reversible current-layer validation.
+- Source-expression checks are separate from editor/native/client and long-term deployment acceptance. [Evidence scope](docs/evidence/owner-eating-property-guards-g147.md).
+
+# G146 local plate-use arm source candidate
+
+- Suppress the generic left-arm/sleeve use fallback only for active first-person main-hand skewer plate with empty offhand.
+- Preserve map branches, occupied offhand, all skewer routes, transforms, G144 performance, G145 composition and CI fixes.
+- Keep strict current/historical producer separation; no native acceptance, publication or deployment.
+- G145 fingerprints remain immutable; G146 is a separate local release identity.
+
+# G145 composed skewer Java-source repair candidate
+
+- Preserve merged G144 indexed deadline work and synchronous effect snapshots.
+- Compose reviewed THREE/raw ONE/failure/offhand projections, third-person item exclusion, cooked slime world-clock frames, saved failure/slime plate visuals, initial grill facing, native GUI icon families, finite custom-effect merging and bottle-clear guide clarification.
+- Preserve UUIDs, saved ownership, settlement, all 83 bottle-clear recipes and original source witnesses. G144 performance and all local effect/resolver runtime bytes are composition-tested.
+- This is a draft source candidate. No full canonical/Windows package, native client, saved-world or deployment acceptance is claimed. Source-left offscreen motion is preserved where independently confirmed from the original Java call chain; editor captures are not engine acceptance.
+- Suspicious-stew variants, native vanilla hidden-effect chains and unregistered external callbacks remain outside this custom-effect repair. PR217 grill/rack shape changes remain separate.
+
 # 維護變更
 
 ## 2.8.144：限制排程積壓與玩家效果重複工作

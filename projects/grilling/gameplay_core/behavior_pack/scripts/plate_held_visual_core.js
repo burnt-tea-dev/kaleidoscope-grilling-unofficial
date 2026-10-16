@@ -1,3 +1,6 @@
+import {plateSpecialModel} from './plate_special_visual_core.js';
+import {PLATE_SPECIAL_HELD_START} from './plate_special_visual_data.js';
+import {FAILED_SOURCE_KEY} from './failure_skewer_visual_core.js';
 import {RAW_TO_COOKED} from './data.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
@@ -30,15 +33,17 @@ function ingredientRows(props,key){
   throw Error('Grilling: invalid plate ingredient snapshot');
  return rows;
 }
-export function plateHeldRowPlan(row){
+export function plateHeldRowPlan(row,frame=0){
  if(!row||typeof row.id!=='string'||(row.native&&(row.native.version!==1||row.native.id!==row.id)))
   throw Error('Grilling: invalid plate row identity');
  const id=canonicalFoodId(row.id);
+ const props=row.native?(row.native.props??{}):(row.props??{});
+ if(!props||typeof props!=='object'||Array.isArray(props))throw Error('Grilling: invalid saved plate properties');
+ const special=plateSpecialModel(id,props[FAILED_SOURCE_KEY],props[SECRET_MODEL_VARIANTS_KEY],frame);
+ if(special!==undefined)return [PLATE_SPECIAL_HELD_START+special,0];
  if(id===SECRET){
   // Match restoreStack: a native envelope owns the row even when it contains
   // no properties. Legacy row.props is used only without a native envelope.
-  const props=row.native?(row.native.props??{}):(row.props??{});
-  if(!props||typeof props!=='object'||Array.isArray(props))throw Error('Grilling: invalid saved plate properties');
   const cooked=props[SECRET_COOKED_KEY]===true,raw=ingredientRows(props,SKEWER_INGREDIENTS_KEY);
   const cached=ingredientRows(props,SECRET_COOKED_INGREDIENTS_KEY),effective=cooked&&cached.length?cached:raw;
   if(effective.length!==3)throw Error('Grilling: incomplete saved secret plate row');
@@ -46,12 +51,12 @@ export function plateHeldRowPlan(row){
  }
  if(id==='kaleidoscope_grilling:ordinary_skewer')return [PLATE_HELD_ORDINARY,0];
  const raw=COOKED_TO_RAW[id]??id,index=GRILL_MODEL_INDEX[raw];
- // Unsupported mod/failed-source models keep their original slot and stored
+ // Unsupported external models keep their original slot and stored
  // data. Do not replace their identity with a convenient fixed skewer mesh.
  return index===undefined?[0,0]:[1+index*2+(raw===id?0:1),0];
 }
-export function plateHeldVisualPlan(rows){
+export function plateHeldVisualPlan(rows,frame=0){
  if(!Array.isArray(rows)||rows.length>5)throw Error('Grilling: invalid held plate count');
- const words=Array.from({length:5},(_,i)=>i<rows.length?plateHeldRowPlan(rows[i]):[0,0]).flat();
+ const words=Array.from({length:5},(_,i)=>i<rows.length?plateHeldRowPlan(rows[i],frame):[0,0]).flat();
  return [...words,rows.length,HELD_VISUAL_PLATE];
 }

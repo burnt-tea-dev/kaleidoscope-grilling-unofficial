@@ -5,7 +5,7 @@ from verify_a2828 import main as baseline
 ROOT=Path(__file__).resolve().parents[2]
 def main():
     baseline()
-    subprocess.run(['node','--test','development/gameplay_core/test_grill_visual.mjs'],cwd=ROOT,check=True)
+    subprocess.run(['node','--test','development/gameplay_core/test_grill_visual.mjs','development/gameplay_core/test_grill_initial_orientation.mjs'],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'tools/build_grill_display.py','--check'],cwd=ROOT,check=True)
     p=ROOT/'projects/grilling/gameplay_core'
     entity=json.loads((p/'behavior_pack/entities/grill_food_visual.json').read_text())['minecraft:entity']

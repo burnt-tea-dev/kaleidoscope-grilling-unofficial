@@ -3,9 +3,11 @@ import hashlib
 import json
 import math
 import unittest
+import sys
 from held_pose_frames import make_pose,chain,translate,rotate,xyz,scale,point,bone_matrix
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools'))
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
 ANIM='animations/a287_skewer_held.animation.json'
 VERSION=tuple(json.loads((ROOT/'projects/grilling/gameplay_core/behavior_pack/manifest.json').read_text())['header']['version'])
@@ -15,7 +17,8 @@ def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 class HandAnchorTests(unittest.TestCase):
     def test_all_bite_stages_preserve_assets_and_bind_once(self):
-        refs={r for p in (RP/'attachables').glob('*_skewer.attachable.json') if p.name!='secret_skewer.attachable.json' and not (VERSION>=(2,8,68) and p.name=='unfinished_skewer.attachable.json') for r in load(p)['minecraft:attachable']['description']['geometry'].values()}
+        from verify_failure_skewer import admit_attachable
+        refs={r for p in (RP/'attachables').glob('*_skewer.attachable.json') if not admit_attachable(p) and p.name!='secret_skewer.attachable.json' and not (VERSION>=(2,8,68) and p.name=='unfinished_skewer.attachable.json') for r in load(p)['minecraft:attachable']['description']['geometry'].values()}
         seen=set()
         for p in (RP/'models/entity/a287_hand').glob('*.geo.json'):
             g=load(p)['minecraft:geometry'][0];seen.add(g['description']['identifier'])
@@ -32,7 +35,15 @@ class HandAnchorTests(unittest.TestCase):
         self.assertEqual(len(seen),150)
         pieces={g['description']['identifier'] for p in (RP/'models/entity/java_eating_piece').glob('*.geo.json') for g in load(p)['minecraft:geometry']}
         if (RP/'render_controllers/java_eating_piece.render_controllers.json').exists():
-            self.assertEqual(pieces,{'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'})
+            from build_review_three_eating_projection import ids as reviewed_three_ids
+            expected={'geometry.kg_java_dual.piece.grilled_fish_skewer','geometry.kg_java_dual.piece.grilled_ender_pearl_skewer'}
+            expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in reviewed_three_ids()}
+            from build_raw_one_eating_projection import ids as raw_one_ids
+            expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in raw_one_ids()}
+            if (RP/'animations/offhand_eating_player.animation.json').exists():
+                from build_offhand_eating_projection import ids as offhand_ids
+                expected|={'geometry.kg_java_dual.piece.'+item.split(':')[1] for item in offhand_ids('ONE')}
+            self.assertEqual(pieces,expected)
         if VERSION>=(2,8,126):
             helper_ref='geometry.kg_probe_caterpillar.piece'
             owners=[load(p)['minecraft:attachable']['description']['identifier']
@@ -51,7 +62,30 @@ class HandAnchorTests(unittest.TestCase):
             self.assertEqual(helper['bones'][1]['pivot'],[0,24,0])
             self.assertEqual(len(helper['bones'][1]['cubes']),1)
             pieces=pieces|{helper_ref}
-        self.assertEqual(refs,seen|pieces)
+        # The cooked-slime continuation adds exactly fifteen owned frame meshes.
+        import sys
+        sys.path.insert(0,str(ROOT/'tools'))
+        from build_slime_frame_selector import frame_aliases,owned_frame_aliases,ID
+        slime_refs=set(frame_aliases().values())
+        owners=[load(p)['minecraft:attachable']['description']
+                for p in (RP/'attachables').glob('*.json')
+                if slime_refs & set(load(p)['minecraft:attachable']['description']['geometry'].values())]
+        self.assertEqual(len(owners),1)
+        self.assertEqual(owners[0]['identifier'],ID)
+        self.assertTrue(owned_frame_aliases(owners[0]))
+        frame_paths=list((RP/'models/entity/slime_frames').glob('*.geo.json'))
+        self.assertEqual(len(frame_paths),15)
+        frames=[load(p)['minecraft:geometry'][0] for p in frame_paths]
+        self.assertEqual({g['description']['identifier'] for g in frames},slime_refs)
+        for g in frames:
+            anchor,pose,model=g['bones']
+            self.assertEqual(anchor,{'name':'grip','pivot':[0,24,0],'binding':'q.item_slot_to_bone_name(context.item_slot)'})
+            self.assertEqual(pose,{'name':'skewer_pose','parent':'grip','pivot':[0,24,0]})
+            self.assertEqual(model['name'],'skewer_model')
+            self.assertEqual(model['parent'],'skewer_pose')
+            self.assertEqual(model['pivot'],[0,24,0])
+            self.assertNotIn('binding',model)
+        self.assertEqual(refs,seen|pieces|slime_refs)
     def test_secret_ingredients_share_the_existing_grip_and_stable_two_sided_faces(self):
         geometries=load(RP/'models/entity/secret_held.geo.json')['minecraft:geometry']
         refs=set(load(RP/'attachables/secret_skewer.attachable.json')['minecraft:attachable']['description']['geometry'].values())

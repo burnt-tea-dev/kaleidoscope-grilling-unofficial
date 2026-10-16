@@ -1,4 +1,16 @@
-## Current maintained baseline: 2.8.144
+## Current maintained baseline: 2.8.149
+
+Stable-channel publication of the unchanged G149 runtime is requested, subject to final exact-tree CI and package checks. [Release scope, historical editor evidence and known deferred risks](docs/RELEASE-NOTES-A2.8.149.md). Real-client gates are waived for this publication; `client=false`, `production_ready=false`, `live=false`.
+
+G149 removes the extra first-person pending-bottle shake from nine offhand attachables, preserving the explicit static hold and sprinkle precedence. Main-hand, TP/player motion, clip payloads, assets and gameplay remain unchanged. Full native host-frame and Java/client parity are still open. See [default-route source proof and limits](docs/evidence/pending-offhand-none-route-g149.md).
+
+G148 restores the source-owned active third-person SPECIAL seasoning item half-turn through the existing display-frame conversion. The separate main-hand item clip is exclusive with idle hold; first-person curves, player-arm equations, geometry, textures and gameplay remain unchanged. Absolute Java/Bedrock socket composition, left-dominant mapping and native-client acceptance remain open. See [source contract and limits](docs/evidence/seasoning-tp-item-inversion-g148.md).
+
+G147 is a separate guarded-owner-property source candidate. Missing eating properties retain zero fallback without repeated unguarded reads; normal values, poses and source history are preserved. Editor/client acceptance and publication remain pending. See [scope and regression boundary](docs/evidence/owner-eating-property-guards-g147.md).
+
+G146 is a local plate-use left-arm correction retaining the complete G145 composition and reviewed CI fixes. It has no publication request or native acceptance. See [source scope](docs/evidence/plate-use-arm-reconstruction-20261016.md).
+
+G145 is a composed source candidate retaining merged G144 performance. Canonical/Windows, family and native acceptance remain pending; no release is requested. See [composition scope](docs/evidence/g145-composed-source-20261015.md).
 
 G144 bounds deadline-queue replacement/cancellation work and reads one local effect snapshot per player pass. Idle players skip unrelated hunger/saturation component reads. Due ticks, eating/settlement and existing HUD cadence stay unchanged. [Measured source operation counts and limits](docs/evidence/performance-bounded-work-20261015.md) separate these reductions from BDS timing and client RTT, which have not been measured for this candidate.
 

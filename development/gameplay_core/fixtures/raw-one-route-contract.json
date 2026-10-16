@@ -1,0 +1,33 @@
+{
+  "base_commit": "b938359b5e3806453d13f049ac5277eaca24cc63",
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "basis": "Existing generic ONE payload retained, including historical right-hand vertical alignment; camera parity unaccepted",
+  "routes": [
+    {
+      "id": "kaleidoscope_grilling:raw_fish_skewer",
+      "helper_model": "kaleidoscope_grilling:item/fixed_skewers/fish/fish_skewer_raw_piece_1"
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_caterpillar_skewer",
+      "helper_model": "kaleidoscope_grilling:item/fixed_skewers/caterpillar/caterpillar_skewer_raw_piece_1"
+    }
+  ],
+  "source_files": {
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/models/item/fixed_skewers/fish/fish_skewer_raw_piece_1.json": "df72728f9ab755a6c3a82d5c1807d80542d84b7d0d203c6121dcfd40bb06b7d0",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/models/item/fixed_skewers/fish/fish_skewer_piece_1_geo.json": "dd36cbf0c0abff51333854d5a435a6697f7976cfeef8c40d5ecd1a783f9a9cf8",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/textures/item/fixed_skewers/fish_skewer_raw.png": "c82749bc46c7887db315d4a27848da2a0e37b9cca243240910ba239bec51a14e",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/textures/item/fixed_skewers/skewer_stick.png": "520eade3402518ccf581d439d9f8f67b17c422985381bd2baa494b70e58d8d0b",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/models/item/fixed_skewers/caterpillar/caterpillar_skewer_raw_piece_1.json": "7cfa3c01526390370359ac3732958b01d822cde92f92b6d4bc92c5c23a29e021",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/models/item/fixed_skewers/caterpillar/caterpillar_skewer_piece_1_geo.json": "466bc4df8524239c87976e19cc301d21d1b4b4ca4d45d93ff0edc18ee805a511",
+    "projects/grilling/source_snapshots/common/src/main/resources/assets/kaleidoscope_grilling/textures/item/fixed_skewers/caterpillar_skewer_raw.png": "2df013816ee9be63c1a4ca1c502a3e2834d8715bb18f2509264ce3c5182a653f",
+    "projects/grilling/gameplay_core/behavior_pack/items/raw_fish_skewer.json": "450d0958df9b5ff18be974a3312c451870e8701559f70be7f3e122a5b2951094",
+    "projects/grilling/gameplay_core/behavior_pack/items/raw_caterpillar_skewer.json": "fc71930fe09510fc6b4d541fc8b56fe718540142b6a218237a6f71adb2abe6af"
+  },
+  "base_sha256": {
+    "resource_pack/attachables/raw_fish_skewer.attachable.json": "f487a5735cb132763e89ca140e69be7911d99d275bd1e44b32b3e2b5b90e8817",
+    "resource_pack/attachables/raw_caterpillar_skewer.attachable.json": "8e6f5194ac2df82c2189b7e220d4eaf00771cc89a50ca74592e4284ee5423d8f",
+    "resource_pack/render_controllers/java_eating_player.render_controllers.json": "31b95a169d7c7678ba2c6cefee7f86ef025740f4f4ce6c2bd88890de79353d9d",
+    "resource_pack/animations/java_eating_player.animation.json": "8209e6e00a1b7b47e430378ab5e3bd3f73a296c36caa1089e0569edd6b236726",
+    "behavior_pack/scripts/main.js": "9badc2e96ce22334e89534ac1ede5e416d409dc5b115592dfc115e21a197706a"
+  }
+}

@@ -13,6 +13,7 @@ import secret_idle_calibration as calibration
 from public_source_witness import assert_public_bytes_with_g71_bottles as assert_public_bytes, public_json
 from test_eating_observer_projection import node
 from eating_owner_context import document,legacy_document
+from eating_owner_properties import predecessor_document
 from secret_terminal_visibility import apply as terminal_continuation
 
 
@@ -47,7 +48,8 @@ class SecretIdleCalibration(unittest.TestCase):
         for identifier in calibration.OWNED:
             path = RP / 'attachables' / (identifier.split(':')[1] + '.attachable.json')
             assert_public_bytes(self, path)
-            actual = load(path)['minecraft:attachable']['description']
+            # This historical calibration check reverses only the owner cache.
+            actual = predecessor_document(load(path))['minecraft:attachable']['description']
             # The public witness already contains the repair. Re-running the
             # current generator must conserve it, not apply a historical delta.
             once = document(terminal_continuation(calibration.apply_idle_calibration(legacy_document(deepcopy(actual)))),attachable=True)
@@ -84,7 +86,7 @@ for (const d of descriptions) {
  const complete = !d.identifier.endsWith(':unfinished_skewer');
  const ownProfile = d.identifier.endsWith('_java_three_alt') ? 4 : 3;
  const routes = Object.fromEntries(d.scripts.animate.flatMap(row => Object.entries(row)).map(([alias, expression]) =>
-  [alias, new Function('q', 'c', 'return ' + expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))]));
+  [alias, new Function('q', 'c', 'v', 'return ' + expression.replaceAll('c.owning_entity->q.','c.owning_entity.'))]));
  for (const hand of ['right', 'left']) for (const itemSlot of ['main_hand', 'off_hand'])
  for (const first of [0, 1]) for (const using of [false, true]) for (const eatHand of [0, 1, 2])
  for (const projection of [0, 1]) for (const profile of [3, 4]) for (const held of [d.identifier, 'minecraft:apple'])
@@ -92,12 +94,15 @@ for (const d of descriptions) {
   const slot = hand === 'right' ? 'main_hand' : 'off_hand';
   const weapon = hand === 'right' ? 'slot.weapon.mainhand' : 'slot.weapon.offhand';
   const handCode = hand === 'right' ? 1 : 2;
+  const props = {eat_hand: eatHand, eat_profile: profile, eat_projection: projection};
   const q = {is_using_item: using, is_sneaking: posture === 'sneaking', is_swimming: posture === 'swimming',
    is_gliding: posture === 'gliding', is_riding: posture === 'riding', is_item_equipped: () => oppositeEquipped,
-   property: name => ({eat_hand: eatHand, eat_profile: profile, eat_projection: projection})[name.split(':')[1]],
+   has_property: name => Object.hasOwn(props, name.split(':')[1]), property: name => props[name.split(':')[1]],
    is_item_name_any: (selected, ...ids) => selected === weapon && ids.includes(held)};
   const c = {is_first_person: first, item_slot: itemSlot, owning_entity: q};
-  const active = alias => routes[alias] ? Boolean(routes[alias](q, c)) : false;
+  const v = {}, math = {clamp: (n, lo, hi) => Math.max(lo, Math.min(hi, n))};
+  evaluatePreAnimation(d.scripts.pre_animation, q, c, math, v);
+  const active = alias => routes[alias] ? Boolean(routes[alias](q, c, v)) : false;
   const fpSlot = Boolean(first && itemSlot === slot);
   const ownUsing = using && eatHand === handCode;
   const projected = Boolean(complete && fpSlot && ownUsing && projection === 1 && profile === ownProfile &&

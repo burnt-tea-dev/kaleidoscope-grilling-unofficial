@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 NS = 'kaleidoscope_grilling:'
 WORD_A_MAX, WORD_B_MAX = 521429, 682708
 SECRET_MAX, INVALID, BOTTLE, PLATE = 213, 254, 214, 255
+FAILURE = 220  #215..219 are reserved by the independent slime frame owner.
 
 
 def verify_server_constants():

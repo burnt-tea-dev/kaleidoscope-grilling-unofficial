@@ -80,7 +80,9 @@ FAMILIES = {
     'bottle': ('seasoning_bottles_1.json',[8,-18,8],'grip',None,[0,0,0]),
     'rack': ('advanced_rack_0.json',[8,-6.5,13.375],'rack_pose','rack_model',[0,7.5,-1.625]),
 }
-def make_pose(family, view, hand):
+def make_pose(family, view, hand, *, tp_item_inversion=False):
+    if tp_item_inversion and (family!='bottle' or view!='tp' or hand not in ('right','left')):
+        raise ValueError('TP item inversion is defined only for bottle TP hand frames')
     ref,source_offset,bone,model,correction=FAMILIES[family]
     display=json.loads((REPORTS/ref).read_text())['java_display']
     key=('firstperson_' if view=='fp' else 'thirdperson_')+hand+'hand'
@@ -96,6 +98,13 @@ def make_pose(family, view, hand):
         arm=rotate('x',15)
         base=chain(translate([5*sign,22,0]),arm,translate([sign,-31,1]))
         target=chain(translate([6*sign,22,0]),arm,translate([0,-10,-2]),rotate('x',-90),translate(tr),xyz(r),scale(size),translate([-8,-8,-8]),translate(source_offset))
+        if tp_item_inversion:
+            # Java ItemInHandLayerAnvilPressMixin inserts Z180 before renderItem:
+            # after the hand prefix, before display translation/rotation/scale.
+            # Retain this adapted prefix and mesh offset; never add an Euler
+            # channel to the finished pose or rotate the player's arm again.
+            rotation=chain(rotate('x',-90),rotate('z',180),xyz(r))
+            target=chain(translate([6*sign,22,0]),arm,translate([0,-10,-2]),rotate('x',-90),rotate('z',180),translate(tr),xyz(r),scale(size),translate([-8,-8,-8]),translate(source_offset))
         local=mul(rigid_inverse(base),target)
         shifted=point(local,[0,24,0])
         correction_transformed=[sum(local[i][j]*correction[j] for j in range(3))for i in range(3)]

@@ -1,3 +1,6 @@
+import {plateSpecialModel} from './plate_special_visual_core.js';
+import {PLATE_SPECIAL_WORLD_START} from './plate_special_visual_data.js';
+import {FAILED_SOURCE_KEY} from './failure_skewer_visual_core.js';
 import {RAW_TO_COOKED} from './data.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
@@ -53,8 +56,10 @@ export function secretGuiIconPlan(stack,readIngredients){
  });
  return {count:raw.length,bits:secretGuiVariantBits(raw,getItemProperty(stack,SECRET_MODEL_VARIANTS_KEY)),colors};
 }
-export function plateMeshPlan(stack,readIngredients){
+export function plateMeshPlan(stack,readIngredients,frame=0){
  const id=canonicalFoodId(stack?.typeId);
+ const special=plateSpecialModel(id,getItemProperty(stack,FAILED_SOURCE_KEY),getItemProperty(stack,SECRET_MODEL_VARIANTS_KEY),frame);
+ if(special!==undefined)return {model:PLATE_SPECIAL_WORLD_START+special,secret:[0,0,0]};
  if(id===SECRET)return {model:114,secret:secretVisualState(stack,readIngredients)};
  const raw=COOKED_TO_RAW[id]??id,index=GRILL_MODEL_INDEX[raw];
  return index===undefined?undefined:{model:index*6+(raw===id?0:4),secret:[0,0,0]};

@@ -1,3 +1,5 @@
+import {canonicalFoodId} from './eating_profile_ids.js';
+import {SLIME_ID,readSlimeWorldFrame} from './slime_frame_core.js';
 import {advancedRackToolVisuals} from './advanced_rack_visual_core.js';
 import {RACK_TOOL_VISUAL_TYPE,rackToolVisualModel} from './rack_tool_visual_data.js';
 import {rackDisplayPose,RACK_TOOL_VISUAL_Y} from './advanced_rack_layout.js';
@@ -50,10 +52,12 @@ function render(row,b,k,stack,at,mode){
  if((mode===4?!vat:!stack)||!at){discard(row,k);return;}
  const rackModel=mode===0?rackToolVisualModel(stack.typeId):undefined,iconModel=mode===3?recipeIconModel(stack):undefined;
  const customIcon=mode===3?secretGuiIconPlan(stack,reader):undefined;
- const mesh=(mode===1||(mode===3&&iconModel===undefined&&!customIcon))?plateMeshPlan(stack,reader):undefined;
+ const slime=canonicalFoodId(stack?.typeId)===SLIME_ID;
+ let frame=slime?readSlimeWorldFrame(world):0;
+ if(vat){let tick;try{tick=world.getAbsoluteTime()}catch{tick=system.currentTick}frame=vatAnimationFrame(tick);}
+ const mesh=(mode===1||(mode===3&&iconModel===undefined&&!customIcon))?plateMeshPlan(stack,reader,frame):undefined;
  const type=vat?VAT_PREMIUM_VISUAL_TYPE:customIcon?CUSTOM_RECIPE_ICON_VISUAL_TYPE:rackModel!==undefined?RACK_TOOL_VISUAL_TYPE:iconModel!==undefined?RECIPE_ICON_VISUAL_TYPE:mesh?PLATE_FOOD_VISUAL_TYPE:TYPE;
  if(old&&(old.entity?.isValid!==true||old.entity.typeId!==type)){if(!discard(row,k))return;old=undefined;}
- let frame=0;if(iconModel===33||vat){let tick;try{tick=world.getAbsoluteTime()}catch{tick=system.currentTick}frame=vat?vatAnimationFrame(tick):recipeAnimationFrame(tick);}
  const signature=JSON.stringify({item:stack?metadataSignature(captureSkewerMetadata(stack)):undefined,at,mode,type,rackModel,iconModel,customIcon,vat,mesh,frame});if(old?.signature===signature)return;
  if(!old){
   if(helpers>=grillingConfig().contentsHelpers){if(system.currentTick-lastCapacityWarning>=1200){lastCapacityWarning=system.currentTick;console.warn("[Grilling contents capacity] render budget="+grillingConfig().contentsHelpers+"; storage unaffected; configure contentsHelpers after workload validation")}return;}

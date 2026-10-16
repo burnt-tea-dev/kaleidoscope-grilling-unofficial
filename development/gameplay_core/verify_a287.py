@@ -17,7 +17,8 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
  for name in ('eat_hand','eat_profile','eat_projection'):
   owned="c.owning_entity->q.property('kaleidoscope_grilling:"+name+"')"
   expr=expr.replace(owned,"q.property('kaleidoscope_grilling:"+name+"')")
- expr=expr.replace("c.owning_entity->q.has_property('kaleidoscope_grilling:eat_projection')","q.has_property('kaleidoscope_grilling:eat_projection')")
+  owned_presence="c.owning_entity->q.has_property('kaleidoscope_grilling:"+name+"')"
+  expr=expr.replace(owned_presence,"q.has_property('kaleidoscope_grilling:"+name+"')")
  expr=expr.replace('q.item_slot_to_bone_name(context.item_slot)',repr(bone))
  for prefix in ('context','c'):
   expr=expr.replace(prefix+'.is_first_person',str(int(first))).replace(prefix+'.item_slot',repr(slot))
@@ -31,7 +32,13 @@ def expression(expr,first,slot,bone,using=False,eat_profile=3,eat_hand=None,proj
   assert type(value) is int and 0 <= value <= maximum,(name,value)
   expr=re.sub(r'\bv\.kg_season_'+name+r'\b',str(value),expr)
  assert type(has_projection) is bool and type(offhand) is int and offhand in (0,1)
- expr=expr.replace("q.has_property('kaleidoscope_grilling:eat_projection')",str(has_projection))
+ # Current selectors consume initialized owner-property cache values. This
+ # bounded evaluator models only these three known boolean-dispatch inputs;
+ # the complete initializer programs are exercised by owner-context tests.
+ projected=int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)
+ for name,value in [('eat_hand',eat_hand),('eat_profile',eat_profile),('eat_projection',projected)]:
+  expr=re.sub(r'\bv\.kg_owner_'+name+r'\b',str(value if has_projection else 0),expr)
+ for prop in ('eat_projection','eat_profile','eat_hand'):expr=expr.replace("q.has_property('kaleidoscope_grilling:"+prop+"')",str(has_projection))
  expr=expr.replace('q.is_using_item',str(bool(using))).replace("q.property('kaleidoscope_grilling:eat_profile')",str(eat_profile))
  expr=expr.replace("q.property('kaleidoscope_grilling:eat_projection')",str(int(using and eat_profile in (1,2,3,4,5) if projection is None else projection)))
  expr=re.sub(r"q\.is_item_name_any\([^)]*\)",'True',expr)
@@ -66,6 +73,8 @@ def binding_assets():
   for key,body in load(p).get('render_controllers',{}).items():assert key not in controllers,key;controllers[key]=body
  for p in sorted((RP/'attachables').glob('*.json')):
   if p.stem.endswith('_java_three_alt.attachable'):continue
+  from verify_failure_skewer import admit_attachable
+  if admit_attachable(p):continue
   # Preserve this historical pose gate on captured bytes only after the exact
   # current owning-context continuation has been validated independently.
   from eating_owner_context import reference_bytes
@@ -101,12 +110,16 @@ def binding_assets():
       projected='fp_eat_'+hand
       projected_code={'one':1,'two':2,'three':3,'three_alt':4,'four':5}.get(d['animations'].get(projected,'').split('.')[-2] if projected in d['animations'] else '')
       if scoped_caterpillar and hand=='right':projected='probe_one_right';projected_code=1
+      if 'review_three_right' in d['animations']:
+       from build_review_three_eating_projection import ids as reviewed_three_ids
+       assert d['identifier'] in reviewed_three_ids(),p
+       if hand=='right':projected='review_three_right';projected_code=3
       # .61 corrects the renderer context: Java renderArmWithItem curves are
       # first-person-only. Older immutable candidates retain their old guard.
       local_eating=[eating] if eating in d['animations'] and (first or version<(2,8,61)) else []
       expected_using=([projected] if first and profile==projected_code else [expected]+local_eating) if version>=(2,8,58) else [expected]+local_eating
       assert using_matches==expected_using,(p,profile,using_matches,expected_using)
-      if scoped_caterpillar:
+      if scoped_caterpillar or 'review_three_right' in d['animations']:
        for omitted in ({'has_projection':False},{'offhand':1}):
         blocked=[key for row in pose_routes for key,expr in row.items() if expression(expr,first,slot,bone,True,profile,**omitted)]
         assert blocked==[expected]+local_eating,(p,profile,omitted,blocked)
@@ -137,7 +150,8 @@ def binding_assets():
     continue
    if ref.startswith('geometry.kg_java_dual.piece.'):
     from build_java_dual_eating_projection import PIECE_BINDING,REPRESENTATIVES
-    assert d['identifier'] in REPRESENTATIVES and ref==d['geometry']['java_piece']
+    from build_review_three_eating_projection import ids as reviewed_three_ids
+    assert (d['identifier'] in REPRESENTATIVES or d['identifier'] in reviewed_three_ids()) and ref==d['geometry']['java_piece']
     assert b['binding']==PIECE_BINDING and 'parent' not in b
     assert len(g['bones'])==2 and not b.get('cubes')
     assert g['bones'][1]['name']=='dual_piece' and g['bones'][1]['parent']=='grip' and g['bones'][1]['pivot']==[0,24,0] and g['bones'][1]['cubes']
@@ -168,7 +182,7 @@ def binding_assets():
     assert model['name']=='skewer_model' and model['parent']=='skewer_pose' and model['pivot']==[0,24,0]
     for alias,anim in d['animations'].items():
      expected_bones={'skewer_model'} if alias.startswith('eat_') else {'skewer_pose','skewer_model'}
-     if alias.startswith('fp_eat_') and 'java_piece' in d['geometry']:expected_bones.add('dual_piece')
+     if (alias.startswith('fp_eat_') or alias=='review_three_right') and 'java_piece' in d['geometry']:expected_bones.add('dual_piece')
      if scoped_caterpillar and alias=='probe_one_right':expected_bones.add('dual_piece')
      assert set(animations[anim]['bones'])==expected_bones,anim
     oldref=ref.replace('kg_a287.','kg_a283.');old=idx[oldref]
@@ -236,18 +250,25 @@ def binding_assets():
  old=repair.source(RP/'attachables/empty_seasoning_bottle.attachable.json')['minecraft:attachable']['description']
  assert not any(expression(expr,0,'main_hand','rightitem') for row in old['scripts']['animate'] for expr in row.values())
  # World entities and native block items must never inherit a player hand binding.
- entities=0;native=0
+ entities=0;native=0;native_ids=set()
  for p in (RP/'entity').glob('*.json'):
   d=load(p).get('minecraft:client_entity',{}).get('description',{})
   for ref in d.get('geometry',{}).values():
    if ref in idx:assert not any('binding' in b for b in idx[ref]['bones']),(p,ref)
   entities+=1
  for p in (BP/'blocks').glob('*.json'):
-  c=load(p)['minecraft:block']['components'];v=c.get('minecraft:item_visual')
+  block=load(p)['minecraft:block'];c=block['components'];v=c.get('minecraft:item_visual')
   if v:
+   native_ids.add(block['description']['identifier'])
    ref=v['geometry'];ref=ref.get('identifier') if isinstance(ref,dict) else ref
    assert not any('binding' in b for b in idx[ref]['bones']),ref;native+=1
- assert native==3
+ # Keep historical membership exact; the reviewed native-icon layer adds only two GUI sprites.
+ expected_native={'kaleidoscope_grilling:'+name for name in ('big_vat','oil_press','grill')}
+ if any((BP/'blocks'/('item_visual_'+name+'.json')).exists() for name in ('grilled_slime_skewer','mysterious_skewer')):
+  from native_skewer_icons import check_or_write
+  check_or_write(Path(__file__).resolve().parents[2])
+  expected_native|={'kaleidoscope_grilling:item_visual_'+name for name in ('grilled_slime_skewer','mysterious_skewer')}
+ assert native_ids==expected_native and native==len(expected_native),(native_ids,native)
  return idx,refs,{'attachables':len(rows),'pose_cases':cases,'native_item_visuals':native,'client_entities':entities,'items':rows}
 def plant_gate():
  count=0;plant_refs=set()

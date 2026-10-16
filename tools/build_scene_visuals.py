@@ -156,6 +156,17 @@ def oil_assets():
             meta['atlas_tile'] = f'kg_a23_{oil}_oil' + ('_flow' if form == 'flow' else '')
             meta['flipbook_texture'] = path
             flipbooks.append(meta)
+    # Fluid ownership remains exact. Append only the separately verified GUI rows.
+    if any((BP/'blocks'/('item_visual_'+name+'.json')).exists() for name in ('grilled_slime_skewer','mysterious_skewer')):
+        import sys
+        sys.path.insert(0,str(ROOT/'development/gameplay_core'))
+        from native_skewer_icons import check_or_write, planned
+        check_or_write(ROOT)
+        expected=json.loads(planned(ROOT)[0][RP/'textures/flipbook_textures.json'])
+        tiles={'kg_native_icon_'+name for name in ('grilled_slime_skewer','mysterious_skewer')}
+        rows=[row for row in expected if row.get('atlas_tile') in tiles]
+        assert len(rows)==2 and {row['atlas_tile'] for row in rows}==tiles
+        flipbooks.extend(rows)
     output[RP / 'textures/flipbook_textures.json'] = dump(flipbooks)
     return output
 
@@ -191,6 +202,10 @@ def build():
     return {**gui_assets(), **oil_assets(), **vat_assets()}
 
 
+def assert_generated(path, data):
+    assert path.is_file() and path.read_bytes() == data, f'stale scene visual: {path.relative_to(ROOT)}'
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
@@ -198,7 +213,7 @@ if __name__ == '__main__':
     output = build()
     for path, data in output.items():
         if args.check:
-            assert path.is_file() and path.read_bytes() == data, f'stale scene visual: {path.relative_to(ROOT)}'
+            assert_generated(path, data)
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)

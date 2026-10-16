@@ -158,6 +158,11 @@ VERIFIERS = {
     (2, 8, 142): "verify_a28142.py",
     (2, 8, 143): "verify_a28143.py",
     (2, 8, 144): "verify_a28144.py",
+    (2, 8, 145): "verify_a28145.py",
+    (2, 8, 146): "verify_a28146.py",
+    (2, 8, 147): "verify_a28147.py",
+    (2, 8, 148): "verify_a28148.py",
+    (2, 8, 149): "verify_a28149.py",
     (2, 8, 8): "verify_a288_local.py",
 }
 
@@ -344,6 +349,8 @@ def main() -> None:
     major, minor, patch, imports = generic_gate()
     subprocess.run([sys.executable, str(DEV / "verify_visual_refs.py")], check=True)
     version = (major, minor, patch)
+    if version >= (2, 8, 143):
+        subprocess.run([sys.executable, str(DEV / "verify_slime_frames.py")], check=True)
     verifier = VERIFIERS.get(version)
     if verifier is None:
         known = ", ".join(".".join(map(str, v)) for v in sorted(VERIFIERS))
@@ -353,18 +360,25 @@ def main() -> None:
         )
 
     command = [sys.executable, str(DEV / verifier)]
+    if source_before is not None:
+        # This common runner owns the receipt-session capability, independent
+        # of release numbers. Only explicit exact-command helpers opt in.
+        command.insert(1, str(DEV / "verification_session_runner.py"))
     if args.compiled:
         command.append("--compiled")
     environment = dict(os.environ)
     environment.pop(SESSION_ENV, None)
-    # Only this current source-receipt run has the existing immutable-input
-    # boundary. Standalone/full historical verifiers retain every command.
-    if source_before is not None and verifier in {
-        "verify_a28114.py", "verify_a28115.py", "verify_a28116.py",
-        "verify_a28117.py", "verify_a28118.py", "verify_a28119.py", "verify_a28120.py", "verify_a28121.py", "verify_a28122.py", "verify_a28123.py", "verify_a28124.py",
-    }:
-        environment[SESSION_ENV] = verifier
     subprocess.run(command, check=True, env=environment)
+    subprocess.run([sys.executable, str(DEV / "verify_failure_skewer.py")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_ordinary_relative_calibration.py")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_tp_java_item_fallback.py")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_offhand_eating_projection.py")], check=True)
+    subprocess.run(["node", "--test", str(DEV / "test_eating_route_resolver.mjs")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_eating_route_extraction.py")], check=True)
+    subprocess.run([sys.executable, str(DEV / "test_eating_compiler_pipeline.py")], check=True)
+    subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_current_runtime_ownership.py")], check=True)
+    subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_composed_skewer_witnesses.py")], check=True)
+    subprocess.run(["node", "--test", str(DEV / "test_all_skewer_integration.mjs")], check=True)
     if args.compiled:
         verify_compiled_exact()
     if args.write_source_validation is not None:

@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "scope": "isolated all-skewer source composition; no native acceptance",
+  "inputs": {
+    "main": {
+      "commit": "23031fc67ac96542d47d4a99295427e3a69af5c5",
+      "tree": "92b67903ebdb6f2d90fb691a6a4f212caa647f86"
+    },
+    "three": {
+      "commit": "b938359b5e3806453d13f049ac5277eaca24cc63",
+      "tree": "7a77484ff4479bc87999791b837ad36af2b85c48"
+    },
+    "raw_one": {
+      "commit": "591000d5d983d835f34d9478038cfbd2dc99c190",
+      "tree": "113aab1435453058c691f9952797d71300cc3e69"
+    },
+    "raw_inventory_adapter": {
+      "commit": "435a1489116b054809143c113b9f54bfa861d5dd",
+      "tree": "6923d4604dff1105a05fa070ebebc95a07892ccb"
+    },
+    "slime": {
+      "commit": "bb5a114047ce16c4aa5b2c0604cd38f3cb3e05c2",
+      "tree": "b712df33f09468221f9a818b22aac84398f6ef25"
+    },
+    "slime_runtime_pin": {
+      "commit": "5c088cd1d5025c395b30d7a7f05268b9b7c2de70",
+      "tree": "43501d16f0f9db50b8d94837167c0dc52ae495a5"
+    },
+    "failure": {
+      "commit": "7347b34bc7fac8a32f5e3989b124d58cec5bf086",
+      "tree": "37b05a7e9af3f0fd9353215162a4ee10c4b10bdd"
+    },
+    "bottle_guide_only": {
+      "commit": "a092a9971ada91f16a973b01db4a3c9488f7ec1c",
+      "tree": "4154ac07f971486378dbd5b73f63c66ef88bf960"
+    }
+  },
+  "construction": "verified main + THREE + raw ONE + slime + seven-file guide delta + failure; generation THREE -> raw ONE -> failure -> owner context -> slime",
+  "inverse": "failure -> raw ONE -> THREE; exact slime-only normalized postimage -> pinned predecessor",
+  "runtime_fingerprint_sha256": "c846e865ed13827466d1860678764a2f083469ffa90555340cdf7206f54d6ce0",
+  "guards": {
+    "original_pins_unchanged": true,
+    "version_changed": false,
+    "publication": false,
+    "native_client_accepted": false,
+    "generic_ONE_camera_resolved": false,
+    "custom_effects_accepted": false
+  },
+  "validation": "focused suites passed; frozen canonical source receipt and independent combined review pending"
+}

@@ -262,6 +262,12 @@ def ingredient_palette():
   if item['description']['identifier'] in aliases:continue
   icon=item.get('components',{}).get('minecraft:icon')
   key=icon if isinstance(icon,str) else (icon or {}).get('texture',(icon or {}).get('textures',{}).get('default'))
+  # Native GUI routing changes neither Java particle colors nor old tint indices.
+  native_name=item['description']['identifier'].removeprefix(NS)
+  if icon is None and native_name in ('grilled_slime_skewer','mysterious_skewer'):
+   from native_skewer_icons import check_or_write
+   check_or_write(ROOT)
+   key=native_name
   if item['description']['identifier'] in bottles:
    candidate=RP/'textures/blocks/seasoning_bottle.png'
   elif item['description']['identifier'] in skewers:

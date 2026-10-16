@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / 'development/gameplay_core'))
 from held_pose_frames import (chain, translate, xyz, rotate, scale, mul,
                              rigid_inverse, point, bedrock_rotation, native_skewer_calibration)
 from secret_skewer_assets import COMPLETE_STATES, state_slot_cubes, shaft_cubes, palette_refs
+from plate_special_models import catalog, lifted_cubes, geometry_key, HELD_START
 from held_visual_channels import (WORD_A_MAX, WORD_B_MAX, PLATE, hand_channel,
                                   hand_owner, verify_server_constants)
 
@@ -182,7 +183,7 @@ def decoder_scripts():
             valid += f' && ({b} == 0 || ({cell} >= 0 && {cell} <= 5333 && {food} <= 213))'
             shape_vars.append(shape)
         variable(f'v.kg_plate_state_{row}', f'{shape_vars[0]}*16 + {shape_vars[1]}*4 + {shape_vars[2]}')
-        variable(f'v.kg_plate_visible_{row}', f'v.kg_plate_owner && v.kg_plate_count > {row} && {valid} && ({b} > 0 || {a} <= 39)')
+        variable(f'v.kg_plate_visible_{row}', f'v.kg_plate_owner && v.kg_plate_count > {row} && {valid} && ({b} > 0 || {a} < {HELD_START + len(catalog()[0])})')
     return {'initialize': initialize, 'pre_animation': pre,
             'animate': [{key: "c.is_first_person == " + str(int(key.startswith('fp'))) +
                          " && c.item_slot == '" + ('main_hand' if key.endswith('right') else 'off_hand') + "'"}
@@ -222,6 +223,23 @@ def build():
                      ordinary['description']['texture_width'], ordinary['description']['texture_height'], row=row))
         textures['ordinary'] = 'textures/a22_bites/ordinary_skewer_stage0'
         models.append('Geometry.' + alias); fixed_textures.append('Texture.ordinary')
+        # Exact cube/UV equality, separately from texture selection. Reuse
+        # current fixed meshes and dark/mysterious shared shapes per row.
+        shared = {geometry_key(g): g['description']['identifier'].rsplit('.', 1)[1]
+                  for g in geometries if g['bones'][-1]['name'] == f'plate_row_{row}'}
+        for special in catalog()[0]:
+            alias = f'special_{row}_{special["name"]}'
+            source = special['geometry']['description']
+            candidate = geometry(alias, lifted_cubes(special), source['texture_width'], source['texture_height'], row=row)
+            key = geometry_key(candidate)
+            if key in shared:
+                alias = shared[key]
+            else:
+                geometries.append(candidate); shared[key] = alias
+            texture = 'special_' + special['name']
+            textures[texture] = special['texture']
+            models.append('Geometry.' + alias); fixed_textures.append('Texture.' + texture)
+        fixed_limit = len(models)
         visible, a, b = f'v.kg_plate_visible_{row}', f'v.kg_plate_a_{row}', f'v.kg_plate_b_{row}'
         def controller(alias, model, texture, condition, arrays=None):
             identifier = 'controller.render.kg_plate_held.' + alias
@@ -230,8 +248,8 @@ def build():
             if arrays: value['arrays'] = arrays
             controllers[identifier] = value
             routes.append({identifier: visible + ' && ' + condition})
-        controller(f'fixed_{row}', f'Array.models[{b} == 0 && {a} <= 39 ? {a} : 0]',
-                   f'Array.items[{b} == 0 && {a} <= 39 ? {a} : 0]', f'{b} == 0 && {a} > 0',
+        controller(f'fixed_{row}', f'Array.models[{b} == 0 && {a} < {fixed_limit} ? {a} : 0]',
+                   f'Array.items[{b} == 0 && {a} < {fixed_limit} ? {a} : 0]', f'{b} == 0 && {a} > 0',
                    {'geometries': {'Array.models': models}, 'textures': {'Array.items': fixed_textures}})
         shaft = f'shaft_{row}'; geometries.append(geometry(shaft, shaft_cubes(True), row=row))
         controller(shaft, 'Geometry.' + shaft, 'Texture.stick', f'{b} > 0')

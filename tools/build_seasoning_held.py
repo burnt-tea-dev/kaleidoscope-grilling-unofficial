@@ -3,7 +3,9 @@
 Derived from final PR125 head 769f8b2e08233e521536e93803045174baa751a5,
 tools/build_seasoning_held.py (blob f724de7b94d4af9d26e94d6651e8f4779dbc7a2c).
 Keep the established Bedrock idle anchor; no player socket compensation.
-Java main-hand curves are mirrored only as an explicit offhand fallback.
+Sprinkle retains its explicit mirrored offhand fallback. The historical left
+shake curve is preserved, but pending offhand use selects the static hold:
+Java's uncanceled OFF_HAND / UseAnim.NONE branch has no custom shake.
 This is a native-unaccepted candidate, not a camera-space parity claim.
 """
 from pathlib import Path
@@ -11,7 +13,7 @@ import argparse,json,math,sys
 from copy import deepcopy
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'development/gameplay_core'))
-from held_pose_frames import chain,translate,xyz,scale,rigid_inverse,bedrock_rotation,bone_matrix,point,native_skewer_calibration
+from held_pose_frames import chain,translate,xyz,scale,rigid_inverse,bedrock_rotation,bone_matrix,point,native_skewer_calibration,make_pose
 P=ROOT/'projects/grilling/gameplay_core';RP=P/'resource_pack';BP=P/'behavior_pack'
 NS='kaleidoscope_grilling:'
 def load(p):return json.loads(p.read_text())
@@ -60,15 +62,22 @@ def dispatch(desc):
   fp=f"c.is_first_person == 1 && c.item_slot == '{slot}'"
   season=f"(v.kg_season_season_hand == {code} && v.kg_season_season_phase != 0)"
   shake=f"(c.owning_entity->q.is_using_item && v.kg_season_pending_hand == {code})" if pending else '0'
+  shaking=pending and hand=='right'
   ids['fp_'+hand]='animation.kg_a286.bottle_fp_'+hand
   ids['tp_'+hand]='animation.kg_a286.bottle_tp_'+hand
   ids['season_'+hand]='animation.kg_seasoning.item.sprinkle.'+hand
-  selectors['fp_'+hand]=fp+' && ('+season+') == 0'+(' && ('+shake+') == 0' if pending else '')
-  if pending:
+  selectors['fp_'+hand]=fp+' && ('+season+') == 0'+(' && ('+shake+') == 0' if shaking else '')
+  if shaking:
    ids['shake_'+hand]='animation.kg_seasoning.item.shake.'+hand
    selectors['shake_'+hand]=fp+' && '+shake+' && ('+season+') == 0'
   selectors['season_'+hand]=fp+' && '+season
   selectors['tp_'+hand]=f"c.is_first_person == 0 && c.item_slot == '{slot}'"
+  if not pending and hand=='right':
+   # SPECIAL main-hand TP replaces the static hold while the source owner is
+   # active. Offhand is not Java's left-dominant main arm; do not conflate them.
+   ids['tp_season_right']='animation.kg_seasoning.item.sprinkle.tp.right'
+   selectors['tp_season_right']=selectors['tp_'+hand]+' && '+season
+   selectors['tp_'+hand]+=' && ('+season+') == 0'
  desc['animations']=ids
  scripts['animate']=[{k:v}for k,v in selectors.items()]
 
@@ -101,9 +110,15 @@ def sprinkle_anchor():
  return {'format_version':'1.8.0','animations':{'animation.kg_seasoning.player.sprinkle_anchor.right':{
   'animation_length':.5,'override_previous_animation':True,'blend_weight':gate,'bones':bones}}}
 
+def tp_sprinkle():
+ # Separate document: preserve all existing FP curve bytes and idle clips.
+ return {'format_version':'1.8.0','animations':{'animation.kg_seasoning.item.sprinkle.tp.right':{
+  'loop':True,'bones':make_pose('bottle','tp','right',tp_item_inversion=True)}}}
+
 def build():
  out={RP/'animations/seasoning_held.animation.json':animations()}
  out[RP/'animations/seasoning_sprinkle_anchor.animation.json']=sprinkle_anchor()
+ out[RP/'animations/seasoning_tp.animation.json']=tp_sprinkle()
  for path in (RP/'attachables').glob('*seasoning*.json'):
   doc=load(path);dispatch(doc['minecraft:attachable']['description']);out[path]=doc
  return out

@@ -1,3 +1,4 @@
+import * as failureSkewers from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 /** Production visual functions/adapters with API doubles; not native client evidence. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -55,7 +56,7 @@ function fixture(){
  const players=[player];
  const world={afterEvents:Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(name=>[name,{subscribe(callback){callbacks[name]=callback}}])),getAllPlayers:()=>players,getDynamicProperty(){throw Error('Unstackable bottles must read native item properties')},setDynamicProperty(){throw Error('Visual runtime must not write world metadata')}};
  const system={currentTick:100,run:callback=>queue.push(callback),runInterval(callback,ticks){intervals.push({callback,ticks})}};
- const context=vm.createContext({...visuals,...seasoning,canonicalFoodId,world,system,EquipmentSlot:{Offhand:'offhand'},GameMode:{Creative:'creative'},console:{warn:value=>warnings.push(value)}});
+ const context=vm.createContext({...failureSkewers,...visuals,...seasoning,canonicalFoodId,world,system,EquipmentSlot:{Offhand:'offhand'},GameMode:{Creative:'creative'},console:{warn:value=>warnings.push(value)}});
  vm.runInContext(strip(read('a2735_player_io.js')),context);
  // itemDataCore has module-private world state. Keep it in its own scope,
  // as the real ESM import does, instead of shadowing the Minecraft world.
@@ -63,6 +64,7 @@ function fixture(){
  vm.runInContext('configureItemDataWorld(world)',context);
  // Load the production shared writer and dispatcher. These existing adapter
  // regressions must exercise the real cache/owner path after the G119 split.
+ vm.runInContext(strip(read('slime_frame_core.js')),context);
  vm.runInContext(strip(read('held_visual_transport.js')),context);
  vm.runInContext(strip(read('held_visual_dispatch_runtime.js')),context);
  vm.runInContext(strip(read('bottle_held_visual_runtime.js')),context);

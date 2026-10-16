@@ -128,8 +128,17 @@ class SeasoningAnimationTests(unittest.TestCase):
 
     def test_motion_dispatch_is_exclusive_and_owning_entity_safe(self):
         import build_seasoning_held as held
-        for name in ['pending_seasoning', 'special_seasoning', 'special_seasoning_r3_v7']:
+        names = ['pending_seasoning'] + ['pending_seasoning_f' + str(i) for i in range(1, 9)]
+        names += [p.name.removesuffix('.attachable.json')
+            for p in sorted((RP / 'attachables').glob('special_seasoning*.json'))]
+        self.assertEqual(len(names), 74)
+        for name in names:
             d = load(RP / f'attachables/{name}.attachable.json')['minecraft:attachable']['description']
+            is_pending = name.startswith('pending_seasoning')
+            if is_pending:
+                self.assertIn('shake_right', d['animations'])
+                self.assertNotIn('shake_left', d['animations'])
+                self.assertEqual(d['animations']['fp_left'], 'animation.kg_a286.bottle_fp_left')
             for expression in d['scripts']['pre_animation'][-3:]:
                 self.assertIn('c.owning_entity->q.has_property', expression)
                 self.assertIn('c.owning_entity->q.property', expression)
@@ -150,8 +159,9 @@ class SeasoningAnimationTests(unittest.TestCase):
                                             expression = expression.replace(token, value)
                                         if eval(expression.replace('&&', ' and '), {'__builtins__': {}}, {}):
                                             selected.append(alias)
-                                    expected = ('tp_' + hand if not first else 'season_' + hand if phase and active == code
-                                        else 'shake_' + hand if name == 'pending_seasoning' and using and pending == code else 'fp_' + hand)
+                                    expected = ('tp_season_right' if not first and name.startswith('special_seasoning') and hand == 'right' and phase and active == code
+                                        else 'tp_' + hand if not first else 'season_' + hand if phase and active == code
+                                        else 'shake_right' if is_pending and hand == 'right' and using and pending == code else 'fp_' + hand)
                                     self.assertEqual(selected, [expected], (name, first, slot, using, phase, active, pending))
         for path, expected in held.build().items():
             self.assertEqual(load(path), expected, path)

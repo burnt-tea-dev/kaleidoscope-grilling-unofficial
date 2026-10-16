@@ -15,12 +15,18 @@ import build_java_eating_projection as generator
 
 
 OWNER_CONTEXT_HARNESS = r"""
+const preAnimationPrograms = new WeakMap();
 function evaluatePreAnimation(rows,q,c,math,v){
+ q={has_property:()=>false,is_item_equipped:()=>false,is_item_name_any:()=>false,...q};
  const owner={has_property:()=>false,property:()=>0,is_item_name_any:()=>false,...(c.owning_entity??{})};
- const text=rows.join('\n').replaceAll('c.owning_entity->q.','owner.');
- if(text.includes('->'))throw Error('Unsupported Molang entity context');
- const numericMath={...math,floor:Math.floor};
- return new Function('q','c','owner','math','v',text)(q,c,owner,numericMath,v);
+ let program=preAnimationPrograms.get(rows);
+ if(!program){
+  const text=rows.join('\n').replaceAll('c.owning_entity->q.','owner.');
+  if(text.includes('->'))throw Error('Unsupported Molang entity context');
+  program=new Function('q','c','owner','math','v',text);preAnimationPrograms.set(rows,program);
+ }
+ const numericMath={...math,floor:Math.floor,max:Math.max,min:Math.min};
+ return program(q,c,owner,numericMath,v);
 }
 """
 
@@ -33,18 +39,24 @@ class EatingObserverProjection(unittest.TestCase):
     def test_camera_space_item_channels_never_run_in_third_person(self):
         documents=[]
         for path in (RP/'attachables').glob('*_skewer.attachable.json'):
+            from verify_failure_skewer import admit_attachable
+            if admit_attachable(path):continue
             d=json.loads(path.read_text())['minecraft:attachable']['description']
-            documents.append(d['scripts']['animate'])
+            documents.append(d['scripts'])
         self.assertEqual(len(documents),41)
         node('''
 const documents='''+json.dumps(documents)+''';
-const q={is_using_item:true,property:name=>name.endsWith('eat_hand')?1:name.endsWith('eat_profile')?5:1,
+const props={eat_hand:1,eat_profile:5,eat_projection:1,eat_native_ticks:90,eat_elapsed_ticks:1};
+const q={is_using_item:true,has_property:name=>Object.hasOwn(props,name.split(':')[1]),property:name=>props[name.split(':')[1]],
 is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0};
-const c={is_first_person:0,item_slot:'main_hand',owning_entity:q};
-for(const rows of documents)for(const row of rows)for(const [alias,expr] of Object.entries(row)){
- const active=Boolean(new Function('q','c','return '+expr.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c));
+const c={is_first_person:0,item_slot:'main_hand',owning_entity:q},math={clamp:(n,lo,hi)=>Math.max(lo,Math.min(hi,n))};
+for(const scripts of documents){
+ const v={};evaluatePreAnimation(scripts.pre_animation,q,c,math,v);
+ for(const row of scripts.animate)for(const [alias,expr] of Object.entries(row)){
+ const active=Boolean(new Function('q','c','v','return '+expr.replaceAll('c.owning_entity->q.','c.owning_entity.'))(q,c,v));
  if((alias.startsWith('eat_')||alias.startsWith('fp_eat_')||alias==='probe_one_right')&&active)throw Error('FP displacement in TP: '+alias);
  if(alias==='tp_right'&&!active)throw Error('Native TP display suppressed');
+ }
 }
 ''')
 
@@ -57,7 +69,7 @@ const math={clamp:(x,lo,hi)=>Math.max(lo,Math.min(hi,x))};
 for(const profile of [1,2,3,4,5])for(const elapsed of [0,5,20,25,40,65,85,90,100]){
  const ticks=profile===3?100:90,props={eat_native_ticks:ticks,eat_elapsed_ticks:elapsed,eat_hand:1,eat_profile:profile};
  for(const remaining of [0,17,90,100,72000])for(const rows of scripts){
-  const q={is_using_item:true,main_hand_item_use_duration:remaining,frame_alpha:.5,property:name=>props[name.split(':')[1]]};
+  const q={is_using_item:true,main_hand_item_use_duration:remaining,frame_alpha:.5,has_property:name=>Object.hasOwn(props,name.split(':')[1]),property:name=>props[name.split(':')[1]]};
   const c={is_first_person:0,item_slot:'main_hand',owning_entity:q},v={};
   evaluatePreAnimation(rows,q,c,math,v);
   if(v.kg_eat_seconds!==Math.min(elapsed,ticks)/20)throw Error('Observer borrowed owner timer');
@@ -66,7 +78,8 @@ for(const profile of [1,2,3,4,5])for(const elapsed of [0,5,20,25,40,65,85,90,100
 }
 // First person retains the measured native countdown convention unchanged.
 for(const rows of scripts){
- const q={is_using_item:true,main_hand_item_use_duration:70,frame_alpha:.5,property:name=>({eat_native_ticks:90,eat_elapsed_ticks:85,eat_hand:1,eat_profile:5})[name.split(':')[1]]};
+ const props={eat_native_ticks:90,eat_elapsed_ticks:85,eat_hand:1,eat_profile:5};
+ const q={is_using_item:true,main_hand_item_use_duration:70,frame_alpha:.5,has_property:name=>Object.hasOwn(props,name.split(':')[1]),property:name=>props[name.split(':')[1]]};
  const c={is_first_person:1,item_slot:'main_hand',owning_entity:q},v={};
  evaluatePreAnimation(rows,q,c,math,v);
  if(v.kg_eat_seconds!==19.5/20)throw Error('Owner clock changed');
@@ -75,8 +88,7 @@ for(const rows of scripts){
 
     def test_secret_owner_context_is_distinct_from_attachable_queries(self):
         scripts=json.loads((RP/'attachables/secret_skewer.attachable.json').read_text())['minecraft:attachable']['description']['scripts']['pre_animation']
-        reads=[s for s in scripts if s.startswith('v.kg_secret_')]
-        node('const rows='+json.dumps(reads)+r""";
+        node('const rows='+json.dumps(scripts)+r""";
 const props={'kaleidoscope_grilling:secret_main_0':174,'kaleidoscope_grilling:secret_main_1':180,'kaleidoscope_grilling:secret_main_2':184,
  'kaleidoscope_grilling:secret_off_0':-7,'kaleidoscope_grilling:secret_off_1':214,'kaleidoscope_grilling:secret_off_2':180.9};
 const owner={has_property:n=>Object.hasOwn(props,n),property:n=>props[n]},q={property:()=>99,has_property:()=>true};
@@ -131,6 +143,8 @@ for(const [profile,names] of Object.entries(items))for(const hand of ['right','l
         table=json.loads(re.search(r'PROFILE_BY_ITEM=Object.freeze\((\{.*?\})\)',(BP/'scripts/data.js').read_text()).group(1))
         cases=[]
         for path in (RP/'attachables').glob('*_skewer.attachable.json'):
+            from verify_failure_skewer import admit_attachable
+            if admit_attachable(path):continue
             d=json.loads(path.read_text())['minecraft:attachable']['description']
             if d['identifier']=='kaleidoscope_grilling:unfinished_skewer':
                 self.assertFalse(any(k.startswith(('eat_','fp_eat_'))for k in d['animations']))
@@ -148,7 +162,7 @@ for(const row of cases)for(const hand of [1,2]){
  const times=[0,...row.boundaries.flatMap(x=>[Math.ceil(x*20)/20-0.05,Math.ceil(x*20)/20]),maximum/20];
  for(const seconds of times){
   const props={eat_native_ticks:maximum,eat_elapsed_ticks:Math.round(seconds*20),eat_hand:hand,eat_profile:{ONE:1,TWO:2,THREE:3,THREE_ALT:4,FOUR:5}[row.profile]};
-  const q={is_using_item:true,main_hand_item_use_duration:0,frame_alpha:.5,property:name=>props[name.split(':')[1]]};
+  const q={is_using_item:true,main_hand_item_use_duration:0,frame_alpha:.5,has_property:name=>Object.hasOwn(props,name.split(':')[1]),property:name=>props[name.split(':')[1]]};
   const c={is_first_person:0,item_slot:hand===1?'main_hand':'off_hand',owning_entity:q},v={};
   evaluatePreAnimation(row.script,q,c,math,v);
   const expected=row.boundaries.filter(x=>x<=Math.round(seconds*20)/20).length;
@@ -162,7 +176,9 @@ for(const row of cases)for(const hand of [1,2]){
 
     def test_native_visibility_fallback_is_preserved_outside_owned_projection(self):
         original=json.loads((ROOT/'development/gameplay_core/fixtures/native-first-person-controller-1.26.50.4.json').read_text())['controller']
-        current=json.loads((RP/'render_controllers/java_eating_player.render_controllers.json').read_text())['render_controllers']['controller.render.player.first_person']
+        from build_review_three_eating_projection import historical_document
+        path=RP/'render_controllers/java_eating_player.render_controllers.json'
+        current=historical_document(path,json.loads(path.read_text()))['render_controllers']['controller.render.player.first_person']
         for old,new in zip(original['part_visibility'],current['part_visibility']):
             for bone,expression in old.items():
                 if bone in ('rightArm','rightSleeve','leftArm','leftSleeve'):

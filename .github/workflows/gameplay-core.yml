@@ -155,6 +155,7 @@ jobs:
           test "$GITHUB_REPOSITORY_ID" = '1377218440'
           git init .
           git config core.autocrlf false
+          git config core.longpaths true
           git config gc.auto 0
           git config maintenance.auto false
           git config fetch.writeCommitGraph false

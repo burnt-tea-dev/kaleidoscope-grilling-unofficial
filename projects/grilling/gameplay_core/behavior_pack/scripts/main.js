@@ -1,3 +1,7 @@
+import {admitEatingProjection,selectEatingProjection} from './eating_projection_routes.js';
+import {mergeEffectApplication} from './effect_lifecycle_core.js';
+import {readSlimeWorldFrame,syncSlimeHeld} from './slime_frame_runtime.js';
+import {createFailedSkewer,isFailureSkewer} from './failure_skewer_visual_core.js';
 import {isOwnedBottleLore,bottleLoreSignature,bottleLoreMismatch} from './bottle_lore_core.js';
 import {flatulenceSoundOrigin,flatulenceSoundPitch} from './flatulence_sound_runtime.js';
 import {tryProjectileDodgeMovement} from './projectile_dodge_movement_runtime.js';
@@ -9,6 +13,9 @@ import {retargetBottleFillStack,prepareBottleFillItems} from './bottle_fill_item
 import {isPlainEatingId,SKEWER_EATING_IDS} from './eating_profile_ids.js';
 import {beginSeasoningMotion,syncSeasoningMotion} from './seasoning_motion_runtime.js';
 import {supportsJavaEatingProjection} from './java_eating_projection_items.js';
+import {supportsFailureEating,failureEatingAnimation} from './failure_skewer_projection.js';
+import {supportsRawOne,rawOneAnimation} from './raw_one_projection.js';
+import {supportsReviewedThree,reviewedThreeAnimation} from './review_three_projection.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {prepareEatingItems,forgetEatingItem,selectedEatingProfile} from './eating_item_runtime.js';
 import {invincibleDamageFeedback,invincibleAmbientFeedback,goldenSkewerFeedback,ordinaryShieldFeedback,ordinaryFatalFeedback} from './immersion_effect_feedback.js';
@@ -388,7 +395,7 @@ function secretRemainders(player,stack){
   const behavior=rolledIngredientEffects(row);
   for(const e of behavior.effects){
    if(e.kind==='persistent_fx'){
-    const old=fxGet(player,e.effect);fxSet(player,e.effect,Math.max(e.ticks,(old?.until??now())-now()),Math.max(e.amplifier??0,old?.amp??0));
+    fxApply(player,e.effect,e.ticks,e.amplifier??0);
    }else try{player.addEffect(e.effect,e.ticks,{...(e.options??{}),amplifier:e.amplifier??0,showParticles:true})}catch{}
   }
   if(behavior.clearPoison)try{player.removeEffect('poison')}catch{}
@@ -431,14 +438,14 @@ function cookedStack(raw,state){
   stack=copyOne(raw);setCookedIngredientRows(stack,readSkewerRows(raw));setItemProperty(stack,SECRET_COOKED_KEY,true);if(!isSecretCooked(stack))throw Error('Grilling: cooked state was not saved');
  }else{
   const out=customSkewerCookedId(ingredientSnapshot(raw))||RAW_TO_COOKED[raw.typeId];
-  if(!out)return new ItemStack(MYSTERIOUS_ID,1);
+  if(!out)return failedStack(raw,MYSTERIOUS_ID);
   stack=new ItemStack(out,1);copyCustomData(raw,stack);
  }
  setHot(stack,state.heatTicks);setSeasonings(stack,state.seasonings??[]);
  try{setItemProperty(stack,'kaleidoscope_grilling:seasoned',state.seasoned)}catch{}
  return refreshHotLore(stack);
 }
-function failedStack(raw,id){const stack=new ItemStack(id,1);return copyCustomData(raw,stack)}
+function failedStack(raw,id){return createFailedSkewer(raw,id,(type,amount)=>new ItemStack(type,amount),type=>new EnchantmentType(type))}
 function outputFor(raw,state,kind){if(kind==='raw')return copyOne(raw);if(kind==='dark')return failedStack(raw,DARK_ID);if(kind==='mysterious')return failedStack(raw,MYSTERIOUS_ID);return cookedStack(raw,state)}
 function firstEmptyPlayerSlot(player){
  const c=mainContainer(player);if(!c)return -1;
@@ -880,6 +887,10 @@ function readFx(entity){try{return readEffects(entity)}catch{return {}}}
 function writeFx(entity,fx,options){try{return writeEffects(entity,fx,options)}catch{return {}}}
 function fxGet(entity,name){const v=readFx(entity)[name];return v&&Number(v.until)>now()?v:null}
 function fxSet(entity,name,ticks,amp=0){const fx=readFx(entity);fx[name]={until:now()+Math.max(1,ticks|0),amp:amp|0};writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
+function fxApply(entity,name,ticks,amp=0){
+ try{const fx=readEffects(entity);fx[name]=mergeEffectApplication(fx[name],ticks,amp,now());return writeEffects(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})[name]}
+ catch(error){console.warn('[Grilling effect application] '+name+': '+error);return undefined}
+}
 function fxClear(entity,name){const fx=readFx(entity);delete fx[name];writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
 function fxReduce(entity,name,ticks){const fx=readFx(entity),v=fx[name];if(!v)return;v.until-=ticks;if(v.until<=now())delete fx[name];writeFx(entity,fx)}
 function fxSnapshot(entity){
@@ -898,6 +909,8 @@ function doubleNewFx(player,before){
   const old=before[name]?.duration??0,duration=Math.max(0,v.until-t);
   if(duration<=old)continue;
   v.until=t+old+(duration-old)*2;
+  // Java HotFoodHandler removes/re-adds the extended active instance.
+  delete v.hidden;
  }
  writeFx(player,current);
 }
@@ -905,25 +918,24 @@ function applyFixedEffect(player,id){
  id=canonicalFoodId(id);
  const e=COOKED_EFFECTS[id];if(!e||!e.effect)return;const ticks=Math.max(1,e.seconds*20);
  if(e.effect.startsWith('minecraft:')){try{player.addEffect(e.effect.split(':')[1],ticks,{showParticles:true})}catch{}return}
- if(e.effect==='kaleidoscope_grilling:invincible'){fxSet(player,'invincible',ticks);return}
- if(e.effect.startsWith('kaleidoscope_cookery:'))fxSet(player,e.effect.split(':')[1],ticks);
+ if(e.effect==='kaleidoscope_grilling:invincible'){fxApply(player,'invincible',ticks);return}
+ if(e.effect.startsWith('kaleidoscope_cookery:'))fxApply(player,e.effect.split(':')[1],ticks);
 }
 function counts(list){return seasoningEffectCounts(list)}
 function applyDragonBlood(player,ticks,amp){
- const old=fxGet(player,'dragon_blood');amp=Math.max(amp,old?.amp??0);
- fxSet(player,'dragon_blood',Math.max(ticks,old?old.until-now():0),amp);
- nativeDragonHealth(player,amp,{heal:true});
+ const applied=fxApply(player,'dragon_blood',ticks,amp);
+ if(applied)nativeDragonHealth(player,applied.amp,{heal:true});
 }
 
 function applySeasoning(player,list){
  const c=counts(list);let duration=3600;if((c.duration??0)>=4)duration*=4;else if((c.duration??0)>0)duration*=2;
  if((c.speed??0)>0)try{player.addEffect('speed',duration,{amplifier:c.speed>=4?1:0,showParticles:true})}catch{}
  if((c.strength??0)>0)try{player.addEffect('strength',duration,{amplifier:c.strength>=4?1:0,showParticles:true})}catch{}
- if((c.numbness??0)>=4)fxSet(player,'numb',900*((c.duration??0)>=4?4:(c.duration??0)>0?2:1));
+ if((c.numbness??0)>=4)fxApply(player,'numb',900*((c.duration??0)>=4?4:(c.duration??0)>0?2:1));
  if((c.totem??0)>0){
   const poisoned=!!fxGet(player,'heavy_metal_poisoning');
   if(poisoned)awardMetalToleranceFailed(player,c.totem,true);
-  else fxSet(player,'heavy_metal',duration,c.totem>=4?1:0);
+  else fxApply(player,'heavy_metal',duration,c.totem>=4?1:0);
  }
  if((c.vitality??0)>0)applyDragonBlood(player,duration,c.vitality>=4?1:0);
 }
@@ -1057,10 +1069,10 @@ world.afterEvents.itemStartUse.subscribe(e=>{
  try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
  // Separate Java NONE-context first-person path. Do not replace the RP player
  // definition or reset body/head channels. The JSON branch gates upright use.
- if(eatingNativeTicks(a.nativeDuration)>0&&(supportsJavaEatingProjection(e.itemStack.typeId,profile)||(e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off'))&&(!['ONE','THREE'].includes(profile)||!heldByHand(e.source,hand==='off'?'main':'off'))){
+ if(eatingNativeTicks(a.nativeDuration)>0&&admitEatingProjection(e,profile,hand,heldByHand)){
   try{
    e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
-   e.source.playAnimation(((e.itemStack.typeId==='kaleidoscope_grilling:grilled_bun_slice_skewer'&&profile==='TWO'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.bun_two.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_ender_pearl_skewer'&&profile==='THREE'&&hand==='main'&&!heldByHand(e.source,'off'))?'animation.kg_isolated_two_route_v1.player.pearl_three.right':((e.itemStack.typeId==='kaleidoscope_grilling:grilled_caterpillar_skewer'&&profile==='ONE'&&hand!=='off')?'animation.kg_probe_caterpillar.player.one.right':('animation.kg_java_eating.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'))))),{
+   e.source.playAnimation(selectEatingProjection(e,profile,hand,heldByHand),{
     // Do not stop on a client-synced property before its update packet arrives.
     // The animation blend gate still masks inactive projection immediately.
     controller:'kg_java_eating_first_person',blendOutTime:0,
@@ -1091,7 +1103,7 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
  a.meta=finishedFoodMeta(a.meta,now());
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
- if(id===SECRET_ID)try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
+ if(id===SECRET_ID||isFailureSkewer(id))try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
  stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
  if(id===SECRET_ID){addSecretNutrition(e.source,e.itemStack,{hot:false})}
  if(RAW_NAUSEA[id])try{e.source.addEffect('nausea',60,{showParticles:true})}catch{};if(id===MYSTERIOUS_ID)try{e.source.addEffect('nausea',100,{showParticles:true})}catch{};if(id===DARK_ID)try{e.source.addEffect('blindness',200,{showParticles:true})}catch{}
@@ -1113,7 +1125,7 @@ world.afterEvents.itemStopUse.subscribe(e=>{
  // Capture elapsed at release, not in the deferred callback: a 23-tick release
  // must not become eligible merely because cleanup runs a tick later.
  // Let native completion win either event order; never delete a newer session.
- const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID)try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
+ const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
  // A proven nonterminal stop cannot race native completion. Settle in this
  // writable after-event, like Java releaseUsing, before leave clears the session.
  // Terminal/unknown clocks retain deferred completion ownership; before-leave
@@ -1257,7 +1269,9 @@ function tickGrill(block){
 }
 function tundraFactor(id){if(id==='minecraft:blue_ice')return 1.1055;if(['minecraft:ice','minecraft:packed_ice','minecraft:frosted_ice'].includes(id))return 1.11;return 1.3}
 system.runInterval(()=>{
+ const slimeFrame=readSlimeWorldFrame(world);
  for(const p of world.getAllPlayers()){try{
+  syncSlimeHeld(p,slimeFrame);
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}
   const active=ACTIVE_EATS.get(p.id);
   try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}

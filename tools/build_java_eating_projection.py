@@ -86,6 +86,10 @@ def fixed_geometry(description):
         stages.append(i)
     if not stages or stages!=list(range(max(stages)+1)):return False
     expected={f'stage{i}':f'geometry.kg_a287.kg_a22.{name}.stage{min(i,max(stages))}' for i in range(5)}
+    if any(key.startswith('slime_') for key in description['geometry']):
+        from build_slime_frame_selector import owned_frame_aliases,frame_aliases
+        if not owned_frame_aliases(description):return False
+        expected.update(frame_aliases())
     return {key:value for key,value in description['geometry'].items() if key!='java_piece'}==expected
 
 def secret_geometry(description,overrides=None):

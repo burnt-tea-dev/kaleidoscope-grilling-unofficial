@@ -378,6 +378,17 @@ def performance_witness_source(text):
     return text
 
 
+def apply_performance_source(text):
+    """Apply the already reviewed G144 pass without altering other source bytes."""
+    delta = _main_delta('g144-main-reviewed-delta.json')
+    _g144_performance_bytes(_performance_sources()[0])
+    operation = delta['operations'][0]
+    restored = performance_witness_source(text)
+    if restored.count(operation['before']) != 1:
+        raise ValueError('Unknown reviewed G144 effect-pass preimage')
+    return restored.replace(operation['before'], operation['after'], 1)
+
+
 def expected_main_bytes(version, *, local_bottles=False, proposal=None):
     """Published G73/G74 and local G71-G73 remain distinct; G75 adds one plate fix."""
     version = tuple(version)
@@ -505,7 +516,9 @@ def assert_public_bytes(testcase, path):
     message = 'Repaired public-source bytes changed outside reviewed scope: ' + str(path.relative_to(ROOT))
     try:
         current = reference_bytes(path)
-    except AssertionError as error:
+        if relative == MAIN_PATH and tuple(version) >= (2, 8, 144):
+            current = apply_performance_source(current.decode()).encode()
+    except (AssertionError, ValueError) as error:
         testcase.fail(message + '; ' + str(error))
     testcase.assertEqual(current, expected, message)
 
@@ -520,4 +533,12 @@ def assert_public_bytes_with_g71_bottles(testcase, path):
         return assert_public_bytes(testcase, path)
     version = json.loads((ROOT / 'baseline.json').read_text())['version']
     expected = expected_main_bytes(version, local_bottles=True)
-    testcase.assertEqual(path.read_bytes(), expected, 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas')
+    from eating_owner_context import reference_bytes
+    message = 'Source differs outside exact reviewed bottle, plate-alias and published G73 deltas'
+    try:
+        current = reference_bytes(path)
+        if relative == MAIN_PATH and tuple(version) >= (2, 8, 144):
+            current = apply_performance_source(current.decode()).encode()
+    except (AssertionError, ValueError) as error:
+        testcase.fail(message + '; ' + str(error))
+    testcase.assertEqual(current, expected, message)

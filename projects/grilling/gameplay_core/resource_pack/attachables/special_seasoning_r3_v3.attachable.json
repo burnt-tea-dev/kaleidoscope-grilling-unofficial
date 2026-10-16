@@ -20,6 +20,7 @@
         "fp_right": "animation.kg_a286.bottle_fp_right",
         "tp_right": "animation.kg_a286.bottle_tp_right",
         "season_right": "animation.kg_seasoning.item.sprinkle.right",
+        "tp_season_right": "animation.kg_seasoning.item.sprinkle.tp.right",
         "fp_left": "animation.kg_a286.bottle_fp_left",
         "tp_left": "animation.kg_a286.bottle_tp_left",
         "season_left": "animation.kg_seasoning.item.sprinkle.left"
@@ -33,7 +34,10 @@
             "season_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (v.kg_season_season_hand == 1 && v.kg_season_season_phase != 0)"
           },
           {
-            "tp_right": "c.is_first_person == 0 && c.item_slot == 'main_hand'"
+            "tp_right": "c.is_first_person == 0 && c.item_slot == 'main_hand' && ((v.kg_season_season_hand == 1 && v.kg_season_season_phase != 0)) == 0"
+          },
+          {
+            "tp_season_right": "c.is_first_person == 0 && c.item_slot == 'main_hand' && (v.kg_season_season_hand == 1 && v.kg_season_season_phase != 0)"
           },
           {
             "fp_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && ((v.kg_season_season_hand == 2 && v.kg_season_season_phase != 0)) == 0"

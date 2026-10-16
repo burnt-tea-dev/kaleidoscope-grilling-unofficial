@@ -178,6 +178,12 @@
     },
     "kg_a23_premium_chili_oil_flow": {
       "textures": "textures/blocks/java_oil/premium_chili_flow_first"
+    },
+    "kg_native_icon_grilled_slime_skewer": {
+      "textures": "textures/ui/kg_java/grilled_slime_skewer_cooked_frame_0"
+    },
+    "kg_native_icon_mysterious_skewer": {
+      "textures": "textures/ui/kg_java/mysterious_skewer_frame_0"
     }
   }
 }

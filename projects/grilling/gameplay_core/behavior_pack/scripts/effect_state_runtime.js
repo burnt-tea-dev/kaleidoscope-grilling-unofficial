@@ -2,7 +2,7 @@ import {world,system} from '@minecraft/server';
 import {nativeDragonHealth} from './dragon_native_health.js';
 import {FX_KEY,activeEffects,effectPayload,milkEffects} from './effect_lifecycle_core.js';
 const snapshots=new WeakMap(),identities=new Map(),dodgeStates=new Map();let identityTick=-1;
-const copyEffects=fx=>Object.fromEntries(Object.entries(fx).map(([k,v])=>[k,{...v}]));
+const copyEffects=fx=>activeEffects(fx,effectTime());
 function identity(entity){if(identityTick!==system.currentTick){identities.clear();identityTick=system.currentTick}try{if(typeof entity.id==='string')return entity.id}catch{}return undefined;}
 function snapshot(entity){const id=identity(entity);return id===undefined?snapshots.get(entity):identities.get(id);}
 function save(entity,value){const id=identity(entity);if(id===undefined)snapshots.set(entity,value);else identities.set(id,value);}

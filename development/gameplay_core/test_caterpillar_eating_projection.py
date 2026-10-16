@@ -5,8 +5,9 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import build_caterpillar_eating_projection as scoped
+import build_review_three_eating_projection as review
 import build_eating_motion as motion
-from eating_owner_context import reference_bytes,augment as current_context
+from eating_owner_context import reference_bytes
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
 assert FIX['source_predecessor']==SOURCE_PREDECESSOR_BASE
@@ -17,7 +18,7 @@ class CaterpillarProjectionTests(unittest.TestCase):
   for relative,sha in FIX['runtime_file_sha256'].items():
    self.assertEqual(hashlib.sha256(reference_bytes(P/relative)).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
-  current=(scoped.BP/'scripts/main.js').read_text()
+  current=review.restore_main((scoped.BP/'scripts/main.js').read_text())
   # Preserve the original two-edit G126 comparison after verifying and
   # reversing only the exact bounded two-route continuation and the reviewed
   # G130 display hooks. Their independent full-source preimages stay enforced.
@@ -32,17 +33,22 @@ class CaterpillarProjectionTests(unittest.TestCase):
   path=scoped.RP/'attachables/grilled_caterpillar_skewer.attachable.json'
   source=json.loads(subprocess.check_output(['git','show',FIX['source_predecessor']+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT))
   first=motion.build({path:source});second=motion.build(first)
-  self.assertEqual({str(k):encoded(v)for k,v in first.items()},{str(k):encoded(v)for k,v in second.items()})
+  self.assertEqual(set(first),set(second))
+  for k in first:self.assertEqual(hashlib.sha256(encoded(first[k])).hexdigest(),hashlib.sha256(encoded(second[k])).hexdigest(),str(k))
   for k,v in first.items():self.assertEqual(k.read_bytes(),encoded(v),str(k))
   # Compare the exact G126 pipeline prefix before the registered G127 layer.
   # Keep current full-build idempotency above and require full recomposition;
   # the later layer must not mask the original main.js presence delta.
   import build_two_route_eating_projection as two_route
   with patch.object(two_route,'augment',side_effect=lambda output:output):
-   retained=motion.build({path:source})
+   retained=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
    with patch.object(scoped,'augment',side_effect=lambda output:output):
-    previous=motion.build({path:source})
-  self.assertEqual({str(k):encoded(v)for k,v in current_context(two_route.augment(retained)).items()},{str(k):encoded(v)for k,v in first.items()})
+    previous=motion.build({path:source},review_three_routes=False,slime_frames=False,failure_skewers=False)
+  from eating_compiler_pipeline import Context,run
+  context=Context(tuple(json.loads((scoped.BP/'manifest.json').read_text())['header']['version']),{},scoped.RP,scoped.BP/'scripts/main.js')
+  recomposed=run(retained,context,resume_after='g126')
+  self.assertEqual(set(recomposed),set(first))
+  for k in first:self.assertEqual(encoded(recomposed[k]),encoded(first[k]),str(k))
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)

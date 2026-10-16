@@ -16,13 +16,15 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import build_caterpillar_eating_projection as caterpillar
 import build_eating_motion as motion
 import build_two_route_eating_projection as scoped
+import build_review_three_eating_projection as review
 from eating_owner_context import reference_bytes
+from eating_owner_properties import predecessor_document as owner_property_predecessor
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.current = scoped.MAIN.read_text()
+        cls.current = review.restore_main(scoped.MAIN.read_text())
         cls.original = scoped.restore_main(cls.current)
         cls.shared = json.loads(reference_bytes(scoped.SHARED))
         cls.clips = scoped.animations(scoped.SHARED.read_bytes())
@@ -30,7 +32,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147), (2, 8, 148), (2, 8, 149)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
@@ -90,23 +92,33 @@ class TwoRouteProjectionTests(unittest.TestCase):
             scoped.animations(drift)
 
     def test_two_full_generations_preserve_every_non_target_output_and_caterpillar(self):
-        first = motion.build(two_route_camera=True)
-        second = motion.build(first, two_route_camera=True)
+        first = motion.build(two_route_camera=True, review_three_routes=False, failure_skewers=False)
+        second = motion.build(first, two_route_camera=True, review_three_routes=False, failure_skewers=False)
         # Remove only the newly registered layer to compare the full G126 output.
         with patch.object(scoped, 'augment', side_effect=lambda output: output):
-            before = motion.build({scoped.MAIN: self.original})
-        encode = lambda rows: {path: scoped.encoded(value) for path, value in rows.items()}
-        self.assertEqual(encode(first), encode(second))
+            before = motion.build({scoped.MAIN: self.original}, review_three_routes=False, failure_skewers=False)
+        self.assertEqual(set(first), set(second))
+        for path in first:
+            self.assertEqual(scoped.encoded(first[path]), scoped.encoded(second[path]), str(path))
         delta = {path for path in set(before) | set(first)
                  if path not in before or path not in first or scoped.encoded(before[path]) != scoped.encoded(first[path])}
         self.assertEqual(delta, {scoped.MAIN, scoped.DEDICATED})
+        import build_failure_skewer_held as failure
+        final = motion.build()
+        failure_paths = set(failure.base_assets()) | {failure.PLAYER_FILE, failure.PLAYER_CONTROLLER}
         for path, value in first.items():
-            self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
+            if path in failure_paths:
+                self.assertEqual(path.read_bytes(), scoped.encoded(final[path]), str(path))
+            elif path == scoped.MAIN:
+                self.assertEqual(review.restore_main(path.read_text()).encode(),scoped.encoded(value),str(path))
+            elif path.suffix == '.json':
+                self.assertEqual(scoped.encoded(review.predecessor_document(path,owner_property_predecessor(json.loads(path.read_bytes())))),scoped.encoded(value),str(path))
+            else:self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
         fixtures = json.loads((ROOT / 'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
         for relative, digest in fixtures['runtime_file_sha256'].items():
             self.assertEqual(hashlib.sha256(reference_bytes(scoped.P / relative)).hexdigest(), digest, relative)
         # Existing generation must not strip the scoped selector on a later run.
-        self.assertEqual(motion.build()[scoped.MAIN], self.current)
+        self.assertEqual(review.restore_main(motion.build()[scoped.MAIN]), self.current)
 
     def test_supplied_generated_sources_do_not_require_disk_fallbacks(self):
         # Immutable continuation metadata is required even for supplied source;

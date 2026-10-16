@@ -11,6 +11,17 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 from held_visual_channels import bottle_bank_ready
 
 class BottleFillProxyAssets(unittest.TestCase):
+    def test_reviewed_bottle_guide_complete_bytes_and_rejected_mutations(self):
+        import bottle_clear_guide_source_witness as guide
+        for relative in guide.PATHS:
+            path=guide.ROOT/relative
+            current=path.read_bytes()
+            self.assertEqual(guide.reference_bytes(path,current),guide.pinned_bytes(guide.PREVIOUS_BOTTLE_GUIDE_BASE,relative))
+            for changed in (current+b'\n',current.replace(b'=',b':',1),current[1:]):
+                if changed==current:continue
+                with self.subTest(path=relative),self.assertRaises(AssertionError):
+                    guide.reference_bytes(path,changed)
+
     def test_exact_hidden_item_and_clear_recipe_contract_for_all_16(self):
         docs=build.documents()
         self.assertEqual(len(docs),32)
@@ -29,6 +40,38 @@ class BottleFillProxyAssets(unittest.TestCase):
             recipe=build.load(build.BP/'recipes'/f'clear_{name}.json')['minecraft:recipe_shapeless']
             self.assertEqual(recipe['result'],{'item':build.NS+'empty_seasoning_bottle','count':1})
             self.assertEqual(recipe['ingredients'],[{'item':build.NS+name}])
+
+    def test_every_materialized_bottle_has_single_input_discard_recipe(self):
+        # User-reported wrong-ingredient recovery: exercise the actual registered
+        # IDs/recipes, not just the 16 fill proxies or a copied craft simulator.
+        # This proves source coverage, not engine unlock/crafting-grid behavior.
+        items = {}
+        for path in (build.BP/'items').glob('*.json'):
+            item = build.load(path)['minecraft:item']
+            identifier = item['description']['identifier']
+            if identifier.startswith(build.NS) and (
+                path.stem in ('empty_seasoning_bottle', 'pending_seasoning', 'special_seasoning')
+                or path.stem.startswith(('partial_seasoning_f', 'pending_seasoning_f', 'special_seasoning_r'))
+            ):
+                items[identifier] = item
+        self.assertEqual(len(items), 83)
+        inputs = []
+        for path in (build.BP/'recipes').glob('clear_*seasoning*.json'):
+            recipe = build.load(path)['minecraft:recipe_shapeless']
+            self.assertEqual(len(recipe['ingredients']), 1, path)
+            ingredient = recipe['ingredients'][0]
+            self.assertEqual(set(ingredient), {'item'}, path)
+            inputs.append(ingredient['item'])
+            self.assertEqual(recipe['tags'], ['crafting_table'], path)
+            self.assertEqual(recipe['unlock'], [ingredient], path)
+            self.assertEqual(recipe['result'], {'item': build.NS+'empty_seasoning_bottle', 'count': 1}, path)
+            # No refund, data-copy recipe, secondary ingredient or output.
+            self.assertEqual(set(recipe), {'description', 'tags', 'ingredients', 'result', 'unlock'}, path)
+        self.assertEqual(set(inputs), set(items))
+        self.assertEqual(len(inputs), len(set(inputs)))
+        # JSON cannot predicate on dynamic ingredient data. Keep the documented
+        # base-ID self recipe so pre-proxy legacy filled EMPTY bottles can clear.
+        self.assertIn(build.NS+'empty_seasoning_bottle', inputs)
 
     def test_source_shell_and_exact_first_fill_layers_are_retained(self):
         source=build.load(build.SOURCE)
@@ -75,7 +118,10 @@ class BottleFillProxyAssets(unittest.TestCase):
             d=actual['minecraft:attachable']['description']
             self.assertEqual(d['render_controllers'],['controller.render.kg_bottle_held.dynamic'])
             self.assertEqual(d['geometry'],{'default':'geometry.kg_bottle_held.combined'})
-            if kind=='pending':self.assertIn('shake_right',d['animations']);self.assertIn('shake_left',d['animations'])
-            else:self.assertNotIn('shake_right',d['animations']);self.assertNotIn('shake_left',d['animations'])
+            if kind=='pending':
+                self.assertIn('shake_right',d['animations'])
+                self.assertEqual(d['animations']['fp_left'],'animation.kg_a286.bottle_fp_left')
+            else:self.assertNotIn('shake_right',d['animations'])
+            self.assertNotIn('shake_left',d['animations'])
 
 if __name__=='__main__':unittest.main()

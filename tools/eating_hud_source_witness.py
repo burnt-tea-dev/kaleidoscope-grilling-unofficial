@@ -19,6 +19,8 @@ PREPARATION_BEFORE = "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(
 PREPARATION_AFTER = "  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}\n" + "  try{prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}\n"
 
 def dispatcher_witness_source(text):
+    from build_slime_frame_selector import strip_main
+    text = strip_main(text)
     marker = "import {showJavaEatingHud,hideJavaEatingHud,forgetJavaEatingHud}"
     if marker not in text:
         return text

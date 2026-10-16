@@ -38,6 +38,14 @@ def held_plate_assets():
     return build()
 
 
+@lru_cache(maxsize=1)
+def failure_source_contract():
+    # Exact new family, checked independently before legacy family accounting.
+    import subprocess
+    subprocess.run([sys.executable, str(ROOT/'development/gameplay_core/verify_failure_skewer.py')],
+                   cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
+
+
 def geometry_ref(value):
     if isinstance(value, str):
         return value
@@ -487,8 +495,14 @@ def check_current_display_contracts(findings, geometry_index, animations):
     sys.path.insert(0,str(ROOT/'tools'))
     from build_java_dual_eating_projection import REPRESENTATIVES,PIECE_BINDING
     import build_caterpillar_eating_projection as caterpillar
+    import build_review_three_eating_projection as review_three
+    reviewed_three=set(review_three.ids())
+    import build_raw_one_eating_projection as raw_one
+    raw_one_ids=set(raw_one.ids())
     from build_java_eating_projection import held_profile_condition, projection_items, SECRET_PROFILES, secret_item_animation_id
     version=tuple(load_json(BP/"manifest.json")["header"]["version"])
+    import build_offhand_eating_projection as offhand
+    offhand_routes = {row['id']:row['profile'] for row in offhand.contract()['routes']} if version >= (2,8,145) else {}
     from secret_idle_calibration import OWNED as CALIBRATED_ITEMS,animation_document,clip_id,owning_hand_using
     expected = expected_animations()
     if version>=(2,8,68):expected.update(animation_document()["animations"])
@@ -499,10 +513,16 @@ def check_current_display_contracts(findings, geometry_index, animations):
     counts = Counter()
     bottle_ids = set()
     skewer_refs = set()
+    slime_frame_refs = set()
     aliases = {"fp_right", "fp_left", "tp_right", "tp_left"}
     admitted = projection_items()
     for path in sorted((RP / "attachables").glob("*.json")):
         desc = load_json(path)["minecraft:attachable"]["description"]
+        from verify_failure_skewer import FAILURE_ATTACHABLES
+        if path.name in FAILURE_ATTACHABLES:
+            failure_source_contract()
+            counts['failure']+=1
+            continue
         if desc['identifier']=='kaleidoscope_grilling:skewer_plate' and version>=(2,8,119):
             counts['plate']+=1
             for target,content in held_plate_assets().items():
@@ -520,7 +540,15 @@ def check_current_display_contracts(findings, geometry_index, animations):
                     add(findings,'error','held_plate_source_contract',str(target.relative_to(ROOT)),
                         'held plate differs from its current mesh/palette/owner and Java frame generator')
             continue
+        from build_slime_frame_selector import owned_frame_aliases,frame_aliases
+        if owned_frame_aliases(desc):slime_frame_refs.update(frame_aliases().values())
         scoped_caterpillar=version>=(2,8,126) and desc['identifier']==caterpillar.ITEM
+        reviewed_route=desc['identifier'] in reviewed_three
+        raw_one_route=desc['identifier'] in raw_one_ids
+        offhand_profile=offhand_routes.get(desc['identifier'])
+        offhand_piece_ref='geometry.kg_java_dual.piece.'+desc['identifier'].split(':')[1] if offhand_profile else None
+        if offhand_profile and desc.get('geometry',{}).get('java_piece')!=offhand_piece_ref:
+            add(findings,'error','held_binding_contract',desc['identifier'],'offhand route requires its exact item-owned helper geometry')
         ids = desc.get("animations", {})
         canonical_id = desc["identifier"].removesuffix("_java_three_alt")
         family = "skewer" if canonical_id.endswith("_skewer") else "rack" if desc["identifier"] == "kaleidoscope_grilling:advanced_rack" else "bottle"
@@ -547,6 +575,9 @@ def check_current_display_contracts(findings, geometry_index, animations):
             if desc['identifier'] in SECRET_PROFILES and desc['identifier'] in admitted[SECRET_PROFILES[desc['identifier']]]:
                 projected=SECRET_PROFILES[desc['identifier']]
                 expected_ids.update({f'fp_eat_{hand}':secret_item_animation_id(projected,hand) for hand in ('right','left')})
+        if reviewed_route:expected_ids[review_three.ALIAS]='animation.kg_java_eating.item.three.right'
+        if raw_one_route:expected_ids.update({'raw_one_'+hand:'animation.kg_java_eating.item.one.'+hand for hand in ('right','left')})
+        if offhand_profile:expected_ids[offhand.ALIAS]='animation.kg_java_eating.item.'+offhand_profile.lower()+'.left'
         if scoped_caterpillar:
             expected_ids['probe_one_right']=caterpillar.ANIMATION
             expected_geometry=caterpillar.piece_assets()[0]['minecraft:geometry'][0]
@@ -589,6 +620,16 @@ def check_current_display_contracts(findings, geometry_index, animations):
             for alias in ('fp_right','eat_right'):
                 required_selectors[alias]='('+required_selectors[alias]+') && ('+caterpillar.ACTIVE+') == 0'
             required_selectors['probe_one_right']=caterpillar.ACTIVE
+        if reviewed_route:
+            active=review_three.gate([desc['identifier']],True)
+            for alias in ('fp_right','eat_right','eat_alt_right'):
+                if alias in required_selectors:required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
+            required_selectors[review_three.ALIAS]=active
+        if raw_one_route:
+            for hand in ('right','left'):
+                active=raw_one.gate(hand,[desc['identifier']],True)
+                for alias in ('fp_'+hand,'eat_'+hand):required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
+                required_selectors['raw_one_'+hand]=active
         if seasoning_expected is not None:
             required_selectors = {k:v for row in seasoning_expected['scripts']['animate'] for k,v in row.items()}
         if calibrated:
@@ -605,6 +646,20 @@ def check_current_display_contracts(findings, geometry_index, animations):
         if version >= (2,8,143):
             from eating_owner_context import owner_expression
             required_selectors = {alias:owner_expression(query) for alias,query in required_selectors.items()}
+        if offhand_profile:
+            # G145 wraps the already owner-qualified predecessor. Only these
+            # exact item/profile routes receive the actual-left projection.
+            active=offhand.gate(offhand_profile,[desc['identifier']],True)
+            for alias in ('fp_left','eat_left'):
+                required_selectors[alias]='('+required_selectors[alias]+') && ('+active+') == 0'
+            required_selectors[offhand.ALIAS]=active
+        if version >= (2,8,147):
+            from eating_owner_properties import document as guard_document, predecessor_document
+            required_selectors = guard_document(required_selectors)
+            try:
+                predecessor_document({'minecraft:attachable': {'description': desc}})
+            except ValueError as error:
+                add(findings, 'error', 'held_owner_property_guard', desc['identifier'], str(error))
         actual_selectors = {}
         malformed = False
         for row in selectors:
@@ -623,7 +678,8 @@ def check_current_display_contracts(findings, geometry_index, animations):
             geo = geometry_index.get(ref, {}).get("geo", {})
             bound = [b for b in geo.get("bones", []) if b.get("binding")]
             scoped_piece=scoped_caterpillar and alias=='probe_piece' and ref=='geometry.kg_probe_caterpillar.piece'
-            piece=scoped_piece or (alias=='java_piece' and desc['identifier'] in REPRESENTATIVES) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
+            offhand_piece=offhand_profile and alias=='java_piece' and ref==offhand_piece_ref
+            piece=scoped_piece or offhand_piece or (alias=='java_piece' and (desc['identifier'] in REPRESENTATIVES or reviewed_route or raw_one_route)) or (alias=='java_secret_piece' and desc['identifier'] in SECRET_PROFILES)
             if version>=(2,8,68) and re.fullmatch(r'piece_[1-9][0-9]*',alias):
                 piece=desc['identifier'] in SECRET_PROFILES and ref=='geometry.kg_secret_held.'+alias
                 if not piece:add(findings,'error','held_binding_contract',ref,'helper variant requires exact complete secret owner and namespace')
@@ -644,7 +700,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
                 targets = set(animations.get(anim_id, {}).get("body", {}).get("bones", {}))
                 # One attachable may render multiple geometries. The animation
                 # component addresses their union, validated above individually.
-                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar else set()
+                complementary={'skewer_pose','skewer_model'} if piece else {'dual_piece'} if desc['identifier'] in REPRESENTATIVES or desc['identifier'] in SECRET_PROFILES or scoped_caterpillar or reviewed_route or raw_one_route or offhand_profile else set()
                 missing = (targets - set(bones) - complementary) | (targets-available_bones)
                 if missing:
                     add(findings, "error", "held_animation_missing_bone", ref,
@@ -654,10 +710,10 @@ def check_current_display_contracts(findings, geometry_index, animations):
     expected_bottles|={f'kaleidoscope_grilling:special_seasoning_r{remaining}_v{variant}' for remaining in range(1,9) for variant in range(8)}
     if version>=(2,8,71):
         expected_bottles|={f'kaleidoscope_grilling:{kind}_seasoning_f{fill}' for kind in ('partial','pending') for fill in range(1,9)}
-    expected_counts={"skewer":40,"bottle":len(expected_bottles)}
+    expected_counts={"skewer":40,"bottle":len(expected_bottles),"failure":6}
     if version>=(2,8,68):expected_counts["partial"]=1
     if version>=(2,8,119):expected_counts['plate']=1
-    if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs) != 150:
+    if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs - slime_frame_refs) != 150 or not slime_frame_refs <= skewer_refs:
         add(findings, "error", "held_inventory_contract", "attachables", "unexpected held family/bite-stage coverage", dict(counts))
 
 

@@ -1,8 +1,9 @@
 from pathlib import Path
 import copy,hashlib,io,json,subprocess,tempfile,unittest
 from unittest.mock import patch
-from historical_source_refs import ROOT,encoded_listing,inventory,literal_refs,verify
+from historical_source_refs import ROOT,FIXTURE_GIT_REFS,encoded_listing,fixture_refs,inventory,literal_refs,required_refs,verify
 import public_source_witness as public
+from eating_owner_context import reference_bytes
 from eating_owner_context import reference_bytes
 
 class HistoricalSourceRefsTests(unittest.TestCase):
@@ -11,10 +12,21 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   (r/'development/gameplay_core').mkdir(parents=True);(r/'tools/fixtures').mkdir(parents=True)
   (r/'development/gameplay_core/gate.py').write_text(text)
   (r/'tools/fixtures/g66-historical-source-refs.json').write_text(json.dumps({'schema':1,'refs':rows}))
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;path.parent.mkdir(parents=True,exist_ok=True)
+   doc={field:next(iter(rows.values()))}
+   if schema is not None:doc['schema']=schema
+   path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':38,'commits':38})
-  self.assertEqual(set(inventory()),literal_refs())
+  self.assertEqual(verify(),{'refs':54,'commits':54})
+  for ref in ('58f2fc72a286b1ddf210128017c36f14dad759a9','b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
+              '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
+              'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
+              'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f',
+              'f36e333cb629237495479fafdb8a8ac1f2edb459'):
+   self.assertEqual(inventory()[ref],ref)
+  self.assertEqual(set(inventory()),required_refs())
  def test_public_witness_rejects_tree_digest_and_current_source_byte_mutations(self):
   meta=public.witness();path=ROOT/'projects/grilling/gameplay_core/resource_pack/animations/java_eating_player.animation.json'
   self.assertIn(meta['commit'],inventory());self.assertEqual(meta['tree'],public.PUBLIC_SOURCE_TREE)
@@ -88,7 +100,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertIn("const currentSat=player.getComponent('minecraft:player.saturation')",delta['operations'][1]['after'])
   self.assertEqual(public._apply_main_operations(before,delta),repaired)
   self.assertEqual(repaired,public._reviewed_conservation_source())
-  source=path.read_bytes();current=json.loads((ROOT/'baseline.json').read_text())['version']
+  source=reference_bytes(path);current=json.loads((ROOT/'baseline.json').read_text())['version']
   self.assertEqual(source,public.expected_main_bytes(current))
   if tuple(current)>=(2,8,124):
    seasoning=load('g124-main-reviewed-delta.json')
@@ -234,9 +246,9 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertEqual(len(delta['operations']),1)
   self.assertEqual(public._apply_main_operations(before,delta),repaired)
   from eating_hud_source_witness import dispatcher_witness_source
-  current=(ROOT/public.MAIN_PATH).read_text()
+  current=reference_bytes(ROOT/public.MAIN_PATH).decode()
   self.assertEqual(dispatcher_witness_source(current).encode(),repaired)
-  self.assertEqual((ROOT/public.MAIN_PATH).read_bytes(),public.expected_main_bytes(json.loads((ROOT/'baseline.json').read_text())['version']))
+  self.assertEqual(reference_bytes(ROOT/public.MAIN_PATH),public.expected_main_bytes(json.loads((ROOT/'baseline.json').read_text())['version']))
   with self.assertRaisesRegex(AssertionError,'wrong public preimage'):
    public._g127_two_route_bytes(before+b'\n')
   changed=copy.deepcopy(delta);op=changed['operations'][0];original=op['after'];op['after']+='\n'
@@ -259,7 +271,7 @@ class HistoricalSourceRefsTests(unittest.TestCase):
   self.assertIn(HUD_START_SOURCE_BASE,inventory())
   self.assertEqual(current,before.replace(HUD_START_BEFORE.encode(),HUD_START_AFTER.encode(),1))
   from eating_hud_source_witness import PREPARATION_BEFORE,PREPARATION_AFTER
-  actual=(ROOT/public.MAIN_PATH).read_bytes()
+  actual=reference_bytes(ROOT/public.MAIN_PATH)
   self.assertEqual(actual.count(PREPARATION_AFTER.encode()),1)
   legacy=public.performance_witness_source(actual.decode()).encode()
   self.assertEqual(current,legacy.replace(PREPARATION_AFTER.encode(),PREPARATION_BEFORE.encode(),1))
@@ -270,11 +282,15 @@ class HistoricalSourceRefsTests(unittest.TestCase):
    with self.assertRaises(ValueError):restore_main(changed.decode())
  def test_g144_effect_pass_is_exactly_reviewed_and_cannot_widen_old_source_admission(self):
   before=public.expected_main_bytes((2,8,143));current=public.expected_main_bytes((2,8,144))
-  self.assertEqual(current,(ROOT/public.MAIN_PATH).read_bytes())
+  self.assertEqual(current,reference_bytes(ROOT/public.MAIN_PATH))
   self.assertEqual(public.performance_witness_source(current.decode()).encode(),before)
   self.assertIn(public.REVIEWED_PERFORMANCE_BASE,inventory())
   with self.assertRaisesRegex(AssertionError,'wrong immutable preimage'):public._g144_performance_bytes(before+b'\n')
   with self.assertRaises(ValueError):public.performance_witness_source(current.decode().replace('const fx=readFx(p);','const fx={};',1))
+  self.assertEqual(public.apply_performance_source(before.decode()),current.decode())
+  self.assertEqual(public.apply_performance_source(current.decode()),current.decode())
+  for bad in (before.decode().replace("writeFx(p,readFx(p));","writeFx(p,{});",1),current.decode()+current.decode()):
+   with self.assertRaises(ValueError):public.apply_performance_source(bad)
   load=public._main_delta;delta=copy.deepcopy(load('g144-main-reviewed-delta.json'));op=delta['operations'][0]
   op['after']+='\n';delta['after_sha256']=hashlib.sha256(current.replace(load('g144-main-reviewed-delta.json')['operations'][0]['after'].encode(),op['after'].encode(),1)).hexdigest()
   with patch.object(public,'_main_delta',side_effect=lambda name:delta if name=='g144-main-reviewed-delta.json' else load(name)):
@@ -282,6 +298,11 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)
+ def test_frozen_calibration_base_requires_audited_inventory_entry(self):
+  ref='f36e333cb629237495479fafdb8a8ac1f2edb459'
+  r=self.fixture("FROZEN_BASE='"+ref+"'",{'1'*40:'1'*40})
+  self.assertEqual(literal_refs(r),{ref})
+  with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
  def test_missing_short_ref_fails_closed(self):
   r=self.fixture("x=['git','show',f'abcdef12:{path}']",{'1'*40:'1'*40})
   with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
@@ -294,5 +315,30 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_invalid_full_sha_fails_closed(self):
   r=self.fixture("BASE='abcdef12'",{'abcdef12':'a'*39})
   with self.assertRaises(AssertionError):inventory(r)
+
+ def test_named_fixture_commit_fields_are_required_but_other_hashes_are_not(self):
+  ref='1'*40;other='2'*40;r=self.fixture('',{ref:ref})
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;doc=json.loads(path.read_text())
+   doc.update(java_source_revision=other,sha256='3'*64,git_blob_sha1='4'*40)
+   path.write_text(json.dumps(doc))
+  self.assertEqual(fixture_refs(r),{ref});self.assertEqual(required_refs(r),{ref});inventory(r)
+  path=r/'development/gameplay_core/fixtures/offhand-projection-contract.json'
+  doc=json.loads(path.read_text());doc['base_commit']=other;path.write_text(json.dumps(doc))
+  with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
+
+ def test_fixture_missing_files_fields_and_wrong_schema_or_commit_fail_closed(self):
+  ref='1'*40;r=self.fixture('',{ref:ref})
+  for relative,(field,schema) in FIXTURE_GIT_REFS.items():
+   path=r/relative;original=path.read_text();doc=json.loads(original)
+   mutations=[{k:v for k,v in doc.items() if k!=field}, {**doc,field:1}, {**doc,field:'a'*39}]
+   if schema is not None:mutations += [{**doc,'schema':True},{**doc,'schema':2}]
+   for bad in mutations:
+    with self.subTest(path=relative,bad=bad):
+     path.write_text(json.dumps(bad))
+     with self.assertRaises(AssertionError):fixture_refs(r)
+   path.unlink()
+   with self.assertRaises(FileNotFoundError):fixture_refs(r)
+   path.write_text(original)
 
 if __name__=='__main__':unittest.main()

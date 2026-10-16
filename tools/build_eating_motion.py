@@ -54,9 +54,14 @@ def motion_frame(profile,hand,t):
  basis=bone_matrix({**held,'scale':1});delta=chain(item_frame(profile,hand,t),rigid_inverse(item_frame(profile,hand,0)))
  local=chain(rigid_inverse(basis),delta,basis);r=bedrock_rotation(local)
  return [-local[0][3]/.8,local[1][3]/.8,local[2][3]/.8],r
-def build(attachable_overrides=None, *, two_route_camera=False):
+def build(attachable_overrides=None, *, two_route_camera=False, review_three_routes=True, slime_frames=True, failure_skewers=True):
  from eating_owner_context import legacy_document
+ from build_review_three_eating_projection import restore_main,strip_attachable
  overrides={} if attachable_overrides is None else {path:legacy_document(value) if isinstance(value,dict) else value for path,value in attachable_overrides.items()}
+ from build_failure_skewer_held import base_assets as failure_assets
+ overrides.update(failure_assets())
+ main_path=BP/'scripts/main.js'
+ if main_path in overrides:overrides[main_path]=restore_main(overrides[main_path])
  modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
@@ -79,6 +84,9 @@ def build(attachable_overrides=None, *, two_route_camera=False):
  for p in sorted(paths):
   doc=json.loads(json.dumps(overrides[p])) if p in overrides else json.loads(p.read_text())
   doc=legacy_document(doc)
+  from build_raw_one_eating_projection import historical_document as strip_raw_one
+  doc=strip_raw_one(p,doc)
+  strip_attachable(doc)
   d=doc['minecraft:attachable']['description'];identifier=d['identifier'];suffix='_java_three_alt'
   base=identifier[:-len(suffix)] if identifier.endswith(suffix) else identifier
   profile=table.get(base)
@@ -112,31 +120,15 @@ def build(attachable_overrides=None, *, two_route_camera=False):
    # Secret ingredient owner reads are an independent held-render contract.
    # Keep them when rebuilding the shared random-profile bite clock, including
    # the native ALT clone. Otherwise a generator run silently hides the food.
-   secret_reads=[row for row in d['scripts']['pre_animation'] if row.startswith('v.kg_secret_')]
+   secret_reads=[row for row in d['scripts']['pre_animation'] if row.startswith(('v.kg_secret_','v.kg_failure_'))]
    d['scripts']['pre_animation']=["v.kg_bite_stage = q.is_using_item ? (q.property('kaleidoscope_grilling:eat_profile') == 4 ? ("+alt+") : ("+normal+")) : 0;"]+secret_reads
   d['scripts']['pre_animation']=[row.replace(ACTIVE_HAND,'q.is_using_item').replace('q.is_using_item',ACTIVE_HAND) for row in d['scripts']['pre_animation']]
   if modern:d['scripts']['pre_animation']=[ASSIGNMENT]+[row.replace('q.item_in_use_duration',VARIABLE) for row in d['scripts']['pre_animation']]
   d['scripts']['animate']=animate;output[p]=doc
- if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58):
-  sys.path.insert(0,str(ROOT/'tools'))
-  from build_java_eating_projection import augment
-  output=augment(output,table)
- from secret_idle_calibration import augment as augment_idle
- from secret_terminal_visibility import augment as augment_terminal
- output=augment_terminal(augment_idle(output))
- if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,126):
-  from build_caterpillar_eating_projection import augment as augment_caterpillar
-  output=augment_caterpillar(output)
- if two_route_camera or tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,127):
-  # G127 composes the exact reviewed two routes after the retained G126 layer.
-  # The explicit preview remains available for historical source-only checks.
-  from build_two_route_eating_projection import augment as augment_two_route
-  output=augment_two_route(output)
- from eating_owner_context import augment as augment_owner_context
- # Nonedible partial skewers still use the player's eating-hand idle guard.
- partial=RP/'attachables/unfinished_skewer.attachable.json'
- if partial not in output and partial.is_file():output[partial]=json.loads(partial.read_text())
- return augment_owner_context(output)
+ from eating_compiler_pipeline import Context,run
+ context=Context(tuple(json.loads((BP/'manifest.json').read_text())['header']['version']),table,RP,main_path,
+  two_route_camera,review_three_routes,slime_frames,failure_skewers)
+ return run(output,context)
 def mismatch_details(expected, actual, limit=20):
  """Bounded diagnostics only; the full byte-for-byte check remains authoritative."""
  def walk(a,b,pointer=''):

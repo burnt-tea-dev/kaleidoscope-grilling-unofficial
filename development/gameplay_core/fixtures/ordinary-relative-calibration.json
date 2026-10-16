@@ -1,0 +1,36 @@
+{
+  "source_revision": "9a1acdab27698457bec16c9362678e574895a28c",
+  "donor_sha256": "24698515038732b40ad8f3812cbd957f580d1b6f5251fd5708324af4d94944f4",
+  "three_alt_ids": [
+    "kaleidoscope_grilling:grilled_gluten_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_golden_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_lamb_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_meat_and_bone_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_meatball_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_mid_wing_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_mushroom_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_potato_slice_skewer_java_three_alt",
+    "kaleidoscope_grilling:grilled_squid_tentacle_skewer_java_three_alt",
+    "kaleidoscope_grilling:ordinary_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_gluten_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_golden_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_lamb_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_meat_and_bone_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_meatball_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_mid_wing_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_mushroom_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_potato_slice_skewer_java_three_alt",
+    "kaleidoscope_grilling:raw_squid_tentacle_skewer_java_three_alt"
+  ],
+  "three_left_ids": [
+    "kaleidoscope_grilling:grilled_ender_pearl_skewer"
+  ],
+  "excluded": "G127 pearl right, secret, failure, rawONE, reviewedTHREE and all otherprofiles",
+  "proof": "same resolvedJava profile/playerstate implies same playerarmmatrix; conserve existingsecretcalibration without absoluteengineclaim",
+  "source_pins": {
+    "development/gameplay_core/fixtures/java-eating-curves-1.1.1.json": "c342f9eb189f754e244ceff1d2a43a258ed5cd83c1976256e4ba3494be0b9b51",
+    "projects/grilling/integration/immersion_lab/sources/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/ItemInHandSkewerEatingMixin.java": "4c4fb12270f27eaba83607dd1cae8f5b2bebf8969ac3f061ecc45943a2eb734b",
+    "projects/grilling/integration/immersion_lab/sources/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingAnimation.java": "b4e97ccd8fd30b0b928315ce07a0f7e68489cce3efe3b7dd9892c021c8ed95eb",
+    "projects/grilling/integration/immersion_lab/sources/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/EnderPearlEatingAnimation.java": "eab24f1e87a0d4f67abb3bd1b6d3804c90ba3d5fce39eb7c3d7760982dec244d"
+  }
+}

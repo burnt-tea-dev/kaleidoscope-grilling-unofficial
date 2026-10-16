@@ -13,6 +13,7 @@ from public_source_witness import public_json, assert_public_bytes
 import secret_terminal_visibility as terminal
 from test_eating_observer_projection import node
 from eating_owner_context import document
+from eating_owner_properties import predecessor_document
 
 
 class SecretTerminalVisibility(unittest.TestCase):
@@ -26,7 +27,7 @@ class SecretTerminalVisibility(unittest.TestCase):
         node('const descriptions=' + json.dumps(descriptions) + r''';
 for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
  const code=d.identifier.endsWith('_java_three_alt')?4:3,ticks=code===4?90:100;
- const owner={has_property:()=>true,property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
+ const owner={has_property:n=>/^kaleidoscope_grilling:(eat_(hand|profile|native_ticks|elapsed_ticks|projection)|secret_(main|off)_([012]|piece))$/.test(n),property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
  const q={is_using_item:false,main_hand_item_use_duration:ticks,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,property:n=>({eat_hand:hand==='main_hand'?1:2,eat_profile:code,eat_native_ticks:ticks,eat_elapsed_ticks:0,eat_projection:1})[n.split(':')[1]],is_item_name_any:()=>true};
  const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={is_first_person:1,item_slot:hand,owning_entity:owner},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n)),floor:Math.floor};
@@ -48,7 +49,8 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
             path = RP / 'attachables' / (item.split(':')[1] + '.attachable.json')
             assert_public_bytes(self, path)
             source = public_json(path)
-            after = json.loads(path.read_text())
+            # Keep the old source oracle; behavioral tests use the full scripts.
+            after = predecessor_document(json.loads(path.read_text()))
             description = source['minecraft:attachable']['description']
             rows = description['scripts']['pre_animation']
             self.assertEqual(sum(row.startswith('v.kg_secret_owner_occupied = ') for row in rows), 1)
@@ -66,7 +68,7 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
  const code=d.identifier.endsWith('_java_three_alt')?4:3,ticks=code===4?90:100;
  let using=true,held=d.identifier,clear=false,first=1,changed=false;
  const props={eat_native_ticks:ticks,eat_elapsed_ticks:ticks-1,eat_profile:code,eat_hand:hand==='main_hand'?1:2,eat_projection:1};
- const owner={has_property:()=>true,property:n=>clear?0:n.endsWith('_piece')?176:n.endsWith('_0')?(changed?173:174):n.endsWith('_1')?180:184,
+ const owner={has_property:n=>/^kaleidoscope_grilling:(eat_(hand|profile|native_ticks|elapsed_ticks|projection)|secret_(main|off)_([012]|piece))$/.test(n),property:n=>clear?0:n.endsWith('_piece')?176:n.endsWith('_0')?(changed?173:174):n.endsWith('_1')?180:184,
   is_item_name_any:(slot,...ids)=>slot===(hand==='main_hand'?'slot.weapon.mainhand':'slot.weapon.offhand')&&ids.includes(held)};
  const q={get is_using_item(){return using},main_hand_item_use_duration:0,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,
   property:n=>props[n.split(':')[1]],is_item_name_any:(slot,...ids)=>owner.is_item_name_any(slot,...ids)};
@@ -118,7 +120,7 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
 for(const d of descriptions){
  let hand='main_hand',using=true;const code=d.identifier.endsWith('_java_three_alt')?4:3,ticks=code===4?90:100;
  const props={eat_hand:1,eat_profile:code,eat_native_ticks:ticks,eat_elapsed_ticks:ticks-1,eat_projection:1};
- const owner={has_property:()=>true,property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
+ const owner={has_property:n=>/^kaleidoscope_grilling:(eat_(hand|profile|native_ticks|elapsed_ticks|projection)|secret_(main|off)_([012]|piece))$/.test(n),property:n=>n.endsWith('_piece')?176:n.endsWith('_0')?174:n.endsWith('_1')?180:184,is_item_name_any:()=>true};
  const q={get is_using_item(){return using},main_hand_item_use_duration:0,frame_alpha:1,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,property:n=>props[n.split(':')[1]],is_item_name_any:()=>true};
  const secretProperty=owner.property;owner.property=n=>n.startsWith('kaleidoscope_grilling:eat_')?q.property(n):secretProperty(n);
  const c={is_first_person:1,get item_slot(){return hand},owning_entity:owner},v={},math={clamp:(n,a,b)=>Math.max(a,Math.min(b,n))};

@@ -2420,7 +2420,7 @@
           "空手取回待摇晃的瓶子并持续使用 4 秒；完成时有声音与粒子，成品可使用 16 次。提前放开不会完成。 背包瓶图标显示剩余份数；食材的实际顺序与颜色请看手持或放置的瓶层。",
           "对烧烤架撒料时，每根架上烤串消耗 1 次；剩余次数不足时不会部分提交。",
           "搭配：红石提供速度，火药提供力量，折耳根粉延时；不死图腾粉与龙蛋粉提供特殊效果。各材料的数量门槛见其同名条目。",
-          "把一瓶调料单独放入合成格，可清空内容并取回空瓶；包含待摇瓶与已用过的完成调料。",
+          "装错料或缺少基础料时，先空手取回瓶子，再把这一瓶单独放入合成格并取走产出的空瓶。未摇匀、待摇瓶与已用过的完成调料都可清空。这会丢弃整瓶所有材料，不退还粉末，也不能单独抽出某一份。",
           "空瓶合成：上排中央放木按钮，中排与下排各放三块玻璃；支持 Java 1.21.1 的全部十一种木按钮。",
           "厨房料理的热食与调料联动可由服务器关闭。关闭后，炒锅与炖锅的新成品不再附加热度或调料；尝试撒料会提示已关闭，瓶子不会扣次数。烤炉的调料功能不受此设置影响。"
         ],
@@ -2430,7 +2430,7 @@
           "空手取回待搖晃的瓶子並持續使用 4 秒；完成時有聲音與粒子，成品可使用 16 次。提前放開不會完成。 背包瓶圖示顯示剩餘份數；食材的實際順序與颜色請看手持或放置的瓶層。",
           "對燒烤架撒料時，每根架上烤串消耗 1 次；剩餘次數不足時不會部分提交。",
           "搭配：紅石提供速度，火藥提供力量，折耳根粉延時；不死圖騰粉與龍蛋粉提供特殊效果。各材料的數量門檻見其同名條目。",
-          "把一瓶調料單獨放入合成格，可清空內容並取回空瓶；包含待搖瓶與已用過的完成調料。",
+          "裝錯料或缺少基礎料時，先空手取回瓶子，再把這一瓶單獨放入合成格並取走產出的空瓶。未搖勻、待搖瓶與已用過的完成調料都可清空。這會丟棄整瓶所有材料，不退還粉末，也不能單獨抽出某一份。",
           "空瓶合成：上排中央放木按鈕，中排與下排各放三塊玻璃；支援 Java 1.21.1 的全部十一種木按鈕。",
           "廚房料理的熱食與調料聯動可由伺服器關閉。關閉後，炒鍋與燉鍋的新成品不再附加熱度或調料；嘗試撒料會提示已關閉，瓶子不會扣次數。烤爐的調料功能不受此設定影響。"
         ],
@@ -2440,7 +2440,7 @@
           "Take the pending bottle with an empty hand and hold use for 4 seconds. Sound and particles mark completion; the finished bottle has 16 uses. Releasing early does not finish it. Inventory bottle icons show the remaining amount. Check the held or placed layers for the actual ingredient order and colors.",
           "Seasoning a grill costs 1 use per skewer currently on the grill; insufficient remaining uses do not partially commit.",
           "Mixing: Redstone grants Speed, Gunpowder grants Strength, and Houttuynia Powder extends effects. Totem and Dragon Egg Powders add special effects; see their material entries for thresholds.",
-          "Place one seasoning bottle alone in a crafting grid to discard its contents and recover an empty bottle. Pending and partially used bottles are supported.",
+          "If you add the wrong ingredient or lack a base ingredient, pick up the bottle with an empty hand, place that bottle alone in a crafting grid, and take the empty-bottle output. Partially filled, pending, and used finished bottles can all be cleared. This discards every ingredient in the bottle; powders are not refunded, and individual ingredients cannot be removed.",
           "Empty bottle: one wooden button centered above two full rows of glass. All eleven Java 1.21.1 wooden button variants are supported.",
           "The server can disable hot-food and seasoning integration for Cookery dishes. New pot and stockpot outputs then receive no added heat or seasoning. Seasoning attempts show a disabled message without using the bottle. Grill seasoning is unchanged."
         ]

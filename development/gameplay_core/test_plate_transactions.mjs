@@ -1,3 +1,4 @@
+import {createFailedSkewer,FAILED_SOURCE_KEY} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 /** Fault-injected production functions; storage doubles are not Minecraft players. */
 import test from 'node:test';
@@ -53,7 +54,7 @@ function fixture(savedDp){
   captureInteractionIntent:(p,s)=>intentCore.captureInteractionIntentFromStacks(s,held(p,'main'),held(p,'off'),p.selectedSlotIndex),
   interactionIntentStillCurrent:(p,i)=>intentCore.interactionIntentMatchesStacks(i,held(p,'main'),held(p,'off'),p.selectedSlotIndex),
   interactionStackSignature:s=>s?JSON.stringify(s):'',interactionFeedback(){},UNFINISHED_ID:N+'unfinished_skewer'});
- vm.runInContext(source+'\nglobalThis.api={readPlateBlock,placePlateOn,handlePlateBlock,plateStorageStep,plateTransaction,posKey,plateFaultKey,breakPlate,bookItem,stackRow,placeRecipeBlock,readRecipeBlock,handleRecipeBlock,breakRecipe,recipeFaultKey,recipeActionSnapshot,recoverRecipeDelivery,a25ReadRecipeDisplayStack};',c);
+ vm.runInContext(source+'\nglobalThis.api={a25PlateRows,a25PlateItem,a25RestoreStack,readPlateBlock,placePlateOn,handlePlateBlock,plateStorageStep,plateTransaction,posKey,plateFaultKey,breakPlate,bookItem,stackRow,placeRecipeBlock,readRecipeBlock,handleRecipeBlock,breakRecipe,recipeFaultKey,recipeActionSnapshot,recoverRecipeDelivery,a25ReadRecipeDisplayStack};',c);
  const api=c.api,key=api.posKey(N+'a25_plate_',block);
  return {dp,slots,entities,events,scheduled,intervals,components,dirty,flush(){while(scheduled.length)scheduled.shift()()},block,holder,api,key,
   neighbor(id,location,states={}){const b={typeId:id,...location,location,dimension,permutation:permutation(id,states)};neighbors.set(at(location),b);return b},
@@ -344,4 +345,18 @@ test('display dirtiness follows completed plate and recipe transactions, never f
 });
 test('a display queue failure cannot roll back a completed serving',()=>{
  const f=fixture();f.rows(1);f.fault=k=>k==='queue';f.api.handlePlateBlock(f.block,f.holder);assert.equal(f.api.readPlateBlock(f.block).length,0);assert.equal(f.slots.get(0).typeId,N+'grilled_beef_skewer');
+});
+
+test('failure discriminator and original ingredient metadata survive actual portable plate storage',()=>{
+ const f=fixture();
+ for(const result of [N+'mysterious_skewer',N+'dark_grilling']){
+  const input=food();input.typeId=N+'raw_gluten_skewer';
+  item.setItemProperty(input,N+'model_variants','[9,5,4]');
+  item.setItemProperty(input,N+'skewer_ingredients','[{"id":"minecraft:beef"}]');
+  const failed=createFailedSkewer(input,result,(id,n)=>new Stack(id,n));
+  const row=f.api.stackRow(failed),portable=f.api.a25PlateItem([row]);
+  const restored=f.api.a25RestoreStack(f.api.a25PlateRows(portable)[0]);
+  assert.deepEqual(snapshot.captureSkewerMetadata(restored),snapshot.captureSkewerMetadata(failed));
+  assert.equal(item.getItemProperty(restored,FAILED_SOURCE_KEY),N+'raw_gluten_skewer');
+ }
 });

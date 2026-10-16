@@ -29,7 +29,8 @@ class G75SourceConservationTests(unittest.TestCase):
         expected=public.expected_main_bytes(current)
         self.assertEqual(expected,public.expected_main_bytes(current,local_bottles=True))
         path = public.ROOT / public.MAIN_PATH
-        self.assertEqual(path.read_bytes(), expected)
+        from eating_owner_context import reference_bytes
+        self.assertEqual(reference_bytes(path), expected)
         public.assert_public_bytes(self, path)
         public.assert_public_bytes_with_g71_bottles(self, path)
 

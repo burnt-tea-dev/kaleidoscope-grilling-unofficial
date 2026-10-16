@@ -4,6 +4,10 @@ from verify_a283 import BP, RP, main as previous_gate
 
 
 def eating_dispatch_source(script, version):
+    import sys
+    sys.path.insert(0, str(RP.parents[3] / 'tools'))
+    from build_review_three_eating_projection import restore_main as restore_review_three
+    script = restore_review_three(script)
     """Check the exact reviewed two-route wrapper before legacy assertions.
 
     This source-only continuation does not change any release identity witness.
@@ -19,7 +23,7 @@ def eating_dispatch_source(script, version):
         from eating_owner_context import reference_bytes
         try:
             captured = reference_bytes(dedicated)
-        except AssertionError as error:
+        except (AssertionError, ValueError) as error:
             raise AssertionError('Dedicated two-route clip bytes drifted') from error
         assert hashlib.sha256(captured).hexdigest() == NATIVE_CLIPS_SHA256, 'Dedicated two-route clip bytes drifted'
         restored = restore_main(script)
@@ -107,8 +111,11 @@ def eating_gate():
     assert foods == required, required - foods
     # Native arm animation must still carry the same attachable/bite stages.
     skewers = 0
+    from slime_frame_source_witness import reference_bytes as slime_reference_bytes
     for file in (RP / 'attachables').glob('*_skewer.attachable.json'):
-        d = json.loads(file.read_text())['minecraft:attachable']['description']
+        from verify_failure_skewer import admit_attachable
+        if admit_attachable(file):continue
+        d = json.loads(slime_reference_bytes(file, file.read_bytes()))['minecraft:attachable']['description']
         if version >= (2,8,68) and d['identifier']=='kaleidoscope_grilling:unfinished_skewer':
             assert d['identifier'] not in required, file
             assert d['render_controllers']==['controller.render.kg_secret_held.stick']+[f'controller.render.kg_partial_held.{i}' for i in range(2)],file
