@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib,json,os,subprocess,tempfile,urllib.request,zipfile
 ROOT=Path(__file__).resolve().parents[1]
 BP=ROOT/'projects/grilling/gameplay_core/behavior_pack'
-def check_guide_locale_registry(original,patched,base):
+def check_guide_locale_registry(original,patched,base,author_fixed=False):
  # Exercise the actual pinned author begin/chunk/end consumer in both forms.
  # SDK event/scheduler doubles are transport witnesses, not Minecraft players.
  fixture=r'''
@@ -20,12 +20,14 @@ function register(payload,envelopeRow=envelope){
 const before=JSON.stringify(row);register(row);const accepted=getGuidebookExtension(row.id);
 assert.ok(accepted);assert.equal(accepted.categories.length,1);assert.deepEqual(Object.keys(accepted.names).sort(),[...locales].sort());
 const mechanics=accepted.entries[0].mechanicsByLocale;
-if(PATCHED){
+if(PATCHED||AUTHOR_FIXED){
  assert.deepEqual(Object.keys(mechanics).sort(),[...locales].sort());
  for(const locale of locales)assert.deepEqual(mechanics[locale],localized[locale]);
  for(const locale of bad)assert.equal(mechanics[locale],undefined);
- assert.equal(publicGuideLocale(' zh_CN '),'zh_CN');
- for(const locale of bad)assert.equal(publicGuideLocale(locale),'');
+ if(!AUTHOR_FIXED){
+  assert.equal(publicGuideLocale(' zh_CN '),'zh_CN');
+  for(const locale of bad)assert.equal(publicGuideLocale(locale),'');
+ }
 }else{
  for(const locale of locales)assert.equal(mechanics[locale],undefined,'Clean original reproduces lost '+locale+' mechanics');
  assert.deepEqual(mechanics.zh_cn,['Invalid locale']);
@@ -35,23 +37,28 @@ register({...row,version:'invalid source accepted'},{...envelope,source:'BadSour
 assert.equal(getGuidebookExtension(row.id),accepted);
 register({...row,version:'invalid revision accepted'},{...envelope,revision:'BadRevision'});
 assert.equal(getGuidebookExtension(row.id),accepted);assert.equal(JSON.stringify(row),before);
-console.log(PATCHED?'Cookery 1.6.0 patched actual registry retains three locales and rejects malformed locales/general tokens PASS':'Cookery 1.6.0 clean actual registry reproduces missing canonical locale mechanics; names retained PASS');
+console.log(AUTHOR_FIXED?'Cookery 1.6.1 actual author registry retains three locales and rejects malformed locales/general tokens PASS':PATCHED?'Cookery 1.6.0 patched actual registry retains three locales and rejects malformed locales/general tokens PASS':'Cookery 1.6.0 clean actual registry reproduces missing canonical locale mechanics; names retained PASS');
 '''
  stub='let receive;const system={currentTick:0,afterEvents:{scriptEventReceive:{subscribe(fn){receive=fn}}},run(){},runInterval(){return 1},clearRun(){},sendScriptEvent(){}};\n'
  author_import='import { system } from "@minecraft/server";'
  helper_import='import {publicGuideLocale} from "./guide_labels_core.js";\n'
  assert original.count(author_import)==1 and patched.count(author_import)==1
- assert original.count('const safeLocale=cleanToken(locale);')==1
- assert patched.count('const cleanToken=publicGuideLocale;')==1
+ if author_fixed:
+  assert original==patched, 'Retired locale hook must not modify the author fix'
+  assert original.count('const safeLocale=/^[a-z]{2}_[A-Z]{2}$/.test(String(locale ?? "")) ? String(locale) : "";')==1
+  assert helper_import not in patched and 'const cleanToken=publicGuideLocale;' not in patched
+ else:
+  assert original.count('const safeLocale=cleanToken(locale);')==1
+  assert patched.count('const cleanToken=publicGuideLocale;')==1
  generic='function cleanToken(value) {\n  const s = String(value ?? "").trim();\n  return /^[a-z0-9_.-]+$/.test(s) ? s : "";\n}'
  assert generic in original and generic in patched
  for active,text in [(False,original),(True,patched)]:
   text=text.replace(author_import,'')
-  if active:
+  if active and not author_fixed:
    assert text.count(helper_import)==1
    text=text.replace(helper_import,'import {publicGuideLocale} from '+json.dumps((BP/'scripts/host_api/guide_labels_core.js').as_uri())+';\n')
   path=base/('guide-locale-patched.mjs' if active else 'guide-locale-original.mjs')
-  path.write_text(stub+text+'\nconst PATCHED='+str(active).lower()+';\n'+fixture)
+  path.write_text(stub+text+'\nconst PATCHED='+str(active).lower()+';const AUTHOR_FIXED='+str(author_fixed).lower()+';\n'+fixture)
   subprocess.run(['node',str(path)],check=True)
 def check_tavern_guide_bridge():
  # Protocol/scheduler adapter doubles only; no Minecraft runtime or bot.
@@ -79,17 +86,23 @@ for(const mode of ['declined','timeout','leave','send_failed']){const a=adapter(
 console.log('Tavern chapter acknowledged handoff, source/nonce matching, timeout fallback and return cleanup PASS; no rendered-client acceptance');
 """
  subprocess.run(['node','--input-type=module','-e',fixture],check=True)
-def check():
+def check(author161=False):
  spec=json.loads((BP/'host-extensions/board-api.json').read_text())
- assert spec['host_uuid']=='5df753c9-3436-4fba-87f1-a2da3651cfcf' and spec['version']==([0,2,10] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,123) else [0,2,9] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,122) else [0,2,8] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,121) else [0,2,7] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,120) else [0,2,6] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,74) else [0,2,5])
- assert spec['archive_sha256']=='da12fe6d39d7514aff1de3c963d69899324d771be5ca0fc3da1ccb759c7ad458'
+ if author161:
+  version='1.6.1';archive_env='COOKERY_161_ARCHIVE';file_path='9123/386'
+  assert spec['id']=='kaleidoscope_grilling:family-api-0.2.11' and spec['host_uuid']=='d0ca7a68-2877-4bd5-bc82-6c7b325cccf2' and spec['version']==[0,2,11]
+  assert spec['archive_sha256']=='5b01865d4dd9a455cd80dae4ddc94dc45964e074025f7d24c6f0c5e35f0fbe52'
+ else:
+  version='1.6.0';archive_env='COOKERY_160_ARCHIVE';file_path='9054/164'
+  assert spec['host_uuid']=='5df753c9-3436-4fba-87f1-a2da3651cfcf' and spec['version']==([0,2,10] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,123) else [0,2,9] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,122) else [0,2,8] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,121) else [0,2,7] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,120) else [0,2,6] if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,74) else [0,2,5])
+  assert spec['archive_sha256']=='da12fe6d39d7514aff1de3c963d69899324d771be5ca0fc3da1ccb759c7ad458'
  with tempfile.TemporaryDirectory() as tmp:
-  base=Path(tmp);archive=Path(os.environ['COOKERY_160_ARCHIVE']) if os.environ.get('COOKERY_160_ARCHIVE') else base/'author.mcaddon'
+  base=Path(tmp);archive=Path(os.environ[archive_env]) if os.environ.get(archive_env) else base/'author.mcaddon'
   if not archive.exists():
-   with urllib.request.urlopen('https://edge.forgecdn.net/files/9054/164/Kaleidoscope%20Cookery%20v1.6.0.mcaddon',timeout=60) as response:archive.write_bytes(response.read())
+   with urllib.request.urlopen('https://edge.forgecdn.net/files/'+file_path+'/Kaleidoscope%20Cookery%20v'+version+'.mcaddon',timeout=60) as response:archive.write_bytes(response.read())
   assert hashlib.sha256(archive.read_bytes()).hexdigest()==spec['archive_sha256']
   with zipfile.ZipFile(archive) as z:
-   prefix='Kaleidoscope Cookery v1.6.0 [BP]/'
+   prefix='Kaleidoscope Cookery v'+version+' [BP]/'
    originals={name:z.read(prefix+name) for name in spec['original_files']}
    original_oil_registry=z.read(prefix+'scripts/api/oilContainers.js')
   for name,raw in originals.items():
@@ -106,7 +119,7 @@ def check():
     if op['path']==name:
      assert text.count(op['anchor'])==1; text=text.replace(op['anchor'],op['text']+op['anchor'] if op['position']=='before' else op['anchor']+op['text'])
    assert hashlib.sha256(text.encode()).hexdigest()==spec['patched_files'][name],name
-   if name=='scripts/api/guidebookExtensionRegistry.js':check_guide_locale_registry(raw.decode(),text,base)
+   if name=='scripts/api/guidebookExtensionRegistry.js':check_guide_locale_registry(raw.decode(),text,base,author_fixed=author161)
    if name.endswith('.js'):
     p=base/(Path(name).stem+'.mjs');p.write_text(text);subprocess.run(['node','--check',str(p)],check=True)
    if name.endswith('/oilPot.js'):
@@ -128,7 +141,7 @@ assert.equal(consumeOilFromHeldContainer(owner),true);assert.equal(hand.item.typ
 hand.item=new ItemStack(FILLED_POT,1);assert.equal(consumeOilFromHeldContainer(owner),true);assert.equal(sharedCalls,1);
 console.log('Cookery 1.6.0 original foreign container route/debit/empty remainder and shared author can dispatch PASS');
 """
-    p=base/'foreign-oil.mjs';p.write_text(fixture);subprocess.run(['node',str(p)],check=True)
+    p=base/'foreign-oil.mjs';p.write_text(fixture.replace('Cookery 1.6.0 original foreign','Cookery '+version+' original foreign'));subprocess.run(['node',str(p)],check=True)
   check_tavern_guide_bridge()
-  print('All reviewed 1.6.0 targets, syntax and scoped oil/guide adapters PASS; native/client gates remain separate')
+  print('All reviewed '+version+' targets, syntax and scoped oil/guide adapters PASS; native/client gates remain separate')
 if __name__=='__main__':check()

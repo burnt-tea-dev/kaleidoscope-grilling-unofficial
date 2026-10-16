@@ -25,6 +25,7 @@ def host_baseline(host='1.6.0', version=(2, 8, 73)):
     pair = {
         '1.0.8': ('d322809c-a51e-4742-bfc4-16d3c1491c9d', '8e2c6318-2f5f-4907-aad0-31d10610e405'),
         '1.6.0': ('5df753c9-3436-4fba-87f1-a2da3651cfcf', 'f1d333ca-2d6b-4566-8005-e6c309816324'),
+        '1.6.1': ('d0ca7a68-2877-4bd5-bc82-6c7b325cccf2', 'c9df2982-d72e-4bbf-a72c-b77de4ea915b'),
     }[host]
     return {
         'schema': 1, 'repository': publish.REPO, 'repository_id': publish.REPO_ID,
@@ -69,14 +70,14 @@ class HostRequirementTests(unittest.TestCase):
         return (self.root / 'release-notes.md').read_text()
 
     def test_notes_follow_reviewed_host_not_grilling_version_or_dependency_order(self):
-        for host in ('1.6.0', '1.0.8'):
+        for host in ('1.6.1', '1.6.0', '1.0.8'):
             with self.subTest(host=host):
                 baseline = host_baseline(host)
                 baseline['packs']['BP']['dependencies'].reverse()
                 notes = self.generate(baseline)
                 self.assertIn(f'需要公開版 Cookery {host}（私人版 UUID 不可直接替換）', notes)
-                other = '1.0.8' if host == '1.6.0' else '1.6.0'
-                self.assertNotIn('Cookery ' + other, notes)
+                for other in {'1.0.8','1.6.0','1.6.1'}-{host}:
+                    self.assertNotIn('Cookery ' + other, notes)
                 self.assertIn('尚未驗收', notes)
                 self.assertIn('A2.8.73-test.73.1', self.command.call_args.args)
 

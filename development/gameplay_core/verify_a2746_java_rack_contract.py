@@ -1,5 +1,6 @@
 from __future__ import annotations
-import hashlib,urllib.request
+import hashlib,json,re,urllib.request
+from pathlib import Path
 BASE='https://raw.githubusercontent.com/breezeth-CN/KaleidoscopeGrilling/9a1acdab27698457bec16c9362678e574895a28c/'
 FILES={
  'entity':('neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java','ac52b331e020d2020964da754c8fdeec47cd1c52',(
@@ -13,13 +14,30 @@ FILES={
   'slot < 5 ? isSeasoningItem(stack) : isToolItem(stack)','advanced_rack_seasonings','advanced_rack_tools')),
  'automation':('neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/AdvancedRackAutomationApi.java','58f3e6f9f9dcef5a237e2c39bce6e7170b1afed6',(
   'BorrowReceipt','BorrowResult','returnBorrowed','simulate')),
+ 'grill':('neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java','b41c563e6e0ef9d2fc76b45628a50e3ae11fe862',(
+  'private static final VoxelShape FLAT_Z','private static final VoxelShape FLAT_X',
+  'return s.getValue(LEGGED) ? (x ? LEGS_X : LEGS_Z) : (x ? FLAT_X : FLAT_Z);')),
+ 'blocks':('neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java','69f91d7c18ecfa14c206b910d2d4e1d92ce9f6d0',(
+  'BlockBehaviour.Properties.ofLegacyCopy(Blocks.IRON_BARS)',
+  'BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)')),
 }
 def blob(v):return hashlib.sha1(b'blob '+str(len(v)).encode()+bytes([0])+v).hexdigest()
 def main():
+ witness=json.loads((Path(__file__).resolve().parents[2]/'data/java-collision-shapes-20261016.json').read_text())
  for name,(path,sha,tokens) in FILES.items():
   req=urllib.request.Request(BASE+path,headers={'User-Agent':'Grilling-A2.7.46-contract/1'})
   with urllib.request.urlopen(req,timeout=90) as r:data=r.read()
   assert blob(data)==sha,(name,blob(data),sha);s=data.decode()
   for token in tokens:assert token in s,(name,token)
+  source_name={'block':'AdvancedRackBlock','grill':'GrillBlock','blocks':'ModBlocks'}.get(name)
+  if source_name:
+   assert witness['sources'][source_name]['path']==path
+   assert witness['sources'][source_name]['sha256']==hashlib.sha256(data).hexdigest()
+  if name in ('block','grill'):
+   boxes={key.lower():[float(x.strip()) for x in raw.split(',')]
+          for key,raw in re.findall(r'VoxelShape\s+(\w+)\s*=\s*Block\.box\(([^)]+)\)',s)}
+   expected={f:boxes[f] for f in ('north','south','east','west')} if name=='block' else {
+    'north':boxes['flat_z'],'south':boxes['flat_z'],'east':boxes['flat_x'],'west':boxes['flat_x']}
+   assert witness['shape_bounds']['advanced_rack' if name=='block' else 'grill']==expected
  print('A2.7.46 pinned Java Advanced Rack contract: PASS')
 if __name__=='__main__':main()
