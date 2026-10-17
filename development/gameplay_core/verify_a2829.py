@@ -11,7 +11,11 @@ def main():
     entity=json.loads((p/'behavior_pack/entities/grill_food_visual.json').read_text())['minecraft:entity']
     assert 'minecraft:transient' in entity['components'] and 'minecraft:inventory' not in entity['components']
     assert all(v['client_sync'] for v in entity['description']['properties'].values())
-    client=json.loads((p/'resource_pack/entity/grill_food_visual.entity.json').read_text())['minecraft:client_entity']['description']
+    # The generator check above verifies every current display output, including
+    # the four Cookery 1.6.1 foods. Keep the old cardinality oracle on its exact
+    # G150 source only after validating the complete sealed current postimage.
+    from skewer_content_source import historical_bytes
+    client=json.loads(historical_bytes(p/'resource_pack/entity/grill_food_visual.entity.json'))['minecraft:client_entity']['description']
     version=tuple(json.loads((p/'behavior_pack/manifest.json').read_text())['header']['version'])
     if version>=(2,8,68):assert (len(client['textures']),len(client['geometry']))==(1613,199)
     else:assert len(client['textures'])==len(client['geometry'])==115
