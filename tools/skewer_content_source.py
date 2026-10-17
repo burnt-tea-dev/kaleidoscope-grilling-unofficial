@@ -155,12 +155,17 @@ def historical_bytes(path, actual=None):
     """
     key = _key(path)
     actual = (ROOT / key).read_bytes() if actual is None else actual
+    # G152 owns only guide/identity bytes. Validate that outer continuation
+    # before this immutable G151 boundary, including non-G151 guide paths.
+    from guide_recipe_source import historical_bytes as guide_history, predecessor_version
+    actual = guide_history(path, actual)
     if key not in PATHS:
         return actual
     try:
         version = json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError('Invalid release identity at the G151 source boundary') from error
+    version = predecessor_version(version)
     if version == VERSION and key in PATHS:
         return reference_bytes(path, actual)
     return actual

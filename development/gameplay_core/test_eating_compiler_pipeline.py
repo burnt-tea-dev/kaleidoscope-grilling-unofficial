@@ -28,7 +28,8 @@ class PipelineTests(unittest.TestCase):
   text='def original(output,table,main_path,two_route_camera,review_three_routes,slime_frames,failure_skewers):\n'+source[start:end]+'\n'
   ns={'BP':motion.BP,'RP':motion.RP,'ROOT':ROOT,'sys':sys,'json':json};exec(text,ns)
   modules={s.name:importlib.import_module(s.module)for s in pipeline.STAGES if s.module};real=Path.read_text;partial=motion.RP/'attachables/unfinished_skewer.attachable.json'
-  for version in [(2,8,57),(2,8,58),(2,8,126),(2,8,127),(2,8,144),(2,8,145),(2,8,146),(2,8,147),(2,8,151)]:
+  versions=[(2,8,57),(2,8,58),(2,8,126),(2,8,127),(2,8,144),(2,8,145),(2,8,146),(2,8,147),(2,8,151),(2,8,152)]
+  for version in versions:
    for flags in range(16):
     opts=[bool(flags&(1<<n))for n in range(4)]
     for effects in [False,True]:
@@ -48,9 +49,9 @@ class PipelineTests(unittest.TestCase):
       ns['original'](dict(supplied),{},motion.BP/'scripts/main.js',*opts);expected=list(trace);trace.clear()
       if version>=(2,8,144) and all(opts[1:]):expected.append('performance')
       if version>=(2,8,147) and all(opts[1:]):expected.append('owner_properties')
-      if version==(2,8,151) and all(opts[1:]):expected.append('skewer_content')
+      if version in ((2,8,151),(2,8,152)) and all(opts[1:]):expected.append('skewer_content')
       pipeline.run(dict(supplied),pipeline.Context(version,{},motion.RP,motion.BP/'scripts/main.js',*opts));self.assertEqual(trace,expected,(version,flags,effects))
-  print('Version/flag/effects traces:288',flush=True)
+  print('Version/flag/effects traces:',len(versions)*32,flush=True)
  def test_order_checkpoints_and_mutations(self):
   names=[s.name for s in pipeline.STAGES]
   self.assertEqual(names,['java_projection','secret_idle','secret_terminal','g126','g127','reviewed_three','raw_one','failure','partial_attachable','owner_context','slime','effects','ordinary_relative','offhand','performance','owner_properties','skewer_content'])

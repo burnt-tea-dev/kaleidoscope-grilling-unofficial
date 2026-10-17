@@ -10,6 +10,7 @@ from held_pose_frames import (RP, expected_animations, make_pose, bone_matrix, c
 sys.path.insert(0,str(RP.parents[3]/'tools'))
 from build_plate_held import animations as plate_animations
 from eating_owner_context import reference_bytes
+from skewer_content_source import addition_bytes
 
 def plate_layout_value(value,count):
     """Read the generated count selector, without simulating any player API."""
@@ -62,13 +63,21 @@ class HeldPoseFrameTests(unittest.TestCase):
         if plate_file.exists():
             self.assertEqual(json.loads(plate_file.read_text())['animations'],plate)
             expected.update(plate)
+        from secret_idle_calibration import TARGET, animation_document
+        calibrated=animation_document()
+        self.assertEqual(json.loads(TARGET.read_text()),calibrated)
+        expected.update(calibrated['animations'])
         for p in (RP/'attachables').glob('*.json'):
             # The immutable pose comparison keeps its original source bytes after
             # the exact current owner-context continuation has been checked.
-            desc=json.loads(reference_bytes(p))['minecraft:attachable']['description']
+            # The added native-plain route instead checks its sealed current
+            # payload and actual calibrated pose, with no inherited client proof.
+            data=(addition_bytes(p) if p==RP/'attachables/secret_skewer_native_plain.attachable.json'
+                  else reference_bytes(p))
+            desc=json.loads(data)['minecraft:attachable']['description']
             for hand in ('right','left'):
                 bones=expected[desc['animations']['fp_'+hand]]['bones']
-                base,camera=(native_skewer_calibration(hand) if desc['animations']['fp_'+hand].startswith(('animation.kg_a287.skewer','animation.kg_a286.bottle','animation.kg_plate_held.')) else calibration(hand))
+                base,camera=(native_skewer_calibration(hand) if desc['animations']['fp_'+hand].startswith(('animation.kg_a287.skewer','animation.kg_a286.bottle','animation.kg_plate_held.','animation.kg_secret_held.fp_idle_calibrated_')) else calibration(hand))
                 combined=chain(rigid_inverse(camera),base,translate([0,24,0]))
                 for bone in bones.values():combined=chain(combined,bone_matrix(bone))
                 combined=chain(combined,translate([0,-24,0]))

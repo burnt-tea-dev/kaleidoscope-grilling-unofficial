@@ -2,11 +2,11 @@
 
 ## 2026-10-17 當前來源與接續狀態
 
-**G151／2.8.151**；Cookery1.6.1／family API0.2.12。串製作／顯示／進食的當前來源修補見[整合紀錄](evidence/skewer-repair-20261017.md)。公開包為[A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，使用Cookery1.6.0；來源、下載、倉庫部署與驗收統一見[家族主線](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
+**G152／2.8.152**；Cookery1.6.1／family API0.2.12。串製作／顯示／進食的當前來源修補見[整合紀錄](evidence/skewer-repair-20261017.md)。公開包為[A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，使用Cookery1.6.0；來源、下載、倉庫部署與驗收統一見[家族主線](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
 
 | 行為／追蹤 | 現行判定 | 接續範圍 |
 | --- | --- | --- |
-| 配方／秘製串內容／進食 | G151 已補 Cookery1.6.1 原料接入、1／2料進度、native_plain 食材投影、4個新食物與進食資料／當前槽位核對 | 同候選正常取得→穿串→烤製→盤／手持→食用／保存，動畫開／關均需實際客户端結果；[修補範圍](evidence/skewer-repair-20261017.md) |
+| 配方／秘製串內容／進食 | G151 已補 Cookery1.6.1 原料接入、1／2料進度、native_plain 食材投影、4個新食物與進食資料／當前槽位核對；G152 同步三語砧板指南 | 同候選正常取得→穿串→烤製→盤／手持→食用／保存，動畫開／關均需實際客户端結果；[修補範圍](evidence/skewer-repair-20261017.md) |
 | [PR214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214) | 餐盤回滾ownership及花椒清果／未知掉落確認仍未吸收 | 保留窄修審查，從目前來源接續新版本；舊draft不可直接合併／發布 |
 | [PR217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217)、[PR220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220)、[PR222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) | 碰撞、20-ID THREE主體、固定動態icon已被後續來源承接 | 只審殘餘獨有差異後收束，不再計為三件待開發功能；詳[PR處置](audit/PR-TRIAGE.md) |
 | [#166](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/166) | 任意三槽、每stack秘製串inventory投影仍缺 | 同一串的原料／生熟／variant與背包、快捷欄對照；五幀固定sprite不代替此項 |

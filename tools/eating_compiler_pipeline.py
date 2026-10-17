@@ -61,7 +61,7 @@ def enabled(stage,c):
   'complete':c.review_three_routes and c.slime_frames and c.failure_skewers,
   'performance':c.version>=(2,8,144) and c.review_three_routes and c.slime_frames and c.failure_skewers,
   'owner_properties':c.version>=(2,8,147) and c.review_three_routes and c.slime_frames and c.failure_skewers,
-  'skewer_content':c.version==(2,8,151) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
+  'skewer_content':c.version in ((2,8,151),(2,8,152)) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
 
 def apply_stage(stage,output,c):
  if stage.name=='partial_attachable':
