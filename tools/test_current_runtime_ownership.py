@@ -23,12 +23,15 @@ class RuntimeOwnership(unittest.TestCase):
     files=dict(self.actual);files[path]+=b'\n'
     with self.assertRaises(ValueError):skewer.predecessor_runtime(files)
     with self.assertRaises(ValueError):skewer.reference_bytes(path,files[path])
+    with self.assertRaises(ValueError):skewer.addition_bytes(path,files[path])
     if path in self.g150:
      self.assertEqual(skewer.reference_bytes(path),self.g150[path])
      with self.assertRaises(ValueError):skewer.reference_bytes(path,self.g150[path])
+     with self.assertRaisesRegex(ValueError,'not a source addition'):skewer.addition_bytes(path)
     else:
      # New plain rendering, decoder and palette files have no old source proof.
      with self.assertRaisesRegex(ValueError,'no historical source bytes'):skewer.reference_bytes(path)
+     self.assertEqual(skewer.addition_bytes(path),self.actual[path])
   for operation in ('add','delete','revert'):
    files=dict(self.actual);path=owner.PREFIXES[0]+'/scripts/main.js'
    if operation=='add':files[owner.PREFIXES[0]+'/unknown.json']=b'{}'
@@ -37,6 +40,7 @@ class RuntimeOwnership(unittest.TestCase):
    with self.subTest(operation=operation),self.assertRaises(ValueError):skewer.predecessor_runtime(files)
   with self.assertRaises(ValueError):skewer.reference_bytes(owner.PREFIXES[0]+'/scripts/timed_work_queue.js')
   with self.assertRaises(ValueError):skewer.reference_bytes('../escape',b'')
+  with self.assertRaises(ValueError):skewer.addition_bytes('../escape',b'')
  def test_skewer_content_ledger_scope_source_identity_and_preimage_are_not_editable_authority(self):
   import skewer_content_source as skewer
   path=owner.PREFIXES[0]+'/scripts/main.js'

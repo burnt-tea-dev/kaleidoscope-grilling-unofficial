@@ -78,7 +78,14 @@ def binding_assets():
   # Preserve this historical pose gate on captured bytes only after the exact
   # current owning-context continuation has been validated independently.
   from eating_owner_context import reference_bytes
-  d=json.loads(reference_bytes(p))['minecraft:attachable']['description'];selected=[]
+  if p==RP/'attachables/secret_skewer_native_plain.attachable.json':
+   # This route was added in G151 and has no historical pose proof. Its entire
+   # sealed current payload still faces every binding/pose check below.
+   from skewer_content_source import addition_bytes,VERSION
+   assert version==tuple(VERSION),p
+   data=addition_bytes(p)
+  else:data=reference_bytes(p)
+  d=json.loads(data)['minecraft:attachable']['description'];selected=[]
   scoped_caterpillar=version>=(2,8,126) and d['identifier']=='kaleidoscope_grilling:grilled_caterpillar_skewer'
   if scoped_caterpillar:
    # A reviewed immutable payload, not a broad exemption from legacy bindings.

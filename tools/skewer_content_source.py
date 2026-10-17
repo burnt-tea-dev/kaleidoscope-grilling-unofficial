@@ -138,6 +138,15 @@ def reference_bytes(path, actual=None):
     return before
 
 
+def addition_bytes(path, actual=None):
+    """Validate a sealed new source file without inventing a historical proof."""
+    key = _key(path)
+    actual = (ROOT / key).read_bytes() if actual is None else actual
+    if _validated_change(key, actual) is not None:
+        raise ValueError('A modified G151 file is not a source addition: ' + key)
+    return actual
+
+
 def historical_bytes(path, actual=None):
     """First source boundary for historical callers; never normalizes bytes.
 
