@@ -78,7 +78,14 @@ def binding_assets():
   # Preserve this historical pose gate on captured bytes only after the exact
   # current owning-context continuation has been validated independently.
   from eating_owner_context import reference_bytes
-  d=json.loads(reference_bytes(p))['minecraft:attachable']['description'];selected=[]
+  if p==RP/'attachables/secret_skewer_native_plain.attachable.json':
+   # This route was added in G151 and has no historical pose proof. Its entire
+   # sealed current payload still faces every binding/pose check below.
+   from skewer_content_source import addition_bytes,VERSION
+   assert version in (tuple(VERSION),(2,8,152)),p
+   data=addition_bytes(p)
+  else:data=reference_bytes(p)
+  d=json.loads(data)['minecraft:attachable']['description'];selected=[]
   scoped_caterpillar=version>=(2,8,126) and d['identifier']=='kaleidoscope_grilling:grilled_caterpillar_skewer'
   if scoped_caterpillar:
    # A reviewed immutable payload, not a broad exemption from legacy bindings.
@@ -245,6 +252,7 @@ def binding_assets():
     assert set(d['geometry'])==set(old['geometry'])
   rows.append({'item':d['identifier'],'geometries':list(d['geometry'].values()),'poses':selected,'bound_bone':'grip'})
  expected_count=125 if version>=(2,8,119) else 124 if version>=(2,8,71) else 108 if version>=(2,8,68) else 107 if (RP/'attachables/secret_skewer.attachable.json').exists() else 106 if version >= (2,8,32) else 107
+ expected_count+=int((RP/'attachables/secret_skewer_native_plain.attachable.json').is_file())
  assert len(rows)==expected_count and cases==expected_count*12,(len(rows),cases)
  # Regression reproduction: old dispatch can select zero poses for a normalized bone name.
  old=repair.source(RP/'attachables/empty_seasoning_bottle.attachable.json')['minecraft:attachable']['description']

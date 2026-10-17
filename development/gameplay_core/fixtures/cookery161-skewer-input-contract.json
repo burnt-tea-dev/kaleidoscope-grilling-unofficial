@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "source_archive": {
+    "version": "1.6.1",
+    "curseforge_file": 9123386,
+    "sha256": "5b01865d4dd9a455cd80dae4ddc94dc45964e074025f7d24c6f0c5e35f0fbe52"
+  },
+  "board_source": {
+    "path": "scripts/data/stationRecipes.js",
+    "sha256": "53123aeccf439588b0f9a7a46dcce27fae342e1184b8e5fe0fd18a9de554b2ab"
+  },
+  "board_recipes": {
+    "minecraft:beef": {
+      "result": "kaleidoscope_cookery:raw_cow_offal",
+      "count": 3,
+      "cuts": 4
+    },
+    "minecraft:chicken": {
+      "outputs": [
+        {
+          "id": "kaleidoscope_cookery:raw_cut_small_meats",
+          "count": 3
+        },
+        {
+          "id": "minecraft:bone",
+          "count": 1
+        }
+      ],
+      "cuts": 4
+    }
+  },
+  "skewer_ingredients": [
+    {
+      "id": "kaleidoscope_cookery:caterpillar",
+      "source_path": "items/caterpillar.json",
+      "source_sha256": "ef52a4510d1ad2acb5b146793f263a91b17a3becf051a0a35efbadb6ffdb4b24",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 18,
+        "saturation_modifier": 0.2,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:fried_egg",
+      "source_path": "items/fried_egg.json",
+      "source_sha256": "dce8ec28a6f354552a3eb60298fc33435ed88b2d55029ee90e5b8e30c14dbd10",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 4,
+        "saturation_modifier": 0.5,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:green_chili",
+      "source_path": "items/green_chili.json",
+      "source_sha256": "21d0d524c008190d359d7e41fc037ceca917a1ac2a715f4df7b173c459aa41e8",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 1,
+        "saturation_modifier": 0.0,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:oil",
+      "source_path": "items/oil.json",
+      "source_sha256": "333d72866ebdaeb42b1bd6f56264c540ebba28fb9e2213aedf5ad0a60158fead",
+      "tags": [],
+      "food": null
+    },
+    {
+      "id": "kaleidoscope_cookery:raw_cut_small_meats",
+      "source_path": "items/raw_cut_small_meats.json",
+      "source_sha256": "8a3371b5c00cb83924763f7ab3b27c8a616f6a9a5986a2b413af44fb69a49e11",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 2,
+        "saturation_modifier": 0.3,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:raw_dough",
+      "source_path": "items/raw_dough.json",
+      "source_sha256": "e533ee80814cc4f82bc7648b110a44edf9b2e3899cf1911eaf9e789878981750",
+      "tags": [],
+      "food": null
+    },
+    {
+      "id": "kaleidoscope_cookery:raw_lamb_chops",
+      "source_path": "items/raw_lamb_chops.json",
+      "source_sha256": "fae4bd373cbc4b996542aca6e97f2ee1410e73b438290d1785b0fb92079f515c",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 1,
+        "saturation_modifier": 0.5,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:raw_meatball",
+      "source_path": "items/raw_meatball.json",
+      "source_sha256": "ae0e0d331b24537baca45746cc513b4e0b8b64502c17acb111046e29316d5545",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 4,
+        "saturation_modifier": 0.3,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:raw_pork_belly",
+      "source_path": "items/raw_pork_belly.json",
+      "source_sha256": "cdcb5e90051e3aab10b0755e51d8f806e652c19e4c88db0b93cf6c0adae0fd7e",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 2,
+        "saturation_modifier": 0.3,
+        "can_always_eat": false
+      }
+    },
+    {
+      "id": "kaleidoscope_cookery:red_chili",
+      "source_path": "items/red_chili.json",
+      "source_sha256": "7d012262687f81df77188b78e76e92e911a7fdefc9f4d974514633b29b626001",
+      "tags": [
+        "minecraft:is_food"
+      ],
+      "food": {
+        "nutrition": 1,
+        "saturation_modifier": 0.0,
+        "can_always_eat": false
+      }
+    }
+  ],
+  "scope": "Limited author recipe/item declarations for identity and owned-adapter tests; no complete author implementation, native gameplay or client evidence."
+}

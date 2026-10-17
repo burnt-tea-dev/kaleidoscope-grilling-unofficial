@@ -65,7 +65,8 @@ class NativeEatingClock(unittest.TestCase):
         subprocess.run(['node','--input-type=module','-e',js],check=True)
         sys.path.insert(0,str(ROOT/'tools'))
         from build_review_three_eating_projection import restore_main
-        s=restore_main((module.parent/'main.js').read_text())
+        from skewer_content_source import historical_bytes
+        s=restore_main(historical_bytes(module.parent/'main.js').decode())
         self.assertIn('eatingNativeTicks(a.nativeDuration)',s)
         version=tuple(json.loads((module.parent.parent/'manifest.json').read_text())['header']['version'])
         admitted="supportsJavaEatingProjection(e.itemStack.typeId,profile)"

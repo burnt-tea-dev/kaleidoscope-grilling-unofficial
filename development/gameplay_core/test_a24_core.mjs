@@ -1,14 +1,52 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   UNFINISHED_ID,SECRET_ID,FAT_CAPACITY,FLUID_CAPACITY,OIL_BUCKET_POINTS,
-  recipeTable,completedRecipe,appendOutcome,secretFood,oilPotCapacity,clampOilCount,canFillTypedOil,
+  recipeTable,completedRecipe,canAppendConfigured,expectedSize,appendOutcome,secretFood,oilPotCapacity,clampOilCount,canFillTypedOil,
   isDisassemblableRaw
-} from './a24_skewering_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+
+// The expected slots come from the pinned Java data, independently of the
+// Bedrock table. Native storage/client rendering are covered separately.
+const javaRoot=new URL('fixtures/java-1.1.1-recipes/',import.meta.url);
+const javaRecipes=JSON.parse(fs.readFileSync(new URL('skewers.json',javaRoot),'utf8')).skewers.filter(r=>r.ingredients.length);
+function javaSelectorRows(selector){
+ if(!selector.startsWith('#'))return [{id:selector,tags:[]}];
+ const tag=selector.slice(1),[ns,path]=tag.split(':');
+ return JSON.parse(fs.readFileSync(new URL('tags/'+ns+'/'+path+'.json',javaRoot),'utf8')).values.map(id=>({id,tags:[tag]}));
+}
+function combinations(slots){return slots.reduce((rows,slot)=>rows.flatMap(row=>slot.map(value=>[...row,value])),[[]]);}
+function javaMatches(recipe,rows){return rows.length<=recipe.ingredients.length&&rows.every((row,i)=>recipe.ingredients[i].some(selector=>selector.startsWith('#')?row.tags.includes(selector.slice(1)):row.id===selector));}
 
 let n=0;
 const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 
 t('ships all 20 Java configured skewer recipes',()=>assert.equal(recipeTable().length,20));
+t('all pinned Java selectors and alternatives resolve the same ordered result',()=>{
+ assert.deepEqual(recipeTable().map(r=>r.id),javaRecipes.map(r=>r.id));
+ for(const recipe of javaRecipes){
+  const slots=recipe.ingredients.map(slot=>slot.flatMap(javaSelectorRows));
+  for(const rows of combinations(slots)){
+   assert.equal(completedRecipe(rows)?.id,recipe.id,JSON.stringify(rows));
+   assert.equal(completedRecipe(rows)?.cooked??null,recipe.cooked_result??null);
+   assert.equal(canAppendConfigured(rows.slice(0,-1),rows.at(-1)),true);
+   assert.equal(appendOutcome(rows.slice(0,-1),rows.at(-1),true).id,recipe.id);
+   const reversed=[rows.at(-1),...rows.slice(0,-1)];
+   const expected=javaRecipes.find(r=>r.ingredients.length===reversed.length&&javaMatches(r,reversed));
+   assert.equal(completedRecipe(reversed)?.id,expected?.id,'ordered '+JSON.stringify(reversed));
+  }
+ }
+});
+t('expected ingredient count follows the longest Java prefix, including one- and two-slot recipes',()=>{
+ for(const recipe of javaRecipes){
+  const rows=recipe.ingredients.map(slot=>javaSelectorRows(slot[0])[0]);
+  for(let count=0;count<=rows.length;count++){
+   const prefix=rows.slice(0,count),sizes=javaRecipes.filter(r=>javaMatches(r,prefix)).map(r=>r.ingredients.length);
+   assert.equal(expectedSize(prefix),sizes.length?Math.max(...sizes):3,recipe.id+' at '+count);
+  }
+ }
+ assert.equal(expectedSize([{id:'minecraft:apple',tags:[]}]),3);
+});
 t('fixed beef recipe resolves exactly',()=>{
   const r=completedRecipe(['kaleidoscope_grilling:beef_chunks','kaleidoscope_cookery:red_chili','kaleidoscope_grilling:beef_chunks']);
   assert.equal(r?.id,'kaleidoscope_grilling:raw_beef_skewer');

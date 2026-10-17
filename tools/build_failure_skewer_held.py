@@ -5,7 +5,7 @@ Author assets CC BY-NC-SA4.0. No vanilla reference textures are redistributed.
 from pathlib import Path
 from functools import lru_cache
 import argparse,copy,hashlib,importlib.util,json,tempfile
-from held_visual_channels import hand_channel,hand_owner,FAILURE
+from held_visual_channels import hand_channel,hand_owner,FAILURE,FOOD_COUNT
 ROOT=Path(__file__).resolve().parents[1];P=ROOT/'projects/grilling/gameplay_core';RP=P/'resource_pack';BP=P/'behavior_pack'
 FIX=ROOT/'development/gameplay_core/fixtures/java-failure-skewer-9a1acdab';ASSETS=FIX/'common/src/main/resources/assets'
 NS='kaleidoscope_grilling:';NAMES=('mysterious_skewer','dark_grilling');IDS=tuple(NS+n for n in NAMES)
@@ -75,7 +75,7 @@ def base_assets():
   for suffix in ('','_java_three_alt','_native_plain'):
    identifier=NS+name+suffix;plain=suffix=='_native_plain'
    init=['v.kg_failure_source = 0;','v.kg_failure_state = 0;','v.kg_failure_helper_index = 0;','v.kg_failure_ready = 0;','v.kg_failure_helper_visible = 0;','v.kg_bite_stage = 0;']
-   pre=[f'v.kg_failure_source = math.floor(math.clamp({hand_channel(0)},0,19));',f'v.kg_failure_state = math.floor(math.clamp({hand_channel(1)},0,63));',f'v.kg_failure_helper_index = math.floor(math.clamp({hand_channel(2)},0,213));',f'v.kg_failure_ready = {hand_owner(identifier)} && {hand_channel(11)} == {FAILURE};','v.kg_failure_helper_visible = 0;']
+   pre=[f'v.kg_failure_source = math.floor(math.clamp({hand_channel(0)},0,19));',f'v.kg_failure_state = math.floor(math.clamp({hand_channel(1)},0,63));',f'v.kg_failure_helper_index = math.floor(math.clamp({hand_channel(2)},0,{FOOD_COUNT}));',f'v.kg_failure_ready = {hand_owner(identifier)} && {hand_channel(11)} == {FAILURE};','v.kg_failure_helper_visible = 0;']
    aliases={key:'animation.kg_a287.skewer_'+key for key in ['fp_right','fp_left','tp_right','tp_left']}
    animate=[{key:"c.is_first_person == "+str(int(key.startswith('fp')))+" && c.item_slot == '"+('main_hand'if key.endswith('right')else'off_hand')+"'"}for key in aliases]
    d={'identifier':identifier,'materials':{'default':'entity_alphatest_one_sided'},'textures':{**textures,**({}if plain else helper_textures)},'geometry':{**refs,**({}if plain else helper_refs)},'animations':aliases,'scripts':{'initialize':init,'pre_animation':pre+(['v.kg_bite_stage = 0;']if plain else []),'animate':animate},'render_controllers':[controller_id(name)]+([]if plain else[HELPER])}
@@ -138,6 +138,9 @@ def restore_main(text):
  return text
 
 def patch_main(text):
+ from skewer_content_source import generator_main_source,reapply_main as reapply_skewer_content
+ preceding=generator_main_source(text)
+ if preceding!=text:return reapply_skewer_content(patch_main(preceding))
  from public_source_witness import performance_witness_source, apply_performance_source
  performance=performance_witness_source(text)!=text
  # Current callers supply the extracted whole-pipeline boundary. Historical

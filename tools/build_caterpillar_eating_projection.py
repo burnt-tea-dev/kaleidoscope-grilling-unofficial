@@ -161,7 +161,11 @@ def augment(output):
     if len(changed)!=4:raise ValueError('Native FP arm visibility contract changed')
     output[path]=doc
     path=BP/'scripts/main.js';text=output.get(path)
-    if text is None:text=path.read_text()
+    if text is None:
+        # The first main-producing stage owns its disk fallback. Do not insert
+        # main earlier: disabled historical prefixes must keep their old scope.
+        from skewer_content_source import historical_bytes
+        text=historical_bytes(path).decode()
     if not isinstance(text,str):raise ValueError('Canonical main must be text')
     output[path]=patch_main(text)
     return output
@@ -177,7 +181,9 @@ def main():
             actual=path.read_bytes()
             if path==BP/'scripts/main.js':
                 from build_review_three_eating_projection import restore_main
-                actual=restore_main(actual.decode()).encode()
+                from skewer_content_source import historical_bytes
+                # Match the generation-side source boundary before older oracles.
+                actual=restore_main(historical_bytes(path,actual).decode()).encode()
             if path.suffix=='.json':
                 from eating_owner_properties import reference_bytes as owner_property_reference
                 actual=owner_property_reference(path,actual)

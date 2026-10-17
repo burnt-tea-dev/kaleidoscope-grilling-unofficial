@@ -23,7 +23,7 @@ from held_pose_frames import (chain, translate, xyz, rotate, scale, mul,
 from secret_skewer_assets import COMPLETE_STATES, state_slot_cubes, shaft_cubes, palette_refs
 from plate_special_models import catalog, lifted_cubes, geometry_key, HELD_START
 from held_visual_channels import (WORD_A_MAX, WORD_B_MAX, PLATE, hand_channel,
-                                  hand_owner, verify_server_constants)
+                                  hand_owner, verify_server_constants, FOOD_COUNT, SECRET_VISUAL_MAX)
 
 NS = 'kaleidoscope_grilling:'
 SOURCE_PIN = '9a1acdab27698457bec16c9362678e574895a28c'
@@ -180,7 +180,7 @@ def decoder_scripts():
             variable(shape, '(' + ' || '.join(f'{code} == {n}' for n in range(1, 21, 3)) + ') ? 2 : (' +
                      ' || '.join(f'{code} == {n}' for n in range(2, 21, 3)) + ') ? 3 : 1')
             variable(style, ' : '.join(f'{code} >= {s*3} ? {s}' for s in reversed(range(1, 7))) + ' : 0')
-            valid += f' && ({b} == 0 || ({cell} >= 0 && {cell} <= 5333 && {food} <= 213))'
+            valid += f' && ({b} == 0 || ({cell} >= 0 && {cell} <= {SECRET_VISUAL_MAX} && {food} <= {FOOD_COUNT}))'
             shape_vars.append(shape)
         variable(f'v.kg_plate_state_{row}', f'{shape_vars[0]}*16 + {shape_vars[1]}*4 + {shape_vars[2]}')
         variable(f'v.kg_plate_visible_{row}', f'v.kg_plate_owner && v.kg_plate_count > {row} && {valid} && ({b} > 0 || {a} < {HELD_START + len(catalog()[0])})')
@@ -199,7 +199,7 @@ def build():
     ordered = sorted(index, key=index.get)
     body = json.loads((RP / 'models/blocks/skewer_plate.geo.json').read_text())['minecraft:geometry'][0]
     geometries = [geometry('body', lift_cubes(body, HAND_PIVOT[1]), body['description']['texture_width'], body['description']['texture_height'])]
-    textures = {'body': 'textures/blocks/skewer_plate', 'stick': 'textures/secret_skewer_stick', **palette_refs(213)}
+    textures = {'body': 'textures/blocks/skewer_plate', 'stick': 'textures/secret_skewer_stick', **palette_refs(FOOD_COUNT)}
     controllers = {'controller.render.kg_plate_held.body': {'geometry': 'Geometry.body',
         'materials': [{'*': 'Material.default'}], 'textures': ['Texture.body'],
         'part_visibility': [{'*': 0}, {'plate_body': 'v.kg_plate_item_owner == 1'}]}}
@@ -260,9 +260,9 @@ def build():
                 geometries.append(geometry(alias, state_slot_cubes(state, slot, True), 256, 96, row=row))
             food, style = f'v.kg_plate_food_{row}_{slot}', f'v.kg_plate_style_{row}_{slot}'
             controller(f'secret_{row}_{slot}', 'Array.states[v.kg_plate_state_' + str(row) + ']',
-                       f'Array.palette[{food} + {style}*214]', f'{b} > 0 && {food} > 0',
+                       f'Array.palette[{food} + {style}*{FOOD_COUNT+1}]', f'{b} > 0 && {food} > 0',
                        {'geometries': {'Array.states': references}, 'textures': {'Array.palette':
-                        [f'Texture.food_{i}_s{style}' for style in range(7) for i in range(214)]}})
+                        [f'Texture.food_{i}_s{style}' for style in range(7) for i in range(FOOD_COUNT+1)]}})
     references = {g['description']['identifier'].rsplit('.', 1)[1]: g['description']['identifier'] for g in geometries}
     attach = {'format_version': '1.26.0', 'minecraft:attachable': {'description': {
         'identifier': NS + 'skewer_plate', 'materials': {'default': 'entity_alphatest_one_sided'},

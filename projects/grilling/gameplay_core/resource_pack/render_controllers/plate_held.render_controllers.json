@@ -390,7 +390,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_0_0 + v.kg_plate_style_0_0*214]"
+        "Array.palette[v.kg_plate_food_0_0 + v.kg_plate_style_0_0*218]"
       ],
       "part_visibility": [
         {
@@ -685,6 +685,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -899,6 +903,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -1113,6 +1121,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -1327,6 +1339,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -1541,6 +1557,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -1755,6 +1775,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -1968,7 +1992,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -1981,7 +2009,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_0_1 + v.kg_plate_style_0_1*214]"
+        "Array.palette[v.kg_plate_food_0_1 + v.kg_plate_style_0_1*218]"
       ],
       "part_visibility": [
         {
@@ -2276,6 +2304,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -2490,6 +2522,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -2704,6 +2740,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -2918,6 +2958,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -3132,6 +3176,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -3346,6 +3394,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -3559,7 +3611,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -3572,7 +3628,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_0_2 + v.kg_plate_style_0_2*214]"
+        "Array.palette[v.kg_plate_food_0_2 + v.kg_plate_style_0_2*218]"
       ],
       "part_visibility": [
         {
@@ -3867,6 +3923,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -4081,6 +4141,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -4295,6 +4359,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -4509,6 +4577,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -4723,6 +4795,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -4937,6 +5013,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -5150,7 +5230,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -5525,7 +5609,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_1_0 + v.kg_plate_style_1_0*214]"
+        "Array.palette[v.kg_plate_food_1_0 + v.kg_plate_style_1_0*218]"
       ],
       "part_visibility": [
         {
@@ -5820,6 +5904,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -6034,6 +6122,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -6248,6 +6340,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -6462,6 +6558,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -6676,6 +6776,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -6890,6 +6994,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -7103,7 +7211,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -7116,7 +7228,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_1_1 + v.kg_plate_style_1_1*214]"
+        "Array.palette[v.kg_plate_food_1_1 + v.kg_plate_style_1_1*218]"
       ],
       "part_visibility": [
         {
@@ -7411,6 +7523,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -7625,6 +7741,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -7839,6 +7959,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -8053,6 +8177,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -8267,6 +8395,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -8481,6 +8613,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -8694,7 +8830,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -8707,7 +8847,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_1_2 + v.kg_plate_style_1_2*214]"
+        "Array.palette[v.kg_plate_food_1_2 + v.kg_plate_style_1_2*218]"
       ],
       "part_visibility": [
         {
@@ -9002,6 +9142,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -9216,6 +9360,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -9430,6 +9578,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -9644,6 +9796,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -9858,6 +10014,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -10072,6 +10232,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -10285,7 +10449,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -10660,7 +10828,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_2_0 + v.kg_plate_style_2_0*214]"
+        "Array.palette[v.kg_plate_food_2_0 + v.kg_plate_style_2_0*218]"
       ],
       "part_visibility": [
         {
@@ -10955,6 +11123,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -11169,6 +11341,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -11383,6 +11559,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -11597,6 +11777,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -11811,6 +11995,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -12025,6 +12213,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -12238,7 +12430,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -12251,7 +12447,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_2_1 + v.kg_plate_style_2_1*214]"
+        "Array.palette[v.kg_plate_food_2_1 + v.kg_plate_style_2_1*218]"
       ],
       "part_visibility": [
         {
@@ -12546,6 +12742,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -12760,6 +12960,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -12974,6 +13178,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -13188,6 +13396,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -13402,6 +13614,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -13616,6 +13832,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -13829,7 +14049,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -13842,7 +14066,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_2_2 + v.kg_plate_style_2_2*214]"
+        "Array.palette[v.kg_plate_food_2_2 + v.kg_plate_style_2_2*218]"
       ],
       "part_visibility": [
         {
@@ -14137,6 +14361,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -14351,6 +14579,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -14565,6 +14797,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -14779,6 +15015,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -14993,6 +15233,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -15207,6 +15451,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -15420,7 +15668,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -15795,7 +16047,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_3_0 + v.kg_plate_style_3_0*214]"
+        "Array.palette[v.kg_plate_food_3_0 + v.kg_plate_style_3_0*218]"
       ],
       "part_visibility": [
         {
@@ -16090,6 +16342,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -16304,6 +16560,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -16518,6 +16778,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -16732,6 +16996,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -16946,6 +17214,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -17160,6 +17432,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -17373,7 +17649,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -17386,7 +17666,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_3_1 + v.kg_plate_style_3_1*214]"
+        "Array.palette[v.kg_plate_food_3_1 + v.kg_plate_style_3_1*218]"
       ],
       "part_visibility": [
         {
@@ -17681,6 +17961,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -17895,6 +18179,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -18109,6 +18397,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -18323,6 +18615,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -18537,6 +18833,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -18751,6 +19051,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -18964,7 +19268,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -18977,7 +19285,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_3_2 + v.kg_plate_style_3_2*214]"
+        "Array.palette[v.kg_plate_food_3_2 + v.kg_plate_style_3_2*218]"
       ],
       "part_visibility": [
         {
@@ -19272,6 +19580,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -19486,6 +19798,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -19700,6 +20016,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -19914,6 +20234,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -20128,6 +20452,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -20342,6 +20670,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -20555,7 +20887,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -20930,7 +21266,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_4_0 + v.kg_plate_style_4_0*214]"
+        "Array.palette[v.kg_plate_food_4_0 + v.kg_plate_style_4_0*218]"
       ],
       "part_visibility": [
         {
@@ -21225,6 +21561,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -21439,6 +21779,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -21653,6 +21997,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -21867,6 +22215,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -22081,6 +22433,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -22295,6 +22651,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -22508,7 +22868,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -22521,7 +22885,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_4_1 + v.kg_plate_style_4_1*214]"
+        "Array.palette[v.kg_plate_food_4_1 + v.kg_plate_style_4_1*218]"
       ],
       "part_visibility": [
         {
@@ -22816,6 +23180,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -23030,6 +23398,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -23244,6 +23616,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -23458,6 +23834,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -23672,6 +24052,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -23886,6 +24270,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -24099,7 +24487,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }
@@ -24112,7 +24504,7 @@
         }
       ],
       "textures": [
-        "Array.palette[v.kg_plate_food_4_2 + v.kg_plate_style_4_2*214]"
+        "Array.palette[v.kg_plate_food_4_2 + v.kg_plate_style_4_2*218]"
       ],
       "part_visibility": [
         {
@@ -24407,6 +24799,10 @@
             "Texture.food_211_s0",
             "Texture.food_212_s0",
             "Texture.food_213_s0",
+            "Texture.food_214_s0",
+            "Texture.food_215_s0",
+            "Texture.food_216_s0",
+            "Texture.food_217_s0",
             "Texture.food_0_s1",
             "Texture.food_1_s1",
             "Texture.food_2_s1",
@@ -24621,6 +25017,10 @@
             "Texture.food_211_s1",
             "Texture.food_212_s1",
             "Texture.food_213_s1",
+            "Texture.food_214_s1",
+            "Texture.food_215_s1",
+            "Texture.food_216_s1",
+            "Texture.food_217_s1",
             "Texture.food_0_s2",
             "Texture.food_1_s2",
             "Texture.food_2_s2",
@@ -24835,6 +25235,10 @@
             "Texture.food_211_s2",
             "Texture.food_212_s2",
             "Texture.food_213_s2",
+            "Texture.food_214_s2",
+            "Texture.food_215_s2",
+            "Texture.food_216_s2",
+            "Texture.food_217_s2",
             "Texture.food_0_s3",
             "Texture.food_1_s3",
             "Texture.food_2_s3",
@@ -25049,6 +25453,10 @@
             "Texture.food_211_s3",
             "Texture.food_212_s3",
             "Texture.food_213_s3",
+            "Texture.food_214_s3",
+            "Texture.food_215_s3",
+            "Texture.food_216_s3",
+            "Texture.food_217_s3",
             "Texture.food_0_s4",
             "Texture.food_1_s4",
             "Texture.food_2_s4",
@@ -25263,6 +25671,10 @@
             "Texture.food_211_s4",
             "Texture.food_212_s4",
             "Texture.food_213_s4",
+            "Texture.food_214_s4",
+            "Texture.food_215_s4",
+            "Texture.food_216_s4",
+            "Texture.food_217_s4",
             "Texture.food_0_s5",
             "Texture.food_1_s5",
             "Texture.food_2_s5",
@@ -25477,6 +25889,10 @@
             "Texture.food_211_s5",
             "Texture.food_212_s5",
             "Texture.food_213_s5",
+            "Texture.food_214_s5",
+            "Texture.food_215_s5",
+            "Texture.food_216_s5",
+            "Texture.food_217_s5",
             "Texture.food_0_s6",
             "Texture.food_1_s6",
             "Texture.food_2_s6",
@@ -25690,7 +26106,11 @@
             "Texture.food_210_s6",
             "Texture.food_211_s6",
             "Texture.food_212_s6",
-            "Texture.food_213_s6"
+            "Texture.food_213_s6",
+            "Texture.food_214_s6",
+            "Texture.food_215_s6",
+            "Texture.food_216_s6",
+            "Texture.food_217_s6"
           ]
         }
       }

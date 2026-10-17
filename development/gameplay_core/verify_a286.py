@@ -89,6 +89,7 @@ def render_assets():
    im=Image.open(RP/(path+'.png'));assert im.width==im.height,(key,im.size)
  version=tuple(load(BP/'manifest.json')['header']['version'])
  expected_count=125 if version>=(2,8,119) else 124 if version>=(2,8,71) else 108 if version>=(2,8,68) else 107 if (RP/'attachables/secret_skewer.attachable.json').exists() else 106 if version >= (2,8,32) else 107
+ expected_count+=int((RP/'attachables/secret_skewer_native_plain.attachable.json').is_file())
  from verify_failure_skewer import admit_attachable
  assert len([p for p in (RP/'attachables').glob('*.json') if not p.stem.endswith('_java_three_alt.attachable') and not admit_attachable(p)])==expected_count
  assert not (RP/'attachables/big_vat.attachable.json').exists()

@@ -47,7 +47,7 @@ export function recipeTable(){return RECIPES.map(r=>({id:r.id,cooked:r.cooked,sl
 export function completedRecipe(rows){return RECIPES.find(r=>matches(r,rows))??null}
 export function canAppendConfigured(rows,next){return RECIPES.some(r=>prefix(r,[...rows,next]))}
 export function isConfiguredIngredient(value){return RECIPES.some(r=>r.slots.some(slot=>slotMatches(value,slot)))}
-export function expectedSize(rows){return RECIPES.filter(r=>prefix(r,rows)).reduce((m,r)=>Math.max(m,r.slots.length),3)}
+export function expectedSize(rows){return RECIPES.filter(r=>prefix(r,rows)).reduce((m,r)=>Math.max(m,r.slots.length),0)||3}
 export function appendOutcome(rows,next,edible=false,explicitAllow=false){
  const current=ids(rows),nextId=identity(next).id;
  if(!nextId||current.length>=3)return {ok:false,reason:'full'};

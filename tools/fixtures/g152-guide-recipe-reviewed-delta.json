@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "predecessor_commit": "ba49ee55b67ab4f679c37fa833039857443a47f2",
+  "predecessor_tree": "75243da7f072114f580fcf28e4151d285e5b06a7",
+  "predecessor_version": [
+    2,
+    8,
+    151
+  ],
+  "version": [
+    2,
+    8,
+    152
+  ],
+  "evidence_scope": "source_only",
+  "native_acceptance": false,
+  "client_acceptance": false,
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "owner": "g152_paired_identity",
+      "operation": "modify",
+      "before_sha256": "17ba2d1bb58c006e8ea6454e2fec2f28efd0d392ba4945399688103484da40b8",
+      "after_sha256": "ed7cfa535ac4ea6cffd2827e084ef54a7c8b1f5384f3f3bd69756038a08d4481"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/guide/payload.js": {
+      "owner": "cookery161_board_guide",
+      "operation": "modify",
+      "before_sha256": "dceaf4f047e80fc81874a8af0e147922a423759d2606da3925620e485bd94277",
+      "after_sha256": "c97c41acdfcf638c9af049e1f21f6ffff02b438e79357217fbd622a518a6dbc0"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "owner": "g152_paired_identity",
+      "operation": "modify",
+      "before_sha256": "5de08820319f683128eddbacc32bcf3aeaaec3a4211257a82b4d8c02927c2a4d",
+      "after_sha256": "0e54bfbaea8640f13a3f4d0c4adce2769ab9e301b4b7a3d2650557752e8c8fb4"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/en_US.lang": {
+      "owner": "cookery161_board_guide",
+      "operation": "modify",
+      "before_sha256": "5aac1a16fc1d3b25f418d879774e694ff199d57f95a9c551facfeeb7026718d1",
+      "after_sha256": "35323f47bbc7a0f3524c87ab37cb61bb3d64d974b75485ff5508b9b057c77d28"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/zh_CN.lang": {
+      "owner": "cookery161_board_guide",
+      "operation": "modify",
+      "before_sha256": "947f16ffdc22eceea20c713b1223197358ddd6fa8be7a8ac6bd081c416c65f80",
+      "after_sha256": "00e8d4177133623be5b2578d82b7bb7e9060369f9747f3f89be24f6f6f86dd1f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/zh_TW.lang": {
+      "owner": "cookery161_board_guide",
+      "operation": "modify",
+      "before_sha256": "227b494479913f5fe60686ed0633a60fe2a9226da4894e081311db59444360f8",
+      "after_sha256": "234f965d0af62f4451d1700478395d231810da6dd9f8b457ede8ffda5e244c84"
+    },
+    "projects/grilling/guide/catalog.a3.json": {
+      "owner": "cookery161_board_guide",
+      "operation": "modify",
+      "before_sha256": "03778820e949b98f7756195ba445877dde98823d1cefaa9783acabc34e63b920",
+      "after_sha256": "4893d29020071f293ddb456fbeb8ca8bf611d83860001a9a41cdde1aec0cabd1"
+    }
+  }
+}

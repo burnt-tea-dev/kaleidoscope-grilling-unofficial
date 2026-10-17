@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 import eating_compiler_pipeline as pipeline
 import build_eating_motion as motion
 import build_offhand_eating_projection as offhand
+from skewer_content_source import historical_bytes,reapply_main as reapply_skewer_content
 BASE='c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f'
 def encoded(v):return v if isinstance(v,bytes)else v.encode()if isinstance(v,str)else(json.dumps(v,ensure_ascii=False,indent=2)+'\n').encode()
 def predecessor():
@@ -13,12 +14,13 @@ def predecessor():
  module=types.ModuleType('frozen_motion');module.__file__=str(ROOT/'tools/build_eating_motion.py');exec(compile(source,module.__file__,'exec'),module.__dict__);return module,source
 class PipelineTests(unittest.TestCase):
  def test_full_output_bytes_match_frozen_orchestrator_and_runtime(self):
-  old,_=predecessor();before=old.build();after=motion.build();self.assertEqual(set(before),set(after))
+  old,_=predecessor();main=motion.BP/'scripts/main.js';before=old.build({main:historical_bytes(main).decode()});after=motion.build();self.assertEqual(set(before),set(after))
   from public_source_witness import apply_performance_source
   from eating_owner_properties import augment as guard_properties
   for p in before:
    expected=apply_performance_source(before[p]) if p==motion.BP/'scripts/main.js' else before[p]
    expected=guard_properties({p:expected})[p]
+   if p==main:expected=reapply_skewer_content(expected)
    self.assertEqual(encoded(expected),encoded(after[p]),str(p));self.assertEqual(p.read_bytes(),encoded(after[p]),str(p))
   print('Exact generated outputs:',len(after),flush=True)
  def test_flag_version_stage_traces_match_original_tail(self):
@@ -26,7 +28,8 @@ class PipelineTests(unittest.TestCase):
   text='def original(output,table,main_path,two_route_camera,review_three_routes,slime_frames,failure_skewers):\n'+source[start:end]+'\n'
   ns={'BP':motion.BP,'RP':motion.RP,'ROOT':ROOT,'sys':sys,'json':json};exec(text,ns)
   modules={s.name:importlib.import_module(s.module)for s in pipeline.STAGES if s.module};real=Path.read_text;partial=motion.RP/'attachables/unfinished_skewer.attachable.json'
-  for version in [(2,8,57),(2,8,58),(2,8,126),(2,8,127),(2,8,144),(2,8,145),(2,8,146),(2,8,147)]:
+  versions=[(2,8,57),(2,8,58),(2,8,126),(2,8,127),(2,8,144),(2,8,145),(2,8,146),(2,8,147),(2,8,151),(2,8,152)]
+  for version in versions:
    for flags in range(16):
     opts=[bool(flags&(1<<n))for n in range(4)]
     for effects in [False,True]:
@@ -46,16 +49,17 @@ class PipelineTests(unittest.TestCase):
       ns['original'](dict(supplied),{},motion.BP/'scripts/main.js',*opts);expected=list(trace);trace.clear()
       if version>=(2,8,144) and all(opts[1:]):expected.append('performance')
       if version>=(2,8,147) and all(opts[1:]):expected.append('owner_properties')
+      if version in ((2,8,151),(2,8,152)) and all(opts[1:]):expected.append('skewer_content')
       pipeline.run(dict(supplied),pipeline.Context(version,{},motion.RP,motion.BP/'scripts/main.js',*opts));self.assertEqual(trace,expected,(version,flags,effects))
-  print('Version/flag/effects traces:256',flush=True)
+  print('Version/flag/effects traces:',len(versions)*32,flush=True)
  def test_order_checkpoints_and_mutations(self):
   names=[s.name for s in pipeline.STAGES]
-  self.assertEqual(names,['java_projection','secret_idle','secret_terminal','g126','g127','reviewed_three','raw_one','failure','partial_attachable','owner_context','slime','effects','ordinary_relative','offhand','performance','owner_properties'])
+  self.assertEqual(names,['java_projection','secret_idle','secret_terminal','g126','g127','reviewed_three','raw_one','failure','partial_attachable','owner_context','slime','effects','ordinary_relative','offhand','performance','owner_properties','skewer_content'])
   for bad in [pipeline.STAGES[::-1],pipeline.STAGES+(pipeline.STAGES[-1],),pipeline.STAGES[:4]+pipeline.STAGES[5:],(dataclasses.replace(pipeline.STAGES[0],gate='unowned'),)+pipeline.STAGES[1:]]:
    with self.assertRaises(ValueError):pipeline.validate_stages(bad)
   c=pipeline.Context((2,8,145),{},motion.RP,motion.BP/'scripts/main.js');trace=[]
   with patch.object(pipeline,'apply_stage',side_effect=lambda stage,out,ctx:trace.append(stage.name)or out):pipeline.run({},c,resume_after='g126')
-  self.assertEqual(trace,[name for name in names[4:] if name!='owner_properties'])
+  self.assertEqual(trace,[name for name in names[4:] if name not in ('owner_properties','skewer_content')])
   with self.assertRaises(ValueError):pipeline.run({},c,resume_after='unknown')
   with self.assertRaises(ValueError):pipeline.run({},dataclasses.replace(c,version=(2,8,58)),resume_after='g126')
  def test_offhand_supplied_documents_are_not_disk_fallbacks(self):

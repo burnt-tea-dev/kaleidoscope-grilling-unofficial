@@ -7,10 +7,134 @@ class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
   cls.actual=owner.runtime_files();cls.doc=owner.manifest()
+  from guide_recipe_source import predecessor_runtime as guide_predecessor
+  cls.g151=guide_predecessor(cls.actual)
+  from skewer_content_source import predecessor_runtime as skewer_predecessor
+  cls.g150=skewer_predecessor(cls.g151)
   from stable_host_source import predecessor_runtime
-  cls.g149=predecessor_runtime(cls.actual)
+  cls.g149=predecessor_runtime(cls.g150)
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4501,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6})
+  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4531,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6,'skewer_content_layer_changes':66,'guide_recipe_layer_changes':6})
+ def test_guide_layer_rejects_reverted_supplied_bytes_and_unrelated_runtime_changes(self):
+  import guide_recipe_source as guide
+  self.assertEqual(self.g151,{p:b for p,b in guide.preceding_files().items() if p.startswith(owner.PREFIXES)})
+  self.assertEqual(len(guide.PATHS),7);self.assertEqual(len(guide.RUNTIME_PATHS),6)
+  for path in guide.PATHS:
+   current=(owner.ROOT/path).read_bytes();before=guide.preceding_files()[path]
+   with self.subTest(path=path):
+    self.assertEqual(guide.reference_bytes(path,current),before)
+    for invalid in (current+b'\n',before):
+     with self.assertRaises(ValueError):guide.reference_bytes(path,invalid)
+     with self.assertRaises(ValueError):guide.historical_bytes(path,invalid)
+    # No supplied postimage may be replaced with the current disk file.
+    read=Path.read_bytes
+    def no_fallback(p):
+     if p==owner.ROOT/path:raise AssertionError('Unexpected supplied-byte fallback')
+     return read(p)
+    with patch.object(Path,'read_bytes',no_fallback):
+     self.assertEqual(guide.reference_bytes(path,current),before)
+  for operation in ('mutate','add','delete','revert','double_inverse'):
+   files=dict(self.actual);path=guide.BP+'/scripts/main.js'
+   if operation=='mutate':files[path]+=b'\n'
+   elif operation=='add':files[guide.BP+'/unknown.json']=b'{}'
+   elif operation=='delete':del files[path]
+   elif operation=='revert':files[guide.BP+'/manifest.json']=self.g151[guide.BP+'/manifest.json']
+   else:files=dict(self.g151)
+   with self.subTest(operation=operation),self.assertRaises(ValueError):guide.predecessor_runtime(files)
+ def test_guide_source_ledger_and_published_predecessor_are_not_editable_authority(self):
+  import guide_recipe_source as guide
+  for key,value in [('predecessor_commit','0'*40),('predecessor_tree','0'*40),('version',[2,8,151]),('evidence_scope','client'),('native_acceptance',True),('client_acceptance',True)]:
+   forged=copy.deepcopy(guide.ledger());forged[key]=value
+   with self.subTest(key=key),self.assertRaises(ValueError):guide.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  for key,value in [('owner','arbitrary_module'),('operation','add'),('before_sha256','0'*64),('after_sha256',owner.sha(b'unreviewed'))]:
+   forged=copy.deepcopy(guide.ledger());forged['changes'][guide.GUIDE][key]=value
+   with self.subTest(key=key),self.assertRaises(ValueError):guide.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  forged=copy.deepcopy(guide.ledger());forged['changes'][guide.BP+'/*']=forged['changes'].pop(guide.GUIDE)
+  with self.assertRaises(ValueError):guide.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  with self.assertRaises(ValueError):guide.reference_bytes('../escape',b'')
+  with self.assertRaises(ValueError):guide.reference_bytes(guide.BP+'/scripts/main.js')
+  with patch.object(guide,'PREVIOUS_TREE','0'*40),self.assertRaises(ValueError):guide.preceding_files.__wrapped__()
+  with self.assertRaises(TypeError):guide.preceding_files()['new']=b''
+  with self.assertRaises(TypeError):guide.OWNERS[guide.GUIDE]='unowned'
+ def test_guide_boundary_retains_both_complete_generations_and_g151_addition_rules(self):
+  import guide_recipe_source as guide
+  import skewer_content_source as skewer
+  import bottle_clear_guide_source_witness as bottle
+  from build_grilling_guide import build_payload
+  current=json.loads((owner.ROOT/guide.GUIDE).read_bytes())
+  before=json.loads(guide.reference_bytes(guide.GUIDE))
+  self.assertEqual((before['version'],current['version']),('0.3.62','0.3.63'))
+  payload=guide.BP+'/scripts/guide/payload.js'
+  for source,expected in ((before,guide.preceding_files()[payload]),(current,self.actual[payload])):
+   actual=('export const GUIDE_PAYLOAD='+json.dumps(build_payload(source),ensure_ascii=False,separators=(',',':'))+';\n').encode()
+   self.assertEqual(actual,expected)
+  for path in bottle.PATHS:
+   self.assertEqual(bottle.reference_bytes(path,(owner.ROOT/path).read_bytes()),bottle.pinned_bytes(bottle.PREVIOUS_BOTTLE_GUIDE_BASE,path))
+  self.assertEqual(skewer.historical_bytes(skewer.MAIN,self.actual[skewer.MAIN]),self.g150[skewer.MAIN])
+  with self.assertRaises(ValueError):skewer.historical_bytes(skewer.MAIN,self.g150[skewer.MAIN])
+  native=guide.RP+'/attachables/secret_skewer_native_plain.attachable.json'
+  with self.assertRaisesRegex(ValueError,'no historical source bytes'):skewer.reference_bytes(native)
+  self.assertEqual(skewer.addition_bytes(native),self.actual[native])
+ def test_skewer_content_layer_rejects_changed_or_reverted_postimages_and_extra_inventory(self):
+  import skewer_content_source as skewer
+  self.assertEqual(self.g150,{p:b for p,b in skewer.preceding_files().items() if p.startswith(owner.PREFIXES)})
+  self.assertEqual(len(skewer.RUNTIME_PATHS),66)
+  self.assertEqual(sum(row['operation']=='add' for row in skewer.ledger()['changes'].values()),30)
+  for path in skewer.RUNTIME_PATHS:
+   with self.subTest(path=path):
+    files=dict(self.g151);files[path]+=b'\n'
+    with self.assertRaises(ValueError):skewer.predecessor_runtime(files)
+    with self.assertRaises(ValueError):skewer.reference_bytes(path,files[path])
+    with self.assertRaises(ValueError):skewer.addition_bytes(path,files[path])
+    if path in self.g150:
+     self.assertEqual(skewer.reference_bytes(path,self.g151[path]),self.g150[path])
+     with self.assertRaises(ValueError):skewer.reference_bytes(path,self.g150[path])
+     with self.assertRaisesRegex(ValueError,'not a source addition'):skewer.addition_bytes(path,self.g151[path])
+    else:
+     # New plain rendering, decoder and palette files have no old source proof.
+     with self.assertRaisesRegex(ValueError,'no historical source bytes'):skewer.reference_bytes(path)
+     self.assertEqual(skewer.addition_bytes(path),self.actual[path])
+  for operation in ('add','delete','revert'):
+   files=dict(self.g151);path=owner.PREFIXES[0]+'/scripts/main.js'
+   if operation=='add':files[owner.PREFIXES[0]+'/unknown.json']=b'{}'
+   elif operation=='delete':del files[path]
+   else:files[path]=self.g150[path]
+   with self.subTest(operation=operation),self.assertRaises(ValueError):skewer.predecessor_runtime(files)
+  with self.assertRaises(ValueError):skewer.reference_bytes(owner.PREFIXES[0]+'/scripts/timed_work_queue.js')
+  with self.assertRaises(ValueError):skewer.reference_bytes('../escape',b'')
+  with self.assertRaises(ValueError):skewer.addition_bytes('../escape',b'')
+ def test_skewer_content_ledger_scope_source_identity_and_preimage_are_not_editable_authority(self):
+  import skewer_content_source as skewer
+  path=owner.PREFIXES[0]+'/scripts/main.js'
+  changes=[('predecessor_commit','0'*40),('predecessor_tree','0'*40),('version',[2,8,152]),('evidence_scope','client'),('native_acceptance',True),('client_acceptance',True)]
+  for key,value in changes:
+   forged=copy.deepcopy(skewer.ledger());forged[key]=value
+   with self.subTest(key=key),self.assertRaises(ValueError):skewer.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  for key,value in [('owner','arbitrary_module'),('operation','delete'),('before_sha256','0'*64),('after_sha256',owner.sha(self.actual[path]+b'\n'))]:
+   forged=copy.deepcopy(skewer.ledger());forged['changes'][path][key]=value
+   with self.subTest(key=key),self.assertRaises(ValueError):skewer.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  forged=copy.deepcopy(skewer.ledger());forged['changes'][owner.PREFIXES[0]+'/*']=forged['changes'].pop(path)
+  with self.assertRaises(ValueError):skewer.ledger((json.dumps(forged,indent=2)+'\n').encode())
+  previous=dict(skewer.preceding_files());previous[path]+=b'\n'
+  with patch.object(skewer,'preceding_files',return_value=previous),self.assertRaises(ValueError):skewer.reference_bytes(path)
+  with patch.object(skewer,'PREVIOUS_TREE','0'*40),self.assertRaises(ValueError):skewer.preceding_files.__wrapped__()
+  with self.assertRaises(TypeError):skewer.preceding_files()['new']=b''
+  with self.assertRaises(TypeError):skewer.OWNERS[path]='arbitrary_module'
+ def test_skewer_content_main_generation_roundtrip_preserves_supplied_source_and_rejects_drift(self):
+  import skewer_content_source as skewer
+  old=self.g150[skewer.MAIN].decode();current=self.actual[skewer.MAIN].decode()
+  self.assertEqual(skewer.generator_main_source(current),old)
+  self.assertEqual(skewer.reapply_main(old),current)
+  read=Path.read_bytes
+  def supplied_only(path):
+   if path==owner.ROOT/skewer.MAIN:raise AssertionError('Supplied generation must not read main from disk')
+   return read(path)
+  with patch.object(Path,'read_bytes',supplied_only):
+   self.assertEqual(skewer.reapply_main(skewer.generator_main_source(current)),current)
+  for changed in (old+'\n',old.replace('MINIMUM_EAT_TICKS=25','MINIMUM_EAT_TICKS=1',1),current):
+   with self.assertRaises(ValueError):skewer.reapply_main(changed)
+  forged=copy.deepcopy(skewer.ledger());forged['changes'][skewer.MAIN]['operations'][0]['after']+='unreviewed'
+  with self.assertRaises(ValueError):skewer.ledger((json.dumps(forged,indent=2)+'\n').encode())
  def test_stable_host_layer_rejects_changed_scope_postimage_and_predecessor(self):
   import stable_host_source as stable
   import pending_offhand_source as pending
@@ -18,18 +142,18 @@ class RuntimeOwnership(unittest.TestCase):
   self.assertEqual(stable.preceding_host_spec(),json.loads(self.g149[stable.BP+'/host-extensions/board-api.json']))
   with self.assertRaises(ValueError):stable.preceding_host_spec((stable.ROOT/stable.BP/'host-extensions/board-api.json').read_bytes()+b'\n')
   for path in stable.RUNTIME_PATHS:
-   files=dict(self.actual);files[path]+=b'\n'
+   files=dict(self.g150);files[path]+=b'\n'
    with self.subTest(path=path),self.assertRaises(ValueError):stable.predecessor_runtime(files)
    self.assertEqual(stable.reference_bytes(path),self.g149[path])
   for operation in ('add','delete','old_postimage'):
-   files=dict(self.actual);path=next(iter(stable.RUNTIME_PATHS))
+   files=dict(self.g150);path=next(iter(stable.RUNTIME_PATHS))
    if operation=='add':files[owner.PREFIXES[0]+'/unknown.json']=b'{}'
    elif operation=='delete':del files[path]
    else:files[path]=self.g149[path]
    with self.subTest(operation=operation),self.assertRaises(ValueError):stable.predecessor_runtime(files)
   with self.assertRaises(ValueError):stable.reference_bytes(stable.GUIDE,(stable.ROOT/stable.GUIDE).read_bytes()+b'\n')
   forged=copy.deepcopy(stable.ledger());path=next(iter(stable.RUNTIME_PATHS))
-  forged['changes'][path]['after_sha256']=owner.sha(self.actual[path]+b'\n')
+  forged['changes'][path]['after_sha256']=owner.sha(self.g150[path]+b'\n')
   with self.assertRaises(ValueError):stable.ledger((json.dumps(forged,indent=2)+'\n').encode())
   forged=copy.deepcopy(stable.ledger());forged['predecessor_commit']='0'*40
   with self.assertRaises(ValueError):stable.ledger((json.dumps(forged,indent=2)+'\n').encode())

@@ -6,6 +6,7 @@ import {captureSkewerMetadata,restoreSkewerMetadata} from '../../projects/grilli
 import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 import {isBottleHeldVisualItem} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/bottle_held_visual_core.js';
 import {secretVisualIndex} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/integration_registry_core.js';
+import {secretHeldMarker} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
 import {secretVisualState,partialVisualState} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state.js';
 import {captureEatingIdentity,eatingStillCurrent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
 const N='kaleidoscope_grilling:',root=new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/',import.meta.url);
@@ -57,7 +58,7 @@ const stripped=name=>fs.readFileSync(new URL(name,root),'utf8').replace(/^import
 function runtime(stack){
  const held={main:stack},values={},writes=[],callbacks={},queue=[];let fail;
  const player={id:'failure-holder',selectedSlotIndex:0,setProperty(k,v){writes.push([k,v]);if(fail?.(k,v))throw Error('injected write');values[k]=v;}};
- const ctx={...failure,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretVisualState,partialVisualState,eatingStillCurrent,getMainHand:()=>held.main,getOffHand:()=>held.off,isCreative:()=>!!held.creative,console:{warn(){}},world:{getAllPlayers:()=>[player],afterEvents:Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(k=>[k,{subscribe:f=>callbacks[k]=f}]))},system:{currentTick:100,run:f=>queue.push(f),runInterval(){}}};
+ const ctx={...failure,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretHeldMarker,secretVisualState,partialVisualState,eatingStillCurrent,getMainHand:()=>held.main,getOffHand:()=>held.off,isCreative:()=>!!held.creative,console:{warn(){}},world:{getAllPlayers:()=>[player],afterEvents:Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(k=>[k,{subscribe:f=>callbacks[k]=f}]))},system:{currentTick:100,run:f=>queue.push(f),runInterval(){}}};
  vm.runInNewContext(stripped('slime_frame_core.js')+'\n'+stripped('held_visual_transport.js')+'\n'+stripped('held_visual_dispatch_runtime.js')+'\n'+stripped('secret_held_runtime.js')+'\nthis.api={configureSecretHeldReader,syncSecretHeld,writeHeldVisual,heldVisualKind};',ctx);
  ctx.api.configureSecretHeldReader(s=>s.raw,s=>s.raw);return {held,values,writes,player,callbacks,queue,api:ctx.api,fail:f=>fail=f};
 }

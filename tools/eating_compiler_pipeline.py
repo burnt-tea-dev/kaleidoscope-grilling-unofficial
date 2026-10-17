@@ -42,6 +42,7 @@ STAGES=(
  Stage('offhand','build_offhand_eating_projection',('ordinary_relative',),'complete'),
  Stage('performance','public_source_witness',('offhand',),'performance'),
  Stage('owner_properties','eating_owner_properties',('performance',),'owner_properties'),
+ Stage('skewer_content','skewer_content_source',('owner_properties',),'skewer_content'),
 )
 
 def validate_stages(stages=None):
@@ -50,7 +51,7 @@ def validate_stages(stages=None):
  for stage in stages:
   if stage.name in seen:raise ValueError('Duplicate compiler stage: '+stage.name)
   if not set(stage.after)<=seen:raise ValueError('Missing/out-of-order compiler prerequisite: '+stage.name)
-  if stage.gate not in {'always','modern','g126','g127','review','failure','slime','complete','performance','owner_properties'}:raise ValueError('Unknown compiler gate: '+stage.gate)
+  if stage.gate not in {'always','modern','g126','g127','review','failure','slime','complete','performance','owner_properties','skewer_content'}:raise ValueError('Unknown compiler gate: '+stage.gate)
   seen.add(stage.name)
 
 def enabled(stage,c):
@@ -59,7 +60,8 @@ def enabled(stage,c):
   'failure':c.failure_skewers,'slime':c.slime_frames,
   'complete':c.review_three_routes and c.slime_frames and c.failure_skewers,
   'performance':c.version>=(2,8,144) and c.review_three_routes and c.slime_frames and c.failure_skewers,
-  'owner_properties':c.version>=(2,8,147) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
+  'owner_properties':c.version>=(2,8,147) and c.review_three_routes and c.slime_frames and c.failure_skewers,
+  'skewer_content':c.version in ((2,8,151),(2,8,152)) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
 
 def apply_stage(stage,output,c):
  if stage.name=='partial_attachable':

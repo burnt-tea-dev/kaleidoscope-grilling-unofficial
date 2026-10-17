@@ -3,10 +3,21 @@ export const BOARD_API_VERSION='0.1.0';
 export const BOARD_CAPABILITIES=Object.freeze(['chopping_board_v2','chopping_board_recipe_selection','chopping_board_multi_output','chopping_board_commit_receipt']);
 const id=v=>typeof v==='string'&&/^[a-z0-9_.-]+:[a-z0-9_./-]+$/.test(v);
 const integer=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
+function normalizeBuiltin(value){
+ if(!value||!integer(value.cuts,1,64))return undefined;
+ if(value.outputs!==undefined){
+  if(value.result!==undefined||value.count!==undefined||!Array.isArray(value.outputs)||value.outputs.length<1||value.outputs.length>4)return undefined;
+  if(Object.keys(value).some(key=>!['outputs','cuts'].includes(key)))return undefined;
+  if(value.outputs.some(row=>!row||!id(row.id)||!integer(row.count,1,64)||Object.keys(row).some(key=>!['id','count'].includes(key))))return undefined;
+  return {outputs:value.outputs.map(row=>({id:row.id,count:row.count})),cuts:value.cuts};
+ }
+ if(!id(value.result)||!integer(value.count,1,64))return undefined;
+ return {result:value.result,count:value.count,cuts:value.cuts};
+}
 export function normalizeBoardV2Recipe(payload){
  if(payload?.api!==1||payload?.kind!=='chopping_board_v2'||!id(payload.source))return undefined;
- const r=payload.recipe,b=r?.builtin;
- if(!r||!id(r.id)||!id(r.input)||!b||!id(b.result)||!integer(b.count,1,64)||!integer(b.cuts,1,64))return undefined;
+ const r=payload.recipe,b=normalizeBuiltin(r?.builtin);
+ if(!r||!id(r.id)||!id(r.input)||!b)return undefined;
  if(!['replace','supplement'].includes(r.mode))return undefined;
  if(r.mode==='replace'&&(!id(r.result)||!integer(r.count,1,64)))return undefined;
  const bonuses=r.bonusOutputs??[];
@@ -14,8 +25,10 @@ export function normalizeBoardV2Recipe(payload){
  if(r.mode==='supplement'&&!bonuses.length)return undefined;
  const permitted=new Set(['id','input','builtin','mode','result','count','bonusOutputs']);
  if(Object.keys(r).some(k=>!permitted.has(k)))return undefined;
- return {id:r.id,source:payload.source,input:r.input,builtin:{result:b.result,count:b.count,cuts:b.cuts},mode:r.mode,
-  result:r.mode==='replace'?r.result:b.result,count:r.mode==='replace'?r.count:b.count,cuts:b.cuts,
+ const primary=b.outputs?.[0]??{id:b.result,count:b.count};
+ return {id:r.id,source:payload.source,input:r.input,builtin:b,mode:r.mode,
+  result:r.mode==='replace'?r.result:primary.id,count:r.mode==='replace'?r.count:primary.count,cuts:b.cuts,
+  ...(r.mode==='supplement'&&b.outputs?{outputs:b.outputs.map(row=>({...row}))}:{}),
   bonusOutputs:bonuses.map(x=>({id:x.id,min:x.min,max:x.max})),apiVersion:BOARD_API_VERSION};
 }
 export function createBoardRegistry(){
@@ -28,12 +41,16 @@ export function createBoardRegistry(){
   rows.set(r.input,r);return {ok:true,kind:payload.kind,source:r.source,id:r.id,apiVersion:BOARD_API_VERSION};
  },select(input,builtin){
   const r=rows.get(input);if(!r||conflicts.has(input)||!builtin)return undefined;
-  if(builtin.result!==r.builtin.result||builtin.count!==r.builtin.count||builtin.cuts!==r.builtin.cuts)return undefined;
+  // Keep exact author identity/count/order. Multi-output matching must also
+  // bind secondary products, so a missing/changed bone cannot pass silently.
+  if(JSON.stringify(normalizeBuiltin(builtin))!==JSON.stringify(r.builtin))return undefined;
   return JSON.parse(JSON.stringify(r));
  }};
 }
 export function sampleBoardOutputs(recipe,random=Math.random){
- const rows=[{id:recipe.result,count:recipe.count}];
+ // Old saved boardV2 recipes retain their single-output contract. New host
+ // supplements carry every author output before sampling the additive bonus.
+ const rows=recipe.outputs?recipe.outputs.map(row=>({...row})):[{id:recipe.result,count:recipe.count}];
  for(const b of recipe.bonusOutputs){const n=Number(random());if(!Number.isFinite(n)||n<0||n>=1)throw Error('invalid random sample');rows.push({id:b.id,count:b.min+Math.floor(n*(b.max-b.min+1))});}
  return rows;
 }

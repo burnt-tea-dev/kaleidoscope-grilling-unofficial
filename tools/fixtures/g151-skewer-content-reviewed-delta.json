@@ -1,0 +1,598 @@
+{
+  "schema": 1,
+  "predecessor_commit": "aa091a1e91035d1510b579af11254a9bc9f86e6b",
+  "predecessor_tree": "31a4a37c4cdc881548cf7429a6dbfecfc0a3f2ec",
+  "predecessor_version": [
+    2,
+    8,
+    150
+  ],
+  "version": [
+    2,
+    8,
+    151
+  ],
+  "evidence_scope": "source_only",
+  "native_acceptance": false,
+  "client_acceptance": false,
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/entities/grill_food_visual.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "3af29c379c7d1287c778eabb663eb0a310751e6667d90cb298d9f996ca3f24e0",
+      "after_sha256": "1102d6caeccd8d1de709dfb025037281e214091c65adff23baed35e9cac21ff1"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/entities/plate_food_visual.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "d9535264512982184318271093fa26cb10b176583f9f5becea2381a27d0a2270",
+      "after_sha256": "f74b26eefcdcc781bcce728e3a4025d0fbbc351a1dc26085e7dfd12ecb65b3b9"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/entities/player.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "aff4ac80cc2c8932aa5ce129f2b6ea6b78e8121dab8e73a9b96595f6d418dbe2",
+      "after_sha256": "684a1b9df549f014444a132849d8f99e4f17de4b614e3dced3d407575cc89a2d"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json": {
+      "owner": "typed_board_recipe_match",
+      "operation": "modify",
+      "before_sha256": "a6cb35e8a8772a66825841b5bdf46ed1b5f028c99e2ea1c7cba6e4e24214a06b",
+      "after_sha256": "dcf5d5e29a81f97a2de2470a0c29d7a0479aad0c9da6bf6dd790b4d503e1a763"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "owner": "g151_paired_identity",
+      "operation": "modify",
+      "before_sha256": "e6ec987063b32289b1e2512610b2c9c720557a2d56772c99837fafac53c2ff79",
+      "after_sha256": "17ba2d1bb58c006e8ea6454e2fec2f28efd0d392ba4945399688103484da40b8"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js": {
+      "owner": "secret_thread_snapshot_match",
+      "operation": "modify",
+      "before_sha256": "310a2785992efd2d2c24a7c912170e38d49d929efba7e91d532f4f79936c0151",
+      "after_sha256": "293f7780f28991b6f962ed65735b113ae5b1f672c0f27d1c300014501f1389c0"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js": {
+      "owner": "typed_board_recipe_match",
+      "operation": "modify",
+      "before_sha256": "4b01996b398d1d60ae54a3979ff9445be79fdc6b484a60153ea3e3ee246a645a",
+      "after_sha256": "5872f628873db68159704198b3ddf4e8ab66723c6d5748e9c34d38b308f38afd"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js": {
+      "owner": "secret_content_lifecycle",
+      "operation": "modify",
+      "before_sha256": "c3999cbae004a5350aa61b84b6b4d45f3894356d68236c3e9aeda92b336a9475",
+      "after_sha256": "7cc1bf419212fa688a6498b4e04bf036b467231274e6e89120d8813e3a682bfe"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/food_snapshot_core.js": {
+      "owner": "secret_saved_food_qualification",
+      "operation": "modify",
+      "before_sha256": "b1cc0633859716b1d384adba4656049c37d84aebc7b6ef2e12bbd5c4430de379",
+      "after_sha256": "e0987ee2fda67c39c7496f98b81c8af2048cd0059a33c29c4c05d7c889997200"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "b698beb3e5c920d0fc70ffc39170d65f43b7d66190527e36b406e4290124cb70",
+      "after_sha256": "9a1054a0016dd58a9bf2f5288785fb83491e6cb716fe983879aaddc010a650ba"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/board_api_core.js": {
+      "owner": "typed_board_recipe_match",
+      "operation": "modify",
+      "before_sha256": "c4a13bb7f1f841bf1d2db6998029a0d08e530985a69305f1809458b0c0b8d67a",
+      "after_sha256": "bc7298ec2843f9eb0948da6dc99e52fe71ae9ffcb1afd313b85bd8cf91717017"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/board_api_runtime.js": {
+      "owner": "typed_board_recipe_match",
+      "operation": "modify",
+      "before_sha256": "54cb3125da5d4e7eaf84a02ce6afd8fbcd5e75528c3e1408f0703e0c395db725",
+      "after_sha256": "0fe132a47fff74c7ae54d94f7a010231405ad40117c68e477c995a46a9ea0de1"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/main.js": {
+      "owner": "secret_content_lifecycle_and_threading",
+      "operation": "modify",
+      "before_sha256": "56cf29fbf6cfaaff08b966e462c880d66c7561e55650c8495fa909f4be843cd1",
+      "after_sha256": "17d4a3dbbf06b6c43074ea12ddb364fb2b72eebfd67eb2d3a81e64f4e5c966c5",
+      "operations": [
+        {
+          "start": 3125,
+          "end": 3125,
+          "before": "",
+          "after": "secretEatingRows} from './secret_eating_core.js';\nimport {"
+        },
+        {
+          "start": 4881,
+          "end": 4881,
+          "before": "",
+          "after": "pletedEatingStillCurrent,com"
+        },
+        {
+          "start": 6202,
+          "end": 6202,
+          "before": "",
+          "after": "e,expectedSiz"
+        },
+        {
+          "start": 22212,
+          "end": 22215,
+          "before": "'3'",
+          "after": "String(expectedSize(clean))"
+        },
+        {
+          "start": 23952,
+          "end": 23952,
+          "before": "",
+          "after": "secretEatingData(stack){\n try{\n  const original=readSkewerRows(stack),cooked=isSecretCooked(stack),raw=secretEatingRows(original,id=>new ItemStack(id,1));\n  if(!raw)return undefined;\n  const rows=cooked?secretEatingRows(readEffectiveSkewerRows(stack),id=>new ItemStack(id,1)):raw;\n  if(!rows)return undefined;\n  const food=secretFood(rows,cooked,original);\n  return Number.isFinite(food.nutrition)&&Number.isFinite(food.saturation)?{rows,food}:undefined;\n }catch{return undefined;}\n}\nfunction "
+        },
+        {
+          "start": 24027,
+          "end": 24034,
+          "before": "Food(re",
+          "after": "E"
+        },
+        {
+          "start": 24035,
+          "end": 24041,
+          "before": "dEffec",
+          "after": ""
+        },
+        {
+          "start": 24043,
+          "end": 24055,
+          "before": "veSkewerRows",
+          "after": "ngData"
+        },
+        {
+          "start": 24062,
+          "end": 24072,
+          "before": ",isSecretC",
+          "after": "?.f"
+        },
+        {
+          "start": 24074,
+          "end": 24076,
+          "before": "ke",
+          "after": ""
+        },
+        {
+          "start": 24077,
+          "end": 24107,
+          "before": "(stack),readSkewerRows(stack))",
+          "after": ""
+        },
+        {
+          "start": 24405,
+          "end": 24405,
+          "before": "",
+          "after": ")return null;\n // Block/entity threading can bypass the item-use admission callback.\n if(canonicalFoodId(food.typeId)===SECRET_ID&&!canUseSecretSkewer(food)"
+        },
+        {
+          "start": 25571,
+          "end": 25571,
+          "before": "",
+          "after": "// Every saved ingredient must still be reconstructible. Checking only the new\n // food can debit it into an old/corrupt skewer that can never be disassembled.\n for(const row of nextRows)"
+        },
+        {
+          "start": 25589,
+          "end": 25594,
+          "before": "nextR",
+          "after": "r"
+        },
+        {
+          "start": 25596,
+          "end": 25616,
+          "before": "s[nextRows.length-1]",
+          "after": ""
+        },
+        {
+          "start": 25618,
+          "end": 25679,
+          "before": " // Verify reconstructibility before either input is debited.",
+          "after": ""
+        },
+        {
+          "start": 30021,
+          "end": 30021,
+          "before": "",
+          "after": "sec"
+        },
+        {
+          "start": 30023,
+          "end": 30023,
+          "before": "",
+          "after": "tE"
+        },
+        {
+          "start": 30024,
+          "end": 30030,
+          "before": "dEffec",
+          "after": ""
+        },
+        {
+          "start": 30032,
+          "end": 30044,
+          "before": "veSkewerRows",
+          "after": "ngData"
+        },
+        {
+          "start": 30051,
+          "end": 30051,
+          "before": "",
+          "after": "?.rows??[]"
+        },
+        {
+          "start": 78125,
+          "end": 78125,
+          "before": "",
+          "after": "if(id===SECRET_ID&&!canUseSecretSkewer(e.itemStack)){stopSoundHandle(ACTIVE_EATS.get(e.source.id)?.audio);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);return;}\n  "
+        },
+        {
+          "start": 82016,
+          "end": 82016,
+          "before": "",
+          "after": "))return;\n if(id===SECRET_ID&&(!canUseSecretSkewer(e.itemStack)||!completedEatingStillCurrent(a.use,e.itemStack,heldByHand(e.source,a.hand),e.source.selectedSlotIndex,now(),!creative(e.source))"
+        },
+        {
+          "start": 89262,
+          "end": 89266,
+          "before": "try{",
+          "after": ""
+        },
+        {
+          "start": 89273,
+          "end": 89279,
+          "before": "validS",
+          "after": "!!s"
+        },
+        {
+          "start": 89284,
+          "end": 89285,
+          "before": "I",
+          "after": "Eati"
+        },
+        {
+          "start": 89287,
+          "end": 89293,
+          "before": "redien",
+          "after": "Da"
+        },
+        {
+          "start": 89294,
+          "end": 89301,
+          "before": "Rows(re",
+          "after": ""
+        },
+        {
+          "start": 89302,
+          "end": 89313,
+          "before": "dSkewerRows",
+          "after": ""
+        },
+        {
+          "start": 89320,
+          "end": 89426,
+          "before": ")&&(!isSecretCooked(stack)||validSecretIngredientRows(readEffectiveSkewerRows(stack)))}catch{return false}",
+          "after": ";"
+        }
+      ]
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_core.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "e517831a1402e529b1e4bf92f0a85af94d9232904ba98ea8f0fff8048eea7b4d",
+      "after_sha256": "9e021e3fea191e18be3d2755e62243d2270ed313549f399d128c0496e2d45eba"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js": {
+      "owner": "secret_saved_food_qualification",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "be6b85c93ae49ec3af155b7bd0b73e80a7a188c71653580c5de36a6537191cff"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/secret_gui_color_data.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "48d90db12963dbea65f1eee050c2168fc9ea2e263847caf24e60acf05bb090cd",
+      "after_sha256": "563a594b03dd47987898720c68af01c5bee18d717ea1a71f2d4137058fce9be0"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/secret_held_runtime.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "750113aeca7e683a9be67343b193ec8954bb2a789a4af584c7f0074ab7d42762",
+      "after_sha256": "b6fe756856f460e2953d19609295ab0b03b5bf76bdb5f4edc17baf4922080989"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_catalog.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "85f4f1b974dbb6289c5e385266bbfd11e8d49bacfeca6e5b2b4afc2221459ccc",
+      "after_sha256": "adeee9d2b69db669ee7d8d0b0163aa1108d86e44f8fb849da16edc3fe96756a3"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "b59fb2150447eea6e25d1f8fc793967b13478ad0ab0a025f01d9d7191e6428ad",
+      "after_sha256": "c8b738bfbf8eadde0ef76359404d7a8e31397d4ab25969603d1d77f4b704a7d1"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/dark_grilling.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "489332485dc513d94c605b39592e783147dc0b9fb70f83d7798f19967ec3d260",
+      "after_sha256": "9ee702616a2c834019e3aa4766b18f5a4503b87b21be248a19cbb2c616b93ac3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/dark_grilling_java_three_alt.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "a5659b01b6ea6c25a0738beb32048d86d965fa6131bb86aa0e6870a7c08ea826",
+      "after_sha256": "67d2e0bf27a851c293fe14eaf8e36e50cc9848b267534071d5bcb672c2ac951b"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/dark_grilling_native_plain.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "15b5227aff278b295f5fbda9801e70b6c15cdcca5935f0bb8c9087d8b3165900",
+      "after_sha256": "4c5cd754ef5c87e0ecad8641d3e3405a3acaef1fdee6d1dc551a2c8282b1c069"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/mysterious_skewer.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "565a590e9762336b6cf22e9d8a081078755ee1bc125ca6aed7cbb241652889cd",
+      "after_sha256": "cb09b9b40231126c5d623ef1ecdc971a305bcb6e473d6a186088a5f3d1468915"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/mysterious_skewer_java_three_alt.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "a456d05bf9cb5dab3ba163fdc1fd66ef6f669d32fa0aed1f6c37c39cf3922329",
+      "after_sha256": "e6f5f791b5ff7c600fba748f5550f88a2908b4b4a150e70f6298dbb33d3dc7fc"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/mysterious_skewer_native_plain.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "f75ea21be6ebe04636bdf215ffdb235ad277c60bac92dd4f5faccffc6e797e58",
+      "after_sha256": "0575b15a26cc78a44ca89d09a6a433f9169272dd4eab44b3f150fb7ac7a9bf23"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "ba7bc4747f5a14338e4ef5e03119ef8643ed7ecd3a55b38c4f1f76519dfd7f4d",
+      "after_sha256": "fddafe54892da9f81dc9dfefeb9d4d98f5ecc6b47cca0d1a6e33004b02ae87d3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer_java_three_alt.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "f1c69d6af1755b35d54eaf79ce70857a2751faae17f48e7472e905698f3fd2e2",
+      "after_sha256": "5df4c9e607fd1c307c5d6e1fe6250890bf9c3af755151d30d0508137dcd12e10"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/secret_skewer_native_plain.attachable.json": {
+      "owner": "native_plain_secret_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "84426b556ea3c390e74a19563d05ce47e5e862b39f82dc14d6232a2936546b20"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/skewer_plate.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "ac93abbc1c575e93a78ba31801a78560a2ca24dddca4a2607b4aa2b5a5d48601",
+      "after_sha256": "80419946d1bab6e57a79fc618620c8d5fc412ef97bb41c486c8e61f35e1e834e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/unfinished_skewer.attachable.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "1100ea596814625b4f7c5ce5c75976f2e45ccaaf1ea304c04019737e4daad433",
+      "after_sha256": "18284e82e558a42765399214482b47e1471cb931ebe751d697b83ebf9d74af7c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/entity/grill_food_visual.entity.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "5ab22c2c2dcf7fba922c83549413a61b1a5918d6d7b0ce43ce3d27417c2d8552",
+      "after_sha256": "0516590442cc2c653d7f0aa24e18ae94698d83ab1ac7f292f6dc30f1785a10fb"
+    },
+    "projects/grilling/gameplay_core/resource_pack/entity/plate_food_visual.entity.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "7770d3c062b4e90b0ff261e1799740a865e6ff8a9875b870e539418b105f3502",
+      "after_sha256": "21a8be11dce3cdd6408275d9060fdb3a90ce465f06faea8f0c26ed0f3185d110"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "owner": "g151_paired_identity",
+      "operation": "modify",
+      "before_sha256": "007c5820887c7a9a24628792229f993d6a4d9e6f7870f340db44f1956b9267b3",
+      "after_sha256": "5de08820319f683128eddbacc32bcf3aeaaec3a4211257a82b4d8c02927c2a4d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/secret_helper_sprites.geo.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "0bb2d2f33de93580361ab73fad63210478aadc389db7cd151fa8a2a7b3c615f6",
+      "after_sha256": "980ef2455c9ad2ce003052d6659a77625506c60b95d38dfa6eb1373424b25cee"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/failure_skewer_held.render_controllers.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "a528772d90dcae90e80645dcea8422d5119bcfe1a19c54cd92c29761d72f7d1a",
+      "after_sha256": "e0c29da7f332d54ffda55226a560001042dd156b2fc9e173e84a37970e954832"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/grill_food_visual.render_controllers.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "93b2d3079755e4e04a85ff55675162c766312b0ed445ce3b37f8a6ac11c9c084",
+      "after_sha256": "7fe47f6a93b6bc39c5f27425598571975ef8729b2a2214e80afc4fb3af1d73aa"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/plate_held.render_controllers.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "7880511162623c947e8c188ae1d3d8d3cd97e0a9733209e76f0da840f6ba59b6",
+      "after_sha256": "c4945ce5b0481be9043e567e4ae06d148755edad6cb359ec41d5ac33666a196f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/secret_held.render_controllers.json": {
+      "owner": "cookery161_food_visuals",
+      "operation": "modify",
+      "before_sha256": "98403b7be47d3ab7feb9af13fc61c2fea99caeef1acfd147c1c8d3b4f394d5df",
+      "after_sha256": "316d9d223d01c5d34d8b987a924b668291fc087c4e462ed7578a48e7c7ec870b"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_0.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "3bfe252b939dd77fa4d238cdaa214db42a543822b3c10b478dbfdaec0c93e4c4"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_1.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "b8b4b575b26630908d6e9c76a0094d4f8afd7cbbf418443f40a35e09f0708eac"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_2.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "245ee9a3d406abb1fb16c146607b2fc9b1729c3d111a7db984c62e792c26c7fe"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_3.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "a3cf7b1f5d3daeb3b1f031517f6420d3904692404c7ce02610865d3602b1e38a"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_4.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "8bfee827f154e2f77be6f77c3df4cb2ef1e388029483c84019dcb515d7c8fc69"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_5.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "f31df83dfb20f6643730d76bb6f053860299721406449976353c290b12608fed"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_214_6.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "76a834af9997bf22aa2c999074406dd236871d1d4b9bc99142de70749b0d07ac"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_0.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "422f680236893387eb7b343899b012924f17e0cf9b019603652f8aa37c684cae"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_1.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "cdb3055b01eb1f57fd59f675a2f6f2e1c61a959ff9ab71018ecdbe621a39070c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_2.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "7fb13250cf8f0c52677f52654237a9f4912201bfc6e7002e229b2f16c886ac1f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_3.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "bd544d454115eaba3cf1f8ad753ac22bc0fe4189368c83b396bc650029356567"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_4.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "d1ce80ca98466e529d7d440f01ed06dd532ecdb6bed3cb6bfbb40064fe853a0e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_5.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "84d42b07a31770375be827cd92791b62c2b0c964b5b1dcd2050ca232ca1b92a9"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_215_6.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "3c25cbc244793f7a55b2c3ca5e6e669a8c274ae3d47b1dbac3e0c41c8f98f5a7"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_0.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "b540b20c192b57210a5a77a7ca924d6c22fbafefbd4dd4ea667a7ff0d1b7f029"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_1.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "2887677f1a07f86711ad9188eb85cf09fd1127dfbda42c7ced2b5e3be8f0b26e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_2.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "431f4759296f52e6d61ec9ea045eefc1931c206958296ec58b31c762e1d76c42"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_3.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "50722661dea29bcb087f79235aaecf9885b1cb4012f22fa5f46652159bc5a15f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_4.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "37594d9f8c868e22f586aad084c6e7168c46b92efe6e19d8d726759a7df77c48"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_5.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "a2893ffe29dc4865da8f63513d5c3881d7778a51e7ce4e173387dec0a6a27044"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_216_6.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "a9054fe207ae3a9aa6513c00b5c21b26cc8e0a139d26adec09c032be8c4013ce"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_0.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "146892b008e18cfcdd28d76ff52ca3b842b4aabaa9434950df5c97e75b1f2eab"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_1.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "d3804cff48d2b17dd283b5ca99bc50c9783dc470f92571b74fe4aa4e362703d6"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_2.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "778aec26e1b432094d843ac68bc9806e7062bfaacf4c40b5fc56d27e6a53e0bf"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_3.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "de5afb0aaade156493b5d572620a81f2479434b42fa2fb611ccc88f65410f317"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_4.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "964c923fb343580d9024219e076db380bccd8bf6e2310b23cb27e7e24e45a0a6"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_5.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "88db7e47ff3e22798b8674a0f17305ba66d31a4912c9012b05a08e53ee749390"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/secret_food_palette/food_217_6.png": {
+      "owner": "cookery161_food_visuals",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "bdf939700096b097f278fbd6b9d975248982477be8ad52ae6ff6a7bda599dd6b"
+    }
+  }
+}

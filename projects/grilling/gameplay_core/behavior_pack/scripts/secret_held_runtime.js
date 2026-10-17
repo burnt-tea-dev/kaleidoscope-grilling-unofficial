@@ -5,6 +5,7 @@ import {getMainHand,getOffHand,isCreative} from './a2735_player_io.js';
 import {eatingStillCurrent} from './a285_eating_transaction.js';
 import {secretVisualIndex} from './integration_registry_core.js';
 import {secretVisualState,partialVisualState} from './secret_visual_state.js';
+import {secretHeldMarker} from './secret_visual_state_core.js';
 import {heldVisualKind,writeHeldVisual,invalidateHeldVisual,HELD_VISUAL_EMPTY} from './held_visual_transport.js';
 import {registerHeldVisualProvider,reportHeldVisualError} from './held_visual_dispatch_runtime.js';
 let reader,rawReader;const completedHands=new Map();
@@ -42,7 +43,7 @@ export function syncSecretHeld(player,{beginHand,completedUse}={}){
   // cooked/effective rows and not a destructively shortened bite-stage list.
   const raw=canonicalFoodId(stack?.typeId)==='kaleidoscope_grilling:secret_skewer'&&rawReader?rawReader(stack):[];
   writeHeldVisual(player,hand,'secret',[
-   ...Array(8).fill(0),...Array.from({length:3},(_,i)=>ingredients[i]??0),secretVisualIndex(raw[raw.length-1]?.id)
+   ...Array(8).fill(0),...Array.from({length:3},(_,i)=>ingredients[i]??0),secretHeldMarker(secretVisualIndex(raw[raw.length-1]?.id))
   ]);
  }catch(error){
   try{invalidateHeldVisual(player,hand)}catch{}

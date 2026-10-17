@@ -61,8 +61,12 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  from build_failure_skewer_held import base_assets as failure_assets
  overrides.update(failure_assets())
  main_path=BP/'scripts/main.js'
+ version=tuple(json.loads((BP/'manifest.json').read_text())['header']['version'])
+ if version in ((2,8,151),(2,8,152)) and main_path in overrides:
+  from skewer_content_source import generator_main_source
+  overrides[main_path]=generator_main_source(overrides[main_path])
  if main_path in overrides:overrides[main_path]=restore_main(overrides[main_path])
- modern=tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) >= (2,8,58)
+ modern=version >= (2,8,58)
  sys.path.insert(0,str(ROOT/'development/gameplay_core'))
  from native_eating_clock import SECONDS,VARIABLE,ASSIGNMENT
  animations={};profiles=['ONE','TWO','THREE','THREE_ALT','FOUR']
@@ -126,7 +130,7 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
   if modern:d['scripts']['pre_animation']=[ASSIGNMENT]+[row.replace('q.item_in_use_duration',VARIABLE) for row in d['scripts']['pre_animation']]
   d['scripts']['animate']=animate;output[p]=doc
  from eating_compiler_pipeline import Context,run
- context=Context(tuple(json.loads((BP/'manifest.json').read_text())['header']['version']),table,RP,main_path,
+ context=Context(version,table,RP,main_path,
   two_route_camera,review_three_routes,slime_frames,failure_skewers)
  return run(output,context)
 def mismatch_details(expected, actual, limit=20):

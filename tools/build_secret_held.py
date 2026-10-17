@@ -7,10 +7,10 @@ from pathlib import Path
 import argparse,copy,json
 from secret_skewer_assets import held_geometries,partial_geometries,PARTIAL_STATES,COMPLETE_STATES,palette_refs,palette_keys
 from build_secret_palettes import build as build_palettes
-from secret_idle_calibration import augment as augment_idle
+from secret_idle_calibration import augment as augment_idle,clip_id
 from secret_terminal_visibility import augment as augment_terminal
 from generated_food_sprite import helper_assets
-from held_visual_channels import secret_bank_ready
+from held_visual_channels import secret_bank_ready,secret_helper_index,FOOD_COUNT,SECRET_VISUAL_MAX
 ROOT=Path(__file__).resolve().parents[1];P=ROOT/'projects/grilling/gameplay_core';RP=P/'resource_pack';BP=P/'behavior_pack'
 FIX=ROOT/'development/gameplay_core/fixtures/secret-visual-catalog.json'
 PIECE_BINDING="q.item_slot_to_bone_name(context.item_slot == 'main_hand' ? 'off_hand' : 'main_hand')"
@@ -22,7 +22,7 @@ def owner_occupancy(identifier):
  # equipment changes propagate. Retain the existing item/empty/terminal gates.
  return 'v.kg_secret_owner_occupied = ('+occupied+') && '+secret_bank_ready()+';'
 def build():
- rows=json.loads(FIX.read_text())['items'];assert len(rows)==213,'Update property encoding/tests for a changed visual catalog'
+ rows=json.loads(FIX.read_text())['items'];assert len(rows)==FOOD_COUNT,'Update property encoding/tests for a changed visual catalog'
  textures={'stick':'textures/secret_skewer_stick',**palette_refs(len(rows))}
  geometries=held_geometries();refs={};controllers={};table={}
  for geo in geometries:
@@ -41,7 +41,7 @@ def build():
  # The source helper is a raw-last-item generated sprite. Its socket and the
  # authored THREE child/scale channels are independent of the food cells.
  # One selected mesh, sharing the exact raw-last index with the original texture.
- # Verified alpha outlines are deduplicated; do not draw 213 ingredient passes.
+ # Verified alpha outlines are deduplicated; draw one selected helper pass.
  helper_models=['Geometry.java_secret_piece' if name.endswith('.piece') else 'Geometry.'+name.rsplit('.',1)[1] for name in helper_assets()[1]]
  controllers['controller.render.kg_secret_held.piece']={'arrays':{'geometries':{'Array.pieces':helper_models},'textures':{'Array.food':['Texture.stick']+['Texture.food_'+str(i) for i in range(1,len(rows)+1)]}},'geometry':'Array.pieces[v.kg_secret_piece_index]','materials':[{'*':'Material.default'}],'textures':['Array.food[v.kg_secret_piece_index]'],'part_visibility':[{'dual_piece':'v.kg_secret_piece_visible == 1'}]}
  # Match the ordered vanilla armor pattern: each pass admits only its own
@@ -74,7 +74,7 @@ def build():
    name='kaleidoscope_grilling:secret_'+hand+'_'+str(slot)
    reads.append("(c.owning_entity->q.has_property('"+name+"') ? c.owning_entity->q.property('"+name+"') : 0)")
   scripts['initialize'].append(var+' = 0;')
-  scripts['pre_animation'].append(var+' = math.floor(math.clamp((v.kg_secret_off_hand ? '+reads[0]+' : '+reads[1]+'), 0, 5333));')
+  scripts['pre_animation'].append(var+' = math.floor(math.clamp((v.kg_secret_off_hand ? '+reads[0]+' : '+reads[1]+'), 0, '+str(SECRET_VISUAL_MAX)+'));')
   food='v.kg_secret_food_'+str(slot);shape='v.kg_secret_shape_'+str(slot);style='v.kg_secret_style_'+str(slot)
   scripts['initialize'] += [food+' = 0;',shape+' = 1;',style+' = 0;']
   scripts['pre_animation'] += [food+' = '+var+' - math.floor('+var+'/256)*256;',
@@ -84,10 +84,7 @@ def build():
  scripts['initialize'].append('v.kg_secret_state = 21;')
  scripts['pre_animation'].append('v.kg_secret_state = v.kg_secret_shape_0*16 + v.kg_secret_shape_1*4 + v.kg_secret_shape_2;')
  scripts['initialize'] += ['v.kg_secret_piece_index = 0;','v.kg_secret_owner_occupied = 0;','v.kg_secret_piece_visible = 0;']
- reads=[]
- for hand in ['off','main']:
-  name='kaleidoscope_grilling:secret_'+hand+'_piece';reads.append("(c.owning_entity->q.has_property('"+name+"') ? c.owning_entity->q.property('"+name+"') : 0)")
- scripts['pre_animation'].append('v.kg_secret_piece_index = math.floor(math.clamp((v.kg_secret_off_hand ? '+reads[0]+' : '+reads[1]+'), 0, '+str(len(rows))+'));')
+ scripts['pre_animation'].append('v.kg_secret_piece_index = math.floor('+secret_helper_index()+');')
  scripts['pre_animation'].append(owner_occupancy('kaleidoscope_grilling:secret_skewer'))
  # Motion owns this derived projection guard; preserve it for direct --check.
  visible=[row for row in existing.get('scripts',{}).get('pre_animation',[]) if row.startswith('v.kg_secret_piece_visible = ')] if target.exists() else []
@@ -120,6 +117,21 @@ def build():
    'materials':[{'*':'Material.default'}],'textures':['Array.food[v.kg_secret_food_'+str(slot)+']'],
    'part_visibility':[{'*':0},{'skewer_model':'v.kg_secret_owner_occupied == 1'}]}
  output[RP/'attachables/unfinished_skewer.attachable.json']=partial
+ # Disabling authored eating changes use duration, not the skewer's contents.
+ # The native-plain ItemStack still carries the same three owner channels; a
+ # missing attachable would silently fall back to the generic bamboo icon.
+ # Keep only the held mesh and static view poses. Native eating owns the arms;
+ # no Java bite clock, terminal latch or opposite-hand helper is admitted.
+ plain=copy.deepcopy(attach);d=plain['minecraft:attachable']['description'];d['identifier']='kaleidoscope_grilling:secret_skewer_native_plain'
+ d['geometry']={k:v for k,v in d['geometry'].items()if k=='stick'or k.startswith(('part_','state_'))}
+ d['textures']={key:value for key,value in d['textures'].items()if key=='stick'or '_s'in key}
+ d['animations']={key:(clip_id(key.split('_')[1])if key.startswith('fp_')else'animation.kg_a287.skewer_'+key)for key in ['fp_right','fp_left','tp_right','tp_left']}
+ d['scripts']={
+  'initialize':[row for row in scripts['initialize']if row.startswith('v.kg_secret_')and not row.startswith('v.kg_secret_piece_')]+['v.kg_bite_stage = 0;'],
+  'pre_animation':[row for row in scripts['pre_animation']if row.startswith('v.kg_secret_')and not row.startswith(('v.kg_secret_piece_','v.kg_secret_owner_occupied = '))]+[owner_occupancy(d['identifier']),'v.kg_bite_stage = 0;'],
+  'animate':[{key:"c.is_first_person == "+str(int(key.startswith('fp')))+" && c.item_slot == '"+('main_hand'if key.endswith('right')else'off_hand')+"'"}for key in d['animations']]}
+ d['render_controllers']=['controller.render.kg_secret_held.stick']+['controller.render.kg_secret_held.'+str(slot)for slot in range(3)]
+ output[RP/'attachables/secret_skewer_native_plain.attachable.json']=plain
  # Keep the existing ALT attachable's geometry/catalog/owner decoding coherent
  # before shared motion eligibility is recomputed. Its own authored routes and
  # absent THREE helper remain unchanged; this avoids a stale one-pass generator.

@@ -13,7 +13,7 @@ import {VisualTargetQueue} from '../../projects/grilling/gameplay_core/behavior_
 import {queueStationContentsVisual,takeStationContentsVisualDirty} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/station_contents_visual_queue.js';
 import {captureSkewerMetadata,metadataSignature} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js';
 import {rackToolVisualModel,RACK_TOOL_VISUAL_TYPE} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack_tool_visual_data.js';
-import {SECRET_MODEL_VARIANTS_KEY} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
+import {SECRET_MODEL_VARIANTS_KEY,SECRET_VISUAL_MAX} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
 const NS='kaleidoscope_grilling:',base=new URL('../../projects/grilling/gameplay_core/',import.meta.url);
 const source=fs.readFileSync(new URL('behavior_pack/scripts/station_contents_visual_runtime.js',base),'utf8');
 const json=path=>JSON.parse(fs.readFileSync(new URL(path,base),'utf8'));
@@ -72,7 +72,7 @@ test('plate and recipe model selection canonicalizes raw/cooked aliases and keep
 test('secret meshes preserve shape variants and cooked cache without rewriting any item metadata',()=>{
  const raw=[{id:'minecraft:beef'},{id:'minecraft:potato'},{id:'minecraft:carrot'}],cooked=[{id:'minecraft:cooked_beef'},{id:'minecraft:baked_potato'},{id:'minecraft:carrot'}];
  const s=new Stack(eatingItemId(NS+'secret_skewer',true),{[NS+'skewer_ingredients']:JSON.stringify(raw),[NS+'secret_cooked_ingredients']:JSON.stringify(cooked),[NS+'secret_cooked']:true,[SECRET_MODEL_VARIANTS_KEY]:'[4,5,6]','foreign:payload':'unchanged'}),before=s.clone();
- const plan=visual.plateMeshPlan(s,readIngredients);assert.equal(plan.model,114);assert.ok(plan.secret.every(v=>Number.isInteger(v)&&v>0&&v<=5333));assert.deepEqual(s,before);
+ const plan=visual.plateMeshPlan(s,readIngredients);assert.equal(plan.model,114);assert.ok(plan.secret.every(v=>Number.isInteger(v)&&v>0&&v<=SECRET_VISUAL_MAX));assert.deepEqual(s,before);
  s.props[SECRET_MODEL_VARIANTS_KEY]='[6,5,4]';assert.notDeepEqual(visual.plateMeshPlan(s,readIngredients).secret,plan.secret);
  s.props[NS+'secret_cooked']=false;assert.notDeepEqual(visual.plateMeshPlan(s,readIngredients).secret,plan.secret);
 });

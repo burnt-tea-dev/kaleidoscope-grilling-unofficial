@@ -81,7 +81,9 @@ def reference_bytes(path, actual=None):
     if key not in PATHS:
         raise ValueError('Path is outside G150 stable-host ownership: ' + key)
     row = ledger()['changes'][key]
-    actual = (ROOT / key).read_bytes() if actual is None else actual
+    if actual is None:
+        from skewer_content_source import historical_bytes
+        actual = historical_bytes(ROOT / key)
     before = preceding_bytes(key)
     if sha(actual) != row['after_sha256'] or sha(before) != row['before_sha256']:
         raise ValueError('Unreviewed G150 stable-host pre/postimage: ' + key)
@@ -97,7 +99,8 @@ def preceding_host_spec(actual=None):
 def expected_files():
     files = dict(preceding_files())
     for path in RUNTIME_PATHS:
-        actual = (ROOT / path).read_bytes()
+        from skewer_content_source import historical_bytes
+        actual = historical_bytes(ROOT / path)
         reference_bytes(path, actual)
         files[path] = actual
     return MappingProxyType(files)

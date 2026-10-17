@@ -90,7 +90,7 @@ def check(author161=False):
  spec=json.loads((BP/'host-extensions/board-api.json').read_text())
  if author161:
   version='1.6.1';archive_env='COOKERY_161_ARCHIVE';file_path='9123/386'
-  assert spec['id']=='kaleidoscope_grilling:family-api-0.2.11' and spec['host_uuid']=='d0ca7a68-2877-4bd5-bc82-6c7b325cccf2' and spec['version']==[0,2,11]
+  assert spec['id']=='kaleidoscope_grilling:family-api-0.2.12' and spec['host_uuid']=='d0ca7a68-2877-4bd5-bc82-6c7b325cccf2' and spec['version']==[0,2,12]
   assert spec['archive_sha256']=='5b01865d4dd9a455cd80dae4ddc94dc45964e074025f7d24c6f0c5e35f0fbe52'
  else:
   version='1.6.0';archive_env='COOKERY_160_ARCHIVE';file_path='9054/164'

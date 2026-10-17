@@ -89,17 +89,18 @@ class FailureAssets(unittest.TestCase):
   from build_failure_skewer_held import predecessor_script
   from build_slime_frame_selector import strip_main as strip_slime
   from slime_frame_source_witness import reference_bytes as slime_reference
+  from skewer_content_source import historical_bytes
   import build_raw_one_eating_projection as raw_one
   for name in ['secret_held_runtime.js','held_visual_transport.js']:
-   p=main.with_name(name);prior=subprocess.check_output(['git','show','b938359b:'+p.relative_to(ROOT).as_posix()],cwd=ROOT,text=True);self.assertEqual(slime_reference(p,predecessor_script(p,p.read_text()).encode()).decode(),prior)
-  current=main.read_text();slime_reference(main,current.encode())
+   p=main.with_name(name);prior=subprocess.check_output(['git','show','b938359b:'+p.relative_to(ROOT).as_posix()],cwd=ROOT,text=True);self.assertEqual(slime_reference(p,predecessor_script(p,historical_bytes(p).decode()).encode()).decode(),prior)
+  current=historical_bytes(main).decode();slime_reference(main,current.encode())
   from effect_merge_source_witness import restore_main as restore_effect
   predecessor=raw_one.restore_main(restore_main(strip_slime(restore_effect(current))))
   self.assertEqual(predecessor,base)
   failure_only=patch_main(predecessor)
   self.assertEqual(restore_main(failure_only),base);self.assertEqual(patch_main(failure_only),failure_only)
   self.assertEqual(patch_main(current),current)
-  with self.assertRaises(ValueError):restore_main(main.read_text().replace('if(!out)return failedStack(raw,MYSTERIOUS_ID);','if(!out)return failedStack(raw,DARK_ID);'))
+  with self.assertRaises(ValueError):restore_main(current.replace('if(!out)return failedStack(raw,MYSTERIOUS_ID);','if(!out)return failedStack(raw,DARK_ID);'))
   controller=read(PLAYER_CONTROLLER);expected=json.loads(subprocess.check_output(['git','show','b938359b:'+PLAYER_CONTROLLER.relative_to(ROOT).as_posix()],cwd=ROOT,text=True))
   self.assertEqual(raw_one.historical_document(PLAYER_CONTROLLER,predecessor_document(PLAYER_CONTROLLER,controller)),expected)
  def test_actual_owner_scripts_boundaries_plain_cancel_and_helper(self):

@@ -19,12 +19,13 @@ import build_two_route_eating_projection as scoped
 import build_review_three_eating_projection as review
 from eating_owner_context import reference_bytes
 from eating_owner_properties import predecessor_document as owner_property_predecessor
+from skewer_content_source import historical_bytes, generator_main_source
 
 
 class TwoRouteProjectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.current = review.restore_main(scoped.MAIN.read_text())
+        cls.current = review.restore_main(historical_bytes(scoped.MAIN).decode())
         cls.original = scoped.restore_main(cls.current)
         cls.shared = json.loads(reference_bytes(scoped.SHARED))
         cls.clips = scoped.animations(scoped.SHARED.read_bytes())
@@ -32,7 +33,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
     def test_exact_selector_delta_preserves_admission_and_every_other_main_byte(self):
         from verify_a284 import eating_dispatch_source
         version = tuple(json.loads((scoped.BP / 'manifest.json').read_text())['header']['version'])
-        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147), (2, 8, 148), (2, 8, 149), (2, 8, 150)))
+        self.assertIn(version, ((2, 8, 127), (2, 8, 128), (2, 8, 129), (2, 8, 130), (2, 8, 131), (2, 8, 132), (2, 8, 133), (2, 8, 134), (2, 8, 135), (2, 8, 136), (2, 8, 137), (2, 8, 138), (2, 8, 139), (2, 8, 140), (2, 8, 141), (2, 8, 142), (2, 8, 143), (2, 8, 144), (2, 8, 145), (2, 8, 146), (2, 8, 147), (2, 8, 148), (2, 8, 149), (2, 8, 150), (2, 8, 151), (2, 8, 152)))
         self.assertEqual(eating_dispatch_source(self.current, version), self.original)
         self.assertEqual(eating_dispatch_source(self.current, (2, 8, 126)), self.original)
         with self.assertRaisesRegex(AssertionError, 'exact dispatcher'):
@@ -110,7 +111,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
             if path in failure_paths:
                 self.assertEqual(path.read_bytes(), scoped.encoded(final[path]), str(path))
             elif path == scoped.MAIN:
-                self.assertEqual(review.restore_main(path.read_text()).encode(),scoped.encoded(value),str(path))
+                self.assertEqual(review.restore_main(historical_bytes(path).decode()).encode(),scoped.encoded(value),str(path))
             elif path.suffix == '.json':
                 self.assertEqual(scoped.encoded(review.predecessor_document(path,owner_property_predecessor(json.loads(path.read_bytes())))),scoped.encoded(value),str(path))
             else:self.assertEqual(path.read_bytes(), scoped.encoded(value), str(path))
@@ -118,7 +119,7 @@ class TwoRouteProjectionTests(unittest.TestCase):
         for relative, digest in fixtures['runtime_file_sha256'].items():
             self.assertEqual(hashlib.sha256(reference_bytes(scoped.P / relative)).hexdigest(), digest, relative)
         # Existing generation must not strip the scoped selector on a later run.
-        self.assertEqual(review.restore_main(motion.build()[scoped.MAIN]), self.current)
+        self.assertEqual(review.restore_main(generator_main_source(motion.build()[scoped.MAIN])), self.current)
 
     def test_supplied_generated_sources_do_not_require_disk_fallbacks(self):
         # Immutable continuation metadata is required even for supplied source;

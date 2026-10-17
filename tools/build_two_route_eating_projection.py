@@ -153,13 +153,18 @@ def main():
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     from eating_owner_context import augment as current_context
-    for path, value in current_context(augment({})).items():
+    from skewer_content_source import historical_bytes
+    # The historical CLI checks the exact G150 source recovered from a sealed
+    # G151 postimage. Do not let its write mode export that predecessor over
+    # current runtime; full current generation owns the G151 reapplication.
+    source = {MAIN: historical_bytes(MAIN).decode()} if args.check else {}
+    for path, value in current_context(augment(source)).items():
         data = encoded(value)
         if args.check:
             actual = path.read_bytes()
             if path == MAIN:
                 from build_review_three_eating_projection import restore_main as restore_review_three
-                actual = restore_review_three(actual.decode()).encode()
+                actual = restore_review_three(historical_bytes(path, actual).decode()).encode()
             if actual != data:
                 raise AssertionError(path)
         else:

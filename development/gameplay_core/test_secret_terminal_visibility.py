@@ -9,11 +9,12 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 RP = ROOT / 'projects/grilling/gameplay_core/resource_pack'
 sys.path.insert(0, str(ROOT / 'tools'))
-from public_source_witness import public_json, assert_public_bytes
+from public_source_witness import public_json, assert_public_bytes, reviewed_held_bytes
 import secret_terminal_visibility as terminal
 from test_eating_observer_projection import node
 from eating_owner_context import document
 from eating_owner_properties import predecessor_document
+from skewer_content_source import historical_bytes
 
 
 class SecretTerminalVisibility(unittest.TestCase):
@@ -44,17 +45,21 @@ for(const d of descriptions)for(const hand of ['main_hand','off_hand']){
     def test_public_repaired_terminal_scripts_are_conserved_and_generator_is_idempotent(self):
         # PR134 already contains the repair. This freezes those public source
         # bytes plus the exact G119 owner row, retaining the full terminal mask.
-        from build_secret_held import owner_occupancy
         for item in terminal.OWNED:
             path = RP / 'attachables' / (item.split(':')[1] + '.attachable.json')
             assert_public_bytes(self, path)
             source = public_json(path)
             # Keep the old source oracle; behavioral tests use the full scripts.
-            after = predecessor_document(json.loads(path.read_text()))
+            after = predecessor_document(json.loads(historical_bytes(path)))
             description = source['minecraft:attachable']['description']
             rows = description['scripts']['pre_animation']
             self.assertEqual(sum(row.startswith('v.kg_secret_owner_occupied = ') for row in rows), 1)
-            description['scripts']['pre_animation'] = [owner_occupancy(description['identifier']) if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]
+            # A later catalog may add current owner markers; the G119 source
+            # oracle retains its exact already-reviewed occupancy expression.
+            reviewed_rows = json.loads(reviewed_held_bytes(path))['minecraft:attachable']['description']['scripts']['pre_animation']
+            owner_rows = [row for row in reviewed_rows if row.startswith('v.kg_secret_owner_occupied = ')]
+            self.assertEqual(len(owner_rows), 1)
+            description['scripts']['pre_animation'] = [owner_rows[0] if row.startswith('v.kg_secret_owner_occupied = ') else row for row in rows]
             terminal.apply(description)
             self.assertEqual(after, document(source,attachable=True))
             self.assertEqual(document(terminal.apply(deepcopy(after['minecraft:attachable']['description'])),attachable=True), after['minecraft:attachable']['description'])

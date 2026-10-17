@@ -67,7 +67,19 @@ def validate_inventory(actual,document):
  seasoning_tp_changes=0
  pending_offhand_changes=0
  stable_host_changes=0
+ skewer_content_changes=0
+ guide_recipe_changes=0
  current_count=len(actual)
+ if version==[2,8,152]:
+  from guide_recipe_source import predecessor_runtime, RUNTIME_PATHS
+  actual=predecessor_runtime(actual)
+  guide_recipe_changes=len(RUNTIME_PATHS)
+  version=[2,8,151]
+ if version==[2,8,151]:
+  from skewer_content_source import predecessor_runtime, RUNTIME_PATHS
+  actual=predecessor_runtime(actual)
+  skewer_content_changes=len(RUNTIME_PATHS)
+  version=[2,8,150]
  if version==[2,8,150]:
   from stable_host_source import predecessor_runtime, RUNTIME_PATHS
   actual=predecessor_runtime(actual)
@@ -104,6 +116,8 @@ def validate_inventory(actual,document):
  if seasoning_tp_changes:result['seasoning_tp_layer_changes']=seasoning_tp_changes
  if pending_offhand_changes:result['pending_offhand_layer_changes']=pending_offhand_changes
  if stable_host_changes:result['stable_host_layer_changes']=stable_host_changes
+ if skewer_content_changes:result['skewer_content_layer_changes']=skewer_content_changes
+ if guide_recipe_changes:result['guide_recipe_layer_changes']=guide_recipe_changes
  return result
 
 def validate_plate_source():
@@ -122,12 +136,13 @@ def validate_plate_source():
 def validate_merged_performance_and_identity():
  # Independent source semantics for the two additional exact owners.
  from public_source_witness import apply_performance_source, REVIEWED_PERFORMANCE_BASE
+ from skewer_content_source import historical_bytes
  main=PREFIXES[0]+'/scripts/main.js';queue=PREFIXES[0]+'/scripts/timed_work_queue.js'
- assert (ROOT/main).read_bytes()==apply_performance_source(frozen_runtime_bytes(main).decode()).encode()
+ assert historical_bytes(ROOT/main)==apply_performance_source(frozen_runtime_bytes(main).decode()).encode()
  reviewed_queue=subprocess.check_output(['git','show',REVIEWED_PERFORMANCE_BASE+':'+queue],cwd=ROOT)
  assert (ROOT/queue).read_bytes()==reviewed_queue
  for prefix in PREFIXES:
-  path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));raw=(ROOT/path).read_bytes()
+  path=prefix+'/manifest.json';before=json.loads(frozen_runtime_bytes(path));raw=historical_bytes(ROOT/path)
   if json.loads(raw)['header']['version']==[2,8,150]:
    from stable_host_source import reference_bytes
    raw=reference_bytes(path,raw)

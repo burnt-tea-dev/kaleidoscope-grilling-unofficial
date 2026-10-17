@@ -66,7 +66,7 @@ class SecretSlotOrderTests(unittest.TestCase):
             row = controllers[f'controller.render.kg_secret_held.{slot}']
             gate = next(part['skewer_model'] for part in row['part_visibility'] if 'skewer_model' in part)
             thresholds.append(int(re.fullmatch(r'v\.kg_secret_owner_occupied == 1 && v\.kg_bite_stage < (\d+)', gate)[1]))
-            self.assertEqual(row['textures'], [f'Array.food[v.kg_secret_food_{slot} + v.kg_secret_style_{slot} * 214]'])
+            self.assertEqual(row['textures'], [f'Array.food[v.kg_secret_food_{slot} + v.kg_secret_style_{slot} * 218]'])
         for stage, expected in enumerate(([0, 1, 2], [0, 1], [0], [])):
             self.assertEqual([slot for slot, limit in enumerate(thresholds) if stage < limit], expected)
 

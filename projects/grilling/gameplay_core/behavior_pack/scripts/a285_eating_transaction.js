@@ -17,6 +17,22 @@ export function eatingEventMatches(use,stack,time){
 }
 export function eatingStillCurrent(use,current,slot,time){return !!use&&!!current&&(use.hand==='off'||use.slot===slot)&&eatingEventMatches(use,current,time);}
 
+// Native completion can expose the original hand view or exactly one fewer
+// serving. A matching event alone cannot authorize effects after a slot switch
+// or replacement; all remaining saved metadata must still belong to this use.
+export function completedEatingStillCurrent(use,eventStack,current,slot,time,nativeConsumed=true){
+ try{
+  if(!eatingEventMatches(use,eventStack,time)||(use.hand!=='off'&&use.slot!==slot))return false;
+  const before=JSON.parse(use.identity);
+  if(!Number.isInteger(before.amount)||before.amount<1)return false;
+  if(!current)return nativeConsumed&&before.amount===1;
+  if(eatingStillCurrent(use,current,slot,time))return true;
+  if(!nativeConsumed||before.amount<2||current.amount!==before.amount-1)return false;
+  before.amount--;
+  return eatingStillCurrent({...use,identity:JSON.stringify(before)},current,slot,time);
+ }catch{return false;}
+}
+
 
 // No reward before a verified debit. A failed write cannot grant free nutrition.
 // Adapters throw on unavailable storage; rollback is attempted on every failure.

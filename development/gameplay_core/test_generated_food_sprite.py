@@ -57,8 +57,8 @@ class GeneratedFoodSprite(unittest.TestCase):
     def test_all_actual_catalog_sources_have_verified_derived_spans(self):
         proof = json.loads(FIXTURE.read_text())
         catalog = json.loads((ROOT / 'development/gameplay_core/fixtures/secret-visual-catalog.json').read_text())['items']
-        self.assertEqual(len(proof['items']), 213)
-        counts = {'installed_bedrock_1.26.52.3': 40, 'catalog_hash_verified_cookery_1.0.8_sprite': 113, 'canonical_grilling_runtime_sprite': 60}
+        self.assertEqual(len(proof['items']), 217)
+        counts = {'installed_bedrock_1.26.52.3': 40, 'catalog_hash_verified_cookery_1.0.8_sprite': 113, 'canonical_grilling_runtime_sprite': 60, 'public_cookery_1.6.1_bedrock_sprite': 4}
         self.assertEqual({kind: sum(row['source']['kind'] == kind for row in proof['items']) for kind in counts}, counts)
         for row, source in zip(proof['items'], catalog):
             self.assertEqual(row['texture'], source['texture'])
@@ -84,8 +84,8 @@ class GeneratedFoodSprite(unittest.TestCase):
         self.assertEqual(controller['geometry'], 'Array.pieces[v.kg_secret_piece_index]')
         self.assertEqual(controller['textures'], ['Array.food[v.kg_secret_piece_index]'])
         arrays = controller['arrays']
-        self.assertEqual(len(arrays['geometries']['Array.pieces']), 214)
-        self.assertEqual(len(arrays['textures']['Array.food']), 214)
+        self.assertEqual(len(arrays['geometries']['Array.pieces']), 218)
+        self.assertEqual(len(arrays['textures']['Array.food']), 218)
         for name in ('secret_skewer', 'secret_skewer_java_three_alt'):
             desc = json.loads((rp / 'attachables' / (name + '.attachable.json')).read_text())['minecraft:attachable']['description']
             self.assertEqual(desc['render_controllers'].count('controller.render.kg_secret_held.piece'), 1)
@@ -94,7 +94,8 @@ class GeneratedFoodSprite(unittest.TestCase):
                 self.assertIn(selected[index], by_id)
                 if index:
                     self.assertEqual(texture, 'Texture.food_' + str(index))
-        self.assertLess(len(geometries), 214, 'Duplicate silhouettes should not expand rendering work')
+        self.assertEqual(len(geometries), 170)
+        self.assertLess(len(geometries), 218, 'Duplicate silhouettes should not expand rendering work')
 
     def test_beef_is_actual_alpha_outline_not_rectangle_background_walls(self):
         proof = json.loads(FIXTURE.read_text())

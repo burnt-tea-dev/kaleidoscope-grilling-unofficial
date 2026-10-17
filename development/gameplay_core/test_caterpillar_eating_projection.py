@@ -8,6 +8,7 @@ import build_caterpillar_eating_projection as scoped
 import build_review_three_eating_projection as review
 import build_eating_motion as motion
 from eating_owner_context import reference_bytes
+from skewer_content_source import historical_bytes
 FIX=json.loads((ROOT/'development/gameplay_core/fixtures/caterpillar-camera-native-20261009.json').read_text())
 SOURCE_PREDECESSOR_BASE='d10d3b12b6cbbf922b0e940fbf174c7b24edf223'
 assert FIX['source_predecessor']==SOURCE_PREDECESSOR_BASE
@@ -18,7 +19,7 @@ class CaterpillarProjectionTests(unittest.TestCase):
   for relative,sha in FIX['runtime_file_sha256'].items():
    self.assertEqual(hashlib.sha256(reference_bytes(P/relative)).hexdigest(),sha,relative)
   original=subprocess.check_output(['git','show',FIX['source_predecessor']+':projects/grilling/gameplay_core/behavior_pack/scripts/main.js'],cwd=ROOT).decode()
-  current=review.restore_main((scoped.BP/'scripts/main.js').read_text())
+  current=review.restore_main(historical_bytes(scoped.BP/'scripts/main.js').decode())
   # Preserve the original two-edit G126 comparison after verifying and
   # reversing only the exact bounded two-route continuation and the reviewed
   # G130 display hooks. Their independent full-source preimages stay enforced.

@@ -1,10 +1,10 @@
-## Current maintained source: 2.8.150
+## Current maintained source: 2.8.152
 
-Reviewed **2026-10-17** at [2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f); [PR #229](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/229) is merged and its required source CI passed. **G150 uses Cookery 1.6.1 / family API 0.2.11**, with reviewed author identity/state adaptation and Java grill/rack collision repairs.
+**G152 uses Cookery 1.6.1 / family API 0.2.12.** It preserves the G151 skewer repairs and synchronizes the three-language chopping-board guide with the actual current outputs. It repairs current chopping-board ingredient production, short-recipe progress, native-mode secret-skewer contents and eating-data ownership, and appends four missing Cookery foods to the display catalog. The [G151 repair review](docs/evidence/skewer-repair-20261017.md) records the actual source defects, verification and remaining client scope. It retains the earlier author identity/state adaptation and Java grill/rack collision repairs.
 
-**Public download:** [A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149), which uses **Cookery 1.6.0**. G150's [release request](.github/release-request.json) remains `publication_request=false`; a source merge is not a new public package. The G149 stable publication retains the owner's existing source/editor/CI/package decision and its [bounded evidence and deferred risks](docs/RELEASE-NOTES-A2.8.149.md).
+**Public download:** [A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149), which uses **Cookery 1.6.0**. G152's [release request](.github/release-request.json) remains `publication_request=false`; a source merge is not a new public package. The G149 stable publication retains the owner's existing source/editor/CI/package decision and its [bounded evidence and deferred risks](docs/RELEASE-NOTES-A2.8.149.md).
 
-**Last LIVE batch recorded in the repository:** T169/G144/W147/private42, deployed **2026-10-15 22:40:27 HKT** and reported checked at the start of the following source batch. This documentation audit did not connect to LIVE. The [single family status index](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md) owns delivery identities and acceptance.
+**Last LIVE batch recorded in the repository:** T169/G144/W147/private42, deployed **2026-10-15 22:40:27 HKT** and reported checked at the start of the following source batch. This repair session has no new LIVE readback. The [single family status index](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md) owns delivery identities and acceptance.
 
 G145–G149 presentation corrections are already retained in current main and included in G149's published runtime; their older “local candidate / publication pending” prose is historical. [Earlier README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/README.md) and versioned notes retain their original source and evidence.
 
@@ -15,7 +15,7 @@ The owner's **all-item Blockbench first-person/side-texture review** and current
 森羅物語：煙火的非官方基岩版移植。目標是跟隨 Java 原作，保留其玩法與沉浸體驗；**完整一比一移植與現行真人驗收仍未完成**。
 
 當前版本、UUID、相依與來源身份以 [baseline.json](baseline.json) 為準。
-從目前main建置G150依賴作者穩定版 **Cookery 1.6.1**；公開G149請使用其Cookery1.6.0相依。G150最低engine宣告 1.26.50，
+從目前main建置G152依賴作者穩定版 **Cookery 1.6.1**；公開G149請使用其Cookery1.6.0相依。G152最低engine宣告 1.26.50，
 `@minecraft/server` 2.9.0 與 `@minecraft/server-ui` 2.2.0；原生證據的引擎版本與範圍以各次紀錄為準。
 家族整合提供的砧板／油壺／炒鍋與酒館指南交接能力，不能當作只安裝作者 Cookery 就有的功能。
 

@@ -3,9 +3,10 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {canonicalFoodId,eatingItemId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 import {secretVisualState,partialVisualState} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state.js';
 import {secretVisualIndex} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/integration_registry_core.js';
+import {secretHeldMarker,SECRET_FOOD_COUNT} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
 import {isBottleHeldVisualItem} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/bottle_held_visual_core.js';
 import {captureEatingIdentity,eatingStillCurrent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
 
@@ -19,7 +20,7 @@ function fixture(main,off){
  const held={main,off},properties={},writes=[];
  const callbacks={},events=Object.fromEntries(['playerInventoryItemChange','playerHotbarSelectedSlotChange','playerSpawn','playerLeave'].map(name=>[name,{subscribe:f=>callbacks[name]=f}]));
  const player={id:'owner',selectedSlotIndex:3,setProperty(k,v){properties[k]=v;writes.push([k,v]);}};
- const context={...failureSkewers,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretVisualState,partialVisualState,eatingStillCurrent,isCreative:()=>!!held.creative,getMainHand:()=>held.main,getOffHand:()=>held.off,world:{afterEvents:events,getAllPlayers:()=>[player]},system:{currentTick:100,run:f=>f(),runInterval(){}},console};
+ const context={...failureSkewers,canonicalFoodId,isBottleHeldVisualItem,secretVisualIndex,secretHeldMarker,secretVisualState,partialVisualState,eatingStillCurrent,isCreative:()=>!!held.creative,getMainHand:()=>held.main,getOffHand:()=>held.off,world:{afterEvents:events,getAllPlayers:()=>[player]},system:{currentTick:100,run:f=>f(),runInterval(){}},console};
  vm.runInNewContext(shared('slime_frame_core.js')+'\n'+shared('held_visual_transport.js')+'\n'+shared('held_visual_dispatch_runtime.js')+'\n'+source+'\nthis.api={configureSecretHeldReader,syncSecretHeld};',context);
  const api=context.api;api.configureSecretHeldReader(s=>s.cooked,s=>s.raw);
  return {api,player,held,properties,writes,callbacks};
@@ -37,6 +38,67 @@ test('canonical and ALT resolve both owning hands without selecting visual-bite 
  assert.equal(f.properties['kaleidoscope_grilling:secret_main_piece'],secretVisualIndex('minecraft:beef'));
  assert.equal(f.properties['kaleidoscope_grilling:secret_off_piece'],secretVisualIndex('minecraft:potato'));
  for(const stage of [0,1,2,3]){main.biteStage=stage;f.api.syncSecretHeld(f.player);assert.equal(f.properties['kaleidoscope_grilling:secret_main_piece'],secretVisualIndex('minecraft:beef'));}
+});
+test('animation-off serving reaches real ingredient passes in both views/hands without a Java helper',()=>{
+ const resource=new URL('../../resource_pack/',file),read=path=>JSON.parse(readFileSync(new URL(path,resource),'utf8'));
+ const description=read('attachables/secret_skewer_native_plain.attachable.json')['minecraft:attachable'].description;
+ const controllers=read('render_controllers/secret_held.render_controllers.json').render_controllers;
+ const geometries=new Map(read('models/entity/secret_held.geo.json')['minecraft:geometry'].map(g=>[g.description.identifier,g]));
+ assert.equal(description.identifier,eatingItemId('kaleidoscope_grilling:secret_skewer',false,false));
+ assert.deepEqual(description.render_controllers,['controller.render.kg_secret_held.stick',...Array.from({length:3},(_,i)=>'controller.render.kg_secret_held.'+i)]);
+ assert.ok(!JSON.stringify(description.scripts).includes('eat_profile'));
+ assert.ok(!JSON.stringify(description.scripts).includes('kg_secret_piece'));
+ assert.ok(!Object.keys(description.geometry).some(key=>key==='java_secret_piece'||key.startsWith('piece_')));
+ const evaluate=(expression,v)=>new Function('v','return '+expression)(v);
+ for(const hand of ['main','off'])for(const cookedState of [false,true]){
+  const item=serving(description.identifier),other=serving();
+  const data={'kaleidoscope_grilling:model_variants':'[4,5,9]','kaleidoscope_grilling:secret_cooked':cookedState,
+   'kaleidoscope_grilling:secret_cooked_ingredients':JSON.stringify(item.cooked)};
+  item.getDynamicProperty=key=>data[key];
+  const f=fixture(hand==='main'?item:other,hand==='off'?item:other);
+  f.api.configureSecretHeldReader((s,cooked)=>cooked?s.cooked:s.raw,s=>s.raw);f.api.syncSecretHeld(f.player);
+  const before=JSON.stringify(item),slot=hand+'_hand',weapon='slot.weapon.'+(hand==='main'?'mainhand':'offhand');
+  const owner={has_property:key=>Object.hasOwn(f.properties,key),property:key=>f.properties[key],is_item_name_any:(selected,...ids)=>selected===weapon&&ids.includes(f.held[hand].typeId)};
+  const program=description.scripts.pre_animation.join('\n').replaceAll('c.owning_entity->q.','owner.');
+  const decode=new Function('c','owner','math','v',program),math={floor:Math.floor,clamp:(n,a,b)=>Math.max(a,Math.min(b,n))};
+  for(const first of [0,1])for(const using of [false,true]){
+   const c={item_slot:slot,is_first_person:first},v={};decode(c,owner,math,v);
+   assert.equal(Boolean(v.kg_secret_owner_occupied),true);assert.equal(v.kg_bite_stage,0);
+   assert.equal(v.kg_secret_state,27);
+   assert.deepEqual([0,1,2].map(i=>v['kg_secret_food_'+i]),(cookedState?item.cooked:item.raw).map(row=>secretVisualIndex(row.id)));
+   const active=description.scripts.animate.flatMap(row=>Object.entries(row).filter(([,expression])=>new Function('c','q','return '+expression)(c,{is_using_item:using})).map(([alias])=>alias));
+   assert.deepEqual(active,[(first?'fp_':'tp_')+(hand==='main'?'right':'left')]);
+   for(let i=0;i<3;i++){
+    const controller=controllers['controller.render.kg_secret_held.'+i];
+    assert.equal(Boolean(evaluate(controller.part_visibility[1].skewer_model,v)),true);
+    const geometry=controller.arrays.geometries['Array.states'][v.kg_secret_state].split('.')[1];
+    assert.ok(geometries.get(description.geometry[geometry]).bones.some(bone=>bone.cubes?.length));
+    const texture=controller.arrays.textures['Array.food'][v['kg_secret_food_'+i]+v['kg_secret_style_'+i]*(SECRET_FOOD_COUNT+1)].split('.')[1];
+    assert.equal(description.textures[texture],`textures/secret_food_palette/food_${v['kg_secret_food_'+i]}_${cookedState?6:0}`);
+   }
+  }
+  assert.equal(JSON.stringify(item),before);
+  // Reattaching on an animation-setting toggle must retain the same bank, but
+  // the old plain owner must hide until that exact alias is equipped again.
+  const bank=JSON.stringify(f.properties);
+  for(const animations of [true,false]){
+   f.held[hand].typeId=eatingItemId('kaleidoscope_grilling:secret_skewer',true,animations);f.api.syncSecretHeld(f.player);
+   assert.equal(JSON.stringify(f.properties),bank);
+   const v={};decode({item_slot:slot},owner,math,v);assert.equal(Boolean(v.kg_secret_owner_occupied),!animations);
+  }
+ }
+});
+test('Cookery 1.6.1 food writers use escaped helper owners in both hands without changing stack data',()=>{
+ const ids=['tea_egg','butter_tea','clay_pot_milk_tea','mystery_tea'].map(name=>'kaleidoscope_cookery:'+name);
+ for(const hand of ['main','off'])for(const [ordinal,id]of ids.entries())for(const alias of ['secret_skewer','secret_skewer_java_three_alt','secret_skewer_native_plain','unfinished_skewer']){
+  const item=serving('kaleidoscope_grilling:'+alias),other=serving();
+  item.raw=Array.from({length:alias==='unfinished_skewer'?2:3},()=>({id,native:{version:1,id,amount:1,props:{'foreign:preserved':17}}}));item.cooked=structuredClone(item.raw);
+  const before=JSON.stringify(item),f=fixture(hand==='main'?item:other,hand==='off'?item:other);f.api.syncSecretHeld(f.player);
+  assert.equal(f.properties['kaleidoscope_grilling:secret_'+hand+'_piece'],alias==='unfinished_skewer'?0:221+ordinal);
+  assert.equal(f.properties['kaleidoscope_grilling:secret_'+hand+'_0']%256,214+ordinal);
+  assert.equal(f.properties['kaleidoscope_grilling:secret_'+(hand==='main'?'off':'main')+'_piece'],secretVisualIndex('minecraft:beef'));
+  assert.equal(JSON.stringify(item),before);
+ }
 });
 test('missing raw reader fails closed instead of borrowing cooked helper food',()=>{
  const f=fixture(serving());f.api.configureSecretHeldReader(s=>s.cooked);f.api.syncSecretHeld(f.player);
