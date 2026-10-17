@@ -181,7 +181,9 @@ def main():
             actual=path.read_bytes()
             if path==BP/'scripts/main.js':
                 from build_review_three_eating_projection import restore_main
-                actual=restore_main(actual.decode()).encode()
+                from skewer_content_source import historical_bytes
+                # Match the generation-side source boundary before older oracles.
+                actual=restore_main(historical_bytes(path,actual).decode()).encode()
             if path.suffix=='.json':
                 from eating_owner_properties import reference_bytes as owner_property_reference
                 actual=owner_property_reference(path,actual)
