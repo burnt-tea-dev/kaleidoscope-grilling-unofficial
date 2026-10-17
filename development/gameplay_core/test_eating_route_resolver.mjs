@@ -10,6 +10,7 @@ import * as raw from '../../projects/grilling/gameplay_core/behavior_pack/script
 import * as reviewed from '../../projects/grilling/gameplay_core/behavior_pack/scripts/review_three_projection.js';
 import {eatingNativeTicks} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js';
 import {PROFILE_BY_ITEM} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_data_lookup.js';
+import {VANILLA_FOOD_NUTRITION} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/vanilla_food_nutrition.js';
 const root=new URL('../../',import.meta.url), base='2e05439ced5e20810547d3e239c1c7036a5a65fc';
 const main='projects/grilling/gameplay_core/behavior_pack/scripts/main.js';
 const before=execFileSync('git',['show',base+':'+main],{cwd:root,encoding:'utf8'});
@@ -48,18 +49,25 @@ test('every observable getter/helper/property failure point retains order and ca
 });
 
 test('actual subscriber before/after preserves 212 baseline routes and occupied/invalid-duration lifecycle',()=>{
- const harness=fs.readFileSync(new URL('development/gameplay_core/test_eating_native_completion.mjs',root),'utf8').split("test('inclusive native boundary")[0];
- const append=`const rows=${JSON.stringify(baselineRows)}; const out=[];
+ const harnessPath='development/gameplay_core/test_eating_native_completion.mjs';
+ const harness=fs.readFileSync(new URL(harnessPath,root),'utf8').split("test('inclusive native boundary")[0];
+ // Pair the historical subscriber with its own source-era API double. The
+ // current harness binds production ingredient readers added after this base.
+ const oldHarness=execFileSync('git',['show',base+':'+harnessPath],{cwd:root,encoding:'utf8'}).split("test('inclusive native boundary")[0];
+ const secretRows=['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id,...VANILLA_FOOD_NUTRITION[id],edible:true,tags:[],native:{version:1,id}}));
+ const append=`const rows=${JSON.stringify(baselineRows)},secretRows=${JSON.stringify(secretRows)}; const out=[];
  for(const row of rows)for(const helperEmpty of [true,false])for(const duration of [0,row.duration]){
- const f=fixture({mealId:row.id,hand:row.hand,profile:row.profile,duration,helperEmpty});
+ // These are positive route cases; an empty secret skewer cannot start use.
+ const ingredientRows=canonicalFoodId(row.id)==='kaleidoscope_grilling:secret_skewer'?secretRows:undefined;
+ const f=fixture({mealId:row.id,hand:row.hand,profile:row.profile,duration,helperEmpty,ingredientRows});
  f.startUse();if(helperEmpty && duration>0)assert.deepEqual(JSON.parse(JSON.stringify(f.animations.map(([name,options])=>({name,options})))),row.animations);const started={animations:f.animations,properties:[...f.properties],counts:{...f.counts}};
  f.stop({tick:101});f.flush();out.push({id:row.id,hand:row.hand,helperEmpty,duration,started,ended:{properties:[...f.properties],counts:f.counts,active:f.ctx.ACTIVE_EATS.size}});
  }console.log(JSON.stringify(out));`;
- function execute(source){
-  const code=harness.replace(/const source=fs.readFileSync\([^\n]+/, 'const source='+JSON.stringify(source)+';')+append;
+ function execute(source,apiHarness){
+  const code=apiHarness.replace(/const source=fs.readFileSync\([^\n]+/, 'const source='+JSON.stringify(source)+';')+append;
   return JSON.parse(execFileSync('node',['--input-type=module'],{cwd:new URL('development/gameplay_core/',root),encoding:'utf8',input:code,maxBuffer:16e6}));
  }
- assert.deepEqual(execute(after),execute(before));
+ assert.deepEqual(execute(after,harness),execute(before,oldHarness));
  console.log('Actual subscriber lifecycle cases:',baselineRows.length*4);
 });
 
