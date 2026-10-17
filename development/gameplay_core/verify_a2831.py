@@ -8,7 +8,9 @@ def historical_host_spec():
  if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,150):
   sys.path.insert(0,str(ROOT/'tools'))
   from stable_host_source import preceding_host_spec
-  return preceding_host_spec(path.read_bytes())
+  # The current-source entry validates each sealed continuation before G150;
+  # explicit bytes belong to the already-restored G150 caller contract.
+  return preceding_host_spec()
  return json.loads(path.read_text())
 def main():
  baseline()
