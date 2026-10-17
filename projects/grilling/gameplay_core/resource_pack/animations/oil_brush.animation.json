@@ -1,0 +1,433 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.kg_oil_brush.display.fp.right": {
+      "loop": true,
+      "bones": {
+        "frame": {
+          "position": [
+            "v.kg_oil_brush_active ? (-12.63544993) : (-0.38914182)",
+            "v.kg_oil_brush_active ? (35.4358394) : (41.06540608)",
+            "v.kg_oil_brush_active ? (-12.43574823) : (5.75424606)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (82.63609472) : (152.40800303)",
+            "v.kg_oil_brush_active ? (61.26036072) : (-8.37650115)",
+            "v.kg_oil_brush_active ? (-51.57420591) : (22.84999445)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (0.68)",
+            "v.kg_oil_brush_active ? (1) : (0.68)",
+            "v.kg_oil_brush_active ? (1) : (0.68)"
+          ]
+        },
+        "source_move": {
+          "position": [
+            "v.kg_oil_brush_active ? (-(1 * 8.32 + v.kg_oil_brush_sine * 4)) : (0)",
+            "v.kg_oil_brush_active ? (-7.68) : (0)",
+            "v.kg_oil_brush_active ? (-12.48) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_x": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (24) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_y": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (-180) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_z": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (1 * (32 + v.kg_oil_brush_sine * 34)) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "brush": {
+          "position": [
+            "v.kg_oil_brush_active ? (-1.13) : (0)",
+            "v.kg_oil_brush_active ? (-11.59094308) : (0)",
+            "v.kg_oil_brush_active ? (8.02713003) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (90.0) : (0)",
+            "v.kg_oil_brush_active ? (65.0) : (0)",
+            "v.kg_oil_brush_active ? (90.0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (0.68) : (1)",
+            "v.kg_oil_brush_active ? (0.68) : (1)",
+            "v.kg_oil_brush_active ? (0.68) : (1)"
+          ]
+        }
+      }
+    },
+    "animation.kg_oil_brush.display.fp.left": {
+      "loop": true,
+      "bones": {
+        "frame": {
+          "position": [
+            "v.kg_oil_brush_active ? (-6.0) : (-16.169)",
+            "v.kg_oil_brush_active ? (33.0) : (13.09105692)",
+            "v.kg_oil_brush_active ? (0.0) : (3.57286997)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (-180.0) : (-90.0)",
+            "v.kg_oil_brush_active ? (-0.0) : (65.0)",
+            "v.kg_oil_brush_active ? (180.0) : (-90.0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (0.68)",
+            "v.kg_oil_brush_active ? (1) : (0.68)",
+            "v.kg_oil_brush_active ? (1) : (0.68)"
+          ]
+        },
+        "source_move": {
+          "position": [
+            "v.kg_oil_brush_active ? (-(-1 * 8.32 + v.kg_oil_brush_sine * 4)) : (0)",
+            "v.kg_oil_brush_active ? (-7.68) : (0)",
+            "v.kg_oil_brush_active ? (-12.48) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_x": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (24) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_y": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (-180) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_z": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (-1 * (32 + v.kg_oil_brush_sine * 34)) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "brush": {
+          "position": [
+            "v.kg_oil_brush_active ? (1.13) : (0)",
+            "v.kg_oil_brush_active ? (-11.59094308) : (0)",
+            "v.kg_oil_brush_active ? (8.02713003) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (90.0) : (0)",
+            "v.kg_oil_brush_active ? (-65.0) : (0)",
+            "v.kg_oil_brush_active ? (-90.0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (0.68) : (1)",
+            "v.kg_oil_brush_active ? (0.68) : (1)",
+            "v.kg_oil_brush_active ? (0.68) : (1)"
+          ]
+        }
+      }
+    },
+    "animation.kg_oil_brush.display.tp.right": {
+      "loop": true,
+      "bones": {
+        "frame": {
+          "position": [
+            "v.kg_oil_brush_active ? (1 * (1 - math.cos((1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.cos(((1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)))) : (-0.0)",
+            "v.kg_oil_brush_active ? (21 + 1 * (math.cos((1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(((1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)) * math.sin(-75.63042895726868) - math.sin((1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.cos(-75.63042895726868))) : (22.0)",
+            "v.kg_oil_brush_active ? (-3 + 1 * (-math.cos((1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(((1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)) * math.cos(-75.63042895726868) - math.sin((1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(-75.63042895726868))) : (7.2)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (90.0) : (90.0)",
+            "v.kg_oil_brush_active ? (0.0) : (0.0)",
+            "v.kg_oil_brush_active ? (0.0) : (0.0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (0.55)",
+            "v.kg_oil_brush_active ? (1) : (0.55)",
+            "v.kg_oil_brush_active ? (1) : (0.55)"
+          ]
+        },
+        "source_move": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_x": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_y": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_z": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (1 * v.kg_oil_brush_sine * 16) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "brush": {
+          "position": [
+            "v.kg_oil_brush_active ? (-0.0) : (0)",
+            "v.kg_oil_brush_active ? (-10.2) : (0)",
+            "v.kg_oil_brush_active ? (1.0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (-0.0) : (0)",
+            "v.kg_oil_brush_active ? (0.0) : (0)",
+            "v.kg_oil_brush_active ? (0.0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (0.55) : (1)",
+            "v.kg_oil_brush_active ? (0.55) : (1)",
+            "v.kg_oil_brush_active ? (0.55) : (1)"
+          ]
+        }
+      }
+    },
+    "animation.kg_oil_brush.display.tp.left": {
+      "loop": true,
+      "bones": {
+        "frame": {
+          "position": [
+            "v.kg_oil_brush_active ? (-1 * (1 - math.cos((-1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.cos(((-1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)))) : (-0.0)",
+            "v.kg_oil_brush_active ? (21 + -1 * (math.cos((-1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(((-1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)) * math.sin(-75.63042895726868) - math.sin((-1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.cos(-75.63042895726868))) : (22.0)",
+            "v.kg_oil_brush_active ? (-3 + -1 * (-math.cos((-1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(((-1 * 0.18 + v.kg_oil_brush_sine * 0.70) * 57.29577951308232)) * math.cos(-75.63042895726868) - math.sin((-1 * (0.10 + v.kg_oil_brush_sine * 0.42) * 57.29577951308232)) * math.sin(-75.63042895726868))) : (7.2)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (90.0) : (90.0)",
+            "v.kg_oil_brush_active ? (0.0) : (0.0)",
+            "v.kg_oil_brush_active ? (0.0) : (0.0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (0.55)",
+            "v.kg_oil_brush_active ? (1) : (0.55)",
+            "v.kg_oil_brush_active ? (1) : (0.55)"
+          ]
+        },
+        "source_move": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_x": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_y": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "source_z": {
+          "position": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (0) : (0)",
+            "v.kg_oil_brush_active ? (-1 * v.kg_oil_brush_sine * 16) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)",
+            "v.kg_oil_brush_active ? (1) : (1)"
+          ]
+        },
+        "brush": {
+          "position": [
+            "v.kg_oil_brush_active ? (-0.0) : (0)",
+            "v.kg_oil_brush_active ? (-10.2) : (0)",
+            "v.kg_oil_brush_active ? (1.0) : (0)"
+          ],
+          "rotation": [
+            "v.kg_oil_brush_active ? (-0.0) : (0)",
+            "v.kg_oil_brush_active ? (0.0) : (0)",
+            "v.kg_oil_brush_active ? (0.0) : (0)"
+          ],
+          "scale": [
+            "v.kg_oil_brush_active ? (0.55) : (1)",
+            "v.kg_oil_brush_active ? (0.55) : (1)",
+            "v.kg_oil_brush_active ? (0.55) : (1)"
+          ]
+        }
+      }
+    }
+  }
+}

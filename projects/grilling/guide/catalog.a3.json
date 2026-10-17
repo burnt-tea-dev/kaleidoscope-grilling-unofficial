@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "version": "0.3.63",
-  "revision": "kg-guide-a3-2875",
+  "version": "0.3.64",
+  "revision": "kg-guide-a3-28153",
   "module_id": "kg_a1:grilling",
   "order": 300,
   "icon": "textures/ui/kg_grilling/grill_legged_lit",
@@ -429,13 +429,22 @@
       },
       "body": {
         "zh_CN": [
-          "用途与取得：请查看本页配方；未列出额外操作或固定效果。"
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料取得：戴厨房草帽打短草有机会获得油菜籽；种在耕地，成熟后收获更多。菜籽粉用来合成油饼（8 粉围 1 小麦），4 个油饼可榨油。",
+          "磨粉：把油菜籽拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份菜籽粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。"
         ],
         "zh_TW": [
-          "用途與取得：請查看本頁配方；未列出額外操作或固定效果。"
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料取得：戴廚房草帽打短草有機會獲得油菜籽；種在耕地，成熟後收穫更多。菜籽粉用來合成油餅（8 粉圍 1 小麥），4 個油餅可榨油。",
+          "磨粉：把油菜籽拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份菜籽粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。"
         ],
         "en_US": [
-          "Use and acquisition: see the recipes on this page. No additional interaction or fixed effect is documented."
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Get canola seeds by breaking short grass while wearing a Cookery straw hat; grow on farmland. Craft 8 powders around 1 wheat into an Oil Cake; 4 cakes make one oil-press batch.",
+          "Grinding: hold Canola Seeds in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Canola Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting."
         ]
       },
       "kinds": [
@@ -454,11 +463,20 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/canola_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/canola_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_grilling:canola_seeds",
+        "output": "kaleidoscope_grilling:canola_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:canola_seeds",
@@ -514,13 +532,13 @@
       },
       "body": {
         "zh_CN": [
-          "加工：在 Cookery 砧板上用厨房刀切 4 次。"
+          "加工：主手拿 1 个胡萝卜对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份胡萝卜粒，拾取成品。"
         ],
         "zh_TW": [
-          "加工：在 Cookery 砧板上用廚房刀切 4 次。"
+          "加工：主手拿 1 個胡蘿蔔對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份胡蘿蔔粒，拾取成品。"
         ],
         "en_US": [
-          "Processing: make 4 cuts with a Kitchen Knife on the Cookery Chopping Board."
+          "Use 1 Carrot on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Carrot Dice; collect the output."
         ]
       },
       "kinds": [
@@ -638,17 +656,20 @@
       },
       "body": {
         "zh_CN": [
-          "在工作台旁潜行：主手需要至少 3 份折耳根，副手需要装有高级辣椒油的 Cookery 油壶。",
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
+          "主手拿至少 3 份折耳根，副手拿装有高級辣椒油的厨房油壶；潜行并对工作台按使用键，做出 1 份涼拌折耳根。只站在旁边不会制作。",
           "制作会消耗 3 份折耳根和 2 点高级辣椒油；油壶剩余油量会保留。",
           "凉拌折耳根食用后获得约 60 秒抗火。"
         ],
         "zh_TW": [
-          "在工作台旁潛行：主手需要至少 3 份折耳根，副手需要裝有高級辣椒油的 Cookery 油壺。",
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
+          "主手拿至少 3 份折耳根，副手拿裝有高級辣椒油的廚房油壺；潛行並對工作台按使用鍵，做出 1 份涼拌折耳根。只站在旁邊不會製作。",
           "製作會消耗 3 份折耳根和 2 點高級辣椒油；油壺剩餘油量會保留。",
           "涼拌折耳根食用後獲得約 60 秒抗火。"
         ],
         "en_US": [
-          "Sneak at a Crafting Table with at least 3 Houttuynia in the main hand and a Cookery Oil Pot containing Premium Chili Oil in the off hand.",
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
+          "Hold at least 3 Houttuynia in your main hand and a Cookery Oil Pot containing Premium Chili Oil in your offhand. Sneak-use the crafting table to make 1 Dressed Houttuynia; standing nearby alone does nothing.",
           "Crafting consumes 3 Houttuynia and 2 Premium Chili Oil points; any remaining oil stays in the pot.",
           "Cold Houttuynia grants about 60 seconds of Fire Resistance when eaten."
         ]
@@ -660,9 +681,12 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/cold_houttuynia.json",
         "projects/grilling/guide/content.a2.json#guide_cold_houttuynia",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2722_cold_houttuynia_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2722_cold_houttuynia_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/cold_houttuynia",
       "stack": 64,
       "food": {
@@ -777,12 +801,24 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料取得：戴厨房草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
+          "磨粉：把青辣椒拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份绿辣椒粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "用途：特制调料的三种基础料之一；每瓶至少加入青辣椒粉、花椒、洋葱粉各 1 份。"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料取得：戴廚房草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
+          "磨粉：把青辣椒拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份青辣椒粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：特製調料的三種基礎料之一；每瓶至少加入青辣椒粉、花椒、洋蔥粉各 1 份。"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Obtain chili seeds by breaking short grass while wearing a Cookery straw hat. Plant on farmland and harvest mature chili: it yields red chili, with a 20% bonus chance of green chili. Use the matching color; the two powder inputs are not interchangeable.",
+          "Grinding: hold Green Chili in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Green Chili Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Use: one of the three required seasoning bases. Each bottle needs at least one Green Chili Powder, Sichuan Pepper and Onion Powder."
         ]
       },
@@ -802,11 +838,20 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/green_chili_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/green_chili_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_cookery:green_chili",
+        "output": "kaleidoscope_grilling:green_chili_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:green_pepper_squid_tentacles",
@@ -909,15 +954,18 @@
       },
       "body": {
         "zh_CN": [
-          "种植与用途：折耳根可种植；可切成碎折耳根，或用于凉拌折耳根与炒肉。初始种源请按当前世界生成情况确认。",
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
+          "种植与用途：折耳根可种在耕地或灵魂沙上；可切成碎折耳根、磨成粉，或用于凉拌折耳根与炒肉。",
           "折耳根也可放入堆肥桶；每份有 65% 机会增加一层堆肥。"
         ],
         "zh_TW": [
-          "種植與用途：折耳根可種植；可切成碎折耳根，或用於涼拌折耳根與炒肉。初始種源請按目前世界生成情況確認。",
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
+          "種植與用途：折耳根可種在耕地或靈魂沙上；可切成碎折耳根、磨成粉，或用於涼拌折耳根與炒肉。",
           "折耳根也可放入堆肥桶；每份有 65% 機會增加一層堆肥。"
         ],
         "en_US": [
-          "Farming and use: Houttuynia can be planted, chopped, used in Cold Houttuynia or stir-fried pork. Initial access depends on the current world-generation setup.",
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
+          "Grow Houttuynia on farmland or soul sand. Chop it into Minced Houttuynia, grind it into powder, or use it for Dressed Houttuynia and stir-fried pork.",
           "Houttuynia can also go into a Composter. Each item has a 65% chance to raise the compost level by one."
         ]
       },
@@ -928,9 +976,12 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/houttuynia",
       "stack": 64,
       "food": {
@@ -954,16 +1005,28 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
+          "磨粉：把折耳根拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份折耳根粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "没有折耳根粉时，常规调料效果基础持续约 3 分钟。",
           "加入 1–3 份折耳根粉会把调料效果时间 ×2；达到 4 份或更多时 ×4。",
           "麻木效果也会使用同一时间倍率。"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
+          "磨粉：把折耳根拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份折耳根粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "沒有折耳根粉時，常規調料效果基礎持續約 3 分鐘。",
           "加入 1–3 份折耳根粉會把調料效果時間 ×2；達到 4 份或更多時 ×4。",
           "麻木效果也會使用同一時間倍率。"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
+          "Grinding: hold Houttuynia in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Houttuynia Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Without Houttuynia Powder, regular seasoning effects have a base duration of about 3 minutes.",
           "Adding 1–3 Houttuynia Powder multiplies seasoning-effect duration by 2; 4 or more multiplies it by 4.",
           "Numb uses the same duration multiplier."
@@ -986,11 +1049,23 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia_powder.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_houttuynia",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "docs/evidence/guide-processing-audit-20261017.md",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/houttuynia_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_grilling:houttuynia",
+        "output": "kaleidoscope_grilling:houttuynia_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:houttuynia_stir_fried_pork",
@@ -1004,6 +1079,7 @@
       },
       "body": {
         "zh_CN": [
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
           "使用已更新的森罗厨房炒锅。旧版已在制作或已有成品的锅，先按原流程取完、清空，再开始新一锅。",
           "第一张卡是固定数量配方，优先匹配，成品没有品质加成。第二张卡列出弹性配方的每种必需食材各 1 个；各种数量可增加，合计最多 9 个，仍只做 1 份。比例与世界及该配方决定的目标越接近，品质越好。",
           "在热源上的空锅加油后开始 60 秒备料时间。期间可加料或取回食材，时间不会重新计算；没有热源时暂停。食材须是普通可堆叠物品，自定义名称或附带数据的材料会留在手中。",
@@ -1013,6 +1089,7 @@
           "备料时空手或持食材容器可取回最后放入的 1 个食材。从热锅直接取食材，或不用碗触碰已完成的热锅，会受到 1 点伤害；请用锅铲翻炒、用碗盛出。"
         ],
         "zh_TW": [
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
           "使用已更新的森羅廚房炒鍋。舊版已在製作或已有成品的鍋，先按原流程取完、清空，再開始新一鍋。",
           "第一張卡是固定數量配方，優先匹配，成品沒有品質加成。第二張卡列出彈性配方的每種必需食材各 1 個；各種數量可增加，合計最多 9 個，仍只做 1 份。比例與世界及該配方決定的目標越接近，品質越好。",
           "在熱源上的空鍋加油後開始 60 秒備料時間。期間可加料或取回食材，時間不會重新計算；沒有熱源時暫停。食材須是普通可堆疊物品，自訂名稱或附帶資料的材料會留在手中。",
@@ -1022,6 +1099,7 @@
           "備料時空手或持食材容器可取回最後放入的 1 個食材。從熱鍋直接取食材，或不用碗碰觸已完成的熱鍋，會受到 1 點傷害；請用鍋鏟翻炒、用碗盛出。"
         ],
         "en_US": [
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
           "Use the updated Cookery Wok. Let a pot that was already active or holding a result in an older version finish through its original flow, then empty it before starting a new batch.",
           "The first card is an exact-count recipe and takes priority, producing the base dish without a quality bonus. The second card shows one of each required flex ingredient. Increase any of those counts up to 9 items in total; the output remains 1 dish. Quality improves as the proportions approach the target determined by the world and this recipe.",
           "Adding oil to an empty heated wok starts 60 seconds of preparation. Adding or removing ingredients does not restart that time; removing the heat pauses it. Ingredients must be ordinary stackable items. Custom-named items and items carrying extra data remain in your hand.",
@@ -1066,9 +1144,12 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
-        "docs/evidence/cuisine-quality-native-food-20261009.md"
+        "docs/evidence/cuisine-quality-native-food-20261009.md",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/houttuynia_stir_fried_pork",
       "stack": 16,
       "food": {
@@ -1092,13 +1173,16 @@
       },
       "body": {
         "zh_CN": [
-          "加工：在 Cookery 砧板上用厨房刀切 4 次。"
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
+          "加工：主手拿 1 个折耳根对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 1 份折耳根沫，拾取成品。"
         ],
         "zh_TW": [
-          "加工：在 Cookery 砧板上用廚房刀切 4 次。"
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
+          "加工：主手拿 1 個折耳根對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 1 份折耳根沫，拾取成品。"
         ],
         "en_US": [
-          "Processing: make 4 cuts with a Kitchen Knife on the Cookery Chopping Board."
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
+          "Use 1 Houttuynia on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 1 Minced Houttuynia; collect the output."
         ]
       },
       "kinds": [
@@ -1117,9 +1201,12 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/minced_houttuynia.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/minced_houttuynia",
       "stack": 64
     },
@@ -1317,12 +1404,24 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料取得：戴厨房草帽打短草有机会获得洋葱；洋葱种在耕地，成熟后收获并留种。",
+          "磨粉：把洋葱拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份洋葱粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "用途：特制调料的三种基础料之一；每瓶至少加入青辣椒粉、花椒、洋葱粉各 1 份。"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料取得：戴廚房草帽打短草有機會獲得洋蔥；洋蔥種在耕地，成熟後收穫並留種。",
+          "磨粉：把洋蔥拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份洋蔥粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：特製調料的三種基礎料之一；每瓶至少加入青辣椒粉、花椒、洋蔥粉各 1 份。"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Obtain onions by breaking short grass while wearing a Cookery straw hat. Plant onions on farmland, harvest mature crops and retain some for replanting.",
+          "Grinding: hold Onion in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Onion Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Use: one of the three required seasoning bases. Each bottle needs at least one Green Chili Powder, Sichuan Pepper and Onion Powder."
         ]
       },
@@ -1342,11 +1441,20 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/onion_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/onion_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_grilling:onion",
+        "output": "kaleidoscope_grilling:onion_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:ordinary_skewer",
@@ -1548,13 +1656,13 @@
       },
       "body": {
         "zh_CN": [
-          "加工：在 Cookery 砧板上用厨房刀切 4 次。"
+          "加工：主手拿 1 个马铃薯对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份土豆片，拾取成品。"
         ],
         "zh_TW": [
-          "加工：在 Cookery 砧板上用廚房刀切 4 次。"
+          "加工：主手拿 1 個馬鈴薯對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份馬鈴薯片，拾取成品。"
         ],
         "en_US": [
-          "Processing: make 4 cuts with a Kitchen Knife on the Cookery Chopping Board."
+          "Use 1 Potato on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Potato Slice; collect the output."
         ]
       },
       "kinds": [
@@ -1591,6 +1699,7 @@
       },
       "body": {
         "zh_CN": [
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
           "三种烟火油桶都可像流体一样放到世界中；源方块会向下优先、再向水平方向扩散，并显示 8 级液面。",
           "空桶可收回油源；Cookery 油壶也可直接从油源吸取对应油。",
           "基岩版里的烟火油由脚本模拟，因此不保证具备原版水/熔岩的所有互动；对大缸或 Cookery 油壶使用油桶时，容器操作会优先。",
@@ -1598,6 +1707,7 @@
           "使用：以油桶向大缸或 Cookery 油壶转移；刷烤架用装油的油壶，不是旧版油刷。"
         ],
         "zh_TW": [
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
           "三種煙火油桶都可像流體一樣放到世界中；源方塊會向下優先、再向水平方向擴散，並顯示 8 級液面。",
           "空桶可收回油源；Cookery 油壺也可直接從油源吸取對應油。",
           "基岩版裡的煙火油由腳本模擬，因此不保證具備原版水／熔岩的所有互動；對大缸或 Cookery 油壺使用油桶時，容器操作會優先。",
@@ -1605,6 +1715,7 @@
           "使用：以油桶向大缸或 Cookery 油壺轉移；刷烤架用裝油的油壺，不是舊版油刷。"
         ],
         "en_US": [
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
           "All three Grilling oil buckets can be placed into the world as fluids. A source flows downward first, then horizontally, using 8 visual levels.",
           "An empty bucket can collect an oil source, and a Cookery Oil Pot can also take matching oil directly from a source.",
           "On Bedrock these oils are script-simulated, so they do not promise every vanilla water/lava interaction. When an oil bucket is used on a Big Vat or Cookery Oil Pot, the container interaction takes priority.",
@@ -1633,9 +1744,12 @@
         "projects/grilling/gameplay_core/behavior_pack/items/premium_chili_oil_bucket.json",
         "projects/grilling/guide/content.a2.json#guide_world_oil",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/premium_chili_oil.json"
+        "projects/grilling/gameplay_core/behavior_pack/recipes/premium_chili_oil.json",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/premium_chili_oil_bucket",
       "stack": 1
     },
@@ -1651,13 +1765,13 @@
       },
       "body": {
         "zh_CN": [
-          "加工：在 Cookery 砧板上用厨房刀切 4 次。"
+          "加工：主手拿 1 个馒头对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份生馒头片，拾取成品。"
         ],
         "zh_TW": [
-          "加工：在 Cookery 砧板上用廚房刀切 4 次。"
+          "加工：主手拿 1 個饅頭對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份生饅頭片，拾取成品。"
         ],
         "en_US": [
-          "Processing: make 4 cuts with a Kitchen Knife on the Cookery Chopping Board."
+          "Use 1 Mantou on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Raw Mantou Slice; collect the output."
         ]
       },
       "kinds": [
@@ -1694,13 +1808,16 @@
       },
       "body": {
         "zh_CN": [
-          "加工：在 Cookery 砧板上用厨房刀切 4 次。"
+          "完整流程：红薯在石磨磨成红薯粉，再按下面砧板流程加工；或手持红薯粉持续使用 1.5 秒，将手中整叠粉揉成等量生苕皮。",
+          "加工：主手拿 1 个红薯粉对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 1 份生苕皮，拾取成品。"
         ],
         "zh_TW": [
-          "加工：在 Cookery 砧板上用廚房刀切 4 次。"
+          "完整流程：番薯在石磨磨成番薯粉，再按下面砧板流程加工；或手持番薯粉持續使用 1.5 秒，將手中整疊粉揉成等量生苕皮。",
+          "加工：主手拿 1 個番薯粉對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 1 份生苕皮，拾取成品。"
         ],
         "en_US": [
-          "Processing: make 4 cuts with a Kitchen Knife on the Cookery Chopping Board."
+          "Full route: grind Sweet Potato into Sweet Potato Powder, then use the board below. Alternatively, hold-use the powder for 1.5 seconds to knead the entire held stack into the same number of Raw Sweet Potato Sheets.",
+          "Use 1 Sweet Potato Powder on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 1 Raw Sweet Potato Sheet; collect the output."
         ]
       },
       "kinds": [
@@ -1738,12 +1855,24 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料取得：戴厨房草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
+          "磨粉：把红辣椒拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份红辣椒粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "用途：用于辣椒油桶"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料取得：戴廚房草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
+          "磨粉：把紅辣椒拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份紅辣椒粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：用於辣椒油桶"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Obtain chili seeds by breaking short grass while wearing a Cookery straw hat. Plant on farmland and harvest mature chili: it yields red chili, with a 20% bonus chance of green chili. Use the matching color; the two powder inputs are not interchangeable.",
+          "Grinding: hold Red Chili in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Red Chili Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Used in: Chili Oil Bucket"
         ]
       },
@@ -1763,11 +1892,20 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/red_chili_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/red_chili_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_cookery:red_chili",
+        "output": "kaleidoscope_grilling:red_chili_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:red_sweet_potato_porridge",
@@ -1841,13 +1979,16 @@
       },
       "body": {
         "zh_CN": [
-          "用途与取得：请查看本页配方；未列出额外操作或固定效果。"
+          "取得鸡翅：主手持森罗厨房刀击杀鸡；掠夺附魔会增加掉落数量。",
+          "烹调：1 个鸡翅 → 1 个烤鸡翅。放进熔炉或烟熏炉并加入燃料，完成后从输出格取出；也可把鸡翅放在点燃的营火或灵魂营火上，烤熟后拾取掉出的成品。"
         ],
         "zh_TW": [
-          "用途與取得：請查看本頁配方；未列出額外操作或固定效果。"
+          "取得雞翅：主手持森羅廚房刀擊殺雞；掠奪附魔會增加掉落數量。",
+          "烹調：1 個雞翅 → 1 個烤雞翅。放進熔爐或煙燻爐並加入燃料，完成後從輸出格取出；也可把雞翅放在點燃的營火或靈魂營火上，烤熟後拾取掉出的成品。"
         ],
         "en_US": [
-          "Use and acquisition: see the recipes on this page. No additional interaction or fixed effect is documented."
+          "Obtain Chicken Wings by killing a chicken with a Cookery Kitchen Knife in your main hand. Looting can increase the drops.",
+          "Cook 1 Chicken Wing into 1 Roasted Chicken Wing. Put it in a Furnace or Smoker with fuel, then collect it from the output slot. Alternatively, place it on a lit Campfire or Soul Campfire and pick up the cooked item when it drops."
         ]
       },
       "kinds": [
@@ -1894,10 +2035,8 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/roasted_chicken_wing.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/roasted_chicken_wing",
@@ -2117,18 +2256,21 @@
       },
       "body": {
         "zh_CN": [
+          "寻找首棵花椒树：在新生成、带森林标签的生物群系寻找；生成有随机性，不会给已探索地形补种。找到树后采结果叶获得花椒，破坏叶子有机会得树苗，再自行种植。",
           "花椒本身是完成特制调料所需的三种基础料之一。",
           "同一瓶调料中的花椒达到 4 份或更多时，趁热食用会额外触发麻木，基础约 45 秒。",
           "折耳根粉会把这 45 秒按 ×2 或 ×4 的同一规则延长。",
           "取得：空手采收结果的花椒树叶，一次掉落 1–2 份。"
         ],
         "zh_TW": [
+          "尋找首棵花椒樹：在新產生、帶森林標籤的生態域尋找；生成有隨機性，不會給已探索地形補種。找到樹後採結果葉獲得花椒，破壞葉子有機會得樹苗，再自行種植。",
           "花椒本身是完成特製調料所需的三種基礎料之一。",
           "同一瓶調料中的花椒達到 4 份或更多時，趁熱食用會額外觸發麻木，基礎約 45 秒。",
           "折耳根粉會把這 45 秒按 ×2 或 ×4 的同一規則延長。",
           "取得：空手採收結果的花椒樹葉，一次掉落 1–2 份。"
         ],
         "en_US": [
+          "Find your first pepper tree in newly generated biomes tagged as forest. Generation is random and does not retrofit explored terrain. Harvest fruiting leaves for pepper; breaking leaves can drop saplings for replanting.",
           "Sichuan Pepper is one of the three base ingredients required to finish Special Seasoning.",
           "At 4 or more Sichuan Pepper in the same bottle, eating the food hot also triggers Numb for a base duration of about 45 seconds.",
           "Houttuynia Powder extends those 45 seconds using the same ×2 or ×4 rule.",
@@ -2142,7 +2284,9 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sichuan_pepper.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_pepper",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/feature_rules/pepper_tree_worldgen_rule.json",
+        "projects/grilling/gameplay_core/behavior_pack/features/pepper_tree_worldgen.json"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/sichuan_pepper",
@@ -2271,16 +2415,19 @@
       },
       "body": {
         "zh_CN": [
+          "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
           "操作：汤锅使用水作为汤底，配方加热 15 秒，以碗盛出。这里只列精确配方，不把灵活配方误写成随意减料。",
           "附属需求：酸辣粉的醋来自森罗物语：酒馆；没有对应醋物品时，此配方不会注册。",
           "食用效果：温暖 45 秒"
         ],
         "zh_TW": [
+          "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
           "操作：湯鍋使用水作為湯底，配方加熱 15 秒，以碗盛出。這裡只列精確配方，不把靈活配方誤寫成隨意減料。",
           "附屬需求：酸辣粉的醋來自森羅物語：酒館；沒有對應醋物品時，此配方不會註冊。",
           "食用效果：溫暖 45 秒"
         ],
         "en_US": [
+          "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
           "Use water as the stockpot base; cook for 15 seconds and serve with a bowl. Exact recipes are listed; flexible recipes are not presented as reduced quantities.",
           "Add-on requirement: the vinegar comes from Kaleidoscope Tavern. Without a matching vinegar item, this recipe is not registered.",
           "Eating effects: Warmth 45 seconds"
@@ -2383,9 +2530,12 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
+        "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
       ],
-      "acquisition": "verified",
+      "acquisition": "implemented_java_fortress_chest_loot",
       "icon": "textures/ui/kg_grilling/catalog/sour_spicy_noodles",
       "stack": 16,
       "food": {
@@ -2417,7 +2567,7 @@
       },
       "body": {
         "zh_CN": [
-          "放置空调料瓶后，对最上层瓶子加入材料；每瓶最多记录 8 份材料，世界中最多可叠放 4 瓶。",
+          "先到「食物百科 → 磨石加工」磨青辣椒粉和洋葱粉，采花椒直接使用；完整设备步骤见「工作站 → 石磨与磨粉」。放置空调料瓶后，对最上层瓶子加入材料；每瓶最多记录 8 份材料，世界中最多可叠放 4 瓶。",
           "完成调料必须至少有青/绿辣椒粉、花椒、洋葱粉各 1 份；三种基础料齐全后，瓶子会变成“待摇晃的调料”。",
           "空手取回待摇晃的瓶子并持续使用 4 秒；完成时有声音与粒子，成品可使用 16 次。提前放开不会完成。 背包瓶图标显示剩余份数；食材的实际顺序与颜色请看手持或放置的瓶层。",
           "对烧烤架撒料时，每根架上烤串消耗 1 次；剩余次数不足时不会部分提交。",
@@ -2427,7 +2577,7 @@
           "厨房料理的热食与调料联动可由服务器关闭。关闭后，炒锅与炖锅的新成品不再附加热度或调料；尝试撒料会提示已关闭，瓶子不会扣次数。烤炉的调料功能不受此设置影响。"
         ],
         "zh_TW": [
-          "放置空調料瓶後，對最上層瓶子加入材料；每瓶最多記錄 8 份材料，世界中最多可疊放 4 瓶。",
+          "先到「食物百科 → 磨石加工」磨青辣椒粉和洋蔥粉，採花椒直接使用；完整設備步驟見「工作站 → 石磨與磨粉」。放置空調料瓶後，對最上層瓶子加入材料；每瓶最多記錄 8 份材料，世界中最多可疊放 4 瓶。",
           "完成調料必須至少有青辣椒粉、花椒、洋蔥粉各 1 份；三種基礎料齊全後，瓶子會變成「待搖晃的調料」。",
           "空手取回待搖晃的瓶子並持續使用 4 秒；完成時有聲音與粒子，成品可使用 16 次。提前放開不會完成。 背包瓶圖示顯示剩餘份數；食材的實際順序與颜色請看手持或放置的瓶層。",
           "對燒烤架撒料時，每根架上烤串消耗 1 次；剩餘次數不足時不會部分提交。",
@@ -2437,7 +2587,7 @@
           "廚房料理的熱食與調料聯動可由伺服器關閉。關閉後，炒鍋與燉鍋的新成品不再附加熱度或調料；嘗試撒料會提示已關閉，瓶子不會扣次數。烤爐的調料功能不受此設定影響。"
         ],
         "en_US": [
-          "Place an Empty Seasoning Bottle and add ingredients to the top bottle. Each bottle stores up to 8 ingredients, and up to 4 bottles can be stacked in the world.",
+          "First grind Green Chili Powder and Onion Powder (Food → Millstone); harvest Sichuan Pepper for direct use. See Workstations → Millstone & Grinding for the full setup. Place an Empty Seasoning Bottle and add ingredients to the top bottle. Each bottle stores up to 8 ingredients, and up to 4 bottles can be stacked in the world.",
           "A finished seasoning requires at least one Green Chili Powder, one Sichuan Pepper, and one Onion Powder. Once all three bases are present, it becomes Seasoning to Be Shaken.",
           "Take the pending bottle with an empty hand and hold use for 4 seconds. Sound and particles mark completion; the finished bottle has 16 uses. Releasing early does not finish it. Inventory bottle icons show the remaining amount. Check the held or placed layers for the actual ingredient order and colors.",
           "Seasoning a grill costs 1 use per skewer currently on the grill; insufficient remaining uses do not partially commit.",
@@ -2687,13 +2837,13 @@
       },
       "body": {
         "zh_CN": [
-          "用途与取得：请查看本页配方；未列出额外操作或固定效果。"
+          "工作台无序合成：1 个森罗厨房番茄 + 1 份糖 → 1 份糖拌番茄。戴厨房草帽打短草有机会获得番茄种子，种在耕地并成熟收获番茄。"
         ],
         "zh_TW": [
-          "用途與取得：請查看本頁配方；未列出額外操作或固定效果。"
+          "工作台無序合成：1 個森羅廚房番茄 + 1 份糖 → 1 份糖拌番茄。戴廚房草帽打短草有機會獲得番茄種子，種在耕地並成熟收穫番茄。"
         ],
         "en_US": [
-          "Use and acquisition: see the recipes on this page. No additional interaction or fixed effect is documented."
+          "Shapeless crafting: 1 Cookery Tomato + 1 Sugar → 1 Sugared Tomato. Get tomato seeds from short grass while wearing a Cookery straw hat; plant on farmland and harvest when mature."
         ]
       },
       "kinds": [
@@ -2793,12 +2943,21 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "磨粉：把红薯拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份红薯粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "番薯粉可在 Cookery 砧板切 4 次做成生苕皮；也可以手持番薯粉持续使用约 1.5 秒直接揉成生苕皮。"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "磨粉：把番薯拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份番薯粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "番薯粉可在 Cookery 砧板切 4 次做成生苕皮；也可以手持番薯粉持續使用約 1.5 秒直接揉成生苕皮。"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Grinding: hold Sweet Potato in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Sweet Potato Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Cut Sweet Potato Powder 4 times on a Cookery Chopping Board to make Raw Sweet Potato Sheet, or hold-use the powder for about 1.5 seconds to knead it directly."
         ]
       },
@@ -2819,11 +2978,20 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sweet_potato_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/guide/content.a2.json#guide_sweet_potato"
+        "projects/grilling/guide/content.a2.json#guide_sweet_potato",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/sweet_potato_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "kaleidoscope_grilling:sweet_potato",
+        "output": "kaleidoscope_grilling:sweet_potato_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:totem_powder",
@@ -2837,18 +3005,30 @@
       },
       "body": {
         "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "原料：不死图腾由唤魔者掉落；每个图腾磨成 1 份粉，会消耗图腾本体。",
+          "磨粉：把不死图腾拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份不死图腾粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
           "调料中加入不死图腾粉并趁热食用，会获得重金属保命效果。",
           "可确认的致命伤害会消耗一次保命效果，并把生命设为 1 点。",
           "触发后会进入约 10 分钟的重金属中毒；中毒期间再次使用这类保命调料不会绕过限制。",
           "目前与伤害吸收及原生不死图腾的判定顺序尚未完全对齐；有剩余吸收盾时，仍可能无法及时触发保命。"
         ],
         "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "原料：不死圖騰由喚魔者掉落；每個圖騰磨成 1 份粉，會消耗圖騰本體。",
+          "磨粉：把不死圖騰拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份不死圖騰粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
+          "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "調料中加入不死圖騰粉並趁熱食用，會獲得重金屬保命效果。",
           "可確認的致命傷害會消耗一次保命效果，並把生命設為 1 點。",
           "觸發後會進入約 10 分鐘的重金屬中毒；中毒期間再次使用這類保命調料不會繞過限制。",
           "目前與傷害吸收及原生不死圖騰的判定順序尚未完全對齊；有剩餘吸收盾時，仍可能無法及時觸發保命。"
         ],
         "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Evokers drop Totems of Undying. Grinding consumes the totem itself and yields 1 powder.",
+          "Grinding: hold Totem of Undying in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Totem Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
+          "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Add Totem Powder to seasoning and eat it hot to gain the Heavy Metal survival effect.",
           "Damage confirmed as lethal consumes the survival effect once and sets health to 1.",
           "After triggering, Heavy Metal Poisoning lasts about 10 minutes; using more of the same survival seasoning does not bypass that poisoned state.",
@@ -2873,11 +3053,20 @@
         "projects/grilling/gameplay_core/behavior_pack/items/totem_powder.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_totem",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/heavy_metal_damage_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/heavy_metal_damage_runtime.js",
+        "docs/evidence/guide-processing-audit-20261017.md"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/totem_powder",
-      "stack": 64
+      "stack": 64,
+      "process_contract": {
+        "kind": "millstone",
+        "input": "minecraft:totem_of_undying",
+        "output": "kaleidoscope_grilling:totem_powder",
+        "count": 1,
+        "station": "kaleidoscope_cookery:millstone",
+        "requires_host_extension_input_fix": true
+      }
     },
     {
       "id": "kaleidoscope_grilling:unfinished_skewer",
@@ -2988,7 +3177,7 @@
       },
       "body": {
         "zh_CN": [
-          "最短流程：打火石点火 → 放入 1–3 根生串 → 用装油的 Cookery 油壶刷油。",
+          "工作台图样（·为空）：III / BCB / I·I；I=铁锭，B=红砖，C=煤或木炭。最短流程：打火石点火 → 放入 1–3 根生串 → 用装油的 Cookery 油壶刷油。",
           "空手使用烧烤架翻面；每次翻面后约 1 秒才能再翻，共翻 4 次。",
           "第 4 次翻面后使用特制调料；刷油和撒料都会按架上烤串数量消耗。",
           "调味完成后空手取出；潜行空手可连续取出。烧烤阶段不能跳过。",
@@ -2998,7 +3187,7 @@
           "服务器可选择原版食用模式：关闭独立进食动画后，烤串以 1.25 秒完成原生食用，不播放专属音效与进度条；松开取消不会额外扣串。"
         ],
         "zh_TW": [
-          "最短流程：打火石點火 → 放入 1–3 根生串 → 用裝油的 Cookery 油壺刷油。",
+          "工作台圖樣（·為空）：III / BCB / I·I；I=鐵錠，B=紅磚，C=煤或木炭。最短流程：打火石點火 → 放入 1–3 根生串 → 用裝油的 Cookery 油壺刷油。",
           "空手使用燒烤架翻面；每次翻面後約 1 秒才能再翻，共翻 4 次。",
           "第 4 次翻面後使用特製調料；刷油和撒料都會按架上烤串數量消耗。",
           "調味完成後空手取出；潛行空手可連續取出。燒烤階段不能跳過。",
@@ -3008,7 +3197,7 @@
           "伺服器可選擇原版食用模式：關閉獨立進食動畫後，烤串以 1.25 秒完成原生食用，不播放專屬音效與進度條；放開取消不會額外扣串。"
         ],
         "en_US": [
-          "Shortest flow: light with Flint and Steel → insert 1–3 raw skewers → brush with a filled Cookery Oil Pot.",
+          "Crafting pattern (· = empty): III / BCB / I·I; I = Iron Ingot, B = Brick, C = Coal or Charcoal. Shortest flow: light with Flint and Steel → insert 1–3 raw skewers → brush with a filled Cookery Oil Pot.",
           "Use an empty hand to flip. There is about a 1-second flip cooldown; flip 4 times total.",
           "After the fourth flip, use Special Seasoning. Oil points and seasoning uses are consumed per skewer on the grill.",
           "After seasoning, use an empty hand to extract; sneak with an empty hand to extract repeatedly. Grill stages cannot be skipped.",
@@ -3165,6 +3354,7 @@
       },
       "body": {
         "zh_CN": [
+          "寻找首棵花椒树：在新生成、带森林标签的生物群系寻找；生成有随机性，不会给已探索地形补种。找到树后采结果叶获得花椒，破坏叶子有机会得树苗，再自行种植。",
           "花椒树苗种在泥土类方块上；光照达到 9 以上会随机生长，骨粉也可尝试催生；油渣会连续尝试施肥两次。",
           "结果的花椒树叶空手采收会掉落 1–2 份花椒，并恢复为未结果状态。",
           "花椒树叶带刺：踩上去会短暂减速并造成伤害；狐狸和蜜蜂不会被刺。",
@@ -3173,6 +3363,7 @@
           "花椒树苗和树叶都可放入堆肥桶；每份有 30% 机会增加一层堆肥。"
         ],
         "zh_TW": [
+          "尋找首棵花椒樹：在新產生、帶森林標籤的生態域尋找；生成有隨機性，不會給已探索地形補種。找到樹後採結果葉獲得花椒，破壞葉子有機會得樹苗，再自行種植。",
           "花椒樹苗種在泥土類方塊上；光照達到 9 以上會隨機生長，骨粉也可嘗試催生；油渣會連續嘗試施肥兩次。",
           "結果的花椒樹葉空手採收會掉落 1–2 份花椒，並恢復為未結果狀態。",
           "花椒樹葉帶刺：踩上去會短暫減速並造成傷害；狐狸和蜜蜂不會被刺。",
@@ -3181,6 +3372,7 @@
           "花椒樹苗和樹葉都可放入堆肥桶；每份有 30% 機會增加一層堆肥。"
         ],
         "en_US": [
+          "Find your first pepper tree in newly generated biomes tagged as forest. Generation is random and does not retrofit explored terrain. Harvest fruiting leaves for pepper; breaking leaves can drop saplings for replanting.",
           "Plant a Sichuan Pepper Sapling on a dirt-like block. At light level 9 or higher it can grow randomly. Bone Meal can attempt to advance growth; Oil Residue makes two consecutive attempts.",
           "Use an empty hand on fruiting leaves to harvest 1–2 Sichuan Pepper, returning the leaves to an unfruited state.",
           "Pepper leaves sting: stepping on them briefly slows and damages entities, except foxes and bees.",
@@ -3201,7 +3393,9 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/plant_fertilizer.js",
-        "projects/grilling/gameplay_core/behavior_pack/recipes/oak_planks_from_pepper_log.json"
+        "projects/grilling/gameplay_core/behavior_pack/recipes/oak_planks_from_pepper_log.json",
+        "projects/grilling/gameplay_core/behavior_pack/feature_rules/pepper_tree_worldgen_rule.json",
+        "projects/grilling/gameplay_core/behavior_pack/features/pepper_tree_worldgen.json"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/pepper_sapling",
@@ -5486,6 +5680,51 @@
       "icon": "textures/items/kc_oil_pot_filled",
       "related_ids": [
         "kaleidoscope_cookery:oil_pot"
+      ]
+    },
+    {
+      "id": "kg_a1:guide_millstone",
+      "categories": [
+        "workstations",
+        "food_mill"
+      ],
+      "title": {
+        "zh_CN": "石磨与磨粉",
+        "zh_TW": "石磨與磨粉",
+        "en_US": "Millstone & Grinding"
+      },
+      "body": {
+        "zh_CN": [
+          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "先做森罗厨房石磨：工作台图样（·为空）\n·F·\nSG·\nTTT\nF=木栅栏，S=木棍，G=原版砂轮，T=平滑石。放置时预留完整 3×3 空间。",
+          "磨粉顺序：主手拿原料 → 对石磨使用（最多 8 个同种）→ 带成年牛或羊站上磨盘 → 等约 100 游戏刻 → 拾取前方掉出的粉。驴、马等需驯服且无人骑乘；幼年动物不能驱动。",
+          "支持：油菜籽→菜籽粉；洋葱→洋葱粉；红/青辣椒→对应辣椒粉；折耳根→折耳根粉；红薯→红薯粉；不死图腾→不死图腾粉。全部每个原料产 1 份，无需晒干或烤熟。",
+          "花椒直接加入调料瓶，不需要磨粉；龙蛋粉要用厨房刀对龙蛋使用。原版红石粉和火药也直接加入。调料瓶的必备三料是青辣椒粉、花椒、洋葱粉。",
+          "不会转：检查成年工作者是否在完整磨盘上、是否被骑乘或被别的石磨占用；30 秒内没有可用工作者会退回原料。潜行空手使用释放工作者。不能入料：确认家族兼容包包含石磨扩展配方输入修复；旧版厨房 1.6.1 仅登记配方仍无法投入这些材料。"
+        ],
+        "zh_TW": [
+          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "先做森羅廚房石磨：工作台圖樣（·為空）\n·F·\nSG·\nTTT\nF=木柵欄，S=木棍，G=原版砂輪，T=平滑石。放置時預留完整 3×3 空間。",
+          "磨粉順序：主手拿原料 → 對石磨使用（最多 8 個同種）→ 帶成年牛或羊站上磨盤 → 等約 100 遊戲刻 → 拾取前方掉出的粉。驢、馬等需馴服且無人騎乘；幼年動物不能驅動。",
+          "支援：油菜籽→菜籽粉；洋蔥→洋蔥粉；紅/青辣椒→對應辣椒粉；折耳根→折耳根粉；番薯→番薯粉；不死圖騰→不死圖騰粉。全部每個原料產 1 份，無需曬乾或烤熟。",
+          "花椒直接加入調料瓶，不需要磨粉；龍蛋粉要用廚房刀對龍蛋使用。原版紅石粉和火藥也直接加入。調料瓶的必備三料是青辣椒粉、花椒、洋蔥粉。",
+          "不會轉：檢查成年工作者是否在完整磨盤上、是否被騎乘或被別的石磨佔用；30 秒內沒有可用工作者會退回原料。潛行空手使用釋放工作者。不能入料：確認家族相容包包含石磨擴充配方輸入修復；舊版廚房 1.6.1 僅登記配方仍無法投入這些材料。"
+        ],
+        "en_US": [
+          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Craft a Cookery Millstone on a crafting table (· = empty):\n·F·\nSG·\nTTT\nF = wooden fence, S = stick, G = vanilla Grindstone, T = smooth stone. Reserve a clear 3×3 footprint.",
+          "Hold input → use the millstone (up to 8 identical items) → bring an adult cow/sheep onto it → wait about 100 ticks → collect powder at the front. Horses/donkeys must be tamed and unridden; baby animals cannot drive it.",
+          "Recipes: canola seeds→canola powder; onion→onion powder; red/green chili→matching chili powder; houttuynia→houttuynia powder; sweet potato→sweet potato powder; totem→totem powder. Each input yields 1 powder, without drying or roasting.",
+          "Sichuan Pepper goes directly into the bottle. Dragon Egg Powder uses a kitchen knife on a dragon egg. Vanilla redstone and gunpowder also go in directly. A finished seasoning needs Green Chili Powder, Sichuan Pepper and Onion Powder.",
+          "Not turning? Check the intact footprint, adult worker, riders and another millstone binding. If no worker is found within 30 seconds, the input is returned. Sneak-use empty-handed releases a worker. Inputs rejected? The family compatibility pack must include the extension-input fix; unpatched Cookery 1.6.1 registers recipes but rejects these inputs."
+        ]
+      },
+      "kinds": [],
+      "icon": "textures/ui/kg_grilling/catalog/canola_powder",
+      "recipes": [],
+      "source_refs": [
+        "docs/evidence/guide-processing-audit-20261017.md",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
       ]
     }
   ],

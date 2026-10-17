@@ -226,7 +226,8 @@ def main():
                 assert json.loads(path.read_bytes()) == expected, path
                 continue
             before = json.loads(prior(path))
-            actual = path.read_bytes()
+            from g153_repair_source import reference_bytes as repair_reference
+            actual = repair_reference(path, path.read_bytes())
             if version >= (2, 8, 150) and kind == 'block' and path.stem in ('advanced_rack_block', 'grill'):
                 # The original label-only guard remains unchanged below. Only
                 # exact, independently sealed G150 collision postimages may

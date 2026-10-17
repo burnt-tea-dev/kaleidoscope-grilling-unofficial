@@ -20,7 +20,11 @@ class PipelineTests(unittest.TestCase):
   for p in before:
    expected=apply_performance_source(before[p]) if p==motion.BP/'scripts/main.js' else before[p]
    expected=guard_properties({p:expected})[p]
-   if p==main:expected=reapply_skewer_content(expected)
+   if p==main:
+    expected=reapply_skewer_content(expected)
+    if tuple(json.loads((motion.BP/'manifest.json').read_text())['header']['version'])==(2,8,153):
+     from g153_repair_source import reapply_bytes
+     expected=reapply_bytes(main,expected.encode()).decode()
    self.assertEqual(encoded(expected),encoded(after[p]),str(p));self.assertEqual(p.read_bytes(),encoded(after[p]),str(p))
   print('Exact generated outputs:',len(after),flush=True)
  def test_flag_version_stage_traces_match_original_tail(self):

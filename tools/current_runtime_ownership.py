@@ -69,7 +69,13 @@ def validate_inventory(actual,document):
  stable_host_changes=0
  skewer_content_changes=0
  guide_recipe_changes=0
+ repair_changes=0
  current_count=len(actual)
+ if version==[2,8,153]:
+  from g153_repair_source import predecessor_runtime, RUNTIME_PATHS
+  actual=predecessor_runtime(actual)
+  repair_changes=len(RUNTIME_PATHS)
+  version=[2,8,152]
  if version==[2,8,152]:
   from guide_recipe_source import predecessor_runtime, RUNTIME_PATHS
   actual=predecessor_runtime(actual)
@@ -118,6 +124,7 @@ def validate_inventory(actual,document):
  if stable_host_changes:result['stable_host_layer_changes']=stable_host_changes
  if skewer_content_changes:result['skewer_content_layer_changes']=skewer_content_changes
  if guide_recipe_changes:result['guide_recipe_layer_changes']=guide_recipe_changes
+ if repair_changes:result['g153_repair_layer_changes']=repair_changes
  return result
 
 def validate_plate_source():

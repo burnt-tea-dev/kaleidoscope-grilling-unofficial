@@ -1,0 +1,771 @@
+{
+  "schema": 1,
+  "remote_base": "5bc8f43f45a6cd0d287b5557db24e2da4dd2c207",
+  "version": "G153 candidate",
+  "change": "Oil owner markers relocated from221/222 to225/226; remote extended secret221..224 retained.",
+  "allocations": {
+    "legacy_secret": [
+      0,
+      213
+    ],
+    "bottle": 214,
+    "slime": [
+      215,
+      219
+    ],
+    "failure": 220,
+    "extended_secret": [
+      221,
+      224
+    ],
+    "oil_active": 225,
+    "oil_idle": 226,
+    "invalid": 254,
+    "plate": 255
+  },
+  "property_bounds": {
+    "marker": [
+      0,
+      255
+    ],
+    "word_a_max": 521433,
+    "word_b_max": 683220,
+    "secret_visual_max": 5337,
+    "property_count": 32
+  },
+  "runtime_source_hashes": {
+    "projects/grilling/gameplay_core/behavior_pack/scripts/oil_brush_visual_core.js": "2d257eab8e3931c445a5d7f1fb4a9371949121a3df4d4088020cfd19a6683c0d",
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilling_oil_pot_brush.attachable.json": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilling_oil_pot_filled_brush.attachable.json": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399"
+  },
+  "preserved_visuals": [
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_secret_chili_oil_brush.geo.json",
+      "sha256": "be1fdb0615b6a37b220a6cea89e4e6e95797c71a93f50a931408f30a02ba6330"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_pot_has_oil.geo.json",
+      "sha256": "17828cfd8fbd3d5b21f58e68e7cf5879dda2be956b2559182f38069d6455d3c0"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_canola.geo.json",
+      "sha256": "ba4208b15507bb04eb21494cf5c5cead977ef16e27bcf6d01dc887fd4b8780d6"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_pot_no_oil.geo.json",
+      "sha256": "6e53d8b7d6ecc65ed1b536327bf1670c899729dace197333c8430737eb29ba7f"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_premium_chili_oil_brush.geo.json",
+      "sha256": "90e97999fd5e6f02fa75cae3ced32554aad944edcec06dff877218f78a0e1d99"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_canola_oil_brush.geo.json",
+      "sha256": "270162f13b7dd50934005b2a6d3dcaa7cd721e55d28e3d78a671615affcd1818"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_premium_chili.geo.json",
+      "sha256": "d33d7e42398567786e371a838d0eb3ea39da7b7c223cf1dfaa9ef73b0767eaa5"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_secret_chili.geo.json",
+      "sha256": "2662d89b82c67bd79678e9f68fe94224e732e82996511f0e8a77055f2661ec38"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/animations/oil_brush.animation.json",
+      "sha256": "91702a94c1caf1eea892bd8c2291696d90e305d2c8862b73339ce124b95b0cd7"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/animations/oil_brush_player.animation.json",
+      "sha256": "9a1e3f00cad2f74daf35b78d916732afc6fe4bf4c7dda827449b2151fd1ffeff"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/render_controllers/oil_brush.render_controllers.json",
+      "sha256": "c18e4c402d4ae111228d583b179eee1ac93b9f8a42d5a9fe656cf5e23e7afd39"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/held/java_pot_no_oil.png",
+      "sha256": "c518f576c6ff8d3ee76a0be62e3f6d53205a6743974dd51a7c31acecc693b1c5"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/held/java_pot_has_oil.png",
+      "sha256": "ce48a9010f9f364c83348f9f5f3e3caa6b13acf3d3a6d8c121921d64eecb13a5"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_premium_chili.png",
+      "sha256": "177476a0f617e0798765a47c4becc61ee21ba571cbaf353fb7380c5abeeb2705"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_canola.png",
+      "sha256": "41abed53f59eadb41180745256192deabd61313efd530a8bfe6e467134078bf3"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_secret_chili.png",
+      "sha256": "95ea5d1930eeaef0fd1657cbcb96811c99f92b656cdc1edf38ad823b55dd75fb"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/items/premium_chili_oil_brush.png",
+      "sha256": "dfc6f87451c2b9da321a23d568728e79d680b766c88281f72f24a6a67f66a62d"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/items/secret_chili_oil_brush.png",
+      "sha256": "e6aeaa05c39172de93667882bacada19356202321b57c7b950e1c36c39a29140"
+    },
+    {
+      "path": "projects/grilling/gameplay_core/resource_pack/textures/items/canola_oil_brush.png",
+      "sha256": "679a920cf29db60d3d8e102ad8a4772bd71f09ecd3427dd6803c9ae47a8f2bfb"
+    }
+  ],
+  "prior_matrix_receipt": {
+    "path": "docs/evidence/oil-brush-native-20261017.json",
+    "sha256": "687b11dec4e218df768118b79cf3db8809210c903b5be4e45183e8d1acbe5f10",
+    "reuse_scope": "Only byte-identical geometry,UV,texture,animation and rendercontroller matrices/appearance; old marker dispatch receipt is historical, not evidence for225/226."
+  },
+  "verification": {
+    "runtime_tests": 46,
+    "asset_tests": 9,
+    "generated_selector_cases": 64512,
+    "transport_owner_cases": 3584,
+    "native_selector_cases": 48,
+    "native_selector_passed": 48
+  },
+  "native_selector": {
+    "editor": "5.2.2",
+    "raw_results_sha256": "c24f52553fca24bd2a8246fe401dd53883c8dce281532ca8925c45b6d4a1939e",
+    "queue_sha256": "3785d8e5617bc93c48c2868918cbcc65d04d006ee4d7dce8618e181dd727120c",
+    "helper_sha256": "7fa9ef57ededa04af78a2867e2697cd656929480d7861fe2a18748ac3d3e881f",
+    "method": "Actual authored pre_animation expressions evaluated by Animator.MolangParser inside Blockbench; only owner property reads,slot and delta_time substituted with fixture scalars. Opposite hand receives a different valid225 packet. Parser variables reset per case. Return model +100*active verifies both fields.",
+    "samples": [
+      {
+        "key": "oil_pot_main_225_1",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 225,
+        "word": 1,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 105,
+        "expected_model": 5,
+        "expected_active": 1,
+        "actual": 105,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_225_21",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 225,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 106,
+        "expected_model": 6,
+        "expected_active": 1,
+        "actual": 106,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_225_41",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 225,
+        "word": 41,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 107,
+        "expected_model": 7,
+        "expected_active": 1,
+        "actual": 107,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_226_0",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 226,
+        "word": 0,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_226_1",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 226,
+        "word": 1,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_226_2",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 226,
+        "word": 2,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 2,
+        "expected_model": 2,
+        "expected_active": 0,
+        "actual": 2,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_226_3",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 226,
+        "word": 3,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 3,
+        "expected_model": 3,
+        "expected_active": 0,
+        "actual": 3,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_226_4",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 226,
+        "word": 4,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 4,
+        "expected_model": 4,
+        "expected_active": 0,
+        "actual": 4,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_221_21",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 221,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_222_21",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 222,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_223_21",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 223,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_main_224_21",
+        "pot": "oil_pot",
+        "hand": "main",
+        "marker": 224,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_225_1",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 225,
+        "word": 1,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 105,
+        "expected_model": 5,
+        "expected_active": 1,
+        "actual": 105,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_225_21",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 225,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 106,
+        "expected_model": 6,
+        "expected_active": 1,
+        "actual": 106,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_225_41",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 225,
+        "word": 41,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 107,
+        "expected_model": 7,
+        "expected_active": 1,
+        "actual": 107,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_226_0",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 226,
+        "word": 0,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_226_1",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 226,
+        "word": 1,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_226_2",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 226,
+        "word": 2,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 2,
+        "expected_model": 2,
+        "expected_active": 0,
+        "actual": 2,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_226_3",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 226,
+        "word": 3,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 3,
+        "expected_model": 3,
+        "expected_active": 0,
+        "actual": 3,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_226_4",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 226,
+        "word": 4,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 4,
+        "expected_model": 4,
+        "expected_active": 0,
+        "actual": 4,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_221_21",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 221,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_222_21",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 222,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_223_21",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 223,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_off_224_21",
+        "pot": "oil_pot",
+        "hand": "off",
+        "marker": 224,
+        "word": 21,
+        "source_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_225_1",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 225,
+        "word": 1,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 105,
+        "expected_model": 5,
+        "expected_active": 1,
+        "actual": 105,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_225_21",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 225,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 106,
+        "expected_model": 6,
+        "expected_active": 1,
+        "actual": 106,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_225_41",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 225,
+        "word": 41,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 107,
+        "expected_model": 7,
+        "expected_active": 1,
+        "actual": 107,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_226_0",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 226,
+        "word": 0,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_226_1",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 226,
+        "word": 1,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_226_2",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 226,
+        "word": 2,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 2,
+        "expected_model": 2,
+        "expected_active": 0,
+        "actual": 2,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_226_3",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 226,
+        "word": 3,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 3,
+        "expected_model": 3,
+        "expected_active": 0,
+        "actual": 3,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_226_4",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 226,
+        "word": 4,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 4,
+        "expected_model": 4,
+        "expected_active": 0,
+        "actual": 4,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_221_21",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 221,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_222_21",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 222,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_223_21",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 223,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_main_224_21",
+        "pot": "oil_pot_filled",
+        "hand": "main",
+        "marker": 224,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_225_1",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 225,
+        "word": 1,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 105,
+        "expected_model": 5,
+        "expected_active": 1,
+        "actual": 105,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_225_21",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 225,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 106,
+        "expected_model": 6,
+        "expected_active": 1,
+        "actual": 106,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_225_41",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 225,
+        "word": 41,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 107,
+        "expected_model": 7,
+        "expected_active": 1,
+        "actual": 107,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_226_0",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 226,
+        "word": 0,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 0,
+        "expected_model": 0,
+        "expected_active": 0,
+        "actual": 0,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_226_1",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 226,
+        "word": 1,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_226_2",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 226,
+        "word": 2,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 2,
+        "expected_model": 2,
+        "expected_active": 0,
+        "actual": 2,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_226_3",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 226,
+        "word": 3,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 3,
+        "expected_model": 3,
+        "expected_active": 0,
+        "actual": 3,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_226_4",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 226,
+        "word": 4,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 4,
+        "expected_model": 4,
+        "expected_active": 0,
+        "actual": 4,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_221_21",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 221,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_222_21",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 222,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_223_21",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 223,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      },
+      {
+        "key": "oil_pot_filled_off_224_21",
+        "pot": "oil_pot_filled",
+        "hand": "off",
+        "marker": 224,
+        "word": 21,
+        "source_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399",
+        "expected": 1,
+        "expected_model": 1,
+        "expected_active": 0,
+        "actual": 1,
+        "pass": true
+      }
+    ]
+  },
+  "limits": [
+    "No network replication or Minecraft client acceptance.",
+    "No new geometry preview claimed for marker relocation;19visual files are byte-identical to prior reviewed native captures.",
+    "Prior cropping,retainedFP arm and fixture-only editor composition limits remain unchanged."
+  ],
+  "minecraft_client_acceptance": false
+}

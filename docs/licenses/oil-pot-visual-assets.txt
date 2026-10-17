@@ -1,0 +1,21 @@
+Oil-pot/brush held rendering source attribution
+
+Kaleidoscope Grilling art: Copyright (c) 2026 breezeth.
+Source: https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab27698457bec16c9362678e574895a28c
+License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
+
+Kaleidoscope Cookery pot_no_oil / pot_has_oil art: Copyright (c) 2025,
+Kaleidoscope Official Production Team.
+Source: https://modrinth.com/mod/kaleidoscope-cookery/version/TqaHu4Ma
+Public source: https://github.com/KaleidoscopeMods/KaleidoscopeCookery
+License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Changes: source PNG pixels are unchanged. Bedrock alpha-edge shells, authored
+held display transforms, state selectors and runtime transport were added.
+Derived resource geometry and copied art retain CC BY-NC-SA 4.0.
+No endorsement by the original authors is implied.
+
+Mojang generated-item display reference: extracted unchanged from the official
+Minecraft 1.21.1 client archive (URL and SHA1 in the adjacent source fixture).
+It is used as the minimal technical transform reference; no client JAR is shipped.

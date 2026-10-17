@@ -1,0 +1,1425 @@
+{
+  "schema": 1,
+  "runtime_commit": "20887310a01026f8cb410a16d5053554888568d2",
+  "editor": "Blockbench 5.2.2",
+  "kind": "controlled native composition diagnostic",
+  "minecraft_client_acceptance": false,
+  "production_ready": false,
+  "count": 12,
+  "max_matrix_error": 4.706075973359702e-09,
+  "fixture_adjustments": [
+    "Explicit leftitem binding replaces Blockbench query stub that always returns rightitem.",
+    "Scoped fixture callback resets only declared overridden player bones before native clip evaluation; Blockbench stackAnimations does not honor override_previous_animation. Callback does not modify runtime assets and fixture flag is removed after each fixture.",
+    "Idle controls load pinned Mojang empty-hand pose instead of Blockbench approximate default.",
+    "Active/sine variables sample transport output; half-cycle uses exact zero rather than unsupported scientific-notation Molang literal."
+  ],
+  "excluded_evidence": [
+    "Original source-motion batch omitted controlled player clip and inherited inaccurate editor default pose.",
+    "Composed half-cycle samples without finite_literal suffix contain invalid fixture numeric syntax; excluded and replaced by exact-zero controls."
+  ],
+  "limitations": [
+    "Fixed-phase editor captures do not validate network replication, engine blending or client rendering.",
+    "Native first-person arm remains visible; Java cancels whole hand rendering.",
+    "Both idle pots and active brushes are visible in their respective native first-person corners. Idle pots and outer active sweep are partly cropped. Native Java-reference captures also show lower/outer-edge idle cropping, but camera parameters differ, so no pixel-framing equivalence is claimed. No runtime offsets were tuned to editor framing."
+  ],
+  "report_sha256": {
+    "composed-complete-final.json": "70e52c68ed8afd9c9383f8dde4163e783cb716d4e9f9de5ca6edf18f9704bf4c",
+    "controls-complete-final.json": "7fb2f0bb88ed0132c692841e7224a45de7d68a5916b7278b11be4ca4738d2137"
+  },
+  "helper_sha256": "c9614f3af8ebb0228c4e85d1a5f0ef5934f39f53d64ce3973c2250ed3c2d7e15",
+  "records": [
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_right_0",
+      "time": 0,
+      "grip_parent_object": "d5d98212-8ede-7469-62d0-2c2cb857d306",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 3.923409153117063e-09,
+      "actual_column_major_matrix": [
+        -0.1522884196497893,
+        -0.028025068200877357,
+        0.6621350563086857,
+        0,
+        -0.3265835698560003,
+        0.5943462517416895,
+        -0.04995703094375825,
+        0,
+        -0.5766727053890109,
+        -0.3291916289836982,
+        -0.1465655562073795,
+        0,
+        -1.2194416224917957,
+        4.62225414163461,
+        16.058615732695845,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.1522884196529404,
+        -0.02802506816518203,
+        0.6621350563094714,
+        0.0,
+        -0.32658356985919423,
+        0.594346251737037,
+        -0.04995703097822569,
+        0.0,
+        -0.5766727053863697,
+        -0.3291916289951364,
+        -0.1465655561920801,
+        0.0,
+        -1.2194416202688343,
+        4.6222541377112005,
+        16.05861573354353,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.main",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00000_source_right_0__fp_main_attachable.png",
+          "sha256": "874d136d973b012d69ee518e0a802794dd24f90a03594d7c8aa722898840514b",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00000_source_right_0__front.png",
+          "sha256": "592ffc22a0d25786aecf612bd0a056db689e31b3b62388a4d4e422c929e135e8",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00000_source_right_0__side45.png",
+          "sha256": "383e748709ef88a2f6abc9d2613798504103546b200a6e03b9733f1b59106d47",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00000_source_right_0__side.png",
+          "sha256": "372d7714fa71c7e49ab08ead92e2739cb9e262c5795e6637078e45823b458ef8",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_right_0_25",
+      "time": 0.25,
+      "grip_parent_object": "e4126293-2344-0d7d-b1d2-471049f79e01",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 3.884874200110744e-09,
+      "actual_column_major_matrix": [
+        -0.2625350754621974,
+        -0.1438848038352234,
+        0.6105509785246095,
+        0,
+        -0.563008286208745,
+        0.3458842468654266,
+        -0.1605794427398131,
+        0,
+        -0.2765809172960973,
+        -0.5675044061464514,
+        -0.2526692406922803,
+        0,
+        -1.271534192626854,
+        9.691256184211667,
+        18.315480848274373,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.262535075464419,
+        -0.14388480380301646,
+        0.6105509785312438,
+        0.0,
+        -0.5630082862099455,
+        0.34588424685329316,
+        -0.16057944276173816,
+        0.0,
+        -0.2765809172915441,
+        -0.5675044061620118,
+        -0.25266924066231405,
+        0.0,
+        -1.2715341887419798,
+        9.691256182201895,
+        18.315480849638405,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.main",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00001_source_right_0_25__fp_main_attachable.png",
+          "sha256": "eb2237a7d6bac669bf055c7050154247f903861ac2d47d25d5fa3a17f8f2c57b",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00001_source_right_0_25__front.png",
+          "sha256": "b3961444fbff9ef09b2908c6e6a1dbe5bd5c297e34dc6a9fbefbc35f4a4f175c",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00001_source_right_0_25__side45.png",
+          "sha256": "7b532ec1c17f3e4fbe0b75d9ab0c38fd45d45d7f8eb46ff06959e6d4a1be7643",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00001_source_right_0_25__side.png",
+          "sha256": "42f48f899c9d48f0fb881a4594c807c15443e175c87b050a2d1b98f8b55c9a2a",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_right_0_75",
+      "time": 0.75,
+      "grip_parent_object": "78e52318-b9a1-61b2-b29d-27e2af2a525d",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 4.604539416419584e-09,
+      "actual_column_major_matrix": [
+        0.010029431953254422,
+        0.011707707065227169,
+        0.6798252276063094,
+        0,
+        0.02150818622897056,
+        0.6795534632709015,
+        -0.01202033617100473,
+        0,
+        -0.6795857623728115,
+        0.02167994815028126,
+        0.009652534815589416,
+        0,
+        -3.595206445156408,
+        2.4366421481698914,
+        15.085518578112069,
+        1
+      ],
+      "expected_column_major_matrix": [
+        0.010029431949784517,
+        0.01170770710284019,
+        0.6798252276057125,
+        0.0,
+        0.021508186225092853,
+        0.6795534632703618,
+        -0.012020336208437066,
+        0.0,
+        -0.6795857623729852,
+        0.021679948146876245,
+        0.009652534810990819,
+        0.0,
+        -3.5952064454226496,
+        2.436642143565352,
+        15.085518578795407,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.main",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00003_source_right_0_75__fp_main_attachable.png",
+          "sha256": "9e63345f2fbc8becc4dc946b98620a8953a300e1636f4baf916a1710b1b63f89",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00003_source_right_0_75__front.png",
+          "sha256": "a98420771e03774f0e034d23b452b0f45acc776c2e18d3ac9dda34ca38e5857f",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00003_source_right_0_75__side45.png",
+          "sha256": "1d1351be30c4cb4a3a6aea8d6f38c3d412c271181aef7de14de0795e58a3146e",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00003_source_right_0_75__side.png",
+          "sha256": "a56bb3f2524f12d96b88e1b6a2bcf09e8e6c233bd04d5ce5fe491b12acb7d6ff",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_right_0_95",
+      "time": 0.95,
+      "grip_parent_object": "9084825a-f1a2-9504-a78b-d1cc601d3da4",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 4.286432542244256e-09,
+      "actual_column_major_matrix": [
+        -0.1052945781892644,
+        -0.006389147894180325,
+        0.6717679886635949,
+        0,
+        -0.22580495162257558,
+        0.6407446325709945,
+        -0.029299140843855126,
+        0,
+        -0.6327125537135103,
+        -0.2276082042032933,
+        -0.1013377015364013,
+        0,
+        -1.7856559006830395,
+        3.5808026585621953,
+        15.594931658007326,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.1052945781925891,
+        -0.00638914785768062,
+        0.6717679886634206,
+        0.0,
+        -0.2258049516261419,
+        0.6407446325680671,
+        -0.029299140880381356,
+        0.0,
+        -0.632712553711684,
+        -0.22760820421255776,
+        -0.10133770152699403,
+        0.0,
+        -1.7856558991774658,
+        3.5808026542757627,
+        15.594931658760947,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.main",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00004_source_right_0_95__fp_main_attachable.png",
+          "sha256": "d7d225048ec4f182a0b5808f8f503efeaa157bc1a15a75922c51decc0086670f",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00004_source_right_0_95__front.png",
+          "sha256": "f245b0b808ec859293fc4dbcc8f9871f975857d8ddd1671cf2fd75c398441b7b",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00004_source_right_0_95__side45.png",
+          "sha256": "11a83bfe45b1d76ee32320d2c6e15659c6dd7753ba83b54161ee215017bffa02",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00004_source_right_0_95__side.png",
+          "sha256": "1cfad5e6aa09e61c0428888aaa37d160271e7e8927caba50f0dec9e587273339",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_left_0",
+      "time": 0,
+      "grip_parent_object": "c73b8180-7726-8c46-3719-132955061377",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.092469474414884e-09,
+      "actual_column_major_matrix": [
+        -0.15228841965294035,
+        0.028025068165182354,
+        -0.6621350563094717,
+        0,
+        0.32658356985919446,
+        0.594346251737037,
+        -0.049957030978225514,
+        0,
+        0.5766727053863697,
+        -0.32919162899513654,
+        -0.14656555619208014,
+        0,
+        1.2194416226206766,
+        4.622254141803669,
+        16.0586157336052,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.15228841965294013,
+        0.02802506816518203,
+        -0.6621350563094716,
+        0.0,
+        0.32658356985919434,
+        0.594346251737037,
+        -0.04995703097822555,
+        0.0,
+        0.5766727053863697,
+        -0.32919162899513643,
+        -0.14656555619207984,
+        0.0,
+        1.2194416202688276,
+        4.6222541377112,
+        16.058615733543533,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.off",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00005_source_left_0__fp_main_attachable.png",
+          "sha256": "477968afec9bd9af09237a240906f255679e7dbd4e503172b8316ad576523d4c",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00005_source_left_0__front.png",
+          "sha256": "7b4988e7ab06702a9d866dfb93d7e1de9abad7a2a3bc7f4e180c918ebbbcc670",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00005_source_left_0__side45.png",
+          "sha256": "45c7c7b1c9c4161e400eafec3045763947a9aad8d38232157539a1a48faf238b",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00005_source_left_0__side.png",
+          "sha256": "37a740ac316226bf61f14f0205a168cd8850ca591c84f922bc49f8384d61a4fd",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_left_0_25",
+      "time": 0.25,
+      "grip_parent_object": "6e63cdba-e425-7e8b-504b-a57f1bf28c91",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.0544314572343865e-09,
+      "actual_column_major_matrix": [
+        -0.26253507546441884,
+        0.14388480380301685,
+        -0.610550978531244,
+        0,
+        0.5630082862099456,
+        0.34588424685329305,
+        -0.1605794427617379,
+        0,
+        0.2765809172915441,
+        -0.5675044061620118,
+        -0.2526692406623143,
+        0,
+        -6.728465807203595,
+        9.6912561845051,
+        18.315480848903444,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.26253507546441873,
+        0.1438848038030165,
+        -0.610550978531244,
+        0.0,
+        0.5630082862099457,
+        0.3458842468532931,
+        -0.16057944276173788,
+        0.0,
+        0.2765809172915442,
+        -0.5675044061620118,
+        -0.25266924066231394,
+        0.0,
+        -6.728465811258027,
+        9.691256182201897,
+        18.315480849638405,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.off",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00006_source_left_0_25__fp_main_attachable.png",
+          "sha256": "e7653d51dad045b836165a079bd6a83a4a678a449e303eb88cd0f96d215ffef5",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00006_source_left_0_25__front.png",
+          "sha256": "bf4febd69b72d343779062b0a0cbe5f3ccf6c4cfc341ce83ba948a40e09eb177",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00006_source_left_0_25__side45.png",
+          "sha256": "dcd8e9ac0cc051ea7ec0e27a2c531f3c91fddff565527412e7f96aeccb5e826c",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00006_source_left_0_25__side.png",
+          "sha256": "5d96aee8bf761c1e92aa2c1928e6b8bdcf66cbf76b00a3c711eb0f82d2bf758b",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_left_0_75",
+      "time": 0.75,
+      "grip_parent_object": "b2839708-818d-b3b0-1d85-c75501214dcf",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.706075973359702e-09,
+      "actual_column_major_matrix": [
+        0.010029431949784562,
+        -0.011707707102840026,
+        -0.6798252276057127,
+        0,
+        -0.021508186225092717,
+        0.6795534632703618,
+        -0.01202033620843701,
+        0,
+        0.6795857623729853,
+        0.02167994814687618,
+        0.00965253481099088,
+        0,
+        11.595206445267754,
+        2.436642148271428,
+        15.085518579130277,
+        1
+      ],
+      "expected_column_major_matrix": [
+        0.010029431949784834,
+        -0.01170770710284019,
+        -0.6798252276057125,
+        0.0,
+        -0.02150818622509278,
+        0.6795534632703618,
+        -0.012020336208437066,
+        0.0,
+        0.6795857623729852,
+        0.02167994814687618,
+        0.009652534810991136,
+        0.0,
+        11.595206445422644,
+        2.436642143565352,
+        15.08551857879541,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.off",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00008_source_left_0_75__fp_main_attachable.png",
+          "sha256": "79b86be55a4f9cc1456e16538868a8b3d43e916e3fe3c7fcf60d9162306aadc6",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00008_source_left_0_75__front.png",
+          "sha256": "bf529c5a0a7750343413f52a6466a3ad2286c438a0770c0787ece69330bd688a",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00008_source_left_0_75__side45.png",
+          "sha256": "898d7b6c804e2fe5e1a93ad04780e7733ce173c6a0a45473811f85a02ef8a16d",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00008_source_left_0_75__side.png",
+          "sha256": "d14e4ddd84277490ba5defa58988749f554cd26ed451af51f9d7b07097bceab8",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_source_composed",
+      "key": "source_left_0_95",
+      "time": 0.95,
+      "grip_parent_object": "3c7e034c-40ef-8c9f-87f0-a91a1e6ef9ef",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.426601751816861e-09,
+      "actual_column_major_matrix": [
+        -0.10529457819258904,
+        0.0063891478576808824,
+        -0.6717679886634207,
+        0,
+        0.22580495162614206,
+        0.6407446325680671,
+        -0.029299140880381186,
+        0,
+        0.6327125537116841,
+        -0.22760820421255792,
+        -0.10133770152699406,
+        0,
+        4.257791855803143,
+        3.580802658702364,
+        15.594931658971383,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.10529457819258878,
+        0.00638914785768062,
+        -0.6717679886634207,
+        0.0,
+        0.22580495162614195,
+        0.6407446325680671,
+        -0.029299140880381217,
+        0.0,
+        0.632712553711684,
+        -0.22760820421255784,
+        -0.10133770152699373,
+        0.0,
+        4.257791854177041,
+        3.5808026542757623,
+        15.594931658760947,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.off",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_source_composed_00009_source_left_0_95__fp_main_attachable.png",
+          "sha256": "f23c35680c6d08dcf735f4ce9d707fe0f0c18a8ecbd0495a664357d38e7e50df",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_source_composed_00009_source_left_0_95__front.png",
+          "sha256": "d39727dfe12b741e8c4ef237117fef2fc0a3f0856e3dd0bdcece84f46c1d4a9a",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_source_composed_00009_source_left_0_95__side45.png",
+          "sha256": "e077ace9c7046d293a953705979d7f2675902835515757517b48298a3a59f8d9",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_source_composed_00009_source_left_0_95__side.png",
+          "sha256": "f4fcc25b432dc42e67481b6327425dbf975c69a61c720e0c2dfcb13e33af3860",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_calibration_controls",
+      "key": "source_right_idle",
+      "time": 0,
+      "grip_parent_object": "b9f97739-4a3e-90f3-40e9-c13773d7d410",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 2.416872035837514e-09,
+      "actual_column_major_matrix": [
+        -7.673320312484577e-12,
+        0.2873804179657424,
+        -0.6162892951932845,
+        0,
+        -5.886902076923661e-12,
+        0.6162892951932846,
+        0.2873804179657424,
+        0,
+        0.68,
+        8.578138199766272e-12,
+        -4.466385594703581e-12,
+        0,
+        -10.168999997583128,
+        4.091056914135017,
+        3.5728699699710624,
+        1
+      ],
+      "expected_column_major_matrix": [
+        3.7736835634849656e-17,
+        0.28738041798367564,
+        -0.616289295184922,
+        0.0,
+        -1.7596975451066843e-17,
+        0.616289295184922,
+        0.28738041798367564,
+        0.0,
+        0.68,
+        0.0,
+        4.163799117101001e-17,
+        0.0,
+        -10.169,
+        4.091056915561872,
+        3.5728699683917817,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.native_empty_hand_calibration",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_calibration_controls_00000_source_right_idle__fp_main_attachable.png",
+          "sha256": "0a836d1d1dde72f6b0ca44265f26c63c00a1480ca0f3e17446a587271bd601f0",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00000_source_right_idle__front.png",
+          "sha256": "433279c3f2c35c062a1604de079bcca5e30e92de28cd41b981c144699f32dff0",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00000_source_right_idle__side45.png",
+          "sha256": "ffd392236cac49de60ef61e36db63155d0d60288bfa67c04027be51bf6a811c4",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00000_source_right_idle__side.png",
+          "sha256": "a1eb602b30177a3221873913a51286d4506167432799c17d0a263498b618b590",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_calibration_controls",
+      "key": "source_left_idle",
+      "time": 0,
+      "grip_parent_object": "6e1e0440-429e-1579-4070-948405d0fee7",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.438128087258519e-09,
+      "actual_column_major_matrix": [
+        -1.509903313490213e-16,
+        -0.28738041798367564,
+        0.6162892951849223,
+        0,
+        0,
+        0.616289295184922,
+        0.28738041798367564,
+        0,
+        -0.6800000000000002,
+        0,
+        -1.509903313490213e-16,
+        0,
+        10.169,
+        4.09105692,
+        3.57286997,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -1.1321050690454898e-16,
+        -0.28738041798367564,
+        0.616289295184922,
+        0.0,
+        -5.279092635320053e-17,
+        0.616289295184922,
+        0.28738041798367564,
+        0.0,
+        -0.68,
+        0.0,
+        -1.2491397351303002e-16,
+        0.0,
+        10.168999999999999,
+        4.091056915561872,
+        3.5728699683917835,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.native_empty_hand_calibration",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_calibration_controls_00001_source_left_idle__fp_main_attachable.png",
+          "sha256": "a30dfbf0560bbc9ddc388350855d51cbb7fec78b7814c7920b582e098a77f3ad",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00001_source_left_idle__front.png",
+          "sha256": "7091e78b4b9294d31b2799f6a033b15dfe807ab4ec019ef84f2de22fb91c9328",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00001_source_left_idle__side45.png",
+          "sha256": "7f0da1bc2ee0bef23faf288ef60082a6814272bd72d05c1e6a33f7a8129e462c",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00001_source_left_idle__side.png",
+          "sha256": "4592df826e11d3c6b2cbd0f445365e798b3820d8f9554fd9ea950860fbd62d7b",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_calibration_controls",
+      "key": "source_right_0_5_finite_literal",
+      "time": 0.5,
+      "grip_parent_object": "e65f629d-e197-253d-8e74-5c2582aaf8ef",
+      "grip_binding": "q.item_slot_to_bone_name(context.item_slot)",
+      "grip_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "player_socket_name": "rightItem",
+      "player_socket_matrix": [
+        -0.2988362387301198,
+        0.6408563820557887,
+        -0.7071067811865477,
+        0,
+        0.37668900495779023,
+        -0.6015841215415001,
+        -0.7044160264027587,
+        0,
+        -0.8768137179387336,
+        -0.47686438563548356,
+        -0.06162841671621955,
+        0,
+        -11.435659273434652,
+        16.85194523284629,
+        16.223805403632763,
+        1
+      ],
+      "max_matrix_error": 3.923409153117063e-09,
+      "actual_column_major_matrix": [
+        -0.1522884196497893,
+        -0.028025068200877357,
+        0.6621350563086857,
+        0,
+        -0.3265835698560003,
+        0.5943462517416895,
+        -0.04995703094375825,
+        0,
+        -0.5766727053890109,
+        -0.3291916289836982,
+        -0.1465655562073795,
+        0,
+        -1.2194416224917957,
+        4.62225414163461,
+        16.058615732695845,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.1522884196529404,
+        -0.02802506816518203,
+        0.6621350563094714,
+        0.0,
+        -0.32658356985919423,
+        0.594346251737037,
+        -0.04995703097822569,
+        0.0,
+        -0.5766727053863697,
+        -0.3291916289951364,
+        -0.1465655561920801,
+        0.0,
+        -1.2194416202688343,
+        4.6222541377112005,
+        16.05861573354353,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.right",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.main",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_calibration_controls_00002_source_right_0_5_finite_literal__fp_main_attachable.png",
+          "sha256": "874d136d973b012d69ee518e0a802794dd24f90a03594d7c8aa722898840514b",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00002_source_right_0_5_finite_literal__front.png",
+          "sha256": "592ffc22a0d25786aecf612bd0a056db689e31b3b62388a4d4e422c929e135e8",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00002_source_right_0_5_finite_literal__side45.png",
+          "sha256": "383e748709ef88a2f6abc9d2613798504103546b200a6e03b9733f1b59106d47",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00002_source_right_0_5_finite_literal__side.png",
+          "sha256": "372d7714fa71c7e49ab08ead92e2739cb9e262c5795e6637078e45823b458ef8",
+          "view": "side"
+        }
+      ]
+    },
+    {
+      "batch": "G151_oil_calibration_controls",
+      "key": "source_left_0_5_finite_literal",
+      "time": 0.5,
+      "grip_parent_object": "58afe007-2bbd-a3e0-b63a-3b71a1fcd250",
+      "grip_binding": "'leftitem'",
+      "grip_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "player_socket_name": "leftItem",
+      "player_socket_matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -6,
+        15,
+        0,
+        1
+      ],
+      "max_matrix_error": 4.092469474414884e-09,
+      "actual_column_major_matrix": [
+        -0.15228841965294035,
+        0.028025068165182354,
+        -0.6621350563094717,
+        0,
+        0.32658356985919446,
+        0.594346251737037,
+        -0.049957030978225514,
+        0,
+        0.5766727053863697,
+        -0.32919162899513654,
+        -0.14656555619208014,
+        0,
+        1.2194416226206766,
+        4.622254141803669,
+        16.0586157336052,
+        1
+      ],
+      "expected_column_major_matrix": [
+        -0.15228841965294013,
+        0.02802506816518203,
+        -0.6621350563094716,
+        0.0,
+        0.32658356985919434,
+        0.594346251737037,
+        -0.04995703097822555,
+        0.0,
+        0.5766727053863697,
+        -0.32919162899513643,
+        -0.14656555619207984,
+        0.0,
+        1.2194416202688276,
+        4.6222541377112,
+        16.058615733543533,
+        1.0
+      ],
+      "animation_scopes": [
+        {
+          "name": "animation.kg_oil_brush.display.fp.left",
+          "scope": 2,
+          "playing": true
+        },
+        {
+          "name": "animation.kg_oil_brush.player.off",
+          "scope": 1,
+          "playing": true
+        }
+      ],
+      "warnings": [],
+      "images": [
+        {
+          "filename": "G151_oil_calibration_controls_00003_source_left_0_5_finite_literal__fp_main_attachable.png",
+          "sha256": "477968afec9bd9af09237a240906f255679e7dbd4e503172b8316ad576523d4c",
+          "view": "fp_main_attachable"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00003_source_left_0_5_finite_literal__front.png",
+          "sha256": "7b4988e7ab06702a9d866dfb93d7e1de9abad7a2a3bc7f4e180c918ebbbcc670",
+          "view": "front"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00003_source_left_0_5_finite_literal__side45.png",
+          "sha256": "45c7c7b1c9c4161e400eafec3045763947a9aad8d38232157539a1a48faf238b",
+          "view": "side45"
+        },
+        {
+          "filename": "G151_oil_calibration_controls_00003_source_left_0_5_finite_literal__side.png",
+          "sha256": "37a740ac316226bf61f14f0205a168cd8850ca591c84f922bc49f8384d61a4fd",
+          "view": "side"
+        }
+      ]
+    }
+  ],
+  "review_correction": "An initial borderless contact-sheet reading incorrectly described the left idle pot as absent. Direct review of the hash-matching full-resolution original confirms visible bottom-left pot; that finding is withdrawn."
+}

@@ -37,9 +37,12 @@ console.log(n);'''
   base=layer.contract()['base_commit'];changed=subprocess.check_output(['git','diff','--name-only',base,BASE],cwd=ROOT,text=True).splitlines()
   import build_offhand_eating_projection as offhand
   from eating_owner_properties import reference_bytes as owner_property_reference
-  owned=offhand.augment({})
+  from g153_repair_source import reference_bytes as repair_reference
+  owned=offhand.augment({offhand.MAIN:repair_reference(offhand.MAIN,offhand.MAIN.read_bytes()).decode()})
   for path,expected in owned.items():
-   actual=owner_property_reference(path);expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
+   actual=owner_property_reference(path)
+   if path==offhand.MAIN:actual=repair_reference(path,actual)
+   expected=expected if isinstance(expected,bytes)else(expected if isinstance(expected,str)else json.dumps(expected,ensure_ascii=False,indent=2)+'\n').encode();self.assertEqual(actual,expected,str(path))
   from eating_route_extraction import validate_resolver
   owned[ROOT/validate_resolver()]=(ROOT/validate_resolver()).read_bytes()
   self.assertLessEqual({p for p in changed if '/behavior_pack/'in p or'/resource_pack/'in p},{str(layer.PLAYER.relative_to(ROOT))}|{str(p.relative_to(ROOT))for p in owned})

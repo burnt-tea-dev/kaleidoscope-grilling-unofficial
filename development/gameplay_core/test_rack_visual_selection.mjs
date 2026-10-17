@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {advancedRackToolVisuals,ADVANCED_RACK_HOOK_X} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advanced_rack_visual_core.js';
 import {RACK_SEASONING_X,RACK_TOOL_X,rackDisplayPose,rackSeasoningOccupancy} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advanced_rack_layout.js';
-import {RACK_TOOL_VISUAL_Y} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advanced_rack_layout.js';
+import {RACK_TOOL_VISUAL_Y,RACK_TOOL_VISUAL_Z} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advanced_rack_layout.js';
 import {rackToolVisualModel} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack_tool_visual_data.js';
 import {rackSlotAtHit} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_rack_quick_pick.js';
 const source=fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/station_contents_visual_runtime.js',import.meta.url),'utf8');
@@ -13,7 +13,7 @@ function sync(rows,oldKeys=[]){
  const row={dimensionId:'test',parts};
  const block={typeId:'kaleidoscope_grilling:advanced_rack_block',x:0,y:0,z:0};
  const read=[];
- const ctx={rackToolVisualModel,RACK_TOOL_VISUAL_Y,rememberStationVisual(){},syncRackDisplay(){},targets:new Map([['rack',row]]),key:()=> 'rack',peekStationContainer:()=>({getItem(i){read.push(i);return rows[i]}}),advancedRackToolVisuals,rackDisplayPose:(_b,x,y,z)=>({x,y,z}),render:(_r,_b,key,stack,at,mode)=>{if(stack)out.push({key,stack,at,mode})},discard:(_r,k)=>{discarded.push(k);parts.delete(k)},clear(){},work:{remove(){}}};
+ const ctx={rackToolVisualModel,RACK_TOOL_VISUAL_Y,RACK_TOOL_VISUAL_Z,rememberStationVisual(){},syncRackDisplay(){},targets:new Map([['rack',row]]),key:()=> 'rack',peekStationContainer:()=>({getItem(i){read.push(i);return rows[i]}}),advancedRackToolVisuals,rackDisplayPose:(_b,x,y,z)=>({x,y,z}),render:(_r,_b,key,stack,at,mode)=>{if(stack)out.push({key,stack,at,mode})},discard:(_r,k)=>{discarded.push(k);parts.delete(k)},clear(){},work:{remove(){}}};
  const start=source.indexOf('export function syncStationContentsVisual('),end=source.indexOf('\nfunction index()',start);
  assert.ok(start>=0&&end>start);vm.runInNewContext(source.slice(start,end).replace('export ',''),ctx);
  ctx.syncStationContentsVisual(block,[{dimensionId:'test',x:0,y:0,z:0}]);return {out,discarded,read};
@@ -76,5 +76,30 @@ test('all32 shelf occupancy masks identify exact saved slots without compaction'
 
 test('known sprite centers match clicked tool row while extensions retain native anchor',()=>{
  const rows=Array(9);rows[5]={typeId:'kaleidoscope_cookery:iron_kitchen_knife'};rows[8]={typeId:'custom:knife'};const f=sync(rows);
- assert.equal(f.out[0].at.y,7/16);assert.equal(f.out[1].at.y,.35);assert.equal(f.out[0].at.z,-.27);assert.equal(f.out[1].at.z,-.27);
+ assert.equal(f.out[0].at.y,7/16);assert.equal(f.out[1].at.y,.35);assert.equal(f.out[0].at.z,3/16);assert.equal(f.out[1].at.z,3/16);
+});
+
+// Exercise the actual runtime depth, not a hypothetical pose supplied by the test.
+// The oracle comes from the block selection box and block transformation JSON.
+test('displayed tool centers lie on actual selection face and oblique aim selects their saved slot',async()=>{
+ const {rackAimHit}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/rack_aim_hit.js');
+ const definition=JSON.parse(fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/blocks/advanced_rack_block.json',import.meta.url),'utf8'))['minecraft:block'];
+ const faceZ=definition.components['minecraft:selection_box'].origin[2]/16;
+ const tools=['iron_kitchen_knife','gold_kitchen_knife','diamond_kitchen_knife','netherite_kitchen_knife','kitchen_shovel'].map(id=>'kaleidoscope_cookery:'+id).concat('minecraft:flint_and_steel');
+ for(const typeId of tools)for(let slot=5;slot<9;slot++){
+  const rows=Array(9);rows[slot]={typeId};const visual=sync(rows).out[0];
+  assert.equal(visual.at.z,faceZ,'runtime helper must use the clickable front face, not empty space ahead of rack');
+  for(const facing of ['north','east','south','west']){
+   const block={x:0,y:0,z:0,permutation:{getState:()=>facing}};
+   const anchor=rackDisplayPose(block,visual.at.x,visual.at.y,visual.at.z).location;
+   const outward={north:[0,0,-1],east:[1,0,0],south:[0,0,1],west:[-1,0,0]}[facing];
+   const tangent={north:[1,0,0],east:[0,0,1],south:[-1,0,0],west:[0,0,-1]}[facing];
+   for(const side of [-2,-1,0,1,2])for(const rise of [-.5,0,.5]){
+    const origin=Object.fromEntries(['x','y','z'].map((axis,i)=>[axis,anchor[axis]+outward[i]*2+tangent[i]*side+(i===1?rise:0)]));
+    const direction=Object.fromEntries(['x','y','z'].map(axis=>[axis,anchor[axis]-origin[axis]]));
+    const hit=rackAimHit(origin,direction,facing);
+    assert.equal(rackSlotAtHit(facing,hit),slot,`${typeId}/${facing}/${slot}/${side}/${rise}`);
+   }
+  }
+ }
 });

@@ -73,6 +73,8 @@ def binding_assets():
   for key,body in load(p).get('render_controllers',{}).items():assert key not in controllers,key;controllers[key]=body
  for p in sorted((RP/'attachables').glob('*.json')):
   if p.stem.endswith('_java_three_alt.attachable'):continue
+  from verify_oil_brush import admit_attachable as admit_oil_attachable
+  if admit_oil_attachable(p):continue
   from verify_failure_skewer import admit_attachable
   if admit_attachable(p):continue
   # Preserve this historical pose gate on captured bytes only after the exact
@@ -82,7 +84,7 @@ def binding_assets():
    # This route was added in G151 and has no historical pose proof. Its entire
    # sealed current payload still faces every binding/pose check below.
    from skewer_content_source import addition_bytes,VERSION
-   assert version in (tuple(VERSION),(2,8,152)),p
+   assert version in (tuple(VERSION),(2,8,152),(2,8,153)),p
    data=addition_bytes(p)
   else:data=reference_bytes(p)
   d=json.loads(data)['minecraft:attachable']['description'];selected=[]

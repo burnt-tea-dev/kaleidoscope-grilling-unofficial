@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "predecessor_commit": "5bc8f43f45a6cd0d287b5557db24e2da4dd2c207",
+  "predecessor_tree": "568a556b6455188fb7a8fca895c86001380245b6",
+  "predecessor_version": [
+    2,
+    8,
+    152
+  ],
+  "version": [
+    2,
+    8,
+    153
+  ],
+  "evidence_scope": "source_only",
+  "native_acceptance": false,
+  "client_acceptance": false,
+  "changes": {
+    "projects/grilling/gameplay_core/behavior_pack/blocks/onion_crop.json": {
+      "owner": "crop_java_geometry",
+      "operation": "modify",
+      "before_sha256": "4f57253a76e75c1e86ce5bc8e9a1e9bd56831aae79fa2ee47b2244489c6e09a2",
+      "after_sha256": "f05af2d99a835618a184da632d04b761d342b1ce0b6ea3e94414169a8c2a729b"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "owner": "release_identity",
+      "operation": "modify",
+      "before_sha256": "ed7cfa535ac4ea6cffd2827e084ef54a7c8b1f5384f3f3bd69756038a08d4481",
+      "after_sha256": "f1caa8d65c074abd29b52f9d7f80c3cd061a5b154c7ebb31447a3ff97971207d"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js": {
+      "owner": "pepper_harvest_conservation",
+      "operation": "modify",
+      "before_sha256": "97bedfde5c2548f84452fda4580908d761b687e6500bdc98d78d68a269fd1f96",
+      "after_sha256": "18f9df4072fee663c1d8d881582e26befc30c09583f897d7cea3c780f66d53d9"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/advanced_rack_layout.js": {
+      "owner": "rack_visual_selection",
+      "operation": "modify",
+      "before_sha256": "3630faf831328ed15fc304868ddfb191491a95a38353ee1ab33d5158458b6089",
+      "after_sha256": "581e1cf07f9644c0a0ade2cc7854afc4eb5d811f412c020df7a6f981cd7792df"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/guide/payload.js": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "c97c41acdfcf638c9af049e1f21f6ffff02b438e79357217fbd622a518a6dbc0",
+      "after_sha256": "224ac9d2e1e78fc5200a3e4250bb2db10083f20796f06a6e27e3967fad69ab0f"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/guide/publisher.js": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "75de4fc2673933c72c47b7c8165bc6ab7c3efe694dcfa7109608c9a0c59c40de",
+      "after_sha256": "7bf1d220d8bd9771547b51837348f95a6e224a63edb2c9741b062031bec36ac5"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js": {
+      "owner": "oil_brush_visual",
+      "operation": "modify",
+      "before_sha256": "9a1054a0016dd58a9bf2f5288785fb83491e6cb716fe983879aaddc010a650ba",
+      "after_sha256": "addbd4b21ee89a0c74a42d60eecd3008612ed8d2a6a5b49f6152c070732dd3b2"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/main.js": {
+      "owner": "oil_brush_visual",
+      "operation": "modify",
+      "before_sha256": "17d4a3dbbf06b6c43074ea12ddb364fb2b72eebfd67eb2d3a81e64f4e5c966c5",
+      "after_sha256": "a8d7d518dcd3f65e33217e21e008dcf40330b8242fe565e0287084927416bf89"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/oil_brush_visual_core.js": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "2d257eab8e3931c445a5d7f1fb4a9371949121a3df4d4088020cfd19a6683c0d"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/oil_brush_visual_runtime.js": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "ac2aa252ac984e43763854c9367083af578e90d5f2cefae6004ca48f32baa821"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/server_config_core.js": {
+      "owner": "oil_brush_visual",
+      "operation": "modify",
+      "before_sha256": "b04911ab1efea314caaf9576b4822fa5fb23b03d9148c3a4952f5dbc8468e4c0",
+      "after_sha256": "28ef43ab2a8dd2f05934e74703db3eaa0b874b5f0262ef0f1af2a72f7905fffa"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/server_config_runtime.js": {
+      "owner": "oil_brush_visual",
+      "operation": "modify",
+      "before_sha256": "0f201a486ab37c24c2da28dc94d3daea8aaef1ba215cb16a3abfdc402cc655db",
+      "after_sha256": "71f02c9cc9d454baac7509de49fddd3531299cb8f151a7d37802f80106805f63"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/station_contents_visual_runtime.js": {
+      "owner": "rack_visual_selection",
+      "operation": "modify",
+      "before_sha256": "5720369122962757f298d080cb9bd88c013bc9ef2cb03cca0d372fdc09139344",
+      "after_sha256": "f3aa620402b1fa1b17a1a43301c67eb1161eeb6960b5262e427ac75432432d9e"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/oil_brush.animation.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "91702a94c1caf1eea892bd8c2291696d90e305d2c8862b73339ce124b95b0cd7"
+    },
+    "projects/grilling/gameplay_core/resource_pack/animations/oil_brush_player.animation.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "9a1e3f00cad2f74daf35b78d916732afc6fe4bf4c7dda827449b2151fd1ffeff"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilling_oil_pot_brush.attachable.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "07f01a8c852f5c972d99bacf9e8ed17eb94cde57efac44fdd749b15f2c21f36d"
+    },
+    "projects/grilling/gameplay_core/resource_pack/attachables/grilling_oil_pot_filled_brush.attachable.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "96440f720b775f89057020365ee0f53e4eff2597565fd22f0f984e988450e399"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "owner": "release_identity",
+      "operation": "modify",
+      "before_sha256": "0e54bfbaea8640f13a3f4d0c4adce2769ab9e301b4b7a3d2650557752e8c8fb4",
+      "after_sha256": "6c4e034a98dc4ddc44f6515d3cfc4bd3ea7c0fe6a1e91e17c26b14f7197c2f6c"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/blocks/canola_crop.geo.json": {
+      "owner": "crop_java_geometry",
+      "operation": "modify",
+      "before_sha256": "6e0a9c195e0db5058db8a0479ed6777d6b17e368019c54b87687a726f8b2f1ad",
+      "after_sha256": "ee3dcd90c3f8a4f8ccf0bd4f941d93af32094cc535a544cfe1d080ef30438e02"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/blocks/houttuynia_crop.geo.json": {
+      "owner": "crop_java_geometry",
+      "operation": "modify",
+      "before_sha256": "f62621099dd3381051b5ff57c8676bef1adbf2a4d35c54b225f68c84ab2079c8",
+      "after_sha256": "fc0057c505998f9afecebb216f4e17ceaf1023036dbb9618eab8203aae8469ef"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/blocks/onion_crop.geo.json": {
+      "owner": "crop_java_geometry",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "7e85673714cd3fc5721bc24dfd527234f204f5265b87667f3c12d5dfa396de6b"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_canola_oil_brush.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "270162f13b7dd50934005b2a6d3dcaa7cd721e55d28e3d78a671615affcd1818"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_canola.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "ba4208b15507bb04eb21494cf5c5cead977ef16e27bcf6d01dc887fd4b8780d6"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_premium_chili.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "d33d7e42398567786e371a838d0eb3ea39da7b7c223cf1dfaa9ef73b0767eaa5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_oil_pot_secret_chili.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "2662d89b82c67bd79678e9f68fe94224e732e82996511f0e8a77055f2661ec38"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_pot_has_oil.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "17828cfd8fbd3d5b21f58e68e7cf5879dda2be956b2559182f38069d6455d3c0"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_pot_no_oil.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "6e53d8b7d6ecc65ed1b536327bf1670c899729dace197333c8430737eb29ba7f"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_premium_chili_oil_brush.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "90e97999fd5e6f02fa75cae3ced32554aad944edcec06dff877218f78a0e1d99"
+    },
+    "projects/grilling/gameplay_core/resource_pack/models/entity/oil_brush_secret_chili_oil_brush.geo.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "be1fdb0615b6a37b220a6cea89e4e6e95797c71a93f50a931408f30a02ba6330"
+    },
+    "projects/grilling/gameplay_core/resource_pack/render_controllers/oil_brush.render_controllers.json": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "c18e4c402d4ae111228d583b179eee1ac93b9f8a42d5a9fe656cf5e23e7afd39"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/en_US.lang": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "35323f47bbc7a0f3524c87ab37cb61bb3d64d974b75485ff5508b9b057c77d28",
+      "after_sha256": "bb2b4e2485f9d762f89ebba45e41e2f5dae186640375b12f69106a2de49f5140"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/zh_CN.lang": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "00e8d4177133623be5b2578d82b7bb7e9060369f9747f3f89be24f6f6f86dd1f",
+      "after_sha256": "604c9fd95014ce596060f3a837cdfd81094d5c680b160e307fc010db2b2bfe34"
+    },
+    "projects/grilling/gameplay_core/resource_pack/texts/zh_TW.lang": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "234f965d0af62f4451d1700478395d231810da6dd9f8b457ede8ffda5e244c84",
+      "after_sha256": "d0a1548581019e1d5f058025d5ea14e10f4d4ad06ce9717b3675622cc24df7f2"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_canola.png": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "41abed53f59eadb41180745256192deabd61313efd530a8bfe6e467134078bf3"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_premium_chili.png": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "177476a0f617e0798765a47c4becc61ee21ba571cbaf353fb7380c5abeeb2705"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/held/java_oil_pot_secret_chili.png": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "95ea5d1930eeaef0fd1657cbcb96811c99f92b656cdc1edf38ad823b55dd75fb"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/held/java_pot_has_oil.png": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "ce48a9010f9f364c83348f9f5f3e3caa6b13acf3d3a6d8c121921d64eecb13a5"
+    },
+    "projects/grilling/gameplay_core/resource_pack/textures/held/java_pot_no_oil.png": {
+      "owner": "oil_brush_visual",
+      "operation": "add",
+      "before_sha256": null,
+      "after_sha256": "c518f576c6ff8d3ee76a0be62e3f6d53205a6743974dd51a7c31acecc693b1c5"
+    },
+    "projects/grilling/guide/catalog.a3.json": {
+      "owner": "guide_processing_flows",
+      "operation": "modify",
+      "before_sha256": "4893d29020071f293ddb456fbeb8ca8bf611d83860001a9a41cdde1aec0cabd1",
+      "after_sha256": "6b440e02d0e7082d4b29a89677c1a27d0ab408b4cdc49433f8d4e22cdfe617f1"
+    }
+  }
+}

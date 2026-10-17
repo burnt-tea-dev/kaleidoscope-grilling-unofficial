@@ -62,8 +62,13 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  overrides.update(failure_assets())
  main_path=BP/'scripts/main.js'
  version=tuple(json.loads((BP/'manifest.json').read_text())['header']['version'])
- if version in ((2,8,151),(2,8,152)) and main_path in overrides:
+ if version in ((2,8,151),(2,8,152),(2,8,153)) and main_path in overrides:
   from skewer_content_source import generator_main_source
+  if version==(2,8,153):
+   from g153_repair_source import reference_bytes, ledger, sha
+   raw=overrides[main_path].encode()
+   if sha(raw)==ledger()['changes'][main_path.relative_to(ROOT).as_posix()]['after_sha256']:
+    overrides[main_path]=reference_bytes(main_path,raw).decode()
   overrides[main_path]=generator_main_source(overrides[main_path])
  if main_path in overrides:overrides[main_path]=restore_main(overrides[main_path])
  modern=version >= (2,8,58)

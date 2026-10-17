@@ -76,7 +76,64 @@ def guide_item_icon_key(item):
                 'Static guide illustration differs from original native first frame '+iid)
     return name
 
+def check_houttuynia_acquisition(s):
+    """Trace the real chest graph; missing worldgen callback is not missing loot."""
+    seen=set();items=set()
+    def visit(relative):
+        require(relative.startswith('loot_tables/') and '..' not in Path(relative).parts,'Unsafe loot reference')
+        if relative in seen:return
+        seen.add(relative);table=load(GAME/relative)
+        def walk(value):
+            if isinstance(value,dict):
+                if value.get('type')=='loot_table':visit(value['name'])
+                elif value.get('type')=='item':items.add(value['name'])
+                for child in value.values():walk(child)
+            elif isinstance(value,list):
+                for child in value:walk(child)
+        walk(table)
+    visit('loot_tables/chests/nether_bridge.json')
+    require(NS+'houttuynia' in items,'Fortress chest no longer reaches Houttuynia')
+    require('loot_tables/kaleidoscope_grilling/vanilla/chests/nether_bridge.json' in seen,'Vanilla fortress loot lost')
+    bonus=load(GAME/'loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json')['pools'][0]
+    require(bonus['rolls']=={'min':1,'max':2} and bonus['conditions']==[{'condition':'random_chance','chance':0.65}],'Fortress acquisition chance changed')
+    require(bonus['entries'][0]['functions']==[{'function':'set_count','count':{'min':1,'max':3}}],'Fortress acquisition quantity changed')
+    owner={e['id']:e for e in s['entries']}
+    for stem in ('houttuynia','houttuynia_powder','minced_houttuynia','cold_houttuynia','houttuynia_stir_fried_pork','premium_chili_oil_bucket','sour_spicy_noodles'):
+        e=owner[NS+stem]
+        require(e.get('acquisition')=='implemented_java_fortress_chest_loot','Incorrect acquisition classification '+stem)
+        require(any(ref.endswith('/loot_tables/chests/nether_bridge.json') for ref in e['source_refs']),'Loot acquisition source missing '+stem)
+        for loc in LOCALES:
+            first='\n'.join(e['body'][loc][:2])
+            require(all(t in first for t in ('65%','1–6','25%','Java')),'Incomplete acquisition/parity distinction '+stem+' '+loc)
+    require(not any(g.get('id')==NS+'houttuynia' for g in s['acquisition_gaps']),'False Houttuynia acquisition gap')
+    return {'fortress_loot_tables_traced':len(seen),'fortress_loot_items':len(items)}
+
+def check_millstone_installation_warning(s):
+    expected={'zh_CN': '使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。', 'zh_TW': '使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。', 'en_US': 'Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.'}
+    pages=[e for e in s['entries'] if e['id']=='kg_a1:guide_millstone' or any(r['method']=='Millstone' for r in e.get('recipes',[]))]
+    require(len(pages)==8,'Grinding prerequisite page inventory changed')
+    for e in pages:
+        for loc,warning in expected.items():
+            require(e['body'][loc][0]==warning,'Missing applied-host prerequisite: '+e['id']+' '+loc)
+
+def check_roasted_wing_flow(s):
+    publisher=(GAME/'scripts/guide/publisher.js').read_text()
+    match=re.search(r"export const REVISION = '([^']+)';",publisher)
+    require(match and match[1]==s['revision'],'Catalog/publisher revision mismatch')
+    payload=json.loads((GAME/'scripts/guide/payload.js').read_text().removeprefix('export const GUIDE_PAYLOAD=').strip().removesuffix(';'))
+    require(payload['version']==s['version'],'Catalog/payload version mismatch')
+    recipe=load(GAME/'recipes/roasted_chicken_wing.json')['minecraft:recipe_furnace']
+    labels={'furnace':'Furnace','smoker':'Smoker','campfire':'Campfire','soul_campfire':'Soul Campfire'}
+    require(set(recipe['tags'])==set(labels),'Roasted wing station set changed')
+    e=next(e for e in s['entries'] if e['id']==NS+'roasted_chicken_wing')
+    require(e['recipes']==[{'method':labels[tag],'ingredients':[recipe['input']],'count':1,'time':0,'result':recipe['output']} for tag in recipe['tags']],'Roasted wing native/guide route drift')
+    expected={'zh_CN': ['取得鸡翅：主手持森罗厨房刀击杀鸡；掠夺附魔会增加掉落数量。', '烹调：1 个鸡翅 → 1 个烤鸡翅。放进熔炉或烟熏炉并加入燃料，完成后从输出格取出；也可把鸡翅放在点燃的营火或灵魂营火上，烤熟后拾取掉出的成品。'], 'zh_TW': ['取得雞翅：主手持森羅廚房刀擊殺雞；掠奪附魔會增加掉落數量。', '烹調：1 個雞翅 → 1 個烤雞翅。放進熔爐或煙燻爐並加入燃料，完成後從輸出格取出；也可把雞翅放在點燃的營火或靈魂營火上，烤熟後拾取掉出的成品。'], 'en_US': ['Obtain Chicken Wings by killing a chicken with a Cookery Kitchen Knife in your main hand. Looting can increase the drops.', 'Cook 1 Chicken Wing into 1 Roasted Chicken Wing. Put it in a Furnace or Smoker with fuel, then collect it from the output slot. Alternatively, place it on a lit Campfire or Soul Campfire and pick up the cooked item when it drops.']}
+    require(e['body']==expected,'Roasted wing acquisition or cooking instructions changed')
+
 def check_facts(s):
+    check_roasted_wing_flow(s)
+    check_millstone_installation_warning(s)
+    check_houttuynia_acquisition(s)
     owner={}
     for e in s['entries']:
         for iid in [e['id'],*e.get('related_ids',[])]:
@@ -129,7 +186,25 @@ def check_facts(s):
         if kind=='stockpot_flex':continue
         if kind=='millstone':
             for o in r['outputs']:
-                require(any(x['method']=='Millstone' and x['ingredients']==[r['input']] and x['count']==o['count'] for x in owner[o['id']]['recipes']),'Millstone recipe drift')
+                e=owner[o['id']]
+                require(any(x['method']=='Millstone' and x['ingredients']==[r['input']] and x['result']==o['id'] and x['count']==o['count'] for x in e['recipes']),'Millstone recipe drift')
+                require(e.get('process_contract')=={'kind':'millstone','input':r['input'],'output':o['id'],'count':o['count'],'station':'kaleidoscope_cookery:millstone','requires_host_extension_input_fix':True},'Missing powder process contract '+o['id'])
+                fixture=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/millstone'/(o['id'].split(':')[1]+'.json'))
+                require(fixture['result']=={'id':o['id'],'count':o['count']},'Java powder result drift '+o['id'])
+                ingredient=fixture['ingredient']
+                if 'item' in ingredient:require(ingredient['item']==r['input'],'Java powder input drift '+o['id'])
+                else:
+                    tag=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(ingredient['tag'].replace(':','/')).with_suffix('.json'))
+                    values=list(tag['values'])
+                    for v in list(values):
+                        if v.startswith('#'):
+                            nested=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(v[1:].replace(':','/')).with_suffix('.json'))
+                            values.extend(nested['values'])
+                    require(r['input'] in values,'Java powder tag drift '+o['id'])
+                for loc in LOCALES:
+                    body='\n'.join(e['body'][loc])
+                    require(s['names'][loc][r['input']] in body and all(t in body for t in ('8','3×3','100')), 'Powder acquisition/operation missing '+o['id']+' '+loc)
+                    require(('拾取' in body if loc!='en_US' else 'collect' in body.lower()),'Powder collection step missing '+o['id'])
         elif kind=='chopping_board':
             require(any(x['method']=='Chopping Board' and x['ingredients']==[r['input']] and x['count']==r['count'] for x in owner[r['result']]['recipes']),'Board recipe drift')
         else:

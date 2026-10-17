@@ -1,0 +1,71 @@
+{
+  "format_version": "1.20.30",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "kaleidoscope_cookery:oil_pot",
+      "item": {
+        "kaleidoscope_cookery:oil_pot": "q.is_owner_identifier_any('minecraft:player')"
+      },
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "pot_no_oil": "textures/held/java_pot_no_oil",
+        "pot_has_oil": "textures/held/java_pot_has_oil",
+        "oil_pot_canola": "textures/held/java_oil_pot_canola",
+        "oil_pot_secret_chili": "textures/held/java_oil_pot_secret_chili",
+        "oil_pot_premium_chili": "textures/held/java_oil_pot_premium_chili",
+        "canola_oil_brush": "textures/items/canola_oil_brush",
+        "secret_chili_oil_brush": "textures/items/secret_chili_oil_brush",
+        "premium_chili_oil_brush": "textures/items/premium_chili_oil_brush"
+      },
+      "geometry": {
+        "pot_no_oil": "geometry.kg_oil_brush.pot_no_oil",
+        "pot_has_oil": "geometry.kg_oil_brush.pot_has_oil",
+        "oil_pot_canola": "geometry.kg_oil_brush.oil_pot_canola",
+        "oil_pot_secret_chili": "geometry.kg_oil_brush.oil_pot_secret_chili",
+        "oil_pot_premium_chili": "geometry.kg_oil_brush.oil_pot_premium_chili",
+        "canola_oil_brush": "geometry.kg_oil_brush.canola_oil_brush",
+        "secret_chili_oil_brush": "geometry.kg_oil_brush.secret_chili_oil_brush",
+        "premium_chili_oil_brush": "geometry.kg_oil_brush.premium_chili_oil_brush"
+      },
+      "scripts": {
+        "pre_animation": [
+          "v.kg_oil_brush_owner = (c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_off_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_off_piece') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_main_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_main_piece') : 0));",
+          "v.kg_oil_brush_word = (c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_off_0') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_off_0') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_main_0') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_main_0') : 0));",
+          "v.kg_oil_brush_model = (v.kg_oil_brush_owner == 225 && v.kg_oil_brush_word >= 1 && v.kg_oil_brush_word <= 60) ? 5 + math.floor((v.kg_oil_brush_word - 1) / 20) : ((v.kg_oil_brush_owner == 226 && v.kg_oil_brush_word >= 0 && v.kg_oil_brush_word <= 4) ? v.kg_oil_brush_word : 0);",
+          "v.kg_oil_brush_active = v.kg_oil_brush_owner == 225 && v.kg_oil_brush_word >= 1 && v.kg_oil_brush_word <= 60;",
+          "v.kg_oil_brush_stale = (v.kg_oil_brush_word == (v.kg_oil_brush_previous_word ?? -1) && v.kg_oil_brush_owner == (v.kg_oil_brush_previous_owner ?? -1)) ? math.min((v.kg_oil_brush_stale ?? 0) + q.delta_time, 2) : 0;",
+          "v.kg_oil_brush_previous_word = v.kg_oil_brush_word;",
+          "v.kg_oil_brush_previous_owner = v.kg_oil_brush_owner;",
+          "v.kg_oil_brush_active = v.kg_oil_brush_active && v.kg_oil_brush_stale < 2;",
+          "v.kg_oil_brush_model = (v.kg_oil_brush_owner == 225 && !v.kg_oil_brush_active) ? 0 : v.kg_oil_brush_model;",
+          "v.kg_oil_brush_sine = math.sin(math.mod(math.clamp((v.kg_oil_brush_word) - 1, 0, 59), 20) * 18);"
+        ],
+        "animate": [
+          {
+            "fp_right": "c.is_first_person == 1 && c.item_slot == 'main_hand'"
+          },
+          {
+            "fp_left": "c.is_first_person == 1 && c.item_slot == 'off_hand'"
+          },
+          {
+            "tp_right": "c.is_first_person == 0 && c.item_slot == 'main_hand'"
+          },
+          {
+            "tp_left": "c.is_first_person == 0 && c.item_slot == 'off_hand'"
+          }
+        ]
+      },
+      "animations": {
+        "fp_right": "animation.kg_oil_brush.display.fp.right",
+        "fp_left": "animation.kg_oil_brush.display.fp.left",
+        "tp_right": "animation.kg_oil_brush.display.tp.right",
+        "tp_left": "animation.kg_oil_brush.display.tp.left"
+      },
+      "render_controllers": [
+        "controller.render.kg_oil_brush"
+      ]
+    }
+  }
+}

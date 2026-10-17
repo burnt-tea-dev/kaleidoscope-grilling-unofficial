@@ -4,7 +4,9 @@ from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[2];PACK=ROOT/'projects/grilling/gameplay_core';BP=PACK/'behavior_pack';RP=PACK/'resource_pack';SOURCE=Path(__file__).parent/'fixtures/java-item-icons-1.1.1'
 sys.path.insert(0,str(ROOT/'tools'))
-from public_source_witness import reviewed_pepper_bytes
+from public_source_witness import reviewed_pepper_bytes, PEPPER_PATH
+from g153_repair_source import reference_bytes as repair_reference
+from unittest.mock import patch
 def read(p):return json.loads(p.read_text())
 def dimensions(p):
  with Image.open(p) as image:return image.size
@@ -35,6 +37,7 @@ class ItemIcons(unittest.TestCase):
  def test_placed_sapling_and_growth_hooks_unchanged(self):
   for name,expected in read(SOURCE/'source.json')['preserved_sha256'].items():
    data=(ROOT/name).read_bytes()
+   if name==PEPPER_PATH:data=repair_reference(ROOT/name,data)
    if tuple(read(BP/'manifest.json')['header']['version']) >= (2,8,60):
     reviewed=read(Path(__file__).parent/'fixtures/pepper-growth-before-2.8.60.json')['changes']
     self.assertEqual(set(reviewed),{'projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js'})
@@ -62,6 +65,12 @@ class ItemIcons(unittest.TestCase):
    if name.endswith('/blocks/pepper_sapling.json'):
     data=data.replace(b'kaleidoscope_grilling.display.block.pepper_sapling',b'tile.kaleidoscope_grilling:pepper_sapling.name')
    self.assertEqual(expected,hashlib.sha256(data).hexdigest(),name)
+ def test_unreviewed_pepper_successor_cannot_gain_historical_acceptance(self):
+  pepper=ROOT/PEPPER_PATH;original=pepper.read_bytes();read_bytes=Path.read_bytes
+  for corrupt in (original+b'\n// unreviewed pepper mutation\n',original.replace(b'harvestedPepperCount',b'unreviewedPepperCount',1)):
+   def changed(path):return corrupt if path==pepper else read_bytes(path)
+   with self.subTest(corrupt=hashlib.sha256(corrupt).hexdigest()),patch.object(Path,'read_bytes',changed):
+    with self.assertRaises(ValueError):self.test_placed_sapling_and_growth_hooks_unchanged()
  def test_legacy_builder_uses_specific_sources(self):
   s=(Path(__file__).parent/'build.py').read_text();self.assertIn("shutil.copyfile(specific,rp/f'textures/items/{i}.png')",s);self.assertNotIn("shutil.copyfile(brush_src,rp/f'textures/items/{i}.png')",s)
 if __name__=='__main__':unittest.main()

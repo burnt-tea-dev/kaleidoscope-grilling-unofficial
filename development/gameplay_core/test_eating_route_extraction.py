@@ -33,7 +33,11 @@ class Extraction(unittest.TestCase):
  def test_failure_current_boundary_and_legacy_supplied_input(self):
   import build_failure_skewer_held as failure
   from unittest.mock import patch
-  main=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js';current=main.read_text()
+  main=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js';live=main.read_text()
+  from skewer_content_source import historical_bytes,reapply_main as reapply_skewer_content
+  from g153_repair_source import reapply_bytes as repair_reapply
+  current=historical_bytes(main,live.encode()).decode()
+  with self.assertRaises(ValueError):historical_bytes(main,(live+'\n// unrelated supplied suffix').encode())
   old_source=subprocess.check_output(['git','show','c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f:tools/build_failure_skewer_held.py'],cwd=ROOT,text=True)
   legacy={'__file__':failure.__file__,'__name__':'failure_pre_extraction_boundary_test'}
   exec(compile(old_source,failure.__file__,'exec'),legacy)
@@ -50,6 +54,8 @@ class Extraction(unittest.TestCase):
    self.assertEqual(failure.patch_main(current),current)
    with self.assertRaises(ValueError):failure.patch_main(current+'\n// unrelated supplied suffix')
    for text,want in zip(inputs,expected):self.assertEqual(failure.patch_main(text),want)
+  composed=reapply_skewer_content(failure.patch_main(current)).encode()
+  self.assertEqual(repair_reapply(main,composed).decode(),live)
  def test_failure_boundary_rejects_owned_mutations(self):
   import build_failure_skewer_held as failure
   current=(ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/main.js').read_text();c=bridge.contract()

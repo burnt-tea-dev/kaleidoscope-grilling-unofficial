@@ -2,7 +2,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {SLIME_ID,readSlimeWorldFrame} from './slime_frame_core.js';
 import {advancedRackToolVisuals} from './advanced_rack_visual_core.js';
 import {RACK_TOOL_VISUAL_TYPE,rackToolVisualModel} from './rack_tool_visual_data.js';
-import {rackDisplayPose,RACK_TOOL_VISUAL_Y} from './advanced_rack_layout.js';
+import {rackDisplayPose,RACK_TOOL_VISUAL_Y,RACK_TOOL_VISUAL_Z} from './advanced_rack_layout.js';
 import {syncRackDisplay} from './a2746_rack_state_adapter.js';
 import {PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,CUSTOM_RECIPE_ICON_VISUAL_TYPE,VAT_PREMIUM_VISUAL_TYPE,plateMeshPlan,recipeIconModel,secretGuiIconPlan,recipeAnimationFrame,vatPremiumPlan,vatAnimationFrame,plateSlotPose,recipeIconPose,recipeMeshPose} from './plate_recipe_visual_core.js';
 import {takeStationContentsVisualDirty} from './station_contents_visual_queue.js';
@@ -100,7 +100,7 @@ export function syncStationContentsVisual(block,observers){
   // Native tagged-item fallback keeps its previous Y anchor; client calibration is separate.
   for(const {slot,stack,x} of advancedRackToolVisuals(i=>c?.getItem(i))){
    const k='rack/'+slot;seen.add(k);const y=rackToolVisualModel(stack.typeId)===undefined?.35:RACK_TOOL_VISUAL_Y;
-   render(row,block,k,stack,rackDisplayPose(block,x,y,-.27),0);
+   render(row,block,k,stack,rackDisplayPose(block,x,y,RACK_TOOL_VISUAL_Z),0);
   }
  }else if(block.typeId==='kaleidoscope_grilling:skewer_plate_block'){
   const rows=a25ReadPlateBlock(block);

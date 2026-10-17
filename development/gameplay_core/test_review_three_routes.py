@@ -25,7 +25,9 @@ class ReviewThreeTests(unittest.TestCase):
   for i,row in enumerate(rows):
    if 'rightArm' in row:row['rightArm']=oldrows[i]['rightArm']
   with self.assertRaises(ValueError):r.predecessor_document(p,raw)
-  with patch.object(pathlib.Path,'read_bytes',return_value=(json.dumps(raw,ensure_ascii=False,indent=2)+'\n').encode()):
+  original_read=pathlib.Path.read_bytes
+  mutated=(json.dumps(raw,ensure_ascii=False,indent=2)+'\n').encode()
+  with patch.object(pathlib.Path,'read_bytes',lambda path:mutated if path==p else original_read(path)):
    with self.assertRaises(ValueError):context.reference_bytes(p)
  def test_predecessor_never_rewrites_secret_terminal_layer(self):
   p=r.RP/'attachables/secret_skewer.attachable.json';raw=json.loads(p.read_text())
@@ -37,14 +39,17 @@ class ReviewThreeTests(unittest.TestCase):
   pre=bad['minecraft:attachable']['description']['scripts']['pre_animation']
   pre[0]=pre[0].replace("c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks')","q.property('kaleidoscope_grilling:eat_native_ticks')",1)
   self.assertNotEqual(r.predecessor_document(p,bad),r.predecessor_document(p,pristine))
-  with patch.object(pathlib.Path,'read_bytes',return_value=(json.dumps(bad,ensure_ascii=False,indent=2)+'\n').encode()):
+  original_read=pathlib.Path.read_bytes
+  mutated=(json.dumps(bad,ensure_ascii=False,indent=2)+'\n').encode()
+  with patch.object(pathlib.Path,'read_bytes',lambda path:mutated if path==p else original_read(path)):
    with self.assertRaises(AssertionError):context.reference_bytes(p)
 
  def test_public_main_witness_still_rejects_unrelated_mutation(self):
   from public_source_witness import assert_public_bytes_with_g71_bottles
   assert_public_bytes_with_g71_bottles(self,r.MAIN)
   original=r.MAIN.read_bytes()
-  with patch.object(pathlib.Path,'read_bytes',return_value=original+b'\n// unrelated change\n'):
+  original_read=pathlib.Path.read_bytes
+  with patch.object(pathlib.Path,'read_bytes',lambda path:original+b'\n// unrelated change\n' if path==r.MAIN else original_read(path)):
    with self.assertRaises(AssertionError):assert_public_bytes_with_g71_bottles(self,r.MAIN)
  def test_alt_variant_generation_preserves_every_existing_output(self):
   from build_native_eating_variants import build
