@@ -1,12 +1,32 @@
 # 煙火現況對照表
 
+## 2026-10-17 當前來源與接續狀態
+
+**G150／2.8.150**，固定[2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)；Cookery1.6.1／family API0.2.11。公開包為[A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，使用Cookery1.6.0；來源、下載、倉庫部署與驗收統一見[家族主線](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
+
+| 行為／追蹤 | 現行判定 | 接續範圍 |
+| --- | --- | --- |
+| [PR214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214) | 餐盤回滾ownership及花椒清果／未知掉落確認仍未吸收 | 保留窄修審查，從目前來源接續新版本；舊draft不可直接合併／發布 |
+| [PR217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217)、[PR220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220)、[PR222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) | 碰撞、20-ID THREE主體、固定動態icon已被後續來源承接 | 只審殘餘獨有差異後收束，不再計為三件待開發功能；詳[PR處置](audit/PR-TRIAGE.md) |
+| [#166](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/166) | 任意三槽、每stack秘製串inventory投影仍缺 | 同一串的原料／生熟／variant與背包、快捷欄對照；五幀固定sprite不代替此項 |
+| [#168](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/168) | 裝料／保存／RawMessage比較與G148–149動作已有來源修補 | 當前同瓶三料→PENDING→80tick→SPECIAL→撒料，保留剩餘uses與取消／換槽／重登 |
+| [#181](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/181)、[#182](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/182) | 放置盤G118、手持盤G119及後續special/slime、count、G146左臂已在main | 四朝向／1–5份／兩手混持／換槽／重載／無殘影與真材質；舊G117「無renderer」不是當前實作 |
+| 全物品Blockbench／動作 | current tree有249份BP item、151份attachable；沒有當前逐項完整結果 | 依ID／路由／貼圖／姿態展開全量；G17舊214 captures與最近代表瓶editor觀察保留原範圍 |
+| 生存料理／花椒／九格架 | 取得、穿串、四翻、調料、盤、樹冠均有既有來源或有限歷史證據 | 同一候選正常取得→製作→食用→保存；新chunk花椒／舊殘樁；高級架維持使用者指定無UI直接取放 |
+
+raw ONE、mysterious／dark、部分offhand、slime與plate special等已由G145前後composition補入，不能照抄早期#220全量缺項。generic ONE camera basis、原生clocks／admission、鏡頭／socket、材質／透明／光照／culling及當前全量聲畫仍未完成。編輯器與source檢查各保留實際範圍；`client=false`、`production_ready=false`。
+
+## 各版詳細修補與證據（保留原身份）
+
+以下的版本、相依與候選稱呼均限定在其記錄時点；今天的來源和接續狀態以上方為準。
+
 後續動畫、物品顯示與手持修復統一使用[官方來源優先流程與驗收收據](ANIMATION-ITEM-REPAIR-WORKFLOW.md)。Blockbench 預覽另標 editor evidence，不升格為本表的真人客戶端驗收；現有失敗與未驗證狀態保持原範圍。
 
 2026-10-16：G149 候選移除九個 PENDING 副手第一人稱中 Java `UseAnim.NONE` 路徑沒有的額外搖晃，並保留既有靜態持握與撒料優先序。[完整預設路徑來源及限制](evidence/pending-offhand-none-route-g149.md)。其他副手／TP 擴充、原生 host frame、操作與完整 Java 對齊仍待完成。
 
 2026-10-16：G148 候選補上 Java 主手第三人稱 SPECIAL 調料瓶的獨立 item-local 半轉貢獻，維持 FP、玩家手臂與玩法原值。[來源／矩陣與限制](evidence/seasoning-tp-item-inversion-g148.md)。這一窄來源修補不代表下列 C／D 或完整 Java 對齊已完成；下方版本標記保留各次歷史範圍。
 
-更新：2026-10-15；目前維護來源 **G143 整合候選**。G133 的永久 title 接收方案是歷史候選，不能當作目前 HUD 路由；G137 已恢復原生 Actionbar factory。最近的 [G138 觸控使用入口](STATUS-A2.8.138.md)、G140 錨點／觸控布局／END 隱藏、G141 原生剩餘時間與同步首幀、G142 未選圖像裁剪，見 [CHANGELOG](../CHANGELOG.md) 和[玩家回報](BUGS.md#client-hud食用入口圖形缺失與延遲)。進食時間、結算、動畫及原作素材保留；實際延遲、完整聲畫與操作仍未驗收。
+歷史記錄：2026-10-15；當時來源 **G143 整合候選**。G133 的永久 title 接收方案是歷史候選，不能當作目前 HUD 路由；G137 已恢復原生 Actionbar factory。最近的 [G138 觸控使用入口](STATUS-A2.8.138.md)、G140 錨點／觸控布局／END 隱藏、G141 原生剩餘時間與同步首幀、G142 未選圖像裁剪，見 [CHANGELOG](../CHANGELOG.md) 和[玩家回報](BUGS.md#client-hud食用入口圖形缺失與延遲)。進食時間、結算、動畫及原作素材保留；實際延遲、完整聲畫與操作仍未驗收。
 
 [G143 來源與分層修復收據](evidence/eating-owner-context-20261015.md)及[具體修補](BUGS.md#eating-owner手持串的進食狀態與瓶子錯誤)接通 owning-player 進食狀態、副手同步時鐘及末段隱藏；瓶子等價 RawMessage 比較、失敗掃描節流和食物 preparation 隔離。這些來源結果不補成近鏡、末段平片、native inventory 或 HUD 延遲的真人驗收。
 

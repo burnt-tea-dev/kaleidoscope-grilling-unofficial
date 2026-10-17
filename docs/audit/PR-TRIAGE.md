@@ -1,3 +1,22 @@
+# 煙火 PR 現行承接與歷史處置
+
+## 2026-10-17：以G150覆核開放草稿
+
+核對main [2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)。四個draft仍保持原GitHub狀態，來源吸收不寫成PR已合併。家族版本、交付與接續順序見[主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
+
+| PR | 當前來源核對 | 處置 |
+| --- | --- | --- |
+| [#214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214) | plate_transaction_core回滾仍缺完整signature ownership／未知結果停止更早退款；pepper採果仍缺清果／出料確認 | 仍有獨立差異；保留review，從G150接續，舊身份不可直接合併或發布 |
+| [#217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217) | grill與advanced_rack兩個runtime JSON與G150同blob；G150／#229承接 | 主體已吸收；核對剩餘工具／文檔再收束 |
+| [#220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220) | THREE core、20-ID資料、player clip與20套helper幾何／貼圖已納入後續composition，owner／offhand另有後續修補 | 主體已吸收；只檢查殘餘獨有差異，不整支舊G143覆寫 |
+| [#222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) | 18個runtime檔中16個與main相同，另2個為舊manifest；sprite與碰撞均已承接 | 主體已吸收；核對工具／文檔殘餘後收束，不作另一個G144候選 |
+
+來源：[all-skewer followup](../evidence/all-skewer-followup-20261015.md)、[G150 collision](../evidence/collision-shapes-20261016.md)、[目前plate transaction](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/projects/grilling/gameplay_core/behavior_pack/scripts/plate_transaction_core.js)、[目前pepper runtime](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js)。本次未運行新native或client測試，原PR的故障注入證據保持原head。
+
+## 歷史處置原文
+
+以下2026-10-09與更早的「目前／未合併／已部署」保留其原時點，不能代替上方G150覆核。
+
 # 煙火舊 PR 處置與保留工作
 
 更新：2026-10-09（香港）；追加 G118/G119 來源承接進度。18 個舊 head 的重新比對基準仍為 **2.8.116／`b4bd3229f254adf58be1ee413f89daa1ab9c4df0`**。

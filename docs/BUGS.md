@@ -1,6 +1,16 @@
-# 煙火目前缺口與待重現問題
+# 煙火目前缺口與待驗收場景
 
-Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；目前維護來源2.8.143（整合候選），更新2026-10-15。
+## 當前入口（2026-10-17）
+
+目前來源 **G150／2.8.150**，固定[2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)；來源／下載／部署見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。目前每項實作／驗收狀態只維護在[PARITY-MATRIX](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)，本頁保留原回報及可重現場景。
+
+接續時保留G145–G149的新動作／投影來源：自填瓶、放置盤、手持盤都有實作，當前完整操作及畫面未閉合；任意三槽每stack inventory投影仍缺，PR #214交易／採果窄修仍未吸收。全物品當前Blockbench結果不足，不能借用舊G17或代表瓶子預覽。詳情以矩陣及原Issue為準。`client=false`、`production_ready=false`。
+
+## 分項來源與歷史玩家回報
+
+本區保留各版原始失敗和修補內容；目前是否已承接以上方現況及對應Issue為準。
+
+Phase 0 原始稽核基準：2.8.114／`6fc3ab711e90ae9f23739b18b1f28ef5f31bbf8a`；以下段落原記錄來源2.8.143（整合候選），日期2026-10-15。
 本頁不把「缺證據」全部當作已證實程式 bug，也不把舊候選觀察沿用成現行驗收。
 G116承接餐盤營養界限與防誤食；G117修復瓶爆炸取消及手持提前結算界限。
 G118補本日一比一稽核的核心、農業與容器機制差異；完整逐項狀態見[G118](STATUS-A2.8.118.md)。真人驗收仍待完成。
@@ -59,7 +69,7 @@ G124 以單一自有 resolver 提供預設及當前映射，取料、效果與�
 
 ## SKEWER-GUI：任意食材秘製串 inventory icon
 
-**狀態：使用者有失敗觀察；現行來源缺動態 GUI 投影，当前候選仍待 client 複驗。**
+**狀態：使用者有失敗觀察；現行來源缺動態 GUI 投影，當前候選仍待 client 複驗。**
 
 重現：用未完成串手動穿三份胡蘿蔔，分別查看未完成與完成串的背包 icon。
 比較其他食材及 raw/cooked／variant，確認 inventory icon 是否仍只呈現通用空串。
@@ -109,7 +119,7 @@ G116仍把瓶變成AIR、清除native容器與兩筆保存資料，沒有掉落�
 
 重現參數：舊 native trace 中 hunger 10→13 寫入成功後，cached saturation view 的 max仍為10，
 後續寫入12.353846153846154造成 `ArgumentOutOfBoundsError`，交易退回食物與營養。
-在獨立当前候選重現同一飢餓／食物與原生界限條件，觀察吃餐盤是否成功或被回滾。
+在獨立當前候選重現同一飢餓／食物與原生界限條件，觀察吃餐盤是否成功或被回滾。
 
 Java 預期：完成食用後按食物資料加飢餓與飽和度，且只結算一次；
 原生寫入失敗則完整回滾，不可吞物品、虛構 attribute max 或丟失應有增益。
@@ -235,7 +245,7 @@ Flex 保留原作按 Item 去重、一對一九槽匹配、exact 優先及固定
 
 仍需完成：真鍋加油→備料→三翻→碗取出，無熱源／卸載／重啟，冷卻與兩手連吃、滿包／拆鍋／保存失敗，
 以及真飢餓／飽和、動作音效與普通原料限制的使用者驗收。未知或不可原生比較的私有物品資料保留不扣，
-不猜序列化。Forge 食物 modifier 與 NeoForge 恢復值差異已列明，当前以維護中的 NeoForge 為目標。
+不猜序列化。Forge 食物 modifier 與 NeoForge 恢復值差異已列明，當前以維護中的 NeoForge 為目標。
 詳見[G122](STATUS-A2.8.122.md)、[品質與食物值](evidence/cuisine-quality-native-food-20261009.md)；
 [G120 原始規格](evidence/cookery-flex-pot-lifecycle-20261009.md)保留當時「尚未實作」的歷史範圍。
 
@@ -281,8 +291,8 @@ G81 已修有完整 counter 證據的 stop→leave 分支，未知／0 counter�
 | 舊 build 入口 | 重整後預設拒絕，只有全新且位於 Git 工作樹外的明確輸出可用；不再刪除既有目錄 | 已修工具；66個augment仍是歷史入口，不能當現行release鏈 |
 | 舊 workflow 直接寫主幹 | 兩個 localization workflow 已移到 `docs/legacy_workflows`，Actions不再執行 | 已退出自動執行，歷史內容保留；没有證據稱它們曾覆蓋今日main |
 | 驗證鏈重複 | 四組已審查重複命令在當前一次source-receipt驗證內重用成功結果 | 已去重；保留失敗／來源漂移拒絕及historical standalone行為 |
-| 效能 | 有手動 BDS profiling，尚無約定的通過預算；家族有 slowdown／記憶體警告 | 独立当前场景量測，再決定上限；不能把 logging 成功當能效已修復 |
+| 效能 | 有手動 BDS profiling，尚無約定的通過預算；家族有 slowdown／記憶體警告 | 独立當前场景量測，再決定上限；不能把 logging 成功當能效已修復 |
 | 真自訂流體／Numb準星／Pepper entityInside／任意 mod smoking | 有已記錄平台替代或未完成项 | 按選定API與實際場景重審，分別決定近似／等待，不永久憑舊README放棄 |
 
-完整 PR 處置來源與范围見 [稽核表](audit/PR-TRIAGE.md)；
+完整 PR 處置來源與範圍見 [稽核表](audit/PR-TRIAGE.md)；
 下一階段按具體玩家問題從current main逐項修復；本輪不將這些舊提案直接合併或刪除歷史證據。
