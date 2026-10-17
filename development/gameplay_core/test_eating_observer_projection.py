@@ -89,10 +89,11 @@ for(const rows of scripts){
     def test_secret_owner_context_is_distinct_from_attachable_queries(self):
         scripts=json.loads((RP/'attachables/secret_skewer.attachable.json').read_text())['minecraft:attachable']['description']['scripts']['pre_animation']
         node('const rows='+json.dumps(scripts)+r""";
+// Food bytes 214..217 are valid Cookery additions; 218 is the first invalid byte.
 const props={'kaleidoscope_grilling:secret_main_0':174,'kaleidoscope_grilling:secret_main_1':180,'kaleidoscope_grilling:secret_main_2':184,
- 'kaleidoscope_grilling:secret_off_0':-7,'kaleidoscope_grilling:secret_off_1':214,'kaleidoscope_grilling:secret_off_2':180.9};
+ 'kaleidoscope_grilling:secret_off_0':-7,'kaleidoscope_grilling:secret_off_1':218,'kaleidoscope_grilling:secret_off_2':180.9};
 const owner={has_property:n=>Object.hasOwn(props,n),property:n=>props[n]},q={property:()=>99,has_property:()=>true};
-for(const [slot,expected] of [['main_hand',[174,180,184]],['off_hand',[0,214,180]]]){
+for(const [slot,expected] of [['main_hand',[174,180,184]],['off_hand',[0,218,180]]]){
  const c={item_slot:slot,owning_entity:owner},v={};evaluatePreAnimation(rows,q,c,{clamp:(n,lo,hi)=>Math.max(lo,Math.min(hi,n))},v);
  const actual=[0,1,2].map(i=>v['kg_secret_ingredient_'+i]);if(JSON.stringify(actual)!==JSON.stringify(expected))throw Error('Wrong owner/hand indices');
  if(slot==='off_hand'&&v.kg_secret_food_1!==0)throw Error('Unsupported low byte must hide, not borrow last catalog food');
