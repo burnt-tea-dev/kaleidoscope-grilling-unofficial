@@ -4,7 +4,7 @@
 
 目前來源 **G150／2.8.150**，固定[2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)；來源／下載／部署見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。目前每項實作／驗收狀態只維護在[PARITY-MATRIX](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)，本頁保留原回報及可重現場景。
 
-接續時保留G145–G149的新動作／投影來源：自填瓶、放置盤、手持盤都有實作，當前完整操作及畫面未閉合；任意三槽每stack inventory投影仍缺，G214交易／採果窄修仍未吸收。全物品當前Blockbench結果不足，不能借用舊G17或代表瓶子預覽。詳情以矩陣及原Issue為準。`client=false`、`production_ready=false`。
+接續時保留G145–G149的新動作／投影來源：自填瓶、放置盤、手持盤都有實作，當前完整操作及畫面未閉合；任意三槽每stack inventory投影仍缺，PR #214交易／採果窄修仍未吸收。全物品當前Blockbench結果不足，不能借用舊G17或代表瓶子預覽。詳情以矩陣及原Issue為準。`client=false`、`production_ready=false`。
 
 ## 分項來源與歷史玩家回報
 

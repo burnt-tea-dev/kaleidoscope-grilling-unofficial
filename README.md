@@ -4,7 +4,7 @@ Reviewed **2026-10-17** at [2422c2ab](https://github.com/casama233/kaleidoscope-
 
 **Public download:** [A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149), which uses **Cookery 1.6.0**. G150's [release request](.github/release-request.json) remains `publication_request=false`; a source merge is not a new public package. The G149 stable publication retains the owner's existing source/editor/CI/package decision and its [bounded evidence and deferred risks](docs/RELEASE-NOTES-A2.8.149.md).
 
-**Last repository-recorded verified family deployment:** T169/G144/W147/private42, 2026-10-15 22:40:27 HKT. This documentation audit did not connect to LIVE. The [single family status index](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md) owns delivery identities and acceptance.
+**Last LIVE batch recorded in the repository:** T169/G144/W147/private42, deployed **2026-10-15 22:40:27 HKT** and reported checked at the start of the following source batch. This documentation audit did not connect to LIVE. The [single family status index](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md) owns delivery identities and acceptance.
 
 G145–G149 presentation corrections are already retained in current main and included in G149's published runtime; their older “local candidate / publication pending” prose is historical. [Earlier README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/README.md) and versioned notes retain their original source and evidence.
 
