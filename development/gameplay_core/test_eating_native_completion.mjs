@@ -13,9 +13,10 @@ const ordinaryRelativeContract=JSON.parse(fs.readFileSync(new URL('./fixtures/or
 function ordinaryRelativeClip(id,profile,hand){return (profile==='THREE_ALT'&&ordinaryRelativeContract.three_alt_ids.includes(id))||(profile==='THREE'&&hand==='off'&&ordinaryRelativeContract.three_left_ids.includes(id))?'animation.kg_ordinary_relative.player.'+profile.toLowerCase()+'.'+(hand==='off'?'left':'right'):null;}
 
 import * as presentation from '../../projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js';
-import {captureEatingIdentity,eatingEventMatches,eatingStillCurrent,commitEating} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
+import {captureEatingIdentity,eatingEventMatches,eatingStillCurrent,completedEatingStillCurrent,commitEating} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
 import {activeEffects,mergeEffectApplication} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect_lifecycle_core.js';
 import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
 import {rolledIngredientEffects} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
 import {registerSecretIngredientBehavior,resetSecretCompatRegistry} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_compat_core.js';
 import {completedUseStillCurrent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2810_use_transaction.js';
@@ -50,11 +51,15 @@ class Stack{
  getDynamicPropertyIds(){return Object.keys(this.props)}
  getDynamicProperty(key){return this.props[key]}
 }
+class IngredientStack extends Stack{
+ constructor(typeId,amount=1){super(amount);if(typeId==='fixture:missing')throw Error('Uninstalled item');this.typeId=typeId;}
+ getComponent(type){const data=FOOD_DATA[this.typeId];return type==='minecraft:food'&&data?{nutrition:data.nutrition,saturationModifier:data.saturation}:undefined;}
+}
 function fixture({creative=false,duration=90,profile='FOUR',requested,hand='main',start=100,mealId=duration===100?'kaleidoscope_grilling:grilled_ender_pearl_skewer':id,helperEmpty=false,amount=2,realEffects=false,hot=false,hotUntil=1000,seasonings=['salt'],saturationMultiplier=1,ingredientRows}={}){
  const callbacks={},queue=[],effects=[],properties=new Map(),nutrition={hunger:10,saturation:2};
  const counts={nativeDebits:0,manualWrites:0,nativeRewards:0,manualRewards:0};
  const state={stack:new Stack(amount),other:new Stack(1),creative};state.stack.typeId=mealId;
- if(ingredientRows)state.stack.props.secretRows=JSON.stringify(ingredientRows);
+ if(ingredientRows){state.stack.props.secretRows=JSON.stringify(ingredientRows);state.stack.props.secretCooked=true;state.stack.props.secretCookedRows=JSON.stringify(ingredientRows);}
  state.other.typeId='minecraft:torch';state.other.nameTag='Keep opposite equipment';state.other.props={foreign:'unchanged'};
  const hunger={effectiveMax:20,get currentValue(){return nutrition.hunger},setCurrentValue(n){nutrition.hunger=n}};
  const saturation={effectiveMax:20,get currentValue(){return nutrition.saturation},setCurrentValue(n){nutrition.saturation=n}};
@@ -69,6 +74,8 @@ function fixture({creative=false,duration=90,profile='FOUR',requested,hand='main
  // returns its validated descriptor. Keep the real selector and source shape.
  if(requested)ctx.PROFILE_BY_ITEM[canonicalFoodId(mealId)]=requested;
  // Bind the actual production selector, including the captured native duration.
+ Object.assign(ctx,{completedEatingStillCurrent,secretEatingRows,secretFood,ItemStack:IngredientStack,getItemProperty:(stack,key)=>stack?.props[key],SKEWER_INGREDIENTS_KEY:'secretRows',SECRET_COOKED_KEY:'secretCooked',SECRET_COOKED_INGREDIENTS_KEY:'secretCookedRows'});
+ vm.runInNewContext(['readRowsFromKey','readSkewerRows','isSecretCooked','readEffectiveSkewerRows','secretEatingData','dynamicFood','canUseSecretSkewer'].map(productionFunction).join('\n'),ctx);
  const selectorBegin=source.indexOf('function resolvedProfile('),selectorEnd=source.indexOf('function writeUseHand(',selectorBegin);
  const soundBegin=source.indexOf('function startEatingSound('),soundEnd=source.indexOf('function spawnBiteCrumbs(',soundBegin);
  vm.runInNewContext(selectedProfileSource+'\n'+source.slice(soundBegin,soundEnd)+'\n'+source.slice(selectorBegin,selectorEnd),ctx);
@@ -87,7 +94,7 @@ function fixture({creative=false,duration=90,profile='FOUR',requested,hand='main
   ctx.afterCommitted=(...args)=>{countCommitted(...args);ctx.effectFinishTick=ctx.system.currentTick;productionCommitted(...args)};
  }
  if(ingredientRows){
-  Object.assign(ctx,{readEffectiveSkewerRows:stack=>JSON.parse(stack.props.secretRows),rolledIngredientEffects:row=>rolledIngredientEffects(row,()=>0),dynamicFood:stack=>secretFood(JSON.parse(stack.props.secretRows),true),emitSecretIngredientConsumed(){}});
+  Object.assign(ctx,{rolledIngredientEffects:row=>rolledIngredientEffects(row,()=>0),emitSecretIngredientConsumed(){}});
   vm.runInNewContext(['behaviorRemainder','secretRemainders','addSecretNutrition'].map(productionFunction).join('\n'),ctx);
  }
  let event;
@@ -318,7 +325,8 @@ test('production projection admission agrees with every serialized item/profile 
  for(const [declared,items] of Object.entries(JAVA_FP_EATING_ITEMS_BY_PROFILE))for(const mealId of items)for(const hand of ['main','off']){
   const item=JSON.parse(fs.readFileSync(new URL(`../../projects/grilling/gameplay_core/behavior_pack/items/${mealId.split(':')[1]}.json`,import.meta.url),'utf8'))['minecraft:item'];
   const duration=Math.round(item.components['minecraft:use_modifiers'].use_duration*20);
-  const f=fixture({mealId,duration,hand,helperEmpty:true}),before=f.state.stack.clone(),a=f.startUse();
+  const ingredientRows=canonicalFoodId(mealId)==='kaleidoscope_grilling:secret_skewer'?['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id})):undefined;
+  const f=fixture({mealId,duration,hand,helperEmpty:true,ingredientRows}),before=f.state.stack.clone(),a=f.startUse();
   const name=`animation.kg_java_eating.player.${a.profile.toLowerCase()}.${hand==='off'?'left':'right'}`;
   const route=routes[mealId],selectedClip=route&&route.profile===a.profile&&hand==='main'?route.clip:(ordinaryRelativeClip(mealId,a.profile,hand)||name);
   const q={is_using_item:true,is_sneaking:0,is_swimming:0,is_gliding:0,is_riding:0,is_item_equipped:()=>0,has_property:key=>f.properties.has(key),
@@ -547,6 +555,34 @@ test('alternating hands start independent clocks and queued old cleanup cannot e
 
 // These flow cases intentionally use real ingredient dispatch, application
 // merging, seasoning effects and completion handlers instead of finish stubs.
+const legacySecretRows=()=>['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id}));
+test('production after-start refuses empty, partial, unknown and corrupt secret payloads without custom use or settlement',()=>{
+ for(const rows of [undefined,[],legacySecretRows().slice(0,2),[{id:'fixture:missing'},...legacySecretRows().slice(1)],[{id:'minecraft:air'},...legacySecretRows().slice(1)],[{id:'minecraft:apple',nutrition:null},...legacySecretRows().slice(1)]]){
+  const f=fixture({mealId:'kaleidoscope_grilling:secret_skewer',duration:100,ingredientRows:rows});
+  assert.equal(f.startUse(),undefined,JSON.stringify(rows));assert.equal(f.animations.length,0);assert.equal(f.properties.get(presentation.EAT_PROJECTION_PROPERTY),false);
+  f.complete({tick:199});f.stop({tick:199});f.flush();assert.equal(f.counts.nativeRewards+f.counts.manualRewards,0);assert.equal(f.state.stack.amount,2);assert.equal(f.nutrition.hunger,10);
+ }
+});
+for(const finish of ['release','native'])test('secret '+finish+' rechecks canonical data after admission before script debit or reward',()=>{
+ const f=fixture({mealId:'kaleidoscope_grilling:secret_skewer',duration:100,ingredientRows:legacySecretRows()});assert.ok(f.startUse());
+ // The saved world record can become unavailable without replacing the native
+ // item/event snapshot. The second check must read that source again.
+ f.ctx.getItemProperty=()=>{throw Error('Missing saved metadata');};
+ if(finish==='release'){f.stop({tick:125,remaining:75});f.flush();}else f.complete({tick:199});
+ assert.equal(f.counts.nativeRewards+f.counts.manualRewards,0);assert.equal(f.counts.manualWrites,0);assert.equal(f.state.stack.amount,2);assert.equal(f.nutrition.hunger,10);
+});
+test('secret native completion rejects a changed main slot, replacement or unrelated stack decrement',()=>{
+ for(const change of [f=>f.player.selectedSlotIndex++,f=>f.state.stack.nameTag='replacement',f=>f.state.stack.props.marker='changed',f=>f.state.stack.amount=1,f=>f.state.stack.typeId='minecraft:apple']){
+  const f=fixture({mealId:'kaleidoscope_grilling:secret_skewer',duration:100,amount:3,ingredientRows:legacySecretRows()});f.startUse();change(f);const before=structuredClone(f.state.stack);
+  f.complete({tick:199});assert.equal(f.counts.nativeRewards,0);assert.equal(f.nutrition.hunger,10);assert.deepEqual({...f.state.stack},before);
+ }
+});
+for(const hand of ['main','off'])for(const amount of [1,3])test('legal secret native-plain legacy rows survive cancellation and consume exactly one serving: '+hand+' amount='+amount,()=>{
+ const f=fixture({mealId:'kaleidoscope_grilling:secret_skewer_native_plain',duration:25,hand,amount,ingredientRows:legacySecretRows()});
+ const first=f.startUse();assert.equal(first.plain,true);assert.equal(f.animations.length,0);f.stop({tick:110,remaining:15});f.flush(111);assert.equal(f.state.stack.amount,amount);assert.equal(f.nutrition.hunger,10);
+ f.ctx.system.currentTick=112;assert.ok(f.startUse());f.complete({tick:136,nativeDebit:true});f.stop({tick:136});f.flush(137);
+ assert.equal(f.state.stack?.amount??0,amount-1);assert.equal(f.nutrition.hunger,16);assert.equal(f.counts.nativeRewards,1);assert.equal(f.counts.manualWrites,0);assert.equal(f.event.itemStack.props.secretRows,JSON.stringify(legacySecretRows()));
+});
 for(const hand of ['main','off'])for(const finish of ['release','native'])for(const creative of [false,true])test(`actual mixed-secret effects settle once ${hand} ${finish} creative=${creative}`,()=>{
  resetSecretCompatRegistry();
  registerSecretIngredientBehavior({input:'fixture:strong',behavior:{effects:[{kind:'persistent_fx',effect:'numb',ticks:1000,amplifier:1}]}});
@@ -594,7 +630,7 @@ for(const hand of ['main','off'])for(const creative of [false,true])test(`saved 
  Object.assign(f.ctx,{...itemMetadata,PLATE_ID:'kaleidoscope_grilling:skewer_plate',PLATE_CAPACITY,PLATE_SKEWERS_KEY,normalizePlateRows,plateHighestNutritionIndex,decodePlateStorage,primitiveStackProps,completedUseStillCurrent,ItemStack:PlateStack,captureSkewerMetadata,restoreSkewerMetadata});
  vm.runInNewContext(['cloneOne','restoreStack','plateRowsFromItem','plateItem'].map(plateFunction).join('\n')+'\nconst a25PlateRows=plateRowsFromItem,a25RestoreStack=restoreStack,a25PlateItem=plateItem;',f.ctx);
  vm.runInNewContext(['writeUseHand','completePlateUse','addNestedNutrition'].map(productionFunction).join('\n'),f.ctx);
- const serving=new PlateStack('kaleidoscope_grilling:secret_skewer_java_three_alt');serving.nameTag='Kept original';serving.props.secretRows=JSON.stringify(ingredients);serving.props['fixture:marker']='kept';
+ const serving=new PlateStack('kaleidoscope_grilling:secret_skewer_java_three_alt');serving.nameTag='Kept original';serving.props.secretRows=JSON.stringify(ingredients);serving.props.secretCooked=true;serving.props['fixture:marker']='kept';
  const snapshot={id:serving.typeId,nutrition:7,saturation:.3,native:captureSkewerMetadata(serving)};
  const lesser={id:'kaleidoscope_grilling:raw_fish_skewer',nutrition:1,saturation:0};
  const plate=f.ctx.plateItem([snapshot,lesser]);

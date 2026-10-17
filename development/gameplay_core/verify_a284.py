@@ -33,7 +33,8 @@ def eating_dispatch_source(script, version):
 
 
 def eating_gate():
-    script = (BP / 'scripts/main.js').read_text()
+    from skewer_content_source import historical_bytes
+    script = historical_bytes(BP / 'scripts/main.js').decode()
     version = tuple(json.loads((BP / 'manifest.json').read_text())['header']['version'])
     script = eating_dispatch_source(script, version)
     start = script.split('world.afterEvents.itemStartUse.subscribe', 1)[1].split('world.afterEvents.itemCompleteUse.subscribe', 1)[0]

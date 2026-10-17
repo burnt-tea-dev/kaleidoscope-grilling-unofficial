@@ -81,7 +81,8 @@ class SlimeFrameSelector(unittest.TestCase):
         current = (P / 'gameplay_core/behavior_pack/scripts/main.js').read_text()
         self.assertEqual(install_main(current), current)
         from effect_merge_source_witness import restore_main as restore_effect
-        current = restore_effect(current)
+        from skewer_content_source import historical_bytes
+        current = restore_effect(historical_bytes(P / 'gameplay_core/behavior_pack/scripts/main.js', current.encode()).decode())
         plain = strip_main(current)
         self.assertEqual(install_main(plain), current)
         self.assertEqual(install_main(current), current)
@@ -94,9 +95,10 @@ class SlimeFrameSelector(unittest.TestCase):
         import sys
         sys.path.insert(0, str(ROOT / 'tools'))
         from slime_frame_source_witness import reference_bytes, pinned_bytes, PREVIOUS_SLIME_BASE, MAIN_PATH, ATTACHABLE_PATH
+        from skewer_content_source import historical_bytes
         for relative in (MAIN_PATH, ATTACHABLE_PATH):
             path = ROOT / relative
-            current = path.read_bytes()
+            current = historical_bytes(path)
             self.assertEqual(reference_bytes(path, current), pinned_bytes(PREVIOUS_SLIME_BASE, relative))
             for corrupted in (current + b' ', pinned_bytes(PREVIOUS_SLIME_BASE, relative)):
                 with self.assertRaisesRegex(AssertionError, 'reviewed complete bytes'):

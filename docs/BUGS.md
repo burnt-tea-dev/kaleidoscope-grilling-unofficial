@@ -2,9 +2,15 @@
 
 ## 當前入口（2026-10-17）
 
-目前來源 **G150／2.8.150**，固定[2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)；來源／下載／部署見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。目前每項實作／驗收狀態只維護在[PARITY-MATRIX](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)，本頁保留原回報及可重現場景。
+目前來源 **G151／2.8.151**，Cookery1.6.1／family API0.2.12；來源／下載／部署見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。目前每項實作／驗收狀態只維護在[PARITY-MATRIX](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)，本頁保留原回報及可重現場景。
 
 接續時保留G145–G149的新動作／投影來源：自填瓶、放置盤、手持盤都有實作，當前完整操作及畫面未閉合；任意三槽每stack inventory投影仍缺，PR #214交易／採果窄修仍未吸收。全物品當前Blockbench結果不足，不能借用舊G17或代表瓶子預覽。詳情以矩陣及原Issue為準。`client=false`、`production_ready=false`。
+
+## SKEWER-CONTENTS：配方取得、只有竹籤與無效進食
+
+2026-10-17 玩家回報配方匹配有問題、秘製串穿料後仍只見竹籤且會吃空氣。G151 修補 Cookery1.6.1 的砧板生產契約失配、單／雙料進度、已有食材保存前檢查、native_plain 缺少 attachable、四個新食物缺圖及進食開始／完成的共同資料守衛。Java20組有序配方不變。
+
+[整合修補與待驗證操作](evidence/skewer-repair-20261017.md)記錄可重現來源缺陷及三代理交界。空／不完整串也不能透過 entity／block 互動再次穿入外層；合法三份零營養仍保留 Java 行為。來源修補與腳本回歸已有實作，當前客户端與完整家族部署另記；每stack背包圖示仍由#166追蹤。
 
 ## 分項來源與歷史玩家回報
 

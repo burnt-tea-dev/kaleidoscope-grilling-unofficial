@@ -1,4 +1,5 @@
 import {canonicalFoodId,eatingItemId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
 /** Production functions and storage/event doubles; not native player evidence. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -15,6 +16,7 @@ function fn(text,name){const start=text.indexOf('function '+name+'(');assert.ok(
 class Stack{
  constructor(typeId,amount=1){if(typeId==='fixture:missing')throw Error('missing item');this.typeId=typeId;this.amount=amount;this.props={};this.nameTag='';this.lore=[];this.damage=0;}
  clone(){return Object.assign(new Stack(this.typeId,this.amount),structuredClone({...this}));}
+ getComponent(){return undefined;}
 }
 const rawRows=()=>[{id:'minecraft:beef',nutrition:3,saturation:.3,edible:true,tags:[],native:{version:1,id:'minecraft:beef',name:'named raw beef',damage:4,props:{custom:'retained'}}},{id:'minecraft:carrot',nutrition:3,saturation:.3,edible:true,tags:[]},{id:'fixture:food',nutrition:2,saturation:.2,edible:true,tags:['fixture:food_tag']}];
 function skewer(rows=rawRows()){const s=new Stack(SECRET_ID);s.props[SKEWER_INGREDIENTS_KEY]=JSON.stringify(rows);s.props.creator='original creator';s.nameTag='kept skewer name';s.lore=['kept lore'];return s;}
@@ -23,7 +25,7 @@ function fixture({flips=3,lit=false,stacks=[skewer(),skewer(),skewer()]}={}){
  const rows=stacks.map(x=>x?.clone()),sounds=[],notices=[],animations=[],writes=[];
  const container={getItem:i=>rows[i]?.clone(),setItem(i,s){rows[i]=s?.clone();writes.push(i);if(fail?.slot===i){if(!fail.permanent)fail=undefined;throw Error('slot write after mutation')}}};
  const player={playAnimation:()=>animations.push('animation')},block={isValid:true,typeId:'fixture:grill'};
- const ctx=vm.createContext({canonicalFoodId,...logic,SECRET_ID,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SKEWER_INGREDIENTS_KEY,GRILL_ID:'fixture:grill',COOKERY_FILLED:'fixture:oil',OIL_TOOLS:{},FOOD_DATA:{},RAW_TO_COOKED:{},MYSTERIOUS_ID:'fixture:mystery',ItemStack:Stack,slotWrite,commitSteps,resolveSecretSmokedId,secretFood,
+ const ctx=vm.createContext({secretEatingRows,canonicalFoodId,...logic,SECRET_ID,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SKEWER_INGREDIENTS_KEY,GRILL_ID:'fixture:grill',COOKERY_FILLED:'fixture:oil',OIL_TOOLS:{},FOOD_DATA:{},RAW_TO_COOKED:{},MYSTERIOUS_ID:'fixture:mystery',ItemStack:Stack,slotWrite,commitSteps,resolveSecretSmokedId,secretFood,
   getItemProperty:(s,k)=>s.props[k],setItemProperty(s,k,v){s.props[k]=v;if(k===SECRET_COOKED_INGREDIENTS_KEY&&++metadataWrites===failMetadata)throw Error('metadata write after mutation')},
   ingredientSnapshot:s=>({id:s.typeId,nutrition:6,saturation:.6,edible:s.typeId!=='minecraft:stone',tags:[],native:{version:1,id:s.typeId,name:s.nameTag,damage:s.damage,props:structuredClone(s.props)}}),
   copyOne:s=>{const next=s.clone();next.amount=1;return next},setHot:s=>s.props.hot=true,setSeasonings:(s,a)=>s.props.seasonings=[...a],refreshHotLore:s=>s,
@@ -32,7 +34,7 @@ function fixture({flips=3,lit=false,stacks=[skewer(),skewer(),skewer()]}={}){
  });
  const transfer=fs.readFileSync(new URL('grill_transfer.js',root),'utf8').replace(/^import .*;\s*$/gm,'').replace(/export /g,'');
  vm.runInContext(transfer,ctx);
- const names=['readRowsFromKey','readSkewerRows','validSecretIngredientRows','isSecretCooked','readEffectiveSkewerRows','cookedIngredientRows','setCookedIngredientRows','dynamicFood','cookedStack','handleGrill'];
+ const names=['readRowsFromKey','readSkewerRows','validSecretIngredientRows','isSecretCooked','readEffectiveSkewerRows','cookedIngredientRows','setCookedIngredientRows','secretEatingData','dynamicFood','cookedStack','handleGrill'];
  if(source.includes('function commitGrillFlip('))names.push('commitGrillFlip');
  vm.runInContext(names.map(n=>fn(source,n)).join('\n'),ctx);
  return {ctx,rows,sounds,notices,animations,writes,block,player,get state(){return state},get metadataWrites(){return metadataWrites},get quarantined(){return quarantined},run:()=>ctx.handleGrill(block,player),failSlot(slot,permanent=false){fail={slot,permanent}},failState(){failState=true},failMetadata(n=1){failMetadata=n},get cached(){return rows.map(s=>s?.props[SECRET_COOKED_INGREDIENTS_KEY])},cooked:s=>ctx.cookedStack(s,state),visual(s,prefer){return Array.from(ctx.readEffectiveSkewerRows(s,prefer),row=>row.id)}};

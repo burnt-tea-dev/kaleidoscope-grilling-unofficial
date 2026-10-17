@@ -58,6 +58,10 @@ def strip_main(text):
     return text
 
 def install_main(text):
+    from skewer_content_source import generator_main_source, reapply_main as reapply_skewer_content
+    preceding = generator_main_source(text)
+    if preceding != text:
+        return reapply_skewer_content(install_main(preceding))
     from public_source_witness import performance_witness_source, apply_performance_source
     performance = performance_witness_source(text) != text
     from eating_route_extraction import restore_main as restore_extraction

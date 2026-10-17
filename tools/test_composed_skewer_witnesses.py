@@ -4,6 +4,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 from eating_owner_context import ROOT, reference_bytes
+from skewer_content_source import historical_bytes
 import build_failure_skewer_held as failure
 import build_raw_one_eating_projection as raw
 import build_review_three_eating_projection as three
@@ -36,7 +37,7 @@ class ComposedWitnessTests(unittest.TestCase):
    with self.subTest(before=before):self.reject_change(p,before,after)
  def test_original_slime_pins_remain_exact(self):
   for relative in slime.PATHS:
-   path=ROOT/relative;current=path.read_bytes()
+   path=ROOT/relative;current=historical_bytes(path)
    if relative==slime.TRANSPORT_PATH:current=failure.predecessor_script(path,current.decode()).encode()
    self.assertEqual(slime.reference_bytes(path,current),slime.pinned_bytes(slime.PREVIOUS_SLIME_BASE,relative))
  def test_effect_postimages_inverse_and_mutations_are_exact(self):
@@ -46,7 +47,7 @@ class ComposedWitnessTests(unittest.TestCase):
   from public_source_witness import performance_witness_source
   verify_current_inventory()
   for relative in effect.PATHS:
-   path=ROOT/relative;current=path.read_bytes()
+   path=ROOT/relative;current=historical_bytes(path)
    reviewed=effect.pinned(effect.REVIEWED_EFFECT_BASE,relative)
    predecessor=effect.pinned(effect.PREVIOUS_EFFECT_BASE,relative)
    # Frozen effect proof remains exact; current main is a later scoped layer.
@@ -56,7 +57,7 @@ class ComposedWitnessTests(unittest.TestCase):
    self.assertEqual(effect.reference_bytes(path,current),predecessor)
    for source in (reviewed,current):
     with self.assertRaises(ValueError):effect.reference_bytes(path,source+b'\n// unreviewed\n')
-  intermediate=restore_later_layers(performance_witness_source(three.MAIN.read_text()))
+  intermediate=restore_later_layers(performance_witness_source(historical_bytes(three.MAIN).decode()))
   before=effect.restore_main(intermediate)
   self.assertEqual(effect.reapply_main(before),intermediate)
   with self.assertRaises(ValueError):effect.reapply_main(before+'\n')

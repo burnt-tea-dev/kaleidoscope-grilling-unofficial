@@ -7,11 +7,12 @@ import build_raw_one_eating_projection as r
 from eating_owner_context import legacy_document,document
 from eating_owner_properties import predecessor_document,reference_bytes
 import build_failure_skewer_held as failure
+from skewer_content_source import historical_bytes
 
 class RawOneTests(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
-  cls.output=r.augment({r.MAIN:failure.restore_main(r.MAIN.read_text()),r.CONTROLLER:failure.predecessor_document(r.CONTROLLER,json.loads(r.CONTROLLER.read_text()))})
+  cls.output=r.augment({r.MAIN:failure.restore_main(historical_bytes(r.MAIN).decode()),r.CONTROLLER:failure.predecessor_document(r.CONTROLLER,json.loads(r.CONTROLLER.read_text()))})
  def test_sources_and_exact_scope(self):
   c=r.validate_sources();self.assertEqual(len(c['routes']),2)
   for hand in ['bad','main','off','']:
@@ -27,7 +28,7 @@ class RawOneTests(unittest.TestCase):
   for p in [r.CONTROLLER]:
    current=failure.predecessor_document(p,json.loads(p.read_text()));expected=json.loads(subprocess.check_output(['git','show',r.contract()['base_commit']+':'+p.relative_to(r.ROOT).as_posix()],cwd=r.ROOT))
    self.assertEqual(r.historical_document(p,current),expected)
-  text=failure.restore_main(r.MAIN.read_text());expected=subprocess.check_output(['git','show',r.contract()['base_commit']+':'+r.MAIN.relative_to(r.ROOT).as_posix()],cwd=r.ROOT).decode()
+  text=failure.restore_main(historical_bytes(r.MAIN).decode());expected=subprocess.check_output(['git','show',r.contract()['base_commit']+':'+r.MAIN.relative_to(r.ROOT).as_posix()],cwd=r.ROOT).decode()
   from build_slime_frame_selector import strip_main as strip_slime
   from slime_frame_source_witness import reference_bytes as slime_reference
   slime_reference(r.MAIN,text.encode())
@@ -93,7 +94,7 @@ class RawOneTests(unittest.TestCase):
    else:d['identifier']='kaleidoscope_grilling:raw_fish_skewer_java_three_alt'
    with self.assertRaises(ValueError):r.historical_document(p,x,owned=True)
   from eating_route_extraction import restore_main as extraction_preimage
-  with self.assertRaises(ValueError):r.restore_main(extraction_preimage(r.MAIN.read_text()).replace(r.IMPORT,''))
+  with self.assertRaises(ValueError):r.restore_main(extraction_preimage(historical_bytes(r.MAIN).decode()).replace(r.IMPORT,''))
   x=failure.predecessor_document(r.CONTROLLER,json.loads(r.CONTROLLER.read_text()));rows=x['render_controllers']['controller.render.player.first_person']['part_visibility'];next(row for row in rows if 'rightArm'in row)['rightArm']='1'
   with self.assertRaises(ValueError):r.historical_document(r.CONTROLLER,x)
  def test_source_hash_fail_closed(self):

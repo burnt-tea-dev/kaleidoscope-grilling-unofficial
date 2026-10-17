@@ -2,16 +2,17 @@
 
 ## 2026-10-17 當前來源與接續狀態
 
-**G150／2.8.150**，固定[2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f)；Cookery1.6.1／family API0.2.11。公開包為[A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，使用Cookery1.6.0；來源、下載、倉庫部署與驗收統一見[家族主線](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
+**G151／2.8.151**；Cookery1.6.1／family API0.2.12。串製作／顯示／進食的當前來源修補見[整合紀錄](evidence/skewer-repair-20261017.md)。公開包為[A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，使用Cookery1.6.0；來源、下載、倉庫部署與驗收統一見[家族主線](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。
 
 | 行為／追蹤 | 現行判定 | 接續範圍 |
 | --- | --- | --- |
+| 配方／秘製串內容／進食 | G151 已補 Cookery1.6.1 原料接入、1／2料進度、native_plain 食材投影、4個新食物與進食資料／當前槽位核對 | 同候選正常取得→穿串→烤製→盤／手持→食用／保存，動畫開／關均需實際客户端結果；[修補範圍](evidence/skewer-repair-20261017.md) |
 | [PR214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214) | 餐盤回滾ownership及花椒清果／未知掉落確認仍未吸收 | 保留窄修審查，從目前來源接續新版本；舊draft不可直接合併／發布 |
 | [PR217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217)、[PR220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220)、[PR222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) | 碰撞、20-ID THREE主體、固定動態icon已被後續來源承接 | 只審殘餘獨有差異後收束，不再計為三件待開發功能；詳[PR處置](audit/PR-TRIAGE.md) |
 | [#166](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/166) | 任意三槽、每stack秘製串inventory投影仍缺 | 同一串的原料／生熟／variant與背包、快捷欄對照；五幀固定sprite不代替此項 |
 | [#168](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/168) | 裝料／保存／RawMessage比較與G148–149動作已有來源修補 | 當前同瓶三料→PENDING→80tick→SPECIAL→撒料，保留剩餘uses與取消／換槽／重登 |
 | [#181](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/181)、[#182](https://github.com/casama233/kaleidoscope-grilling-unofficial/issues/182) | 放置盤G118、手持盤G119及後續special/slime、count、G146左臂已在main | 四朝向／1–5份／兩手混持／換槽／重載／無殘影與真材質；舊G117「無renderer」不是當前實作 |
-| 全物品Blockbench／動作 | current tree有249份BP item、151份attachable；沒有當前逐項完整結果 | 依ID／路由／貼圖／姿態展開全量；G17舊214 captures與最近代表瓶editor觀察保留原範圍 |
+| 全物品Blockbench／動作 | current tree新增native_plain食材attachable；沒有當前逐項完整結果 | 依ID／路由／貼圖／姿態展開全量；G17舊214 captures與最近代表瓶editor觀察保留原範圍 |
 | 生存料理／花椒／九格架 | 取得、穿串、四翻、調料、盤、樹冠均有既有來源或有限歷史證據 | 同一候選正常取得→製作→食用→保存；新chunk花椒／舊殘樁；高級架維持使用者指定無UI直接取放 |
 
 raw ONE、mysterious／dark、部分offhand、slime與plate special等已由G145前後composition補入，不能照抄早期#220全量缺項。generic ONE camera basis、原生clocks／admission、鏡頭／socket、材質／透明／光照／culling及當前全量聲畫仍未完成。編輯器與source檢查各保留實際範圍；`client=false`、`production_ready=false`。

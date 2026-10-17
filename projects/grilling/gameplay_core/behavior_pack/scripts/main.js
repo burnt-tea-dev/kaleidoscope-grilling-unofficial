@@ -35,6 +35,7 @@ import {configureSecretGrillReader} from './grill_visual_runtime.js';
 import {configureSecretHeldReader,syncSecretHeld} from './secret_held_runtime.js';
 import {configureSecretVisuals} from './station_contents_visual_runtime.js';
 import {foodFacts} from './food_snapshot_core.js';
+import {secretEatingRows} from './secret_eating_core.js';
 import {canUseCuisineFood,captureCuisineUse,cuisineUseEventMatches,completedCuisineUse} from './cuisine_eating_core.js';
 import {updateGrillAudio,removeGrillAudio,blockSound,useSound,seasoningShakeSound,stopSoundHandle,seasoningFinished} from './immersion_audio_runtime.js';
 import {updateNumbVisual,forgetNumbVisual,suppressNumbVisual} from './numb_visual_runtime.js';
@@ -56,7 +57,7 @@ import {
 } from './skewer_compat_core.js';
 import './skewer_compat_runtime.js';
 import {EquipmentSlot,GameMode,EnchantmentType} from '@minecraft/server';
-import {captureEatingIdentity,eatingStillCurrent,eatingEventMatches,commitEating} from './a285_eating_transaction.js';
+import {captureEatingIdentity,eatingStillCurrent,eatingEventMatches,completedEatingStillCurrent,commitEating} from './a285_eating_transaction.js';
 import {completedUseStillCurrent} from './a2810_use_transaction.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback,javaInteractionChat} from './a283_interaction_feedback.js';
 import {showJavaEatingHud,hideJavaEatingHud,forgetJavaEatingHud} from './java_eating_hud_runtime.js';
@@ -69,7 +70,7 @@ import {grillStateKey as stateKey,readGrillState as readState,occupiedGrillSlots
 import {mergeIntoContainer,compactSkewerContainer,compactMatchingHotFood,isFoodStack} from './a23_hot_runtime.js';
 import './a23_oil_world.js';
 import './oil_pot_ambient_runtime.js';
-import {UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SECRET_CREATOR_KEY,FLUID_CAPACITY,appendOutcome,secretFood,isDisassemblableRaw,canAppendConfigured,isConfiguredIngredient} from './a24_skewering_core.js';
+import {UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SECRET_CREATOR_KEY,FLUID_CAPACITY,appendOutcome,expectedSize,secretFood,isDisassemblableRaw,canAppendConfigured,isConfiguredIngredient} from './a24_skewering_core.js';
 import {PLATE_ID,plateHighestNutritionIndex} from './a25_plate_recipe_core.js';
 import {a25PlateRows,a25PlateItem,a25RestoreStack} from './a25_plate_recipe_runtime.js';
 import './a26_oil_machine_runtime.js';
@@ -294,7 +295,7 @@ function rowLabel(row){return String(row.id??'').replace(/^.*:/,'').replaceAll('
 function writeSkewerRows(stack,rows){
  const clean=(rows??[]).filter(x=>x&&typeof x.id==='string').slice(0,3);
  try{
-  setItemLore(stack,[{translate:'tooltip.kaleidoscope_grilling.skewer.progress',with:[String(clean.length),'3']},...clean.map((row,index)=>{let name;try{const item=new ItemStack(row.id);name=item.localizationKey?{translate:item.localizationKey}:undefined}catch{}return {rawtext:[{translate:'tooltip.kaleidoscope_grilling.skewer.ingredient',with:[String(index+1)]},{text:' '},row.native?.name||row.name?{text:row.native?.name??row.name}:name??{text:row.id}]}})]);
+  setItemLore(stack,[{translate:'tooltip.kaleidoscope_grilling.skewer.progress',with:[String(clean.length),String(expectedSize(clean))]},...clean.map((row,index)=>{let name;try{const item=new ItemStack(row.id);name=item.localizationKey?{translate:item.localizationKey}:undefined}catch{}return {rawtext:[{translate:'tooltip.kaleidoscope_grilling.skewer.ingredient',with:[String(index+1)]},{text:' '},row.native?.name||row.name?{text:row.native?.name??row.name}:name??{text:row.id}]}})]);
   setItemProperty(stack,SKEWER_INGREDIENTS_KEY,JSON.stringify(clean));
  }catch{}
  return stack;
@@ -314,10 +315,22 @@ function setCookedIngredientRows(stack,rows){
  const value=JSON.stringify(cooked);setItemProperty(stack,SECRET_COOKED_INGREDIENTS_KEY,value);
  if(getItemProperty(stack,SECRET_COOKED_INGREDIENTS_KEY)!==value)throw Error('Grilling: cooked ingredient data was not saved');return stack;
 }
-function dynamicFood(stack){return canonicalFoodId(stack?.typeId)===SECRET_ID?secretFood(readEffectiveSkewerRows(stack),isSecretCooked(stack),readSkewerRows(stack)):FOOD_DATA[stack?.typeId]}
+function secretEatingData(stack){
+ try{
+  const original=readSkewerRows(stack),cooked=isSecretCooked(stack),raw=secretEatingRows(original,id=>new ItemStack(id,1));
+  if(!raw)return undefined;
+  const rows=cooked?secretEatingRows(readEffectiveSkewerRows(stack),id=>new ItemStack(id,1)):raw;
+  if(!rows)return undefined;
+  const food=secretFood(rows,cooked,original);
+  return Number.isFinite(food.nutrition)&&Number.isFinite(food.saturation)?{rows,food}:undefined;
+ }catch{return undefined;}
+}
+function dynamicFood(stack){return canonicalFoodId(stack?.typeId)===SECRET_ID?secretEatingData(stack)?.food:FOOD_DATA[stack?.typeId]}
 function isEdible(stack){if(stack?.typeId==='kaleidoscope_grilling:sweet_potato_powder')return false;try{return foodFacts(stack).edible}catch{return false}}
 function threadOutcome(player){
  const food=heldMain(player),off=heldOff(player);if(!food||!off||player.isSneaking)return null;
+ // Block/entity threading can bypass the item-use admission callback.
+ if(canonicalFoodId(food.typeId)===SECRET_ID&&!canUseSecretSkewer(food))return null;
  if(off.typeId!=='minecraft:stick'&&off.typeId!==UNFINISHED_ID&&!(canonicalFoodId(off.typeId)===SECRET_ID&&!isSecretCooked(off)))return null;
  const rows=off.typeId==='minecraft:stick'?[]:readSkewerRows(off);
  const identity=ingredientSnapshot(food);
@@ -335,7 +348,9 @@ function threadCurrent(player){
  const main=captureWritableHand(player,'main'),other=captureWritableHand(player,'off');
  const food=main.before,off=other.before,outcome=threadOutcome(player);if(!food||!off||!outcome?.ok)return false;
  const rows=off.typeId==='minecraft:stick'?[]:readSkewerRows(off),nextRows=[...rows,ingredientSnapshot(food,true)],next=new ItemStack(outcome.id,1);
- restoreIngredient(nextRows[nextRows.length-1]); // Verify reconstructibility before either input is debited.
+ // Every saved ingredient must still be reconstructible. Checking only the new
+ // food can debit it into an old/corrupt skewer that can never be disassembled.
+ for(const row of nextRows)restoreIngredient(row);
  writeSkewerRows(next,nextRows);
  const variants=JSON.stringify(appendedModelVariants(off.typeId==='minecraft:stick'?undefined:getItemProperty(off,SECRET_MODEL_VARIANTS_KEY),rows.length));
  setItemProperty(next,SECRET_MODEL_VARIANTS_KEY,variants);
@@ -391,7 +406,7 @@ function skewerAction(player,itemStack){
  return threadOutcome(player)?.ok?'thread':null;
 }
 function secretRemainders(player,stack){
- for(const row of readEffectiveSkewerRows(stack)){
+ for(const row of secretEatingData(stack)?.rows??[]){
   const behavior=rolledIngredientEffects(row);
   for(const e of behavior.effects){
    if(e.kind==='persistent_fx'){
@@ -1060,6 +1075,7 @@ world.afterEvents.itemStartUse.subscribe(e=>{
    return;
   }
   if(!FOOD_DATA[id]&&id!==SECRET_ID)return;
+  if(id===SECRET_ID&&!canUseSecretSkewer(e.itemStack)){stopSoundHandle(ACTIVE_EATS.get(e.source.id)?.audio);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);return;}
   const requested=PROFILE_BY_ITEM[id]??'THREE_RANDOM',hand=captureInteractionIntent(e.source,e.itemStack).hand,profile=resolvedProfile(selectedEatingProfile(requested,e.itemStack.typeId),e.useDuration),meta=stackMeta(e.itemStack),sat=e.source.getComponent('minecraft:player.saturation');
   try{syncSecretHeld(e.source,{beginHand:hand})}catch(error){console.warn('[Grilling held ingredients] '+error)}
  const a={plain:isPlainEatingId(e.itemStack.typeId),id,start:system.currentTick,nativeDuration:Math.max(0,Number(e.useDuration)||0),requested,profile,hand,use:captureEatingIdentity(e.itemStack,hand,e.source.selectedSlotIndex),meta,biteTimes:BITE_TIMES[profile]??BITE_TIMES.THREE,nextBite:0,nativeBefore:meta.hot?nativeSnapshot(e.source):{},fxBefore:meta.hot?fxSnapshot(e.source):{},saturationBefore:meta.hot?sat?.currentValue:undefined};
@@ -1100,6 +1116,7 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
   if(!FOOD_DATA[id]&&id!==SECRET_ID)return;
  const a=ACTIVE_EATS.get(e.source.id);
  if(!a||a.id!==id||!eatingEventMatches(a.use,e.itemStack,now())||!nativeEatingCompleted(a.start,system.currentTick,a.nativeDuration,e.useDuration))return;
+ if(id===SECRET_ID&&(!canUseSecretSkewer(e.itemStack)||!completedEatingStillCurrent(a.use,e.itemStack,heldByHand(e.source,a.hand),e.source.selectedSlotIndex,now(),!creative(e.source))))return;
  a.meta=finishedFoodMeta(a.meta,now());
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
@@ -1173,7 +1190,7 @@ world.afterEvents.entityHurt.subscribe(e=>{
  }catch{} // A removed actor/projectile must not abort other damage subscribers.
 });
 function canUseSecretSkewer(stack){
- try{return validSecretIngredientRows(readSkewerRows(stack))&&(!isSecretCooked(stack)||validSecretIngredientRows(readEffectiveSkewerRows(stack)))}catch{return false}
+ return !!secretEatingData(stack);
 }
 world.beforeEvents.itemUse.subscribe(e=>{
  if(e.cancel)return;

@@ -8,9 +8,12 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 NS = 'kaleidoscope_grilling:'
-WORD_A_MAX, WORD_B_MAX = 521429, 682708
+WORD_A_MAX, WORD_B_MAX = 521433, 683220
+# SECRET_MAX is the legacy owner-marker ceiling, not the extended food count.
 SECRET_MAX, INVALID, BOTTLE, PLATE = 213, 254, 214, 255
 FAILURE = 220  #215..219 are reserved by the independent slime frame owner.
+FOOD_COUNT, SECRET_VISUAL_MAX = 217, 5337
+SECRET_EXT_MIN, SECRET_EXT_MAX = 221, 224
 
 
 def verify_server_constants():
@@ -44,7 +47,12 @@ def hand_owner(identifier):
 
 def secret_bank_ready():
     marker = hand_channel(11)
-    return f'({marker} >= 0 && {marker} <= {SECRET_MAX})'
+    return f'(({marker} >= 0 && {marker} <= {SECRET_MAX}) || ({marker} >= {SECRET_EXT_MIN} && {marker} <= {SECRET_EXT_MAX}))'
+
+
+def secret_helper_index():
+    marker = hand_channel(11)
+    return f'({marker} >= {SECRET_EXT_MIN} && {marker} <= {SECRET_EXT_MAX} ? {marker} - 7 : ({marker} >= 0 && {marker} <= {SECRET_MAX} ? {marker} : 0))'
 
 
 def bottle_bank_ready(identifier):

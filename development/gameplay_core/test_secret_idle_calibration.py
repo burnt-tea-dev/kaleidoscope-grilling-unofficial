@@ -15,6 +15,7 @@ from test_eating_observer_projection import node
 from eating_owner_context import document,legacy_document
 from eating_owner_properties import predecessor_document
 from secret_terminal_visibility import apply as terminal_continuation
+from skewer_content_source import historical_bytes
 
 
 def load(path):
@@ -48,8 +49,9 @@ class SecretIdleCalibration(unittest.TestCase):
         for identifier in calibration.OWNED:
             path = RP / 'attachables' / (identifier.split(':')[1] + '.attachable.json')
             assert_public_bytes(self, path)
-            # This historical calibration check reverses only the owner cache.
-            actual = predecessor_document(load(path))['minecraft:attachable']['description']
+            # First recover the sealed G150 bytes, then reverse the owner cache;
+            # current catalog additions do not alter the old calibration proof.
+            actual = predecessor_document(json.loads(historical_bytes(path)))['minecraft:attachable']['description']
             # The public witness already contains the repair. Re-running the
             # current generator must conserve it, not apply a historical delta.
             once = document(terminal_continuation(calibration.apply_idle_calibration(legacy_document(deepcopy(actual)))),attachable=True)
@@ -63,6 +65,15 @@ class SecretIdleCalibration(unittest.TestCase):
                 self.assertEqual(sum(alias in row for row in actual['scripts']['animate']), 1)
         for path in (RP / 'attachables').glob('*.json'):
             description = load(path)['minecraft:attachable']['description']
+            if description['identifier'] == 'kaleidoscope_grilling:secret_skewer_native_plain':
+                # Animation-off reuses the same static mesh pose throughout
+                # native use; it does not opt into authored idle/eating routing.
+                self.assertEqual(description['animations'], {
+                    **{'fp_' + hand: calibration.clip_id(hand) for hand in ('right', 'left')},
+                    **{'tp_' + hand: 'animation.kg_a287.skewer_tp_' + hand for hand in ('right', 'left')},
+                })
+                self.assertEqual(calibration.apply_idle_calibration(deepcopy(description)), description)
+                continue
             if description['identifier'] not in calibration.OWNED:
                 self.assertNotIn('fp_idle_calibrated_', json.dumps(description))
                 self.assertEqual(calibration.apply_idle_calibration(deepcopy(description)), description)

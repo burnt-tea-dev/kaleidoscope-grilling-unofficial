@@ -3,7 +3,8 @@ ROOT=pathlib.Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'too
 import eating_route_extraction as bridge
 class Extraction(unittest.TestCase):
  def test_exact_preimage_and_idempotence(self):
-  c=bridge.contract();rel='projects/grilling/gameplay_core/behavior_pack/scripts/main.js';old=subprocess.check_output(['git','show',c['baseline_commit']+':'+rel],cwd=ROOT).decode();new=(ROOT/rel).read_text()
+  from skewer_content_source import historical_bytes
+  c=bridge.contract();rel='projects/grilling/gameplay_core/behavior_pack/scripts/main.js';old=subprocess.check_output(['git','show',c['baseline_commit']+':'+rel],cwd=ROOT).decode();new=historical_bytes(ROOT/rel).decode()
   from public_source_witness import performance_witness_source,apply_performance_source
   from current_runtime_ownership import verify_current_inventory
   verify_current_inventory()
@@ -38,7 +39,8 @@ class Extraction(unittest.TestCase):
   exec(compile(old_source,failure.__file__,'exec'),legacy)
   historical=subprocess.check_output(['git','show','b938359b:'+main.relative_to(ROOT).as_posix()],cwd=ROOT,text=True)
   from public_source_witness import performance_witness_source
-  inputs=[historical,bridge.restore_main(performance_witness_source(current))]
+  from skewer_content_source import historical_bytes
+  inputs=[historical,bridge.restore_main(performance_witness_source(historical_bytes(main).decode()))]
   expected=[legacy['patch_main'](text) for text in inputs]
   original_read=pathlib.Path.read_text
   def supplied_only(path,*args,**kwargs):

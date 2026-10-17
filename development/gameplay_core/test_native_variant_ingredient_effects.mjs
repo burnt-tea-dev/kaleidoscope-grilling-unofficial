@@ -8,6 +8,8 @@ import {RANDOM_EATING_IDS,eatingItemId} from '../../projects/grilling/gameplay_c
 import {ingredientBehavior,rolledIngredientEffects} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
 import {registerSecretIngredientBehavior,secretIngredientRegistration,resetSecretCompatRegistry} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_compat_core.js';
 import {configureItemDataWorld,setItemLore,setItemProperty,getItemRawLore,getItemProperty} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/itemDataCore.js';
+import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
+import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
 const records=new Map();configureItemDataWorld({getDynamicProperty:key=>records.get(key),setDynamicProperty:(key,value)=>records.set(key,value)});
 function freeze(value){if(value&&typeof value==='object'){for(const row of Object.values(value))freeze(row);Object.freeze(value)}return value}
 function row(id,base=id){return freeze({id,...(FOOD_DATA[base]??{nutrition:6,saturation:.3}),edible:true,convertTo:'fixture:original_container',tags:['fixture:ingredient'],name:'Original ingredient',lore:['foreign lore'],props:{'fixture:marker':'retained'},
@@ -58,7 +60,8 @@ for(const base of ['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grill
  const delivered=[],native=[],persistent=[],emitted=[];let ordinary=0;
  const player={addEffect:(...args)=>native.push(structuredClone(args)),removeEffect(){}};
  const ctx=vm.createContext({ItemStack:ContainerStack,setItemLore,setItemProperty,readEffectiveSkewerRows:()=>[input],rolledIngredientEffects:row=>rolledIngredientEffects(row,()=>0),fxGet:()=>undefined,fxApply:(_player,...args)=>persistent.push(args),now:()=>100,applyOrdinary:()=>ordinary++,dangerousPreservation(){},give:(_player,stack)=>delivered.push(stack),emitSecretIngredientConsumed:(_player,row)=>emitted.push(row)});
- vm.runInContext(body('behaviorRemainder')+'\n'+body('secretRemainders'),ctx);ctx.secretRemainders(player,{});
+ Object.assign(ctx,{secretEatingRows,secretFood,readSkewerRows:()=>[input,...['minecraft:apple','minecraft:carrot'].map(id=>({id,edible:true,nutrition:0,saturation:0,convertTo:''}))],isSecretCooked:()=>false});
+ vm.runInContext(body('behaviorRemainder')+'\n'+body('secretEatingData')+'\n'+body('secretRemainders'),ctx);ctx.secretRemainders(player,{});
  const behavior=ingredientBehavior(input);assert.equal(ordinary,base.endsWith('ordinary_skewer')?1:0);
  assert.deepEqual(native,behavior.effects.filter(e=>e.kind!=='persistent_fx').map(e=>[e.effect,e.ticks,{...(e.options??{}),amplifier:e.amplifier??0,showParticles:true}]));
  assert.deepEqual(persistent,behavior.effects.filter(e=>e.kind==='persistent_fx').map(e=>[e.effect,e.ticks,e.amplifier??0]));

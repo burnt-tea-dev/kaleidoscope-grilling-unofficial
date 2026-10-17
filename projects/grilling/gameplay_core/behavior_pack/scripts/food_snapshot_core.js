@@ -22,6 +22,10 @@ export function ingredientFoodFacts(row){
  }
  // Repair old snapshots captured before vanilla foods were queryable. Explicit
  // data-driven food snapshots remain authoritative, including zero-nutrition food.
- const known=!row?.edible&&row?.nutrition===0?VANILLA_FOOD_NUTRITION[row?.id]:undefined;
- return known?{...row,...known,edible:true}:row??{};
+ const known=VANILLA_FOOD_NUTRITION[row?.id];
+ if(known&&!row?.edible&&row?.nutrition===0)return {...row,...known,edible:true};
+ // Older ID-only saves can recover their food facts from the same pinned
+ // definition. Missing fields are distinct from an explicitly saved zero.
+ if(known&&(row.nutrition===undefined||row.saturation===undefined||row.edible===undefined))return {...row,nutrition:row.nutrition??known.nutrition,saturation:row.saturation??known.saturation,edible:row.edible??true,convertTo:row.convertTo??known.convertTo};
+ return row??{};
 }

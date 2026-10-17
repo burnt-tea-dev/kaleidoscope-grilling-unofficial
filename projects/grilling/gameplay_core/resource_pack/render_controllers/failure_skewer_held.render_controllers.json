@@ -1628,7 +1628,11 @@
             "Geometry.piece_164",
             "Geometry.piece_140",
             "Geometry.piece_165",
-            "Geometry.piece_166"
+            "Geometry.piece_166",
+            "Geometry.piece_167",
+            "Geometry.piece_3",
+            "Geometry.piece_168",
+            "Geometry.piece_169"
           ]
         },
         "textures": {
@@ -1846,7 +1850,11 @@
             "Texture.food_210",
             "Texture.food_211",
             "Texture.food_212",
-            "Texture.food_213"
+            "Texture.food_213",
+            "Texture.food_214",
+            "Texture.food_215",
+            "Texture.food_216",
+            "Texture.food_217"
           ]
         }
       },

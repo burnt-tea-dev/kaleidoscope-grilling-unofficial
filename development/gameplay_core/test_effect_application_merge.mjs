@@ -9,13 +9,16 @@ import * as lifecycle from '../../projects/grilling/gameplay_core/behavior_pack/
 import {seasoningEffectCounts} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_contract_core.js';
 import {rolledIngredientEffects} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
 import {registerSecretIngredientBehavior,resetSecretCompatRegistry} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_compat_core.js';
+import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
+import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
 const source=fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/main.js',import.meta.url),'utf8');
 function body(name){const start=source.indexOf('function '+name+'(');assert.ok(start>=0,name);let end=source.indexOf('{',start)+1,depth=1;while(depth){if(source[end]==='{')depth++;if(source[end]==='}')depth--;end++}return source.slice(start,end)}
 function fixture(initial={}){
  let raw=JSON.stringify(initial),tick=100;const heals=[],writes=[];
  const ctx=vm.createContext({...lifecycle,now:()=>tick,readFx:()=>lifecycle.activeEffects(JSON.parse(raw??'{}'),tick),writeFx:(_p,value)=>{raw=lifecycle.effectPayload(value,tick);writes.push(raw);return lifecycle.activeEffects(JSON.parse(raw??'{}'),tick)},seasoningEffectCounts,nativeDragonHealth:(_p,amp)=>heals.push(amp),awardMetalToleranceFailed(){},COOKED_EFFECTS:{},canonicalFoodId:id=>id,readEffectiveSkewerRows:s=>s.rows,rolledIngredientEffects:r=>rolledIngredientEffects(r,()=>0),dangerousPreservation(){},behaviorRemainder:()=>null,emitSecretIngredientConsumed(){}});
+ Object.assign(ctx,{secretEatingRows,secretFood,readSkewerRows:s=>s.rows,isSecretCooked:()=>false,ItemStack:class{constructor(typeId){this.typeId=typeId;}getComponent(){}}});
  ctx.readEffects=ctx.readFx;ctx.writeEffects=ctx.writeFx;
- const names=['fxGet','fxSet','fxClear','fxReduce','counts','applyDragonBlood','applySeasoning','secretRemainders'];if(source.includes('function fxApply('))names.push('fxApply');
+ const names=['fxGet','fxSet','fxClear','fxReduce','counts','applyDragonBlood','applySeasoning','secretEatingData','secretRemainders'];if(source.includes('function fxApply('))names.push('fxApply');
  vm.runInContext(names.map(body).join('\n'),ctx);
  return {ctx,heals,writes,player:{},get effects(){return lifecycle.activeEffects(JSON.parse(raw??'{}'),tick)},get raw(){return raw},advance(to){tick=to},reload(){raw=JSON.stringify(JSON.parse(raw??'{}'));},set raw(v){raw=v}};
 }
@@ -37,7 +40,7 @@ test('short stronger Dragon Blood preserves long weaker instance across serializ
 });
 test('actual mixed custom ingredient finish does not combine maximum strength with maximum duration',()=>{
  resetSecretCompatRegistry();registerSecretIngredientBehavior({input:'fixture:strong',behavior:{effects:[{kind:'persistent_fx',effect:'numb',ticks:1000,amplifier:1}]}});registerSecretIngredientBehavior({input:'fixture:long',behavior:{effects:[{kind:'persistent_fx',effect:'numb',ticks:7200,amplifier:0}]}});
- const f=fixture();f.ctx.secretRemainders(f.player,{rows:['fixture:strong','fixture:long'].map(id=>({id,edible:true,nutrition:1,saturation:0}))});assert.deepEqual(f.effects.numb,{until:1100,amp:1,hidden:{until:7300,amp:0}});f.advance(1100);assert.deepEqual(f.effects.numb,{until:7300,amp:0});resetSecretCompatRegistry();
+ const f=fixture();f.ctx.secretRemainders(f.player,{rows:['fixture:strong','fixture:long','minecraft:apple'].map(id=>({id,edible:true,nutrition:1,saturation:0}))});assert.deepEqual(f.effects.numb,{until:1100,amp:1,hidden:{until:7300,amp:0}});f.advance(1100);assert.deepEqual(f.effects.numb,{until:7300,amp:0});resetSecretCompatRegistry();
 });
 test('state codec preserves old rows and unrelated effects while restoring hidden chain',()=>{
  const before={warmth:{until:9000,amp:0},numb:{until:1100,amp:1,hidden:{until:7300,amp:0}}};assert.deepEqual(lifecycle.activeEffects(before,100),before);const output=JSON.parse(lifecycle.effectPayload(before,100));assert.deepEqual(output,before);output.numb.hidden.until=99999;assert.equal(before.numb.hidden.until,7300);assert.deepEqual(lifecycle.activeEffects(before,1100),{warmth:before.warmth,numb:{until:7300,amp:0}});

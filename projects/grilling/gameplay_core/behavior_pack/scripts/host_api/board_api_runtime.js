@@ -5,7 +5,7 @@ export {BOARD_API_VERSION,BOARD_CAPABILITIES};
 const registry=createBoardRegistry();
 export function registerBoardV2Recipe(payload){
  const recipe=normalizeBoardV2Recipe(payload);if(!recipe)return {ok:false,reason:'schema'};
- const ids=[recipe.input,recipe.result,...recipe.bonusOutputs.map(x=>x.id)];
+ const ids=[recipe.input,recipe.result,...(recipe.outputs??[]).map(x=>x.id),...recipe.bonusOutputs.map(x=>x.id)];
  try{if(ids.some(id=>!ItemTypes.get(id)))return {ok:false,reason:'item_unavailable'}}catch{return {ok:false,reason:'item_unavailable'}}
  const result=registry.register(payload);if(result.ok)console.log('[Cookery board API 0.1.0] registered '+recipe.id);return result;
 }

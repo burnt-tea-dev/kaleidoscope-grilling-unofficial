@@ -52,7 +52,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -61,7 +61,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -70,7 +70,7 @@
           "type": "int",
           "range": [
             0,
-            5333
+            5337
           ],
           "default": 0,
           "client_sync": true
@@ -88,7 +88,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -97,7 +97,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -106,7 +106,7 @@
           "type": "int",
           "range": [
             0,
-            5333
+            5337
           ],
           "default": 0,
           "client_sync": true
@@ -124,7 +124,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -133,7 +133,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -142,7 +142,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -151,7 +151,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -160,7 +160,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -169,7 +169,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -178,7 +178,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -187,7 +187,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -196,7 +196,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -205,7 +205,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -214,7 +214,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -223,7 +223,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -232,7 +232,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -241,7 +241,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true
@@ -250,7 +250,7 @@
           "type": "int",
           "range": [
             0,
-            521429
+            521433
           ],
           "default": 0,
           "client_sync": true
@@ -259,7 +259,7 @@
           "type": "int",
           "range": [
             0,
-            682708
+            683220
           ],
           "default": 0,
           "client_sync": true

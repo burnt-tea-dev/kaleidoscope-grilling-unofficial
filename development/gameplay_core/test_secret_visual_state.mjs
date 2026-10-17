@@ -1,18 +1,21 @@
 /** Source-backed visual state checks; no Minecraft/client-rendering claim. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SECRET_VISUAL_MAX,SECRET_MODEL_VARIANTS_KEY,modelVariant,readModelVariants,appendedModelVariants,encodeSecretVisual,decodeSecretVisual} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
+import {SECRET_FOOD_COUNT,SECRET_VISUAL_MAX,SECRET_MODEL_VARIANTS_KEY,modelVariant,readModelVariants,appendedModelVariants,encodeSecretVisual,decodeSecretVisual,secretHeldMarker} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state_core.js';
 import {configureItemDataWorld,getItemProperty,setItemProperty} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/itemDataCore.js';
 import {secretVisualState} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state.js';
 import {secretVisualIndex} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/integration_registry_core.js';
 const N='kaleidoscope_grilling:';
 test('all supported foods, shapes and seven stage styles have collision-free legacy-safe properties',()=>{
- const seen=new Set();for(let food=1;food<=213;food++)for(let shape=1;shape<=3;shape++)for(let style=0;style<7;style++){
+ assert.equal(SECRET_FOOD_COUNT,217);assert.equal(SECRET_VISUAL_MAX,5337);
+ const seen=new Set();for(let food=1;food<=217;food++)for(let shape=1;shape<=3;shape++)for(let style=0;style<7;style++){
   const value=encodeSecretVisual(food,shape+3,style===6?4:style,style===6);assert.ok(value<=SECRET_VISUAL_MAX);assert.equal(seen.has(value),false);seen.add(value);
   assert.deepEqual(decodeSecretVisual(value),{food,shape,style});
  }
- for(let food=1;food<=213;food++)assert.deepEqual(decodeSecretVisual(food),{food,shape:1,style:0});
- assert.equal(encodeSecretVisual(0,4,5),0);assert.equal(encodeSecretVisual(214,4,0),0);assert.equal(decodeSecretVisual(214).food,0);
+ for(let food=1;food<=217;food++)assert.deepEqual(decodeSecretVisual(food),{food,shape:1,style:0});
+ assert.equal(encodeSecretVisual(0,4,5),0);assert.equal(encodeSecretVisual(218,4,0),0);assert.equal(decodeSecretVisual(218).food,0);
+ for(let food=0;food<=217;food++)assert.equal(secretHeldMarker(food),food<=213?food:food+7);
+ for(const invalid of [-1,218,255,0.5,NaN])assert.throws(()=>secretHeldMarker(invalid));
 });
 test('Java stored4..9 values retain shapes and old unrecorded variants use stable migration defaults',()=>{
  assert.deepEqual([4,5,6,7,8,9].map(modelVariant),[1,2,3,1,2,3]);

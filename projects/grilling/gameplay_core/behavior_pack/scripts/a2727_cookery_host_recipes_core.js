@@ -59,8 +59,8 @@ function stockpot(recipe){
 }
 
 export const BOARD_V2_RECIPES=Object.freeze([
- {api:1,kind:'chopping_board_v2',source:'kaleidoscope_grilling:board_api',recipe:{id:'kaleidoscope_grilling:chopping_board/beef_chunks',input:'minecraft:beef',builtin:{result:'kaleidoscope_cookery:raw_cow_offal',count:2,cuts:4},mode:'replace',result:'kaleidoscope_grilling:beef_chunks',count:2}},
- {api:1,kind:'chopping_board_v2',source:'kaleidoscope_grilling:board_api',recipe:{id:'kaleidoscope_grilling:chopping_board/chicken_skin',input:'minecraft:chicken',builtin:{result:'kaleidoscope_cookery:raw_cut_small_meats',count:2,cuts:4},mode:'supplement',bonusOutputs:[{id:'kaleidoscope_grilling:chicken_skin',min:1,max:3}]}}
+ {api:1,kind:'chopping_board_v2',source:'kaleidoscope_grilling:board_api',recipe:{id:'kaleidoscope_grilling:chopping_board/beef_chunks',input:'minecraft:beef',builtin:{result:'kaleidoscope_cookery:raw_cow_offal',count:3,cuts:4},mode:'replace',result:'kaleidoscope_grilling:beef_chunks',count:2}},
+ {api:1,kind:'chopping_board_v2',source:'kaleidoscope_grilling:board_api',recipe:{id:'kaleidoscope_grilling:chopping_board/chicken_skin',input:'minecraft:chicken',builtin:{outputs:[{id:'kaleidoscope_cookery:raw_cut_small_meats',count:3},{id:'minecraft:bone',count:1}],cuts:4},mode:'supplement',bonusOutputs:[{id:'kaleidoscope_grilling:chicken_skin',min:1,max:3}]}}
 ]);
 const RECIPES=Object.freeze([
  ...BOARD_V2_RECIPES.map(payload=>({capability:'chopping_board_v2',payload})),

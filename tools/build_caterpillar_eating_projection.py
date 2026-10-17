@@ -161,7 +161,11 @@ def augment(output):
     if len(changed)!=4:raise ValueError('Native FP arm visibility contract changed')
     output[path]=doc
     path=BP/'scripts/main.js';text=output.get(path)
-    if text is None:text=path.read_text()
+    if text is None:
+        # The first main-producing stage owns its disk fallback. Do not insert
+        # main earlier: disabled historical prefixes must keep their old scope.
+        from skewer_content_source import historical_bytes
+        text=historical_bytes(path).decode()
     if not isinstance(text,str):raise ValueError('Canonical main must be text')
     output[path]=patch_main(text)
     return output

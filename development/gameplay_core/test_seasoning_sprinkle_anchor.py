@@ -12,8 +12,9 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'development/gameplay_core'))
 import build_seasoning_held as held
 from a2861_bottle_held_visual_assets import update_numeric_scripts
-from held_visual_channels import WORD_A_MAX, WORD_B_MAX, channel_name
+from held_visual_channels import channel_name
 from bottle_pose_review import historical_pose, historical_bytes
+from skewer_content_source import historical_bytes as skewer_predecessor_bytes
 from test_native_bottle_fp import projected
 
 def admit_shared_bottle_owner(description):
@@ -98,7 +99,7 @@ class SprinkleAnchor(unittest.TestCase):
         paths += list((held.RP / 'attachables').glob('*seasoning*.json'))
         version=tuple(json.loads((held.BP/'manifest.json').read_text())['header']['version'])
         for path in paths:
-            current=path.read_bytes()
+            current=skewer_predecessor_bytes(path)
             if version>=(2,8,149) and path.parent==held.RP/'attachables' and path.name.startswith('pending_seasoning'):
                 # Only the exact nine reviewed pending postimages may use G148
                 # predecessor bytes; unrelated paths or mutations fail closed.
@@ -127,7 +128,9 @@ class SprinkleAnchor(unittest.TestCase):
                     if version>=(2,8,119):
                         # Same property names, type/default/sync and native
                         # player bytes; only ten owned hand ranges are wider.
-                        for index in range(10):props[channel_name(hand,index)]['range']=[0,WORD_A_MAX if index%2==0 else WORD_B_MAX]
+                        # Preserve G119's ranges even when a later catalog
+                        # needs wider current transport words.
+                        for index in range(10):props[channel_name(hand,index)]['range']=[0,521429 if index%2==0 else 682708]
                 self.assertEqual(json.loads(current),before,path)
             elif version>=(2,8,119) and path.parent==held.RP/'attachables' and path.name in ('empty_seasoning_bottle.attachable.json','pending_seasoning.attachable.json'):
                 # The exact owner marker/decoder delta cannot alter the old

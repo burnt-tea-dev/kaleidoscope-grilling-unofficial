@@ -15,6 +15,7 @@ from held_visual_channels import WORD_A_MAX, WORD_B_MAX
 from test_eating_observer_projection import node
 from eating_owner_context import document
 from eating_owner_properties import predecessor_document
+from skewer_content_source import historical_bytes
 
 
 def load(path):
@@ -33,7 +34,7 @@ class SecretHeldOwnerContextTests(unittest.TestCase):
         helper_path = RP / 'models/entity/secret_helper_sprites.geo.json'
         assert_public_bytes(self, helper_path)
         self.assertEqual(load(helper_path), {'format_version': '1.21.0', 'minecraft:geometry': helper_variants})
-        self.assertEqual(len(helper_variants), 166)
+        self.assertEqual(len(helper_variants), 169)
         self.assertEqual([[len(slot_cubes(slot, shape)) for slot in range(3)] for shape in range(1, 4)],
                          [[12, 18, 18], [18, 18, 18], [12, 24, 26]])
         self.assertEqual(shaft_cubes(True)[0]['size'], [.5, .5, 12.5])
@@ -52,9 +53,9 @@ class SecretHeldOwnerContextTests(unittest.TestCase):
             for i in range(3):
                 statement = next(row for row in reads if row.startswith(f'v.kg_secret_ingredient_{i} = '))
                 self.assertIn('c.owning_entity->q.has_property', statement)
-                self.assertIn(', 0, 5333)', statement)
+                self.assertIn(', 0, 5337)', statement)
                 for hand in ('main', 'off'):
-                    self.assertEqual(props[f'kaleidoscope_grilling:secret_{hand}_{i}']['range'], [0, (WORD_A_MAX, WORD_B_MAX, 5333)[i]])
+                    self.assertEqual(props[f'kaleidoscope_grilling:secret_{hand}_{i}']['range'], [0, (WORD_A_MAX, WORD_B_MAX, 5337)[i]])
             for hand in ('main', 'off'):
                 self.assertEqual(props[f'kaleidoscope_grilling:secret_{hand}_piece']['range'], [0, 255])
 
@@ -68,7 +69,7 @@ class SecretHeldOwnerContextTests(unittest.TestCase):
             row = controllers[f'controller.render.kg_secret_held.{i}']
             self.assertEqual(row['geometry'], f'Array.states[v.kg_secret_food_{i} == 0 ? 0 : v.kg_secret_state]')
             self.assertEqual(len(row['arrays']['geometries']['Array.states']), 64)
-            self.assertEqual(len(row['arrays']['textures']['Array.food']), 214 * 7)
+            self.assertEqual(len(row['arrays']['textures']['Array.food']), 218 * 7)
             self.assertEqual(row['part_visibility'], [{'*': 0}, {'skewer_model': f'v.kg_secret_owner_occupied == 1 && v.kg_bite_stage < {3-i}'}])
         self.assertEqual(controllers['controller.render.kg_secret_held.piece']['textures'], ['Array.food[v.kg_secret_piece_index]'])
 
@@ -79,7 +80,7 @@ class SecretHeldOwnerContextTests(unittest.TestCase):
         for name in ('secret_skewer', 'secret_skewer_java_three_alt', 'unfinished_skewer'):
             path = RP / f'attachables/{name}.attachable.json'
             assert_public_bytes(self, path)
-            actual = predecessor_document(load(path))['minecraft:attachable']['description']
+            actual = predecessor_document(json.loads(historical_bytes(path)))['minecraft:attachable']['description']
             source = document(public_json(path),attachable=True)['minecraft:attachable']['description']
             self.assertEqual(actual['animations'], source['animations'])
             self.assertEqual(actual['scripts']['animate'], source['scripts']['animate'])
@@ -97,7 +98,7 @@ const props = {
  'kaleidoscope_grilling:secret_main_2': 5304,
  'kaleidoscope_grilling:secret_main_piece': 176,
  'kaleidoscope_grilling:secret_off_0': -7,
- 'kaleidoscope_grilling:secret_off_1': 214,
+ 'kaleidoscope_grilling:secret_off_1': 218,
  'kaleidoscope_grilling:secret_off_2': 180.9,
  'kaleidoscope_grilling:secret_off_piece': 999,
 };
@@ -105,7 +106,7 @@ const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
 const scenarios = [props, {...props,
  'kaleidoscope_grilling:secret_main_0': 9999.5,
  'kaleidoscope_grilling:secret_main_piece': -9,
- 'kaleidoscope_grilling:secret_off_2': 5333.9,
+ 'kaleidoscope_grilling:secret_off_2': 5337.9,
 }];
 for (const d of descriptions) for (const hand of ['main', 'off']) for (const values of scenarios)
 for (const ownerPresent of [false, true]) for (const exactItem of [false, true])
@@ -123,22 +124,22 @@ for (const terminalWait of [0, 1]) for (const empty of [false, true]) {
  const q = {property: () => 99, has_property: () => true, is_item_name_any: () => true};
  const v = {kg_secret_terminal_wait: terminalWait};
  evaluatePreAnimation(rows, q, c, {clamp, max: Math.max}, v);
- const expected = [0, 1, 2].map(i => Math.floor(clamp(ownerPresent && !empty ? values['kaleidoscope_grilling:secret_' + hand + '_' + i] : 0, 0, 5333)));
+ const expected = [0, 1, 2].map(i => Math.floor(clamp(ownerPresent && !empty ? values['kaleidoscope_grilling:secret_' + hand + '_' + i] : 0, 0, 5337)));
  for (let i = 0; i < 3; i++) {
   if (v['kg_secret_ingredient_' + i] !== expected[i]) throw Error('Owner ingredient query borrowed another context');
   const food = expected[i] % 256;
-  if (v['kg_secret_food_' + i] !== (food <= 213 ? food : 0)) throw Error('Invalid catalog byte borrowed food');
+  if (v['kg_secret_food_' + i] !== (food <= 217 ? food : 0)) throw Error('Invalid catalog byte borrowed food');
   if (v['kg_secret_shape_' + i] !== Math.floor(expected[i] / 256) % 3 + 1) throw Error('Wrong owner shape');
   if (v['kg_secret_style_' + i] !== Math.floor(expected[i] / 768)) throw Error('Wrong owner stage');
  }
  const complete = !d.identifier.endsWith(':unfinished_skewer');
  const marker = ownerPresent && !empty ? values['kaleidoscope_grilling:secret_' + hand + '_piece'] : 0;
  const occupied = ownerPresent && exactItem && selectedWeapon === weapon &&
-  marker >= 0 && marker <= 213 &&
+  ((marker >= 0 && marker <= 213) || (marker >= 221 && marker <= 224)) &&
   (!complete || (expected.some(value => value > 0) && terminalWait === 0));
  if (Boolean(v.kg_secret_owner_occupied) !== occupied) throw Error('Owner identity/hand/empty/terminal guard escaped');
  if (complete) {
-  const expectedPiece = Math.floor(clamp(ownerPresent && !empty ? values['kaleidoscope_grilling:secret_' + hand + '_piece'] : 0, 0, 213));
+  const expectedPiece = Math.floor(marker >= 221 && marker <= 224 ? marker - 7 : marker >= 0 && marker <= 213 ? marker : 0);
   if (v.kg_secret_piece_index !== expectedPiece) throw Error('Helper borrowed another owner hand');
   if (v.kg_secret_state !== v.kg_secret_shape_0 * 16 + v.kg_secret_shape_1 * 4 + v.kg_secret_shape_2) throw Error('Wrong owner geometry state');
  }

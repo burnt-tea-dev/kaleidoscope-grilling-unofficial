@@ -550,21 +550,23 @@ def check_current_display_contracts(findings, geometry_index, animations):
         if offhand_profile and desc.get('geometry',{}).get('java_piece')!=offhand_piece_ref:
             add(findings,'error','held_binding_contract',desc['identifier'],'offhand route requires its exact item-owned helper geometry')
         ids = desc.get("animations", {})
-        canonical_id = desc["identifier"].removesuffix("_java_three_alt")
+        plain_secret=desc['identifier']=='kaleidoscope_grilling:secret_skewer_native_plain'
+        canonical_id = desc["identifier"].removesuffix("_java_three_alt").removesuffix('_native_plain')
         family = "skewer" if canonical_id.endswith("_skewer") else "rack" if desc["identifier"] == "kaleidoscope_grilling:advanced_rack" else "bottle"
         partial=version>=(2,8,68) and desc["identifier"]=="kaleidoscope_grilling:unfinished_skewer"
         calibrated=version>=(2,8,68) and desc["identifier"] in CALIBRATED_ITEMS
         if canonical_id == desc["identifier"]: counts["partial" if partial else family] += 1
         if family == "bottle": bottle_ids.add(desc["identifier"])
         expected_ids = {alias: f"animation.{'kg_a287' if family == 'skewer' else 'kg_a286'}.{family}_{alias}" for alias in aliases}
-        if family == "skewer" and not partial:
+        if plain_secret:expected_ids.update({'fp_'+hand:clip_id(hand)for hand in ('right','left')})
+        if family == "skewer" and not partial and not plain_secret:
             table = json.loads(re.search(r'PROFILE_BY_ITEM=Object.freeze\((\{.*?\})\)', (BP / 'scripts/data.js').read_text()).group(1))
             requested=table.get(canonical_id,'THREE_RANDOM' if canonical_id=='kaleidoscope_grilling:secret_skewer' else 'THREE')
             profile = requested.replace('THREE_RANDOM', 'THREE').lower()
             expected_ids.update({f'eat_{hand}': f'animation.kg_eating.item.{profile}.{hand}' for hand in ['right','left']})
             if requested=='THREE_RANDOM':expected_ids.update({f'eat_alt_{hand}':f'animation.kg_eating.item.three_alt.{hand}' for hand in ['right','left']})
         projected = None
-        if family == 'skewer' and not partial and version >= (2,8,58):
+        if family == 'skewer' and not partial and not plain_secret and version >= (2,8,58):
             candidate = ('THREE_ALT' if desc['identifier'].endswith('_java_three_alt') else 'THREE') if requested == 'THREE_RANDOM' else requested
             if candidate in ('TWO','THREE_ALT','FOUR') and desc['identifier'] in admitted[candidate]:
                 projected = candidate
@@ -597,7 +599,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
             alias: f"c.is_first_person == {1 if alias.startswith('fp') else 0} && c.item_slot == '{'main_hand' if alias.endswith('right') else 'off_hand'}'"
             for alias in aliases
         }
-        if family == "skewer" and not partial:
+        if family == "skewer" and not partial and not plain_secret:
             required_selectors.update({f'eat_{hand}': "c.is_first_person == 1 && q.is_using_item && q.property('kaleidoscope_grilling:eat_hand') == " + str(1 if hand == 'right' else 2) + " && c.item_slot == '" + ('main_hand' if hand == 'right' else 'off_hand') + "'" for hand in ['right','left']})
             if requested=='THREE_RANDOM':
                 for hand in ['right','left']:
