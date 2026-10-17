@@ -1,3 +1,5 @@
+> **歷史快照（2026-10-17整理標記）。** 本頁及其舊版本／JSON配套保留原始證據，不再提供現行進度。當前來源與交付見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)；目前行為差距見[PARITY-MATRIX.md](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)。以下「當前／最新」只指原記錄日期。
+
 > 當前狀態以 [2.8.45 F01–F16 矩陣](CURRENT-REPAIR-STATUS.md) 為準；下文為歷史證據，編號不是本輪全面審查的編號。
 
 # Java 1.1.1 與 A2.8.39 的差距／證據矩陣
@@ -37,6 +39,6 @@ A2.8.38 的作者快照保留原版明訂的無點數舊 filled 壺＝256 普通
 
 ## A2.8.41 審查後修復
 
-[本輪 R01–R14 矩陣](STATUS-A2.8.41.md) 取代舊版對這些新增問題的狀態推測；舊 F01–F12 記錄保留歷史用途。本輪修復精確熱期限、效果清除、一層槽位交換、多語動態 lore、油源／展示排程與公開 native aux。秘製 GUI、共享随机曲線、龍血 max health 等價與真人多人／跨平台仍未完成；新候選不沿用旧收據的延期部署許可。
+[本輪 R01–R14 矩陣](STATUS-A2.8.41.md) 取代舊版對這些新增問題的狀態推測；舊 F01–F12 記錄保留歷史用途。本輪修復精確熱期限、效果清除、一層槽位交換、多語動態 lore、油源／展示排程與公開 native aux。秘製 GUI、共享随机曲線、龍血 max health 等價與真人多人／跨平台仍未完成；新候選不沿用舊收據的延期部署許可。
 
 A2.8.42 在上述修復基礎上補強同一角色多 wrapper 的效果快取一致性；見 [本版狀態](STATUS-A2.8.42.md)。A2.8.41 的逐項未完成界線仍適用。

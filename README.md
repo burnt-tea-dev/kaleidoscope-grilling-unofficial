@@ -1,57 +1,21 @@
-## Current maintained baseline: 2.8.150
+## Current maintained source: 2.8.150
 
-G150 adapts the reviewed public family API to stable Cookery 1.6.1 and restores the source grill/rack collision and directional rack selection bounds. It retains G149 presentation, effects and settlement repairs. Exact candidate CI and full-family stopped-save validation precede LIVE deployment; rendered-client and complete Java parity remain unverified. [Public adapter scope](docs/evidence/cookery161-public-family-api-20261016.md).
+Reviewed **2026-10-17** at [2422c2ab](https://github.com/casama233/kaleidoscope-grilling-unofficial/commit/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f); [PR #229](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/229) is merged and its required source CI passed. **G150 uses Cookery 1.6.1 / family API 0.2.11**, with reviewed author identity/state adaptation and Java grill/rack collision repairs.
 
-The preceding G149 stable-channel publication has its own [release scope, historical editor evidence and known deferred risks](docs/RELEASE-NOTES-A2.8.149.md). Its publication waiver does not turn later candidates into client acceptance; `client=false`, `production_ready=false` remain until human verification.
+**Public download:** [A2.8.149](https://github.com/casama233/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149), which uses **Cookery 1.6.0**. G150's [release request](.github/release-request.json) remains `publication_request=false`; a source merge is not a new public package. The G149 stable publication retains the owner's existing source/editor/CI/package decision and its [bounded evidence and deferred risks](docs/RELEASE-NOTES-A2.8.149.md).
 
-G149 removes the extra first-person pending-bottle shake from nine offhand attachables, preserving the explicit static hold and sprinkle precedence. Main-hand, TP/player motion, clip payloads, assets and gameplay remain unchanged. Full native host-frame and Java/client parity are still open. See [default-route source proof and limits](docs/evidence/pending-offhand-none-route-g149.md).
+**Last repository-recorded verified family deployment:** T169/G144/W147/private42, 2026-10-15 22:40:27 HKT. This documentation audit did not connect to LIVE. The [single family status index](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md) owns delivery identities and acceptance.
 
-G148 restores the source-owned active third-person SPECIAL seasoning item half-turn through the existing display-frame conversion. The separate main-hand item clip is exclusive with idle hold; first-person curves, player-arm equations, geometry, textures and gameplay remain unchanged. Absolute Java/Bedrock socket composition, left-dominant mapping and native-client acceptance remain open. See [source contract and limits](docs/evidence/seasoning-tp-item-inversion-g148.md).
+G145–G149 presentation corrections are already retained in current main and included in G149's published runtime; their older “local candidate / publication pending” prose is historical. [Earlier README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/README.md) and versioned notes retain their original source and evidence.
 
-G147 is a separate guarded-owner-property source candidate. Missing eating properties retain zero fallback without repeated unguarded reads; normal values, poses and source history are preserved. Editor/client acceptance and publication remain pending. See [scope and regression boundary](docs/evidence/owner-eating-property-guards-g147.md).
+**Current work:** [#214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214) still has unabsorbed plate rollback/pepper-harvest changes. The main runtime subjects of [#217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217), [#220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220) and [#222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) are absorbed; residual review remains before closing them. [PR triage](docs/audit/PR-TRIAGE.md) records that distinction.
 
-G146 is a local plate-use left-arm correction retaining the complete G145 composition and reviewed CI fixes. It has no publication request or native acceptance. See [source scope](docs/evidence/plate-use-arm-reconstruction-20261016.md).
-
-G145 is a composed source candidate retaining merged G144 performance. Canonical/Windows, family and native acceptance remain pending; no release is requested. See [composition scope](docs/evidence/g145-composed-source-20261015.md).
-
-G144 bounds deadline-queue replacement/cancellation work and reads one local effect snapshot per player pass. Idle players skip unrelated hunger/saturation component reads. Due ticks, eating/settlement and existing HUD cadence stay unchanged. [Measured source operation counts and limits](docs/evidence/performance-bounded-work-20261015.md) separate these reductions from BDS timing and client RTT, which have not been measured for this candidate.
-
-G143's integrated repairs remain: attachable eating properties read the owning player, offhand animation avoids the main-hand counter, and terminal hiding waits for the server to acknowledge a fresh serving. Bottle metadata round trips compare equivalent RawMessage lore without rewriting it; a malformed bottle cannot repeatedly scan every slot or block food-animation preparation. Java curves, assets, eating/HUD duration, nutrition and the 25-tick checkpoint remain unchanged. Source and native client acceptance remain separate. [Changes](CHANGELOG.md).
-
-2026-10-14 的玩家回報及截圖已納入[目前缺口](docs/BUGS.md#client-hud食用入口圖形缺失與延遲)：保留森羅 HUD 缺失、原始資料碼外露及串沒有進食動作的失敗；後續截圖已見進食姿勢、數量減少與圖形，但位置與延遲仍被回報。G138 補原生觸控使用入口，G140 修正錨點／觸控布局及 END 隱藏，G141 接回原生剩餘時間與同步首幀，G142 裁剪未選圖像；這些來源修補不等於全部客戶端驗收。
-
-先前 LIVE 的 G144 保留 [PR215](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/215) 的顯示修補及 [PR223](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/223) 性能修補；目前完整家族的實際安裝版本與逐檔讀回以[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)為準。G145–G150 的來源修補不能沿用 G144 的存檔或客戶端結果。公開下載只包含煙火兩份包；AMW、Java Saturation 與 queue 的 producer／renderer 修補由另一份 canonical 私有整合提供。單一 shared HUD bridge 的預留出口缺少對方時為 typed empty，沒有任意第三方全面相容承諾。
-
-相依為官方穩定版 [Cookery 1.6.1（file 9123386）](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9123386)。新 UUID／API 配對由 family API 0.2.11 適配；作者已修的指南語系驗證保留，移除舊 locale shadow。煙火指南隨包；乾淨 Cookery 不自帶家族的砧板／油壺／炒鍋與酒館指南掛鉤，安裝／保存遷移依[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)記錄。真人畫面、完整 Java 聲畫及其他視角／操作仍待驗收；`client=false`、`production_ready=false`。
-
-離線來源草稿另見[熟饅頭片 TWO／熟末影珍珠 THREE 整合](docs/evidence/two-route-source-integration-20261010.md)：新增兩條 exact-ID player clips，保留 G126 與其他食品。該凍結證據仍是未編版的歷史草稿；本版以獨立 G127 身份及新增 reviewed witness 承接，不改寫原 G126 身份或門檻。
-
-家族目前的 LIVE 配套、部署與逐檔收據、保存演練及指南接收範圍，統一見[家族基線入口](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)。本倉庫的版本記錄保留各次修補及當時的驗證範圍。
-
-[G125 場景聲畫與操作守恆](docs/STATUS-A2.8.125.md)：修復烤架後續取消／延後目標、榨油機扣料及滿背包串譜／穿串／拆串；烤架亮度回到 7，新增動畫油面、premium 大缸滿亮液面與秘製串牆譜 GUI 分層。Numb 修正 20 倍時間誤差，油壺粒子、搖瓶聲音及保命圖騰粒子補齊可用路由。仍有 native inventory／HUD／第一人稱及原生事件差異；隔離 BDS 診斷不代替完整家族准入或 LIVE 更新。
-
-[G124 調料資料映射](docs/STATUS-A2.8.124.md)：沿用公開 Server-only API 保存及重新載入調料資料，取料、食用與 HUD 共用目前映射。保留 G123 locale 掛鉤及 G122 保存／品質，明確 provider、原生玩家操作與真人驗收限制仍依版本記錄分開保留。
-
-[G123 指南正文語言鍵修補](docs/STATUS-A2.8.123.md)：Cookery 1.6.0 原 registry 接收條目與名稱後會丟棄三語正文；本版登記局部 locale 掛鉤，保留其他 token 驗證與 G122 修補。
-
-[G122炒鍋、品質與所有權修補](docs/STATUS-A2.8.122.md)：三道料理補保存備料／三翻／變質流程和原作彈性配方，
-品質原生食物、冷卻與食材快照接通；兩分支原 Java 純邏輯的 1,248 組品質與 12 組 NeoForge 食物值相符。
-油渣新增乾燥紅樹葉下生苗與懸掛苗成熟，明列 25 類；施肥與炒鍋退款先確認本次寫入所有權。
-先前未合併的機制候選移入 G122；版本沿革與當前驗證邊界見本版狀態頁。
-承接[G121酒館指南共用入口](docs/STATUS-A2.8.121.md)：Cookery 的酒館章節交由酒館顯示同一份指南，
-以玩家來源與限時交接確認避免重複視窗；關閉不重開，返回才回 Cookery。
-承接[G120持久化與出料修補](docs/STATUS-A2.8.120.md)：重金屬在取消傷害前保存並確認防重複結算記錄，
-油渣新增瓜梗、纏根土及兩種下界藤，明列 23 類植物適配；料理工作站補取消保存與出料收據守恆。
-承接[G119剩餘差異修補](docs/STATUS-A2.8.119.md)：手持餐盤內容與獨立份數解碼，
-共用每手顯示通道，擴充原版植物施肥，並將重金屬保命改為一次確認提交。
-承接[G118機制與放置顯示修補](docs/STATUS-A2.8.118.md)、
-[G117手持營養與瓶保存](docs/STATUS-A2.8.117.md)和[G116餐盤互動](docs/STATUS-A2.8.116.md)。
-任意秘製串背包圖示、原生事件差異與聲畫／真人驗收仍分開記錄。
+The owner's **all-item Blockbench first-person/side-texture review** and current complete skewer/bottle/plate gameplay acceptance remain open. Per-stack custom inventory icons are still missing; bottles and plates already have source implementations. `client=false`, `production_ready=false`. See [PARITY-MATRIX](docs/PARITY-MATRIX.md) and [BUGS](docs/BUGS.md).
 
 森羅物語：煙火的非官方基岩版移植。目標是跟隨 Java 原作，保留其玩法與沉浸體驗；**完整一比一移植與現行真人驗收仍未完成**。
 
 當前版本、UUID、相依與來源身份以 [baseline.json](baseline.json) 為準。
-依賴作者穩定版 **Cookery 1.6.1**；最低 engine 宣告 1.26.50，
+從目前main建置G150依賴作者穩定版 **Cookery 1.6.1**；公開G149請使用其Cookery1.6.0相依。G150最低engine宣告 1.26.50，
 `@minecraft/server` 2.9.0 與 `@minecraft/server-ui` 2.2.0；原生證據的引擎版本與範圍以各次紀錄為準。
 家族整合提供的砧板／油壺／炒鍋與酒館指南交接能力，不能當作只安裝作者 Cookery 就有的功能。
 

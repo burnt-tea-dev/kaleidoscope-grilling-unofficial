@@ -1,3 +1,5 @@
+> **歷史快照（2026-10-17整理標記）。** 本頁及其舊版本／JSON配套保留原始證據，不再提供現行進度。當前來源與交付見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)；目前行為差距見[PARITY-MATRIX.md](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)。以下「當前／最新」只指原記錄日期。
+
 > 2026-10-05：目前 canonical 為 2.8.61。最新功能面審查與 G01–G14 修復計畫見 [Java／Bedrock 審查](JAVA-PARITY-AUDIT-20261005.md)；本頁以下保留 2.8.51 歷史，不代表當前 live 或完整客戶端驗收。
 
 # 歷史全面審查修復與驗收矩陣：追蹤至 2.8.51

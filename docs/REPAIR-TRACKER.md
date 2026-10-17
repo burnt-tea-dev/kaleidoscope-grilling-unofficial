@@ -1,3 +1,5 @@
+> **歷史快照（2026-10-17整理標記）。** 本頁及其舊版本／JSON配套保留原始證據，不再提供現行進度。當前來源與交付見[家族主索引](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/main/family/BASELINE-STATUS.md)；目前行為差距見[PARITY-MATRIX.md](PARITY-MATRIX.md)，PR承接見[audit/PR-TRIAGE.md](audit/PR-TRIAGE.md)。以下「當前／最新」只指原記錄日期。
+
 # 當前批次：A2.8.37
 
 油壺／刷油、作者出料、指南名稱、設備內容、進食曲線及龍血修復見 [STATUS-A2.8.37.md](STATUS-A2.8.37.md)。完整家族部署與實際驗收以本輪收據為準；下方是歷史記錄。
