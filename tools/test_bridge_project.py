@@ -1,13 +1,49 @@
 """Regression tests for bridge. authoring/export guards (no simulated players)."""
 from pathlib import Path
+import copy
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 import bridge_project as guard
 
 class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
+
+    def test_current_project_rejects_stale_cookery_description_on_either_pack(self):
+        load = guard.load
+        baseline = load(guard.ROOT / 'baseline.json')
+        for side in ['BP', 'RP']:
+            manifest_path = guard.ROOT / baseline['runtime'][side] / 'manifest.json'
+            def stale(path):
+                value = load(path)
+                if path == manifest_path:
+                    value['header']['description'] = value['header']['description'].replace('Cookery 1.6.2', 'Cookery 1.6.1')
+                return value
+            with self.subTest(side=side), patch.object(guard, 'load', stale):
+                with self.assertRaisesRegex(AssertionError, 'stale displayed Cookery requirement'):
+                    guard.check()
+
+    def test_current_guide_reference_and_historical_hosts_are_exact(self):
+        sys.path.insert(0, str(guard.ROOT / 'development/gameplay_core'))
+        from verify_a2828 import verify_host_reference
+        catalog = guard.load(guard.ROOT / 'projects/grilling/guide/catalog.a3.json')
+        version = guard.load(guard.ROOT / 'baseline.json')['version']
+        verify_host_reference(catalog, version)
+        reference = guard.ROOT / 'tools/fixtures'
+        for older, release in [('161', [2,8,153]), ('160', [2,8,149])]:
+            historical = {'host_reference': guard.load(reference / ('cookery-' + older + '-reference.json'))}
+            with self.subTest(reference=older):
+                verify_host_reference(historical, release)
+                with self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
+                    verify_host_reference(historical, version)
+        for field in ['file_id', 'archive_sha256', 'guide_sha256']:
+            changed = copy.deepcopy(catalog)
+            changed['host_reference'][field] = 'unreviewed'
+            with self.subTest(field=field), self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
+                verify_host_reference(changed, version)
 
     def test_workflow_propagates_native_failures(self):
         # A later successful command must not mask a failed export/baseline guard

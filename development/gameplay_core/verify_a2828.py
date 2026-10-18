@@ -6,6 +6,15 @@ from verification_session import run_checked_once, session_active
 ROOT=Path(__file__).resolve().parents[2]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
 
+def verify_host_reference(catalog,version):
+    if tuple(version)>=(2,8,72):
+        reference='cookery-162-reference.json' if tuple(version)>=(2,8,154) else 'cookery-161-reference.json' if tuple(version)>=(2,8,150) else 'cookery-160-reference.json'
+        ref=json.loads((ROOT/'tools/fixtures'/reference).read_text())
+        assert all(catalog['host_reference'][key]==value for key,value in ref.items()), 'Guide host differs from reviewed Cookery reference'
+    else:
+        assert catalog['host_reference']['version']=='1.0.8'
+        assert catalog['host_reference']['guide_sha256']=='49ea47f9dc7511af210562118c7d2164ab5e185296a5a8c8d678e7d7ff8dc959'
+
 def verify_sound_registry(defs,proof,version):
     expected_names={'kg_imm.'+name for name in proof['sound_events']}|{'kg_imm.four_skewer_eat_ch'+str(i) for i in range(8)}
     if tuple(version)>=(2,8,73):
@@ -55,13 +64,7 @@ def main():
             expected.append(sound)
         assert defs['kg_imm.'+event]['sounds']==expected,event
     catalog=json.loads((ROOT/'projects/grilling/guide/catalog.a3.json').read_text())
-    if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,72):
-        reference='cookery-161-reference.json' if tuple(json.loads((ROOT/'baseline.json').read_text())['version'])>=(2,8,150) else 'cookery-160-reference.json'
-        ref=json.loads((ROOT/'tools/fixtures'/reference).read_text())
-        assert all(catalog['host_reference'][key]==value for key,value in ref.items())
-    else:
-        assert catalog['host_reference']['version']=='1.0.8'
-        assert catalog['host_reference']['guide_sha256']=='49ea47f9dc7511af210562118c7d2164ab5e185296a5a8c8d678e7d7ff8dc959'
+    verify_host_reference(catalog,json.loads((ROOT/'baseline.json').read_text())['version'])
     assert len(catalog['categories'])<=32
     if catalog.get('host_extension'):
         assert catalog['acquisition_gaps']==[] and catalog['host_extension']['capability']=='chopping_board_v2'
