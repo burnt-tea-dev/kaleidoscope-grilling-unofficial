@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   guards:
+    name: Rebuild guards
     # Numeric ID only: it survives owner renames (casama233 -> burnt-tea-dev), the name does not.
     if: github.repository_id == '1377218440'
     runs-on: ubuntu-24.04
@@ -39,7 +40,6 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          OWNER_OVERRIDE: ${{ contains(github.event.pull_request.labels.*.name, 'owner-approved-guard-change') }}
         shell: bash
         run: |
           set -euo pipefail
@@ -52,11 +52,9 @@ jobs:
           fi
           if git cat-file -e "$BASE_SHA:tools/guards/growth-ratchet.json" 2>/dev/null; then
             git show "$BASE_SHA:tools/guards/growth-ratchet.json" > "$tmp/ceilings.json"
-            if [ "$OWNER_OVERRIDE" = "true" ]; then
-              echo "::warning::owner-approved-guard-change label present; base ceilings not enforced"
-            else
-              python3 tools/guards/growth_ratchet.py check --ceilings "$tmp/ceilings.json"
-            fi
+            # Labels never authorize weakening a guard. Any policy amendment
+            # requires a separate reviewed bootstrap, not a bypass in a PR.
+            python3 tools/guards/growth_ratchet.py check --ceilings "$tmp/ceilings.json"
           fi
           # The guard files themselves may not disappear.
           for f in tools/guards/save_compat.py tools/guards/growth_ratchet.py tools/guards/save-compat.lock.json \

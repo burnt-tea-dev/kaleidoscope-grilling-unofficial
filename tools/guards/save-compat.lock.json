@@ -267,6 +267,7 @@
   "minecraft:player"
  ],
  "persisted_key_literals": [
+  "kaleidoscope_grilling:",
   "kaleidoscope_grilling:a21_fx",
   "kaleidoscope_grilling:a23_oil_source_",
   "kaleidoscope_grilling:a25_plate_",
@@ -280,6 +281,7 @@
   "kaleidoscope_grilling:bottle_",
   "kaleidoscope_grilling:cuisine_",
   "kaleidoscope_grilling:dragon_health_",
+  "kaleidoscope_grilling:dragon_native_level",
   "kaleidoscope_grilling:dragon_pool",
   "kaleidoscope_grilling:eat_elapsed_ticks",
   "kaleidoscope_grilling:eat_hand",
@@ -291,30 +293,53 @@
   "kaleidoscope_grilling:gui_color_",
   "kaleidoscope_grilling:heavy_metal_claim",
   "kaleidoscope_grilling:hot_until",
+  "kaleidoscope_grilling:integration_operation:",
   "kaleidoscope_grilling:integration_registry_v1",
   "kaleidoscope_grilling:model_variants",
+  "kaleidoscope_grilling:oil_transaction_fault_",
   "kaleidoscope_grilling:oil_transfer_fault:",
   "kaleidoscope_grilling:oil_type",
+  "kaleidoscope_grilling:pepper_sting_until",
   "kaleidoscope_grilling:plant_transaction_fault_",
   "kaleidoscope_grilling:plate_skewers",
+  "kaleidoscope_grilling:player_item_receipt_",
+  "kaleidoscope_grilling:player_touched_nether:",
   "kaleidoscope_grilling:rack_binding_",
   "kaleidoscope_grilling:rack_filters_",
   "kaleidoscope_grilling:rack_payload",
   "kaleidoscope_grilling:recipe_record",
   "kaleidoscope_grilling:sb_",
+  "kaleidoscope_grilling:seasoned",
   "kaleidoscope_grilling:seasoning_bottle_",
   "kaleidoscope_grilling:seasonings",
   "kaleidoscope_grilling:secret_",
   "kaleidoscope_grilling:secret_cooked",
   "kaleidoscope_grilling:secret_cooked_ingredients",
   "kaleidoscope_grilling:secret_creator",
+  "kaleidoscope_grilling:server_config_v1",
   "kaleidoscope_grilling:skewer_ingredients",
   "kaleidoscope_grilling:special_seasoning_r",
   "kaleidoscope_grilling:storage_owner_v1",
   "kaleidoscope_grilling:storage_v1/",
   "kaleidoscope_grilling:uses",
   "kaleidoscope_grilling:variant",
-  "kaleidoscope_grilling:wedding_candy_state"
+  "kaleidoscope_grilling:vat_buckets",
+  "kaleidoscope_grilling:vat_type",
+  "kaleidoscope_grilling:wedding_candy_state",
+  "kc_oil_count",
+  "kc_oilpot:",
+  "senluo:cuisine_carrier:",
+  "senluo:cuisine_heat_and_seasoning_v1",
+  "senluo:cuisine_metadata:",
+  "senluo:cuisine_output:",
+  "senluo:cuisine_recovery:",
+  "senluo:grilling_item_",
+  "senluo:java_pot_operation:",
+  "senluo:oil_api_placed:",
+  "senluo:oil_api_recovery:",
+  "senluo:oil_api_revision",
+  "senluo:oil_hand_fault:",
+  "senluo:oil_station_fault:"
  ],
  "blocks": {
   "kaleidoscope_grilling:advanced_rack_block": {
@@ -538,6 +563,42 @@
    "module_uuids": [
     "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7"
    ]
+  }
+ },
+ "storage_components": {
+  "kaleidoscope_grilling:equipment_visual": {
+   "components": {
+    "inventory_size": 1,
+    "container_type": "inventory",
+    "private": true
+   }
+  },
+  "kaleidoscope_grilling:inventory_grill_v1": {
+   "components": {
+    "inventory_size": 3,
+    "container_type": "inventory",
+    "private": true,
+    "restrict_to_owner": true,
+    "can_be_siphoned_from": false
+   }
+  },
+  "kaleidoscope_grilling:inventory_rack_v1": {
+   "components": {
+    "inventory_size": 9,
+    "container_type": "inventory",
+    "private": true,
+    "restrict_to_owner": true,
+    "can_be_siphoned_from": false
+   }
+  },
+  "kaleidoscope_grilling:inventory_seasoning_v1": {
+   "components": {
+    "inventory_size": 4,
+    "container_type": "inventory",
+    "private": true,
+    "restrict_to_owner": true,
+    "can_be_siphoned_from": false
+   }
   }
  }
 }

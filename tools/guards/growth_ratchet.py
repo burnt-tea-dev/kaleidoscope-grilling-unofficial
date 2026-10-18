@@ -21,12 +21,18 @@ from __future__ import annotations
 import json
 import re
 import sys
+import subprocess
+
+from js_tokens import code
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CEILINGS = Path(__file__).with_name("growth-ratchet.json")
-BP = ROOT / "projects/grilling/gameplay_core/behavior_pack"
-RP = ROOT / "projects/grilling/gameplay_core/resource_pack"
+BASELINE = json.loads((ROOT / "baseline.json").read_text())
+BP = ROOT / BASELINE["runtime"]["BP"]
+RP = ROOT / BASELINE["runtime"]["RP"]
+if not BP.is_dir() or not RP.is_dir():
+    raise ValueError("canonical runtime directories missing")
 
 
 def files(base: Path, pattern: str) -> list[Path]:
@@ -36,6 +42,16 @@ def files(base: Path, pattern: str) -> list[Path]:
 def regex_count(paths, rx: str) -> int:
     r = re.compile(rx)
     return sum(len(r.findall(p.read_text(encoding="utf-8", errors="replace"))) for p in paths)
+
+
+def committed_artifacts():
+    raw = subprocess.check_output(["git", "ls-files", "-z", "--", "artifacts/"], cwd=ROOT)
+    return len([p for p in raw.split(b"\0") if p and (ROOT / p.decode()).is_file()])
+
+
+def js_count(paths, rx):
+    pattern = re.compile(rx)
+    return sum(len(pattern.findall(code(p.read_text(encoding="utf-8")))) for p in paths)
 
 
 def scripts() -> list[Path]:
@@ -51,9 +67,9 @@ def tests() -> list[Path]:
 
 METRICS = {
     # --- verification bureaucracy -------------------------------------------------
-    "per_version_verifiers": lambda: len(files(ROOT / "development/gameplay_core", "verify_a*.py")),
-    "augment_layer_scripts": lambda: len(files(ROOT / "development/gameplay_core", "augment_a*.py")),
-    "version_layer_tools": lambda: len([p for p in files(ROOT / "tools", "*.py")
+    "per_version_verifiers": lambda: len(files(ROOT / "development/gameplay_core", "**/verify_a*.py")),
+    "augment_layer_scripts": lambda: len(files(ROOT / "development/gameplay_core", "**/augment_a*.py")),
+    "version_layer_tools": lambda: len([p for p in files(ROOT / "tools", "**/*.py")
                                         if re.match(r"(test_)?g\d+_", p.name)]),
     "tests_total": lambda: len(tests()),
     # Tests that slice function bodies out of main.js source text and eval them
@@ -66,16 +82,16 @@ METRICS = {
     "status_docs": lambda: len(files(ROOT / "docs", "STATUS-*.md")),
     "release_note_docs": lambda: len(files(ROOT / "docs", "RELEASE-NOTES-*.md")),
     "docs_files_total": lambda: len(files(ROOT / "docs", "**/*")),
-    "committed_artifact_files": lambda: len(files(ROOT / "artifacts", "**/*")),
+    "committed_artifact_files": committed_artifacts,
     "history_tree_files": lambda: len(files(ROOT / "history", "**/*")),
     # --- runtime architecture -----------------------------------------------------
     "script_modules": lambda: len(scripts()),
-    "version_prefixed_script_modules": lambda: len([p for p in scripts() if re.match(r"a\d{2,5}_", p.name)]),
-    "global_block_interact_handlers": lambda: regex_count(scripts(), r"beforeEvents\.playerInteractWithBlock\.subscribe"),
-    "global_break_handlers": lambda: regex_count(scripts(), r"Events\.playerBreakBlock\.subscribe"),
-    "global_explosion_handlers": lambda: regex_count(scripts(), r"beforeEvents\.explosion\.subscribe"),
-    "script_event_listeners": lambda: regex_count(scripts(), r"scriptEventReceive\.subscribe"),
-    "run_intervals": lambda: regex_count(scripts(), r"system\.runInterval\("),
+    "version_prefixed_script_modules": lambda: len([p for p in scripts() if re.match(r"a\d+_", p.name)]),
+    "global_block_interact_handlers": lambda: js_count(scripts(), r"beforeEvents\.playerInteractWithBlock\.subscribe"),
+    "global_break_handlers": lambda: js_count(scripts(), r"Events\.playerBreakBlock\.subscribe"),
+    "global_explosion_handlers": lambda: js_count(scripts(), r"beforeEvents\.explosion\.subscribe"),
+    "script_event_listeners": lambda: js_count(scripts(), r"scriptEventReceive\.subscribe"),
+    "run_intervals": lambda: js_count(scripts(), r"system\.runInterval\("),
     "vanilla_entity_overrides": lambda: len([p for p in files(BP / "entities", "*.json")
                                              if '"minecraft:player"' in p.read_text(encoding="utf-8", errors="replace")
                                              or re.search(r'"identifier"\s*:\s*"minecraft:', p.read_text(encoding="utf-8", errors="replace"))]),
@@ -85,7 +101,7 @@ METRICS = {
                                        if re.search(r"_(native_plain|java_three_alt)\.", p.name)]),
     "rp_geometry_files": lambda: len(files(RP / "models", "**/*.json")),
     "version_prefixed_model_dirs": lambda: len([p for p in (RP / "models/entity").iterdir()
-                                                if p.is_dir() and re.match(r"a\d{2,5}_", p.name)]) if (RP / "models/entity").exists() else 0,
+                                                if p.is_dir() and re.match(r"a\d+_", p.name)]) if (RP / "models/entity").exists() else 0,
     "largest_geometry_kib": lambda: max((p.stat().st_size for p in files(RP / "models", "**/*.json")), default=0) // 1024,
     "rp_total_mib": lambda: sum(p.stat().st_size for p in files(RP, "**/*")) // (1024 * 1024),
 }
@@ -116,7 +132,7 @@ def main(argv=None) -> int:
         return 1
     doc = json.loads(CEILINGS.read_text(encoding="utf-8"))
     ceil = doc["ceilings"]
-    bad, lowered = [], []
+    bad, lowered = [f"{k}: ceiling has no measured metric" for k in sorted(set(ceil) - set(now))], []
     for k, v in now.items():
         if k not in ceil:
             bad.append(f"{k}: new metric without a ceiling (add it with tighten on main)")

@@ -28,56 +28,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
 import re
 import sys
 from pathlib import Path
+
+from js_tokens import persisted_literals
 
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = ROOT / "baseline.json"
 LOCK = Path(__file__).with_name("save-compat.lock.json")
 RETIREMENTS = Path(__file__).with_name("id-retirements.json")
 
-# Constants whose value is a persisted key or key prefix
-# (world/entity/item dynamic properties). Renaming the constant is fine;
-# dropping the literal value orphans saved data.
-PERSIST_CONST = re.compile(
-    r"\b(?:const|let|var)\s+([A-Z][A-Z0-9_]*(?:KEY|PREFIX|PROPERTY|OWNER|NAMESPACE)[A-Z0-9_]*)\s*=\s*"
-    r"(['\"`])(kaleidoscope_grilling:[^'\"`$]*)\2"
-)
-PERSIST_CALL = re.compile(r"[gs]etDynamicProperty\(\s*(['\"])(kaleidoscope_grilling:[^'\"]+)\1")
-# Literal key prefixes that are concatenated with coordinates/ids, e.g. the grill
-# state key 'kaleidoscope_grilling:g_' + dimension + x/y/z.
-PERSIST_CONCAT = re.compile(r"(['\"])(kaleidoscope_grilling:[a-z0-9_./:-]+)\1\s*\+")
 
 
-def strip_jsonc(text: str) -> str:
-    out, i, n, in_str = [], 0, len(text), False
-    while i < n:
-        c = text[i]
-        if in_str:
-            out.append(c)
-            if c == "\\" and i + 1 < n:
-                out.append(text[i + 1])
-                i += 2
-                continue
-            if c == '"':
-                in_str = False
-            i += 1
-            continue
-        if c == '"':
-            in_str = True
-            out.append(c)
-            i += 1
-        elif text.startswith("//", i):
-            j = text.find("\n", i)
-            i = n if j < 0 else j
-        elif text.startswith("/*", i):
-            j = text.find("*/", i + 2)
-            i = n if j < 0 else j + 2
-        else:
-            out.append(c)
-            i += 1
-    return re.sub(r",(\s*[}\]])", r"\1", "".join(out))
+from jsonc import strip_jsonc
 
 
 def load_json(path: Path):
@@ -91,7 +56,7 @@ def runtime_roots() -> tuple[Path, Path]:
 
 def collect() -> dict:
     bp, rp = runtime_roots()
-    items, blocks, entities, client_entities = set(), {}, set(), set()
+    items, blocks, entities, storage = set(), {}, set(), {}
     for p in sorted((bp / "items").rglob("*.json")):
         ident = load_json(p).get("minecraft:item", {}).get("description", {}).get("identifier")
         if ident:
@@ -112,15 +77,23 @@ def collect() -> dict:
             states[name] = sorted({json.dumps(v) for v in values})
         blocks[ident] = states
     for p in sorted((bp / "entities").rglob("*.json")):
-        ident = load_json(p).get("minecraft:entity", {}).get("description", {}).get("identifier")
+        entity = load_json(p).get("minecraft:entity", {})
+        ident = entity.get("description", {}).get("identifier")
         if ident:
             entities.add(ident)
+            schemas = {}
+            groups = {"components": entity.get("components", {}),
+                      **{"component_groups/" + name: value for name, value in entity.get("component_groups", {}).items()}}
+            for name, components in groups.items():
+                inventory = components.get("minecraft:inventory")
+                if inventory is not None:
+                    schemas[name] = inventory
+            if schemas:
+                storage[ident] = schemas
     persisted = set()
     for p in sorted((bp / "scripts").rglob("*.js")):
         text = p.read_text(encoding="utf-8", errors="replace")
-        persisted.update(m.group(3) for m in PERSIST_CONST.finditer(text))
-        persisted.update(m.group(2) for m in PERSIST_CALL.finditer(text))
-        persisted.update(m.group(2) for m in PERSIST_CONCAT.finditer(text))
+        persisted.update(persisted_literals(text))
     packs = {}
     for label, root in (("BP", bp), ("RP", rp)):
         man = load_json(root / "manifest.json")
@@ -132,6 +105,7 @@ def collect() -> dict:
         "items": sorted(items),
         "blocks": {k: blocks[k] for k in sorted(blocks)},
         "entities": sorted(entities),
+        "storage_components": storage,
         "persisted_key_literals": sorted(persisted),
         "packs": packs,
     }
@@ -144,18 +118,13 @@ def load_retirements() -> dict[str, dict]:
     return {row["id"]: row for row in doc.get("retired", [])}
 
 
-def script_text() -> str:
-    bp, _ = runtime_roots()
-    return "\n".join(p.read_text(encoding="utf-8", errors="replace") for p in (bp / "scripts").rglob("*.js"))
 
 
 def check(lock: dict, now: dict) -> tuple[list[str], list[str]]:
     errors, additions = [], []
     retired = load_retirements()
-    scripts = None
 
     def removed(kind: str, ident: str):
-        nonlocal scripts
         row = retired.get(ident)
         if not row:
             errors.append(f"{kind} removed without retirement: {ident}")
@@ -164,10 +133,49 @@ def check(lock: dict, now: dict) -> tuple[list[str], list[str]]:
         if missing:
             errors.append(f"{kind} retirement for {ident} lacks {', '.join(missing)}")
             return
-        if scripts is None:
-            scripts = script_text()
-        if row["migration"] == "runtime" and ident not in scripts:
-            errors.append(f"{kind} {ident} retired with runtime migration, but no script still mentions it")
+        mode = row["migration"]
+        if mode not in ("runtime", "offline-rewrite"):
+            errors.append(f"{kind} {ident}: unsupported migration {mode!r}")
+            return
+        path = Path(row["world_rewrite_receipt"])
+        if path.is_absolute() or ".." in path.parts:
+            errors.append(f"{kind} {ident}: receipt must be a repository-relative evidence file")
+            return
+        try:
+            raw = (ROOT / path).read_bytes()
+            if hashlib.sha256(raw).hexdigest() != row.get("receipt_sha256"):
+                raise ValueError("receipt SHA256 missing or mismatched")
+            proof = json.loads(raw)
+            if proof.get("id") != ident or proof.get("replacement") != row["replacement"]:
+                raise ValueError("receipt identity/replacement mismatch")
+            if proof.get("migration") != mode or proof.get("staging_first_load") is not True or proof.get("staging_restart") is not True:
+                raise ValueError("staging first-load/restart or migration evidence missing")
+            before, after = proof["counts_before"], proof["counts_after"]
+            old, new = before[ident], row["replacement"]
+            if not all(isinstance(n, int) and not isinstance(n, bool) and n >= 0
+                       for n in (old, before.get(new, 0), after[ident], after[new])):
+                raise ValueError("invalid migration counts")
+            if after[ident] != 0 or after[new] != before.get(new, 0) + old:
+                raise ValueError("migration counts do not preserve contents")
+            if mode == "runtime":
+                # A comment mentioning an ID is not evidence. Require a bound
+                # migration source and separately reviewed scenario proof.
+                migration = Path(row.get("migration_source", ""))
+                if migration.is_absolute() or ".." in migration.parts or migration.suffix != ".js":
+                    raise ValueError("invalid migration source")
+                source = ROOT / migration
+                bp, _ = runtime_roots()
+                if not source.resolve().is_relative_to((bp / "scripts").resolve()):
+                    raise ValueError("migration source outside runtime scripts")
+                if hashlib.sha256(source.read_bytes()).hexdigest() != proof.get("migration_source_sha256"):
+                    raise ValueError("migration source is not bound to receipt")
+                if proof.get("scenario_passed") is not True or not proof.get("reviewed_pr"):
+                    raise ValueError("runtime migration requires reviewed scenario evidence")
+                from js_tokens import tokens, literal
+                if ident not in {literal(t) for t in tokens(source.read_text())}:
+                    raise ValueError("old identifier absent from executable migration tokens")
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            errors.append(f"{kind} {ident}: invalid migration evidence: {exc}")
 
     for key in ("items", "entities", "persisted_key_literals"):
         before, after = set(lock.get(key, [])), set(now[key])
@@ -182,14 +190,30 @@ def check(lock: dict, now: dict) -> tuple[list[str], list[str]]:
             continue
         for name, values in states.items():
             if name not in cur:
-                errors.append(f"block {ident} lost state {name} (saved permutations become invalid)")
+                removed("block state", f"{ident}#state:{name}")
                 continue
             lost = sorted(set(values) - set(cur[name]))
             if lost:
-                errors.append(f"block {ident} state {name} lost values {', '.join(lost)}")
+                for value in lost:
+                    removed("block state value", f"{ident}#state:{name}={value}")
+            additions += [f"block {ident} state {name} value added: {v}"
+                          for v in sorted(set(cur[name]) - set(values))]
         for name in sorted(set(cur) - set(states)):
             additions.append(f"block {ident} state added: {name}")
     additions += [f"block added: {i}" for i in sorted(set(now["blocks"]) - set(lock.get("blocks", {})))]
+
+    for ident, schemas in lock.get("storage_components", {}).items():
+        current = now.get("storage_components", {}).get(ident, {})
+        for group, previous in schemas.items():
+            present = current.get(group)
+            if present is None or present != previous:
+                # Fail closed for any storage schema change, including changed
+                # ownership/type and moved component groups, not only shrinking.
+                removed("storage component", f"{ident}#inventory:{group}")
+    for ident, schemas in now.get("storage_components", {}).items():
+        for group in schemas:
+            if group not in lock.get("storage_components", {}).get(ident, {}):
+                additions.append(f"storage component added: {ident}#{group}")
 
     for label, rec in lock.get("packs", {}).items():
         cur = now["packs"].get(label, {})
@@ -210,6 +234,10 @@ def merge(lock: dict, now: dict) -> dict:
         for name, values in states.items():
             prev[name] = sorted(set(prev.get(name, [])) | set(values))
     out["blocks"] = {k: blocks[k] for k in sorted(blocks)}
+    for ident, schemas in now.get("storage_components", {}).items():
+        previous = out.setdefault("storage_components", {}).setdefault(ident, {})
+        for group, inventory in schemas.items():
+            previous.setdefault(group, inventory)
     out.setdefault("packs", now["packs"])
     return out
 

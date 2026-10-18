@@ -4,7 +4,7 @@
 
 ## 1. 身份與寫入目標
 
-- 本 repo：`casama233/kaleidoscope-grilling-unofficial`，repository ID **1377218440**。任何遠端寫入前，讀 `.repo-target.json` 並核對已驗證的 full name **和**數字 ID。
+- 本 repo：`burnt-tea-dev/kaleidoscope-grilling-unofficial`，repository ID **1377218440**。任何遠端寫入前，讀 `.repo-target.json` 並核對已驗證的 full name **和**數字 ID。
 - 不得寫入上游（`breezeth-CN/KaleidoscopeGrilling`）或任何名稱相似的 repo。寫其他 repo 需要擁有者明確指示。
 - 私有整合（senluo-family-integration-private）的內容、作者 Cookery 完整包、世界檔、SSH 金鑰、密碼、BSM token **絕不進入公開 repo、PR、issue、log 或收據**。
 

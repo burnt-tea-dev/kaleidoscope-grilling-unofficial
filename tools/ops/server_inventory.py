@@ -37,17 +37,30 @@ PROPERTY_KEYS = ("level-name", "server-port", "server-portv6", "allow-cheats", "
                  "texturepack-required", "online-mode", "max-players", "tick-distance", "view-distance")
 
 
-def strip_jsonc(text: str) -> str:
-    text = re.sub(r"(?m)^\s*//.*$", "", text)
-    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
-    return re.sub(r",(\s*[}\]])", r"\1", text)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "guards"))
+from jsonc import strip_jsonc
 
 
 def read_json(path: Path):
-    try:
-        return json.loads(strip_jsonc(path.read_text(encoding="utf-8-sig")))
-    except Exception as exc:  # noqa: BLE001 - inventory must keep going
-        return {"__error__": f"{type(exc).__name__}: {exc}"}
+    return json.loads(strip_jsonc(path.read_text(encoding="utf-8-sig")))
+
+
+def version(value):
+    return (isinstance(value, list) and len(value) == 3
+            and all(isinstance(v, int) and not isinstance(v, bool) and v >= 0 for v in value))
+
+
+def manifest(path):
+    doc = read_json(path)
+    if not isinstance(doc, dict) or not isinstance(doc.get("header"), dict):
+        raise ValueError("manifest/header must be objects")
+    header = doc["header"]
+    if not isinstance(header.get("uuid"), str) or not header["uuid"] or not version(header.get("version")):
+        raise ValueError("invalid manifest UUID/version")
+    for field in ["modules", "dependencies"]:
+        if not isinstance(doc.get(field, []), list) or not all(isinstance(x, dict) for x in doc.get(field, [])):
+            raise ValueError(f"invalid manifest {field}")
+    return doc
 
 
 def tree_hash(root: Path) -> tuple[str, int, int]:
@@ -66,8 +79,9 @@ def vstr(v):
     return ".".join(map(str, v)) if isinstance(v, list) else str(v)
 
 
-def installed_packs(server_root: Path, world_dir: Path) -> dict[str, list[dict]]:
+def installed_packs(server_root: Path, world_dir: Path, problems=None) -> dict[str, list[dict]]:
     found: dict[str, list[dict]] = {}
+    problems = problems if problems is not None else []
     roots = []
     for kind, names in PACK_DIRS.items():
         roots += [(kind, server_root / n) for n in names]
@@ -76,19 +90,33 @@ def installed_packs(server_root: Path, world_dir: Path) -> dict[str, list[dict]]
         if not root.is_dir():
             continue
         for man_path in root.glob("*/manifest.json"):
-            man = read_json(man_path)
-            header = man.get("header", {}) if isinstance(man, dict) else {}
-            uuid = header.get("uuid")
-            if not uuid:
+            try:
+                man = manifest(man_path)
+            except (OSError, ValueError, TypeError) as exc:
+                problems.append(f"{man_path}: {exc}")
                 continue
+            header = man["header"]
+            uuid = header["uuid"]
             digest, size, count = tree_hash(man_path.parent)
-            entities = []
+            entities, fragments = [], []
             ent_dir = man_path.parent / "entities"
             if ent_dir.is_dir():
                 for e in ent_dir.rglob("*.json"):
-                    ident = read_json(e).get("minecraft:entity", {}).get("description", {}).get("identifier", "")
-                    if ident.startswith("minecraft:"):
-                        entities.append(ident)
+                    try:
+                        doc = read_json(e)
+                        entity = doc["minecraft:entity"]
+                        if not isinstance(entity, dict): raise ValueError("entity must be an object")
+                        if "description" not in entity:
+                            # Vanilla version-overlay fragments legitimately
+                            # omit description. Report them explicitly rather
+                            # than fabricating an identifier or a parse error.
+                            fragments.append(e.relative_to(man_path.parent).as_posix())
+                            continue
+                        ident = entity["description"]["identifier"]
+                        if not isinstance(ident, str): raise ValueError("entity identifier must be a string")
+                        if ident.startswith("minecraft:"): entities.append(ident)
+                    except (OSError, ValueError, TypeError, KeyError) as exc:
+                        problems.append(f"{e}: invalid entity: {exc}")
             found.setdefault(uuid, []).append({
                 "kind": kind,
                 "folder": str(man_path.parent),
@@ -100,19 +128,28 @@ def installed_packs(server_root: Path, world_dir: Path) -> dict[str, list[dict]]
                 "dependencies": [{"uuid": d.get("uuid"), "module_name": d.get("module_name"),
                                   "version": vstr(d.get("version"))} for d in man.get("dependencies", [])],
                 "vanilla_entity_overrides": sorted(entities),
+                "entity_fragments_without_identifier": sorted(fragments),
                 "sha256_tree": digest, "bytes": size, "files": count,
             })
     return found
 
 
 def world_report(server_root: Path, world_dir: Path) -> dict:
-    installed = installed_packs(server_root, world_dir)
     report = {"world_dir": str(world_dir), "stacks": {}, "problems": []}
+    installed = installed_packs(server_root, world_dir, report["problems"])
     for kind, fname in (("behavior", "world_behavior_packs.json"), ("resource", "world_resource_packs.json")):
-        stack = read_json(world_dir / fname) if (world_dir / fname).exists() else []
+        try:
+            stack = read_json(world_dir / fname)
+            if not isinstance(stack, list): raise ValueError("pack stack must be an array")
+        except (OSError, ValueError, TypeError) as exc:
+            report["problems"].append(f"{fname}: {exc}")
+            stack = []
         rows = []
-        for order, entry in enumerate(stack if isinstance(stack, list) else []):
-            uuid, want = entry.get("pack_id"), vstr(entry.get("version"))
+        for order, entry in enumerate(stack):
+            if not isinstance(entry, dict) or not isinstance(entry.get("pack_id"), str) or not version(entry.get("version")):
+                report["problems"].append(f"{fname} entry {order}: invalid pack identity/version")
+                continue
+            uuid, want = entry["pack_id"], vstr(entry["version"])
             cands = [c for c in installed.get(uuid, []) if c["kind"] == kind]
             match = [c for c in cands if c["version"] == want]
             row = {"order": order, "pack_id": uuid, "version": want,
@@ -152,6 +189,8 @@ def main(argv=None) -> int:
     ap.add_argument("--server-root", required=True, type=Path)
     args = ap.parse_args(argv)
     root = args.server_root.resolve()
+    if not root.is_dir() or not (root / "server.properties").is_file():
+        ap.error("server root must exist and contain server.properties")
     props = {}
     sp = root / "server.properties"
     if sp.exists():
@@ -161,6 +200,8 @@ def main(argv=None) -> int:
                 if k.strip() in PROPERTY_KEYS:
                     props[k.strip()] = v.strip()
     worlds = sorted(p.parent for p in (root / "worlds").glob("*/level.dat")) if (root / "worlds").is_dir() else []
+    if not props.get("level-name") or not any(w.name == props["level-name"] for w in worlds):
+        ap.error("configured active world/level.dat is missing")
     out = {"schema": 1, "server_root": str(root), "server_properties": props,
            "active_world": props.get("level-name"),
            "worlds": [world_report(root, w) for w in worlds]}
@@ -168,7 +209,7 @@ def main(argv=None) -> int:
     sys.stdout.write("\n")
     problems = sum(len(w["problems"]) for w in out["worlds"])
     print(f"{len(worlds)} world(s), {problems} problem(s)", file=sys.stderr)
-    return 0
+    return 1 if problems else 0
 
 
 if __name__ == "__main__":
