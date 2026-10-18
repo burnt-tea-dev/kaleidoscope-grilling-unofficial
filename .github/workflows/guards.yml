@@ -17,7 +17,8 @@ concurrency:
 
 jobs:
   guards:
-    if: github.repository == 'casama233/kaleidoscope-grilling-unofficial' && github.repository_id == '1377218440'
+    # Numeric ID only: it survives owner renames (casama233 -> burnt-tea-dev), the name does not.
+    if: github.repository_id == '1377218440'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
