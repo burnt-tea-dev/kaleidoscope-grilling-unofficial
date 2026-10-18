@@ -1,7 +1,6 @@
 """Immersion audio and truthful shared-guide regressions; client gate is separate."""
 from pathlib import Path
 import hashlib,json,subprocess,sys
-from verify_a2827 import main as baseline
 from verification_session import run_checked_once, session_active
 ROOT=Path(__file__).resolve().parents[2]
 RP=ROOT/'projects/grilling/gameplay_core/resource_pack'
@@ -41,6 +40,7 @@ def verify_sound_registry(defs,proof,version):
     assert set(defs)==expected_names, 'Missing or unreviewed sound event'
 
 def main():
+    from verify_a2827 import main as baseline
     baseline()
     subprocess.run(['node','--test','development/gameplay_core/test_immersion_audio.mjs','development/gameplay_core/test_localized_heat_lore.mjs','development/gameplay_core/test_pending_audio.mjs','development/gameplay_core/test_full_skewer_flow.mjs'],cwd=ROOT,check=True)
     if session_active():
