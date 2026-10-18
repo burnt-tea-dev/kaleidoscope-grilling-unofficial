@@ -25,7 +25,8 @@ def historical153_checks():
     """
     import g154_host_source as host
     import current_runtime_ownership as owner
-    before = host.predecessor_runtime(owner.runtime_files())
+    current = owner.runtime_files()
+    before = host.predecessor_runtime(current)
     inputs = ['tools', 'development', 'projects/grilling/guide', 'config.json',
               'projects/grilling/gameplay_core/config.json', 'baseline.json', 'release-history.json',
               'docs/RELEASE-NOTES-A2.8.151.md', 'docs/RELEASE-NOTES-A2.8.152.md',
@@ -55,7 +56,7 @@ def historical153_checks():
         for relative, contents in before.items():
             target = snapshot / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            if relative in host.RUNTIME_PATHS:
+            if current[relative] != contents:
                 target.write_bytes(contents)
             else:
                 # Complete byte equality was checked before any link exists.
@@ -80,6 +81,12 @@ def historical153_checks():
 
 def main(expected_version=(2, 8, 154)):
     assert expected_version == (2, 8, 154)
+    semantic_checks(expected_version)
+
+
+def semantic_checks(expected_version):
+    """Current semantics run on the fully admitted exact successor runtime."""
+    assert expected_version in ((2, 8, 154), (2, 8, 155))
     import current_runtime_ownership as owner
     owner.verify_current_inventory()
     run_checked_once([sys.executable, '-B', 'tools/test_g154_host_source.py'], cwd=ROOT)
@@ -101,7 +108,7 @@ def main(expected_version=(2, 8, 154)):
         run_checked_once(command, cwd=ROOT)
     historical153_checks()
     owner.verify_current_inventory()
-    print('G154 actual source semantic checks PASS; native/client/rendered acceptance remains separate')
+    print('Current actual source semantic checks PASS; native/client/rendered acceptance remains separate')
 
 
 if __name__ == '__main__':

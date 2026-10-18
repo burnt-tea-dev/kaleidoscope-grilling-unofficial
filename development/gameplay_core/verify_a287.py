@@ -84,7 +84,8 @@ def binding_assets():
    # This route was added in G151 and has no historical pose proof. Its entire
    # sealed current payload still faces every binding/pose check below.
    from skewer_content_source import addition_bytes,VERSION
-   assert version in (tuple(VERSION),(2,8,152),(2,8,153)),p
+   from g154_host_source import predecessor_version
+   assert tuple(predecessor_version(list(version))) in (tuple(VERSION),(2,8,152),(2,8,153)),p
    data=addition_bytes(p)
   else:data=reference_bytes(p)
   d=json.loads(data)['minecraft:attachable']['description'];selected=[]

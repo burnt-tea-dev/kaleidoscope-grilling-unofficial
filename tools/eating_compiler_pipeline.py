@@ -61,7 +61,7 @@ def enabled(stage,c):
   'complete':c.review_three_routes and c.slime_frames and c.failure_skewers,
   'performance':c.version>=(2,8,144) and c.review_three_routes and c.slime_frames and c.failure_skewers,
   'owner_properties':c.version>=(2,8,147) and c.review_three_routes and c.slime_frames and c.failure_skewers,
-  'skewer_content':c.version in ((2,8,151),(2,8,152),(2,8,153),(2,8,154)) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
+  'skewer_content':c.version in ((2,8,151),(2,8,152),(2,8,153),(2,8,154),(2,8,155)) and c.review_three_routes and c.slime_frames and c.failure_skewers}[stage.gate]
 
 def apply_stage(stage,output,c):
  if stage.name=='partial_attachable':
@@ -90,7 +90,7 @@ ordered checkpoints, preserving historical flag/version combinations exactly.
  validate_stages()
  if resume_after not in (None,'g126'):raise ValueError('Unknown compiler checkpoint')
  if resume_after=='g126' and context.version<(2,8,126):raise ValueError('G126 checkpoint requires G126 version')
- repair=context.version in ((2,8,153),(2,8,154))
+ repair=context.version in ((2,8,153),(2,8,154),(2,8,155))
  if repair:
   from current_runtime_ownership import verify_current_inventory
   from g153_repair_source import reapply_bytes

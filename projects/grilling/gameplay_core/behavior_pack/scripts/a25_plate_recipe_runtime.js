@@ -4,7 +4,6 @@ import {useSound} from './immersion_audio_runtime.js';
 import {itemTranslationKey} from './a2745_skewer_recipe_hud_core.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 import {decodePlateStorage,verifiedPlateStep,commitPlateSteps,plateFacingFromYaw} from './plate_transaction_core.js';
-import {commitSteps} from './a277_grill_transaction_core.js';
 import {nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction} from './owned_item_transaction_core.js';
 import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from './itemData.js';
 import {hasSolidTop,hasFullCubeCollision,hasSturdySide} from './blockSupport.js';
@@ -12,7 +11,7 @@ import {withoutAutomaticCreatorLore} from './a23_hot_runtime.js';
 import {creatorLore} from './localized_lore_core.js';
 import {queueStationContentsVisual} from './station_contents_visual_queue.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from './a283_interaction_feedback.js';
-import {world,system,ItemStack,EnchantmentType} from '@minecraft/server';
+import {world,system,ItemStack,EnchantmentType,BlockPermutation} from '@minecraft/server';
 import {
  UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SECRET_CREATOR_KEY,secretFood,recipeTable
 } from './a24_skewering_core.js';
@@ -53,10 +52,6 @@ function decrementOff(player,count=1){
 function decrementHand(player,hand,count=1){
  if(creative(player))return true;const s=heldByHand(player,hand);if(!s||s.amount<count)return false;
  if(s.amount===count)setHand(player,hand,undefined);else{s.amount-=count;setHand(player,hand,s)}return true;
-}
-function give(player,stack){
- if(!stack)return;const c=mainContainer(player);if(!c){player.dimension.spawnItem(stack,player.location);return}
- try{const rem=c.addItem(stack);if(rem)player.dimension.spawnItem(rem,player.location)}catch{player.dimension.spawnItem(stack,player.location)}
 }
 function primitiveProps(stack){
  const out={};let ids=[];try{ids=getItemPropertyIds(stack)}catch{}
@@ -155,14 +150,27 @@ function readPlateBlock(block){
  assertPlateAvailable(block);
  return normalizePlateRows(decodePlateStorage(world.getDynamicProperty(posKey(PLATE_PREFIX,block))));
 }
+function blockPermutationStep(block,before,after){
+ const dimension=block.dimension,location={...block.location};
+ const target=()=>{const current=dimension.getBlock(location);if(!current)throw Error('Grilling: captured block unavailable');return current};
+ const signature=p=>metadataSignature({id:p.type.id,states:p.getAllStates()});
+ return verifiedPlateStep({read:()=>target().permutation,write:value=>target().setPermutation(value),before,after,signature});
+}
 function plateStorageStep(block,rows){
  assertPlateAvailable(block);
  const key=posKey(PLATE_PREFIX,block),before=world.getDynamicProperty(key);
  decodePlateStorage(before);decodePlateStorage(JSON.stringify(rows));
  const step=verifiedPlateStep({read:()=>world.getDynamicProperty(key),write:value=>world.setDynamicProperty(key,value),before,after:JSON.stringify(normalizePlateRows(rows))});
+ const dimension=block.dimension,location={...block.location};let count;
  return {
-  apply(){step.apply();syncPlateCount(block,rows.length)},
-  rollback(){step.rollback();if(block.typeId===PLATE_BLOCK_ID)syncPlateCount(block,decodePlateStorage(before).length)}
+  apply(){
+   const current=dimension.getBlock(location);
+   if(current?.typeId!==PLATE_BLOCK_ID)throw Error('Grilling: plate count target changed');
+   const permutation=current.permutation;
+   count=blockPermutationStep(current,permutation,permutation.withState('kaleidoscope_grilling:plate_count',rows.length));
+   step.apply();count.apply();
+  },
+  rollback(){if(count)count.rollback();step.rollback()}
  };
 }
 function plateHandStep(captured,next){
@@ -237,11 +245,7 @@ function sameRecipeForAction(row){
  return block?.typeId===RECIPE_BLOCK_ID&&metadataSignature(block.permutation.getAllStates())===row.states&&world.getDynamicProperty(posKey(RECIPE_PREFIX,block))===row.saved?block:undefined;
 }
 function recipeRemovalStep(block){
- const before=block.permutation;
- return {
-  apply(){block.setType('minecraft:air');if(block.typeId!=='minecraft:air')throw Error('Grilling: recipe removal rejected')},
-  rollback(){block.setPermutation(before);if(block.typeId!==before.type.id||metadataSignature(block.permutation.getAllStates())!==metadataSignature(before.getAllStates()))throw Error('Grilling: recipe removal rollback rejected')}
- };
+ return blockPermutationStep(block,block.permutation,BlockPermutation.resolve('minecraft:air'));
 }
 function recipeInventoryDelivery(player,book){
  const container=mainContainer(player);if(!container)return undefined;
@@ -332,7 +336,7 @@ function placePlateOn(support,face,player,source,hand='main'){
  if(interactionStackSignature(captured.before)!==interactionStackSignature(source))return false;
  const next=captured.before?.clone();if(!next)return false;
  const remainder=next.amount===1?undefined:next;if(remainder)remainder.amount--;
- const place={apply(){target.setType(PLATE_BLOCK_ID);target.setPermutation(target.permutation.withState('minecraft:cardinal_direction',facing));if(target.typeId!==PLATE_BLOCK_ID||target.permutation.getState('minecraft:cardinal_direction')!==facing)throw Error('Grilling: plate placement rejected')},rollback(){target.setPermutation(before);if(target.typeId!==before.type.id||metadataSignature(target.permutation.getAllStates())!==metadataSignature(before.getAllStates()))throw Error('Grilling: plate placement rollback rejected')}};
+ const place=blockPermutationStep(target,before,BlockPermutation.resolve(PLATE_BLOCK_ID,{'minecraft:cardinal_direction':facing}));
  if(!plateTransaction(target,[place,plateStorageStep(target,rows),...(creative(player)?[]:[plateHandStep(captured,remainder)])]))return false;
  try{target.dimension.playSound('dig.wood',target.location,{volume:.8,pitch:1})}catch{}
  return true;
@@ -364,13 +368,14 @@ function breakPlate(block,player){
  const receiptKey=posKey(PLATE_PREFIX,block)+'_delivery',receiptBefore=world.getDynamicProperty(receiptKey),receipt={phase:'prepared',saved:world.getDynamicProperty(posKey(PLATE_PREFIX,block)),drop:!!drop};
  const journal=verifiedPlateStep({read:()=>world.getDynamicProperty(receiptKey),write:v=>world.setDynamicProperty(receiptKey,v),before:receiptBefore,after:JSON.stringify(receipt)});
  const signature=s=>s?metadataSignature({amount:s.amount,...captureSkewerMetadata(s)}):'';
- let escrow;
+ let escrow,spawnAttempted=false;
  const delivery={
   apply(){
    if(!drop)return;
    try{
+    spawnAttempted=true;
     escrow=dim.spawnItem(drop,loc);
-    if(!escrow?.isValid||signature(escrow.getComponent('minecraft:item')?.itemStack)!==signature(drop))throw Error('Grilling: plate drop readback differs');
+    if(escrow?.isValid!==true||signature(escrow.getComponent('minecraft:item')?.itemStack)!==signature(drop))throw Error('Grilling: plate drop readback differs');
    }catch(error){
     // A spawn call can fail after creating an inaccessible item. Never retry
     // automatically when no returned entity exists to confirm its removal.
@@ -379,26 +384,27 @@ function breakPlate(block,player){
    }
   },
   rollback(){
-   if(!escrow)return;
-   try{if(escrow.isValid)escrow.remove()}catch(error){if(escrow.isValid)throw error}
-   if(escrow.isValid)throw Error('Grilling: plate drop cleanup unconfirmed');
+   if(!spawnAttempted)return;
+   if(!escrow)throw Error('Grilling: plate drop spawn outcome unknown');
+   if(escrow.isValid===false)return;
+   if(escrow.isValid!==true||signature(escrow.getComponent('minecraft:item')?.itemStack)!==signature(drop))throw Error('Grilling: plate drop ownership unconfirmed');
+   try{escrow.remove()}catch(error){if(escrow.isValid!==false)throw error}
+   if(escrow.isValid!==false)throw Error('Grilling: plate drop cleanup unconfirmed');
   }
  };
  const key=posKey(PLATE_PREFIX,block),raw=world.getDynamicProperty(key);
  const clear=verifiedPlateStep({read:()=>world.getDynamicProperty(key),write:value=>world.setDynamicProperty(key,value),before:raw,after:undefined});
- const remove={
-  apply(){block.setType('minecraft:air');if(block.typeId!=='minecraft:air')throw Error('Grilling: plate removal rejected')},
-  rollback(){block.setPermutation(before);if(block.typeId!==before.type.id||metadataSignature(block.permutation.getAllStates())!==metadataSignature(before.getAllStates()))throw Error('Grilling: plate removal rollback rejected')}
- };
- const commitReceipt={apply(){receipt.phase='delivered';const value=JSON.stringify(receipt);world.setDynamicProperty(receiptKey,value);if(world.getDynamicProperty(receiptKey)!==value)throw Error('plate receipt commit');},rollback(){receipt.phase='prepared';world.setDynamicProperty(receiptKey,JSON.stringify(receipt));}};
+ const remove=blockPermutationStep(block,before,BlockPermutation.resolve('minecraft:air'));
+ const commitReceipt=verifiedPlateStep({read:()=>world.getDynamicProperty(receiptKey),write:value=>world.setDynamicProperty(receiptKey,value),before:JSON.stringify(receipt),after:JSON.stringify({...receipt,phase:'delivered'})});
  return plateTransaction(block,[journal,delivery,clear,remove,commitReceipt]);
 }
 function recordBookFromSkewer(player,book,skewer,hand='main'){
  const custom=skewerIngredientIds(skewer),record=makeBookRecord(skewer.typeId,custom);
  if(!record){message(player,'§c這根串不能記錄成配方');return false}
  const out=bookItem(record,stackRow(skewer),book);if(!out)return false;
- const before=heldByHand(player,hand)?.clone();
- const result=commitSteps([{apply(){setHand(player,hand,out);if(interactionStackSignature(heldByHand(player,hand))!==interactionStackSignature(out))throw Error('Recipe hand write rejected')},rollback(){setHand(player,hand,before)}}]);
+ const captured=captureWritableHand(player,hand);
+ if(nativeItemSignature(captured.before)!==nativeItemSignature(book))return false;
+ const result=commitPlayerItemTransaction(world,player,[plateHandStep(captured,out)],{tick:system.currentTick,label:'record recipe'});
  if(!result.ok){console.warn('[Grilling record recipe] '+result.error+'; rollback errors='+result.rollbackErrors);return false}
  return true;
 }
@@ -470,10 +476,18 @@ function handleBookAir(player,item){
 function convertCookeryRecipe(player){
  const main=heldMain(player),off=heldOff(player);if(!main||!COOKERY_RECIPE_ITEMS.has(main.typeId)||!isRecordableStack(off))return false;
  const custom=skewerIngredientIds(off),record=makeBookRecord(off.typeId,custom);if(!record)return false;
- const out=bookItem(record,stackRow(off));if(!creative(player)){
-  if(main.amount<=1)setMain(player,undefined);else{main.amount-=1;setMain(player,main)}
- }
- give(player,out);return true;
+ const out=bookItem(record,stackRow(off)),container=mainContainer(player);if(!out||!container)return false;
+ const slot=player.selectedSlotIndex,captured=captureWritableHand(player,'main');
+ if(nativeItemSignature(captured.before)!==nativeItemSignature(main))return false;
+ const before=Array.from({length:container.size},(_,i)=>container.getItem(i)?.clone());
+ if(nativeItemSignature(before[slot])!==nativeItemSignature(captured.before))return false;
+ const consumed=before.map(s=>s?.clone()),free=creative(player);
+ if(!free){if(consumed[slot].amount===1)consumed[slot]=undefined;else consumed[slot].amount--}
+ const delivery=planOwnedInventoryDelivery(container,[out],{startingItems:consumed,dimension:player.dimension,location:player.location});
+ const debit=ownedItemStep({read:captured.read,write:captured.write,before:captured.before,after:consumed[slot],canRestore:delivery.canRestoreInputs});
+ const result=commitPlayerItemTransaction(world,player,[...(free?[]:[debit]),...delivery.steps],{tick:system.currentTick,label:'convert recipe'});
+ if(!result.ok)console.warn('[Grilling convert recipe] '+result.error+'; rollback errors='+result.rollbackErrors);
+ return result.ok;
 }
 function placeRecipeBlock(support,face,player,book,hand='main'){
  const f=faceName(face);if(!['north','south','west','east'].includes(f))return false;
@@ -488,7 +502,7 @@ function placeRecipeBlock(support,face,player,book,hand='main'){
  const before=target.permutation,saved=JSON.stringify({...stackRow(book),placementId:system.currentTick+':'+(++recipePlacementSequence)});
  // Restore the snapshot before touching the hand, including native metadata.
  if(!readBookRecord(restoreStack(JSON.parse(saved))))throw Error('Grilling: recipe placement cannot be restored');
- const place={apply(){target.setType(RECIPE_BLOCK_ID);target.setPermutation(target.permutation.withState('minecraft:cardinal_direction',f));if(target.typeId!==RECIPE_BLOCK_ID||target.permutation.getState('minecraft:cardinal_direction')!==f)throw Error('Grilling: recipe placement rejected')},rollback(){target.setPermutation(before);if(target.typeId!==before.type.id||metadataSignature(target.permutation.getAllStates())!==metadataSignature(before.getAllStates()))throw Error('Grilling: recipe placement rollback rejected')}};
+ const place=blockPermutationStep(target,before,BlockPermutation.resolve(RECIPE_BLOCK_ID,{'minecraft:cardinal_direction':f}));
  if(!recipeTransaction(target,[place,recipePropertyStep(key,undefined,saved),...(creative(player)?[]:[plateHandStep(captured,remainder)])]))return false;
  try{target.dimension.playSound('block.itemframe.place',target.location,{volume:.8,pitch:1})}catch{}return true;
 }

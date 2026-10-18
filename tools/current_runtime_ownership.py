@@ -71,7 +71,13 @@ def validate_inventory(actual,document):
  guide_recipe_changes=0
  repair_changes=0
  host162_changes=0
+ plate_transfer_changes=0
  current_count=len(actual)
+ if version==[2,8,155]:
+  from g155_plate_source import predecessor_runtime, RUNTIME_PATHS
+  actual=predecessor_runtime(actual)
+  plate_transfer_changes=len(RUNTIME_PATHS)
+  version=[2,8,154]
  if version==[2,8,154]:
   from g154_host_source import predecessor_runtime, RUNTIME_PATHS
   actual=predecessor_runtime(actual)
@@ -132,6 +138,7 @@ def validate_inventory(actual,document):
  if guide_recipe_changes:result['guide_recipe_layer_changes']=guide_recipe_changes
  if repair_changes:result['g153_repair_layer_changes']=repair_changes
  if host162_changes:result['g154_host_layer_changes']=host162_changes
+ if plate_transfer_changes:result['g155_plate_layer_changes']=plate_transfer_changes
  return result
 
 def validate_plate_source():

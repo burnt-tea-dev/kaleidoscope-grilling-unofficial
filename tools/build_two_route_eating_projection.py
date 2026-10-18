@@ -154,8 +154,8 @@ def main():
     args = parser.parse_args()
     from eating_owner_context import augment as current_context
     from skewer_content_source import historical_bytes
-    if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) in ((2,8,153),(2,8,154)) and not args.check:
-        raise ValueError('Scoped historical builder cannot overwrite G153 or G154; use build_eating_motion.py')
+    if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) in ((2,8,153),(2,8,154),(2,8,155)) and not args.check:
+        raise ValueError('Scoped historical builder cannot overwrite G153 or G154 or G155; use build_eating_motion.py')
     # The historical CLI checks the exact G150 source recovered from a sealed
     # G151 postimage. Do not let its write mode export that predecessor over
     # current runtime; full current generation owns the G151 reapplication.

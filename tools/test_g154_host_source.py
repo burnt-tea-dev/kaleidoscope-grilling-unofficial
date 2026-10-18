@@ -73,6 +73,13 @@ class HostSource(unittest.TestCase):
             stage = next(s for s in pipeline.STAGES if s.name == 'skewer_content')
             self.assertTrue(pipeline.enabled(stage, context))
 
+    def test_slime_builder_preserves_exact_current_main_and_rejects_other_bytes(self):
+        import build_slime_frame_selector as selector
+        text = selector.MAIN.read_text()
+        self.assertEqual(selector.install_main(text), text)
+        with self.assertRaises(ValueError):
+            selector.install_main(text + '\nrunUnreviewed();\n')
+
     def test_partial_legacy_builders_cannot_overwrite_actual154(self):
         import build_caterpillar_eating_projection as caterpillar
         import build_two_route_eating_projection as two_route

@@ -93,10 +93,13 @@ def key_for(path):
 def reference_bytes(path, actual=None):
     key = key_for(path)
     actual = (ROOT / key).read_bytes() if actual is None else actual
+    from g155_plate_source import historical_bytes as outer_history
     if key not in PATHS:
-        return actual
+        return outer_history(key, actual)
     row = ledger()['changes'][key]
     before = preceding_bytes(key)
+    if actual != before:
+        actual = outer_history(key, actual)
     if key in ADDED:
         raise ValueError('Added G154 path has no historical byte preimage: ' + key)
     if sha(before) != row['before_sha256']:
@@ -110,7 +113,8 @@ def expected_files():
     doc = ledger()
     files = dict(preceding_files())
     for path in PATHS:
-        raw = (ROOT / path).read_bytes()
+        from g155_plate_source import historical_bytes as outer_history
+        raw = outer_history(path, (ROOT / path).read_bytes())
         before = preceding_bytes(path)
         row = doc['changes'][path]
         if row['before_sha256'] != (None if before is None else sha(before)) or row['after_sha256'] != sha(raw) or raw == before:
@@ -121,6 +125,9 @@ def expected_files():
 
 
 def predecessor_runtime(actual):
+    if json.loads(actual.get(BP + '/manifest.json', b'{}')).get('header', {}).get('version') == [2, 8, 155]:
+        from g155_plate_source import predecessor_runtime as outer_predecessor
+        actual = outer_predecessor(actual)
     before = preceding_files()
     if actual != expected_files() or set(actual) != set(before) | ADDED:
         raise ValueError('G154 runtime differs from complete reviewed host layer')
@@ -138,6 +145,20 @@ def active(root=ROOT):
         return False
 
 
+def applies(root=ROOT):
+    """The exact outer layer recovers G154 before its frozen checks run."""
+    if root != ROOT:
+        return False
+    from g155_plate_source import predecessor_version
+    return predecessor_version(json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']) == [2, 8, 154]
+
+
 def historical_bytes(path, actual=None):
     actual = (ROOT / path).read_bytes() if actual is None else actual
-    return reference_bytes(path, actual) if active() else actual
+    return reference_bytes(path, actual) if applies() else actual
+
+
+def predecessor_version(version):
+    from g155_plate_source import predecessor_version as outer_version
+    version = outer_version(version)
+    return json.loads(reference_bytes(BP + '/manifest.json'))['header']['version'] if version == [2, 8, 154] else version

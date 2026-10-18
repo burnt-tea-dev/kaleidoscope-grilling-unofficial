@@ -8,6 +8,10 @@ class RuntimeOwnership(unittest.TestCase):
  def setUpClass(cls):
   cls.current_actual=owner.runtime_files();cls.doc=owner.manifest()
   cls.actual=cls.current_actual
+  cls.has_g155=json.loads(cls.actual[owner.PREFIXES[0]+'/manifest.json'])['header']['version']==[2,8,155]
+  if cls.has_g155:
+   from g155_plate_source import predecessor_runtime
+   cls.actual=predecessor_runtime(cls.actual)
   if json.loads(cls.actual[owner.PREFIXES[0]+'/manifest.json'])['header']['version']==[2,8,154]:
    from g154_host_source import predecessor_runtime
    cls.actual=predecessor_runtime(cls.actual)
@@ -22,6 +26,7 @@ class RuntimeOwnership(unittest.TestCase):
  def test_reviewed_candidate_and_independent_source_validators(self):
   expected={'baseline_files':4496,'current_files':4552,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6,'skewer_content_layer_changes':66,'guide_recipe_layer_changes':6,'g153_repair_layer_changes':38}
   if self.current_actual is not self.actual:expected.update(current_files=4553,g154_host_layer_changes=7)
+  if self.has_g155:expected['g155_plate_layer_changes']=6
   self.assertEqual(owner.verify_current_runtime(),expected)
  def test_repair_layer_rejects_mutated_postimages_and_recovers_exact_g152(self):
   import g153_repair_source as repair

@@ -175,8 +175,8 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
     from eating_owner_context import augment as current_context, legacy_document
     from skewer_content_source import historical_bytes
-    if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) in ((2,8,153),(2,8,154)) and not args.check:
-        raise ValueError('Scoped historical builder cannot overwrite G153 or G154; use build_eating_motion.py')
+    if tuple(json.loads((BP/'manifest.json').read_text())['header']['version']) in ((2,8,153),(2,8,154),(2,8,155)) and not args.check:
+        raise ValueError('Scoped historical builder cannot overwrite G153 or G154 or G155; use build_eating_motion.py')
     inputs={path:legacy_document(json.loads(path.read_text())) for path in [RP/'attachables/grilled_caterpillar_skewer.attachable.json',RP/'render_controllers/java_eating_player.render_controllers.json']}
     for path,value in current_context(augment(inputs)).items():
         data=value if isinstance(value,bytes) else (value.encode() if isinstance(value,str) else dump(value))

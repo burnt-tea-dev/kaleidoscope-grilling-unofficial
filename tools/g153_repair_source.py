@@ -175,7 +175,14 @@ def reference_bytes(path, actual=None):
     if '..' in Path(key).parts:
         raise ValueError('G153 source path leaves the repository')
     actual = (ROOT/key).read_bytes() if actual is None else actual
-    from g154_host_source import active as host_active, PATHS as HOST_PATHS, reference_bytes as host_reference
+    from g155_plate_source import historical_bytes as outer_history
+    if key in PATHS and actual == preceding_bytes(key):
+        return actual
+    # A composed witness may already hold the exact G153 postimage. Every
+    # successor byte string must cross its own sealed boundary first.
+    if key not in PATHS or sha(actual) != ledger()['changes'][key]['after_sha256']:
+        actual = outer_history(key, actual)
+    from g154_host_source import applies as host_active, PATHS as HOST_PATHS, reference_bytes as host_reference
     if key not in PATHS:
         return host_reference(key, actual) if host_active(ROOT) and key in HOST_PATHS else actual
     before = preceding_bytes(key)
@@ -203,7 +210,7 @@ def expected_files():
     files = dict(preceding_files())
     for path in PATHS:
         actual = (ROOT/path).read_bytes()
-        from g154_host_source import active as host_active, reference_bytes as host_reference
+        from g154_host_source import applies as host_active, reference_bytes as host_reference
         if host_active(ROOT): actual = host_reference(path, actual)
         row = doc['changes'][path]
         before = preceding_bytes(path)
@@ -216,6 +223,9 @@ def expected_files():
 
 
 def predecessor_runtime(actual):
+    if json.loads(actual.get(BP+'/manifest.json', b'{}')).get('header', {}).get('version') == [2,8,155]:
+        from g155_plate_source import predecessor_runtime as outer_predecessor
+        actual = outer_predecessor(actual)
     if json.loads(actual.get(BP+'/manifest.json', b'{}')).get('header', {}).get('version') == [2,8,154]:
         from g154_host_source import predecessor_runtime as host_predecessor
         actual = host_predecessor(actual)
@@ -241,7 +251,12 @@ def reapply_bytes(path, historical):
         raise ValueError('Legacy builder changed G153 predecessor: '+key)
     actual = (ROOT/key).read_bytes()
     reference_bytes(key, actual)
-    if sha(actual) != ledger()['changes'][key]['after_sha256']:
+    from g155_plate_source import historical_bytes as outer_history
+    from g154_host_source import applies as host_active, PATHS as HOST_PATHS, reference_bytes as host_reference
+    admitted = outer_history(key, actual)
+    if host_active(ROOT) and key in HOST_PATHS:
+        admitted = host_reference(key, admitted)
+    if sha(admitted) != ledger()['changes'][key]['after_sha256']:
         raise ValueError('Missing admitted G153 postimage: '+key)
     return actual
 
@@ -253,10 +268,13 @@ def historical_bytes(path, actual=None):
         version = json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError('Invalid release identity at the G153 repair boundary') from error
-    return reference_bytes(path, actual) if version in ([2, 8, 153], [2, 8, 154]) else actual
+    from g155_plate_source import predecessor_version as outer_version
+    return reference_bytes(path, actual) if outer_version(version) in ([2, 8, 153], [2, 8, 154]) else actual
 
 
 def predecessor_version(version):
+    from g155_plate_source import predecessor_version as outer_version
+    version = outer_version(version)
     if version == [2,8,154]:
         from g154_host_source import reference_bytes as host_reference
         version = json.loads(host_reference(BP+'/manifest.json'))['header']['version']

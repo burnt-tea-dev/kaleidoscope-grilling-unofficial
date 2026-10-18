@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "predecessor_commit": "7eadfebf370aa3e5927084b8bf2c47272ed006e9",
+  "predecessor_tree": "2e6bc329356aafb15a3f1a8040006a534ce9a680",
+  "predecessor_version": [
+    2,
+    8,
+    154
+  ],
+  "version": [
+    2,
+    8,
+    155
+  ],
+  "evidence_scope": "source_only",
+  "native_acceptance": false,
+  "client_acceptance": false,
+  "imported_plate_source": {
+    "commit": "5a0cf60ae510bc05ee49eb7178aa975a1be59487",
+    "base": "686cde5578ae5ddc66632b8e0d24fa9d6d89b656",
+    "tree": "b063246da03554e2dd768542b1b7fa0ed4df3a7b",
+    "paths": [
+      "projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_runtime.js",
+      "projects/grilling/gameplay_core/behavior_pack/scripts/plate_transaction_core.js"
+    ]
+  },
+  "changes": {
+    "config.json": {
+      "owner": "paired155_packaging",
+      "operation": "modify",
+      "before_sha256": "fa7193b0565d43919f09ac80bc14def332803f7a00b4fa155fb74dce18bc9849",
+      "after_sha256": "087ef3c598904f07090ddcf0fc98f2bb4aa1f6e294c5b422b92cc58bc48ba920"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
+      "owner": "g155_paired_identity",
+      "operation": "modify",
+      "before_sha256": "9159f03e5bf41bfba70a983b0de0c13eb614b8cc8f09d272ce5ac8cbc886aed7",
+      "after_sha256": "d8dc3804625d14997225a3040ce73453611a316791f091e334d77a2b0c863e16"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_runtime.js": {
+      "owner": "plate_transfer_ownership",
+      "operation": "modify",
+      "before_sha256": "c70568b7b8adc3ba87c264b57eb9c69a77b276624fee9f1ad5df6db8c4b1c172",
+      "after_sha256": "020dc2c53a3f5f702455c2db1624e4f5f6a0821911d3c816577f7ff85f559cd0"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/guide/payload.js": {
+      "owner": "guide155_identity",
+      "operation": "modify",
+      "before_sha256": "4ae7b4a82dbf7d81f31e3f367e9248da29693f35bccbc0162b126fee7cb757d9",
+      "after_sha256": "5f2339710cd0d05bf2954de021f5ee1c9e877c4200d26b042b8bc9e5135dd444"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/guide/publisher.js": {
+      "owner": "guide155_identity",
+      "operation": "modify",
+      "before_sha256": "ee4c3c6b058194af8a01cd801e6435622ea91fac8a159133733f0a09bdcea513",
+      "after_sha256": "06df93d2a3c3f8b1c7abebfc65c36c5b51bb6bd171a4abbde16cd2245cf24af4"
+    },
+    "projects/grilling/gameplay_core/behavior_pack/scripts/plate_transaction_core.js": {
+      "owner": "plate_transfer_ownership",
+      "operation": "modify",
+      "before_sha256": "3cf39f179152e27edb8799aa7586a0584214172fbe8c844bd9a2bea9cda42ba3",
+      "after_sha256": "a22a97a74ea26a0703408d27acf86b927ac4467f4f74b559e78d0a560e8e06a0"
+    },
+    "projects/grilling/gameplay_core/config.json": {
+      "owner": "paired155_packaging",
+      "operation": "modify",
+      "before_sha256": "c5ea04bcfce86c392336bcabf3792b55b98b85101b3b3e16aa5f4bf5857932d8",
+      "after_sha256": "ab6a001f329fdb72213d15e6d5aeb5c486223d44cb7a919397146f174ee0f895"
+    },
+    "projects/grilling/gameplay_core/resource_pack/manifest.json": {
+      "owner": "g155_paired_identity",
+      "operation": "modify",
+      "before_sha256": "1982848768d9d69d8036b63b4f39a92b0fcf9cf5966bbbdf948c18b1ee8ecb3a",
+      "after_sha256": "975ab58bdab2b3cf727845b65aca36f59d4a8f4c2cb7abd7d4dbc1fde5f12e96"
+    },
+    "projects/grilling/guide/catalog.a3.json": {
+      "owner": "guide155_identity",
+      "operation": "modify",
+      "before_sha256": "5a47baee66db65e66bf3f1ca99443152dc8acc64864605304d7362bc2f330107",
+      "after_sha256": "526a14a2bf3b11fff997239d30ba72d6353576c993e62662fe21c72a2e190b76"
+    }
+  }
+}
