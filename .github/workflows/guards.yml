@@ -1,0 +1,67 @@
+name: Rebuild guards (save compatibility + growth ratchet)
+
+# Fast, path-unfiltered, required on every PR. See docs/REBUILD-PLAN.md §2.
+# Must stay standard-library Python and finish in seconds.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: grilling-guards-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guards:
+    if: github.repository == 'casama233/kaleidoscope-grilling-unofficial' && github.repository_id == '1377218440'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Guard self-test
+        run: python3 tools/guards/test_guards.py
+
+      - name: Save compatibility against this tree's lock
+        run: python3 tools/guards/save_compat.py check
+
+      - name: Growth ratchet against this tree's ceilings
+        run: python3 tools/guards/growth_ratchet.py check
+
+      - name: Compare with the base branch (editing the lock or ceilings cannot hide damage)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          OWNER_OVERRIDE: ${{ contains(github.event.pull_request.labels.*.name, 'owner-approved-guard-change') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/guards-base"; mkdir -p "$tmp"
+          if git cat-file -e "$BASE_SHA:tools/guards/save-compat.lock.json" 2>/dev/null; then
+            git show "$BASE_SHA:tools/guards/save-compat.lock.json" > "$tmp/lock.json"
+            python3 tools/guards/save_compat.py check --lock "$tmp/lock.json"
+          else
+            echo "base has no save-compat lock yet (bootstrap PR)"
+          fi
+          if git cat-file -e "$BASE_SHA:tools/guards/growth-ratchet.json" 2>/dev/null; then
+            git show "$BASE_SHA:tools/guards/growth-ratchet.json" > "$tmp/ceilings.json"
+            if [ "$OWNER_OVERRIDE" = "true" ]; then
+              echo "::warning::owner-approved-guard-change label present; base ceilings not enforced"
+            else
+              python3 tools/guards/growth_ratchet.py check --ceilings "$tmp/ceilings.json"
+            fi
+          fi
+          # The guard files themselves may not disappear.
+          for f in tools/guards/save_compat.py tools/guards/growth_ratchet.py tools/guards/save-compat.lock.json \
+                   tools/guards/growth-ratchet.json tools/guards/id-retirements.json AGENTS.md docs/REBUILD-PLAN.md \
+                   docs/SAVE-COMPAT.md; do
+            if git cat-file -e "$BASE_SHA:$f" 2>/dev/null && [ ! -f "$f" ]; then
+              echo "::error::$f was deleted; guard and plan files are protected"; exit 1
+            fi
+          done

@@ -1,0 +1,29 @@
+{
+ "schema": 1,
+ "ceilings": {
+  "per_version_verifiers": 259,
+  "augment_layer_scripts": 66,
+  "version_layer_tools": 10,
+  "tests_total": 278,
+  "source_text_slicing_tests": 33,
+  "status_docs": 186,
+  "release_note_docs": 24,
+  "docs_files_total": 461,
+  "committed_artifact_files": 146,
+  "history_tree_files": 274,
+  "script_modules": 265,
+  "version_prefixed_script_modules": 125,
+  "global_block_interact_handlers": 12,
+  "global_break_handlers": 13,
+  "global_explosion_handlers": 7,
+  "script_event_listeners": 23,
+  "run_intervals": 16,
+  "vanilla_entity_overrides": 1,
+  "item_definitions": 249,
+  "shadow_route_items": 64,
+  "rp_geometry_files": 923,
+  "version_prefixed_model_dirs": 7,
+  "largest_geometry_kib": 7291,
+  "rp_total_mib": 57
+ }
+}

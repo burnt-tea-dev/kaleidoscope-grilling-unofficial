@@ -1,3 +1,5 @@
+> **重建進行中（2026-10-18 起）：** 本 repo 依 [docs/REBUILD-PLAN.md](docs/REBUILD-PLAN.md) 重建。P3 完成前只接受存檔安全修補；所有變更受 [存檔相容規則](docs/SAVE-COMPAT.md) 與 `tools/guards/` 護欄約束。代理請先讀 [AGENTS.md](AGENTS.md)。
+
 > **Published-download notice (2026-10-18):** Actual G138 TEST/G149 stable fault-injection replay found item-loss, overwrite and duplication paths. These are API-model findings, not native frequency claims. Exact Cookery dependencies, historical release-text corrections and the public assembler's TEST/stable source-lock boundaries are in [published installation and safety guidance](docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md). Existing download bytes are unchanged.
 
 ## Current maintained source: 2.8.155
