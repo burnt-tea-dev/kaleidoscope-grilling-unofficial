@@ -14,13 +14,17 @@ class BaselineGateTests(unittest.TestCase):
   for side in ['BP','RP']:
    root=self.root/'runtime'/side;root.mkdir(parents=True)
    (root/'manifest.json').write_text(json.dumps({'header':{'uuid':side.lower(),'version':[1,0,0]},'modules':[{'version':[1,0,0]}]}));(root/'content.json').write_text('{}')
+  self.target={'repository':'fixture-org/owned','repository_id':1,'owner':{'login':'fixture-org','id':2,'type':'Organization'},'private':False,'logical_runtime_repository':'fixture/owned'}
+  (self.root/'.repo-target.json').write_text(json.dumps(self.target))
   self.config['source_trees'],self.files=gate.validate(self.config)
   (self.root/'release-history.json').write_text(json.dumps({'1.0.0':self.config['source_trees']}))
   self.git('init','-q');self.git('config','user.email','fixture@example.invalid');self.git('config','user.name','Fixture');self.git('add','.');self.git('commit','-qm','Fixture')
   self.base=self.git('rev-parse','HEAD').strip()
-  self.env={k:os.environ.pop(k) for k in ['GITHUB_REPOSITORY','GITHUB_REPOSITORY_ID'] if k in os.environ}
+  self.env={k:os.environ.pop(k) for k in ['GITHUB_REPOSITORY','GITHUB_REPOSITORY_ID','GITHUB_REPOSITORY_OWNER','GITHUB_REPOSITORY_OWNER_ID','GITHUB_EVENT_PATH','GITHUB_ACTIONS','SENLUO_SOURCE_GATE'] if k in os.environ}
  def tearDown(self):
-  gate.ROOT=self.previous;os.environ.update(self.env);self.tmp.cleanup()
+  gate.ROOT=self.previous
+  for key in ['GITHUB_REPOSITORY','GITHUB_REPOSITORY_ID','GITHUB_REPOSITORY_OWNER','GITHUB_REPOSITORY_OWNER_ID','GITHUB_EVENT_PATH','GITHUB_ACTIONS','SENLUO_SOURCE_GATE']:os.environ.pop(key,None)
+  os.environ.update(self.env);self.tmp.cleanup()
  def git(self,*args):return subprocess.check_output(['git',*args],cwd=self.root,text=True)
  def reject(self,part,fn):
   with self.assertRaises(SystemExit) as caught:fn()
@@ -54,6 +58,54 @@ class BaselineGateTests(unittest.TestCase):
     for path in rows:z.writestr(side+'/'+path,(self.root/self.config['runtime'][side]/path).read_bytes())
    z.writestr('BP/install-only.js','hidden patch')
   self.reject('archive differs',lambda:gate.verify_export(self.config,archive,self.files))
+ def ci_identity(self):
+  event=self.root/'event.json';event.write_text(json.dumps({'repository':{'full_name':self.target['repository'],'id':1,'owner':self.target['owner'],'private':False}}))
+  os.environ.update({'GITHUB_REPOSITORY':self.target['repository'],'GITHUB_REPOSITORY_ID':'1','GITHUB_REPOSITORY_OWNER':'fixture-org','GITHUB_REPOSITORY_OWNER_ID':'2','GITHUB_EVENT_PATH':str(event)})
+  return event
+ def test_transferred_repository_preserves_logical_release_identity(self):
+  before=copy.deepcopy(self.config);self.ci_identity();gate.check(self.config)
+  self.assertEqual(self.config,before)
+ def test_wrong_owner_visibility_or_repository_event_rejected(self):
+  event=self.ci_identity();original=json.loads(event.read_text())
+  for key,value in [('id',99),('full_name','other/owned'),('private',True),('owner',{'login':'fixture-org','id':3,'type':'Organization'}),('owner',{'login':'fixture-org','id':2,'type':'User'})]:
+   changed=copy.deepcopy(original);changed['repository'][key]=value;event.write_text(json.dumps(changed))
+   with self.subTest(key=key,value=value):self.reject('event identity',lambda:gate.check(self.config))
+  event.write_text(json.dumps(original));os.environ['GITHUB_REPOSITORY_OWNER_ID']='3'
+  self.reject('wrong repository owner',lambda:gate.check(self.config))
+ def test_cross_repository_marker_requires_fixed_parent_and_child_identity(self):
+  target=json.loads((Path(__file__).resolve().parents[1]/'.repo-target.json').read_text())
+  (self.root/'.repo-target.json').write_text(json.dumps(target));config=copy.deepcopy(self.config)
+  config.update(repository=target['logical_runtime_repository'],repository_id=target['repository_id'])
+  event=self.root/'parent-event.json';actual={'full_name':'burnt-tea-dev/kaleidoscope-tavern-unofficial','id':1377171148,'owner':target['owner'],'private':False}
+  event.write_text(json.dumps({'repository':actual}))
+  values={'GITHUB_REPOSITORY':target['repository'],'GITHUB_REPOSITORY_ID':str(target['repository_id']),'GITHUB_REPOSITORY_OWNER':'burnt-tea-dev','GITHUB_REPOSITORY_OWNER_ID':'344456559','GITHUB_EVENT_PATH':str(event),'SENLUO_SOURCE_GATE':'1'}
+  saved={key:os.environ.get(key) for key in values};os.environ.update(values)
+  try:
+   gate.validate_repository(config)
+   actual['id']=99;event.write_text(json.dumps({'repository':actual}))
+   self.reject('event identity',lambda:gate.validate_repository(config))
+   actual['id']=1377171148;actual['full_name']='fork/kaleidoscope-tavern-unofficial';event.write_text(json.dumps({'repository':actual}))
+   self.reject('unreviewed cross-repository',lambda:gate.validate_repository(config))
+  finally:
+   for key,value in saved.items():
+    if value is None:os.environ.pop(key,None)
+    else:os.environ[key]=value
+ def test_canonical_target_pins_organization_and_repository_id(self):
+  target=json.loads((Path(__file__).resolve().parents[1]/'.repo-target.json').read_text());config=copy.deepcopy(self.config)
+  config.update(repository=target['logical_runtime_repository'],repository_id=target['repository_id']);path=self.root/'.repo-target.json'
+  path.write_text(json.dumps(target));gate.validate_repository(config)
+  for change in ['organization','owner_id','repository_id']:
+   changed=copy.deepcopy(target);current=copy.deepcopy(config)
+   if change=='organization':changed['owner']['login']='another-org';changed['repository']='another-org/'+target['repository'].split('/')[-1]
+   elif change=='owner_id':changed['owner']['id']=99
+   else:changed['repository_id']=current['repository_id']=99
+   path.write_text(json.dumps(changed))
+   with self.subTest(change=change):self.reject('canonical repository target mismatch',lambda:gate.validate_repository(current))
+ def test_missing_or_unreviewed_target_rejected(self):
+  path=self.root/'.repo-target.json';path.unlink();self.reject('target missing',lambda:gate.check(self.config))
+  for key,value in [('repository_id',99),('logical_runtime_repository','other/owned'),('private',True)]:
+   target=copy.deepcopy(self.target);target[key]=value;path.write_text(json.dumps(target))
+   with self.subTest(key=key):self.reject('target mismatch',lambda:gate.check(self.config))
  def test_wrong_repository_rejected(self):
   os.environ['GITHUB_REPOSITORY']='wrong/repo'
   try:self.reject('wrong repository',lambda:gate.check(self.config))

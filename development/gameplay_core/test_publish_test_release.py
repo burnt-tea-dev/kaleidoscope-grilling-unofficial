@@ -28,7 +28,7 @@ def host_baseline(host='1.6.0', version=(2, 8, 73)):
         '1.6.1': ('d0ca7a68-2877-4bd5-bc82-6c7b325cccf2', 'c9df2982-d72e-4bbf-a72c-b77de4ea915b'),
     }[host]
     return {
-        'schema': 1, 'repository': publish.REPO, 'repository_id': publish.REPO_ID,
+        'schema': 1, 'repository': publish.LOGICAL_REPO, 'repository_id': publish.REPO_ID,
         'version': list(version),
         'runtime': {'BP': 'projects/grilling/gameplay_core/behavior_pack',
                     'RP': 'projects/grilling/gameplay_core/resource_pack'},
@@ -288,7 +288,7 @@ class FakeGitHub:
         self.release = None
         self.tag_sha = None
         self.head = sha
-        self.identity = {'full_name': publish.REPO, 'id': publish.REPO_ID}
+        self.identity = {'full_name': publish.REPO, 'id': publish.REPO_ID, 'owner': {**publish.OWNER, 'avatar_url': 'https://example.invalid/avatar'}, 'private': False}
         self.commit_sha = sha
         self.remote_assets = {}
         self.latest_id = 42
@@ -361,7 +361,7 @@ class PublicationTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
-        (root / '.repo-target.json').write_text(json.dumps({'repository': publish.REPO, 'repository_id': publish.REPO_ID}))
+        (root / '.repo-target.json').write_text(json.dumps({'repository': publish.REPO, 'repository_id': publish.REPO_ID, 'logical_runtime_repository': publish.LOGICAL_REPO, 'owner': publish.OWNER, 'private': False}))
         self.assets = []
         for name in ('g66.mcaddon', 'g66.brproject', 'SHA256SUMS.txt', 'build-report.json', 'bounded-evidence.json'):
             path = root / name
@@ -471,6 +471,8 @@ class PublicationTests(unittest.TestCase):
 
     def test_wrong_remote_identity_head_commit_or_tag_never_writes(self):
         for key, value in (('identity', {'full_name': publish.REPO, 'id': 1}),
+                           ('identity', {'full_name': publish.REPO, 'id': publish.REPO_ID, 'owner': {**publish.OWNER, 'id': 99}, 'private': False}),
+                           ('identity', {'full_name': publish.REPO, 'id': publish.REPO_ID, 'owner': publish.OWNER, 'private': True}),
                            ('head', 'b' * 40), ('commit_sha', 'b' * 40), ('tag_sha', 'b' * 40)):
             with self.subTest(key=key):
                 original = getattr(self.remote, key)

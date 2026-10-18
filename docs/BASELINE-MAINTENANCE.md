@@ -13,7 +13,7 @@
 
 Historical artifacts and branches are evidence, not release input. A PR being closed or merged does not prove its content survives in the resulting tree. Reconcile by behaviour and verify the resulting source/export.
 
-Family operations and integration tooling: `casama233/kaleidoscope-tavern-unofficial/family/MAINTENANCE.md`.
+Family operations and integration tooling: `burnt-tea-dev/kaleidoscope-tavern-unofficial/family/MAINTENANCE.md`.
 
 CI runs the current functional suite once per candidate in **Grilling Gameplay Core — Canonical**. It writes a source receipt outside the checkout, binding HEAD and every non-output tracked/nonignored input (including fixtures, config and verifier code). After the pinned Dash build, `verify_current.py --compiled-only --source-validation <receipt>` rejects source/HEAD drift and checks the exact exported file set and contents. It does not rerun or claim a second functional pass. `--compiled` retains the original full-suite behavior for standalone use. Failed functional runs remove stale receipts, and source changes during a run cannot receive a receipt.
 
@@ -28,3 +28,5 @@ The historical A2.0 `build.py` now refuses its default destructive path. It acce
 Release freeze now claims the version and exact runtime trees in Git’s shared common directory before changing locks. All local worktrees and known remote-tracking histories are checked for collisions. A conflicting or incomplete claim must be preserved for review; choose a new release version instead of deleting or rewriting it. This coordination guard does not replace PR checks or fresh family deployment evidence.
 
 The owner’s 2026-10-06 requirements apply: repairs must reach canonical remote Git; current Java releases drive adaptation; source/version pinning never establishes full Java parity. Reuse exact unchanged functional evidence and keep only integrity checks at meaningful state transitions. Private integration stays private.
+
+The reviewed 2026-10-19 transfer keeps the repository numeric ID and all runtime release identities. `.repo-target.json` pins the current organization, owner ID and public visibility; baseline CI verifies its Actions repository/event identity. `baseline.json`, release-history and source receipts retain their original logical repository name so unchanged runtime is not relabeled.

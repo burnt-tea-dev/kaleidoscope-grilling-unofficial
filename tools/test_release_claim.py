@@ -21,7 +21,7 @@ class ReleaseClaimTests(unittest.TestCase):
         self.base = Path(self.temporary.name)
         self.root, self.other = self.base / 'repo', self.base / 'other'
         self.root.mkdir()
-        self.environment = {key: value for key, value in os.environ.items() if key not in ['GITHUB_REPOSITORY', 'GITHUB_REPOSITORY_ID']}
+        self.environment = {key: value for key, value in os.environ.items() if key not in ['GITHUB_REPOSITORY','GITHUB_REPOSITORY_ID','GITHUB_REPOSITORY_OWNER','GITHUB_REPOSITORY_OWNER_ID','GITHUB_EVENT_PATH','GITHUB_ACTIONS','SENLUO_SOURCE_GATE']}
         self.git(self.root, 'init', '-q', '-b', 'main')
         self.git(self.root, 'config', 'user.email', 'fixture@example.invalid')
         self.git(self.root, 'config', 'user.name', 'Release fixture')
@@ -35,6 +35,7 @@ class ReleaseClaimTests(unittest.TestCase):
             (folder / 'manifest.json').write_text(json.dumps({'header': {'uuid': side.lower(), 'version': [1, 0, 0]}, 'modules': [{'version': [1, 0, 0]}]}))
             (folder / 'content.json').write_text('{}')
             self.config['packs'][side] = {'uuid': side.lower(), 'dependencies': []}
+        (self.root / '.repo-target.json').write_text(json.dumps({'repository':'fixture-org/owned','repository_id':1,'owner':{'login':'fixture-org','id':2,'type':'Organization'},'private':False,'logical_runtime_repository':'fixture/owned'}))
         self.config['source_trees'] = self.trees(self.root)
         (self.root / 'baseline.json').write_text(json.dumps(self.config))
         (self.root / 'release-history.json').write_text(json.dumps({'1.0.0': self.config['source_trees']}))
