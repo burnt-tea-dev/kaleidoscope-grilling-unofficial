@@ -1,3 +1,5 @@
+> **Published-download notice (2026-10-18):** Actual G138 TEST/G149 stable fault-injection replay found item-loss, overwrite and duplication paths. These are API-model findings, not native frequency claims. Exact Cookery dependencies, historical release-text corrections and the public assembler's TEST/stable source-lock boundaries are in [published installation and safety guidance](docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md). Existing download bytes are unchanged.
+
 ## Current maintained source: 2.8.152
 
 **G152 uses Cookery 1.6.1 / family API 0.2.12.** It preserves the G151 skewer repairs and synchronizes the three-language chopping-board guide with the actual current outputs. It repairs current chopping-board ingredient production, short-recipe progress, native-mode secret-skewer contents and eating-data ownership, and appends four missing Cookery foods to the display catalog. The [G151 repair review](docs/evidence/skewer-repair-20261017.md) records the actual source defects, verification and remaining client scope. It retains the earlier author identity/state adaptation and Java grill/rack collision repairs.
