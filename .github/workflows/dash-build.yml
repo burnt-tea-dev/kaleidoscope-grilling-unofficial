@@ -5,7 +5,8 @@ on:
       - '.github/workflows/dash-build.yml'
       - 'projects/grilling/config.json'
       - 'projects/grilling/resource_pack/**'
-      - 'projects/grilling/integration/cookery106/**'
+      - 'development/verify_dash_outputs.py'
+      - 'development/test_verify_dash_outputs.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -42,12 +43,15 @@ jobs:
         run: |
           & "$env:RUNNER_TEMP/dash.exe" build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Compile Cookery guide chapter BP and RP
-        working-directory: projects/grilling/integration/cookery106
+      # The standalone Cookery106 chapter was retired in a0218906. The guide
+      # is compiled with the existing product by bridge-project/gameplay CI.
+      - name: Exercise asset export failure guards
         shell: pwsh
         run: |
-          & "$env:RUNNER_TEMP/dash.exe" build
+          python development/test_verify_dash_outputs.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify actual compiled files
         shell: pwsh
-        run: python development/verify_dash_outputs.py
+        run: |
+          python development/verify_dash_outputs.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
