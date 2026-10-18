@@ -3,6 +3,7 @@ import copy
 import json
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -10,6 +11,43 @@ import current_runtime_ownership as owner
 import g154_host_source as host
 import g155_plate_source as plate
 import g153_repair_source as repair
+
+
+class VerifierImports(unittest.TestCase):
+    def test_current_entries_initialize_tools_before_historical_imports(self):
+        # The canonical runner starts with only the verifier directory on its
+        # source search path. An earlier verifier must not initialize tools for
+        # the current entry as an accidental import side effect.
+        code = """import importlib, pathlib, sys
+from unittest.mock import patch
+root = pathlib.Path.cwd()
+tools = root / 'tools'
+sys.path[:] = [str(root / 'development/gameplay_core'),
+               *[p for p in sys.path if pathlib.Path(p).resolve() != tools]]
+if sys.argv[2] == 'direct':
+    module = importlib.import_module(sys.argv[1])
+    assert callable(module.main)
+else:
+    import verification_session_runner as runner
+    from verify_current import DEV, VERIFIERS
+    run_path = runner.runpy.run_path
+    def import_only(path, **kwargs):
+        # Exercise the actual receipt runner's path/session setup while keeping
+        # the current verifier's main and historical gameplay tests uncalled.
+        result = run_path(path, run_name='canonical_import_probe')
+        assert callable(result['main'])
+        return result
+    with patch.object(runner.runpy, 'run_path', import_only):
+        runner.run_registered_verifier(DEV / (sys.argv[1] + '.py'),
+                                       directory=DEV, registered=VERIFIERS)
+import bottle_clear_guide_source_witness as witness
+assert pathlib.Path(witness.__file__).resolve() == tools / 'bottle_clear_guide_source_witness.py'
+"""
+        for entry in ['verify_a28154', 'verify_a28155']:
+            for mode in ['direct', 'registered']:
+                with self.subTest(entry=entry, mode=mode):
+                    subprocess.run([sys.executable, '-B', '-c', code, entry, mode], cwd=plate.ROOT,
+                                   check=True, capture_output=True, text=True)
 
 
 class PlateSource(unittest.TestCase):

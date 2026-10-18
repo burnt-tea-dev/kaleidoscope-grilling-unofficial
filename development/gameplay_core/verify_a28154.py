@@ -9,11 +9,11 @@ import sys
 import tarfile
 import tempfile
 
-from verify_a28152 import main as previous
-from verification_session import run_checked_once
-
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
+
+from verify_a28152 import main as previous
+from verification_session import run_checked_once
 
 
 def historical153_checks():
