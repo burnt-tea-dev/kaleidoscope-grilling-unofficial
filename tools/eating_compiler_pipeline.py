@@ -3,7 +3,7 @@
 Source/donor reads remain owned by each compiler. Supplied output documents are
 not disk fallbacks. Late imports preserve the existing historical module graph.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from importlib import import_module
 import json
 
@@ -55,6 +55,8 @@ def validate_stages(stages=None):
   seen.add(stage.name)
 
 def enabled(stage,c):
+ from g154_plate_source import predecessor_version
+ c=replace(c,version=tuple(predecessor_version(list(c.version))))
  return {'always':True,'modern':c.version>=(2,8,58),'g126':c.version>=(2,8,126),
   'g127':c.two_route_camera or c.version>=(2,8,127),'review':c.review_three_routes,
   'failure':c.failure_skewers,'slime':c.slime_frames,
@@ -88,6 +90,8 @@ Prerequisites express ordering, not forced activation: disabled stages remain
 ordered checkpoints, preserving historical flag/version combinations exactly.
 """
  validate_stages()
+ from g154_plate_source import predecessor_version
+ context=replace(context,version=tuple(predecessor_version(list(context.version))))
  if resume_after not in (None,'g126'):raise ValueError('Unknown compiler checkpoint')
  if resume_after=='g126' and context.version<(2,8,126):raise ValueError('G126 checkpoint requires G126 version')
  repair=context.version==(2,8,153)

@@ -61,7 +61,8 @@ def build(attachable_overrides=None, *, two_route_camera=False, review_three_rou
  from build_failure_skewer_held import base_assets as failure_assets
  overrides.update(failure_assets())
  main_path=BP/'scripts/main.js'
- version=tuple(json.loads((BP/'manifest.json').read_text())['header']['version'])
+ from g154_plate_source import predecessor_version
+ version=tuple(predecessor_version(json.loads((BP/'manifest.json').read_text())['header']['version']))
  if version in ((2,8,151),(2,8,152),(2,8,153)) and main_path in overrides:
   from skewer_content_source import generator_main_source
   if version==(2,8,153):

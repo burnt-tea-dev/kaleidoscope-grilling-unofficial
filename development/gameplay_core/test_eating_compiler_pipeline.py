@@ -22,7 +22,8 @@ class PipelineTests(unittest.TestCase):
    expected=guard_properties({p:expected})[p]
    if p==main:
     expected=reapply_skewer_content(expected)
-    if tuple(json.loads((motion.BP/'manifest.json').read_text())['header']['version'])==(2,8,153):
+    from g154_plate_source import predecessor_version
+    if tuple(predecessor_version(json.loads((motion.BP/'manifest.json').read_text())['header']['version']))==(2,8,153):
      from g153_repair_source import reapply_bytes
      expected=reapply_bytes(main,expected.encode()).decode()
    self.assertEqual(encoded(expected),encoded(after[p]),str(p));self.assertEqual(p.read_bytes(),encoded(after[p]),str(p))

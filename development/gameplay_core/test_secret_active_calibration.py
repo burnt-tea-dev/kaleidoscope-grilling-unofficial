@@ -225,7 +225,8 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    allowed.add(relative)
   # G153 owns precisely two new oil clips, checked against both the complete
   # generator and the immutable reviewed add ledger. Legacy clips stay pinned.
-  if version==(2,8,153):
+  from g154_plate_source import predecessor_version
+  if tuple(predecessor_version(list(version)))==(2,8,153):
    from build_oil_brush_visuals import outputs as oil_outputs,encode as oil_encode
    from g153_repair_source import ledger as repair_ledger,sha as repair_sha
    generated=oil_outputs();reviewed=repair_ledger()['changes']

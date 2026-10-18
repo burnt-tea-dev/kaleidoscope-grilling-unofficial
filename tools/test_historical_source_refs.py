@@ -19,8 +19,8 @@ class HistoricalSourceRefsTests(unittest.TestCase):
    path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':58,'commits':58})
-  for ref in ('5bc8f43f45a6cd0d287b5557db24e2da4dd2c207','ba49ee55b67ab4f679c37fa833039857443a47f2','aa091a1e91035d1510b579af11254a9bc9f86e6b','aa7431f9ea729338f75f134a9c9be8194298b968','58f2fc72a286b1ddf210128017c36f14dad759a9','b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
+  self.assertEqual(verify(),{'refs':59,'commits':59})
+  for ref in ('686cde5578ae5ddc66632b8e0d24fa9d6d89b656','5bc8f43f45a6cd0d287b5557db24e2da4dd2c207','ba49ee55b67ab4f679c37fa833039857443a47f2','aa091a1e91035d1510b579af11254a9bc9f86e6b','aa7431f9ea729338f75f134a9c9be8194298b968','58f2fc72a286b1ddf210128017c36f14dad759a9','b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
               '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
               'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
               'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f',

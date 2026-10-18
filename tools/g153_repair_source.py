@@ -193,10 +193,11 @@ def reference_bytes(path, actual=None):
 def expected_files():
     # Working postimages and the ledger must be revalidated on every admission.
     # Cache only immutable Git predecessors, never mutable candidate evidence.
+    from g154_plate_source import historical_bytes as plate_history
     doc = ledger()
     files = dict(preceding_files())
     for path in PATHS:
-        actual = (ROOT/path).read_bytes()
+        actual = plate_history(path, (ROOT/path).read_bytes())
         row = doc['changes'][path]
         before = preceding_bytes(path)
         if ((None if before is None else sha(before)) != row['before_sha256'] or sha(actual) != row['after_sha256']
@@ -236,16 +237,21 @@ def reapply_bytes(path, historical):
 
 
 def historical_bytes(path, actual=None):
-    """Admit the current live G153 source before any immutable older inverse."""
+    """Admit G154 then the exact live G153 layer before older inverses."""
+    from g154_plate_source import historical_bytes as plate_history, predecessor_version as plate_version
     actual = (ROOT / path).read_bytes() if actual is None else actual
+    actual = plate_history(path, actual)
     try:
         version = json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError('Invalid release identity at the G153 repair boundary') from error
+    version = plate_version(version)
     return reference_bytes(path, actual) if version == [2, 8, 153] else actual
 
 
 def predecessor_version(version):
+    from g154_plate_source import historical_bytes as plate_history, predecessor_version as plate_version
+    version = plate_version(version)
     if version != [2, 8, 153]:
         return version
-    return json.loads(reference_bytes(BP + '/manifest.json'))['header']['version']
+    return json.loads(reference_bytes(BP + '/manifest.json', plate_history(BP + '/manifest.json')))['header']['version']
