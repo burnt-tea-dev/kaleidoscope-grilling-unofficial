@@ -292,7 +292,7 @@ scripts/
 **T1.8 staging 伺服器**（§5.4）
 - 驗收：BSM 內有 `luosen-staging`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 luosen 相同；能正常開服、進入、重啟。
 
-**P1 出口條件**：T1.2–T1.8 全部完成。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
+**P1 出口條件**：T1.2–T1.10 全部完成（T1.4 的 pack 組合盤點已於 2026-10-19 完成，見 §5.0；剩 content log warning 分類）。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
 
 ### P2：Repo 瘦身（runtime 位元組不得改變）
 
@@ -421,14 +421,39 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 ## 5. 伺服器與 luosen 存檔作業手冊
 
-> 依家族 repo 既有設定範本，伺服器慣例路徑為 `/srv/bsm/servers/<伺服器名>`、世界在 `worlds/<level-name>/`、來源在 `/srv/src/{tavern,grilling,world-liquor}`、准入政策在 `/srv/bsm/plugins/addon_quality`。**實際路徑以 T1.4 盤點結果為準**，以下 `<BDS>` 代表 luosen 的 BDS 根目錄。
+> 以下 `<BDS>` 代表 luosen 的 BDS 根目錄。2026-10-19 盤點實測：BSM 以 Docker 容器執行（`dmedina559/bedrock-server-manager:3.10.6`，容器名 `bsm-container`），資料卷 `bsm_data` 掛在主機 `/var/lib/docker/volumes/bsm_data/_data`（容器內 `/root/bedrock-server-manager`）。所以 `<BDS>` = `/var/lib/docker/volumes/bsm_data/_data/servers/luosen`，世界 = `<BDS>/worlds/Bedrock level`。家族範本裡的 `/srv/bsm/...` 不是這台的實際路徑；`/srv/src`、`addon_quality`、`family_bundle` 的實際位置仍待確認。
+
+### 5.0 luosen 實測現況（2026-10-19 01:33 唯讀盤點）
+
+來源：擁有者電腦以 SSH 唯讀收集的 metadata（未停服、未寫入、不含憑證與世界資料庫內容）。原始報告不進公開 repo（含主機名稱與 port）；以下只記錄對重建有影響的事實。
+
+| 項目 | 實測 | 對計畫的影響 |
+| --- | --- | --- |
+| BDS 版本 | 伺服器內附 vanilla pack 到 1.26.52 | GameTest／staging 用同版本 BDS |
+| 世界啟用 | **26 個 BP、24 個 RP**；manifest 全部可解析、相依沒有缺 | 排查衝突時要看整個組合，不只家族包 |
+| 腳本包 | 25 個 BP 帶 script 模組，`@minecraft/server` 版本從 1.13.0 到 2.10.0 混用 | 伺服器腳本負載高；煙火的逐 tick 迴圈與 16 個 interval 會和其他 24 個腳本包搶 tick 預算（伺服器設定 `script-watchdog-slow-threshold=10`、`spike=100`） |
+| **最高優先權包** | 第 1 位是「森羅私有修復支援 1.0.57」BP（純 data）＋RP；**RP 相依 Tavern、Grilling、World Liquor、A Magic Way、Java Saturation、Immersive Eating** | Bedrock 列在越前面優先權越高，同路徑檔案由它覆蓋下面的包。**repo 裡修好的 RP 檔案，在 luosen 可能被私有包覆蓋而看不到**——這是「視覺修了卻沒變」的直接可能原因（T1.9） |
+| Cookery | 作者 Cookery 1.6.2（BP 第 12 位）；其中 `scripts/api/cuisine_api_host.js`、`board_api_core.js`、`food_api_core.js` 與本 repo `host_api/` 同名檔**逐位元相同** | 需確認作者官方 1.6.2 發布包是否本來就含這些檔（作者採納）或是部署時被注入（宿主修補）（T1.10） |
+| 改版的第三方包 | 「森羅廚房：國味」標示「相容修補 1.0.55；作者原版 1.0.6」、版本號改成 1.0.10657；「Java Saturation」「UI Queue」「FP decode」都帶「Senluo HUD／Senluo FP decode」標記與改過的版本號 | 家族對第三方包也做了修補版，這些都屬於 §6 要收斂的私有整合範圍；HUD 通道衝突（`KT_HUD!` 原始碼外露）與這幾個包有關 |
+| 另一個進食包 | 「Kaleidoscope Immersive Eating 1.1.0」BP＋RP 同時啟用 | 與煙火自己的進食動畫／投影可能重疊；T3.4 與 D6 必須把它列入相容驗證（staging 第 11 項） |
+| 主機資源 | 16 GB RAM、可用約 4.2 GB；**2 GB swap 已用盡**；同時有 2 個 `bedrock_server` 程序 | 記憶體吃緊；巨型 geometry 與高頻腳本會放大問題。staging 伺服器要確認記憶體足夠再開，必要時先停掉另一個 BDS |
+| 磁碟 | 248 GB 中約 33 GB 可用 | 每份停服備份的大小要先量；保留策略（§5.3）要配合可用空間 |
+| content log | 最新一份尾段 1228 行：0 個 error、**489 個 warning** | 尚未分類；T1.4 補做 warning 分類（哪個包、哪類） |
+| 伺服器設定 | survival、easy、`allow-cheats=true`、`tick-distance=4`、`view-distance=8`、`max-players=10`、content log 有開 | — |
+
+新增 P1 任務：
+
+- **T1.9 私有包覆蓋清單**：列出「森羅私有修復支援」RP（與 BP）中每個與 Grilling RP／BP **同路徑**的檔案，逐一分類：(a) 已在 Grilling 修好、私有包是舊版 → 從私有包移除；(b) 私有包修的是 Grilling 的真 bug → 移進 Grilling canonical；(c) 跨包整合 → 依 §6。驗收：覆蓋 Grilling 的檔案數歸零，或每個都有分類與去處。
+- **T1.10 Cookery 原版比對**：取得作者官方 Cookery 1.6.2 發布包，比對伺服器上那份的逐檔雜湊。驗收：列出伺服器版與官方版不同的每個檔案及來源。若有任何注入，計畫 §6.2 的「B 宿主修補」要把它們全部移除。
 
 ### 5.1 存取
 
 - SSH 金鑰由擁有者提供；**金鑰、密碼、BSM token 一律不得寫入任何 repo、PR、issue、log 或收據**。
 - 進入伺服器後第一步：
   ```sh
-  hostname; date; df -h /srv; ls /srv/bsm/servers/
+  hostname; date; free -h; df -h /var/lib/docker
+  docker ps --format '{{.Names}} {{.Image}} {{.Status}}'
+  ls /var/lib/docker/volumes/bsm_data/_data/servers/
   grep -E '^(level-name|server-port)=' <BDS>/server.properties
   ```
 
@@ -443,7 +468,12 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 1. 公告玩家 → 透過 BSM 正常停止 luosen（不要 kill）。
 2. 確認程序已結束、`<BDS>/worlds/<level>/db/LOCK` 不被占用。
-3. 打包：`tar --zstd -cpf /srv/backups/luosen-<YYYYMMDD-HHMM>-<目的>.tar.zst -C <BDS> worlds/<level> world_behavior_packs.json? behavior_packs resource_packs development_behavior_packs development_resource_packs server.properties permissions.json allowlist.json`（不存在的路徑略過；世界內的 `world_*_packs.json` 已含在 world 目錄）。
+3. 打包（luosen 的附加包都裝在世界目錄內的 `behavior_packs/`、`resource_packs/`，會一起備份）：
+   ```sh
+   cd <BDS> && tar --zstd -cpf <備份目錄>/luosen-<YYYYMMDD-HHMM>-<目的>.tar.zst \
+     "worlds/Bedrock level" server.properties permissions.json allowlist.json 2>/dev/null
+   ```
+   `<備份目錄>` 由擁有者指定，**不要放在 bsm_data 卷內**（同一磁碟故障會一起遺失）；先 `du -sh "<BDS>/worlds/Bedrock level"` 確認空間。
 4. `sha256sum` 寫入同名 `.sha256`；記錄大小。
 5. 解壓到臨時目錄抽驗 `level.dat` 存在、`db/` 檔數一致。
 6. 複製一份到伺服器以外的位置（擁有者指定）。
@@ -452,7 +482,8 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 ### 5.4 staging 伺服器
 
 - 在 BSM 建立 `luosen-staging`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
-- 世界：從最新備份解壓。pack：與 luosen 相同組合，再換上候選版本。
+- 世界：從最新備份解壓。pack：與 luosen 相同組合（26 BP／24 RP，含私有修復支援包與 Immersive Eating），再換上候選版本。
+- 主機記憶體吃緊（§5.0）：開 staging 前看 `free -h`；可用記憶體不足時先和擁有者確認是否暫停另一個 BDS。
 - 每次驗證流程：開服（看 content log 無錯誤）→ 進服 → 執行 §9.5 檢查 → 正常停服 → 再開服 → 抽查資料仍在。
 - staging 世界用完可重置，**永遠不要把 staging 世界複製回 luosen**。
 
@@ -487,6 +518,8 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 ## 6. senluo-family-integration-private 收斂方針
 
 > 本計畫撰寫時無法存取該私有 repo；以下是終態要求與盤點步驟，具體檔案清單由 T1.7 補上。
+>
+> 伺服器盤點（§5.0）已確認它在 luosen 的實際形態：最高優先權的「森羅私有修復支援 1.0.57」BP＋RP（覆蓋 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating 的資源），加上數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
 
 ### 6.1 盤點（T1.7）
 
