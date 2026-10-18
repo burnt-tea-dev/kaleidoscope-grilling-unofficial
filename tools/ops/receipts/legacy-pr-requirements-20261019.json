@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "task": "T1.3",
+  "captured_at": "2026-10-18T19:04:53.511260+00:00",
+  "purpose": "Retain player-visible requirements and exact unique source heads before closing the five legacy PRs named by REBUILD-PLAN. This is a capture/requirements register, not proof that gameplay is repaired.",
+  "archive_tag": "archive/pre-rebuild-20261018",
+  "archive_commit": "4d5fb095cce110d759ca59ccad7fe3408ec4a563",
+  "parity_transfer": "Requirements are first registered in this task PR description; T2.6 transfers these references into docs/PARITY.md.",
+  "legacy_prs": [
+    {
+      "row": 1,
+      "pr": 214,
+      "url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/214",
+      "state_at_capture": "OPEN",
+      "branch": "fix/grilling-parity-conservation-20261015",
+      "head": "be4990b544e532a5817a822c53ce026489bec7df",
+      "player_visible_requirement": "餐盤／食譜交易失敗或花椒採收掉落結果不明時，必須保留物品資料與所有權，避免覆寫外來物品、重複退款／採收或遺失內容。",
+      "parity_domains": [
+        "plate",
+        "recipe",
+        "crops",
+        "world"
+      ],
+      "planned_parity_reference": "T1.3-1",
+      "requested_disposition": "close-with-branch-retained",
+      "gameplay_acceptance": "not-established-by-this-disposition"
+    },
+    {
+      "row": 2,
+      "pr": 217,
+      "url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/217",
+      "state_at_capture": "OPEN",
+      "branch": "fix/player-visible-shapes-20261015",
+      "head": "a84868d7d022310011afd98f2df4a3d1fac80c53",
+      "player_visible_requirement": "烤架與貼牆廚具架的碰撞／選取範圍應與Java一致，避免空氣阻擋及靠牆點不中。",
+      "parity_domains": [
+        "grill",
+        "rack"
+      ],
+      "planned_parity_reference": "T1.3-2",
+      "requested_disposition": "close-with-branch-retained",
+      "gameplay_acceptance": "not-established-by-this-disposition"
+    },
+    {
+      "row": 3,
+      "pr": 220,
+      "url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/220",
+      "state_at_capture": "OPEN",
+      "branch": "fix/exact-three-routes-20261015",
+      "head": "d1f8f20faffc1f0046464c2221a1dac7d6086d3b",
+      "player_visible_requirement": "20種既定THREE路線烤串在站立、第一人稱主手食用時，逐口模型與手臂投影應與Java一致。",
+      "parity_domains": [
+        "food",
+        "skewer",
+        "visual/eating"
+      ],
+      "planned_parity_reference": "T1.3-3",
+      "requested_disposition": "close-with-branch-retained",
+      "gameplay_acceptance": "not-established-by-this-disposition"
+    },
+    {
+      "row": 4,
+      "pr": 222,
+      "url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/222",
+      "state_at_capture": "OPEN",
+      "branch": "fix/native-skewer-icons-g144-20261015",
+      "head": "06f2f05ce005a9118581cbee9302a45e67491d1b",
+      "player_visible_requirement": "熟史萊姆串與神秘串的背包圖示應按Java五幀、每幀4tick動畫呈現。",
+      "parity_domains": [
+        "visual/inventory"
+      ],
+      "planned_parity_reference": "T1.3-4",
+      "requested_disposition": "close-with-branch-retained",
+      "gameplay_acceptance": "not-established-by-this-disposition"
+    },
+    {
+      "row": 5,
+      "pr": 232,
+      "url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/232",
+      "state_at_capture": "OPEN",
+      "branch": "repair/g153-composed-20261017",
+      "head": "5a0cf60ae510bc05ee49eb7178aa975a1be59487",
+      "player_visible_requirement": "放置／取回餐盤、錄製食譜與Cookery書轉換在併發或API回應不明時，必須保留物品所有權與資料，避免覆寫、遺失或複製。",
+      "parity_domains": [
+        "plate",
+        "recipe",
+        "compat/cookery"
+      ],
+      "planned_parity_reference": "T1.3-5",
+      "requested_disposition": "close-with-branch-retained",
+      "gameplay_acceptance": "not-established-by-this-disposition"
+    }
+  ],
+  "additional_draft_at_capture": {
+    "pr": 237,
+    "branch": "cleanup/evidence-audit-20261019",
+    "head": "d688150744d7e3cc57ea70169c81ba5d1c327fc9",
+    "planned_phase": [
+      "T2.4",
+      "T2.5"
+    ],
+    "state": "OPEN_DRAFT",
+    "decision_location": "Task PR owner-decision section; not one of the five legacy player-feature PRs originally enumerated."
+  },
+  "runtime_changed": false,
+  "legacy_code_cherry_picked": false,
+  "branch_deletion_authorized": false
+}
