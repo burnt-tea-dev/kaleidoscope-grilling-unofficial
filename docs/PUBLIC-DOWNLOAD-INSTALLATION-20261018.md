@@ -23,7 +23,7 @@ Enable both Grilling packs. The manifests declare engine 1.26.50, `@minecraft/se
 
 ## Public host assembly is a separate workflow
 
-Ordinary mcaddon import does not apply `host-extensions/board-api.json`; pristine author Cookery does not provide the family board/oil/wok/locale hooks. A [public source assembler](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/3bd8f6ca285b5ef5f6e9abe962d12873dfae5752/docs/PUBLICATION-T147-G128-W124.md#公開的-cookery-api-組裝) exists without requiring private integration. The linked page is a historical T147/G128/W124 example, not a current one-command installer.
+Ordinary mcaddon import does not apply `host-extensions/board-api.json`; the inspected public source workflow explicitly applies family board/oil/wok/locale transformations to the exact original Cookery input. The Cookery1.6.0 archive itself has not yet been inspected in this audit. A [public source assembler](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/3bd8f6ca285b5ef5f6e9abe962d12873dfae5752/docs/PUBLICATION-T147-G128-W124.md#公開的-cookery-api-組裝) exists without requiring private integration. The linked page is a historical T147/G128/W124 example, not a current one-command installer.
 
 - The published T163 source lock pins T163/**G137**/W141. The newest TEST G138 does not match that source lock. Do not silently weaken its exact version/source-tree check.
 - The [published T170 lock](https://github.com/casama233/kaleidoscope-tavern-unofficial/blob/3bd8f6ca285b5ef5f6e9abe962d12873dfae5752/family/upstream.lock.json) matches T170/G149/W148.
