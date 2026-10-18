@@ -5,13 +5,14 @@ on:
       - '.github/workflows/dash-build.yml'
       - 'projects/grilling/config.json'
       - 'projects/grilling/resource_pack/**'
-      - 'projects/grilling/integration/cookery106/**'
+      - 'development/verify_dash_outputs.py'
+      - 'development/test_verify_dash_outputs.py'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   dash:
-    if: github.repository == 'casama233/kaleidoscope-grilling-unofficial' && github.repository_id == '1377218440'
+    if: github.repository == 'burnt-tea-dev/kaleidoscope-grilling-unofficial' && github.repository_id == '1377218440'
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
@@ -21,10 +22,10 @@ jobs:
           EXPECTED_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          test "$GITHUB_REPOSITORY" = 'casama233/kaleidoscope-grilling-unofficial'
+          test "$GITHUB_REPOSITORY" = 'burnt-tea-dev/kaleidoscope-grilling-unofficial'
           test "$GITHUB_REPOSITORY_ID" = '1377218440'
           git init .
-          git remote add origin https://github.com/casama233/kaleidoscope-grilling-unofficial.git
+          git remote add origin https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git
           git fetch --depth=1 origin "$EXPECTED_SHA"
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
@@ -42,12 +43,15 @@ jobs:
         run: |
           & "$env:RUNNER_TEMP/dash.exe" build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Compile Cookery guide chapter BP and RP
-        working-directory: projects/grilling/integration/cookery106
+      # The standalone Cookery106 chapter was retired in a0218906. The guide
+      # is compiled with the existing product by bridge-project/gameplay CI.
+      - name: Exercise asset export failure guards
         shell: pwsh
         run: |
-          & "$env:RUNNER_TEMP/dash.exe" build
+          python development/test_verify_dash_outputs.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify actual compiled files
         shell: pwsh
-        run: python development/verify_dash_outputs.py
+        run: |
+          python development/verify_dash_outputs.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -52,9 +52,52 @@ def verify_export(config,archive,files):
   grilling={('behavior_pack' if k.startswith('BP/') else 'resource_pack')+'/'+k.split('/',1)[1]:v for k,v in expected.items()}
   if actual!=expected and actual!=grilling:fail('archive differs from canonical runtime (missing, extra or patched file)')
 
+def validate_repository(config):
+ # A transfer changes the authenticated source name, never the runtime identity.
+ target_path=ROOT/'.repo-target.json'
+ if target_path.is_symlink() or not target_path.is_file():fail('reviewed repository target missing')
+ target=read(target_path);owner=target.get('owner',{})
+ if (target.get('repository_id')!=config.get('repository_id') or type(target.get('repository_id')) is not int
+     or target.get('logical_runtime_repository')!=config.get('repository')
+     or target.get('private') is not False or not isinstance(owner,dict)
+     or owner.get('type')!='Organization' or type(owner.get('id')) is not int or owner['id']<=0
+     or not isinstance(owner.get('login'),str) or not owner['login']
+     or target.get('repository')!=owner['login']+'/'+config['repository'].split('/')[-1]):fail('reviewed repository target mismatch')
+ if config.get('repository')=='casama233/kaleidoscope-grilling-unofficial':
+  if (config.get('repository_id')!=1377218440 or type(config.get('repository_id')) is not int
+      or target.get('repository')!='burnt-tea-dev/kaleidoscope-grilling-unofficial'
+      or target.get('repository_id')!=1377218440
+      or owner!={'login':'burnt-tea-dev','id':344456559,'type':'Organization'}
+      or target.get('private') is not False):fail('canonical repository target mismatch')
+ ci=any(os.getenv(key) for key in ['GITHUB_ACTIONS','GITHUB_REPOSITORY','GITHUB_REPOSITORY_ID'])
+ if not ci:return
+ if os.getenv('GITHUB_REPOSITORY')!=target['repository']:fail('wrong repository')
+ if os.getenv('GITHUB_REPOSITORY_ID')!=str(target['repository_id']):fail('wrong repository ID')
+ if (os.getenv('GITHUB_REPOSITORY_OWNER')!=owner['login']
+     or os.getenv('GITHUB_REPOSITORY_OWNER_ID')!=str(owner['id'])):fail('wrong repository owner')
+ try:event=read(Path(os.environ['GITHUB_EVENT_PATH']));actual=event['repository']
+ except (KeyError,OSError,ValueError,TypeError):fail('repository event identity missing')
+ if not isinstance(actual,dict):fail('repository event identity missing')
+ actual_owner=actual.get('owner',{})
+ expected_name,expected_id,expected_private=target['repository'],target['repository_id'],False
+ if os.getenv('SENLUO_SOURCE_GATE')=='1' and actual.get('full_name')!=expected_name:
+  # A reviewed family parent may check a pinned public peer in a subprocess.
+  # Both the child target and actual parent stay bound to fixed numeric IDs.
+  parents={'burnt-tea-dev/kaleidoscope-tavern-unofficial':(1377171148,False),
+           'burnt-tea-dev/kaleidoscope-grilling-unofficial':(1377218440,False),
+           'burnt-tea-dev/kaleidoscope-world-liquor-unofficial':(1385218112,False),
+           'burnt-tea-dev/senluo-family-integration-private':(1406868911,True)}
+  if (parents.get(expected_name)!=(expected_id,False) or owner!={'login':'burnt-tea-dev','id':344456559,'type':'Organization'}
+      or actual.get('full_name') not in parents):fail('unreviewed cross-repository source gate')
+  expected_name=actual['full_name'];expected_id,expected_private=parents[expected_name]
+ if (actual.get('full_name')!=expected_name or type(actual.get('id')) is not int
+     or actual['id']!=expected_id or actual.get('private') is not expected_private
+     or not isinstance(actual_owner,dict)
+     or any(actual_owner.get(key)!=owner[key] for key in ['login','id','type'])
+     or type(actual_owner.get('id')) is not int):fail('repository event identity mismatch')
+
 def check(config,release=False,archive=None,history_base=None):
- if os.getenv('GITHUB_REPOSITORY') and os.environ['GITHUB_REPOSITORY']!=config['repository']:fail('wrong repository')
- if os.getenv('GITHUB_REPOSITORY_ID') and int(os.environ['GITHUB_REPOSITORY_ID'])!=config['repository_id']:fail('wrong repository ID')
+ validate_repository(config)
  trees,files=validate(config)
  if trees!=config['source_trees']:fail('runtime changed without a reviewed version/hash update')
  history=read(ROOT/'release-history.json')
@@ -81,6 +124,7 @@ def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('operation',choices=['check','freeze']);parser.add_argument('--release',action='store_true');parser.add_argument('--history-base');parser.add_argument('--archive',type=Path);parser.add_argument('--receipt',type=Path);args=parser.parse_args()
  config=read(ROOT/'baseline.json')
  if args.operation=='freeze':
+  validate_repository(config)
   trees,_=validate(config);history_path=ROOT/'release-history.json';history=read(history_path) if history_path.exists() else {};version='.'.join(map(str,config['version']))
   if version in history and history[version]!=trees:fail('version already used; bump the release version')
   if version not in history and history and tuple(config['version'])<=max(tuple(map(int,v.split('.'))) for v in history):fail('release version must advance')

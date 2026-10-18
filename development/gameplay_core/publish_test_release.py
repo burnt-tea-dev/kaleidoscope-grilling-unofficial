@@ -8,7 +8,9 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO = 'casama233/kaleidoscope-grilling-unofficial'
+REPO = 'burnt-tea-dev/kaleidoscope-grilling-unofficial'
+LOGICAL_REPO = 'casama233/kaleidoscope-grilling-unofficial'
+OWNER = {'login': 'burnt-tea-dev', 'id': 344456559, 'type': 'Organization'}
 REPO_ID = 1377218440
 G66 = 'A2.8.66'
 REQUEST = '.github/g66-test-release-request.json'
@@ -121,7 +123,7 @@ def validate_request(version, report, assets, root=ROOT):
     require(path.is_file(), 'G66 needs an explicit root publication request')
     request = json.loads(path.read_text(encoding='utf-8-sig'))
     require(type(request.get('schema')) is int and request['schema'] == 1, 'Unsupported G66 request schema')
-    require(request.get('repository') == REPO and request.get('repository_id') == REPO_ID,
+    require(request.get('repository') == LOGICAL_REPO and request.get('repository_id') == REPO_ID,
             'Wrong G66 publication repository')
     require(request.get('version') == version and request.get('tag') == 'A2.8.66-test', 'Wrong G66 version/tag')
     require(request.get('mode') == 'exact-g66-only-prerelease', 'G66 publication is not explicitly requested')
@@ -254,9 +256,14 @@ def publish_exact(sha, tag, title, notes_path, assets, final_validation, *, prer
     require(type(prerelease) is bool, 'Release class must be boolean')
     notes = notes_path.read_text(encoding='utf-8')
     target = json.loads((ROOT / '.repo-target.json').read_text(encoding='utf-8-sig'))
-    require(target.get('repository') == REPO and target.get('repository_id') == REPO_ID, 'Checkout repository identity mismatch')
+    require(target.get('repository') == REPO and target.get('repository_id') == REPO_ID
+            and target.get('logical_runtime_repository') == LOGICAL_REPO
+            and target.get('owner') == OWNER and target.get('private') is False, 'Checkout repository identity mismatch')
     identity = api(f'repos/{REPO}')
-    require(identity.get('full_name') == REPO and identity.get('id') == REPO_ID, 'Authenticated GitHub repository identity mismatch')
+    require(identity.get('full_name') == REPO and identity.get('id') == REPO_ID
+            and isinstance(identity.get('owner'), dict)
+            and all(identity['owner'].get(key) == value for key, value in OWNER.items())
+            and type(identity['owner'].get('id')) is int and identity.get('private') is False, 'Authenticated GitHub repository identity mismatch')
     require(api(f'repos/{REPO}/commits/{sha}').get('sha') == sha, 'Tested SHA is absent from actual GitHub')
     require(api(f'repos/{REPO}/git/ref/heads/main')['object']['sha'] == sha, 'Actual GitHub main is not the tested SHA')
     actual_tag = tag_target(tag)
@@ -311,7 +318,7 @@ def reviewed_cookery_requirement(version, root=ROOT):
     baseline = json.loads((root / 'baseline.json').read_text(encoding='utf-8-sig'))
     require(type(baseline.get('schema')) is int and baseline['schema'] == 1,
             'Unsupported release baseline schema')
-    require(baseline.get('repository') == REPO and baseline.get('repository_id') == REPO_ID,
+    require(baseline.get('repository') == LOGICAL_REPO and baseline.get('repository_id') == REPO_ID,
             'Release baseline repository mismatch')
     own_version = baseline['version']
     require(isinstance(own_version, list) and len(own_version) == 3
@@ -381,7 +388,7 @@ def current_notes_text(request):
 def current_request(sha, confirmed_tag):
     request = json.loads((ROOT / CURRENT_REQUEST).read_text(encoding='utf-8'))
     require(type(request.get('schema')) is int and request['schema'] == 1, 'Unsupported publication request')
-    require(request.get('repository') == REPO and request.get('repository_id') == REPO_ID,
+    require(request.get('repository') == LOGICAL_REPO and request.get('repository_id') == REPO_ID,
             'Wrong publication repository')
     require(request.get('publication_request') is True, 'Publication is not requested')
     require(request.get('make_latest') == 'false', 'Current publication must remain non-latest')
