@@ -15,7 +15,7 @@ def main(expected_version=VERSION):
     for name in ('test_held_motion_expression.py','test_seasoning_animation.py','test_seasoning_sprinkle_anchor.py','test_secret_held_owner_context.py'):
         subprocess.run([sys.executable,str(ROOT/'development/gameplay_core'/name)],cwd=ROOT,check=True)
     for name in ('build_seasoning_held.py','build_player_extensions.py','build_secret_held.py','build_eating_motion.py','build_plain_eating_variants.py','build_grilling_guide.py'):
-        if name == 'build_eating_motion.py':
+        if name in ('build_eating_motion.py','build_secret_held.py','build_player_extensions.py'):
             run_checked_once([sys.executable,str(ROOT/'tools'/name),'--check'],cwd=ROOT)
         else:
             subprocess.run([sys.executable,str(ROOT/'tools'/name),'--check'],cwd=ROOT,check=True)

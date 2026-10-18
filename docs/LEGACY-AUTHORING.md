@@ -14,7 +14,9 @@ python3 development/gameplay_core/build.py --legacy-output /tmp/grilling-a2-lega
 
 此命令會讀取鎖定的舊上游與本機歷史素材。輸出只供歷史研究，不能用作現行 release／家族候選／部署來源。既有目錄一律拒絕；重建器不再刪除輸出。上游或生成失敗可能留下不完整目錄，下一次應另選新路徑。
 
-66 個 `augment_*.py` 保留原前版 report／manifest 身份檢查，G114 會在修改前被拒絕；它們沒有隔離輸出參數。部分會呼叫 `ROOT/tools` 的其他生成器，因此不能只改 `P/BP/RP` 或把舊輸出複製回 canonical 來接續。這輪沒有把整條歷史 augment 鏈改造成安全的隔離重建工具，也沒有變更供驗證器匯入的 helper 函式或現行 `--check` 素材工具。
+65 個退休 `augment_*.py` 已從當前樹移除；它們僅接受 A2.0–A2.7.59 的指定前版，不是現行 G155 的建置入口。歷史版本及其 report／manifest 身份檢查保留在 Git commit，歷史 YAML 保留原用途；研究舊版須讀取對應 commit 並隔離處理，不能把舊輸出複製回 canonical。
+
+`augment_a21.py` 和 `build.py` 仍保留，因 `test_bottle_item_offhand_sources.py` 執行其瓶物品 AST 表達式，並檢查當前 67 種瓶物品的副手屬性。保留 AST 輸入不代表它們成為現行建置步驟。現行 `--check` 素材工具及產品行為測試保留。逐檔刪除前證據見 [清理收據](audit/LEGACY-CLEANUP-20261019.json)。
 
 兩個舊語言自動寫入流程已移到 `docs/legacy_workflows/localization-a2728-a114.yml` 和 `localization-a2729-a115.yml`。它們保留歷史內容供閱讀，已不在 GitHub 可執行的 `.github/workflows` 中。現行 release 與 CI 不透過這兩個舊增補流程。
 

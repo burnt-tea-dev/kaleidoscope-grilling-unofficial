@@ -20,7 +20,7 @@ def native_variants_gate(expected_version=(2, 8, 62)):
     # Historical verifiers from the other release lineage remain unchanged.
     for generator in ('build_native_eating_variants.py', 'build_eating_motion.py'):
         if generator == 'build_eating_motion.py':
-            run_checked_once([sys.executable, str(ROOT / 'tools' / generator), '--check'])
+            run_checked_once([sys.executable, str(ROOT / 'tools' / generator), '--check'], cwd=ROOT)
         else:
             subprocess.run([sys.executable, str(ROOT / 'tools' / generator), '--check'], check=True)
     variants = list((BP / 'items').glob('*_java_three_alt.json'))

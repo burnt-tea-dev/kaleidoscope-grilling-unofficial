@@ -1,0 +1,3662 @@
+{
+  "schema": 1,
+  "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+  "repository_id": 1377218440,
+  "source_commit": "73c6444178744d90435fae236769a8229c110626",
+  "generated_utc": "2026-10-18T17:42:27.620942+00:00",
+  "status": "prepared_only_not_applied_or_validated_by_canonical_ci",
+  "exported_runtime_changed": false,
+  "deleted_sources": [
+    {
+      "path": "development/gameplay_core/augment_a22.py",
+      "sha256": "eb5aedb76539e5bcba988569bedad54648fdd09140c15040d148e92ca789dffb",
+      "bytes": 30583,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/audit/BUILD.md",
+          "line": 35,
+          "text": "`augment_a21.py`／`augment_a22.py` 只是歷史 A2.0→A2.1→A2.2 的手動序列。",
+          "kind": "documentary_reference"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a22.yml",
+          "line": 6,
+          "text": "- 'development/gameplay_core/augment_a22.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a22.yml",
+          "line": 58,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a23.yml",
+          "line": 55,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a24.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 72,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 70,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 64,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr1/README.md",
+          "line": 169,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr5/.github/workflows/gameplay-core-a27.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/.github/workflows/gameplay-core-a27.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/README.md",
+          "line": 166,
+          "text": "python development/gameplay_core/augment_a22.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "report = load(P / 'reports/build.json')",
+        "if report.get('version') != 'A2.1.0':\n    raise RuntimeError('expected A2.1 baseline before A2.2 augmentation')",
+        "bm = load(BP / 'manifest.json')"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a23.py",
+      "sha256": "24ddb7382a3451def0aa5ed958c4fd031fcdc41f3542e059b57c4b67928b9640",
+      "bytes": 20767,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a23.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a23.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a23.yml",
+          "line": 67,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a24.yml",
+          "line": 73,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 73,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 73,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 68,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr5/.github/workflows/gameplay-core-a27.yml",
+          "line": 73,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/.github/workflows/gameplay-core-a27.yml",
+          "line": 73,
+          "text": "python development/gameplay_core/augment_a23.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "report = load(P / 'reports/build.json')",
+        "if report.get('version') != 'A2.2.0':\n    raise RuntimeError('expected A2.2 baseline')",
+        "bm = load(BP / 'manifest.json')"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a24.py",
+      "sha256": "a817bc0fcf7b3708fe9be8ac0d3d5d86755ae90f125d1a0d5bcdb41c29f68cf3",
+      "bytes": 31807,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/STATUS-A2.8.104.md",
+          "line": 5,
+          "text": "來源為 breezeth-CN/KaleidoscopeGrilling `9a1acdab27698457bec16c9362678e574895a28c` 的既存公開 fixture。圖像素材由 breezeth／Kaleidoscope Official Production Team 提供，授權 CC-BY-NC-SA-4.0；本版完成籤圖示為依此授權改作。空籤素材位元組不變。`tools/build_skewer_inventory_icons.py --check` 重建檢查兩張 native sprite，歷史 `augment_a24.py` 也使用相同產生器。",
+          "kind": "documentary_reference"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a24.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a24.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a24.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a24.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a24.yml",
+          "line": 85,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 86,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 86,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 90,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 88,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr5/.github/workflows/gameplay-core-a27.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/.github/workflows/gameplay-core-a27.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a24.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "report = load(P / 'reports/build.json')",
+        "if report.get('version') != 'A2.3.0':\n    raise RuntimeError('expected A2.3 baseline')",
+        "patch_manifest()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a25.py",
+      "sha256": "4d88373beb5bff17442fc5336511d8b8900a48bfe9f961e23a76610e5c00c4b0",
+      "bytes": 15062,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/STATUS-A2.5.md",
+          "line": 94,
+          "text": "- `development/gameplay_core/augment_a25.py`",
+          "kind": "documentary_reference"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a25.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a25.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a25.yml",
+          "line": 92,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 88,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 80,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr5/.github/workflows/gameplay-core-a27.yml",
+          "line": 88,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/.github/workflows/gameplay-core-a27.yml",
+          "line": 88,
+          "text": "python development/gameplay_core/augment_a25.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 4, 0]:\n    raise RuntimeError('A2.5 must augment the verified A2.4 baseline')",
+        "patch_manifest()",
+        "copy_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a26.py",
+      "sha256": "46bae8fe995ba9d5227d03bfe47b35447b82a42087bb56af0dd96ff0c7560921",
+      "bytes": 14441,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a26.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a26.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a26.yml",
+          "line": 99,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 102,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 102,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 104,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 83,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr5/.github/workflows/gameplay-core-a27.yml",
+          "line": 95,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "history/integrated-pr/pr6/.github/workflows/gameplay-core-a27.yml",
+          "line": 99,
+          "text": "python development/gameplay_core/augment_a26.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 5, 0]:\n    raise RuntimeError('A2.6 must augment the verified A2.5 baseline')",
+        "patch_manifest()",
+        "copy_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a271.py",
+      "sha256": "37aa61b295df4a9277e0f9975a94d1cc381cd63d363185996967e408026d39fd",
+      "bytes": 6859,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a271.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a271.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a271.yml",
+          "line": 115,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 110,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 112,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 91,
+          "text": "python development/gameplay_core/augment_a271.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 6, 0]:\n    raise RuntimeError('A2.7.1 must augment the verified A2.6 baseline')",
+        "patch_manifest()",
+        "copy_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2710.py",
+      "sha256": "88cd249615cd82e0b662d58c830a0b47241fd3ea90e01f516dbc837dee60d343",
+      "bytes": 7385,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2710.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2710.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 146,
+          "text": "python development/gameplay_core/augment_a2710.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 9]:\n    raise RuntimeError('A2.7.10 must augment verified A2.7.9')",
+        "patch_versions()",
+        "patch_items()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2711.py",
+      "sha256": "f17b6c90274d77ec043310e95a4ed6a06d1c15d7121e2625079843f7934fad66",
+      "bytes": 5282,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2711.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2711.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 154,
+          "text": "python development/gameplay_core/augment_a2711.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 10]:\n    raise RuntimeError('A2.7.11 must augment verified A2.7.10')",
+        "patch_versions()",
+        "patch_item()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2712.py",
+      "sha256": "e76662fc2a520b075da17e012e58e648b7a40a19a2b0183356cd6f0c0a3bb828",
+      "bytes": 5755,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2712.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2712.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 162,
+          "text": "python development/gameplay_core/augment_a2712.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 11]:\n    raise RuntimeError('A2.7.12 must augment verified A2.7.11')",
+        "patch_versions()",
+        "patch_item()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2713.py",
+      "sha256": "4cd0ebb8aeb62ca08baf29f9c7d46602e70e0aac63c657490c6b7e0938bcf9fd",
+      "bytes": 7506,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2713.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2713.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 170,
+          "text": "python development/gameplay_core/augment_a2713.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 170,
+          "text": "python development/gameplay_core/augment_a2713.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 170,
+          "text": "python development/gameplay_core/augment_a2713.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 170,
+          "text": "python development/gameplay_core/augment_a2713.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 170,
+          "text": "python development/gameplay_core/augment_a2713.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 12]:\n    raise RuntimeError('A2.7.13 must augment verified A2.7.12')",
+        "patch_versions()",
+        "patch_items()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2714.py",
+      "sha256": "190f7bc53f66d26f3dcb395d7e210a1dae75b3c8b9c022d4b9dacafb073e567c",
+      "bytes": 9888,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2714.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2714.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 180,
+          "text": "python development/gameplay_core/augment_a2714.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 180,
+          "text": "python development/gameplay_core/augment_a2714.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 180,
+          "text": "python development/gameplay_core/augment_a2714.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 180,
+          "text": "python development/gameplay_core/augment_a2714.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 13]:\n    raise RuntimeError('A2.7.14 must augment verified A2.7.13')",
+        "patch_versions()",
+        "patch_item()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2715.py",
+      "sha256": "5fcdedfb3349dbad8f9dc17f512dae1b4bb8589a65cc823c404826210ca555b5",
+      "bytes": 10161,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2715.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2715.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 190,
+          "text": "python development/gameplay_core/augment_a2715.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 190,
+          "text": "python development/gameplay_core/augment_a2715.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 190,
+          "text": "python development/gameplay_core/augment_a2715.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 14]:\n    raise RuntimeError('A2.7.15 must augment verified A2.7.14')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2716.py",
+      "sha256": "45b7b8fda09346c27a2b6620400ef5ca0a5a92d031c4b101839d70495f486932",
+      "bytes": 3502,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2716.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2716.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 200,
+          "text": "python development/gameplay_core/augment_a2716.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 200,
+          "text": "python development/gameplay_core/augment_a2716.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 15]:\n    raise RuntimeError('A2.7.16 must augment verified A2.7.15')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2717.py",
+      "sha256": "b4030d6643057a17dcec89f17af991a360917891a6595ea69fa99aae09da87d6",
+      "bytes": 9499,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2717.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2717.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 210,
+          "text": "python development/gameplay_core/augment_a2717.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 16]:\n    raise RuntimeError('A2.7.17 must augment verified A2.7.16')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2718.py",
+      "sha256": "8e710f29d833ddaa8c64ffd4b7cbe798ac2aa301c1483ea52ca5ef78c565a546",
+      "bytes": 3763,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2718.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2718.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2718.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2718.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2718.yml",
+          "line": 70,
+          "text": "python development/gameplay_core/augment_a2718.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 17]:\n    raise RuntimeError('A2.7.18 must augment verified A2.7.17')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2719.py",
+      "sha256": "75907aa13734b24ddae5f4b5ee3132526352dfb822ccbca3aa27262e0a3b4f6f",
+      "bytes": 10065,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "development/gameplay_core/a2719_sweet_potato_crop_runtime.js",
+          "line": 108,
+          "text": "// A2.7.15/A2.7.17 generated break subscribers are removed by augment_a2719.py.",
+          "kind": "runtime_comment"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2719.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2719.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2719.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2719.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2719.yml",
+          "line": 67,
+          "text": "python development/gameplay_core/augment_a2719.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "projects/grilling/gameplay_core/behavior_pack/scripts/a2719_sweet_potato_crop_runtime.js",
+          "line": 108,
+          "text": "// A2.7.15/A2.7.17 generated break subscribers are removed by augment_a2719.py.",
+          "kind": "runtime_comment"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 18]:\n    raise RuntimeError('A2.7.19 must augment verified A2.7.18')",
+        "patch_versions()",
+        "patch_item()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a272.py",
+      "sha256": "885bf018252663eec383d3af7495c67b384a436acbdaa0e28486b3200a2cf614",
+      "bytes": 6558,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a272.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a272.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a272.yml",
+          "line": 123,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 120,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 94,
+          "text": "python development/gameplay_core/augment_a272.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 1]:\n    raise RuntimeError('A2.7.2 must augment the verified A2.7.1 baseline')",
+        "patch_manifest()",
+        "copy_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2720.py",
+      "sha256": "b1af0652d36a29bad465e11d0702361c3fabc1d094faa2eaf37b99b1fe01e9a3",
+      "bytes": 6163,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2720.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2720.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2720.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a2720.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2720.yml",
+          "line": 67,
+          "text": "python development/gameplay_core/augment_a2720.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 19]:\n    raise RuntimeError('A2.7.20 must augment verified A2.7.19')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2721.py",
+      "sha256": "aa8fb10c3d8e1514389999122d2f626489146a77321435f48b6dcfe5f93457e5",
+      "bytes": 5422,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2721.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a2721.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2721.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a2721.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2721.yml",
+          "line": 62,
+          "text": "python development/gameplay_core/augment_a2721.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 20]:\n    raise RuntimeError('A2.7.21 must augment verified A2.7.20')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2722.py",
+      "sha256": "be63b7824479d5285b607360035c98cdba9586c23e27032f8c22d142072aae70",
+      "bytes": 5813,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2722.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2722.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2722.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2722.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2722.yml",
+          "line": 72,
+          "text": "python development/gameplay_core/augment_a2722.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 21]:\n    raise RuntimeError('A2.7.22 must augment verified A2.7.21')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2723.py",
+      "sha256": "e8252e41ee8bc11869af335ff9819fda22ea30daf871a935e03eb6e9b4911593",
+      "bytes": 6376,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2723.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a2723.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2723.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a2723.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2723.yml",
+          "line": 60,
+          "text": "python development/gameplay_core/augment_a2723.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 22]:\n    raise RuntimeError('A2.7.23 must augment verified A2.7.22')",
+        "patch_versions()",
+        "patch_hidden_items()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2724.py",
+      "sha256": "2e999f36f05f1699845b4f83593a5e73d3988a613fffc05244cd5da01bb954d6",
+      "bytes": 6805,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2724.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2724.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2724.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2724.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2724.yml",
+          "line": 82,
+          "text": "python development/gameplay_core/augment_a2724.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 23]:\n    raise RuntimeError('A2.7.24 must augment verified A2.7.23')",
+        "patch_versions()",
+        "patch_assets()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2725.py",
+      "sha256": "c66cb5a24b61d2d75497e02cc346cfed565c4b309bba946d09c8c312bc354eb6",
+      "bytes": 3976,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2725.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a2725.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2725.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a2725.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2725.yml",
+          "line": 60,
+          "text": "python development/gameplay_core/augment_a2725.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 24]:\n    raise RuntimeError('A2.7.25 must augment verified A2.7.24')",
+        "patch_versions()",
+        "patch_attachables()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2726.py",
+      "sha256": "c8c73dad8467611642c5c5d818290bf3c349c0b88e3d8087ea32f6fd8841f2e5",
+      "bytes": 7560,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2726.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a2726.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2726.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a2726.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2726.yml",
+          "line": 54,
+          "text": "python development/gameplay_core/augment_a2726.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 25]:\n    raise RuntimeError('A2.7.26 must augment verified A2.7.25')",
+        "patch_versions()",
+        "removed, fixed_one = patch_block_geometries()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2727.py",
+      "sha256": "acbbf390cb453eea81a7f914ee8d6a4d1c16adfc69ba9b17ede61ff246296703",
+      "bytes": 4386,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2727.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2727.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2727.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2727.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2727.yml",
+          "line": 78,
+          "text": "python development/gameplay_core/augment_a2727.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 26]:\n    raise RuntimeError('A2.7.27 must augment verified A2.7.26')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2728.py",
+      "sha256": "d163ada54a1e6525ec2373060cfb3b07c41b7740c5c1107abd6742994958dac6",
+      "bytes": 4923,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/localization-a2728-a114.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2728.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/localization-a2728-a114.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2728.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/localization-a2728-a114.yml",
+          "line": 74,
+          "text": "python development/gameplay_core/augment_a2728.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 27]:\n    raise RuntimeError('A2.7.28 must augment verified A2.7.27')",
+        "patch_versions()",
+        "count = patch_languages()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2729.py",
+      "sha256": "55e243becf996efaa50d2792ab342d2cb1b0d136929091a23a36a443149b0a4b",
+      "bytes": 2480,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/localization-a2729-a115.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2729.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/localization-a2729-a115.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2729.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/localization-a2729-a115.yml",
+          "line": 65,
+          "text": "python development/gameplay_core/augment_a2729.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 28]:\n    raise RuntimeError('A2.7.29 must augment published A2.7.28')",
+        "patch_versions()",
+        "n = patch_tw()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a273.py",
+      "sha256": "216d353ee0e715de97aed51270c76617c2d34a7b3efaad742f951258cb28c9b7",
+      "bytes": 10693,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a273.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 14,
+          "text": "- 'development/gameplay_core/augment_a273.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a273.yml",
+          "line": 129,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 127,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 96,
+          "text": "python development/gameplay_core/augment_a273.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 2]:\n    raise RuntimeError('A2.7.3 stabilization must augment verified A2.7.2')",
+        "patch_versions()",
+        "cube_count = build_leg_helper_geometry()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2730.py",
+      "sha256": "560aa67e338cfeb0cea76a2849608eed9dda40ce942c4f8280b5e92d760c27e2",
+      "bytes": 7095,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2730.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2730.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2730.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2730.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2730.yml",
+          "line": 78,
+          "text": "python development/gameplay_core/augment_a2730.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 29]:\n    raise RuntimeError('A2.7.30 must augment verified A2.7.29')",
+        "patch_versions()",
+        "patch_adapter()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2731.py",
+      "sha256": "ada1c0566fd9abdbefad1cb1e634b3caab75b6f433fc32e2d29b5171c3f0fb2d",
+      "bytes": 3800,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2731.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2731.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2731.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2731.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2731.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a2731.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 30]:\n    raise RuntimeError('A2.7.31 must augment verified A2.7.30')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2732.py",
+      "sha256": "f24a4612d0ee6cb3f6b7639df19dab7b5f6364f5006b6b1b56fc26f5dd645771",
+      "bytes": 4141,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2732.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2732.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2732.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2732.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2732.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a2732.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 31]:\n    raise RuntimeError('A2.7.32 must augment verified A2.7.31')",
+        "patch_versions()",
+        "patch_effect_host()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2733.py",
+      "sha256": "0d25b4ea410938f22bd1532b09a5abf1b7e262923ab2b8397c09c84d4a66dbfb",
+      "bytes": 8740,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2733.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a2733.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2733.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a2733.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2733.yml",
+          "line": 61,
+          "text": "python development/gameplay_core/augment_a2733.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 32]:\n    raise RuntimeError('A2.7.33 must augment verified A2.7.32')",
+        "patch_versions()",
+        "patch_hand()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2734.py",
+      "sha256": "64012c2e4888ac425922528923da6d62fdb82758551a5c1c2dd0e6895136bef8",
+      "bytes": 6394,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2734.yml",
+          "line": 10,
+          "text": "- 'development/gameplay_core/augment_a2734.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2734.yml",
+          "line": 18,
+          "text": "- 'development/gameplay_core/augment_a2734.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2734.yml",
+          "line": 85,
+          "text": "python development/gameplay_core/augment_a2734.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 33]:\n    raise RuntimeError('A2.7.34 must augment verified A2.7.33')",
+        "patch_versions()",
+        "patch_adapter()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2735.py",
+      "sha256": "e7dfe904dcdc02418be3e75ecc5775409a0524d6deda0d41dfc97208de2fe6e5",
+      "bytes": 10621,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2735.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2735.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2735.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2735.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2735.yml",
+          "line": 71,
+          "text": "python development/gameplay_core/augment_a2735.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 34]:\n    raise RuntimeError('A2.7.35 must augment verified A2.7.34')",
+        "patch_versions()",
+        "shutil.copy2(DEV / 'a2735_player_io.js', BP / 'scripts/a2735_player_io.js')"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2736.py",
+      "sha256": "a7c855f2e9cc65c961d58beab85686b2e2e8e8482b5bdbe492ce56fbf448ff3f",
+      "bytes": 3710,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2736.yml",
+          "line": 10,
+          "text": "- 'development/gameplay_core/augment_a2736.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2736.yml",
+          "line": 18,
+          "text": "- 'development/gameplay_core/augment_a2736.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2736.yml",
+          "line": 77,
+          "text": "python development/gameplay_core/augment_a2736.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 35]:\n    raise RuntimeError('A2.7.36 must augment verified A2.7.35')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2737.py",
+      "sha256": "497d8b7c0e4c058d1fe19e331781fa7004ea436fb7b9224d8e33f9a0fde9408a",
+      "bytes": 3118,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2737.yml",
+          "line": 10,
+          "text": "- 'development/gameplay_core/augment_a2737.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2737.yml",
+          "line": 18,
+          "text": "- 'development/gameplay_core/augment_a2737.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2737.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a2737.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 36]:\n    raise RuntimeError('A2.7.37 must augment verified A2.7.36')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2738.py",
+      "sha256": "e925b757de2a8fcec8da642565399e57b856c3fc7b96ba4622b08dae331028b1",
+      "bytes": 7575,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2738.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2738.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2738.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2738.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2738.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2738.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 37]:\n    raise RuntimeError('A2.7.38 must augment published A2.7.37')",
+        "shutil.copy2(DEV / SHARED, BP / 'scripts' / SHARED)",
+        "patch_a24()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2739.py",
+      "sha256": "ccf3340da4b2df9dcf3cc3e252df84ccbea0163556ae30506fbf29133cc21601",
+      "bytes": 5359,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2739.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2739.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2739.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2739.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2739.yml",
+          "line": 95,
+          "text": "python development/gameplay_core/augment_a2739.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 38]:\n    raise RuntimeError('A2.7.39 must augment published A2.7.38')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a274.py",
+      "sha256": "2a36c2dc02617cec1ef028562a99db53541407385c3d74e6ff14cd7bf66292e4",
+      "bytes": 8180,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 7,
+          "text": "- 'development/gameplay_core/augment_a274.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 13,
+          "text": "- 'development/gameplay_core/augment_a274.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a274.yml",
+          "line": 134,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 98,
+          "text": "python development/gameplay_core/augment_a274.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 3]:\n    raise RuntimeError('A2.7.4 must augment A2.7.3 stabilization')",
+        "patch_versions()",
+        "rows = import_java_icons()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2740.py",
+      "sha256": "06bafec9b137780d775e4af0d2028dd41c4986855fcb965644b46871dc11b5aa",
+      "bytes": 8103,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2740.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2740.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2740.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2740.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2740.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2740.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 39]:\n    raise RuntimeError('A2.7.40 must augment published A2.7.39')",
+        "patch_core_logic()",
+        "for name in NEW_FILES:\n    shutil.copy2(DEV / name, BP / 'scripts' / name)"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2741.py",
+      "sha256": "8b4051a12abdb1bb812c3c29d0a2ba9c8f1ecf0846a17d8eeb5bd5b8b8d693cf",
+      "bytes": 5653,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2741.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2741.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2741.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2741.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2741.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2741.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 40]:\n    raise RuntimeError('A2.7.41 must augment published A2.7.40')",
+        "patch_oil_runtime()",
+        "patch_scripts()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2742.py",
+      "sha256": "c46e4e66f777f03c7213e041c49c23248ffed1e07a58a20069bea4dec0121aea",
+      "bytes": 5709,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2742.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2742.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2742.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2742.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2742.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2742.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 41]:\n    raise RuntimeError('A2.7.42 must augment published A2.7.41')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2743.py",
+      "sha256": "394202aebe6a2464efa430c98bd13b9bdfc7ca8544f88f29603c757e2d510f2b",
+      "bytes": 12961,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2743.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2743.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2743.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2743.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2743.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2743.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 42]:\n    raise RuntimeError('A2.7.43 must augment published A2.7.42')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2744.py",
+      "sha256": "019d2d5db7908bc22f11a24c04d74cb53c862381d8c07592370780bbe6fbfd77",
+      "bytes": 4918,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2744.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2744.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2744.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2744.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2744.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2744.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 43]:\n    raise RuntimeError('A2.7.44 must augment published A2.7.43')",
+        "patch_plate_runtime()",
+        "patch_scripts()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2745.py",
+      "sha256": "48900c35d3eb9840312936e5ce56d94769aab5e7145dddd637a7e4bb43c4e78f",
+      "bytes": 5091,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2745.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2745.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2745.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2745.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2745.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2745.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 44]:\n    raise RuntimeError('A2.7.45 must augment published A2.7.44')",
+        "patch_recipe_runtime()",
+        "patch_scripts()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2746.py",
+      "sha256": "f06f68ace3acc0f25a90379886df556ffc9a59e69f4d3b2440eabbdfec433038",
+      "bytes": 7061,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2746.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2746.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2746.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2746.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2746.yml",
+          "line": 89,
+          "text": "python development/gameplay_core/augment_a2746.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 45]:\n    raise RuntimeError('A2.7.46 must augment published A2.7.45')",
+        "patch_scripts()",
+        "patch_content()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2747.py",
+      "sha256": "10d4128b204fabdbec44710c1320a15ef988bf21eaf700e5cdd5050dd575672a",
+      "bytes": 8470,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2747.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2747.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2747.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2747.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2747.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a2747.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 46]:\n    raise RuntimeError('A2.7.47 must augment published A2.7.46')",
+        "add_item()",
+        "add_texture()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2748.py",
+      "sha256": "d30a77c11080de65d9a0a845ff7d9bfa217f991a26c5993fe6ce1dad1d992bc2",
+      "bytes": 5886,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2748.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2748.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2748.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2748.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2748.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2748.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 47]:\n    raise RuntimeError('A2.7.48 must augment published A2.7.47')",
+        "patch_scripts()",
+        "patch_behavior_content()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2749.py",
+      "sha256": "9d27b9f08328afc694b2d1cc9d319a932e787411b64a9ff1e9a87e7eb6a2200f",
+      "bytes": 9256,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2749.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2749.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2749.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2749.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2749.yml",
+          "line": 97,
+          "text": "python development/gameplay_core/augment_a2749.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 48]:\n    raise RuntimeError('A2.7.49 must augment published A2.7.48')",
+        "patch_content()",
+        "patch_effect_registry()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a275.py",
+      "sha256": "6b15c815a34a762a29e0d1ca53d85920c248a55507ecbeae7f1de0851c2e50ae",
+      "bytes": 8343,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a275.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a275.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a275.yml",
+          "line": 105,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 106,
+          "text": "python development/gameplay_core/augment_a275.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 4]:\n    raise RuntimeError('A2.7.5 must augment verified A2.7.4')",
+        "patch_versions()",
+        "patch_core()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2750.py",
+      "sha256": "398e370319311ca04c28965d19d50e82648491afe7bf7d9f5edbe66b10852036",
+      "bytes": 13171,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2750.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2750.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2750.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2750.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2750.yml",
+          "line": 97,
+          "text": "python development/gameplay_core/augment_a2750.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 49]:\n    raise RuntimeError('A2.7.50 must augment published A2.7.49')",
+        "patch_scripts()",
+        "add_content()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2751.py",
+      "sha256": "2bcea9bb843b47680da1bafa7e3ab8e963ba8cf5f74bb50549fb9db6de9e875f",
+      "bytes": 2918,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2751.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2751.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2751.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2751.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2751.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2751.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 50]:\n    raise RuntimeError('A2.7.51 must augment published A2.7.50')",
+        "patch_worldgen()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2752.py",
+      "sha256": "fd4cc92551a59f6a23b8d69d667a045c84edef1784f75457e83c526ece8b0e20",
+      "bytes": 12692,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2752.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2752.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2752.yml",
+          "line": 18,
+          "text": "- 'development/gameplay_core/augment_a2752.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2752.yml",
+          "line": 105,
+          "text": "python development/gameplay_core/augment_a2752.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 51]:\n    raise RuntimeError('A2.7.52 must augment published A2.7.51')",
+        "patch_scripts()",
+        "add_content()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2753.py",
+      "sha256": "00d343b5ebe0323d299a154d9ccd38c0d04f042a4ae8dfadf41065dd929e895f",
+      "bytes": 4617,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2753.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2753.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2753.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2753.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2753.yml",
+          "line": 87,
+          "text": "python development/gameplay_core/augment_a2753.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 52]:\n    raise RuntimeError('A2.7.53 must augment published A2.7.52')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2754.py",
+      "sha256": "7a454de39a0dabdb2ef2413d84742dc1c7164d125bf88daf1c840c3f995b8594",
+      "bytes": 4263,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2754.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2754.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2754.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2754.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2754.yml",
+          "line": 87,
+          "text": "python development/gameplay_core/augment_a2754.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 53]:\n    raise RuntimeError('A2.7.54 must augment published A2.7.53')",
+        "patch_loot()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2755.py",
+      "sha256": "f8b4afce77cc02cb214468e349ad6f065e5c1e670e973a7fb9012d9274fd4994",
+      "bytes": 3651,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2755.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2755.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2755.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2755.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2755.yml",
+          "line": 87,
+          "text": "python development/gameplay_core/augment_a2755.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 54]:\n    raise RuntimeError('A2.7.55 must augment published A2.7.54')",
+        "patch_loot()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2756.py",
+      "sha256": "f7dcf7ae9809f421e3ca24a498b49087496c7a41a5e1ed22dcd6fc0b7eb80d56",
+      "bytes": 9683,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2756.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2756.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2756.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2756.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2756.yml",
+          "line": 87,
+          "text": "python development/gameplay_core/augment_a2756.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 55]:\n    raise RuntimeError('A2.7.56 must augment published A2.7.55')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2757.py",
+      "sha256": "6bae7fcd200737a53a53c4b960d1d7bb5e5dae02dd1bc0a707a8bc20cddde917",
+      "bytes": 4251,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2757.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2757.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2757.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2757.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2757.yml",
+          "line": 81,
+          "text": "python development/gameplay_core/augment_a2757.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 56]:\n    raise RuntimeError('A2.7.57 must augment published A2.7.56')",
+        "patch_adapter()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2758.py",
+      "sha256": "ad3cd3096ecec0865b11fb7408d909f9c384583b7bbfd7bcf3f1172e6a136799",
+      "bytes": 12151,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2758.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2758.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2758.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2758.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2758.yml",
+          "line": 87,
+          "text": "python development/gameplay_core/augment_a2758.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 57]:\n    raise RuntimeError('A2.7.58 must augment published A2.7.57')",
+        "patch_scripts()",
+        "patch_lang()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2759.py",
+      "sha256": "46477289d184ebd478de671e77d406076d83bb6499309b825eed488377dfa612",
+      "bytes": 3590,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2759.yml",
+          "line": 9,
+          "text": "- 'development/gameplay_core/augment_a2759.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2759.yml",
+          "line": 17,
+          "text": "- 'development/gameplay_core/augment_a2759.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2759.yml",
+          "line": 95,
+          "text": "python development/gameplay_core/augment_a2759.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 58]:\n    raise RuntimeError('A2.7.59 must augment published A2.7.58')",
+        "patch_content()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a276.py",
+      "sha256": "27c7c368f1e756689d049f5fdece2a766feb7b87696e7c5972178c4186ca0496",
+      "bytes": 17826,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a276.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a276.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a276.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 114,
+          "text": "python development/gameplay_core/augment_a276.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 5]:\n    raise RuntimeError('A2.7.6 must augment verified A2.7.5')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a2760.py",
+      "sha256": "cba153ecb102423da150b9b6e8d711c0e158315c9f7ba02024379635cbfe3487",
+      "bytes": 2968,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2760.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a2760.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2760.yml",
+          "line": 15,
+          "text": "- 'development/gameplay_core/augment_a2760.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2760.yml",
+          "line": 79,
+          "text": "python development/gameplay_core/augment_a2760.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 59]:\n    raise RuntimeError('A2.7.60 must augment published A2.7.59')",
+        "patch_feature()",
+        "patch_versions()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a277.py",
+      "sha256": "44275ca80cef621438675ddc7e178a5930dd5aeb36e94c4b435b8497d80d800f",
+      "bytes": 14002,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a277.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a277.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a277.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 122,
+          "text": "python development/gameplay_core/augment_a277.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 6]:\n    raise RuntimeError('A2.7.7 must augment verified A2.7.6')",
+        "patch_versions()",
+        "patch_runtime()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a278.py",
+      "sha256": "6757e4f544f2a231ca0f9bfd29ce138b1c545954d09a165a038d4f670d1c18af",
+      "bytes": 6142,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a278.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a278.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a278.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 130,
+          "text": "python development/gameplay_core/augment_a278.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 7]:\n    raise RuntimeError('A2.7.8 must augment verified A2.7.7')",
+        "patch_versions()",
+        "patch_items()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    },
+    {
+      "path": "development/gameplay_core/augment_a279.py",
+      "sha256": "0a42194a6e178c9ea0d1f4e378d3621d9596be4787f72f59070f6dbd3da1520d",
+      "bytes": 6191,
+      "imports": [],
+      "literal_consumers": [
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2710.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2711.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2712.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2713.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2714.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2715.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2716.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a2717.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 8,
+          "text": "- 'development/gameplay_core/augment_a279.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 16,
+          "text": "- 'development/gameplay_core/augment_a279.py'",
+          "kind": "historical_reading"
+        },
+        {
+          "path": "docs/legacy_workflows/gameplay-core-a279.yml",
+          "line": 138,
+          "text": "python development/gameplay_core/augment_a279.py",
+          "kind": "historical_reading"
+        }
+      ],
+      "legacy_admission_before_writes": [
+        "if load(BP / 'manifest.json')['header']['version'] != [2, 7, 8]:\n    raise RuntimeError('A2.7.9 must augment verified A2.7.8')",
+        "patch_versions()",
+        "patch_item()"
+      ],
+      "decision": "delete_current_tree_only; historical commits and records retained"
+    }
+  ],
+  "modified_source_preimages": {
+    "development/gameplay_core/test_native_item_icons.py": "c52f9a20f3e863c8d75fd023eadfa0b3b188c02ecaaecee93daeaf6e73b67f6a",
+    "development/gameplay_core/test_package_current.py": "d5e4e48f31eb9f97a6cb9ded80bad5d78683fab50fb57a15a0922e1c8ae0b37d",
+    "development/gameplay_core/verify_current.py": "6aa98098960d16e01b05adaa9a270a0e3025ff99d71554a1ad1a4372013733f2",
+    "development/gameplay_core/verify_a2837.py": "27dc5aece4375c08e83ad93e78171263c86aeed639a27b6efd70b9ad78156bdc",
+    "development/gameplay_core/verify_a2845.py": "45818027750b5f38317bba7c22de25492c00703aed3b8fb9c7a6636582ed7467",
+    "development/gameplay_core/verify_a2862.py": "d95a0465bb2b2ccf446f7d954d10644d3823653cdb39eb1578ae4a7b4dc12383",
+    "development/gameplay_core/verify_a2867.py": "51c87d01940a38e2589bae441f180686eff81ad0faefd2361b1f6d39a7027940",
+    "README.md": "335b244f0ca77ddd9dd8ea1bf50a1fcbf3cc903d7f2a36a67a9fe98661d9f59c",
+    "docs/LEGACY-AUTHORING.md": "bed9e02c92121ec517e625992b6585be8a5f10ddb58b824ad62b576b7653c913",
+    "docs/BASELINE-MAINTENANCE.md": "71b5826fbc9cae4127d3c99f34268b6e726f43ac2c8c867eb54e4f41e8db84f2"
+  },
+  "decisions": [
+    {
+      "target": "65 augment files enumerated above",
+      "evidence": [
+        "README.md canonical BP/RP authoring/packaging contract",
+        "docs/LEGACY-AUTHORING.md former 66 augment historical-only contract",
+        "Every main predecessor admission shown above",
+        "AST import inventory plus tracked consumer inventory shown above",
+        "verify_a28154.historical153_checks uses git archive of fixed PREVIOUS; it does not use current deleted augment files"
+      ],
+      "replacement": "Canonical checked-in BP/RP and package_current.py; historical reconstructions read the original Git commit only",
+      "risk": "Current filesystem cannot run the retired 65 scripts; historical YAML and evidence remain available at original Git commits; no historical replay claims upgraded"
+    },
+    {
+      "target": "ItemIcons.test_legacy_builder_uses_specific_sources",
+      "evidence": [
+        "Only checks two build.py source string literals; does not execute builder or inspect current outputs"
+      ],
+      "replacement": [
+        "test_brush_models_are_generated_sprites checks exact current three-brush source bytes/icon binding/dimensions/no attachable",
+        "test_variant_brushes_are_distinct checks actual pixels"
+      ],
+      "risk": "Historical A2.0 builder copyfile spelling no longer tested; current brush regression coverage retained"
+    },
+    {
+      "target": "PackageDeterminismTests.test_frozen_archives_regenerate_exactly_without_mutating_artifacts",
+      "evidence": [
+        "skipUnless current BP version == [2,8,66], always skipped under current G155",
+        "G66 historical publication source pin protection remains in test_publish_test_release.py"
+      ],
+      "replacement": [
+        "Existing cross-platform ZIP metadata and component-order differential tests remain",
+        "package_current.main calls baseline_check against complete current source and exported archive"
+      ],
+      "risk": "No current coverage removed; frozen G66 test remains accessible in source history; no measured CI runtime savings attributed to a skipped test"
+    },
+    {
+      "target": "verify_current.generic_gate archived YAML count assertion",
+      "evidence": [
+        "Counts docs/legacy_workflows instead of checking executable workflows"
+      ],
+      "replacement": [
+        "Existing active_legacy assertion still rejects retired executable gameplay workflows",
+        "Existing canonical workflow existence assertion retained"
+      ],
+      "risk": "Historical YAML count can change without failing current gameplay CI; historical records are not deleted"
+    },
+    {
+      "target": "current-chain build_eating_motion/build_secret_held/build_player_extensions --check invocations",
+      "evidence": [
+        "G155 -> G154.semantic_checks -> G152 -> preceding current main chain reaches G67, G62, G45 and G37",
+        "G37 and G45 eating-motion commands bypassed session; G62/G67 shared only their absolute-path key",
+        "G45 and G67 secret-held/player-extensions commands each ran separately"
+      ],
+      "replacement": "run_checked_once with sys.executable, absolute ROOT/tools path, resolved repository cwd and inherited effective environment; only exact successful commands can share within receipt session",
+      "risk": "Standalone historical execution has no active session and still executes every command; source_snapshot before/after boundary remains; no persistent or cross-candidate cache"
+    }
+  ],
+  "explicitly_retained": {
+    "build.py": [
+      "test_bottle_item_offhand_sources.authored_items executes its AST support-item loop"
+    ],
+    "augment_a21.py": [
+      "test_bottle_item_offhand_sources.authored_items executes its AST pending assignment"
+    ],
+    "test_bottle_item_offhand_sources.py": [
+      "test_item_labels.py imports BOTTLES/check_authoring; current 67-bottle flag checks retained"
+    ],
+    "verification_session.py": [
+      "Actual exact-command success reuse; failure/env/cwd/command/lifetime tests retained"
+    ],
+    "all_current_runtime": [
+      "No BP/RP source file changed; literal augment_a2719.py runtime comment retained byte-for-byte"
+    ],
+    "historical_records": [
+      "docs/legacy_workflows and history snapshots unchanged; source_provenance and historical_source_refs inventory not rewritten"
+    ]
+  },
+  "validation": {
+    "canonical_ci": "pending after parent applies patch to the sole new activity tree",
+    "full_source_suite": "not run",
+    "native_client_acceptance": "not claimed"
+  }
+}

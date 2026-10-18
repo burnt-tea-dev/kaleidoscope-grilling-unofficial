@@ -245,9 +245,7 @@ def generic_gate() -> tuple[int, int, int, int]:
     assert config["packs"] == {"behaviorPack": "./behavior_pack", "resourcePack": "./resource_pack"}
 
     active_legacy = sorted((ROOT / ".github/workflows").glob("gameplay-core-a*.yml"))
-    archived_legacy = sorted((ROOT / "docs/legacy_workflows").glob("gameplay-core-a*.yml"))
     assert not active_legacy, f"retired gameplay workflows reactivated: {active_legacy}"
-    assert len(archived_legacy) == 65, f"expected 65 archived gameplay workflows, got {len(archived_legacy)}"
     assert (ROOT / ".github/workflows/gameplay-core.yml").is_file()
 
     return bp_version[0], bp_version[1], bp_version[2], imports

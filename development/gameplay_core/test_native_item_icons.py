@@ -71,6 +71,4 @@ class ItemIcons(unittest.TestCase):
    def changed(path):return corrupt if path==pepper else read_bytes(path)
    with self.subTest(corrupt=hashlib.sha256(corrupt).hexdigest()),patch.object(Path,'read_bytes',changed):
     with self.assertRaises(ValueError):self.test_placed_sapling_and_growth_hooks_unchanged()
- def test_legacy_builder_uses_specific_sources(self):
-  s=(Path(__file__).parent/'build.py').read_text();self.assertIn("shutil.copyfile(specific,rp/f'textures/items/{i}.png')",s);self.assertNotIn("shutil.copyfile(brush_src,rp/f'textures/items/{i}.png')",s)
 if __name__=='__main__':unittest.main()

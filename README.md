@@ -46,7 +46,8 @@ python3 -B development/gameplay_core/package_current.py --output-dir artifacts/r
 本機若已安裝 bridge Dash，依 [BRIDGE-WORKFLOW.md](docs/BRIDGE-WORKFLOW.md) 使用。
 Linux 的 `/usr/bin/dash` 是 shell，不能當作 bridge 編譯器。
 
-`development/gameplay_core/build.py`、`augment_a*.py` 是歷史重建工具，**不是現行 release 的前置步驟**。
+`development/gameplay_core/build.py` 是歷史 A2.0 重建工具，**不是現行 release 的前置步驟**。
+65 個退休 augment 已從當前樹移除；`augment_a21.py` 僅因現行瓶屬性測試讀取其歷史表達式而保留，不能用作現行建置。
 舊 build 已改為預設拒絕，只有明確指定全新、位於 Git 工作樹外的輸出才能重建 A2.0；
 不能靠疊加舊 augment 重建 G114。使用界線見 [歷史工具說明](docs/LEGACY-AUTHORING.md)。
 歷史素材工程、驗收台及舊 artifacts 保留原用途，不是現行包的替代來源。
