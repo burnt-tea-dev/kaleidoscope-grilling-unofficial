@@ -222,7 +222,7 @@ scripts/
 - **唯一例外**：Java 在**背包圖示**上就有不同外觀、而 Bedrock 只能用不同 ID 呈現的狀態（例如調料瓶的剩餘量階段）。這類變體必須：在 `data/variants.json` 宣告理由與 Java 依據、由產生器產出 item JSON（不手寫）、數量最小化。
 - 退役目標（P4，走 SAVE-COMPAT 流程）：
   - `*_native_plain`（42）、`*_java_three_alt`（22）：進食路線影子物品，動畫改由 player property 選擇 → **全部退役**，替代為對應基礎 ID。
-  - `*_cuisine_q0–3`（12）：料理品質。Java `CuisineQualitySupport` 是 NBT 屬性，不是不同物品 → 改 item dynamic property＋lore，**退役**（若擁有者在 D5 決定背包圖示必須不同則保留並改由產生器管理）。
+  - `*_cuisine_q0–3`（12）：料理品質。Java `CuisineQualitySupport` 是 stack 上的 Cookery `Quality`，會以 `QualityUtils.modifyFoodProperties` 改變營養、以 `quality.getRatio()` 縮放效果時間、並加一行 tooltip；不是不同物品。Bedrock 的 `minecraft:food` 營養綁在 item ID，所以現行用 4 個 ID 表達 4 種營養。目標：基礎 ID＋item dynamic property 記品質＋lore 顯示，營養差額與效果時間在 `onConsume` 由腳本補正（以基礎營養為最低品質，腳本只加不減，避免原生結算後再扣）→ **退役** 12 個 ID（若擁有者在 D5 決定背包圖示必須不同則保留並改由產生器管理）。
   - `special_seasoning_r*_v*`（64）、`partial/pending_seasoning_f1–8`（16）：先在 P4 盤點 Java 背包圖示實際有幾種外觀，再決定保留數量；保留的改由產生器產出。
 - 不完整、自訂秘製串的**背包圖示**依三格食材變化：Bedrock 無法按 stack 動態合成背包圖示，這是平台限制。終態：通用秘製串圖示＋名稱／lore 列出三格食材；手持、放置、進食畫面則依 property 正確呈現。寫進 `docs/KNOWN-ISSUES.md`，不再用影子 ID 嘗試。
 
@@ -369,7 +369,9 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 **T3.4 進食系統重寫**（跨 skewer/food/plate，單獨一個 PR，高風險）
 - 刪除 `prepareEatingItems` 換手持物品的機制；進食動畫選擇改為：`itemStartUse` 時寫 player property（profile、hand、random alt），attachable 動畫控制器讀 `q.property`（必要時 `c.owning_entity`）。
-- 進食時長：每個物品 ID 在 JSON 固定 `minecraft:use_modifiers.use_duration`；多口串（Java `MultiBiteSkewerItem`）用一次使用＝一口、物品 dynamic property 記剩餘口數（若 Java 是一次吃完多口，照 Java）。
+- Java 事實（`MultiBiteSkewerItem`，已核對原碼）：一次連續使用吃完整串；`AnimationProfile` 決定時長與每口的秒數——ONE 90 tick、TWO 90、THREE 100、THREE_ALT 90、FOUR 90；THREE_RANDOM 物品每個 stack 以 custom data `SkewerEatingProfile` 決定走 THREE（100）或 THREE_ALT（90）；可見的口數＝已過秒數跨過幾個 bite 秒數；放開時已使用 ≥ 25 tick（`MINIMUM_EAT_TICKS`）即可結算；關閉進食動畫設定時時長為 25 tick。現行 `_java_three_alt`／`_native_plain` 影子 ID 就是為了讓 Bedrock 的原生 `use_duration`（綁在 item ID）跟著這些時長變。
+- 目標做法：每個物品只留一個 ID，`minecraft:use_modifiers.use_duration` 設為該物品可能的最長時長；使用開始時腳本決定本次 profile（THREE_RANDOM 的選擇存在 item dynamic property，對應 Java 的 `SkewerEatingProfile`）並寫 player property；口數由腳本依已過 tick 計算後寫 player property，attachable 以 bone 可見度呈現；結算三種路徑：(a) 原生完成；(b) 本次 profile 較短（例如 THREE_ALT 90）時，腳本在第 90 tick 以交易方式結算並扣 1 份，扣份會結束原生使用；(c) 放開時 ≥ 25 tick 結算。每次使用一個 settled 旗標，防止 (a)(b)(c) 重複結算。
+- **先做技術驗證（spike）**：在 T3.4 開頭用 GameTest／staging 驗證「使用中由腳本扣 1 份會結束原生使用且不會再觸發原生完成」。若驗證失敗，保留影子 ID 機制但收斂到 `food/` 一處、只在使用開始前替換一次（不再每 tick 檢查），並在 PARITY 記錄；**不可**在驗證前就刪掉現行機制。
 - 影子 ID 在這個 PR **還不退役**（存檔裡可能有），只是**不再產生**；新增 runtime 遷移：玩家上線、開啟容器、手持時把影子 ID 換回基礎 ID（保留 metadata）。退役在 P4。
 - 驗收：scenario 測試覆蓋主手／副手進食、中途切換、斷線、連吃；staging 實測三種串；`shadow_route_items` 下降 0（仍保留定義）但 runtime 不再引用它們產生新物品（新增一個 validate 規則：除遷移模組外，腳本不得出現影子 ID 字串）。
 
