@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "version": "0.3.64",
-  "revision": "kg-guide-a3-28153",
+  "version": "0.3.65",
+  "revision": "kg-guide-a3-28154",
   "module_id": "kg_a1:grilling",
   "order": 300,
   "icon": "textures/ui/kg_grilling/grill_legged_lit",
@@ -6693,7 +6693,7 @@
     "kaleidoscope_grilling:premium_chili_oil_brush"
   ],
   "host_reference": {
-    "version": "1.6.1",
+    "version": "1.6.2",
     "guide_path": "scripts/events/guidebook.js",
     "guide_sha256": "aae402d3fc7ed52db9cda72459fbd8207f86689adc86c379cc79ccca6b9cf169",
     "root_category_ids": [
@@ -6705,8 +6705,8 @@
       "progression_guide"
     ],
     "supported_shape": "root categories, one child layer, multi-category entries; no host UI override",
-    "archive_sha256": "5b01865d4dd9a455cd80dae4ddc94dc45964e074025f7d24c6f0c5e35f0fbe52",
-    "file_id": 9123386
+    "archive_sha256": "f994f8aa3b3aa4ab323c021f871f05291a827e7957aa265e17e91a085ba85b81",
+    "file_id": 9227406
   },
   "acquisition_gaps": [],
   "host_extension": {

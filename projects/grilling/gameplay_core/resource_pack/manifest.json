@@ -7,7 +7,7 @@
     "version": [
       2,
       8,
-      153
+      154
     ],
     "min_engine_version": [
       1,
@@ -22,17 +22,17 @@
       "version": [
         2,
         8,
-        153
+        154
       ]
     }
   ],
   "dependencies": [
     {
-      "uuid": "c9df2982-d72e-4bbf-a72c-b77de4ea915b",
+      "uuid": "01ba9a7f-877e-46c7-8583-6c0441366b55",
       "version": [
         1,
         6,
-        1
+        2
       ]
     }
   ],

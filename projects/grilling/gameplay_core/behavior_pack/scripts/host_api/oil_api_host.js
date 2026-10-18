@@ -213,7 +213,19 @@ export function captureSharedOilPlacement(ev){
  const slot=hand(ev.player),held=slot?.hasItem()?slot.getItem():undefined;
  if(![EMPTY_POT,FILLED_POT].includes(held?.typeId))return;
  const read=readHostOilItem(held,{legacyFull:true});if(!read.valid){ev.cancel=true;system.run(()=>notice(ev.player,'unavailable'));return;}
- placement.set(ev.player.id,{tick:system.currentTick,state:read.state});system.runTimeout(()=>placement.delete(ev.player.id),16);
+ const pending={tick:system.currentTick,state:read.state,station:location(ev.block)},id=ev.player.id;
+ placement.set(id,pending);system.runTimeout(()=>{if(placement.get(id)===pending)placement.delete(id)},16);
+}
+export function finalizeSharedOilPlacement(ev){
+ if(ev.block?.typeId!==EMPTY_POT)return false;
+ const cached=placement.get(ev.player?.id);placement.delete(ev.player?.id);
+ if(!cached||system.currentTick-cached.tick>12||system.currentTick<cached.tick||stable(cached.station)!==stable(location(ev.block)))return false;
+ // The captured item is authoritative for this placement. Reading the block
+ // first would reject a newly placed filled pot: its visual state is already
+ // true, but the author's quantity has not been initialized yet. Do not grant
+ // this initialization path to an unknown legacy block or another placement.
+ requireOilAvailable(ev.block);
+ writeSharedPlacedOil(ev.block,cached.state);return true;
 }
 export function handleSharedPlacedOil(block,player,sound=()=>{}){
  try{
@@ -284,11 +296,6 @@ world.beforeEvents.playerInteractWithBlock.subscribe(ev=>{
  ev.cancel=true;if(ev.isFirstEvent===false)return;
  const p=ev.player,d=ev.block.dimension,loc={...ev.block.location},held=ev.itemStack.clone();
  system.run(()=>{try{const b=d.getBlock(loc),slot=hand(p);if(b?.typeId!==EMPTY_POT||!slot?.hasItem()||!itemSame(slot.getItem(),held))return;const r=fillSharedPlacedOil(b,slot,type,{creative:p.getGameMode()===GameMode.Creative});if(!r.ok)notice(p,r.reason);else d.playSound(type==='premium_chili'?'bucket.empty_lava':'bucket.empty_water',loc)}catch(e){notice(p,'unavailable');console.warn('[Cookery Oil API] fill retained '+e)}});
-});
-world.afterEvents.playerPlaceBlock.subscribe(ev=>{
- if(ev.block.typeId!==EMPTY_POT)return;const cached=placement.get(ev.player.id);placement.delete(ev.player.id);
- if(!cached||system.currentTick-cached.tick>12)return;
- system.run(()=>{try{if(ev.block.typeId===EMPTY_POT)writeSharedPlacedOil(ev.block,cached.state)}catch(e){console.warn('[Cookery Oil API] placement retained '+e)}});
 });
 world.beforeEvents.playerBreakBlock.subscribe(ev=>{if(ev.block.typeId!==EMPTY_POT)return;try{readSharedPlacedOil(ev.block)}catch{ev.cancel=true;system.run(()=>notice(ev.player,'unavailable'))}});
 world.beforeEvents.explosion.subscribe(ev=>{ev.setImpactedBlocks(ev.getImpactedBlocks().filter(b=>{if(b.typeId!==EMPTY_POT)return true;try{return !!readSharedPlacedOil(b)}catch{return false}}))});

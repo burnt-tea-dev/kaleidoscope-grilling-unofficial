@@ -175,9 +175,15 @@ def reference_bytes(path, actual=None):
     if '..' in Path(key).parts:
         raise ValueError('G153 source path leaves the repository')
     actual = (ROOT/key).read_bytes() if actual is None else actual
+    from g154_host_source import active as host_active, PATHS as HOST_PATHS, reference_bytes as host_reference
     if key not in PATHS:
-        return actual
+        return host_reference(key, actual) if host_active(ROOT) and key in HOST_PATHS else actual
     before = preceding_bytes(key)
+    if host_active(ROOT) and key in HOST_PATHS:
+        # Composed witnesses may already supply the exact G152 preimage.
+        # Every other G154-owned input must cross its own exact boundary first.
+        if actual != before:
+            actual = host_reference(key, actual)
     if before is None:
         # There is no historical byte witness for a new resource. Only the
         # complete runtime inverse can remove its exact admitted postimage.
@@ -197,6 +203,8 @@ def expected_files():
     files = dict(preceding_files())
     for path in PATHS:
         actual = (ROOT/path).read_bytes()
+        from g154_host_source import active as host_active, reference_bytes as host_reference
+        if host_active(ROOT): actual = host_reference(path, actual)
         row = doc['changes'][path]
         before = preceding_bytes(path)
         if ((None if before is None else sha(before)) != row['before_sha256'] or sha(actual) != row['after_sha256']
@@ -208,6 +216,9 @@ def expected_files():
 
 
 def predecessor_runtime(actual):
+    if json.loads(actual.get(BP+'/manifest.json', b'{}')).get('header', {}).get('version') == [2,8,154]:
+        from g154_host_source import predecessor_runtime as host_predecessor
+        actual = host_predecessor(actual)
     before = preceding_files()
     additions = {path for path in RUNTIME_PATHS if OPERATIONS[path] == 'add'}
     if actual != expected_files() or set(actual) != set(before) | additions:
@@ -242,10 +253,13 @@ def historical_bytes(path, actual=None):
         version = json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError('Invalid release identity at the G153 repair boundary') from error
-    return reference_bytes(path, actual) if version == [2, 8, 153] else actual
+    return reference_bytes(path, actual) if version in ([2, 8, 153], [2, 8, 154]) else actual
 
 
 def predecessor_version(version):
+    if version == [2,8,154]:
+        from g154_host_source import reference_bytes as host_reference
+        version = json.loads(host_reference(BP+'/manifest.json'))['header']['version']
     if version != [2, 8, 153]:
         return version
     return json.loads(reference_bytes(BP + '/manifest.json'))['header']['version']

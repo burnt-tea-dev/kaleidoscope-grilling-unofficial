@@ -1,6 +1,6 @@
-## Current maintained source: 2.8.153
+## Current maintained source: 2.8.154
 
-**G153 local composition candidate, not frozen or published.** It retains the complete G151/G152 skewer, input and guide repairs, adding rack targeting, Java crop geometry, pepper conservation and oil brush repairs. Guide 0.3.64 combines both guide corrections. [Composition scope](docs/RELEASE-NOTES-A2.8.153.md).
+**G154 source candidate, pending canonical checks, complete-family gates and client acceptance.** It adds clean Cookery 1.6.2 public API 0.2.13 oil placement and seven-powder millstone admission while retaining the complete G151/G152/G153 skewer, input and guide repairs, adding rack targeting, Java crop geometry, pepper conservation and oil brush repairs. Guide 0.3.64 combines both guide corrections. [Composition scope](docs/RELEASE-NOTES-A2.8.153.md).
 
 **The retained G152 baseline uses Cookery 1.6.1 / family API 0.2.12.** It preserves the G151 skewer repairs and synchronizes the three-language chopping-board guide with the actual current outputs. It repairs current chopping-board ingredient production, short-recipe progress, native-mode secret-skewer contents and eating-data ownership, and appends four missing Cookery foods to the display catalog. The [G151 repair review](docs/evidence/skewer-repair-20261017.md) records the actual source defects, verification and remaining client scope. It retains the earlier author identity/state adaptation and Java grill/rack collision repairs.
 
