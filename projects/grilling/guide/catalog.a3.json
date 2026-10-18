@@ -162,8 +162,8 @@
     {
       "id": "food_mill",
       "title": {
-        "zh_CN": "磨石加工",
-        "zh_TW": "磨石加工",
+        "zh_CN": "石磨加工",
+        "zh_TW": "石磨加工",
         "en_US": "Millstone"
       },
       "icon": "textures/ui/kg_grilling/catalog/canola_powder",
@@ -193,20 +193,20 @@
       },
       "body": {
         "zh_CN": [
-          "高级厨具架的 9 个槽位分为固定的上下两排：上排 5 格放油壶/调料瓶，下排 4 格挂厨房刀、厨房铲、打火石等工具。",
+          "高级厨具架的 9 个槽位分为固定的上下两排：上排 5 格放油壶/调料瓶，下排 4 格挂菜刀、锅铲、打火石等工具。",
           "槽位第一次存入物品时会建立筛选；油壶各状态视为同一家族，调料瓶的空/待摇/完成状态也视为同一家族。",
           "瞄准具体槽位右键：手持符合筛选的物品可存入，空手可取回；潜行右键已占用槽位可与手中物品交换。",
-          "操作距离为 8 格；打掉厨具架时，内容和筛选会写入掉落物，重新放置后恢复。",
+          "操作距离为 8 格；打掉高级厨具架时，内容和筛选会写入掉落物，重新放置后恢复。",
           "工作台图样（空位为 ·）：\nIII\n·R·\nSSS\nI = 铁锭；R = 厨具架；S = 任意木台阶",
-          "空手潜行右键空槽位可清除筛选。/kaleidoscope_grilling:rack 会将背包中符合既有筛选的物品归还到 8 格内最近的厨具架，不打开界面。"
+          "空手潜行右键空槽位可清除筛选。/kaleidoscope_grilling:rack 会将背包中符合既有筛选的物品归还到 8 格内最近的高级厨具架，不打开界面。"
         ],
         "zh_TW": [
-          "高級廚具架的 9 個槽位分為固定的上下兩排：上排 5 格放油壺/調料瓶，下排 4 格掛廚房刀、廚房鏟、打火石等工具。",
+          "高級廚具架的 9 個槽位分為固定的上下兩排：上排 5 格放油壺/調料瓶，下排 4 格掛菜刀、鍋鏟、打火石等工具。",
           "槽位第一次存入物品時會建立篩選；油壺各狀態視為同一家族，調料瓶的空/待搖/完成狀態也視為同一家族。",
           "瞄準具體槽位右鍵：手持符合篩選的物品可存入，空手可取回；潛行右鍵已佔用槽位可與手中物品交換。",
-          "操作距離為 8 格；打掉廚具架時，內容和篩選會寫入掉落物，重新放置後恢復。",
+          "操作距離為 8 格；打掉高級廚具架時，內容和篩選會寫入掉落物，重新放置後恢復。",
           "工作台圖樣（空位為 ·）：\nIII\n·R·\nSSS\nI = 鐵錠；R = 廚具架；S = 任意木半磚",
-          "空手潛行右鍵空槽位可清除篩選。/kaleidoscope_grilling:rack 會將背包中符合既有篩選的物品歸還到 8 格內最近的廚具架，不開啟介面。"
+          "空手潛行右鍵空槽位可清除篩選。/kaleidoscope_grilling:rack 會將背包中符合既有篩選的物品歸還到 8 格內最近的高級廚具架，不開啟介面。"
         ],
         "en_US": [
           "The Advanced Kitchen Rack has 9 slots in two fixed rows: 5 upper slots for oil pots/seasoning bottles, and 4 lower hooks for kitchen knives, the kitchen shovel, Flint and Steel, and similar tools.",
@@ -246,13 +246,13 @@
       },
       "body": {
         "zh_CN": [
-          "搭配 Cookery 1.6.1 与家族砧板扩充，将 1 份生牛肉放到厨房砧板，用厨房刀切 4 次，再持刀使用一次取出 2 份牛肉块。这份牛肉原本的牛杂产出会由牛肉块替换。"
+          "搭配 Cookery 1.6.2 与家族砧板扩充，将 1 份生牛肉放到厨房砧板，用菜刀切 4 次，再持刀使用一次取出 2 份牛肉块。这份牛肉原本的牛杂产出会由牛肉块替换。"
         ],
         "zh_TW": [
-          "搭配 Cookery 1.6.1 與家族砧板擴充，將 1 份生牛肉放到廚房砧板，用廚房刀切 4 次，再持刀使用一次取出 2 份牛肉塊。這份牛肉原本的牛雜產出會由牛肉塊替換。"
+          "搭配 Cookery 1.6.2 與家族砧板擴充，將 1 份生牛肉放到廚房砧板，用菜刀切 4 次，再持刀使用一次取出 2 份牛肉塊。這份牛肉原本的牛雜產出會由牛肉塊替換。"
         ],
         "en_US": [
-          "With Cookery 1.6.1 and the family Chopping Board extension, place one raw Beef on the board, cut four times with a Kitchen Knife, then use the knife once more to release two Beef Chunks. The chunks replace this input's normal Cow Offal output."
+          "With Cookery 1.6.2 and the family Chopping Board extension, place one raw Beef on the board, cut four times with a Kitchen Knife, then use the knife once more to release two Beef Chunks. The chunks replace this input's normal Cow Offal output."
         ]
       },
       "kinds": [
@@ -382,23 +382,23 @@
           "三种烟火油桶都可像流体一样放到世界中；源方块会向下优先、再向水平方向扩散，并显示 8 级液面。",
           "空桶可收回油源；Cookery 油壶也可直接从油源吸取对应油。",
           "基岩版里的烟火油由脚本模拟，因此不保证具备原版水/熔岩的所有互动；对大缸或 Cookery 油壶使用油桶时，容器操作会优先。",
-          "菜籽油提供约 60 秒烟火气；秘制辣椒油约 10 分钟；高级辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壶转移；刷烤架用装油的油壶，不是旧版油刷。",
+          "菜籽油提供约 60 秒烟火气；辣椒油约 10 分钟；熔岩辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壶转移；刷烧烤架用装油的油壶，不是旧版油刷。",
           "取得：榨油器完成一批后，从接收菜籽油的大缸用桶取出。"
         ],
         "zh_TW": [
           "三種煙火油桶都可像流體一樣放到世界中；源方塊會向下優先、再向水平方向擴散，並顯示 8 級液面。",
           "空桶可收回油源；Cookery 油壺也可直接從油源吸取對應油。",
           "基岩版裡的煙火油由腳本模擬，因此不保證具備原版水／熔岩的所有互動；對大缸或 Cookery 油壺使用油桶時，容器操作會優先。",
-          "菜籽油提供約 60 秒煙火氣；秘製辣椒油約 10 分鐘；高級辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壺轉移；刷烤架用裝油的油壺，不是舊版油刷。",
+          "菜籽油提供約 60 秒煙火氣；辣椒油約 10 分鐘；熔岩辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壺轉移；刷燒烤架用裝油的油壺，不是舊版油刷。",
           "取得：榨油器完成一批後，從接收菜籽油的大缸用桶取出。"
         ],
         "en_US": [
           "All three Grilling oil buckets can be placed into the world as fluids. A source flows downward first, then horizontally, using 8 visual levels.",
           "An empty bucket can collect an oil source, and a Cookery Oil Pot can also take matching oil directly from a source.",
           "On Bedrock these oils are script-simulated, so they do not promise every vanilla water/lava interaction. When an oil bucket is used on a Big Vat or Cookery Oil Pot, the container interaction takes priority.",
-          "Canola Oil gives about 60 seconds of Hot Food time, Secret Chili Oil about 10 minutes, and Premium Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
+          "Canola Oil gives about 60 seconds of Hot Food time, Chili Oil about 10 minutes, and Lava Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
           "Use: transfer oil with buckets, vats and the Cookery Oil Pot. Brush the grill with the filled Oil Pot, not a legacy oil brush.",
           "Acquisition: collect it with a bucket from the vat receiving a completed oil-press batch."
         ]
@@ -429,19 +429,19 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
-          "原料取得：戴厨房草帽打短草有机会获得油菜籽；种在耕地，成熟后收获更多。菜籽粉用来合成油饼（8 粉围 1 小麦），4 个油饼可榨油。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
+          "原料取得：戴草帽打短草有机会获得油菜籽；种在耕地，成熟后收获更多。菜籽粉用来合成油饼（8 粉围 1 小麦），4 个油饼可榨油。",
           "磨粉：把油菜籽拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份菜籽粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。"
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
-          "原料取得：戴廚房草帽打短草有機會獲得油菜籽；種在耕地，成熟後收穫更多。菜籽粉用來合成油餅（8 粉圍 1 小麥），4 個油餅可榨油。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
+          "原料取得：戴草帽打短草有機會獲得油菜籽；種在耕地，成熟後收穫更多。菜籽粉用來合成油餅（8 粉圍 1 小麥），4 個油餅可榨油。",
           "磨粉：把油菜籽拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份菜籽粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Get canola seeds by breaking short grass while wearing a Cookery straw hat; grow on farmland. Craft 8 powders around 1 wheat into an Oil Cake; 4 cakes make one oil-press batch.",
           "Grinding: hold Canola Seeds in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Canola Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting."
@@ -492,17 +492,17 @@
       "body": {
         "zh_CN": [
           "取得与种植：戴 Cookery 草帽在生存模式打短草，有机会取得；种在耕地上，成熟后收获。",
-          "油菜籽放入 Cookery 磨石可得到菜籽粉。",
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支持这些扩展原料投料；以下研磨步骤仅保留作配方资料，待负责模组原生支持后可用。油菜籽放入 Cookery 石磨可得到菜籽粉。",
           "工作台用 8 份菜籽粉围住 1 个小麦可做 1 个油饼；4 个油饼是一批榨油原料。"
         ],
         "zh_TW": [
           "取得與種植：戴 Cookery 草帽在生存模式打短草，有機會取得；種在耕地上，成熟後收穫。",
-          "油菜籽放入 Cookery 磨石可得到菜籽粉。",
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支援這些擴充原料投料；以下研磨步驟僅保留作配方資料，待負責模組原生支援後可用。油菜籽放入 Cookery 石磨可得到菜籽粉。",
           "工作台用 8 份菜籽粉圍住 1 個小麥可做 1 個油餅；4 個油餅是一批榨油原料。"
         ],
         "en_US": [
           "Acquisition and farming: break short grass in Survival while wearing a Cookery Straw Hat for a chance to obtain it. Plant on farmland and harvest when mature.",
-          "Mill Canola Seeds in the Cookery Millstone to obtain Canola Powder.",
+          "Clean Cookery 1.6.2 cannot load these extension ingredients. Grinding steps are recipe reference until the responsible mod adds native input support. Mill Canola Seeds in the Cookery Millstone to obtain Canola Powder.",
           "At a crafting table, surround 1 Wheat with 8 Canola Powder to make 1 Oil Cake; 4 cakes make one press batch."
         ]
       },
@@ -532,10 +532,10 @@
       },
       "body": {
         "zh_CN": [
-          "加工：主手拿 1 个胡萝卜对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份胡萝卜粒，拾取成品。"
+          "加工：主手拿 1 个胡萝卜对空的森罗厨房砧板使用；再持菜刀切 4 次，之后再使用一次释放 3 份胡萝卜粒，拾取成品。"
         ],
         "zh_TW": [
-          "加工：主手拿 1 個胡蘿蔔對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份胡蘿蔔粒，拾取成品。"
+          "加工：主手拿 1 個胡蘿蔔對空的森羅廚房砧板使用；再持菜刀切 4 次，之後再使用一次釋出 3 份胡蘿蔔粒，拾取成品。"
         ],
         "en_US": [
           "Use 1 Carrot on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Carrot Dice; collect the output."
@@ -575,13 +575,13 @@
       },
       "body": {
         "zh_CN": [
-          "搭配 Cookery 1.6.1 与家族砧板扩充，将 1 份生鸡肉放到厨房砧板，用厨房刀切 4 次，再持刀使用一次取出原有 3 份生肉块与 1 根骨头，并额外取得 1～3 片鸡皮。杀鸡不会给鸡皮。"
+          "搭配 Cookery 1.6.2 与家族砧板扩充，将 1 份生鸡肉放到厨房砧板，用菜刀切 4 次，再持刀使用一次取出原有 3 份生肉块与 1 根骨头，并额外取得 1～3 片鸡皮。杀鸡不会给鸡皮。"
         ],
         "zh_TW": [
-          "搭配 Cookery 1.6.1 與家族砧板擴充，將 1 份生雞肉放到廚房砧板，用廚房刀切 4 次，再持刀使用一次取出原有 3 份生肉塊與 1 根骨頭，並額外取得 1～3 片雞皮。殺雞不會給雞皮。"
+          "搭配 Cookery 1.6.2 與家族砧板擴充，將 1 份生雞肉放到廚房砧板，用菜刀切 4 次，再持刀使用一次取出原有 3 份生肉塊與 1 根骨頭，並額外取得 1～3 片雞皮。殺雞不會給雞皮。"
         ],
         "en_US": [
-          "With Cookery 1.6.1 and the family Chopping Board extension, place one raw Chicken on the board, cut four times with a Kitchen Knife, then use the knife once more to release the original three Raw Meat Cuts and one Bone, plus 1–3 Chicken Skin. Killing chickens does not yield skin."
+          "With Cookery 1.6.2 and the family Chopping Board extension, place one raw Chicken on the board, cut four times with a Kitchen Knife, then use the knife once more to release the original three Raw Meat Cuts and one Bone, plus 1–3 Chicken Skin. Killing chickens does not yield skin."
         ]
       },
       "kinds": [
@@ -611,11 +611,11 @@
       },
       "body": {
         "zh_CN": [
-          "用 Cookery 厨房刀击杀鸡时会掉落鸡翅；抢夺附魔会影响鸡翅数量。",
+          "用 Cookery 菜刀击杀鸡时会掉落鸡翅；抢夺附魔会影响鸡翅数量。",
           "鸡皮和鸡翅都能继续用于固定烤串配方。"
         ],
         "zh_TW": [
-          "用 Cookery 廚房刀擊殺雞時會掉落雞翅；掠奪附魔會影響雞翅數量。",
+          "用 Cookery 菜刀擊殺雞時會掉落雞翅；掠奪附魔會影響雞翅數量。",
           "雞皮和雞翅都能繼續用於固定烤串配方。"
         ],
         "en_US": [
@@ -657,20 +657,20 @@
       "body": {
         "zh_CN": [
           "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
-          "主手拿至少 3 份折耳根，副手拿装有高級辣椒油的厨房油壶；潜行并对工作台按使用键，做出 1 份涼拌折耳根。只站在旁边不会制作。",
-          "制作会消耗 3 份折耳根和 2 点高级辣椒油；油壶剩余油量会保留。",
+          "主手拿至少 3 份折耳根，副手拿装有熔岩辣椒油的厨房油壶；潜行并对工作台按使用键，做出 1 份凉拌折耳根。只站在旁边不会制作。",
+          "制作会消耗 3 份折耳根和 2 点熔岩辣椒油；油壶剩余油量会保留。",
           "凉拌折耳根食用后获得约 60 秒抗火。"
         ],
         "zh_TW": [
           "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
-          "主手拿至少 3 份折耳根，副手拿裝有高級辣椒油的廚房油壺；潛行並對工作台按使用鍵，做出 1 份涼拌折耳根。只站在旁邊不會製作。",
-          "製作會消耗 3 份折耳根和 2 點高級辣椒油；油壺剩餘油量會保留。",
+          "主手拿至少 3 份折耳根，副手拿裝有熔岩辣椒油的廚房油壺；潛行並對工作台按使用鍵，做出 1 份涼拌折耳根。只站在旁邊不會製作。",
+          "製作會消耗 3 份折耳根和 2 點熔岩辣椒油；油壺剩餘油量會保留。",
           "涼拌折耳根食用後獲得約 60 秒抗火。"
         ],
         "en_US": [
           "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
-          "Hold at least 3 Houttuynia in your main hand and a Cookery Oil Pot containing Premium Chili Oil in your offhand. Sneak-use the crafting table to make 1 Dressed Houttuynia; standing nearby alone does nothing.",
-          "Crafting consumes 3 Houttuynia and 2 Premium Chili Oil points; any remaining oil stays in the pot.",
+          "Hold at least 3 Houttuynia in your main hand and a Cookery Oil Pot containing Lava Chili Oil in your offhand. Sneak-use the crafting table to make 1 Dressed Houttuynia; standing nearby alone does nothing.",
+          "Crafting consumes 3 Houttuynia and 2 Lava Chili Oil points; any remaining oil stays in the pot.",
           "Cold Houttuynia grants about 60 seconds of Fire Resistance when eaten."
         ]
       },
@@ -801,21 +801,21 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
-          "原料取得：戴厨房草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
+          "原料取得：戴草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
           "磨粉：把青辣椒拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份绿辣椒粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
-          "用途：特制调料的三种基础料之一；每瓶至少加入青辣椒粉、花椒、洋葱粉各 1 份。"
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
+          "用途：特制调料的三种基础料之一；每瓶至少加入绿辣椒粉、花椒、洋葱粉各 1 份。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
-          "原料取得：戴廚房草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
+          "原料取得：戴草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
           "磨粉：把青辣椒拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份青辣椒粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：特製調料的三種基礎料之一；每瓶至少加入青辣椒粉、花椒、洋蔥粉各 1 份。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Obtain chili seeds by breaking short grass while wearing a Cookery straw hat. Plant on farmland and harvest mature chili: it yields red chili, with a 20% bonus chance of green chili. Use the matching color; the two powder inputs are not interchangeable.",
           "Grinding: hold Green Chili in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Green Chili Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
@@ -1005,16 +1005,16 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
           "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
           "磨粉：把折耳根拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份折耳根粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
           "没有折耳根粉时，常规调料效果基础持续约 3 分钟。",
           "加入 1–3 份折耳根粉会把调料效果时间 ×2；达到 4 份或更多时 ×4。",
           "麻木效果也会使用同一时间倍率。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
           "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
           "磨粉：把折耳根拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份折耳根粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
@@ -1023,7 +1023,7 @@
           "麻木效果也會使用同一時間倍率。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
           "Grinding: hold Houttuynia in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Houttuynia Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
@@ -1174,11 +1174,11 @@
       "body": {
         "zh_CN": [
           "原料取得：地狱要塞宝箱生成战利品时，有 65% 机会额外加入折耳根（鱼腥草），成功时合计 1–6 个；不是每箱必有，旧箱已生成的物品不会补发。留一株种在耕地或灵魂沙上繁殖。宝箱奖励与 Java 原作一致；Java 新要塞中约 25% 地狱疙瘩替换成折耳根的生成机制尚未实现。",
-          "加工：主手拿 1 个折耳根对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 1 份折耳根沫，拾取成品。"
+          "加工：主手拿 1 个折耳根对空的森罗厨房砧板使用；再持菜刀切 4 次，之后再使用一次释放 1 份折耳根沫，拾取成品。"
         ],
         "zh_TW": [
           "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
-          "加工：主手拿 1 個折耳根對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 1 份折耳根沫，拾取成品。"
+          "加工：主手拿 1 個折耳根對空的森羅廚房砧板使用；再持菜刀切 4 次，之後再使用一次釋出 1 份折耳根沫，拾取成品。"
         ],
         "en_US": [
           "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
@@ -1404,21 +1404,21 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
-          "原料取得：戴厨房草帽打短草有机会获得洋葱；洋葱种在耕地，成熟后收获并留种。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
+          "原料取得：戴草帽打短草有机会获得洋葱；洋葱种在耕地，成熟后收获并留种。",
           "磨粉：把洋葱拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份洋葱粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
-          "用途：特制调料的三种基础料之一；每瓶至少加入青辣椒粉、花椒、洋葱粉各 1 份。"
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
+          "用途：特制调料的三种基础料之一；每瓶至少加入绿辣椒粉、花椒、洋葱粉各 1 份。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
-          "原料取得：戴廚房草帽打短草有機會獲得洋蔥；洋蔥種在耕地，成熟後收穫並留種。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
+          "原料取得：戴草帽打短草有機會獲得洋蔥；洋蔥種在耕地，成熟後收穫並留種。",
           "磨粉：把洋蔥拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份洋蔥粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：特製調料的三種基礎料之一；每瓶至少加入青辣椒粉、花椒、洋蔥粉各 1 份。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Obtain onions by breaking short grass while wearing a Cookery straw hat. Plant onions on farmland, harvest mature crops and retain some for replanting.",
           "Grinding: hold Onion in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Onion Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
@@ -1656,10 +1656,10 @@
       },
       "body": {
         "zh_CN": [
-          "加工：主手拿 1 个马铃薯对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份土豆片，拾取成品。"
+          "加工：主手拿 1 个马铃薯对空的森罗厨房砧板使用；再持菜刀切 4 次，之后再使用一次释放 3 份土豆片，拾取成品。"
         ],
         "zh_TW": [
-          "加工：主手拿 1 個馬鈴薯對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份馬鈴薯片，拾取成品。"
+          "加工：主手拿 1 個馬鈴薯對空的森羅廚房砧板使用；再持菜刀切 4 次，之後再使用一次釋出 3 份馬鈴薯片，拾取成品。"
         ],
         "en_US": [
           "Use 1 Potato on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Potato Slice; collect the output."
@@ -1703,23 +1703,23 @@
           "三种烟火油桶都可像流体一样放到世界中；源方块会向下优先、再向水平方向扩散，并显示 8 级液面。",
           "空桶可收回油源；Cookery 油壶也可直接从油源吸取对应油。",
           "基岩版里的烟火油由脚本模拟，因此不保证具备原版水/熔岩的所有互动；对大缸或 Cookery 油壶使用油桶时，容器操作会优先。",
-          "菜籽油提供约 60 秒烟火气；秘制辣椒油约 10 分钟；高级辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壶转移；刷烤架用装油的油壶，不是旧版油刷。"
+          "菜籽油提供约 60 秒烟火气；辣椒油约 10 分钟；熔岩辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壶转移；刷烧烤架用装油的油壶，不是旧版油刷。"
         ],
         "zh_TW": [
           "原料取得：地獄要塞寶箱產生戰利品時，有 65% 機會額外加入折耳根（魚腥草），成功時合計 1–6 個；不是每箱必有，舊箱已產生的物品不會補發。留一株種在耕地或靈魂沙上繁殖。寶箱獎勵與 Java 原作一致；Java 新要塞中約 25% 地獄疙瘩替換成折耳根的生成機制尚未實現。",
           "三種煙火油桶都可像流體一樣放到世界中；源方塊會向下優先、再向水平方向擴散，並顯示 8 級液面。",
           "空桶可收回油源；Cookery 油壺也可直接從油源吸取對應油。",
           "基岩版裡的煙火油由腳本模擬，因此不保證具備原版水／熔岩的所有互動；對大缸或 Cookery 油壺使用油桶時，容器操作會優先。",
-          "菜籽油提供約 60 秒煙火氣；秘製辣椒油約 10 分鐘；高級辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壺轉移；刷烤架用裝油的油壺，不是舊版油刷。"
+          "菜籽油提供約 60 秒煙火氣；辣椒油約 10 分鐘；熔岩辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壺轉移；刷燒烤架用裝油的油壺，不是舊版油刷。"
         ],
         "en_US": [
           "Obtain Houttuynia from Nether fortress chest loot: a 65% chance adds 1–6 plants in total. Not every chest contains it; already-generated contents are not refilled. Keep a plant to grow on farmland or soul sand. The chest reward matches Java; Java’s replacement of about 25% of wart in newly generated fortresses is not implemented.",
           "All three Grilling oil buckets can be placed into the world as fluids. A source flows downward first, then horizontally, using 8 visual levels.",
           "An empty bucket can collect an oil source, and a Cookery Oil Pot can also take matching oil directly from a source.",
           "On Bedrock these oils are script-simulated, so they do not promise every vanilla water/lava interaction. When an oil bucket is used on a Big Vat or Cookery Oil Pot, the container interaction takes priority.",
-          "Canola Oil gives about 60 seconds of Hot Food time, Secret Chili Oil about 10 minutes, and Premium Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
+          "Canola Oil gives about 60 seconds of Hot Food time, Chili Oil about 10 minutes, and Lava Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
           "Use: transfer oil with buckets, vats and the Cookery Oil Pot. Brush the grill with the filled Oil Pot, not a legacy oil brush."
         ]
       },
@@ -1765,10 +1765,10 @@
       },
       "body": {
         "zh_CN": [
-          "加工：主手拿 1 个馒头对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 3 份生馒头片，拾取成品。"
+          "加工：主手拿 1 个馒头对空的森罗厨房砧板使用；再持菜刀切 4 次，之后再使用一次释放 3 份生馒头片，拾取成品。"
         ],
         "zh_TW": [
-          "加工：主手拿 1 個饅頭對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 3 份生饅頭片，拾取成品。"
+          "加工：主手拿 1 個饅頭對空的森羅廚房砧板使用；再持菜刀切 4 次，之後再使用一次釋出 3 份生饅頭片，拾取成品。"
         ],
         "en_US": [
           "Use 1 Mantou on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 3 Raw Mantou Slice; collect the output."
@@ -1808,15 +1808,15 @@
       },
       "body": {
         "zh_CN": [
-          "完整流程：红薯在石磨磨成红薯粉，再按下面砧板流程加工；或手持红薯粉持续使用 1.5 秒，将手中整叠粉揉成等量生苕皮。",
-          "加工：主手拿 1 个红薯粉对空的森罗厨房砧板使用；再持厨房刀切 4 次，之后再使用一次释放 1 份生苕皮，拾取成品。"
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支持这些扩展原料投料；以下研磨步骤仅保留作配方资料，待负责模组原生支持后可用。完整流程：红薯在石磨磨成红薯粉，再按下面砧板流程加工；或手持红薯粉持续使用 1.5 秒，将手中整叠粉揉成等量生苕皮。",
+          "加工：主手拿 1 个红薯粉对空的森罗厨房砧板使用；再持菜刀切 4 次，之后再使用一次释放 1 份生苕皮，拾取成品。"
         ],
         "zh_TW": [
-          "完整流程：番薯在石磨磨成番薯粉，再按下面砧板流程加工；或手持番薯粉持續使用 1.5 秒，將手中整疊粉揉成等量生苕皮。",
-          "加工：主手拿 1 個番薯粉對空的森羅廚房砧板使用；再持廚房刀切 4 次，之後再使用一次釋出 1 份生苕皮，拾取成品。"
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支援這些擴充原料投料；以下研磨步驟僅保留作配方資料，待負責模組原生支援後可用。完整流程：番薯在石磨磨成番薯粉，再按下面砧板流程加工；或手持番薯粉持續使用 1.5 秒，將手中整疊粉揉成等量生苕皮。",
+          "加工：主手拿 1 個番薯粉對空的森羅廚房砧板使用；再持菜刀切 4 次，之後再使用一次釋出 1 份生苕皮，拾取成品。"
         ],
         "en_US": [
-          "Full route: grind Sweet Potato into Sweet Potato Powder, then use the board below. Alternatively, hold-use the powder for 1.5 seconds to knead the entire held stack into the same number of Raw Sweet Potato Sheets.",
+          "Clean Cookery 1.6.2 cannot load these extension ingredients. Grinding steps are recipe reference until the responsible mod adds native input support. Full route: grind Sweet Potato into Sweet Potato Powder, then use the board below. Alternatively, hold-use the powder for 1.5 seconds to knead the entire held stack into the same number of Raw Sweet Potato Sheets.",
           "Use 1 Sweet Potato Powder on an empty Cookery Chopping Board. Use a Kitchen Knife for 4 cuts, then use it once more to release 1 Raw Sweet Potato Sheet; collect the output."
         ]
       },
@@ -1855,21 +1855,21 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
-          "原料取得：戴厨房草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
+          "原料取得：戴草帽打短草有机会得到辣椒种子，种在耕地上；成熟辣椒产红辣椒，并有 20% 机会额外产青辣椒。请分别使用对应颜色，二者不能互换。",
           "磨粉：把红辣椒拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份红辣椒粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
           "用途：用于辣椒油桶"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
-          "原料取得：戴廚房草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
+          "原料取得：戴草帽打短草有機會得到辣椒種子，種在耕地上；成熟辣椒產紅辣椒，並有 20% 機會額外產青辣椒。請分別使用對應顏色，二者不能互換。",
           "磨粉：把紅辣椒拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份紅辣椒粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "用途：用於辣椒油桶"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Obtain chili seeds by breaking short grass while wearing a Cookery straw hat. Plant on farmland and harvest mature chili: it yields red chili, with a 20% bonus chance of green chili. Use the matching color; the two powder inputs are not interchangeable.",
           "Grinding: hold Red Chili in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Red Chili Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
@@ -1979,11 +1979,11 @@
       },
       "body": {
         "zh_CN": [
-          "取得鸡翅：主手持森罗厨房刀击杀鸡；掠夺附魔会增加掉落数量。",
+          "取得鸡翅：主手持森罗厨房的菜刀击杀鸡；掠夺附魔会增加掉落数量。",
           "烹调：1 个鸡翅 → 1 个烤鸡翅。放进熔炉或烟熏炉并加入燃料，完成后从输出格取出；也可把鸡翅放在点燃的营火或灵魂营火上，烤熟后拾取掉出的成品。"
         ],
         "zh_TW": [
-          "取得雞翅：主手持森羅廚房刀擊殺雞；掠奪附魔會增加掉落數量。",
+          "取得雞翅：主手持森羅廚房的菜刀擊殺雞；掠奪附魔會增加掉落數量。",
           "烹調：1 個雞翅 → 1 個烤雞翅。放進熔爐或煙燻爐並加入燃料，完成後從輸出格取出；也可把雞翅放在點燃的營火或靈魂營火上，烤熟後拾取掉出的成品。"
         ],
         "en_US": [
@@ -2154,21 +2154,21 @@
           "三种烟火油桶都可像流体一样放到世界中；源方块会向下优先、再向水平方向扩散，并显示 8 级液面。",
           "空桶可收回油源；Cookery 油壶也可直接从油源吸取对应油。",
           "基岩版里的烟火油由脚本模拟，因此不保证具备原版水/熔岩的所有互动；对大缸或 Cookery 油壶使用油桶时，容器操作会优先。",
-          "菜籽油提供约 60 秒烟火气；秘制辣椒油约 10 分钟；高级辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壶转移；刷烤架用装油的油壶，不是旧版油刷。"
+          "菜籽油提供约 60 秒烟火气；辣椒油约 10 分钟；熔岩辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壶转移；刷烧烤架用装油的油壶，不是旧版油刷。"
         ],
         "zh_TW": [
           "三種煙火油桶都可像流體一樣放到世界中；源方塊會向下優先、再向水平方向擴散，並顯示 8 級液面。",
           "空桶可收回油源；Cookery 油壺也可直接從油源吸取對應油。",
           "基岩版裡的煙火油由腳本模擬，因此不保證具備原版水／熔岩的所有互動；對大缸或 Cookery 油壺使用油桶時，容器操作會優先。",
-          "菜籽油提供約 60 秒煙火氣；秘製辣椒油約 10 分鐘；高級辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
-          "使用：以油桶向大缸或 Cookery 油壺轉移；刷烤架用裝油的油壺，不是舊版油刷。"
+          "菜籽油提供約 60 秒煙火氣；辣椒油約 10 分鐘；熔岩辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。",
+          "使用：以油桶向大缸或 Cookery 油壺轉移；刷燒烤架用裝油的油壺，不是舊版油刷。"
         ],
         "en_US": [
           "All three Grilling oil buckets can be placed into the world as fluids. A source flows downward first, then horizontally, using 8 visual levels.",
           "An empty bucket can collect an oil source, and a Cookery Oil Pot can also take matching oil directly from a source.",
           "On Bedrock these oils are script-simulated, so they do not promise every vanilla water/lava interaction. When an oil bucket is used on a Big Vat or Cookery Oil Pot, the container interaction takes priority.",
-          "Canola Oil gives about 60 seconds of Hot Food time, Secret Chili Oil about 10 minutes, and Premium Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
+          "Canola Oil gives about 60 seconds of Hot Food time, Chili Oil about 10 minutes, and Lava Chili Oil about 20 minutes. Remaining heat is shown on the food lore.",
           "Use: transfer oil with buckets, vats and the Cookery Oil Pot. Brush the grill with the filled Oil Pot, not a legacy oil brush."
         ]
       },
@@ -2567,31 +2567,31 @@
       },
       "body": {
         "zh_CN": [
-          "先到「食物百科 → 磨石加工」磨青辣椒粉和洋葱粉，采花椒直接使用；完整设备步骤见「工作站 → 石磨与磨粉」。放置空调料瓶后，对最上层瓶子加入材料；每瓶最多记录 8 份材料，世界中最多可叠放 4 瓶。",
-          "完成调料必须至少有青/绿辣椒粉、花椒、洋葱粉各 1 份；三种基础料齐全后，瓶子会变成“待摇晃的调料”。",
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支持这些扩展原料投料；以下研磨步骤仅保留作配方资料，待负责模组原生支持后可用。先到「食物百科 → 石磨加工」磨绿辣椒粉和洋葱粉，采花椒直接使用；完整设备步骤见「烹饪制作台 → 石磨与磨粉」。放置空调料瓶后，对最上层瓶子加入材料；每瓶最多记录 8 份材料，世界中最多可叠放 4 瓶。",
+          "完成调料必须至少有绿辣椒粉、花椒、洋葱粉各 1 份；三种基础料齐全后，瓶子会变成“待摇晃的调料”。",
           "空手取回待摇晃的瓶子并持续使用 4 秒；完成时有声音与粒子，成品可使用 16 次。提前放开不会完成。 背包瓶图标显示剩余份数；食材的实际顺序与颜色请看手持或放置的瓶层。",
           "对烧烤架撒料时，每根架上烤串消耗 1 次；剩余次数不足时不会部分提交。",
-          "搭配：红石提供速度，火药提供力量，折耳根粉延时；不死图腾粉与龙蛋粉提供特殊效果。各材料的数量门槛见其同名条目。",
+          "搭配：红石粉提供速度，火药提供力量，折耳根粉延时；不死图腾粉与龙蛋粉提供特殊效果。各材料的数量门槛见其同名条目。",
           "装错料或缺少基础料时，先空手取回瓶子，再把这一瓶单独放入合成格并取走产出的空瓶。未摇匀、待摇瓶与已用过的完成调料都可清空。这会丢弃整瓶所有材料，不退还粉末，也不能单独抽出某一份。",
           "空瓶合成：上排中央放木按钮，中排与下排各放三块玻璃；支持 Java 1.21.1 的全部十一种木按钮。",
-          "厨房料理的热食与调料联动可由服务器关闭。关闭后，炒锅与炖锅的新成品不再附加热度或调料；尝试撒料会提示已关闭，瓶子不会扣次数。烤炉的调料功能不受此设置影响。"
+          "厨房料理的热食与调料联动可由服务器关闭。关闭后，炒锅与汤锅的新成品不再附加热度或调料；尝试撒料会提示已关闭，瓶子不会扣次数。烧烤架的调料功能不受此设置影响。"
         ],
         "zh_TW": [
-          "先到「食物百科 → 磨石加工」磨青辣椒粉和洋蔥粉，採花椒直接使用；完整設備步驟見「工作站 → 石磨與磨粉」。放置空調料瓶後，對最上層瓶子加入材料；每瓶最多記錄 8 份材料，世界中最多可疊放 4 瓶。",
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支援這些擴充原料投料；以下研磨步驟僅保留作配方資料，待負責模組原生支援後可用。先到「食物百科 → 石磨加工」磨青辣椒粉和洋蔥粉，採花椒直接使用；完整設備步驟見「工作站 → 石磨與磨粉」。放置空調料瓶後，對最上層瓶子加入材料；每瓶最多記錄 8 份材料，世界中最多可疊放 4 瓶。",
           "完成調料必須至少有青辣椒粉、花椒、洋蔥粉各 1 份；三種基礎料齊全後，瓶子會變成「待搖晃的調料」。",
           "空手取回待搖晃的瓶子並持續使用 4 秒；完成時有聲音與粒子，成品可使用 16 次。提前放開不會完成。 背包瓶圖示顯示剩餘份數；食材的實際順序與颜色請看手持或放置的瓶層。",
           "對燒烤架撒料時，每根架上烤串消耗 1 次；剩餘次數不足時不會部分提交。",
-          "搭配：紅石提供速度，火藥提供力量，折耳根粉延時；不死圖騰粉與龍蛋粉提供特殊效果。各材料的數量門檻見其同名條目。",
+          "搭配：紅石粉提供速度，火藥提供力量，折耳根粉延時；不死圖騰粉與龍蛋粉提供特殊效果。各材料的數量門檻見其同名條目。",
           "裝錯料或缺少基礎料時，先空手取回瓶子，再把這一瓶單獨放入合成格並取走產出的空瓶。未搖勻、待搖瓶與已用過的完成調料都可清空。這會丟棄整瓶所有材料，不退還粉末，也不能單獨抽出某一份。",
           "空瓶合成：上排中央放木按鈕，中排與下排各放三塊玻璃；支援 Java 1.21.1 的全部十一種木按鈕。",
-          "廚房料理的熱食與調料聯動可由伺服器關閉。關閉後，炒鍋與燉鍋的新成品不再附加熱度或調料；嘗試撒料會提示已關閉，瓶子不會扣次數。烤爐的調料功能不受此設定影響。"
+          "廚房料理的熱食與調料聯動可由伺服器關閉。關閉後，炒鍋與湯鍋的新成品不再附加熱度或調料；嘗試撒料會提示已關閉，瓶子不會扣次數。燒烤架的調料功能不受此設定影響。"
         ],
         "en_US": [
-          "First grind Green Chili Powder and Onion Powder (Food → Millstone); harvest Sichuan Pepper for direct use. See Workstations → Millstone & Grinding for the full setup. Place an Empty Seasoning Bottle and add ingredients to the top bottle. Each bottle stores up to 8 ingredients, and up to 4 bottles can be stacked in the world.",
+          "Clean Cookery 1.6.2 cannot load these extension ingredients. Grinding steps are recipe reference until the responsible mod adds native input support. First grind Green Chili Powder and Onion Powder (Food → Millstone); harvest Sichuan Pepper for direct use. See Workstations → Millstone & Grinding for the full setup. Place an Empty Seasoning Bottle and add ingredients to the top bottle. Each bottle stores up to 8 ingredients, and up to 4 bottles can be stacked in the world.",
           "A finished seasoning requires at least one Green Chili Powder, one Sichuan Pepper, and one Onion Powder. Once all three bases are present, it becomes Seasoning to Be Shaken.",
           "Take the pending bottle with an empty hand and hold use for 4 seconds. Sound and particles mark completion; the finished bottle has 16 uses. Releasing early does not finish it. Inventory bottle icons show the remaining amount. Check the held or placed layers for the actual ingredient order and colors.",
           "Seasoning a grill costs 1 use per skewer currently on the grill; insufficient remaining uses do not partially commit.",
-          "Mixing: Redstone grants Speed, Gunpowder grants Strength, and Houttuynia Powder extends effects. Totem and Dragon Egg Powders add special effects; see their material entries for thresholds.",
+          "Mixing: Redstone Dust grants Speed, Gunpowder grants Strength, and Houttuynia Powder extends effects. Totem and Dragon Egg Powders add special effects; see their material entries for thresholds.",
           "If you add the wrong ingredient or lack a base ingredient, pick up the bottle with an empty hand, place that bottle alone in a crafting grid, and take the empty-bottle output. Partially filled, pending, and used finished bottles can all be cleared. This discards every ingredient in the bottle; powders are not refunded, and individual ingredients cannot be removed.",
           "Empty bottle: one wooden button centered above two full rows of glass. All eleven Java 1.21.1 wooden button variants are supported.",
           "The server can disable hot-food and seasoning integration for Cookery dishes. New pot and stockpot outputs then receive no added heat or seasoning. Seasoning attempts show a disabled message without using the bottle. Grill seasoning is unchanged."
@@ -2804,10 +2804,10 @@
       },
       "body": {
         "zh_CN": [
-          "取得：主手持 Cookery 厨房刀击杀普通鱿鱼，有机会掉落鱿鱼须；掠夺影响数量。"
+          "取得：主手持 Cookery 菜刀击杀普通鱿鱼，有机会掉落鱿鱼须；掠夺影响数量。"
         ],
         "zh_TW": [
-          "取得：主手持 Cookery 廚房刀擊殺普通魷魚，有機會掉落魷魚鬚；掠奪影響數量。"
+          "取得：主手持 Cookery 菜刀擊殺普通魷魚，有機會掉落魷魚鬚；掠奪影響數量。"
         ],
         "en_US": [
           "Acquisition: kill a normal squid while holding a Cookery Kitchen Knife in the main hand for a chance of tentacle drops; Looting affects the count."
@@ -2837,10 +2837,10 @@
       },
       "body": {
         "zh_CN": [
-          "工作台无序合成：1 个森罗厨房番茄 + 1 份糖 → 1 份糖拌番茄。戴厨房草帽打短草有机会获得番茄种子，种在耕地并成熟收获番茄。"
+          "工作台无序合成：1 个森罗厨房番茄 + 1 份糖 → 1 份糖拌番茄。戴草帽打短草有机会获得番茄种子，种在耕地并成熟收获番茄。"
         ],
         "zh_TW": [
-          "工作台無序合成：1 個森羅廚房番茄 + 1 份糖 → 1 份糖拌番茄。戴廚房草帽打短草有機會獲得番茄種子，種在耕地並成熟收穫番茄。"
+          "工作台無序合成：1 個森羅廚房番茄 + 1 份糖 → 1 份糖拌番茄。戴草帽打短草有機會獲得番茄種子，種在耕地並成熟收穫番茄。"
         ],
         "en_US": [
           "Shapeless crafting: 1 Cookery Tomato + 1 Sugar → 1 Sugared Tomato. Get tomato seeds from short grass while wearing a Cookery straw hat; plant on farmland and harvest when mature."
@@ -2895,17 +2895,17 @@
       "body": {
         "zh_CN": [
           "取得与种植：戴 Cookery 草帽在生存模式打短草，有机会取得；种在耕地上，成熟后收获。",
-          "番薯放入 Cookery 磨石可得到番薯粉。",
-          "番薯也能在熔炉、烟熏炉、营火或灵魂营火烤成熟番薯；食用后获得约 30 秒温暖。"
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支持这些扩展原料投料；以下研磨步骤仅保留作配方资料，待负责模组原生支持后可用。红薯放入 Cookery 石磨可得到红薯粉。",
+          "红薯也能在熔炉、烟熏炉、营火或灵魂营火烤成熟红薯；食用后获得约 30 秒温暖。"
         ],
         "zh_TW": [
           "取得與種植：戴 Cookery 草帽在生存模式打短草，有機會取得；種在耕地上，成熟後收穫。",
-          "番薯放入 Cookery 磨石可得到番薯粉。",
+          "研磨可用性：指定原版 Cookery 1.6.2 尚不支援這些擴充原料投料；以下研磨步驟僅保留作配方資料，待負責模組原生支援後可用。番薯放入 Cookery 石磨可得到番薯粉。",
           "番薯也能在熔爐、煙燻爐、營火或靈魂營火烤成熟番薯；食用後獲得約 30 秒溫暖。"
         ],
         "en_US": [
           "Acquisition and farming: break short grass in Survival while wearing a Cookery Straw Hat for a chance to obtain it. Plant on farmland and harvest when mature.",
-          "Mill Sweet Potato in the Cookery Millstone to obtain Sweet Potato Powder.",
+          "Clean Cookery 1.6.2 cannot load these extension ingredients. Grinding steps are recipe reference until the responsible mod adds native input support. Mill Sweet Potato in the Cookery Millstone to obtain Sweet Potato Powder.",
           "Sweet Potato can also be cooked in a furnace, smoker, campfire, or soul campfire into Roasted Sweet Potato, which grants about 30 seconds of Warmth."
         ]
       },
@@ -2943,19 +2943,19 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
           "磨粉：把红薯拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份红薯粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
-          "番薯粉可在 Cookery 砧板切 4 次做成生苕皮；也可以手持番薯粉持续使用约 1.5 秒直接揉成生苕皮。"
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
+          "红薯粉可在 Cookery 砧板切 4 次做成生苕皮；也可以手持红薯粉持续使用约 1.5 秒直接揉成生苕皮。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
           "磨粉：把番薯拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份番薯粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
           "番薯粉可在 Cookery 砧板切 4 次做成生苕皮；也可以手持番薯粉持續使用約 1.5 秒直接揉成生苕皮。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Grinding: hold Sweet Potato in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Sweet Potato Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
           "Cut Sweet Potato Powder 4 times on a Cookery Chopping Board to make Raw Sweet Potato Sheet, or hold-use the powder for about 1.5 seconds to knead it directly."
@@ -3005,17 +3005,17 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
           "原料：不死图腾由唤魔者掉落；每个图腾磨成 1 份粉，会消耗图腾本体。",
           "磨粉：把不死图腾拿在主手，对森罗厨房「石磨」按使用键；每批最多装 8 个同种原料，每 1 个产出 1 份不死图腾粉。直接磨原料，无需先晒干、烘烤，也不是原版砂轮。",
-          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「工作站 → 石磨与磨粉」。",
+          "石磨操作：在完整 3×3 磨盘上带入成年牛或羊；驴、马等须先驯服且无人骑乘。装料后工作者开始驱动，约 100 游戏刻（5 秒）后从石磨朝向的一侧掉出粉末，走过去拾取。潜行空手使用可释放工作者。设备制作与故障排查见「烹饪制作台 → 石磨与磨粉」。",
           "调料中加入不死图腾粉并趁热食用，会获得重金属保命效果。",
           "可确认的致命伤害会消耗一次保命效果，并把生命设为 1 点。",
           "触发后会进入约 10 分钟的重金属中毒；中毒期间再次使用这类保命调料不会绕过限制。",
           "目前与伤害吸收及原生不死图腾的判定顺序尚未完全对齐；有剩余吸收盾时，仍可能无法及时触发保命。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
           "原料：不死圖騰由喚魔者掉落；每個圖騰磨成 1 份粉，會消耗圖騰本體。",
           "磨粉：把不死圖騰拿在主手，對森羅廚房「石磨」按使用鍵；每批最多裝 8 個同種原料，每 1 個產出 1 份不死圖騰粉。直接磨原料，無需先曬乾、烘烤，也不是原版砂輪。",
           "石磨操作：在完整 3×3 磨盤上帶入成年牛或羊；驢、馬等須先馴服且無人騎乘。裝料後工作者開始驅動，約 100 遊戲刻（5 秒）後從石磨朝向的一側掉出粉末，走過去拾取。潛行空手使用可釋放工作者。設備製作與故障排查見「工作站 → 石磨與磨粉」。",
@@ -3025,7 +3025,7 @@
           "目前與傷害吸收及原生不死圖騰的判定順序尚未完全對齊；有剩餘吸收盾時，仍可能無法及時觸發保命。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Evokers drop Totems of Undying. Grinding consumes the totem itself and yields 1 powder.",
           "Grinding: hold Totem of Undying in your main hand and use it on a Cookery Millstone. Load up to 8 of the same input; each produces 1 Totem Powder. Use the raw input directly: no drying or roasting step, and no vanilla Grindstone.",
           "Bring an adult cow or sheep onto the intact 3×3 millstone. Horses/donkeys must be tamed and unridden. A worker drives the loaded batch for about 100 ticks (5 seconds); collect powder ejected at the front. Sneak-use with an empty hand releases the worker. See Workstations → Millstone & Grinding for crafting and troubleshooting.",
@@ -3183,7 +3183,7 @@
           "调味完成后空手取出；潜行空手可连续取出。烧烤阶段不能跳过。",
           "约 40 秒没有推进当前阶段，烤串会进入过熟状态；过熟串仍可空手取出，得到黑暗烧烤。",
           "过熟后继续加热约 20 秒，架上内容会彻底烧成木炭。",
-          "如果暂时不想继续，先用铲子熄火；熄火时计时不会推进。 中途破坏：未刷油返生串；正常完成返熟串；过熟返黑暗烧烤；其它已刷油中间阶段返谜之烧烤。",
+          "如果暂时不想继续，先用铲子熄火；熄火时计时不会推进。 中途破坏：未刷油返生串；正常完成返熟串；过熟返黑暗烧烤；其它已刷油中间阶段返迷之烤串。",
           "服务器可选择原版食用模式：关闭独立进食动画后，烤串以 1.25 秒完成原生食用，不播放专属音效与进度条；松开取消不会额外扣串。"
         ],
         "zh_TW": [
@@ -3193,7 +3193,7 @@
           "調味完成後空手取出；潛行空手可連續取出。燒烤階段不能跳過。",
           "約 40 秒沒有推進目前階段，烤串會進入過熟狀態；過熟串仍可空手取出，得到黑暗燒烤。",
           "過熟後繼續加熱約 20 秒，架上內容會徹底燒成木炭。",
-          "如果暫時不想繼續，先用鏟子熄火；熄火時計時不會推進。 中途破壞：未刷油返生串；正常完成返熟串；過熟返黑暗燒烤；其它已刷油中間階段返謎之燒烤。",
+          "如果暫時不想繼續，先用鏟子熄火；熄火時計時不會推進。 中途破壞：未刷油返生串；正常完成返熟串；過熟返黑暗燒烤；其它已刷油中間階段返迷之烤串。",
           "伺服器可選擇原版食用模式：關閉獨立進食動畫後，烤串以 1.25 秒完成原生食用，不播放專屬音效與進度條；放開取消不會額外扣串。"
         ],
         "en_US": [
@@ -3304,21 +3304,21 @@
       },
       "body": {
         "zh_CN": [
-          "大缸容量为 8 桶，一次只能保存一种流体；支持水、熔岩、菜籽油、秘制辣椒油和高级辣椒油。",
+          "大缸容量为 8 桶，一次只能保存一种流体；支持水、熔岩、菜籽油、辣椒油和熔岩辣椒油。",
           "用对应的桶可灌入或取出；空手使用可查看当前桶数与容量。",
           "三种烟火油可以直接灌入 Cookery 油壶：每消耗 1 桶，为油壶增加 8 点油。",
           "打掉装有内容的大缸时，掉落的大缸会保存流体种类与桶数，再次放置可恢复。",
           "用 7 颗红砖和 1 个桶合成。工作台图样（空位为 ·）：\nB·B\nBUB\nBBB\nB = 红砖；U = 桶"
         ],
         "zh_TW": [
-          "大缸容量為 8 桶，一次只能保存一種流體；支援水、熔岩、菜籽油、秘製辣椒油和高級辣椒油。",
+          "大缸容量為 8 桶，一次只能保存一種流體；支援水、熔岩、菜籽油、辣椒油和熔岩辣椒油。",
           "用對應的桶可灌入或取出；空手使用可查看目前桶數與容量。",
           "三種煙火油可以直接灌入 Cookery 油壺：每消耗 1 桶，為油壺增加 8 點油。",
           "打掉裝有內容的大缸時，掉落的大缸會保存流體種類與桶數，再次放置可恢復。",
           "用 7 顆紅磚和 1 個桶合成。工作台圖樣（空位為 ·）：\nB·B\nBUB\nBBB\nB = 紅磚；U = 桶"
         ],
         "en_US": [
-          "A Big Vat holds 8 buckets and only one fluid type at a time: water, lava, Canola Oil, Secret Chili Oil, or Premium Chili Oil.",
+          "A Big Vat holds 8 buckets and only one fluid type at a time: water, lava, Canola Oil, Chili Oil, or Lava Chili Oil.",
           "Use the matching bucket to fill or extract it; use an empty hand to view its current bucket count and capacity.",
           "The three Grilling oils can fill a Cookery Oil Pot directly: each vat bucket adds 8 oil points.",
           "Breaking a filled vat preserves its fluid type and amount on the dropped vat item; placing it again restores the contents.",
@@ -3348,9 +3348,9 @@
         "farming_harvesting"
       ],
       "title": {
-        "zh_CN": "花椒树",
-        "zh_TW": "花椒樹",
-        "en_US": "Sichuan Pepper Tree"
+        "zh_CN": "花椒树苗",
+        "zh_TW": "花椒樹苗",
+        "en_US": "Pepper Sapling"
       },
       "body": {
         "zh_CN": [
@@ -3416,18 +3416,18 @@
       },
       "body": {
         "zh_CN": [
-          "调料中有 1–3 份红石：趁热食用时获得速度 I，基础持续约 3 分钟。",
-          "达到 4 份或更多红石时提升为速度 II。",
+          "调料中有 1–3 份红石粉：趁热食用时获得速度 I，基础持续约 3 分钟。",
+          "达到 4 份或更多红石粉时提升为速度 II。",
           "折耳根粉可以再延长这类调料效果时间。"
         ],
         "zh_TW": [
-          "調料中有 1–3 份紅石：趁熱食用時獲得速度 I，基礎持續約 3 分鐘。",
-          "達到 4 份或更多紅石時提升為速度 II。",
+          "調料中有 1–3 份紅石粉：趁熱食用時獲得速度 I，基礎持續約 3 分鐘。",
+          "達到 4 份或更多紅石粉時提升為速度 II。",
           "折耳根粉可以再延長這類調料效果時間。"
         ],
         "en_US": [
-          "With 1–3 Redstone in the seasoning, eating it hot grants Speed I for a base duration of about 3 minutes.",
-          "At 4 or more Redstone, it becomes Speed II.",
+          "With 1–3 Redstone Dust in the seasoning, eating it hot grants Speed I for a base duration of about 3 minutes.",
+          "At 4 or more Redstone Dust, it becomes Speed II.",
           "Houttuynia Powder can further extend this seasoning-effect duration."
         ]
       },
@@ -3496,7 +3496,7 @@
           "先備妥燒烤架、打火石、裝油的油壺及完成的特製調料。油與調料取得請看「油壺」及「調料瓶」條目。",
           "用 1 根木棍合成空的未完成烤串，裝進副手；主手拿生魚，對方塊按使用鍵穿成生魚串。Windows 按使用鍵；觸控使用對方塊的互動操作。",
           "打火石點火 → 放入 1–3 根生串 → 裝油的油壺刷油；刷油按爐上根數消耗油量。",
-          "空手使用烤架翻面，共翻 4 次；每次約 1 秒冷卻。第 4 次後用特製調料撒料，每根消耗 1 次。",
+          "空手使用燒烤架翻面，共翻 4 次；每次約 1 秒冷卻。第 4 次後用特製調料撒料，每根消耗 1 次。",
           "調味後空手取出；潛行空手可連續取出。出爐後趁熱吃，熱度倒數見物品說明。放著不翻會烤壞，燒烤階段不能跳過。",
           "持續使用吃串：未滿 1.25 秒放開不消耗；達門檻後放開可吃下去，完整吃法約 4.5–5 秒。一般進食請鬆開潛行。",
           "需要自動穿串時，用 4 張紙排成 2×2 合成空白串譜，再到「串配方書」頁看錄製與製作。"
@@ -3506,7 +3506,7 @@
           "先备妥烧烤架、打火石、装油的油壶及完成的特制调料。油与调料取得请看“油壶”及“调料瓶”条目。",
           "用 1 根木棍合成空的未完成烤串，装进副手；主手拿生鱼，对方块按使用键穿成生鱼串。Windows 按使用键；触控使用对方块的互动操作。",
           "打火石点火 → 放入 1–3 根生串 → 装油的油壶刷油；刷油按炉上根数消耗油量。",
-          "空手使用烤架翻面，共翻 4 次；每次约 1 秒冷却。第 4 次后用特制调料撒料，每根消耗 1 次。",
+          "空手使用烧烤架翻面，共翻 4 次；每次约 1 秒冷却。第 4 次后用特制调料撒料，每根消耗 1 次。",
           "调味后空手取出；潜行空手可连续取出。出炉后趁热吃，热度倒数见物品说明。放着不翻会烤坏，烧烤阶段不能跳过。",
           "持续使用吃串：未满 1.25 秒放开不消耗；达门槛后放开可吃下去，完整吃法约 4.5–5 秒。一般进食请松开潜行。",
           "需要自动穿串时，用 4 张纸排成 2×2 合成空白串谱，再到“串配方书”页看录制与制作。"
@@ -3542,30 +3542,30 @@
       },
       "body": {
         "zh_CN": [
-          "菜籽油提供约 60 秒烟火气；秘制辣椒油约 10 分钟；高级辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。 热期限按原作每 5 秒一格向下取整；新加热与热食合并都遵守同一规则。已保存的旧热期限读取时保持原值；再次加热、合并或冰箱整理时会按原作重新取整。",
+          "菜籽油提供约 60 秒烟火气；辣椒油约 10 分钟；熔岩辣椒油约 20 分钟。烟火气剩余时间会显示在食物描述上。 热期限按原作每 5 秒一格向下取整；新加热与热食合并都遵守同一规则。已保存的旧热期限读取时保持原值；再次加热、合并或冰箱整理时会按原作重新取整。",
           "趁热吃时，新获得的固定烤串效果持续时间会翻倍，新增的饱和度提高 25%。",
           "特制调料的附加效果只会在食物仍有烟火气时触发；它们不会再被烟火气二次翻倍。冷掉后仍能吃，但不会触发这些调料效果。",
-          "秘制辣椒油桶可用 1 桶菜籽油 + 3 份红辣椒粉无序合成；三种油都可通过桶、大缸与 Cookery 油壶进行已支持的转移。",
+          "辣椒油桶可用 1 桶菜籽油 + 3 份红辣椒粉无序合成；三种油都可通过桶、大缸与 Cookery 油壶进行已支持的转移。",
           "带烟火气的烤串不会随便与冷串或热度差距很大的串合并。",
           "对箱子、陷阱箱或木桶潜行空手使用，会整理串类：只有烟火气剩余时间相差不超过 5 分钟的热串才会合并。",
           "合并后的烟火气按各堆数量做加权平均，避免用一根刚出炉的串把整堆旧串瞬间“续满”。",
           "副手留空，潜行并使用手中的热食，可合并背包内相同种类与数据的热食，按数量平均剩余热度；不限烤串，也不受箱内整理的 5 分钟窗口限制。普通进食请松开潜行。"
         ],
         "zh_TW": [
-          "菜籽油提供約 60 秒煙火氣；秘製辣椒油約 10 分鐘；高級辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。 熱期限按原作每 5 秒一格向下取整；新加熱與熱食合併都遵守同一規則。已保存的舊熱期限讀取時保持原值；再次加熱、合併或冰箱整理時會按原作重新取整。",
+          "菜籽油提供約 60 秒煙火氣；辣椒油約 10 分鐘；熔岩辣椒油約 20 分鐘。煙火氣剩餘時間會顯示在食物描述上。 熱期限按原作每 5 秒一格向下取整；新加熱與熱食合併都遵守同一規則。已保存的舊熱期限讀取時保持原值；再次加熱、合併或冰箱整理時會按原作重新取整。",
           "趁熱吃時，新獲得的固定烤串效果持續時間會翻倍，新增的飽和度提高 25%。",
           "特製調料的附加效果只會在食物仍有煙火氣時觸發；它們不會再被煙火氣二次翻倍。冷掉後仍能吃，但不會觸發這些調料效果。",
-          "秘製辣椒油桶可用 1 桶菜籽油 + 3 份紅辣椒粉無序合成；三種油都可透過桶、大缸與 Cookery 油壺進行已支援的轉移。",
+          "辣椒油桶可用 1 桶菜籽油 + 3 份紅辣椒粉無序合成；三種油都可透過桶、大缸與 Cookery 油壺進行已支援的轉移。",
           "帶煙火氣的烤串不會隨便與冷串或熱度差距很大的串合併。",
           "對箱子、陷阱箱或木桶潛行空手使用，會整理串類：只有煙火氣剩餘時間相差不超過 5 分鐘的熱串才會合併。",
           "合併後的煙火氣按各堆數量做加權平均，避免用一根剛出爐的串把整堆舊串瞬間「續滿」。",
           "副手留空，潛行並使用手中的熱食，可合併背包內相同種類與資料的熱食，按數量平均剩餘熱度；不限烤串，亦不受箱內整理的 5 分鐘窗口限制。普通進食請鬆開潛行。"
         ],
         "en_US": [
-          "Canola Oil gives about 60 seconds of Hot Food time, Secret Chili Oil about 10 minutes, and Premium Chili Oil about 20 minutes. Remaining heat is shown on the food lore. New heating and hot-food merges round the expiry down to five-second boundaries, as in Java. Previously saved deadlines remain exact on reads; reheating, merging or refrigerator sorting re-buckets them as in Java.",
+          "Canola Oil gives about 60 seconds of Hot Food time, Chili Oil about 10 minutes, and Lava Chili Oil about 20 minutes. Remaining heat is shown on the food lore. New heating and hot-food merges round the expiry down to five-second boundaries, as in Java. Previously saved deadlines remain exact on reads; reheating, merging or refrigerator sorting re-buckets them as in Java.",
           "When eaten hot, newly gained fixed skewer effects have double duration and newly gained saturation is increased by 25%.",
           "Special Seasoning effects only trigger while the food is still hot; Hot Food does not double those seasoning durations a second time. Cold food remains edible, but those seasoning effects do not activate.",
-          "A Secret Chili Oil Bucket is shapelessly crafted from 1 Canola Oil Bucket + 3 Red Chili Powder. All three oils can use the supported bucket, Big Vat, and Cookery Oil Pot transfer paths.",
+          "A Chili Oil Bucket is shapelessly crafted from 1 Canola Oil Bucket + 3 Red Chili Powder. All three oils can use the supported bucket, Big Vat, and Cookery Oil Pot transfer paths.",
           "Hot skewers do not freely merge with cold skewers or stacks whose remaining heat is very different.",
           "Sneak-use a Chest, Trapped Chest, or Barrel with an empty hand to sort skewers. Hot stacks only merge when their remaining Hot Food time differs by at most 5 minutes.",
           "Merged heat is a count-weighted average, so one fresh skewer cannot instantly refresh a whole old stack.",
@@ -3594,7 +3594,7 @@
       },
       "body": {
         "zh_CN": [
-          "搭配 Cookery 1.6.1 与家族砧板扩充，将 1 份生牛肉放到厨房砧板，用厨房刀切 4 次，再持刀使用一次取出 2 份牛肉块。这份牛肉原本的牛杂产出会由牛肉块替换。",
+          "搭配 Cookery 1.6.2 与家族砧板扩充，将 1 份生牛肉放到厨房砧板，用菜刀切 4 次，再持刀使用一次取出 2 份牛肉块。这份牛肉原本的牛杂产出会由牛肉块替换。",
           "营养：主面板为熟串。生串饱食 2 / 饱和度 1.2；熟串饱食 5 / 饱和度 6。",
           "材料顺序：牛肉块 → 红辣椒 → 牛肉块",
           "先用 1 根木棍合成空串，放进副手；主手拿食材，对方块使用，按材料顺序逐份穿入。 最短流程：打火石点火 → 放入 1–3 根生串 → 用装油的 Cookery 油壶刷油。",
@@ -3604,7 +3604,7 @@
           "没有烤熟的未完成串、固定生串和秘制生串都可潜行拆解，取回材料与木棍。"
         ],
         "zh_TW": [
-          "搭配 Cookery 1.6.1 與家族砧板擴充，將 1 份生牛肉放到廚房砧板，用廚房刀切 4 次，再持刀使用一次取出 2 份牛肉塊。這份牛肉原本的牛雜產出會由牛肉塊替換。",
+          "搭配 Cookery 1.6.2 與家族砧板擴充，將 1 份生牛肉放到廚房砧板，用菜刀切 4 次，再持刀使用一次取出 2 份牛肉塊。這份牛肉原本的牛雜產出會由牛肉塊替換。",
           "營養：主面板為熟串。生串飽食 2 / 飽和度 1.2；熟串飽食 5 / 飽和度 6。",
           "材料順序：牛肉塊 → 紅辣椒 → 牛肉塊",
           "先用 1 根木棍合成空串，放進副手；主手拿食材，對方塊使用，按材料順序逐份穿入。 最短流程：打火石點火 → 放入 1–3 根生串 → 用裝油的 Cookery 油壺刷油。",
@@ -3614,7 +3614,7 @@
           "沒有烤熟的未完成串、固定生串和秘製生串都可潛行拆解，取回材料與木棍。"
         ],
         "en_US": [
-          "With Cookery 1.6.1 and the family Chopping Board extension, place one raw Beef on the board, cut four times with a Kitchen Knife, then use the knife once more to release two Beef Chunks. The chunks replace this input's normal Cow Offal output.",
+          "With Cookery 1.6.2 and the family Chopping Board extension, place one raw Beef on the board, cut four times with a Kitchen Knife, then use the knife once more to release two Beef Chunks. The chunks replace this input's normal Cow Offal output.",
           "Nutrition panel: cooked skewer. Raw: hunger 2, saturation 1.2; cooked: hunger 5, saturation 6.",
           "Ingredient order: Beef Chunks → Red Chili → Beef Chunks",
           "Craft an empty Unfinished Skewer from one stick and equip it offhand. Hold a skewerable ingredient in the main hand and use it on a block to add one ingredient. Shortest flow: light with Flint and Steel → insert 1–3 raw skewers → brush with a filled Cookery Oil Pot.",
@@ -3807,7 +3807,7 @@
       },
       "body": {
         "zh_CN": [
-          "搭配 Cookery 1.6.1 与家族砧板扩充，将 1 份生鸡肉放到厨房砧板，用厨房刀切 4 次，再持刀使用一次取出原有 3 份生肉块与 1 根骨头，并额外取得 1～3 片鸡皮。杀鸡不会给鸡皮。",
+          "搭配 Cookery 1.6.2 与家族砧板扩充，将 1 份生鸡肉放到厨房砧板，用菜刀切 4 次，再持刀使用一次取出原有 3 份生肉块与 1 根骨头，并额外取得 1～3 片鸡皮。杀鸡不会给鸡皮。",
           "营养：主面板为熟串。生串饱食 2 / 饱和度 1；熟串饱食 4 / 饱和度 4。",
           "材料顺序：鸡皮 → 鸡皮",
           "先用 1 根木棍合成空串，放进副手；主手拿食材，对方块使用，按材料顺序逐份穿入。 最短流程：打火石点火 → 放入 1–3 根生串 → 用装油的 Cookery 油壶刷油。",
@@ -3817,7 +3817,7 @@
           "没有烤熟的未完成串、固定生串和秘制生串都可潜行拆解，取回材料与木棍。"
         ],
         "zh_TW": [
-          "搭配 Cookery 1.6.1 與家族砧板擴充，將 1 份生雞肉放到廚房砧板，用廚房刀切 4 次，再持刀使用一次取出原有 3 份生肉塊與 1 根骨頭，並額外取得 1～3 片雞皮。殺雞不會給雞皮。",
+          "搭配 Cookery 1.6.2 與家族砧板擴充，將 1 份生雞肉放到廚房砧板，用菜刀切 4 次，再持刀使用一次取出原有 3 份生肉塊與 1 根骨頭，並額外取得 1～3 片雞皮。殺雞不會給雞皮。",
           "營養：主面板為熟串。生串飽食 2 / 飽和度 1；熟串飽食 4 / 飽和度 4。",
           "材料順序：雞皮 → 雞皮",
           "先用 1 根木棍合成空串，放進副手；主手拿食材，對方塊使用，按材料順序逐份穿入。 最短流程：打火石點火 → 放入 1–3 根生串 → 用裝油的 Cookery 油壺刷油。",
@@ -3827,7 +3827,7 @@
           "沒有烤熟的未完成串、固定生串和秘製生串都可潛行拆解，取回材料與木棍。"
         ],
         "en_US": [
-          "With Cookery 1.6.1 and the family Chopping Board extension, place one raw Chicken on the board, cut four times with a Kitchen Knife, then use the knife once more to release the original three Raw Meat Cuts and one Bone, plus 1–3 Chicken Skin. Killing chickens does not yield skin.",
+          "With Cookery 1.6.2 and the family Chopping Board extension, place one raw Chicken on the board, cut four times with a Kitchen Knife, then use the knife once more to release the original three Raw Meat Cuts and one Bone, plus 1–3 Chicken Skin. Killing chickens does not yield skin.",
           "Nutrition panel: cooked skewer. Raw: hunger 2, saturation 1; cooked: hunger 4, saturation 4.",
           "Ingredient order: Chicken Skin → Chicken Skin",
           "Craft an empty Unfinished Skewer from one stick and equip it offhand. Hold a skewerable ingredient in the main hand and use it on a block to add one ingredient. Shortest flow: light with Flint and Steel → insert 1–3 raw skewers → brush with a filled Cookery Oil Pot.",
@@ -5034,7 +5034,7 @@
         ],
         "zh_TW": [
           "營養：主面板為熟串。生串飽食 2 / 飽和度 0；熟串飽食 4 / 飽和度 0。",
-          "材料順序：黏液球 → 折耳根 → 黏液球",
+          "材料順序：史萊姆球 → 折耳根 → 史萊姆球",
           "先用 1 根木棍合成空串，放進副手；主手拿食材，對方塊使用，按材料順序逐份穿入。 最短流程：打火石點火 → 放入 1–3 根生串 → 用裝油的 Cookery 油壺刷油。",
           "空手使用燒烤架翻面；每次翻面後約 1 秒才能再翻，共翻 4 次。 第 4 次翻面後使用特製調料；刷油和撒料都會按架上烤串數量消耗。 調味完成後空手取出；潛行空手可連續取出。燒烤階段不能跳過。",
           "熟串效果：阻滯 · 基礎 45 秒；你的近戰命中會讓目標獲得緩慢 II 約 5 秒。",
@@ -5650,20 +5650,20 @@
         "zh_TW": [
           "取得：廚房油壺的製作請看本體指南；家族 API 讓普通油及煙火三油共用同一份內容資料。",
           "普通油容量 256 點，煙火油容量 64 點。主手拿油桶、副手拿空壺按使用鍵，每桶加入 8 點；也可拿空壺從油源或大缸裝油。",
-          "放置油壺後可用同種煙火油桶補入，每桶 8 點；普通油、菜籽油、秘製辣椒油、高級辣椒油不能混合。特殊油的放置壺不會空手抽出普通油。",
-          "裝油壺點擊烤架刷油，耗油等於架上串數。普通油及菜籽油保溫 1 分鐘，秘製辣椒油 10 分鐘，高級辣椒油 20 分鐘。油用完會返還空壺，破壞放置壺會保留剩餘油種與數量。"
+          "放置油壺後可用同種煙火油桶補入，每桶 8 點；普通油、菜籽油、辣椒油、熔岩辣椒油不能混合。特殊油的放置壺不會空手抽出普通油。",
+          "裝油壺點擊燒烤架刷油，耗油等於架上串數。普通油及菜籽油保溫 1 分鐘，辣椒油 10 分鐘，熔岩辣椒油 20 分鐘。油用完會返還空壺，破壞放置壺會保留剩餘油種與數量。"
         ],
         "zh_CN": [
           "取得：厨房油壶的制作请看本体指南；家族 API 让普通油及烟火三油共用同一份内容数据。",
           "普通油容量 256 点，烟火油容量 64 点。主手拿油桶、副手拿空壶按使用键，每桶加入 8 点；也可拿空壶从油源或大缸装油。",
-          "放置油壶后可用同种烟火油桶补入，每桶 8 点；普通油、菜籽油、秘制辣椒油、高级辣椒油不能混合。特殊油的放置壶不会空手抽出普通油。",
-          "装油壶点击烤架刷油，耗油等于架上串数。普通油及菜籽油保温 1 分钟，秘制辣椒油 10 分钟，高级辣椒油 20 分钟。油用完返还空壶，破坏放置壶会保留剩余油种与数量。"
+          "放置油壶后可用同种烟火油桶补入，每桶 8 点；普通油、菜籽油、辣椒油、熔岩辣椒油不能混合。特殊油的放置壶不会空手抽出普通油。",
+          "装油壶点击烧烤架刷油，耗油等于架上串数。普通油及菜籽油保温 1 分钟，辣椒油 10 分钟，熔岩辣椒油 20 分钟。油用完返还空壶，破坏放置壶会保留剩余油种与数量。"
         ],
         "en_US": [
           "Use the host guide for the Oil Pot recipe. The family API shares one oil payload between Cookery and Grilling.",
           "Fat capacity is 256 points; Grilling fluid capacity is 64. Hold an oil bucket in the main hand and an empty pot offhand, then use: each bucket adds 8 points. An empty pot can also draw from a source or Big Vat.",
           "Placed pots accept matching oil buckets at 8 points each. Fat and the three Grilling oils cannot mix. Empty-hand clicks on a typed placed pot do not dispense fat.",
-          "Brush the grill with a filled pot: one point per loaded skewer. Fat and Canola retain heat for 1 minute, Chili for 10, Premium Chili for 20. Exhaustion returns an empty pot; breaking a placed pot preserves oil type and quantity."
+          "Brush the grill with a filled pot: one point per loaded skewer. Fat and Canola retain heat for 1 minute, Chili Oil for 10, Lava Chili Oil for 20. Exhaustion returns an empty pot; breaking a placed pot preserves oil type and quantity."
         ]
       },
       "kinds": [
@@ -5695,28 +5695,28 @@
       },
       "body": {
         "zh_CN": [
-          "使用前提：请安装本版完整家族组合，其中的 Cookery 1.6.1 必须已套用磨盘兼容修补。只更新烟火包，或把兼容包与未经修补的 Cookery 同时启用，都不会修复投料。",
+          "正常安装说明：使用指定原版 Cookery 1.6.2 时，这七种扩展配方可登记，但原版厨房尚不支持这些扩展原料的投料；此页保留配方资料，待负责模组原生支持后可用。",
           "先做森罗厨房石磨：工作台图样（·为空）\n·F·\nSG·\nTTT\nF=木栅栏，S=木棍，G=原版砂轮，T=平滑石。放置时预留完整 3×3 空间。",
           "磨粉顺序：主手拿原料 → 对石磨使用（最多 8 个同种）→ 带成年牛或羊站上磨盘 → 等约 100 游戏刻 → 拾取前方掉出的粉。驴、马等需驯服且无人骑乘；幼年动物不能驱动。",
           "支持：油菜籽→菜籽粉；洋葱→洋葱粉；红/青辣椒→对应辣椒粉；折耳根→折耳根粉；红薯→红薯粉；不死图腾→不死图腾粉。全部每个原料产 1 份，无需晒干或烤熟。",
-          "花椒直接加入调料瓶，不需要磨粉；龙蛋粉要用厨房刀对龙蛋使用。原版红石粉和火药也直接加入。调料瓶的必备三料是青辣椒粉、花椒、洋葱粉。",
-          "不会转：检查成年工作者是否在完整磨盘上、是否被骑乘或被别的石磨占用；30 秒内没有可用工作者会退回原料。潜行空手使用释放工作者。不能入料：确认家族兼容包包含石磨扩展配方输入修复；旧版厨房 1.6.1 仅登记配方仍无法投入这些材料。"
+          "花椒直接加入调料瓶，不需要磨粉；龙蛋粉要用菜刀对龙蛋使用。原版红石粉和火药也直接加入。调料瓶的必备三料是绿辣椒粉、花椒、洋葱粉。",
+          "不会转：检查成年工作者是否在完整磨盘上、是否被骑乘或被别的石磨占用；30 秒内没有可用工作者会退回原料。潜行空手使用释放工作者。"
         ],
         "zh_TW": [
-          "使用前提：請安裝本版完整家族組合，其中的 Cookery 1.6.1 必須已套用磨盤相容修補。只更新煙火包，或把相容包與未經修補的 Cookery 同時啟用，都不會修復投料。",
+          "正常安裝說明：使用指定原版 Cookery 1.6.2 時，這七種擴充配方可登記，但原版廚房尚不支援這些擴充原料的投料；此頁保留配方資料，待負責模組原生支援後可用。",
           "先做森羅廚房石磨：工作台圖樣（·為空）\n·F·\nSG·\nTTT\nF=木柵欄，S=木棍，G=原版砂輪，T=平滑石。放置時預留完整 3×3 空間。",
           "磨粉順序：主手拿原料 → 對石磨使用（最多 8 個同種）→ 帶成年牛或羊站上磨盤 → 等約 100 遊戲刻 → 拾取前方掉出的粉。驢、馬等需馴服且無人騎乘；幼年動物不能驅動。",
           "支援：油菜籽→菜籽粉；洋蔥→洋蔥粉；紅/青辣椒→對應辣椒粉；折耳根→折耳根粉；番薯→番薯粉；不死圖騰→不死圖騰粉。全部每個原料產 1 份，無需曬乾或烤熟。",
-          "花椒直接加入調料瓶，不需要磨粉；龍蛋粉要用廚房刀對龍蛋使用。原版紅石粉和火藥也直接加入。調料瓶的必備三料是青辣椒粉、花椒、洋蔥粉。",
-          "不會轉：檢查成年工作者是否在完整磨盤上、是否被騎乘或被別的石磨佔用；30 秒內沒有可用工作者會退回原料。潛行空手使用釋放工作者。不能入料：確認家族相容包包含石磨擴充配方輸入修復；舊版廚房 1.6.1 僅登記配方仍無法投入這些材料。"
+          "花椒直接加入調料瓶，不需要磨粉；龍蛋粉要用菜刀對龍蛋使用。原版紅石粉和火藥也直接加入。調料瓶的必備三料是青辣椒粉、花椒、洋蔥粉。",
+          "不會轉：檢查成年工作者是否在完整磨盤上、是否被騎乘或被別的石磨佔用；30 秒內沒有可用工作者會退回原料。潛行空手使用釋放工作者。"
         ],
         "en_US": [
-          "Required setup: install the complete family bundle for this release, containing Cookery 1.6.1 with the millstone compatibility repair already applied. Updating Grilling alone, or enabling the compatibility pack alongside untouched Cookery, does not fix input loading.",
+          "Normal clean installation: pinned original Cookery 1.6.2 registers these seven extension recipes but does not accept their ingredients through its native input paths. This page retains the recipe reference; grinding becomes available when the responsible mod adds native input support.",
           "Craft a Cookery Millstone on a crafting table (· = empty):\n·F·\nSG·\nTTT\nF = wooden fence, S = stick, G = vanilla Grindstone, T = smooth stone. Reserve a clear 3×3 footprint.",
           "Hold input → use the millstone (up to 8 identical items) → bring an adult cow/sheep onto it → wait about 100 ticks → collect powder at the front. Horses/donkeys must be tamed and unridden; baby animals cannot drive it.",
           "Recipes: canola seeds→canola powder; onion→onion powder; red/green chili→matching chili powder; houttuynia→houttuynia powder; sweet potato→sweet potato powder; totem→totem powder. Each input yields 1 powder, without drying or roasting.",
-          "Sichuan Pepper goes directly into the bottle. Dragon Egg Powder uses a kitchen knife on a dragon egg. Vanilla redstone and gunpowder also go in directly. A finished seasoning needs Green Chili Powder, Sichuan Pepper and Onion Powder.",
-          "Not turning? Check the intact footprint, adult worker, riders and another millstone binding. If no worker is found within 30 seconds, the input is returned. Sneak-use empty-handed releases a worker. Inputs rejected? The family compatibility pack must include the extension-input fix; unpatched Cookery 1.6.1 registers recipes but rejects these inputs."
+          "Sichuan Pepper goes directly into the bottle. Dragon Egg Powder uses a kitchen knife on a dragon egg. Vanilla redstone dust and gunpowder also go in directly. A finished seasoning needs Green Chili Powder, Sichuan Pepper and Onion Powder.",
+          "Not turning? Check the intact footprint, adult worker, riders and another millstone binding. If no worker is found within 30 seconds, the input is returned. Sneak-use empty-handed releases a worker."
         ]
       },
       "kinds": [],
@@ -5744,7 +5744,7 @@
       "kaleidoscope_cookery:raw_meatball": "生肉丸",
       "kaleidoscope_cookery:raw_pork_belly": "生五花肉",
       "kaleidoscope_cookery:red_chili": "红辣椒",
-      "kaleidoscope_cookery:rice": "稻种",
+      "kaleidoscope_cookery:rice": "稻米",
       "kaleidoscope_cookery:tomato": "番茄",
       "kaleidoscope_grilling:advanced_rack": "高级厨具架",
       "kaleidoscope_grilling:beef_chunks": "牛肉块",
@@ -5797,7 +5797,7 @@
       "kaleidoscope_grilling:pepper_honey": "花椒蜂蜜",
       "kaleidoscope_grilling:pepper_leaves": "花椒树叶",
       "kaleidoscope_grilling:pepper_log": "花椒原木",
-      "kaleidoscope_grilling:pepper_sapling": "花椒树",
+      "kaleidoscope_grilling:pepper_sapling": "花椒树苗",
       "kaleidoscope_grilling:potato_beef_stew": "土豆炖牛肉（烟火版）",
       "kaleidoscope_grilling:potato_slice": "土豆片",
       "kaleidoscope_grilling:premium_chili_oil_bucket": "熔岩辣椒油桶",
@@ -5832,7 +5832,7 @@
       "kaleidoscope_grilling:skewer_plate": "烤串盘",
       "kaleidoscope_grilling:skewer_recipe_book": "串谱",
       "kaleidoscope_grilling:sour_spicy_noodles": "酸辣粉",
-      "kaleidoscope_grilling:special_seasoning": "调料瓶与特制调料",
+      "kaleidoscope_grilling:special_seasoning": "特制调料",
       "kaleidoscope_grilling:squid_tentacle": "鱿鱼须",
       "kaleidoscope_grilling:sugared_tomato": "糖拌番茄",
       "kaleidoscope_grilling:sweet_potato": "红薯",
@@ -5907,7 +5907,8 @@
       "minecraft:bamboo_button": "竹按钮",
       "minecraft:crimson_button": "绯红木按钮",
       "minecraft:warped_button": "诡异木按钮",
-      "minecraft:paper": "纸"
+      "minecraft:paper": "纸",
+      "kg_a1:guide_millstone": "石磨与磨粉"
     },
     "zh_TW": {
       "kaleidoscope_cookery:caterpillar": "毛毛蟲",
@@ -5916,7 +5917,7 @@
       "kaleidoscope_cookery:lettuce": "生菜",
       "kaleidoscope_cookery:mantou": "饅頭",
       "kaleidoscope_cookery:oil": "油脂",
-      "kaleidoscope_cookery:oil_pot": "油罐",
+      "kaleidoscope_cookery:oil_pot": "油壺",
       "kaleidoscope_cookery:oil_pot_filled": "裝油的油壺",
       "kaleidoscope_cookery:raw_cut_small_meats": "生肉丁",
       "kaleidoscope_cookery:raw_dough": "生麵團",
@@ -5924,7 +5925,7 @@
       "kaleidoscope_cookery:raw_meatball": "生肉丸",
       "kaleidoscope_cookery:raw_pork_belly": "生五花肉",
       "kaleidoscope_cookery:red_chili": "紅辣椒",
-      "kaleidoscope_cookery:rice": "稻種",
+      "kaleidoscope_cookery:rice": "稻米",
       "kaleidoscope_cookery:tomato": "番茄",
       "kaleidoscope_grilling:advanced_rack": "高級廚具架",
       "kaleidoscope_grilling:beef_chunks": "牛肉塊",
@@ -5977,7 +5978,7 @@
       "kaleidoscope_grilling:pepper_honey": "花椒蜂蜜",
       "kaleidoscope_grilling:pepper_leaves": "花椒樹葉",
       "kaleidoscope_grilling:pepper_log": "花椒原木",
-      "kaleidoscope_grilling:pepper_sapling": "花椒樹",
+      "kaleidoscope_grilling:pepper_sapling": "花椒樹苗",
       "kaleidoscope_grilling:potato_beef_stew": "馬鈴薯燉牛肉（煙火版）",
       "kaleidoscope_grilling:potato_slice": "馬鈴薯片",
       "kaleidoscope_grilling:premium_chili_oil_bucket": "熔岩辣椒油桶",
@@ -6012,7 +6013,7 @@
       "kaleidoscope_grilling:skewer_plate": "烤串盤",
       "kaleidoscope_grilling:skewer_recipe_book": "串譜",
       "kaleidoscope_grilling:sour_spicy_noodles": "酸辣粉",
-      "kaleidoscope_grilling:special_seasoning": "調料瓶與特製調料",
+      "kaleidoscope_grilling:special_seasoning": "特製調料",
       "kaleidoscope_grilling:squid_tentacle": "魷魚鬚",
       "kaleidoscope_grilling:sugared_tomato": "糖拌番茄",
       "kaleidoscope_grilling:sweet_potato": "番薯",
@@ -6044,7 +6045,7 @@
       "minecraft:red_mushroom": "紅色蘑菇",
       "minecraft:redstone": "紅石粉",
       "minecraft:salmon": "鮭魚",
-      "minecraft:slime_ball": "黏液球",
+      "minecraft:slime_ball": "史萊姆球",
       "minecraft:spider_eye": "蜘蛛眼",
       "minecraft:stick": "木棍",
       "minecraft:sugar": "糖",
@@ -6087,7 +6088,8 @@
       "minecraft:bamboo_button": "竹按鈕",
       "minecraft:crimson_button": "緋紅木按鈕",
       "minecraft:warped_button": "扭曲木按鈕",
-      "minecraft:paper": "紙"
+      "minecraft:paper": "紙",
+      "kg_a1:guide_millstone": "石磨與磨粉"
     },
     "en_US": {
       "kaleidoscope_cookery:caterpillar": "Caterpillar",
@@ -6096,15 +6098,15 @@
       "kaleidoscope_cookery:lettuce": "Lettuce",
       "kaleidoscope_cookery:mantou": "Mantou",
       "kaleidoscope_cookery:oil": "Oil",
-      "kaleidoscope_cookery:oil_pot": "Oil Can",
-      "kaleidoscope_cookery:oil_pot_filled": "Cookery Oil Pot: Grilling Oils",
+      "kaleidoscope_cookery:oil_pot": "Oil Pot",
+      "kaleidoscope_cookery:oil_pot_filled": "Oil-filled Oil Pot",
       "kaleidoscope_cookery:raw_cut_small_meats": "Raw Meat Cuts",
       "kaleidoscope_cookery:raw_dough": "Raw Dough",
       "kaleidoscope_cookery:raw_lamb_chops": "Raw Lamb Chops",
       "kaleidoscope_cookery:raw_meatball": "Raw Meatball",
       "kaleidoscope_cookery:raw_pork_belly": "Raw Pork Belly",
       "kaleidoscope_cookery:red_chili": "Red Chili",
-      "kaleidoscope_cookery:rice": "Rice Seed",
+      "kaleidoscope_cookery:rice": "Rice",
       "kaleidoscope_cookery:tomato": "Tomato",
       "kaleidoscope_grilling:advanced_rack": "Advanced Kitchen Rack",
       "kaleidoscope_grilling:beef_chunks": "Beef Chunks",
@@ -6157,7 +6159,7 @@
       "kaleidoscope_grilling:pepper_honey": "Pepper Honey",
       "kaleidoscope_grilling:pepper_leaves": "Pepper Leaves",
       "kaleidoscope_grilling:pepper_log": "Pepper Log",
-      "kaleidoscope_grilling:pepper_sapling": "Sichuan Pepper Tree",
+      "kaleidoscope_grilling:pepper_sapling": "Pepper Sapling",
       "kaleidoscope_grilling:potato_beef_stew": "Potato Beef Stew (Grilling Edition)",
       "kaleidoscope_grilling:potato_slice": "Potato Slice",
       "kaleidoscope_grilling:premium_chili_oil_bucket": "Lava Chili Oil Bucket",
@@ -6192,7 +6194,7 @@
       "kaleidoscope_grilling:skewer_plate": "Skewer Plate",
       "kaleidoscope_grilling:skewer_recipe_book": "Skewer Recipe Book",
       "kaleidoscope_grilling:sour_spicy_noodles": "Sour and Spicy Noodles",
-      "kaleidoscope_grilling:special_seasoning": "Seasoning Bottle & Special Seasoning",
+      "kaleidoscope_grilling:special_seasoning": "Special Seasoning",
       "kaleidoscope_grilling:squid_tentacle": "Squid Tentacle",
       "kaleidoscope_grilling:sugared_tomato": "Sugared Tomato",
       "kaleidoscope_grilling:sweet_potato": "Sweet Potato",
@@ -6267,7 +6269,8 @@
       "minecraft:bamboo_button": "Bamboo Button",
       "minecraft:crimson_button": "Crimson Button",
       "minecraft:warped_button": "Warped Button",
-      "minecraft:paper": "Paper"
+      "minecraft:paper": "Paper",
+      "kg_a1:guide_millstone": "Millstone & Grinding"
     }
   },
   "icon_sources": {

@@ -4,7 +4,7 @@ const methods={
  'Hand Threading':['手工穿串','手工穿串','Hand Threading'],
  'Grill':['烧烤架','燒烤架','Grill'],
  'Chopping Board':['砧板','砧板','Chopping Board'],
- 'Millstone':['磨石','磨石','Millstone'],
+ 'Millstone':['石磨','石磨','Millstone'],
  'Wok':['炒锅','炒鍋','Wok'],
  'Stockpot':['汤锅','湯鍋','Stockpot'],
  'Oil Press':['榨油器','榨油器','Oil Press'],

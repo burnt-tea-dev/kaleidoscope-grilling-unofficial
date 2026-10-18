@@ -503,7 +503,7 @@ function restoreBrokenGrill(dim,loc,permutation,state,raws){
 function customBreak(block,player){
  if(!block?.isValid||block.typeId!==GRILL_ID)return;
  const state=readState(block),kind=breakDisposition(state),c=inv(block),dim=block.dimension,loc={...block.location},permutation=block.permutation;
- if(!c){interactionFailure(player,'§c烤架庫存暫不可用，未拆除');return}
+ if(!c){interactionFailure(player,'§c燒烤架庫存暫不可用，未拆除');return}
  const raws=[0,1,2].map(i=>c.getItem(i)),drops=[];
  try{
   for(const raw of raws)if(raw)drops.push(outputFor(raw,state,kind));
@@ -622,7 +622,7 @@ function handleGrill(block,player,hand='main'){
   const oil=planCookeryOil(player,hand,n);if(!oil.ok){javaInteractionFeedback(player,oil.reason==='insufficient'?'not_enough_oil':'no_brushable_skewers');return}
   const result=brush(state,n,oil.heat);
   if(result.ok){
-   if(!commitGrillAndHand(block,state,result.state,player,hand,oil.before,oil.next,oil.mutate)){interactionFailure(player,'§c刷油交易失敗，油與烤架已嘗試回滾');return}
+   if(!commitGrillAndHand(block,state,result.state,player,hand,oil.before,oil.next,oil.mutate)){interactionFailure(player,'§c刷油交易失敗，油與燒烤架已嘗試回滾');return}
    awardGleamingWithOil(player);javaInteractionFeedback(player,'oiled',[n]);
    blockSound(block,'grill_flip',.75);
    // Render-only oil-specific brush; capture the post-transaction pot and stop
@@ -640,13 +640,13 @@ function handleGrill(block,player,hand='main'){
   const bottle=planSeasoningBottle(player,hand,n);if(!bottle.ok){javaInteractionFeedback(player,bottle.reason==='insufficient'?'not_enough_seasoning':'no_seasonable_skewers');return}
   const result=season(state,n,bottle.ingredients);
   if(result.ok){
-   if(!commitGrillAndHand(block,state,result.state,player,hand,bottle.before,bottle.next,bottle.mutate)){interactionFailure(player,'§c撒料交易失敗，調料與烤架已嘗試回滾');return}
+   if(!commitGrillAndHand(block,state,result.state,player,hand,bottle.before,bottle.next,bottle.mutate)){interactionFailure(player,'§c撒料交易失敗，調料與燒烤架已嘗試回滾');return}
    javaInteractionFeedback(player,'grill_ready_to_take',[],true);blockSound(block,'season',.85);
    try{beginSeasoningMotion(player,hand);player.playAnimation('animation.kg_imm.player.season.'+hand,{blendOutTime:0})}catch{}
   }return;
  }
  if(id&&(Object.hasOwn(RAW_TO_COOKED,id)||isCompatRawSkewer(ingredientSnapshot(held))||(id===SECRET_ID&&!isSecretCooked(held)&&readSkewerRows(held).length===3))){
-  if(!state.lit){javaInteractionFeedback(player,'grill_need_heat');return}if(!canInsert(state,n)){message(player,'§7烤爐現在不能再放入生串');return}
+  if(!state.lit){javaInteractionFeedback(player,'grill_need_heat');return}if(!canInsert(state,n)){message(player,'§7燒烤架現在不能再放入生串');return}
   const c=inv(block);if(!c)return;const slot=[0,1,2].find(i=>!c.getItem(i));if(slot===undefined)return;
   const storage=captureWritableHand(player,hand),free=creative(player),next=free?storage.before:reducedStack(storage.before),inserted=copyOne(storage.before);
   const result=commitTwoParty(
@@ -654,12 +654,12 @@ function handleGrill(block,player,hand='main'){
    ()=>c.setItem(slot,undefined),()=>{if(!free)storage.write(storage.before)}
   );
   if(!result.ok&&result.rollbackErrors)quarantineStation(block,'insert skewer rollback incomplete');
-  if(!transactionStatus(result,'insert skewer'))interactionFailure(player,'§c插串失敗，已嘗試回復烤架與原料');
+  if(!transactionStatus(result,'insert skewer'))interactionFailure(player,'§c插串失敗，已嘗試回復燒烤架與原料');
   else blockSound(block,'action_success',.65,1);
   return
  }
- if(id){message(player,'§7這個物品不能用在目前的烤爐階段');return}
- if(state.phase===1){const r=flip(state);if(r.ok){if(!commitGrillFlip(block,state,r.state)){interactionFailure(player,'§c翻面失敗；已嘗試回復烤架與食材快照，請查看紀錄');return}javaInteractionFeedback(player,'grill_wait_flip',[r.state.flips,4]);blockSound(block,'grill_flip',.75);try{player.playAnimation('animation.kg_imm.player.reach.'+hand,{blendOutTime:.1})}catch{}}else message(player,'§7翻面冷卻中');return}
+ if(id){message(player,'§7這個物品不能用在目前的燒烤架階段');return}
+ if(state.phase===1){const r=flip(state);if(r.ok){if(!commitGrillFlip(block,state,r.state)){interactionFailure(player,'§c翻面失敗；已嘗試回復燒烤架與食材快照，請查看紀錄');return}javaInteractionFeedback(player,'grill_wait_flip',[r.state.flips,4]);blockSound(block,'grill_flip',.75);try{player.playAnimation('animation.kg_imm.player.reach.'+hand,{blendOutTime:.1})}catch{}}else message(player,'§7翻面冷卻中');return}
  if(state.phase===0&&n>0){javaInteractionFeedback(player,'grill_need_oil');return}if(state.phase===2&&!state.seasoned){javaInteractionFeedback(player,'grill_need_seasoning');return}
  if(canExtract(state))extract(block,player,player.isSneaking)
 }

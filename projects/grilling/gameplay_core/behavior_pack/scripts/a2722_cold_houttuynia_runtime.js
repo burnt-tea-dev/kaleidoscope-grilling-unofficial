@@ -25,8 +25,8 @@ function nextMainStack(stack,count){
 function failureText(reason){
  switch(reason){
   case'need_houttuynia':return '§e涼拌折耳根需要主手至少 3 個折耳根';
-  case'wrong_oil':return '§c需要高級辣椒油（premium_chili）';
-  case'need_oil':return '§c高級辣椒油至少需要 2 點';
+  case'wrong_oil':return '§c需要熔岩辣椒油（premium_chili）';
+  case'need_oil':return '§c熔岩辣椒油至少需要 2 點';
   case'need_oil_pot':return '§e副手需要 Cookery 油壺';
   default:return '§7配料不符合涼拌折耳根配方';
  }
