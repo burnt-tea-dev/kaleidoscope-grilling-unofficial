@@ -113,7 +113,7 @@ def main(argv=None):
     global OUT
     OUT=legacy_output(argv)
     guard=json.loads((ROOT/'.repo-target.json').read_text())
-    if guard['repository']!='casama233/kaleidoscope-grilling-unofficial' or guard['repository_id']!=1377218440:
+    if guard['repository']!='burnt-tea-dev/kaleidoscope-grilling-unofficial' or guard['repository_id']!=1377218440 or guard.get('logical_runtime_repository')!='casama233/kaleidoscope-grilling-unofficial' or guard.get('owner')!={'login':'burnt-tea-dev','id':344456559,'type':'Organization'} or guard.get('private') is not False:
         raise RuntimeError('wrong repository')
     # Reserve the explicitly isolated output once; no historical rebuild deletes it.
     OUT.mkdir(parents=True,exist_ok=False)
