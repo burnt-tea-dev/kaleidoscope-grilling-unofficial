@@ -43,6 +43,10 @@ def check(root=ROOT):
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
+    expected_name = 'Kaleidoscope_Grilling_' + '_'.join(map(str, baseline['version'])) + '_Canonical'
+    assert plugins[0][1]['packName'] == expected_name, 'bridge build name drifted from canonical version'
+    nested = load(root / 'projects/grilling/gameplay_core/config.json')
+    assert nested['compiler']['plugins'] == plugins, 'nested bridge compiler differs from canonical export'
     report = {'project': config['name'], 'target_version': config['targetVersion'], 'packs': {}}
     for kind, pack in [('behaviorPack', 'BP'), ('resourcePack', 'RP')]:
         relative = Path(config['packs'][kind])

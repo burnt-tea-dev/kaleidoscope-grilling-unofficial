@@ -13,6 +13,19 @@ class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
 
+    def test_project_rejects_stale_export_name_at_each_authoring_entry(self):
+        load = guard.load
+        for relative in ['config.json', 'projects/grilling/gameplay_core/config.json']:
+            config_path = guard.ROOT / relative
+            def stale(path):
+                value = load(path)
+                if path == config_path:
+                    value['compiler']['plugins'][0][1]['packName'] = 'Kaleidoscope_Grilling_2_8_154_Canonical'
+                return value
+            with self.subTest(config=relative), patch.object(guard, 'load', stale):
+                with self.assertRaisesRegex(AssertionError, 'bridge build name|nested bridge compiler'):
+                    guard.check()
+
     def test_current_project_rejects_stale_cookery_description_on_either_pack(self):
         load = guard.load
         baseline = load(guard.ROOT / 'baseline.json')

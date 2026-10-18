@@ -38,7 +38,7 @@ PATHS = frozenset(OWNERS)
 RUNTIME_PATHS = frozenset(p for p in PATHS if p.startswith((BP + '/', RP + '/')))
 IMPORTED = frozenset(p for p, owner in OWNERS.items() if owner == 'plate_transfer_ownership')
 LEDGER = ROOT / 'tools/fixtures/g155-plate-reviewed-delta.json'
-LEDGER_SHA256 = '9d023eaa6619b42c102d55a7677d3abe2b3aa2cc7369d6013a2a1e71054907f5'
+LEDGER_SHA256 = '7116153b7b1388508ad05b52746fd87a26e4118a6cd2a62dd9bc7ea40aa3c7d4'
 
 
 def sha(raw):

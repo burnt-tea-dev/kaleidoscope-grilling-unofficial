@@ -29,7 +29,7 @@
       "owner": "paired155_packaging",
       "operation": "modify",
       "before_sha256": "fa7193b0565d43919f09ac80bc14def332803f7a00b4fa155fb74dce18bc9849",
-      "after_sha256": "087ef3c598904f07090ddcf0fc98f2bb4aa1f6e294c5b422b92cc58bc48ba920"
+      "after_sha256": "40034c0495e7476f8efd8251e0e37e6ed94f3df666ee563e05941efa5f417f10"
     },
     "projects/grilling/gameplay_core/behavior_pack/manifest.json": {
       "owner": "g155_paired_identity",
@@ -65,7 +65,7 @@
       "owner": "paired155_packaging",
       "operation": "modify",
       "before_sha256": "c5ea04bcfce86c392336bcabf3792b55b98b85101b3b3e16aa5f4bf5857932d8",
-      "after_sha256": "ab6a001f329fdb72213d15e6d5aeb5c486223d44cb7a919397146f174ee0f895"
+      "after_sha256": "e3e7ab47f05e99d6fa21ef9b1a95a5f21f3eaf8bc4107dc2f218514a56e80077"
     },
     "projects/grilling/gameplay_core/resource_pack/manifest.json": {
       "owner": "g155_paired_identity",
