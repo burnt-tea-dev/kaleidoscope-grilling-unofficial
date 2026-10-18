@@ -43,6 +43,10 @@ def check(root=ROOT):
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
+    expected_name = 'Kaleidoscope_Grilling_' + '_'.join(map(str, baseline['version'])) + '_Canonical'
+    assert plugins[0][1]['packName'] == expected_name, 'bridge build name drifted from canonical version'
+    nested = load(root / 'projects/grilling/gameplay_core/config.json')
+    assert nested['compiler']['plugins'] == plugins, 'nested bridge compiler differs from canonical export'
     report = {'project': config['name'], 'target_version': config['targetVersion'], 'packs': {}}
     for kind, pack in [('behaviorPack', 'BP'), ('resourcePack', 'RP')]:
         relative = Path(config['packs'][kind])
@@ -54,7 +58,7 @@ def check(root=ROOT):
         assert manifest['header']['uuid'] == baseline['packs'][pack]['uuid']
         assert manifest['header']['version'] == baseline['version'], 'bridge. export changed the locked version'
         assert manifest['header']['name'] == 'Kaleidoscope Grilling ' + pack, 'stale version-labelled pack name'
-        cookery='1.6.1' if tuple(baseline['version']) >= (2,8,150) else '1.6.0' if tuple(baseline['version']) >= (2,8,72) else '1.0.8'
+        cookery='1.6.2' if tuple(baseline['version']) >= (2,8,154) else '1.6.1' if tuple(baseline['version']) >= (2,8,150) else '1.6.0' if tuple(baseline['version']) >= (2,8,72) else '1.0.8'
         assert 'Cookery '+cookery in manifest['header']['description'], 'stale displayed Cookery requirement'
         assert all(m['version'] == baseline['version'] for m in manifest['modules'])
         assert tuple(map(int, config['targetVersion'].split('.'))) >= tuple(manifest['header']['min_engine_version'])

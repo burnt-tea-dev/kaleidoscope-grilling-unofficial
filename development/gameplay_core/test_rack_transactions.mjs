@@ -161,9 +161,10 @@ test('cross-rack bound return succeeds before binding switches to requested slot
 const tool=()=>{const s=new Stack('kaleidoscope_cookery:iron_kitchen_knife');s.maxAmount=1;s.metadata.canDestroy=['minecraft:stone'];s.metadata.canPlaceOn=['minecraft:dirt'];s.metadata.damage=19;return s;};
 function click(f,b,slot,options={}){
  const p=options.player??f.holder,direction=b.permutation.getState('minecraft:cardinal_direction'),x=slot<5?layout.RACK_SEASONING_X[slot]:layout.RACK_TOOL_X[slot-5];
- const at=layout.rackDisplayPose(b,x,slot<5?12/16:6/16,.35).location;
+ const at=layout.rackDisplayPose(b,x,slot<5?12/16:layout.RACK_TOOL_VISUAL_Y,slot<5?.35:layout.RACK_TOOL_VISUAL_Z).location;
  const outward={north:{x:0,z:-1},south:{x:0,z:1},east:{x:1,z:0},west:{x:-1,z:0}}[direction];
  p.eye={x:at.x+outward.x*2,y:at.y,z:at.z+outward.z*2};p.view={x:-outward.x,y:0,z:-outward.z};
+ if(options.oblique){p.eye.x+=outward.z*options.oblique;p.eye.z-=outward.x*options.oblique;p.view={x:at.x-p.eye.x,y:at.y-p.eye.y,z:at.z-p.eye.z};}
  const e={cancel:false,isFirstEvent:true,block:b,player:p,itemStack:(p.inv??f.inv).getItem(p.selectedSlotIndex),faceLocation:{x:at.x-b.x,y:at.y-b.y,z:at.z-b.z},...options};
  f.callbacks.playerInteractWithBlock(e);return e;
 }
@@ -334,4 +335,16 @@ test('actual backing-block event never redirects an otherwise valid eye ray into
  const stone={...b,typeId:'minecraft:stone',location:{x:0,y:64,z:1},z:1};const before=snapshot(f);
  f.callbacks.playerInteractWithBlock({player:f.holder,block:stone,isFirstEvent:true,blockFace:'North',faceLocation:{x:.5,y:.72,z:0},itemStack:f.inv.getItem(0)});f.flush();
  assert.equal(rays,0);assert.equal(snapshot(f),before);assert.equal(b.c.rows.filter(Boolean).length,0);
+});
+
+// Read-only visual coordinates drive real event dispatch and native-stack transfers.
+test('oblique pickup returns each displayed original tool with exact metadata and neighbors untouched',()=>{
+ const ids=['iron_kitchen_knife','gold_kitchen_knife','diamond_kitchen_knife','netherite_kitchen_knife','kitchen_shovel'].map(id=>'kaleidoscope_cookery:'+id).concat('minecraft:flint_and_steel');
+ for(const facing of ['north','east','south','west'])for(let slot=5;slot<9;slot++)for(const id of ids)for(const oblique of [-2,2]){
+  const f=fixture(),b=f.block();b.permutation=b.permutation.withState('minecraft:cardinal_direction',facing);
+  for(let i=0;i<9;i++)if(i!==slot)b.c.rows[i]=i<5?seasoning(3):tool();
+  const neighbors=JSON.stringify(b.c.rows),held=tool();held.typeId=id;held.nameTag='Exact '+id;held.metadata.lore=['original '+id,'slot '+slot];held.metadata.enchantments=[{id:'unbreaking',level:3}];
+  f.inv.rows[0]=held.clone();click(f,b,slot,{oblique});f.flush();assert.deepEqual(b.c.rows[slot],held);assert.equal(f.inv.rows[0],undefined);
+  click(f,b,slot,{oblique});f.flush();assert.deepEqual(f.inv.rows[0],held);assert.equal(JSON.stringify(b.c.rows),neighbors);
+ }
 });

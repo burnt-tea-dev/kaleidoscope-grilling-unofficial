@@ -91,7 +91,8 @@ def render_assets():
  expected_count=125 if version>=(2,8,119) else 124 if version>=(2,8,71) else 108 if version>=(2,8,68) else 107 if (RP/'attachables/secret_skewer.attachable.json').exists() else 106 if version >= (2,8,32) else 107
  expected_count+=int((RP/'attachables/secret_skewer_native_plain.attachable.json').is_file())
  from verify_failure_skewer import admit_attachable
- assert len([p for p in (RP/'attachables').glob('*.json') if not p.stem.endswith('_java_three_alt.attachable') and not admit_attachable(p)])==expected_count
+ from verify_oil_brush import admit_attachable as admit_oil_attachable
+ assert len([p for p in (RP/'attachables').glob('*.json') if not p.stem.endswith('_java_three_alt.attachable') and not admit_attachable(p) and not admit_oil_attachable(p)])==expected_count
  assert not (RP/'attachables/big_vat.attachable.json').exists()
  for name in ('grill','oil_press'):
   g=load(RP/f'models/blocks/a283_item_{name}.geo.json')['minecraft:geometry'][0]

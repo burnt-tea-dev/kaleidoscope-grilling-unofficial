@@ -4,6 +4,7 @@ ROOT=pathlib.Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'too
 import build_offhand_eating_projection as layer
 from eating_owner_properties import document as guard_document, predecessor_document
 from unittest.mock import patch
+from g153_repair_source import reference_bytes as repair_reference,reapply_bytes as repair_reapply
 from test_failure_relative_calibration import EVALUATOR,node
 class OffhandProjection(unittest.TestCase):
  def test_exact_ids_sources_and_left_clip_payloads(self):
@@ -42,7 +43,9 @@ for(const r of rows){const good={has_property:()=>true,property:n=>({eat_project
    if 'minecraft:attachable'in bad:bad['minecraft:attachable']['description']['materials']['default']='unrelated'
    else:bad['render_controllers']['controller.render.player.first_person']['part_visibility'][0]['unrelated']=True
    with self.assertRaises(ValueError):layer.strip_document(bad)
-  text=layer.MAIN.read_text();old=layer.restore_main(text);self.assertEqual(layer.patch_main(old),text);self.assertEqual(layer.patch_main(text),text)
+  live=layer.MAIN.read_bytes();text=repair_reference(layer.MAIN,live).decode();old=layer.restore_main(text);self.assertEqual(layer.patch_main(old),text);self.assertEqual(layer.patch_main(text),text)
+  self.assertEqual(repair_reapply(layer.MAIN,layer.patch_main(text).encode()),live)
+  with self.assertRaises(ValueError):repair_reference(layer.MAIN,live+b'\n// unreviewed successor')
   with self.assertRaises(ValueError):layer.restore_main(text.replace('selectEatingProjection(e,profile,hand,heldByHand)','selectEatingProjection(e,profile,hand,undefined)',1))
  def test_guarded_continuation_retains_exact_offhand_payload_and_source_pins(self):
   path=layer.RP/'attachables/grilled_caterpillar_skewer.attachable.json'

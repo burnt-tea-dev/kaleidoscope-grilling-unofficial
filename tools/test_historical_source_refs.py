@@ -19,8 +19,10 @@ class HistoricalSourceRefsTests(unittest.TestCase):
    path.write_text(json.dumps(doc))
   return r
  def test_complete_active_source_refs_resolve_exactly(self):
-  self.assertEqual(verify(),{'refs':57,'commits':57})
-  for ref in ('ba49ee55b67ab4f679c37fa833039857443a47f2','aa091a1e91035d1510b579af11254a9bc9f86e6b','aa7431f9ea729338f75f134a9c9be8194298b968','58f2fc72a286b1ddf210128017c36f14dad759a9','b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
+  self.assertEqual(verify(),{'refs':61,'commits':61})
+  for ref in ('7eadfebf370aa3e5927084b8bf2c47272ed006e9','5a0cf60ae510bc05ee49eb7178aa975a1be59487'):
+   self.assertEqual(inventory()[ref],ref)
+  for ref in ('686cde5578ae5ddc66632b8e0d24fa9d6d89b656','5bc8f43f45a6cd0d287b5557db24e2da4dd2c207','ba49ee55b67ab4f679c37fa833039857443a47f2','aa091a1e91035d1510b579af11254a9bc9f86e6b','aa7431f9ea729338f75f134a9c9be8194298b968','58f2fc72a286b1ddf210128017c36f14dad759a9','b38e6be99e4d1aba474ce857f3db64aa4f2b7086','fd47371e553219852689dd1323b96f3d659e5dd8',
               '40a855f2742a17287c8204fd932329a33f7aa41d','83940e178378a1756839cebe2748c508a6db6bff',
               'af9cfb91a9e722b5bb3cb69456dc702b87746727','2e05439ced5e20810547d3e239c1c7036a5a65fc',
               'c7c0bfb047af06a5d1c42d6e31c873dc9ca6992f',
@@ -298,6 +300,15 @@ class HistoricalSourceRefsTests(unittest.TestCase):
  def test_short_literal_and_full_named_base_are_audited(self):
   full='1'*40;r=self.fixture("SOURCE_BASE='"+full+"'\nx=['git','show','abcdef12:code.json']",{full:full,'abcdef12':'a'*40})
   self.assertEqual(literal_refs(r),{full,'abcdef12'});inventory(r)
+ def test_literal_previous_cannot_escape_shallow_clone_fetch_inventory(self):
+  ref='686cde5578ae5ddc66632b8e0d24fa9d6d89b656'
+  r=self.fixture("PREVIOUS = '"+ref+"'\nPREVIOUS_TREE = '"+'2'*40+"'\nLEDGER_SHA256 = '"+'3'*64+"'",{'1'*40:'1'*40})
+  self.assertEqual(literal_refs(r),{ref})
+  with self.assertRaisesRegex(AssertionError,'absent'):inventory(r)
+  path=r/'tools/fixtures/g66-historical-source-refs.json'
+  document=json.loads(path.read_text());document['refs'][ref]=ref;path.write_text(json.dumps(document))
+  self.assertEqual(inventory(r)[ref],ref)
+  self.assertIn(ref.encode()+b'\n',encoded_listing(r))
  def test_frozen_calibration_base_requires_audited_inventory_entry(self):
   ref='f36e333cb629237495479fafdb8a8ac1f2edb459'
   r=self.fixture("FROZEN_BASE='"+ref+"'",{'1'*40:'1'*40})

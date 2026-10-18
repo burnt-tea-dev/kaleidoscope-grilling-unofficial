@@ -98,21 +98,27 @@ def reference_bytes(path, actual=None):
 
 def predecessor_version(version):
     """Map only the exact current G152 manifest to its sealed G151 identity."""
+    from g153_repair_source import predecessor_version as repair_version
+    version = repair_version(version)
     if version != VERSION:
         return version
-    return json.loads(reference_bytes(BP + '/manifest.json'))['header']['version']
+    from g153_repair_source import historical_bytes as repair_history
+    return json.loads(reference_bytes(BP + '/manifest.json', repair_history(BP + '/manifest.json')))['header']['version']
 
 
 def historical_bytes(path, actual=None):
     """The outer guide boundary for both guide and gameplay source callers."""
     key = _key(path)
     actual = (ROOT / key).read_bytes() if actual is None else actual
+    from g153_repair_source import historical_bytes as repair_history, predecessor_version as repair_version
+    actual = repair_history(path, actual)
     if key not in PATHS:
         return actual
     try:
         version = json.loads((ROOT / BP / 'manifest.json').read_bytes())['header']['version']
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError('Invalid release identity at the G152 guide boundary') from error
+    version = repair_version(version)
     return reference_bytes(key, actual) if version == VERSION else actual
 
 

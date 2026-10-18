@@ -53,6 +53,12 @@ class CaterpillarProjectionTests(unittest.TestCase):
   closure={P/relative for relative in FIX['runtime_closure']}
   delta={p for p in set(previous)|set(retained)if p not in previous or p not in retained or encoded(previous[p])!=encoded(retained[p])}
   self.assertEqual(delta,closure)
+ def test_supplied_successor_mutations_fail_before_regeneration(self):
+  import build_failure_skewer_held as failure
+  main=scoped.BP/'scripts/main.js';current=main.read_text()
+  for bad in (current+'\n// unreviewed successor\n',current.replace('oil_brush_visual_runtime.js','unreviewed_runtime.js',1)):
+   with self.subTest(mutation=bad[-80:]),patch.object(failure,'base_assets',return_value={}):
+    with self.assertRaises(ValueError):motion.build({main:bad})
  def test_player_item_visibility_gate_has_exact_target_and_safe_rejections(self):
   player=scoped.animations()[1]['animations'][scoped.PLAYER]
   self.assertEqual(player['blend_weight'],'variable.is_first_person && '+scoped.GATE)

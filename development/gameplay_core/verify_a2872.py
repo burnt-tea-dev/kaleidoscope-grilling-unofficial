@@ -6,7 +6,9 @@ ROOT=Path(__file__).resolve().parents[2]
 def main(expected_version=(2,8,72)):
  previous(expected_version=expected_version)
  sys.path.insert(0,str(ROOT/'tools'))
- if tuple(expected_version)>=(2,8,150):
+ if tuple(expected_version)>=(2,8,154):
+  from check_cookery162_host import check
+ elif tuple(expected_version)>=(2,8,150):
   from check_cookery161_host import check
  else:
   from check_cookery160_host import check

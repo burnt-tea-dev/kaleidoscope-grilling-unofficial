@@ -220,7 +220,7 @@
       }
     ],
     "components": {
-      "minecraft:geometry": "geometry.kaleidoscope_grilling.houttuynia_crop",
+      "minecraft:geometry": "geometry.kaleidoscope_grilling.onion_crop",
       "minecraft:material_instances": {
         "*": {
           "texture": "onion_stage0",

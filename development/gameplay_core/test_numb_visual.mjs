@@ -78,10 +78,10 @@ test('a failed stop retries within suppression without resetting or restarting a
   updateNumbVisual(player,true,11);assert.equal(calls.at(-1).name,'animation.kg_a22.player.numb');
  }finally{forgetNumbVisual(player.id)}
 });
-test('both actual brush call sites suppress Numb after a successful clip, including native blend-out',()=>{
+test('actual physical brush call site suppresses Numb after a successful clip, including native blend-out',()=>{
  const main=fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/main.js',import.meta.url),'utf8');
  const hooks=[...main.matchAll(/try\{player\.playAnimation\('animation\.kg_imm\.player\.brush\.'\+hand,[\s\S]*?\}catch\{\}/g)];
- assert.equal(hooks.length,2,'host-oil and Grilling brush paths both need the hook');
+ assert.equal(hooks.length,1,'physical brush retains its legacy hook; Cookery has a separately tested controlled branch');
  for(const [index,[source]] of hooks.entries()){
   const run=Function('player','hand','system','suppressNumbVisual',source),calls=[];
   let fail=false;
@@ -102,3 +102,43 @@ test('both actual brush call sites suppress Numb after a successful clip, includ
   }finally{forgetNumbVisual(player.id)}
  }
 });
+
+// Exercise the actual refactored Cookery branch with the real Numb runtime, not
+// a count of legacy playAnimation spellings. Oil and physical brushes now have
+// different successful-pose deadlines (20 and 29 ticks respectively).
+const numbMainSource=fs.readFileSync(new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/main.js',import.meta.url),'utf8');
+const oilBranchMarker="// both the substitute and arm on switch/cancel or Java's 20-tick endpoint.";
+assert.equal(numbMainSource.split(oilBranchMarker).length,2,'locate exactly one actual Cookery visual branch');
+const oilBranchSource=numbMainSource.split(oilBranchMarker)[1].split('  }return;')[0];
+const runOilBranch=Function('player','hand','oil','system','grillingConfig','beginOilBrushVisual','cancelOilBrushVisual','oilBrushStopExpression','suppressNumbVisual',oilBranchSource);
+for(const hand of ['main','off'])for(const enabled of [true,false])for(const published of [true,false])for(const failClip of [true,false])
+ test(`actual Cookery Numb gate hand=${hand}, enabled=${enabled}, published=${published}, failedClip=${failClip}`,()=>{
+  const calls=[];let starts=0,cancels=0;
+  const player={id:`numb-oil-${hand}-${enabled}-${published}-${failClip}`,playAnimation(name,options){
+   if(name.startsWith('animation.kg_oil_brush.player.')||name.startsWith('animation.kg_imm.player.brush.')){
+    calls.push({name,options});if(failClip)throw Error('brush clip unavailable');
+   }else calls.push({name,options});
+  }};
+  const attempted=!enabled||published,success=attempted&&!failClip,duration=enabled?20:29;
+  try{
+   updateNumbVisual(player,true,100);
+   runOilBranch(player,hand,{type:'canola'},{currentTick:100},()=>({enableOilBrushVisuals:enabled}),()=>{starts++;return published},()=>{cancels++},()=> 'marker changed',suppressNumbVisual);
+   assert.equal(starts,enabled?1:0);
+   assert.equal(cancels,attempted&&failClip?1:0);
+   const clips=calls.filter(x=>x.name.includes('.player.brush.')||x.name.includes('.kg_oil_brush.player.'));
+   assert.equal(clips.length,attempted?1:0);
+   if(attempted)assert.equal(clips[0].name,(enabled?'animation.kg_oil_brush.player.':'animation.kg_imm.player.brush.')+hand);
+   assert.equal(calls.filter(x=>x.name==='animation.kg_a22.player.numb_stop').length,success?1:0,'only a successfully started pose suppresses Numb');
+   if(success){
+    for(let tick=101;tick<100+duration;tick++)updateNumbVisual(player,true,tick);
+    assert.equal(calls.filter(x=>x.name==='animation.kg_a22.player.numb').length,1,'Numb stays suppressed through the complete actual pose deadline');
+    updateNumbVisual(player,true,100+duration);
+    assert.equal(calls.at(-1).name,'animation.kg_a22.player.numb','Numb resumes at the exact 20/29 tick endpoint');
+    assert.equal(calls.filter(x=>x.name==='animation.kg_a22.player.numb').length,2);
+   }else{
+    updateNumbVisual(player,true,112);
+    assert.equal(calls.at(-1).name,'animation.kg_a22.player.numb','publication or clip failure leaves no suppression deadline');
+    assert.equal(calls.filter(x=>x.name==='animation.kg_a22.player.numb').length,2);
+   }
+  }finally{forgetNumbVisual(player.id)}
+ });

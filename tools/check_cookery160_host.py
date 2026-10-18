@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib,json,os,subprocess,tempfile,urllib.request,zipfile
 ROOT=Path(__file__).resolve().parents[1]
 BP=ROOT/'projects/grilling/gameplay_core/behavior_pack'
-def check_guide_locale_registry(original,patched,base,author_fixed=False):
+def check_guide_locale_registry(original,patched,base,author_fixed=False,author_version='1.6.1'):
  # Exercise the actual pinned author begin/chunk/end consumer in both forms.
  # SDK event/scheduler doubles are transport witnesses, not Minecraft players.
  fixture=r'''
@@ -58,7 +58,8 @@ console.log(AUTHOR_FIXED?'Cookery 1.6.1 actual author registry retains three loc
    assert text.count(helper_import)==1
    text=text.replace(helper_import,'import {publicGuideLocale} from '+json.dumps((BP/'scripts/host_api/guide_labels_core.js').as_uri())+';\n')
   path=base/('guide-locale-patched.mjs' if active else 'guide-locale-original.mjs')
-  path.write_text(stub+text+'\nconst PATCHED='+str(active).lower()+';const AUTHOR_FIXED='+str(author_fixed).lower()+';\n'+fixture)
+  active_fixture=fixture.replace('Cookery 1.6.1 actual author registry','Cookery '+author_version+' actual author registry')
+  path.write_text(stub+text+'\nconst PATCHED='+str(active).lower()+';const AUTHOR_FIXED='+str(author_fixed).lower()+';\n'+active_fixture)
   subprocess.run(['node',str(path)],check=True)
 def check_tavern_guide_bridge():
  # Protocol/scheduler adapter doubles only; no Minecraft runtime or bot.

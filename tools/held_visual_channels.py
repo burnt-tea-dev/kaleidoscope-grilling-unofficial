@@ -14,6 +14,7 @@ SECRET_MAX, INVALID, BOTTLE, PLATE = 213, 254, 214, 255
 FAILURE = 220  #215..219 are reserved by the independent slime frame owner.
 FOOD_COUNT, SECRET_VISUAL_MAX = 217, 5337
 SECRET_EXT_MIN, SECRET_EXT_MAX = 221, 224
+OIL_BRUSH, OIL_POT_IDLE = 225, 226  # G153: disjoint from extended secret helpers.
 
 
 def verify_server_constants():
@@ -23,6 +24,25 @@ def verify_server_constants():
                         ('HELD_VISUAL_PLATE', PLATE), ('HELD_VISUAL_WORD_MAX', WORD_B_MAX),
                         ('PLATE_HELD_WORD_A_MAX', WORD_A_MAX), ('PLATE_HELD_WORD_B_MAX', WORD_B_MAX)]:
         assert re.search(r'export const ' + name + '=' + str(value) + r';', sources), name
+
+
+def verify_oil_server_constants():
+    source = (ROOT / 'projects/grilling/gameplay_core/behavior_pack/scripts/oil_brush_visual_core.js').read_text()
+    for name, value in [('OIL_BRUSH_MARKER', OIL_BRUSH), ('OIL_POT_IDLE_MARKER', OIL_POT_IDLE)]:
+        assert re.search(r'export const ' + name + '=' + str(value) + r';', source), name
+
+
+def verify_owner_marker_allocation():
+    owners = {'secret': set(range(SECRET_MAX + 1)) | set(range(SECRET_EXT_MIN, SECRET_EXT_MAX + 1)),
+              'bottle': {BOTTLE}, 'slime': set(range(215, 220)), 'failure': {FAILURE},
+              'oil_brush': {OIL_BRUSH}, 'oil_pot': {OIL_POT_IDLE}, 'invalid': {INVALID}, 'plate': {PLATE}}
+    assigned = {}
+    for owner, markers in owners.items():
+        for marker in markers:
+            assert 0 <= marker <= 255, (owner, marker)
+            assert marker not in assigned, (owner, assigned.get(marker), marker)
+            assigned[marker] = owner
+    return owners
 
 
 def channel_name(hand, index):

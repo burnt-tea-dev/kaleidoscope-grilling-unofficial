@@ -1,3 +1,4 @@
+import {beginOilBrushVisual,cancelOilBrushVisual,syncOilBrushVisual,oilBrushStopExpression} from './oil_brush_visual_runtime.js';
 import {admitEatingProjection,selectEatingProjection} from './eating_projection_routes.js';
 import {mergeEffectApplication} from './effect_lifecycle_core.js';
 import {readSlimeWorldFrame,syncSlimeHeld} from './slime_frame_runtime.js';
@@ -624,8 +625,13 @@ function handleGrill(block,player,hand='main'){
    if(!commitGrillAndHand(block,state,result.state,player,hand,oil.before,oil.next,oil.mutate)){interactionFailure(player,'§c刷油交易失敗，油與烤架已嘗試回滾');return}
    awardGleamingWithOil(player);javaInteractionFeedback(player,'oiled',[n]);
    blockSound(block,'grill_flip',.75);
-   // 1.3 s brush clip plus 0.12 s native blend-out: keep Numb off for 29 ticks.
-   try{player.playAnimation('animation.kg_imm.player.brush.'+hand,{blendOutTime:.12});suppressNumbVisual(player,system.currentTick,29)}catch{}
+   // Render-only oil-specific brush; capture the post-transaction pot and stop
+   // both the substitute and arm on switch/cancel or Java's 20-tick endpoint.
+   try{
+    if(grillingConfig().enableOilBrushVisuals){
+     if(beginOilBrushVisual(player,hand,oil.type)){player.playAnimation('animation.kg_oil_brush.player.'+hand,{controller:'kg_oil_brush',blendOutTime:0,stopExpression:oilBrushStopExpression(hand)});suppressNumbVisual(player,system.currentTick,20)}
+    }else{player.playAnimation('animation.kg_imm.player.brush.'+hand,{blendOutTime:.12});suppressNumbVisual(player,system.currentTick,29)}
+   }catch{try{cancelOilBrushVisual(player)}catch{}}
   }return;
  }
  if(id&&Object.hasOwn(OIL_TOOLS,id)){const result=brush(state,n,OIL_TOOLS[id]);if(result.ok){writeState(block,result.state);awardGleamingWithOil(player);blockSound(block,'grill_flip',.75);try{player.playAnimation('animation.kg_imm.player.brush.'+hand,{blendOutTime:.12});suppressNumbVisual(player,system.currentTick,29)}catch{}}return}
@@ -1289,6 +1295,7 @@ system.runInterval(()=>{
  const slimeFrame=readSlimeWorldFrame(world);
  for(const p of world.getAllPlayers()){try{
   syncSlimeHeld(p,slimeFrame);
+  syncOilBrushVisual(p,{idle:false});
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}
   const active=ACTIVE_EATS.get(p.id);
   try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}

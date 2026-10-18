@@ -68,6 +68,8 @@ class HeldPoseFrameTests(unittest.TestCase):
         self.assertEqual(json.loads(TARGET.read_text()),calibrated)
         expected.update(calibrated['animations'])
         for p in (RP/'attachables').glob('*.json'):
+            from verify_oil_brush import admit_attachable as admit_oil_attachable
+            if admit_oil_attachable(p):continue
             # The immutable pose comparison keeps its original source bytes after
             # the exact current owner-context continuation has been checked.
             # The added native-plain route instead checks its sealed current

@@ -19,6 +19,7 @@ const names=Object.freeze(Object.fromEntries(['main','off'].map(hand=>[hand,Obje
 ])])));
 
 export function heldVisualKind(typeId){
+ if(typeId==='kaleidoscope_cookery:oil_pot'||typeId==='kaleidoscope_cookery:oil_pot_filled')return 'oilbrush';
  if(typeId===SLIME_ID)return 'slime';
  if(typeId==='kaleidoscope_grilling:skewer_plate')return 'plate';
  const id=canonicalFoodId(typeId);
@@ -48,6 +49,8 @@ export function writeHeldVisual(player,hand,kind,values){
  const marker=values[11];
  if(!((kind==='plate'&&marker===HELD_VISUAL_PLATE&&values[10]<=5)||
       (kind==='bottle'&&marker===HELD_VISUAL_BOTTLE)||
+      (kind==='oilpot'&&marker===226&&values[0]<=4&&values.slice(1,11).every(v=>v===0))||
+      (kind==='oilbrush'&&marker===225&&values[0]>=1&&values[0]<=60&&values.slice(1,11).every(v=>v===0))||
       (kind==='failure'&&marker===FAILURE_VISUAL_MARKER&&values[0]<=19&&values[1]<=63&&values[2]<=217&&values.slice(3,11).every(v=>v===0))||
       (kind==='slime'&&marker>=SLIME_FRAME_MARKER_MIN&&marker<=SLIME_FRAME_MARKER_MAX&&values.slice(0,11).every(v=>v===0))||
       (kind==='secret'&&(marker<=213||(marker>=221&&marker<=224)))||(kind==='empty'&&values.every(v=>v===0))))

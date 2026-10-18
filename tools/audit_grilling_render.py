@@ -46,6 +46,14 @@ def failure_source_contract():
                    cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
 
 
+@lru_cache(maxsize=1)
+def oil_source_contract():
+    # Two explicit stateful source hierarchies, independently checked in full.
+    import subprocess
+    subprocess.run([sys.executable, str(ROOT/'development/gameplay_core/verify_oil_brush.py')],
+                   cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
+
+
 def geometry_ref(value):
     if isinstance(value, str):
         return value
@@ -518,6 +526,11 @@ def check_current_display_contracts(findings, geometry_index, animations):
     admitted = projection_items()
     for path in sorted((RP / "attachables").glob("*.json")):
         desc = load_json(path)["minecraft:attachable"]["description"]
+        from verify_oil_brush import NAMES as OIL_ATTACHABLES
+        if path.name in OIL_ATTACHABLES:
+            oil_source_contract()
+            counts['oil_pot']+=1
+            continue
         from verify_failure_skewer import FAILURE_ATTACHABLES
         if path.name in FAILURE_ATTACHABLES:
             failure_source_contract()
@@ -715,6 +728,7 @@ def check_current_display_contracts(findings, geometry_index, animations):
     expected_counts={"skewer":40,"bottle":len(expected_bottles),"failure":6}
     if version>=(2,8,68):expected_counts["partial"]=1
     if version>=(2,8,119):expected_counts['plate']=1
+    if version>=(2,8,153):expected_counts['oil_pot']=2
     if counts != expected_counts or bottle_ids != expected_bottles or len(skewer_refs - slime_frame_refs) != 150 or not slime_frame_refs <= skewer_refs:
         add(findings, "error", "held_inventory_contract", "attachables", "unexpected held family/bite-stage coverage", dict(counts))
 

@@ -58,6 +58,11 @@ def strip_main(text):
     return text
 
 def install_main(text):
+    from g153_repair_source import ledger as repair_ledger, sha as repair_sha, reference_bytes as repair_reference, reapply_bytes as repair_reapply
+    if json.loads((ROOT/'projects/grilling/gameplay_core/behavior_pack/manifest.json').read_text())['header']['version'] in ([2,8,153],[2,8,154],[2,8,155]):
+        if repair_sha(text.encode())==repair_ledger()['changes'][MAIN.relative_to(ROOT).as_posix()]['after_sha256']:
+            historical=repair_reference(MAIN,text.encode()).decode()
+            return repair_reapply(MAIN,install_main(historical).encode()).decode()
     from skewer_content_source import generator_main_source, reapply_main as reapply_skewer_content
     preceding = generator_main_source(text)
     if preceding != text:

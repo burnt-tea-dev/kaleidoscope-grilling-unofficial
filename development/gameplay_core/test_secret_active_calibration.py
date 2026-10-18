@@ -1,7 +1,8 @@
 """Source-pose calibration admission, separate from native rendering acceptance."""
 from pathlib import Path
 from copy import deepcopy
-import json,subprocess,sys,unittest
+import json,subprocess,sys,unittest,tempfile
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2];RP=ROOT/'projects/grilling/gameplay_core/resource_pack';sys.path.insert(0,str(ROOT/'tools'));sys.path.insert(0,str(ROOT/'development/gameplay_core'))
 from held_pose_frames import point
 from secret_active_calibration import calibrated_target,PROFILE_IDS
@@ -13,7 +14,24 @@ import java_dual_eating_frames as dual
 import java_active_eating_frames as active
 from test_eating_observer_projection import node
 from eating_owner_context import reference_bytes,PREVIOUS_EATING_CONTEXT_BASE
+def animation_changes(root,rp):
+ relative=(rp/'animations').relative_to(root).as_posix()
+ changed=set(subprocess.check_output(['git','diff','--name-only',PUBLIC_SOURCE_BASE,'--',relative],cwd=root,text=True).splitlines())
+ historical=set(subprocess.check_output(['git','ls-tree','-r','--name-only',PUBLIC_SOURCE_BASE,'--',relative],cwd=root,text=True).splitlines())
+ # Git diff omits untracked additions. Inspect the complete on-disk animation
+ # inventory as well so candidate admission is identical before/after staging.
+ changed.update(p.relative_to(root).as_posix() for p in (rp/'animations').rglob('*') if p.is_file() and p.relative_to(root).as_posix() not in historical)
+ return changed
+
 class SecretActiveCalibration(unittest.TestCase):
+ def test_animation_inventory_admission_is_independent_of_git_index(self):
+  with tempfile.TemporaryDirectory() as directory:
+   root=Path(directory);rp=root/'resource_pack';animations=rp/'animations';animations.mkdir(parents=True)
+   for name in ('legacy.json','oil_brush.animation.json','oil_brush_player.animation.json','unexpected.json'):(animations/name).write_text('{}')
+   expected={'resource_pack/animations/'+name for name in ('oil_brush.animation.json','oil_brush_player.animation.json','unexpected.json')}
+   for tracked in ('','\n'.join(sorted(expected))):
+    with patch.object(subprocess,'check_output',side_effect=[tracked,'resource_pack/animations/legacy.json\n']):
+     self.assertEqual(animation_changes(root,rp),expected)
  def test_each_native_pose_matrix_preserves_orientation_and_only_changes_world_origin(self):
   for profile in PROFILE_IDS:
    for hand in (-1,1):
@@ -51,7 +69,7 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
 ''')
  def test_item_child_helper_timing_scale_and_calibrated_active_animation_are_preserved(self):
   p=RP/'animations/java_eating_projection.animation.json';assert_public_bytes(self,p)
-  changed=subprocess.check_output(['git','diff','--name-only',PUBLIC_SOURCE_BASE,'--',str((RP/'animations').relative_to(ROOT))],cwd=ROOT,text=True).splitlines()
+  changed=animation_changes(ROOT,RP)
   # G77 adds a separate rack-only animation; every pre-existing eating/helper
   # file must remain byte-identical to the public calibration baseline.
   rack=RP/'animations/rack_tool_visual.animation.json'
@@ -205,6 +223,20 @@ for(const row of cases)for(const held of [row.id,'minecraft:apple','kaleidoscope
    self.assertEqual(actual,(json.dumps(tp_sprinkle(),ensure_ascii=False,indent=2)+'\n').encode(),'SPECIAL TP contributor differs from complete generator output')
    self.assertEqual(ledger()['changes'][relative],{'operation':'add','before_sha256':None,'after_sha256':sha(actual)},'SPECIAL TP contributor differs from immutable reviewed postimage')
    allowed.add(relative)
+  # G153 owns precisely two new oil clips, checked against both the complete
+  # generator and the immutable reviewed add ledger. Legacy clips stay pinned.
+  from g154_host_source import predecessor_version
+  if tuple(predecessor_version(list(version)))==(2,8,153):
+   from build_oil_brush_visuals import outputs as oil_outputs,encode as oil_encode
+   from g153_repair_source import ledger as repair_ledger,sha as repair_sha
+   generated=oil_outputs();reviewed=repair_ledger()['changes']
+   for name in ('oil_brush.animation.json','oil_brush_player.animation.json'):
+    path=RP/'animations'/name;relative=path.relative_to(ROOT).as_posix()
+    self.assertNotEqual(subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+relative],cwd=ROOT,capture_output=True).returncode,0)
+    actual=path.read_bytes();self.assertEqual(actual,oil_encode(generated[path.relative_to(ROOT)]))
+    row=reviewed[relative]
+    self.assertEqual((row['operation'],row['before_sha256'],row['after_sha256']),('add',None,repair_sha(actual)))
+    allowed.add(relative)
   self.assertEqual(set(changed)-allowed,set())
   if rack.exists():
    old=subprocess.run(['git','cat-file','-e',PUBLIC_SOURCE_BASE+':'+str(rack.relative_to(ROOT))],cwd=ROOT,capture_output=True)

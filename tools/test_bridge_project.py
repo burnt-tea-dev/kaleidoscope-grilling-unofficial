@@ -1,13 +1,77 @@
 """Regression tests for bridge. authoring/export guards (no simulated players)."""
 from pathlib import Path
+import copy
+import sys
+import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 import bridge_project as guard
 
 class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
+
+    def test_project_rejects_stale_export_name_at_each_authoring_entry(self):
+        load = guard.load
+        for relative in ['config.json', 'projects/grilling/gameplay_core/config.json']:
+            config_path = guard.ROOT / relative
+            def stale(path):
+                value = load(path)
+                if path == config_path:
+                    value['compiler']['plugins'][0][1]['packName'] = 'Kaleidoscope_Grilling_2_8_154_Canonical'
+                return value
+            with self.subTest(config=relative), patch.object(guard, 'load', stale):
+                with self.assertRaisesRegex(AssertionError, 'bridge build name|nested bridge compiler'):
+                    guard.check()
+
+    def test_current_project_rejects_stale_cookery_description_on_either_pack(self):
+        load = guard.load
+        baseline = load(guard.ROOT / 'baseline.json')
+        for side in ['BP', 'RP']:
+            manifest_path = guard.ROOT / baseline['runtime'][side] / 'manifest.json'
+            def stale(path):
+                value = load(path)
+                if path == manifest_path:
+                    value['header']['description'] = value['header']['description'].replace('Cookery 1.6.2', 'Cookery 1.6.1')
+                return value
+            with self.subTest(side=side), patch.object(guard, 'load', stale):
+                with self.assertRaisesRegex(AssertionError, 'stale displayed Cookery requirement'):
+                    guard.check()
+
+    def test_current_guide_reference_and_historical_hosts_are_exact(self):
+        sys.path.insert(0, str(guard.ROOT / 'development/gameplay_core'))
+        from verify_a2828 import verify_host_reference
+        catalog = guard.load(guard.ROOT / 'projects/grilling/guide/catalog.a3.json')
+        version = guard.load(guard.ROOT / 'baseline.json')['version']
+        verify_host_reference(catalog, version)
+        reference = guard.ROOT / 'tools/fixtures'
+        for older, release in [('161', [2,8,153]), ('160', [2,8,149])]:
+            historical = {'host_reference': guard.load(reference / ('cookery-' + older + '-reference.json'))}
+            with self.subTest(reference=older):
+                verify_host_reference(historical, release)
+                with self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
+                    verify_host_reference(historical, version)
+        for field in ['file_id', 'archive_sha256', 'guide_sha256']:
+            changed = copy.deepcopy(catalog)
+            changed['host_reference'][field] = 'unreviewed'
+            with self.subTest(field=field), self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
+                verify_host_reference(changed, version)
+
+    def test_guide_host_guard_imports_without_gameplay_image_dependencies(self):
+        # The Windows export job has only Python's standard library. Importing
+        # this data guard must not load the historical Pillow gameplay suite.
+        code = """import sys
+sys.path[:0] = ['tools', 'development/gameplay_core']
+from verify_a2828 import verify_host_reference
+import bridge_project as guard
+verify_host_reference(guard.load(guard.ROOT / 'projects/grilling/guide/catalog.a3.json'),
+                      guard.load(guard.ROOT / 'baseline.json')['version'])
+assert 'PIL' not in sys.modules and 'verify_a2827' not in sys.modules
+"""
+        subprocess.run([sys.executable, '-S', '-B', '-c', code], cwd=guard.ROOT,
+                       check=True, capture_output=True, text=True)
 
     def test_workflow_propagates_native_failures(self):
         # A later successful command must not mask a failed export/baseline guard

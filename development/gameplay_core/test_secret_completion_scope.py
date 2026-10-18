@@ -53,5 +53,10 @@ class SecretCompletionScope(unittest.TestCase):
         assert_public_bytes(self, ROOT / RUNTIME / 'behavior_pack/scripts/secret_held_runtime.js')
 
 
+    def test_live_completion_boundary_rejects_unreviewed_main(self):
+        path = ROOT / RUNTIME / 'behavior_pack/scripts/main.js'
+        with self.assertRaises(ValueError):
+            historical_bytes(path, path.read_bytes() + b'\n// unrelated mutation\n')
+
 if __name__ == '__main__':
     unittest.main()

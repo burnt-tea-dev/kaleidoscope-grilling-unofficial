@@ -1,0 +1,42 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.kg_oil_brush": {
+      "arrays": {
+        "geometries": {
+          "Array.models": [
+            "Geometry.pot_no_oil",
+            "Geometry.pot_has_oil",
+            "Geometry.oil_pot_canola",
+            "Geometry.oil_pot_secret_chili",
+            "Geometry.oil_pot_premium_chili",
+            "Geometry.canola_oil_brush",
+            "Geometry.secret_chili_oil_brush",
+            "Geometry.premium_chili_oil_brush"
+          ]
+        },
+        "textures": {
+          "Array.models": [
+            "Texture.pot_no_oil",
+            "Texture.pot_has_oil",
+            "Texture.oil_pot_canola",
+            "Texture.oil_pot_secret_chili",
+            "Texture.oil_pot_premium_chili",
+            "Texture.canola_oil_brush",
+            "Texture.secret_chili_oil_brush",
+            "Texture.premium_chili_oil_brush"
+          ]
+        }
+      },
+      "geometry": "Array.models[v.kg_oil_brush_model]",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Array.models[v.kg_oil_brush_model]"
+      ]
+    }
+  }
+}

@@ -1,3 +1,14 @@
+# G153 composed crop, rack, guide and oil-brush repair candidate
+
+- Retain immutable remote G151/G152 skewer, ingredient and board-guide repairs; relocate oil owner markers to avoid extended-secret collisions.
+- Align visible rack tools with their actual selection plane while preserving native stacks and metadata.
+- Restore Java crop planes, onion cross and canola height; bound all crop UVs without replacing stage textures.
+- Clarify acquisition and processing in all three guide languages; guide 0.3.64 uses a fresh matched transfer revision.
+- Restore oil-specific brush visuals with source-derived transforms, shared packet phase and bounded cancellation recovery; inventory is never swapped for animation.
+- Apply the reviewed pepper-harvest debit/drop acknowledgement repair; preserve previous release identities and exact historical witnesses.
+- Seven extension powder recipes require the applied Cookery millstone host repair in the complete assembled family. Grilling alone does not fix the author host's insertion gates.
+- Source/editor evidence is bounded; full Java parity, current Minecraft client acceptance, canonical CI, publication and LIVE deployment are not implied.
+
 # G149 pending offhand NONE-route candidate
 
 - Remove the mirrored FP pending shake only from nine offhand attachables; retain the existing static hold and separate sprinkle precedence.

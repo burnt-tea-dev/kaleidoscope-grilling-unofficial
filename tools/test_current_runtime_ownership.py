@@ -6,21 +6,57 @@ import current_runtime_ownership as owner
 class RuntimeOwnership(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
-  cls.actual=owner.runtime_files();cls.doc=owner.manifest()
+  cls.current_actual=owner.runtime_files();cls.doc=owner.manifest()
+  cls.actual=cls.current_actual
+  cls.has_g155=json.loads(cls.actual[owner.PREFIXES[0]+'/manifest.json'])['header']['version']==[2,8,155]
+  if cls.has_g155:
+   from g155_plate_source import predecessor_runtime
+   cls.actual=predecessor_runtime(cls.actual)
+  if json.loads(cls.actual[owner.PREFIXES[0]+'/manifest.json'])['header']['version']==[2,8,154]:
+   from g154_host_source import predecessor_runtime
+   cls.actual=predecessor_runtime(cls.actual)
   from guide_recipe_source import predecessor_runtime as guide_predecessor
-  cls.g151=guide_predecessor(cls.actual)
+  from g153_repair_source import predecessor_runtime as repair_predecessor
+  cls.g152=repair_predecessor(cls.actual)
+  cls.g151=guide_predecessor(cls.g152)
   from skewer_content_source import predecessor_runtime as skewer_predecessor
   cls.g150=skewer_predecessor(cls.g151)
   from stable_host_source import predecessor_runtime
   cls.g149=predecessor_runtime(cls.g150)
  def test_reviewed_candidate_and_independent_source_validators(self):
-  self.assertEqual(owner.verify_current_runtime(),{'baseline_files':4496,'current_files':4531,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6,'skewer_content_layer_changes':66,'guide_recipe_layer_changes':6})
+  expected={'baseline_files':4496,'current_files':4552,'owned_changes':19,'owner_property_layer_changes':70,'seasoning_tp_layer_changes':68,'pending_offhand_layer_changes':11,'stable_host_layer_changes':6,'skewer_content_layer_changes':66,'guide_recipe_layer_changes':6,'g153_repair_layer_changes':38}
+  if self.current_actual is not self.actual:expected.update(current_files=4553,g154_host_layer_changes=7)
+  if self.has_g155:expected['g155_plate_layer_changes']=6
+  self.assertEqual(owner.verify_current_runtime(),expected)
+ def test_repair_layer_rejects_mutated_postimages_and_recovers_exact_g152(self):
+  import g153_repair_source as repair
+  self.assertEqual(repair.predecessor_runtime(self.actual),self.g152)
+  self.assertEqual(repair.preceding_files(),self.g152)
+  for path in repair.RUNTIME_PATHS:
+   files=dict(self.actual);files[path]+=b'\n'
+   with self.subTest(path=path),self.assertRaises(ValueError):repair.predecessor_runtime(files)
+   if repair.OPERATIONS[path]=='modify':self.assertEqual(repair.reference_bytes(path,self.actual[path]),self.g152[path])
+   else:
+    self.assertNotIn(path,self.g152)
+    with self.assertRaises(ValueError):repair.reference_bytes(path,self.actual[path])
+  for path in repair.PATHS:
+   with self.subTest(path=path),self.assertRaises(ValueError):repair.reference_bytes(path,(repair.ROOT/path).read_bytes()+b'\n')
+  for operation in ('add','delete','revert'):
+   files=dict(self.actual);path=next(path for path in repair.RUNTIME_PATHS if repair.OPERATIONS[path]=='modify')
+   if operation=='add':files[owner.PREFIXES[0]+'/unknown.json']=b'{}'
+   elif operation=='delete':del files[path]
+   else:files[path]=self.g152[path]
+   with self.subTest(operation=operation),self.assertRaises(ValueError):repair.predecessor_runtime(files)
+  forged=copy.deepcopy(repair.ledger());path=next(iter(repair.RUNTIME_PATHS))
+  forged['changes'][path]['after_sha256']=owner.sha(self.actual[path]+b'\n')
+  with self.assertRaises(ValueError):repair.ledger((json.dumps(forged,indent=2)+'\n').encode())
  def test_guide_layer_rejects_reverted_supplied_bytes_and_unrelated_runtime_changes(self):
   import guide_recipe_source as guide
   self.assertEqual(self.g151,{p:b for p,b in guide.preceding_files().items() if p.startswith(owner.PREFIXES)})
   self.assertEqual(len(guide.PATHS),7);self.assertEqual(len(guide.RUNTIME_PATHS),6)
   for path in guide.PATHS:
-   current=(owner.ROOT/path).read_bytes();before=guide.preceding_files()[path]
+   from g153_repair_source import reference_bytes as repair_reference
+   current=repair_reference(path,(owner.ROOT/path).read_bytes());before=guide.preceding_files()[path]
    with self.subTest(path=path):
     self.assertEqual(guide.reference_bytes(path,current),before)
     for invalid in (current+b'\n',before):
@@ -34,7 +70,7 @@ class RuntimeOwnership(unittest.TestCase):
     with patch.object(Path,'read_bytes',no_fallback):
      self.assertEqual(guide.reference_bytes(path,current),before)
   for operation in ('mutate','add','delete','revert','double_inverse'):
-   files=dict(self.actual);path=guide.BP+'/scripts/main.js'
+   files=dict(self.g152);path=guide.BP+'/scripts/main.js'
    if operation=='mutate':files[path]+=b'\n'
    elif operation=='add':files[guide.BP+'/unknown.json']=b'{}'
    elif operation=='delete':del files[path]
@@ -61,11 +97,13 @@ class RuntimeOwnership(unittest.TestCase):
   import skewer_content_source as skewer
   import bottle_clear_guide_source_witness as bottle
   from build_grilling_guide import build_payload
-  current=json.loads((owner.ROOT/guide.GUIDE).read_bytes())
-  before=json.loads(guide.reference_bytes(guide.GUIDE))
+  from g153_repair_source import reference_bytes as repair_reference
+  guide_bytes=repair_reference(guide.GUIDE,(owner.ROOT/guide.GUIDE).read_bytes())
+  current=json.loads(guide_bytes)
+  before=json.loads(guide.reference_bytes(guide.GUIDE,guide_bytes))
   self.assertEqual((before['version'],current['version']),('0.3.62','0.3.63'))
   payload=guide.BP+'/scripts/guide/payload.js'
-  for source,expected in ((before,guide.preceding_files()[payload]),(current,self.actual[payload])):
+  for source,expected in ((before,guide.preceding_files()[payload]),(current,self.g152[payload])):
    actual=('export const GUIDE_PAYLOAD='+json.dumps(build_payload(source),ensure_ascii=False,separators=(',',':'))+';\n').encode()
    self.assertEqual(actual,expected)
   for path in bottle.PATHS:
@@ -122,7 +160,7 @@ class RuntimeOwnership(unittest.TestCase):
   with self.assertRaises(TypeError):skewer.OWNERS[path]='arbitrary_module'
  def test_skewer_content_main_generation_roundtrip_preserves_supplied_source_and_rejects_drift(self):
   import skewer_content_source as skewer
-  old=self.g150[skewer.MAIN].decode();current=self.actual[skewer.MAIN].decode()
+  old=self.g150[skewer.MAIN].decode();current=self.g151[skewer.MAIN].decode()
   self.assertEqual(skewer.generator_main_source(current),old)
   self.assertEqual(skewer.reapply_main(old),current)
   read=Path.read_bytes

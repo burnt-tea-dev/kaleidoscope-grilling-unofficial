@@ -28,7 +28,9 @@ def literal_refs(root=ROOT):
   for path in (Path(root)/folder).rglob('*.py'):
    if path.name in ('historical_source_refs.py','test_historical_source_refs.py'):continue
    text=path.read_text(encoding='utf-8')
-   refs.update(re.findall(r"\b[A-Z_]*BASE[A-Z_]*\s*=\s*['\"]([0-9a-f]{7,40})['\"]",text))
+   # Exact predecessor commits are also Git inputs. Do not mistake adjacent
+   # PREVIOUS_TREE or serialized SHA256 fields for fetchable commit objects.
+   refs.update(re.findall(r"\b(?:[A-Z_]*BASE[A-Z_]*|PREVIOUS)\s*=\s*['\"]([0-9a-f]{7,40})['\"]",text))
    refs.update(re.findall(r"['\"]([0-9a-f]{7,40}):",text))
  return refs
 

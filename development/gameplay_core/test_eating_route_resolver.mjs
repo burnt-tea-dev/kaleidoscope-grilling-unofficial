@@ -10,7 +10,6 @@ import * as raw from '../../projects/grilling/gameplay_core/behavior_pack/script
 import * as reviewed from '../../projects/grilling/gameplay_core/behavior_pack/scripts/review_three_projection.js';
 import {eatingNativeTicks} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js';
 import {PROFILE_BY_ITEM} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_data_lookup.js';
-import {VANILLA_FOOD_NUTRITION} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/vanilla_food_nutrition.js';
 const root=new URL('../../',import.meta.url), base='2e05439ced5e20810547d3e239c1c7036a5a65fc';
 const main='projects/grilling/gameplay_core/behavior_pack/scripts/main.js';
 const before=execFileSync('git',['show',base+':'+main],{cwd:root,encoding:'utf8'});
@@ -49,26 +48,35 @@ test('every observable getter/helper/property failure point retains order and ca
 });
 
 test('actual subscriber before/after preserves 212 baseline routes and occupied/invalid-duration lifecycle',()=>{
- const harnessPath='development/gameplay_core/test_eating_native_completion.mjs';
- const harness=fs.readFileSync(new URL(harnessPath,root),'utf8').split("test('inclusive native boundary")[0];
- // Pair the historical subscriber with its own source-era API double. The
- // current harness binds production ingredient readers added after this base.
- const oldHarness=execFileSync('git',['show',base+':'+harnessPath],{cwd:root,encoding:'utf8'}).split("test('inclusive native boundary")[0];
- const secretRows=['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id,...VANILLA_FOOD_NUTRITION[id],edible:true,tags:[],native:{version:1,id}}));
- const append=`const rows=${JSON.stringify(baselineRows)},secretRows=${JSON.stringify(secretRows)}; const out=[];
+ const harness=fs.readFileSync(new URL('development/gameplay_core/test_eating_native_completion.mjs',root),'utf8').split("test('inclusive native boundary")[0];
+ const historicalHarness=execFileSync('git',['show',base+':development/gameplay_core/test_eating_native_completion.mjs'],{cwd:root,encoding:'utf8'}).split("test('inclusive native boundary")[0];
+ const append=`const rows=${JSON.stringify(baselineRows)}; const out=[];
+ const validSecretRows=['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id}));
  for(const row of rows)for(const helperEmpty of [true,false])for(const duration of [0,row.duration]){
- // These are positive route cases; an empty secret skewer cannot start use.
- const ingredientRows=canonicalFoodId(row.id)==='kaleidoscope_grilling:secret_skewer'?secretRows:undefined;
- const f=fixture({mealId:row.id,hand:row.hand,profile:row.profile,duration,helperEmpty,ingredientRows});
+ const f=fixture({mealId:row.id,hand:row.hand,profile:row.profile,duration,helperEmpty,ingredientRows:canonicalFoodId(row.id)==='kaleidoscope_grilling:secret_skewer'?validSecretRows:undefined});
  f.startUse();if(helperEmpty && duration>0)assert.deepEqual(JSON.parse(JSON.stringify(f.animations.map(([name,options])=>({name,options})))),row.animations);const started={animations:f.animations,properties:[...f.properties],counts:{...f.counts}};
  f.stop({tick:101});f.flush();out.push({id:row.id,hand:row.hand,helperEmpty,duration,started,ended:{properties:[...f.properties],counts:f.counts,active:f.ctx.ACTIVE_EATS.size}});
  }console.log(JSON.stringify(out));`;
- function execute(source,apiHarness){
-  const code=apiHarness.replace(/const source=fs.readFileSync\([^\n]+/, 'const source='+JSON.stringify(source)+';')+append;
+ function execute(source,selectedHarness){
+  const code=selectedHarness.replace(/const source=fs.readFileSync\([^\n]+/, 'const source='+JSON.stringify(source)+';')+append;
   return JSON.parse(execFileSync('node',['--input-type=module'],{cwd:new URL('development/gameplay_core/',root),encoding:'utf8',input:code,maxBuffer:16e6}));
  }
- assert.deepEqual(execute(after,harness),execute(before,oldHarness));
+ assert.deepEqual(execute(after,harness),execute(before,historicalHarness));
  console.log('Actual subscriber lifecycle cases:',baselineRows.length*4);
+});
+
+test('actual subscriber rejects invalid secret metadata while valid secret routes retain baseline coverage',()=>{
+ const harness=fs.readFileSync(new URL('development/gameplay_core/test_eating_native_completion.mjs',root),'utf8').split("test('inclusive native boundary")[0];
+ const append=`const valid=['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id}));let rejected=0;
+ for(const mealId of ['kaleidoscope_grilling:secret_skewer','kaleidoscope_grilling:secret_skewer_java_three_alt','kaleidoscope_grilling:secret_skewer_native_plain'])for(const hand of ['main','off']){
+ const good=fixture({mealId,hand,duration:100,helperEmpty:true,ingredientRows:valid});assert.ok(good.startUse());assert.equal(good.ctx.ACTIVE_EATS.size,1);
+ for(const ingredientRows of [undefined,[],valid.slice(0,2),[{id:'fixture:missing'},...valid.slice(1)],[{id:'minecraft:air'},...valid.slice(1)],[{id:'minecraft:apple',nutrition:null},...valid.slice(1)]]){
+ const f=fixture({mealId,hand,duration:100,helperEmpty:true,ingredientRows});const original=JSON.stringify(f.state.stack);
+ assert.equal(f.startUse(),undefined);assert.equal(f.animations.length,0);assert.equal(f.ctx.ACTIVE_EATS.size,0);
+ f.complete({tick:199});f.stop({tick:199});f.flush();assert.equal(f.counts.nativeRewards+f.counts.manualRewards,0);assert.equal(f.counts.manualWrites,0);assert.equal(JSON.stringify(f.state.stack),original);rejected++;
+ }}console.log('Rejected secret subscriber cases:',rejected);`;
+ const output=execFileSync('node',['--input-type=module'],{cwd:new URL('development/gameplay_core/',root),encoding:'utf8',input:harness+append,maxBuffer:16e6});
+ assert.match(output,/Rejected secret subscriber cases: 36/);
 });
 
 test('route ownership, precedence, lazy occupancy, and stop mutations are detected',()=>{
