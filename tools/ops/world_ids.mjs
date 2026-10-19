@@ -138,21 +138,25 @@ export async function census (records, options = {}) {
     if (kind === 'container' && field === 'Items') return 'container'
     return current
   }
-  const walk = async (tag, location, kind, entityType = '', nested = false, depth = 0, carrier = false) => {
+  const walk = async (tag, location, kind, entityType = '', nested = false, depth = 0, carrier = false, inactiveCarrier = false) => {
     if (!tag || typeof tag !== 'object') throw Object.assign(new Error(), { code: 'NBT_TREE_SHAPE' })
     if (depth > 128) throw Object.assign(new Error(), { code: 'NBT_DEPTH_BUDGET' })
     if (tag.type === 'compound') {
       const fields = tag.value
       if (!fields || typeof fields !== 'object' || Array.isArray(fields)) throw Object.assign(new Error(), { code: 'NBT_COMPOUND_SHAPE' })
       if (carrier && target(fields.Name?.value) && fields.Count === undefined) throw Object.assign(new Error(), { code: 'INVENTORY_SCHEMA' })
-      let isStack = false
+      let isStack = false; let emptyCarrier = inactiveCarrier
       if (fields.Name?.type === 'string' && fields.Count !== undefined) {
         const quantity = amount(fields.Count); isStack = true
+        if (!quantity) emptyCarrier = true
+        if (quantity && inactiveCarrier) problem('EMPTY_CARRIER_CONTENTS', location)
         if (target(fields.Name.value)) {
-          if (quantity) count(items, fields.Name.value, location, quantity)
-          else addReference(fields.Name.value, `${location}/empty_stack`)
+          if (quantity && !inactiveCarrier) count(items, fields.Name.value, location, quantity)
+          else addReference(fields.Name.value, `${location}/${inactiveCarrier ? 'empty_carrier_reference' : 'empty_stack'}`)
         }
-        if (quantity) mergeAnalysis(await analyzeStackProperties(tag, properties.metadata), location)
+        // A zero-count carrier has no active inventory. Still validate its own
+        // serialized payload so damaged hidden contents cannot appear absent.
+        mergeAnalysis(await analyzeStackProperties(tag, properties.metadata, inactiveCarrier), location)
       } else if (target(fields.Name?.value)) addReference(fields.Name.value, `${location}/named_reference`)
       if (target(fields.name?.value)) addReference(fields.name.value, `${location}/palette_reference`)
       if (depth && target(fields.identifier?.value)) addReference(fields.identifier.value, `${location}/entity_reference`)
@@ -169,11 +173,11 @@ export async function census (records, options = {}) {
           Array.isArray(child.value?.value) && (child.value.value.length === 0 || child.value.type === 'compound'))
         if (inventoryField && !inventoryShape) throw Object.assign(new Error(), { code: 'INVENTORY_SCHEMA' })
         const next = inventoryLocation(field, kind, location, nested || isStack, entityType)
-        await walk(child, next, kind, entityType, nested || isStack, depth + 1, inventoryField)
+        await walk(child, next, kind, entityType, nested || isStack, depth + 1, inventoryField, emptyCarrier)
       }
     } else if (tag.type === 'list') {
       if (!tag.value || !Array.isArray(tag.value.value)) throw Object.assign(new Error(), { code: 'NBT_LIST_SHAPE' })
-      for (const child of tag.value.value) await walk({ type: tag.value.type, value: child }, location, kind, entityType, nested, depth + 1, carrier)
+      for (const child of tag.value.value) await walk({ type: tag.value.type, value: child }, location, kind, entityType, nested, depth + 1, carrier, inactiveCarrier)
     }
   }
   const entity = async (root, location) => {
@@ -273,7 +277,10 @@ export async function census (records, options = {}) {
             const kind = chunk.tag === 0x31 ? 'container' : 'legacy_entity'; typeCount(kind)
             for (const root of await parseRoots(value, true)) {
               if (chunk.tag === 0x32) { coverage.legacy_entities++; await entity(root, 'legacy_entity') }
-              else await walk(root, 'container_other', 'container')
+              else {
+                if (root.type !== 'compound') throw Object.assign(new Error(), { code: 'BLOCK_ENTITY_ROOT_SCHEMA' })
+                await walk(root, 'container_other', 'container')
+              }
             }
           } else if (chunk.tag === 0x33) {
             typeCount('scheduled_ticks')
