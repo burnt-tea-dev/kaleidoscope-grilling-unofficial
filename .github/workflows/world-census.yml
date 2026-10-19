@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      CENSUS_RUNTIME: ${{ runner.temp }}/grilling-census
+      CENSUS_RUNTIME: /tmp/grilling-census
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -32,7 +32,8 @@ jobs:
           node-version: '22'
           package-manager-cache: false
       - name: Install the exact native build tool
-        run: python3 -m pip install --only-binary=:all: --require-hashes -r tools/ops/build-requirements.txt
+        run: |
+          python3 -m pip install --only-binary=:all: --require-hashes -r tools/ops/build-requirements.txt
       - name: Keep generated dependencies outside the source checkout
         run: |
           mkdir "$CENSUS_RUNTIME"
@@ -44,5 +45,5 @@ jobs:
       - name: Test binary parsing, quantities, properties and immutable input using synthetic databases
         env:
           WORLD_IDS_TESTS: '1'
-          OPS_BASE: ${{ runner.temp }}/grilling-census
+          OPS_BASE: /tmp/grilling-census
         run: python3 tools/guards/test_guards.py WorldIds
