@@ -1,0 +1,363 @@
+{
+  "schema": 1,
+  "task": "T1.5",
+  "name": "LKG-0",
+  "capture_started_at": "2026-10-19T03:52:22.490066+00:00",
+  "capture_completed_at": "2026-10-19T03:52:31.327985+00:00",
+  "independent_copy_verified_at": "2026-10-19T04:04:13.547399+00:00",
+  "archive": {
+    "bytes": 268407404,
+    "sha256": "526813e838f2ddb3549e744f26bf69cacc99d5ebdc31af30bbad3419ca4920de",
+    "format": "GNU tar compressed with zstd"
+  },
+  "source": {
+    "files": 33017,
+    "bytes": 617429499,
+    "status_during_capture": "STOPPED",
+    "new_stop_start_performed": false,
+    "source_content_unchanged": true,
+    "all_enabled_packs_included": true,
+    "leveldb_LOCK_file_present": false,
+    "leveldb_POSIX_record_lock_held": false,
+    "absent_LOCK_not_created": true,
+    "maintenance_lock_excluded_normal_wake": true,
+    "complete_inode_writer_scans_no_writer": true
+  },
+  "restore": {
+    "all_file_names_content_size_owner_mode_match": true,
+    "restored_files": 33017,
+    "level_dat_exists": true,
+    "database_files_before": 80,
+    "database_files_after": 80,
+    "whole_second_mtime_match": true,
+    "nanosecond_mtime_preserved": false,
+    "nanosecond_metadata_retained_in_private_manifest": true
+  },
+  "independent_copy": {
+    "provider": "Google Drive",
+    "owner_only": true,
+    "public_sharing": false,
+    "archive_parts": 4,
+    "every_part_download_sha256_verified": true,
+    "whole_archive_download_sha256_verified": true,
+    "restore_sidecars_download_verified": 7,
+    "backup_index_download_sha256_verified": true,
+    "backup_index_sha256": "4d5651546cd0462cf3ead2f54d8a33fbb829c6c80559e23eb44258fa2dcff5b3"
+  },
+  "reviewed_family_receipt_sha256": "72903f4f1be4f2723d4b33a735e45e4616c49e03a4dbc997dcd2d0627818079d",
+  "pack_stacks": {
+    "behavior": [
+      {
+        "order": 0,
+        "uuid": "5754f5c4-4086-5fa8-9126-fad18bbdfb59",
+        "version": "1.0.59",
+        "sha256_tree": "f3915d0574edf58a38b9752c881c63599b4a96b98deb38bd83187b3ca40ecb64"
+      },
+      {
+        "order": 1,
+        "uuid": "355ffdfc-50e6-5a33-a126-4d78ab955b2b",
+        "version": "0.1.154",
+        "sha256_tree": "1eb92a34c3a77ad5d85681dfae7f206d740fc999860e7f6f6fda741211f9d7e8"
+      },
+      {
+        "order": 2,
+        "uuid": "f54f37f9-485a-55bf-8f89-6558aca988c5",
+        "version": "0.6.177",
+        "sha256_tree": "8091d2af83a559e4061506ffac2417ffd70e44c52726ca1b6f7453bf862c9bf9"
+      },
+      {
+        "order": 3,
+        "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+        "version": "2.8.155",
+        "sha256_tree": "b11352d86f44926c81c28dff610c64258986e21eed7c2dea34fcf12b9930eb45"
+      },
+      {
+        "order": 4,
+        "uuid": "4fd46237-7fb4-4340-abe1-cec07ad033db",
+        "version": "1.1.0",
+        "sha256_tree": "98ee0df47de74de0223444b6b2e2a692155638743f93f23d2c726ee7826ad5a6"
+      },
+      {
+        "order": 5,
+        "uuid": "aa73502b-f806-4c11-8ef0-3f139bfc604a",
+        "version": "1.0.10658",
+        "sha256_tree": "99547b3ba6ffe7f4c3abd007bc27813ff98ef03dbe663a4f530cada10cec26b6"
+      },
+      {
+        "order": 6,
+        "uuid": "9c8422ab-e9b9-49eb-baf5-abdaf585e41d",
+        "version": "1.0.3",
+        "sha256_tree": "0e38bf22578cddff2c9884958bf80000a3995c929b3e731294de5002da8fc45e"
+      },
+      {
+        "order": 7,
+        "uuid": "6f8ef0e5-d29e-48b4-b7a0-9a80194d4dd7",
+        "version": "1.0.3",
+        "sha256_tree": "4c458a6c75ff5c87cca9fed5320ae580778d69882b9bd595881c979a82471afb"
+      },
+      {
+        "order": 8,
+        "uuid": "dd3c6676-43dd-46b7-9d48-03bfabf7284e",
+        "version": "1.0.1",
+        "sha256_tree": "e4d8978b1a30d6347a4a11bf9c3837b6bc0803db3334a5b318cc648d0684fe5b"
+      },
+      {
+        "order": 9,
+        "uuid": "b6552bad-e030-4083-9225-e47b08cfd860",
+        "version": "1.0.1",
+        "sha256_tree": "83f84cd6c2953c85141efd0c0f4ae4cb6b62e7dc4d00174f58c0f778ad2e82ca"
+      },
+      {
+        "order": 10,
+        "uuid": "d6636182-2ca5-4ec4-9814-40dc1191c026",
+        "version": "1.0.1",
+        "sha256_tree": "fc230eb3111027245213cef277ea8fa031965bab536ab5149e6beff96ebf3b0d"
+      },
+      {
+        "order": 11,
+        "uuid": "439d9798-118a-43ad-8a91-aab3161d9cb5",
+        "version": "1.6.2",
+        "sha256_tree": "a768b4234e0495963766a5434ade91fa63fea2b62368c5e4b00713e022b177c2"
+      },
+      {
+        "order": 12,
+        "uuid": "f65e943a-2128-4da8-9196-e9bf5b86739d",
+        "version": "1.6.10048",
+        "sha256_tree": "b124f06547e5f000d945c95766f09a0ad8b4f3302d7125a5a40af22b214ae43b"
+      },
+      {
+        "order": 13,
+        "uuid": "5f808eda-2eed-47b9-94ca-8486af1c5c14",
+        "version": "1.8.4",
+        "sha256_tree": "fd4ce397e04a50b8491d4472587612e583ed781c206137b5539318fa1d130c35"
+      },
+      {
+        "order": 14,
+        "uuid": "d9e8bf4f-9cda-4423-bb76-5da24c2533d0",
+        "version": "1.1.9",
+        "sha256_tree": "43bdaa9e874c9e13571c822c12c7c11d3d1ef10600a4fd8b9232706cd379a91e"
+      },
+      {
+        "order": 15,
+        "uuid": "d0131071-9ec1-edcd-6871-857c700703d8",
+        "version": "5.0.6",
+        "sha256_tree": "4877af47a0dc0f94904af8f05eae064d4fe07cb0ab50c4de8189aac871157358"
+      },
+      {
+        "order": 16,
+        "uuid": "f37b6a63-2242-418b-8b18-f661948120eb",
+        "version": "1.0.4",
+        "sha256_tree": "8db6c5ad62e5452b01b1d2a4f5bf0ff6ae1e9a466fade7bb2cf171c2bda9c8cd"
+      },
+      {
+        "order": 17,
+        "uuid": "f3b2c1d4-7e8a-4c9b-8f2e-3d1a5b6c7e8f",
+        "version": "1.0.5",
+        "sha256_tree": "46ca1d55802687476443b9413d5013f2eb43dbd97c7a7a43bce60f73b0f9d8dc"
+      },
+      {
+        "order": 18,
+        "uuid": "1e47fa97-55db-492e-b732-350e338b4fe5",
+        "version": "1.0.10037",
+        "sha256_tree": "a5367f8b515b39a4c447682c57069bd72914e9c89e2f245a9524d51b0c430a47"
+      },
+      {
+        "order": 19,
+        "uuid": "2d4fb75b-c854-460b-a2f5-b4639e11eaa6",
+        "version": "1.6.10034",
+        "sha256_tree": "b2820fa3b77574bb8a0b0af9225fc602b42f752bd5e40e77342d976efb4904de"
+      },
+      {
+        "order": 20,
+        "uuid": "fa0c2c98-dd46-4822-b87d-fa5bacdecb5c",
+        "version": "1.0.5",
+        "sha256_tree": "08eeabfc90cba4dac4f564e84951873b79a2760d98e1305353023219339d20eb"
+      },
+      {
+        "order": 21,
+        "uuid": "379931a2-7419-40fb-90fb-34288ab4e971",
+        "version": "1.5.13",
+        "sha256_tree": "5481d1c9e8bf10935890cb84bf31fee585c8df548558e8052e6d5c71896cc9a9"
+      },
+      {
+        "order": 22,
+        "uuid": "d9bc53c2-f1d4-437f-8e54-1663b37550d7",
+        "version": "1.0.2",
+        "sha256_tree": "319b1f976992cc500b8e6dbedbc8c66e66d2c23d84520675596a04bf26cca6d5"
+      },
+      {
+        "order": 23,
+        "uuid": "cd107d2a-333f-4347-ab54-6917142be0d7",
+        "version": "2.6.10058",
+        "sha256_tree": "5c3dc0ec187e536310319bcb5c1f61286cd415950a936895017ed6c60d870444"
+      },
+      {
+        "order": 24,
+        "uuid": "7f3a927d-980f-4a45-ac3d-1b476f2d60b1",
+        "version": "2.0.0",
+        "sha256_tree": "d736ee529da6a82559ac3d43da5c8f32e0595bcff62ad725761a3f5974af854b"
+      },
+      {
+        "order": 25,
+        "uuid": "5e121bf2-1d2d-4da4-be15-cffc5f216d94",
+        "version": "1.2.10058",
+        "sha256_tree": "2fe37be6195e9d6668fb6a33eb3131b6d7174aec8230735d9c4dea498db51a83"
+      }
+    ],
+    "resource": [
+      {
+        "order": 0,
+        "uuid": "70f0e591-9b99-51b8-b319-fc8b2315315d",
+        "version": "1.0.59",
+        "sha256_tree": "1807c9a571282a774db2a4c2dc9309a5e4de024bdaaf4caff8552bfb4dd0adbc"
+      },
+      {
+        "order": 1,
+        "uuid": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+        "version": "0.1.154",
+        "sha256_tree": "b994b65fc3a90de048c3b7833ef0de21b2a2aa884fdc9512718bd1f0fbbe901e"
+      },
+      {
+        "order": 2,
+        "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+        "version": "0.6.177",
+        "sha256_tree": "7fa4b54be17e8c2e146bd1e9943c379bf5f3c1e114a13e43c5b77c41095db6df"
+      },
+      {
+        "order": 3,
+        "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+        "version": "2.8.155",
+        "sha256_tree": "43d54d75d1fc4d59daf40e260d73ab05df8068590aa9102e70de4888c462c990"
+      },
+      {
+        "order": 4,
+        "uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+        "version": "1.1.0",
+        "sha256_tree": "a0b7d19ddb39d0f27c1585f54cc20003a25e8f34c0e01e75ca9ac796451eaa34"
+      },
+      {
+        "order": 5,
+        "uuid": "c170e749-0953-4dff-aef8-39e4934dc802",
+        "version": "1.0.10658",
+        "sha256_tree": "11cc8d22882d24ccf6d1eb5087887b0ca8e70362da5f89e0d2181e28f0d71e97"
+      },
+      {
+        "order": 6,
+        "uuid": "859d9e9f-4834-4ad0-bb4c-35eb8eb44630",
+        "version": "1.0.3",
+        "sha256_tree": "b050747b010c09b6093b3336900a9e298c151af2c599e25a22632e6b881c8d78"
+      },
+      {
+        "order": 7,
+        "uuid": "e993d0f6-1447-4faa-b8c3-9ded60879a1c",
+        "version": "1.0.3",
+        "sha256_tree": "75c7300057ca2ea85a232663bd8659419119a16b7c343e8b8fd7f2916f295c68"
+      },
+      {
+        "order": 8,
+        "uuid": "290da070-9e60-4ec4-89bc-00fd10a8ecb3",
+        "version": "1.0.1",
+        "sha256_tree": "582672290fb52a12ca25353c72ea453fd094b4a77d8804b4b12a1c9da86d5d96"
+      },
+      {
+        "order": 9,
+        "uuid": "40321040-66de-448c-8071-ca694b9ea420",
+        "version": "1.0.1",
+        "sha256_tree": "eadabb5765d6e89c2ee4e181bee14afdf50540acc21e6abb5950623f7820515d"
+      },
+      {
+        "order": 10,
+        "uuid": "f2c4c5f1-7abd-4c36-bb0c-7705a4d93aa5",
+        "version": "1.0.1",
+        "sha256_tree": "e74393acc25929cfa491c5cebbeb1cc8302354f36dfb9b9fd712e194b230b3f7"
+      },
+      {
+        "order": 11,
+        "uuid": "01ba9a7f-877e-46c7-8583-6c0441366b55",
+        "version": "1.6.2",
+        "sha256_tree": "a4a35a5bbc82a71e1ff5b3e092b11520aa17179021099991735cdf1eb02ba575"
+      },
+      {
+        "order": 12,
+        "uuid": "5f80d696-be6b-43e8-bf14-7761d6b576c8",
+        "version": "1.1.10",
+        "sha256_tree": "20504500151abde769bff5f4cbdbb63589dc60b6ca74f8aa144f01093e515297"
+      },
+      {
+        "order": 13,
+        "uuid": "98836a6c-fe16-60f4-87a4-5afb6439bd9f",
+        "version": "5.0.6",
+        "sha256_tree": "0467f15c463e8b901d974cda63a37e3f9319eae42b5b0fcbb41e998785c82830"
+      },
+      {
+        "order": 14,
+        "uuid": "9071b6bc-915d-4d26-8486-05bb8db48762",
+        "version": "1.6.10048",
+        "sha256_tree": "ff2e7f52b8d13050cd14fe34282bdae6b2b03fffa96dbf2f478a16ca917bf275"
+      },
+      {
+        "order": 15,
+        "uuid": "537af6fe-a865-4603-8847-37791b81249d",
+        "version": "1.8.5",
+        "sha256_tree": "367c7686bb7956c9eb7a4326bc6df5fe4c1f0966e80d9701f87e2798fa558608"
+      },
+      {
+        "order": 16,
+        "uuid": "9257e5d2-c65d-45ca-a17b-2c4e2e35763d",
+        "version": "1.0.5",
+        "sha256_tree": "799e5e660626d3c19d9c03c3227d8129dc64cfea2e8c37d31111ff11416476c5"
+      },
+      {
+        "order": 17,
+        "uuid": "e2a7b4d2-5c6a-4e7c-9e8d-1f2b7e4a8c3d",
+        "version": "1.0.6",
+        "sha256_tree": "259a2800f129aefe2f90f8b97c5d47d6783f2f35735cfac2bb25f4200500d2c0"
+      },
+      {
+        "order": 18,
+        "uuid": "a26e36f3-6fa2-4866-97bf-f9c2b9be8bdd",
+        "version": "1.0.10037",
+        "sha256_tree": "b8ce2395e2687e0d880bf41c9498b51ec3981028cdabec6fa3d4d9865dbbf86a"
+      },
+      {
+        "order": 19,
+        "uuid": "1c9c8504-4985-44c8-a019-ad77dd893338",
+        "version": "1.0.5",
+        "sha256_tree": "bab7f6d047ae34bc50f57b055e741fd9b5c267a27ea0a1f8f785e36c90671864"
+      },
+      {
+        "order": 20,
+        "uuid": "ea8da0de-83d7-4ae2-aa43-bbcd4192e0c7",
+        "version": "1.5.13",
+        "sha256_tree": "c20d7e9c2a25050d419d2931712a14aa3149f739bbdc047cbfe075d7f78c8729"
+      },
+      {
+        "order": 21,
+        "uuid": "fdbc2404-8ecc-446d-b346-554d1bb6ba35",
+        "version": "1.0.2",
+        "sha256_tree": "edff8504f9ebc9effb7d0356d520aa72ae7a2b4bcb0a5627af6a23b48de2b218"
+      },
+      {
+        "order": 22,
+        "uuid": "994f73a2-05ec-41ce-876c-d388a526d9f5",
+        "version": "2.6.10058",
+        "sha256_tree": "93886d340a820e847469d131e4a3c4da79cb91a400b522d2807fa82d40ecdc50"
+      },
+      {
+        "order": 23,
+        "uuid": "e1168f1a-83d6-4abc-8f4b-ecb86e0a91dd",
+        "version": "1.2.10058",
+        "sha256_tree": "98bcfc9759c220aff6b748abe26bad4fdfd6c491373d55cea68fc4b6ff1a3550"
+      }
+    ]
+  },
+  "pack_problems": [],
+  "retention": "Permanent LKG-0 baseline; current usable rollback remains separately protected.",
+  "limitations": [
+    "GNU tar preserves whole-second file mtime; nanoseconds remain recorded in the private source manifest.",
+    "Full file restoration was verified offline; staging BDS entry/restart is T1.8, not proven by archive hashes.",
+    "This baseline does not establish human gameplay/rendering acceptance."
+  ],
+  "client": false,
+  "production_ready": false
+}
