@@ -1,0 +1,16 @@
+{
+  "name": "senluo-offline-census-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated low-level Bedrock DB census dependencies; no world wrapper",
+  "dependencies": {
+    "leveldb-zlib": "1.2.0",
+    "prismarine-nbt": "2.8.0"
+  },
+  "scripts": {
+    "build:native": "python3 world_ids.py --build-native"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

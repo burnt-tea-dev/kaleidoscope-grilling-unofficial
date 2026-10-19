@@ -1,0 +1,2053 @@
+{
+  "schema": 1,
+  "task": "T1.6",
+  "complete": true,
+  "runtime": {
+    "node": "v22.23.3",
+    "leveldb_zlib": "1.2.0",
+    "prismarine_nbt": "2.8.0"
+  },
+  "coverage": {
+    "records": 485713,
+    "record_types": {
+      "chunk_metadata": 178314,
+      "subchunk": 257540,
+      "container": 6029,
+      "scheduled_ticks": 5997,
+      "opaque_without_target_namespace": 2184,
+      "other_nbt": 292,
+      "world_dynamic_properties": 1,
+      "actor": 6011,
+      "actor_index": 29327,
+      "player": 18
+    },
+    "actor_records": 6011,
+    "legacy_entities": 0,
+    "player_data_records": 8,
+    "player_mapping_records": 10,
+    "subchunks": 257540,
+    "storages": 280007
+  },
+  "items": [
+    {
+      "id": "kaleidoscope_grilling:advanced_rack",
+      "location_type": "container",
+      "quantity": 2,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:beef_chunks",
+      "location_type": "container",
+      "quantity": 127,
+      "stacks": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "container",
+      "quantity": 3,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_powder",
+      "location_type": "container",
+      "quantity": 65,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_seeds",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:chicken_skin",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:chicken_wing",
+      "location_type": "container",
+      "quantity": 160,
+      "stacks": 4
+    },
+    {
+      "id": "kaleidoscope_grilling:dragon_egg_powder",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:empty_seasoning_bottle",
+      "location_type": "container",
+      "quantity": 11,
+      "stacks": 11
+    },
+    {
+      "id": "kaleidoscope_grilling:green_chili_powder",
+      "location_type": "container",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "container",
+      "quantity": 3,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grilled_caterpillar_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grilled_mid_wing_skewer",
+      "location_type": "container",
+      "quantity": 62,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grilled_pork_belly_skewer",
+      "location_type": "container",
+      "quantity": 6,
+      "stacks": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:grilled_potato_slice_skewer",
+      "location_type": "container",
+      "quantity": 80,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia",
+      "location_type": "container",
+      "quantity": 51,
+      "stacks": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:mysterious_skewer",
+      "location_type": "container",
+      "quantity": 3,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_cake",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "container",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_residue",
+      "location_type": "container",
+      "quantity": 32,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:onion",
+      "location_type": "container",
+      "quantity": 33,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_powder",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_sapling",
+      "location_type": "container",
+      "quantity": 2,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_golden_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_lamb_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_mid_wing_skewer_java_three_alt",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_pork_belly_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_potato_slice_skewer",
+      "location_type": "container",
+      "quantity": 64,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+      "location_type": "container",
+      "quantity": 52,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+      "location_type": "player_inventory",
+      "quantity": 3,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:red_chili_powder",
+      "location_type": "container",
+      "quantity": 65,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:roasted_chicken_wing",
+      "location_type": "container",
+      "quantity": 37,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:sichuan_pepper",
+      "location_type": "container",
+      "quantity": 204,
+      "stacks": 5
+    },
+    {
+      "id": "kaleidoscope_grilling:sichuan_pepper",
+      "location_type": "player_inventory",
+      "quantity": 7,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:special_seasoning",
+      "location_type": "container",
+      "quantity": 3,
+      "stacks": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:special_seasoning_r4_v0",
+      "location_type": "player_inventory",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:special_seasoning_r7_v0",
+      "location_type": "container",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:special_seasoning_r8_v3",
+      "location_type": "container",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:squid_tentacle",
+      "location_type": "container",
+      "quantity": 16,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato",
+      "location_type": "container",
+      "quantity": 27,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:unfinished_skewer",
+      "location_type": "container",
+      "quantity": 126,
+      "stacks": 3
+    }
+  ],
+  "entities": [
+    {
+      "id": "kaleidoscope_grilling:inventory_grill_v1",
+      "location_type": "actor",
+      "quantity": 5,
+      "stacks": 5
+    }
+  ],
+  "blocks": [
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "placed_block_layer_0",
+      "quantity": 2,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "quantity": 12,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "quantity": 5,
+      "stacks": 4
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "placed_block_layer_0",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "quantity": 12,
+      "stacks": 4
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "quantity": 1,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "quantity": 12,
+      "stacks": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "location_type": "placed_block_layer_0",
+      "quantity": 752,
+      "stacks": 96
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_log",
+      "location_type": "placed_block_layer_0",
+      "quantity": 330,
+      "stacks": 149
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "quantity": 12,
+      "stacks": 2
+    }
+  ],
+  "palette_entries": [
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "block_palette_layer_0",
+      "quantity": 15,
+      "stacks": 15
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "block_palette_layer_0",
+      "quantity": 4,
+      "stacks": 4
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "block_palette_layer_0",
+      "quantity": 17,
+      "stacks": 17
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "block_palette_layer_0",
+      "quantity": 14,
+      "stacks": 14
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "block_palette_layer_0",
+      "quantity": 6,
+      "stacks": 6
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "block_palette_layer_0",
+      "quantity": 22,
+      "stacks": 22
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "block_palette_layer_0",
+      "quantity": 9,
+      "stacks": 9
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "block_palette_layer_0",
+      "quantity": 12,
+      "stacks": 12
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "location_type": "block_palette_layer_0",
+      "quantity": 99,
+      "stacks": 99
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_log",
+      "location_type": "block_palette_layer_0",
+      "quantity": 151,
+      "stacks": 151
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_sapling",
+      "location_type": "block_palette_layer_0",
+      "quantity": 2,
+      "stacks": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_worldgen_seed",
+      "location_type": "block_palette_layer_0",
+      "quantity": 68,
+      "stacks": 68
+    },
+    {
+      "id": "kaleidoscope_grilling:seasoning_bottle_1",
+      "location_type": "block_palette_layer_0",
+      "quantity": 3,
+      "stacks": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "block_palette_layer_0",
+      "quantity": 18,
+      "stacks": 18
+    }
+  ],
+  "block_states": [
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 0,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 0,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 0,
+        "minecraft:cardinal_direction": "north"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 0,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 0,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 4
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 0,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 0,
+        "minecraft:cardinal_direction": "west"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 0,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 1,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 1,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 2,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 4,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 4,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "west"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:advanced_rack_block",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:seasoning_occupancy": 8,
+        "kaleidoscope_grilling:seasoning_occupancy_high": 0,
+        "kaleidoscope_grilling:spice_level": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:seasoning_occupancy": "int",
+        "kaleidoscope_grilling:seasoning_occupancy_high": "int",
+        "kaleidoscope_grilling:spice_level": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:vat_fluid": "canola",
+        "kaleidoscope_grilling:vat_level": 2
+      },
+      "state_types": {
+        "kaleidoscope_grilling:vat_fluid": "string",
+        "kaleidoscope_grilling:vat_level": "int"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:vat_fluid": "canola",
+        "kaleidoscope_grilling:vat_level": 4
+      },
+      "state_types": {
+        "kaleidoscope_grilling:vat_fluid": "string",
+        "kaleidoscope_grilling:vat_level": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:vat_fluid": "empty",
+        "kaleidoscope_grilling:vat_level": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:vat_fluid": "string",
+        "kaleidoscope_grilling:vat_level": "int"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 2
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 3
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 4
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 5
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 6
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:canola_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 7
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 12,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:direction": "north"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "north"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "west"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "north"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 2,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 1,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 1,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:legged": 1,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 0,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 0,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 2,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 3,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 3,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 4,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 4,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 5,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 5,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 6,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 6,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 7,
+        "kaleidoscope_grilling:red_variant": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 7,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:houttuynia_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 7,
+        "kaleidoscope_grilling:red_variant": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int",
+        "kaleidoscope_grilling:red_variant": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 5,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 0,
+        "kaleidoscope_grilling:press_stage": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 1,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 1,
+        "kaleidoscope_grilling:press_stage": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 2,
+        "kaleidoscope_grilling:press_stage": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 3,
+        "kaleidoscope_grilling:press_stage": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 4,
+        "kaleidoscope_grilling:press_stage": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 4,
+        "kaleidoscope_grilling:press_stage": 1,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 4,
+        "kaleidoscope_grilling:press_stage": 2,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 4,
+        "kaleidoscope_grilling:press_stage": 3,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:cake_count": 4,
+        "kaleidoscope_grilling:press_stage": 4,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:cake_count": "int",
+        "kaleidoscope_grilling:press_stage": "int",
+        "minecraft:cardinal_direction": "string"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 2
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 3
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 4
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 5
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 6
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 7
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 12,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:has_pepper": 0,
+        "kaleidoscope_grilling:persistent": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:has_pepper": "byte",
+        "kaleidoscope_grilling:persistent": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 526,
+      "palette_entries": 50
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:has_pepper": 1,
+        "kaleidoscope_grilling:persistent": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:has_pepper": "byte",
+        "kaleidoscope_grilling:persistent": "byte"
+      },
+      "legacy_val": null,
+      "quantity": 226,
+      "palette_entries": 49
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_log",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "minecraft:block_face": "down"
+      },
+      "state_types": {
+        "minecraft:block_face": "string"
+      },
+      "legacy_val": null,
+      "quantity": 182,
+      "palette_entries": 102
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_log",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "minecraft:block_face": "up"
+      },
+      "state_types": {
+        "minecraft:block_face": "string"
+      },
+      "legacy_val": null,
+      "quantity": 148,
+      "palette_entries": 49
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_sapling",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:stage": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:stage": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_sapling",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:stage": 1
+      },
+      "state_types": {
+        "kaleidoscope_grilling:stage": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_worldgen_seed",
+      "location_type": "placed_block_layer_0",
+      "states": {},
+      "state_types": {},
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 68
+    },
+    {
+      "id": "kaleidoscope_grilling:seasoning_bottle_1",
+      "location_type": "placed_block_layer_0",
+      "states": {},
+      "state_types": {},
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 2
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 3
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 4
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 5
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 6
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 0,
+      "palette_entries": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:sweet_potato_crop",
+      "location_type": "placed_block_layer_0",
+      "states": {
+        "kaleidoscope_grilling:age": 7
+      },
+      "state_types": {
+        "kaleidoscope_grilling:age": "int"
+      },
+      "legacy_val": null,
+      "quantity": 12,
+      "palette_entries": 3
+    }
+  ],
+  "scheduled_tick_states": [
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "states": {
+        "kaleidoscope_grilling:direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:direction": "string"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "north"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "states": {
+        "kaleidoscope_grilling:legged": 0,
+        "kaleidoscope_grilling:lit": 1,
+        "minecraft:cardinal_direction": "south"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "states": {
+        "kaleidoscope_grilling:legged": 1,
+        "kaleidoscope_grilling:lit": 0,
+        "minecraft:cardinal_direction": "east"
+      },
+      "state_types": {
+        "kaleidoscope_grilling:legged": "byte",
+        "kaleidoscope_grilling:lit": "byte",
+        "minecraft:cardinal_direction": "string"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "states": {
+        "kaleidoscope_grilling:has_pepper": 0,
+        "kaleidoscope_grilling:persistent": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:has_pepper": "byte",
+        "kaleidoscope_grilling:persistent": "byte"
+      },
+      "occurrences": 398
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "states": {
+        "kaleidoscope_grilling:has_pepper": 1,
+        "kaleidoscope_grilling:persistent": 0
+      },
+      "state_types": {
+        "kaleidoscope_grilling:has_pepper": "byte",
+        "kaleidoscope_grilling:persistent": "byte"
+      },
+      "occurrences": 143
+    }
+  ],
+  "serialized_items": [],
+  "references": [
+    {
+      "id": "kaleidoscope_grilling:beef_chunks",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 162
+    },
+    {
+      "id": "kaleidoscope_grilling:big_vat",
+      "location_type": "container/palette_reference",
+      "occurrences": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:chicken_wing",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 150
+    },
+    {
+      "id": "kaleidoscope_grilling:green_chili_powder",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 60
+    },
+    {
+      "id": "kaleidoscope_grilling:green_chili_powder",
+      "location_type": "item_property_reference",
+      "occurrences": 3
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "container/palette_reference",
+      "occurrences": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "scheduled_tick",
+      "occurrences": 5
+    },
+    {
+      "id": "kaleidoscope_grilling:grill",
+      "location_type": "storage_ledger_reference",
+      "occurrences": 5
+    },
+    {
+      "id": "kaleidoscope_grilling:grill_legs",
+      "location_type": "scheduled_tick",
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:oil_press",
+      "location_type": "container/palette_reference",
+      "occurrences": 1
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_powder",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 40
+    },
+    {
+      "id": "kaleidoscope_grilling:onion_powder",
+      "location_type": "item_property_reference",
+      "occurrences": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_leaves",
+      "location_type": "scheduled_tick",
+      "occurrences": 541
+    },
+    {
+      "id": "kaleidoscope_grilling:pepper_sapling",
+      "location_type": "container/palette_reference",
+      "occurrences": 2
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 312
+    },
+    {
+      "id": "kaleidoscope_grilling:roasted_chicken_wing",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 72
+    },
+    {
+      "id": "kaleidoscope_grilling:sichuan_pepper",
+      "location_type": "immutable_item_metadata_reference",
+      "occurrences": 60
+    },
+    {
+      "id": "kaleidoscope_grilling:sichuan_pepper",
+      "location_type": "item_property_reference",
+      "occurrences": 30
+    }
+  ],
+  "dynamic_property_prefix_counts": {
+    "kaleidoscope_grilling:secret_cooked_ingredients": 0,
+    "kaleidoscope_grilling:plant_transaction_fault_": 0,
+    "kaleidoscope_grilling:integration_registry_v1": 0,
+    "kaleidoscope_grilling:integration_operation:": 0,
+    "kaleidoscope_grilling:oil_transaction_fault_": 0,
+    "kaleidoscope_grilling:player_touched_nether:": 38,
+    "kaleidoscope_grilling:failed_skewer_source": 0,
+    "kaleidoscope_grilling:player_item_receipt_": 0,
+    "kaleidoscope_grilling:a26_press_instance_": 0,
+    "kaleidoscope_grilling:dragon_native_level": 0,
+    "kaleidoscope_grilling:oil_transfer_fault:": 0,
+    "kaleidoscope_grilling:special_seasoning_r": 0,
+    "kaleidoscope_grilling:wedding_candy_state": 0,
+    "kaleidoscope_grilling:a2736_oilpot_type_": 0,
+    "kaleidoscope_grilling:pepper_sting_until": 0,
+    "kaleidoscope_grilling:skewer_ingredients": 0,
+    "kaleidoscope_grilling:a26_vat_instance_": 0,
+    "kaleidoscope_grilling:eat_elapsed_ticks": 0,
+    "kaleidoscope_grilling:heavy_metal_claim": 0,
+    "kaleidoscope_grilling:seasoning_bottle_": 0,
+    "kaleidoscope_grilling:eat_native_ticks": 0,
+    "kaleidoscope_grilling:server_config_v1": 0,
+    "kaleidoscope_grilling:storage_owner_v1": 0,
+    "kaleidoscope_grilling:a23_oil_source_": 0,
+    "kaleidoscope_grilling:dragon_health_": 0,
+    "kaleidoscope_grilling:eat_projection": 0,
+    "kaleidoscope_grilling:model_variants": 0,
+    "kaleidoscope_grilling:secret_creator": 0,
+    "senluo:cuisine_heat_and_seasoning_v1": 1,
+    "kaleidoscope_grilling:plate_skewers": 0,
+    "kaleidoscope_grilling:rack_binding_": 0,
+    "kaleidoscope_grilling:rack_filters_": 0,
+    "kaleidoscope_grilling:recipe_record": 0,
+    "kaleidoscope_grilling:secret_cooked": 0,
+    "kaleidoscope_grilling:rack_payload": 0,
+    "kaleidoscope_grilling:a25_recipe_": 0,
+    "kaleidoscope_grilling:dragon_pool": 0,
+    "kaleidoscope_grilling:eat_profile": 0,
+    "kaleidoscope_grilling:storage_v1/": 5,
+    "kaleidoscope_grilling:vat_buckets": 0,
+    "kaleidoscope_grilling:a25_plate_": 0,
+    "kaleidoscope_grilling:a26_press_": 1,
+    "kaleidoscope_grilling:gui_color_": 0,
+    "kaleidoscope_grilling:seasonings": 0,
+    "kaleidoscope_grilling:hot_until": 0,
+    "kaleidoscope_grilling:a26_vat_": 2,
+    "kaleidoscope_grilling:cuisine_": 0,
+    "kaleidoscope_grilling:eat_hand": 0,
+    "kaleidoscope_grilling:oil_type": 0,
+    "kaleidoscope_grilling:seasoned": 0,
+    "kaleidoscope_grilling:vat_type": 0,
+    "kaleidoscope_grilling:bottle_": 0,
+    "kaleidoscope_grilling:secret_": 0,
+    "kaleidoscope_grilling:variant": 0,
+    "kaleidoscope_grilling:a21_fx": 0,
+    "kaleidoscope_grilling:adv_": 0,
+    "kaleidoscope_grilling:uses": 0,
+    "senluo:java_pot_operation:": 2,
+    "kaleidoscope_grilling:sb_": 0,
+    "senluo:oil_station_fault:": 0,
+    "kaleidoscope_grilling:g_": 5,
+    "senluo:cuisine_metadata:": 5,
+    "senluo:cuisine_recovery:": 0,
+    "senluo:oil_api_recovery:": 1,
+    "senluo:cuisine_carrier:": 1,
+    "senluo:oil_api_revision": 1,
+    "kaleidoscope_grilling:": 2,
+    "senluo:cuisine_output:": 23,
+    "senluo:oil_api_placed:": 1,
+    "senluo:oil_hand_fault:": 1,
+    "senluo:grilling_item_": 216,
+    "kc_oil_count": 0,
+    "kc_oilpot:": 1
+  },
+  "station_keys": {
+    "kc_oilpot:": {
+      "present": 1,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "senluo:cuisine_metadata:": {
+      "present": 2,
+      "air": 1,
+      "wrong_block": 2,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "senluo:oil_api_placed:": {
+      "present": 1,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "senluo:oil_api_recovery:": {
+      "present": 1,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "kaleidoscope_grilling:a26_press_": {
+      "present": 1,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "kaleidoscope_grilling:a26_vat_": {
+      "present": 2,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "kaleidoscope_grilling:g_": {
+      "present": 5,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    },
+    "kaleidoscope_grilling:storage_v1/": {
+      "present": 5,
+      "air": 0,
+      "wrong_block": 0,
+      "chunk_unavailable": 0,
+      "unavailable": 0
+    }
+  },
+  "station_orphan_keys": 3,
+  "station_unavailable_keys": 0,
+  "actor_index": {
+    "indexed_ids": 5032,
+    "missing_actor_records": 0,
+    "unindexed_actor_records": 979,
+    "duplicate_index_references": 7
+  },
+  "actor_identity": {
+    "unique_identities": 6009,
+    "duplicate_groups": 2,
+    "duplicate_records": 2,
+    "target_ambiguous_groups": 0,
+    "unrelated_duplicate_groups": 2
+  },
+  "errors": [],
+  "warnings": [
+    {
+      "code": "NONCANONICAL_ACTOR_KEY_SCANNED",
+      "records": 2
+    },
+    {
+      "code": "DUPLICATE_NON_TARGET_ENTITY_IDENTITY",
+      "records": 2
+    },
+    {
+      "code": "ACTOR_INDEX_DUPLICATES_NOT_RECOUNTED",
+      "records": 1
+    }
+  ],
+  "count_semantics": {
+    "items": "Stack quantities at each persisted location; nested contents counted separately.",
+    "blocks": "Actual palette index usage across every storage layer; unused palette entries are separate references.",
+    "serialized_items": "Owned serialized contents; distinct from physical NBT stacks and metadata/journal references.",
+    "references": "Encoded metadata, saved blueprints and recovery copies; not extra physical inventory.",
+    "actor_index": "Every actor record scanned once; digp is an index, including duplicates and absent targets."
+  },
+  "client": false,
+  "production_ready": false,
+  "storage": {
+    "input_database_opened_by_engine": false,
+    "verified_temporary_clone": true,
+    "temporary_engine_files_changed": true,
+    "binding_physical_read_only": false,
+    "repair_requested": false,
+    "iterator_errors_propagated": true,
+    "all_arbitrary_bit_corruption_detection_proven": false
+  },
+  "input_unchanged": true,
+  "source": {
+    "snapshot_archive_sha256": "526813e838f2ddb3549e744f26bf69cacc99d5ebdc31af30bbad3419ca4920de",
+    "source_file_manifest_sha256": "9331ad5ddd3efe8f8f817567f354627c096589f227f87f0c657ee70c6d6646ad",
+    "key_lock_sha256": "89a01f2408abe6d5d280dfa49a38507f79e0430a34486e65e3080df253aff3bf",
+    "db_content_sha256": "3d9cdfe4e1ca38dab0682cef011de87c11c5133e027065625848f8b076b51915",
+    "db_files": 80,
+    "db_bytes": 143188523
+  },
+  "tool_sources_sha256": {
+    "world_ids.py": "e8f5ad9e9e28fb3a15dfa1291d4adea4794ae7a4ceb0560b4f02c5cdbabd973a",
+    "world_ids.mjs": "b95d42499b5ac5bedc433a592273c03141864eabec4dfe9e93e706424533dfdc",
+    "world_nbt.mjs": "e82d06a2a0574a372380e713212319c726e4e99899165785d6c5c759a31a9559",
+    "world_properties.mjs": "951babd74b18e2d1e9b1c167ac6509c45d9041ffd58ce7f3ecfab474e1c7498a",
+    "package.json": "4943f98a8525c809067a0a6a039cb8ad9910e28642cea882ae62c4ee8449cf61",
+    "package-lock.json": "c7e6d479ca84c12df6fc795a4d1463a7231cde111d139fc579f3d5bcc3b27076",
+    "build-requirements.txt": "6ddee298ea06a5c2533bc22cc7713ea28affb3b0440b1b277eaaa49fca8e8840"
+  },
+  "scope": {
+    "namespace": "kaleidoscope_grilling:",
+    "source": "LKG-0 stopped-backup restored copy",
+    "meaning_of_complete": "Every scanned target-bearing format was classified; unrelated world anomalies remain warnings. Not a migration or client acceptance."
+  },
+  "execution": {
+    "started_at": "2026-10-19T05:25:28.574417+00:00",
+    "finished_at": "2026-10-19T05:26:45.242632+00:00",
+    "exit_code": 0,
+    "live_world_opened": false,
+    "live_stop_start_performed": false,
+    "source_runtime_changed": false
+  },
+  "backup_receipt": "tools/ops/receipts/luosen-lkg0-backup-20261019.json",
+  "validation": {
+    "synthetic_binary_and_disposable_db_tests": 16,
+    "synthetic_tests_result": "passed",
+    "synthetic_tests_seconds": 20.066,
+    "guard_test_file_sha256": "f7c1b76bd7d7b1b878896ac54e04386b7e93d54e4f0b547e1e78b0431efc9cbe",
+    "standard_library_guard_selftests": 14,
+    "native_tests_skipped_by_default_fast_guard": 16,
+    "save_compat": "passed",
+    "growth_ratchet": "passed",
+    "new_guard_ceiling_raised": false,
+    "local_full_runtime_ci_rerun": false,
+    "native_build_entry_checked": true,
+    "independent_source_review": "passed after player carrier and unknown metadata-carrier fixes; final source hashes above",
+    "original_failed_local_censuses_preserved": true
+  },
+  "observed_world_anomalies": {
+    "duplicate_identity_groups": 2,
+    "duplicate_extra_records": 2,
+    "duplicate_group_members": 4,
+    "all_duplicate_members_scanned": true,
+    "duplicate_groups_with_owned_data_or_failed_members": 0,
+    "noncanonical_actor_keys": 2,
+    "actor_index_duplicate_references": 7,
+    "orphans_are_not_removed": true,
+    "no_identity_or_key_normalization": true
+  },
+  "limits": [
+    "Quantities describe saved records in this snapshot; visual copies, nested inventory, serialized contents and references are separate categories.",
+    "No identifier is authorized for retirement by this receipt alone.",
+    "Actor duplicate_records means extra n-1 records per group. Every member is scanned; any owned contribution or failed member makes a duplicate group incomplete.",
+    "Unclassified target-bearing structures and metadata-linked carriers fail completeness and add no active inventory.",
+    "Binding opens a temporary clone and may write housekeeping files. Arbitrary bit corruption detection is not fully proven.",
+    "No staging entry/restart, rendered behavior, migration, or human acceptance is claimed."
+  ]
+}
