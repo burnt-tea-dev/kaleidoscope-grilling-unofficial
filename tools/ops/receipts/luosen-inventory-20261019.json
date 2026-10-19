@@ -1,0 +1,1672 @@
+{
+  "schema": 1,
+  "task": "T1.4",
+  "captured_at": "2026-10-18T22:41:38.196047+00:00",
+  "scope": "Read-only installed active-world pack inventory; paths, ports, world/player identities and script bodies omitted.",
+  "inventory_tool_commit": "c228268fe27be5b4626cfb30137235ef023b2ba9",
+  "runtime_reference": "G155 2.8.155; inventory does not certify gameplay or rendering",
+  "stack_order": "zero-based, as present in world pack arrays; lower index has higher priority",
+  "stacks": {
+    "behavior": [
+      {
+        "order": 0,
+        "pack_id": "5754f5c4-4086-5fa8-9126-fad18bbdfb59",
+        "version": "1.0.57",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "森羅私有修復支援 1.0.57 行為包",
+          "version": "1.0.57",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "5ca039369683ea8e8eb84fdd69481ab52caba9d298b791815663aa6cb57be0b2",
+          "bytes": 311322,
+          "files": 138,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data"
+          ],
+          "dependencies": [
+            {
+              "uuid": "70f0e591-9b99-51b8-b319-fc8b2315315d",
+              "module_name": null,
+              "version": "1.0.57"
+            },
+            {
+              "uuid": "439d9798-118a-43ad-8a91-aab3161d9cb5",
+              "module_name": null,
+              "version": "1.6.2"
+            },
+            {
+              "uuid": "5e121bf2-1d2d-4da4-be15-cffc5f216d94",
+              "module_name": null,
+              "version": "1.2.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 1,
+        "pack_id": "355ffdfc-50e6-5a33-a126-4d78ab955b2b",
+        "version": "0.1.153",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "0.1.153",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "cc1d7b41c3a40ce1b7e5015ce6d7c8ee9cc2b41f1e136bfe19399350b6ad279f",
+          "bytes": 1793930,
+          "files": 341,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "f54f37f9-485a-55bf-8f89-6558aca988c5",
+              "module_name": null,
+              "version": "0.6.176"
+            },
+            {
+              "uuid": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+              "module_name": null,
+              "version": "0.1.153"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 2,
+        "pack_id": "f54f37f9-485a-55bf-8f89-6558aca988c5",
+        "version": "0.6.176",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "0.6.176",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "dbba0cbd7943340a3be211b15d63be372cbab0bcf096229e71426f8cb7069f1d",
+          "bytes": 3883155,
+          "files": 835,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+              "module_name": null,
+              "version": "0.6.176"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 3,
+        "pack_id": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+        "version": "2.8.155",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Kaleidoscope Grilling BP",
+          "version": "2.8.155",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "b11352d86f44926c81c28dff610c64258986e21eed7c2dea34fcf12b9930eb45",
+          "bytes": 2281100,
+          "files": 791,
+          "vanilla_entity_overrides": [
+            "minecraft:player"
+          ],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+              "module_name": null,
+              "version": "2.8.155"
+            },
+            {
+              "uuid": "439d9798-118a-43ad-8a91-aab3161d9cb5",
+              "module_name": null,
+              "version": "1.6.2"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.9.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.2.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 4,
+        "pack_id": "4fd46237-7fb4-4340-abe1-cec07ad033db",
+        "version": "1.1.0",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.1.0",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "98ee0df47de74de0223444b6b2e2a692155638743f93f23d2c726ee7826ad5a6",
+          "bytes": 85628,
+          "files": 59,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+              "module_name": null,
+              "version": "1.1.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 5,
+        "pack_id": "aa73502b-f806-4c11-8ef0-3f139bfc604a",
+        "version": "1.0.10657",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "森羅廚房：國味 BP [相容修補 1.0.55；作者原版 1.0.6]",
+          "version": "1.0.10657",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "f73e95eab84eff97ca5a1101afb633a932288aa87d853a32c9c5053272caa7ce",
+          "bytes": 1004610,
+          "files": 284,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "c170e749-0953-4dff-aef8-39e4934dc802",
+              "module_name": null,
+              "version": "1.0.10657"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 6,
+        "pack_id": "9c8422ab-e9b9-49eb-baf5-abdaf585e41d",
+        "version": "1.0.3",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.3",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "0e38bf22578cddff2c9884958bf80000a3995c929b3e731294de5002da8fc45e",
+          "bytes": 1047274,
+          "files": 212,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "859d9e9f-4834-4ad0-bb4c-35eb8eb44630",
+              "module_name": null,
+              "version": "1.0.3"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 7,
+        "pack_id": "6f8ef0e5-d29e-48b4-b7a0-9a80194d4dd7",
+        "version": "1.0.3",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.3",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "4c458a6c75ff5c87cca9fed5320ae580778d69882b9bd595881c979a82471afb",
+          "bytes": 1144215,
+          "files": 285,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "e993d0f6-1447-4faa-b8c3-9ded60879a1c",
+              "module_name": null,
+              "version": "1.0.3"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 8,
+        "pack_id": "dd3c6676-43dd-46b7-9d48-03bfabf7284e",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "e4d8978b1a30d6347a4a11bf9c3837b6bc0803db3334a5b318cc648d0684fe5b",
+          "bytes": 1895948,
+          "files": 422,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "290da070-9e60-4ec4-89bc-00fd10a8ecb3",
+              "module_name": null,
+              "version": "1.0.1"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 9,
+        "pack_id": "b6552bad-e030-4083-9225-e47b08cfd860",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "83f84cd6c2953c85141efd0c0f4ae4cb6b62e7dc4d00174f58c0f778ad2e82ca",
+          "bytes": 96338,
+          "files": 35,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "40321040-66de-448c-8071-ca694b9ea420",
+              "module_name": null,
+              "version": "1.0.1"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 10,
+        "pack_id": "d6636182-2ca5-4ec4-9814-40dc1191c026",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "fc230eb3111027245213cef277ea8fa031965bab536ab5149e6beff96ebf3b0d",
+          "bytes": 3181335,
+          "files": 1470,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "f2c4c5f1-7abd-4c36-bb0c-7705a4d93aa5",
+              "module_name": null,
+              "version": "1.0.1"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 11,
+        "pack_id": "439d9798-118a-43ad-8a91-aab3161d9cb5",
+        "version": "1.6.2",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.6.2",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "a768b4234e0495963766a5434ade91fa63fea2b62368c5e4b00713e022b177c2",
+          "bytes": 6899355,
+          "files": 1695,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "01ba9a7f-877e-46c7-8583-6c0441366b55",
+              "module_name": null,
+              "version": "1.6.2"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 12,
+        "pack_id": "f65e943a-2128-4da8-9196-e9bf5b86739d",
+        "version": "1.6.10048",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "§c§cJava Saturation [v1.6] §71.21-V26+ [Senluo HUD 1.6.10048]",
+          "version": "1.6.10048",
+          "min_engine_version": "1.21.20",
+          "sha256_tree": "b124f06547e5f000d945c95766f09a0ad8b4f3302d7125a5a40af22b214ae43b",
+          "bytes": 59689,
+          "files": 7,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script",
+            "data"
+          ],
+          "dependencies": [
+            {
+              "uuid": "9071b6bc-915d-4d26-8486-05bb8db48762",
+              "module_name": null,
+              "version": "1.6.10048"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.1.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 13,
+        "pack_id": "5f808eda-2eed-47b9-94ca-8486af1c5c14",
+        "version": "1.8.4",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Bedrock Essentials+ BP",
+          "version": "1.8.4",
+          "min_engine_version": "1.21.100",
+          "sha256_tree": "fd4ce397e04a50b8491d4472587612e583ed781c206137b5539318fa1d130c35",
+          "bytes": 36547,
+          "files": 9,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.6.0"
+            },
+            {
+              "uuid": "537af6fe-a865-4603-8847-37791b81249d",
+              "module_name": null,
+              "version": "1.8.5"
+            }
+          ]
+        }
+      },
+      {
+        "order": 14,
+        "pack_id": "d9e8bf4f-9cda-4423-bb76-5da24c2533d0",
+        "version": "1.1.9",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.1.9",
+          "min_engine_version": "1.20.50",
+          "sha256_tree": "43bdaa9e874c9e13571c822c12c7c11d3d1ef10600a4fd8b9232706cd379a91e",
+          "bytes": 2125188,
+          "files": 101,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "5f80d696-be6b-43e8-bf14-7761d6b576c8",
+              "module_name": null,
+              "version": "1.1.10"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "1.13.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "1.1.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 15,
+        "pack_id": "d0131071-9ec1-edcd-6871-857c700703d8",
+        "version": "5.0.6",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "5.0.6",
+          "min_engine_version": "1.26.0",
+          "sha256_tree": "4877af47a0dc0f94904af8f05eae064d4fe07cb0ab50c4de8189aac871157358",
+          "bytes": 1306123,
+          "files": 753,
+          "vanilla_entity_overrides": [
+            "minecraft:item"
+          ],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "98836a6c-fe16-60f4-87a4-5afb6439bd9f",
+              "module_name": null,
+              "version": "5.0.6"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.4.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 16,
+        "pack_id": "f37b6a63-2242-418b-8b18-f661948120eb",
+        "version": "1.0.4",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.4",
+          "min_engine_version": "1.26.10",
+          "sha256_tree": "8db6c5ad62e5452b01b1d2a4f5bf0ff6ae1e9a466fade7bb2cf171c2bda9c8cd",
+          "bytes": 926283,
+          "files": 219,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "9257e5d2-c65d-45ca-a17b-2c4e2e35763d",
+              "module_name": null,
+              "version": "1.0.5"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.5.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 17,
+        "pack_id": "f3b2c1d4-7e8a-4c9b-8f2e-3d1a5b6c7e8f",
+        "version": "1.0.5",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.5",
+          "min_engine_version": "1.21.50",
+          "sha256_tree": "46ca1d55802687476443b9413d5013f2eb43dbd97c7a7a43bce60f73b0f9d8dc",
+          "bytes": 42794024,
+          "files": 1676,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "1.17.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "1.3.0"
+            },
+            {
+              "uuid": "e2a7b4d2-5c6a-4e7c-9e8d-1f2b7e4a8c3d",
+              "module_name": null,
+              "version": "1.0.6"
+            }
+          ]
+        }
+      },
+      {
+        "order": 18,
+        "pack_id": "1e47fa97-55db-492e-b732-350e338b4fe5",
+        "version": "1.0.10037",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name [Senluo FP decode 1.0.10037]",
+          "version": "1.0.10037",
+          "min_engine_version": "1.26.0",
+          "sha256_tree": "a5367f8b515b39a4c447682c57069bd72914e9c89e2f245a9524d51b0c430a47",
+          "bytes": 1373356,
+          "files": 165,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "a26e36f3-6fa2-4866-97bf-f9c2b9be8bdd",
+              "module_name": null,
+              "version": "1.0.10037"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.1.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 19,
+        "pack_id": "2d4fb75b-c854-460b-a2f5-b4639e11eaa6",
+        "version": "1.6.10034",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "UI Queue 1.6 [Senluo HUD 1.6.10034]",
+          "version": "1.6.10034",
+          "min_engine_version": "1.19.0",
+          "sha256_tree": "b2820fa3b77574bb8a0b0af9225fc602b42f752bd5e40e77342d976efb4904de",
+          "bytes": 14871,
+          "files": 7,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.4.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 20,
+        "pack_id": "fa0c2c98-dd46-4822-b87d-fa5bacdecb5c",
+        "version": "1.0.5",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.5",
+          "min_engine_version": "1.26.10",
+          "sha256_tree": "08eeabfc90cba4dac4f564e84951873b79a2760d98e1305353023219339d20eb",
+          "bytes": 1143784,
+          "files": 32,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "1c9c8504-4985-44c8-a019-ad77dd893338",
+              "module_name": null,
+              "version": "1.0.5"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.6.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.1.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 21,
+        "pack_id": "379931a2-7419-40fb-90fb-34288ab4e971",
+        "version": "1.5.13",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Novelty API 1.5.13 繁簡中文 PBR 說明修復配套 行為包",
+          "version": "1.5.13",
+          "min_engine_version": "1.26.0",
+          "sha256_tree": "5481d1c9e8bf10935890cb84bf31fee585c8df548558e8052e6d5c71896cc9a9",
+          "bytes": 100216,
+          "files": 16,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.8.0"
+            },
+            {
+              "uuid": "ea8da0de-83d7-4ae2-aa43-bbcd4192e0c7",
+              "module_name": null,
+              "version": "1.5.13"
+            }
+          ]
+        }
+      },
+      {
+        "order": 22,
+        "pack_id": "d9bc53c2-f1d4-437f-8e54-1663b37550d7",
+        "version": "1.0.2",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.2",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "319b1f976992cc500b8e6dbedbc8c66e66d2c23d84520675596a04bf26cca6d5",
+          "bytes": 165704,
+          "files": 32,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.4.0"
+            },
+            {
+              "uuid": "fdbc2404-8ecc-446d-b346-554d1bb6ba35",
+              "module_name": null,
+              "version": "1.0.2"
+            }
+          ]
+        }
+      },
+      {
+        "order": 23,
+        "pack_id": "cd107d2a-333f-4347-ab54-6917142be0d7",
+        "version": "2.6.29",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "A Magic Way 2.6.29 純魔法版 行為包",
+          "version": "2.6.29",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "24b8610f8d3b9fc09f9be23da50ccde6d02f7c7cdd4304faa89d768902f44e45",
+          "bytes": 4050003,
+          "files": 769,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "script",
+            "data"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.8.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            },
+            {
+              "uuid": "994f73a2-05ec-41ce-876c-d388a526d9f5",
+              "module_name": null,
+              "version": "2.6.29"
+            },
+            {
+              "uuid": "379931a2-7419-40fb-90fb-34288ab4e971",
+              "module_name": null,
+              "version": "1.5.13"
+            },
+            {
+              "uuid": "2d4fb75b-c854-460b-a2f5-b4639e11eaa6",
+              "module_name": null,
+              "version": "1.6.10034"
+            }
+          ]
+        }
+      },
+      {
+        "order": 24,
+        "pack_id": "7f3a927d-980f-4a45-ac3d-1b476f2d60b1",
+        "version": "2.0.0",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "呼嘯莊園｜完整內裝一鍵生成",
+          "version": "2.0.0",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "d736ee529da6a82559ac3d43da5c8f32e0595bcff62ad725761a3f5974af854b",
+          "bytes": 90328521,
+          "files": 62,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.10.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 25,
+        "pack_id": "5e121bf2-1d2d-4da4-be15-cffc5f216d94",
+        "version": "1.2.0",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.2.0",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "21a5bb339331cc9e7fd48635ddf5a303c9d03761045908f4981a93f88e2b9cb7",
+          "bytes": 985996,
+          "files": 312,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "data",
+            "script"
+          ],
+          "dependencies": [
+            {
+              "uuid": "e1168f1a-83d6-4abc-8f4b-ecb86e0a91dd",
+              "module_name": null,
+              "version": "1.2.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server",
+              "version": "2.7.0"
+            },
+            {
+              "uuid": null,
+              "module_name": "@minecraft/server-ui",
+              "version": "2.0.0"
+            }
+          ]
+        }
+      }
+    ],
+    "resource": [
+      {
+        "order": 0,
+        "pack_id": "70f0e591-9b99-51b8-b319-fc8b2315315d",
+        "version": "1.0.57",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "森羅私有修復支援 1.0.57 資源包",
+          "version": "1.0.57",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "1a61bed2df1cc723ccd2e36df082a6ea8935e353ab20b3dcc84ef861aed0e7d1",
+          "bytes": 1241356,
+          "files": 76,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "5754f5c4-4086-5fa8-9126-fad18bbdfb59",
+              "module_name": null,
+              "version": "1.0.57"
+            },
+            {
+              "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+              "module_name": null,
+              "version": "0.6.176"
+            },
+            {
+              "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+              "module_name": null,
+              "version": "2.8.155"
+            },
+            {
+              "uuid": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+              "module_name": null,
+              "version": "0.1.153"
+            },
+            {
+              "uuid": "994f73a2-05ec-41ce-876c-d388a526d9f5",
+              "module_name": null,
+              "version": "2.6.29"
+            },
+            {
+              "uuid": "9071b6bc-915d-4d26-8486-05bb8db48762",
+              "module_name": null,
+              "version": "1.6.10048"
+            },
+            {
+              "uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+              "module_name": null,
+              "version": "1.1.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 1,
+        "pack_id": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+        "version": "0.1.153",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "0.1.153",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "6a7597c53c86ec0f187b3014cc3daf0e18b4dac11a387d0fe09e3242fefcb95d",
+          "bytes": 9561304,
+          "files": 552,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+              "module_name": null,
+              "version": "0.6.176"
+            }
+          ]
+        }
+      },
+      {
+        "order": 2,
+        "pack_id": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+        "version": "0.6.176",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "0.6.176",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "603a9f206649e895b1493a25142139c2257556a405509396573178dfdfd4c924",
+          "bytes": 17392396,
+          "files": 3225,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": []
+        }
+      },
+      {
+        "order": 3,
+        "pack_id": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+        "version": "2.8.155",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Kaleidoscope Grilling RP",
+          "version": "2.8.155",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "43d54d75d1fc4d59daf40e260d73ab05df8068590aa9102e70de4888c462c990",
+          "bytes": 60398238,
+          "files": 3762,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "01ba9a7f-877e-46c7-8583-6c0441366b55",
+              "module_name": null,
+              "version": "1.6.2"
+            }
+          ]
+        }
+      },
+      {
+        "order": 4,
+        "pack_id": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+        "version": "1.1.0",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.1.0",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "a0b7d19ddb39d0f27c1585f54cc20003a25e8f34c0e01e75ca9ac796451eaa34",
+          "bytes": 63081696,
+          "files": 263,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "4fd46237-7fb4-4340-abe1-cec07ad033db",
+              "module_name": null,
+              "version": "1.1.0"
+            }
+          ]
+        }
+      },
+      {
+        "order": 5,
+        "pack_id": "c170e749-0953-4dff-aef8-39e4934dc802",
+        "version": "1.0.10657",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "森羅廚房：國味 RP [相容修補 1.0.55；作者原版 1.0.6]",
+          "version": "1.0.10657",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "e4a5005f2387531bb2f9f223b48714db8b780de84039abc7f285a647bf21e211",
+          "bytes": 3939474,
+          "files": 873,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "aa73502b-f806-4c11-8ef0-3f139bfc604a",
+              "module_name": null,
+              "version": "1.0.10657"
+            }
+          ]
+        }
+      },
+      {
+        "order": 6,
+        "pack_id": "859d9e9f-4834-4ad0-bb4c-35eb8eb44630",
+        "version": "1.0.3",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.3",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "b050747b010c09b6093b3336900a9e298c151af2c599e25a22632e6b881c8d78",
+          "bytes": 2534990,
+          "files": 272,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "9c8422ab-e9b9-49eb-baf5-abdaf585e41d",
+              "module_name": null,
+              "version": "1.0.3"
+            }
+          ]
+        }
+      },
+      {
+        "order": 7,
+        "pack_id": "e993d0f6-1447-4faa-b8c3-9ded60879a1c",
+        "version": "1.0.3",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.3",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "75c7300057ca2ea85a232663bd8659419119a16b7c343e8b8fd7f2916f295c68",
+          "bytes": 2777477,
+          "files": 355,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "6f8ef0e5-d29e-48b4-b7a0-9a80194d4dd7",
+              "module_name": null,
+              "version": "1.0.3"
+            }
+          ]
+        }
+      },
+      {
+        "order": 8,
+        "pack_id": "290da070-9e60-4ec4-89bc-00fd10a8ecb3",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "582672290fb52a12ca25353c72ea453fd094b4a77d8804b4b12a1c9da86d5d96",
+          "bytes": 2767746,
+          "files": 336,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "dd3c6676-43dd-46b7-9d48-03bfabf7284e",
+              "module_name": null,
+              "version": "1.0.1"
+            }
+          ]
+        }
+      },
+      {
+        "order": 9,
+        "pack_id": "40321040-66de-448c-8071-ca694b9ea420",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "eadabb5765d6e89c2ee4e181bee14afdf50540acc21e6abb5950623f7820515d",
+          "bytes": 3921356,
+          "files": 491,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "b6552bad-e030-4083-9225-e47b08cfd860",
+              "module_name": null,
+              "version": "1.0.1"
+            }
+          ]
+        }
+      },
+      {
+        "order": 10,
+        "pack_id": "f2c4c5f1-7abd-4c36-bb0c-7705a4d93aa5",
+        "version": "1.0.1",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.1",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "e74393acc25929cfa491c5cebbeb1cc8302354f36dfb9b9fd712e194b230b3f7",
+          "bytes": 5223844,
+          "files": 542,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "d6636182-2ca5-4ec4-9814-40dc1191c026",
+              "module_name": null,
+              "version": "1.0.1"
+            }
+          ]
+        }
+      },
+      {
+        "order": 11,
+        "pack_id": "01ba9a7f-877e-46c7-8583-6c0441366b55",
+        "version": "1.6.2",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.6.2",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "a4a35a5bbc82a71e1ff5b3e092b11520aa17179021099991735cdf1eb02ba575",
+          "bytes": 15372429,
+          "files": 1614,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "439d9798-118a-43ad-8a91-aab3161d9cb5",
+              "module_name": null,
+              "version": "1.6.2"
+            }
+          ]
+        }
+      },
+      {
+        "order": 12,
+        "pack_id": "5f80d696-be6b-43e8-bf14-7761d6b576c8",
+        "version": "1.1.10",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.1.10",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "20504500151abde769bff5f4cbdbb63589dc60b6ca74f8aa144f01093e515297",
+          "bytes": 1612078,
+          "files": 412,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "d9e8bf4f-9cda-4423-bb76-5da24c2533d0",
+              "module_name": null,
+              "version": "1.1.9"
+            }
+          ]
+        }
+      },
+      {
+        "order": 13,
+        "pack_id": "98836a6c-fe16-60f4-87a4-5afb6439bd9f",
+        "version": "5.0.6",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "5.0.6",
+          "min_engine_version": "1.26.0",
+          "sha256_tree": "0467f15c463e8b901d974cda63a37e3f9319eae42b5b0fcbb41e998785c82830",
+          "bytes": 2316128,
+          "files": 653,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "d0131071-9ec1-edcd-6871-857c700703d8",
+              "module_name": null,
+              "version": "5.0.6"
+            }
+          ]
+        }
+      },
+      {
+        "order": 14,
+        "pack_id": "9071b6bc-915d-4d26-8486-05bb8db48762",
+        "version": "1.6.10048",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "§c§cJava Saturation [v1.6] §71.21-V26+ [Senluo HUD 1.6.10048]",
+          "version": "1.6.10048",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "ff2e7f52b8d13050cd14fe34282bdae6b2b03fffa96dbf2f478a16ca917bf275",
+          "bytes": 74218,
+          "files": 7,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "f65e943a-2128-4da8-9196-e9bf5b86739d",
+              "module_name": null,
+              "version": "1.6.10048"
+            }
+          ]
+        }
+      },
+      {
+        "order": 15,
+        "pack_id": "537af6fe-a865-4603-8847-37791b81249d",
+        "version": "1.8.5",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Bedrock Essentials+ RP",
+          "version": "1.8.5",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "367c7686bb7956c9eb7a4326bc6df5fe4c1f0966e80d9701f87e2798fa558608",
+          "bytes": 10703,
+          "files": 4,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "5f808eda-2eed-47b9-94ca-8486af1c5c14",
+              "module_name": null,
+              "version": "1.8.4"
+            }
+          ]
+        }
+      },
+      {
+        "order": 16,
+        "pack_id": "9257e5d2-c65d-45ca-a17b-2c4e2e35763d",
+        "version": "1.0.5",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.5",
+          "min_engine_version": "1.26.10",
+          "sha256_tree": "799e5e660626d3c19d9c03c3227d8129dc64cfea2e8c37d31111ff11416476c5",
+          "bytes": 6562324,
+          "files": 823,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "f37b6a63-2242-418b-8b18-f661948120eb",
+              "module_name": null,
+              "version": "1.0.4"
+            }
+          ]
+        }
+      },
+      {
+        "order": 17,
+        "pack_id": "e2a7b4d2-5c6a-4e7c-9e8d-1f2b7e4a8c3d",
+        "version": "1.0.6",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.6",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "259a2800f129aefe2f90f8b97c5d47d6783f2f35735cfac2bb25f4200500d2c0",
+          "bytes": 3751702,
+          "files": 597,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "f3b2c1d4-7e8a-4c9b-8f2e-3d1a5b6c7e8f",
+              "module_name": null,
+              "version": "1.0.5"
+            }
+          ]
+        }
+      },
+      {
+        "order": 18,
+        "pack_id": "a26e36f3-6fa2-4866-97bf-f9c2b9be8bdd",
+        "version": "1.0.10037",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name [Senluo FP decode 1.0.10037]",
+          "version": "1.0.10037",
+          "min_engine_version": "1.26.0",
+          "sha256_tree": "b8ce2395e2687e0d880bf41c9498b51ec3981028cdabec6fa3d4d9865dbbf86a",
+          "bytes": 12882816,
+          "files": 360,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "1e47fa97-55db-492e-b732-350e338b4fe5",
+              "module_name": null,
+              "version": "1.0.10037"
+            }
+          ]
+        }
+      },
+      {
+        "order": 19,
+        "pack_id": "1c9c8504-4985-44c8-a019-ad77dd893338",
+        "version": "1.0.5",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.5",
+          "min_engine_version": "1.26.10",
+          "sha256_tree": "bab7f6d047ae34bc50f57b055e741fd9b5c267a27ea0a1f8f785e36c90671864",
+          "bytes": 48589010,
+          "files": 3010,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "fa0c2c98-dd46-4822-b87d-fa5bacdecb5c",
+              "module_name": null,
+              "version": "1.0.5"
+            }
+          ]
+        }
+      },
+      {
+        "order": 20,
+        "pack_id": "ea8da0de-83d7-4ae2-aa43-bbcd4192e0c7",
+        "version": "1.5.13",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "Novelty API 1.5.13 繁簡中文 PBR 說明修復配套 資源包",
+          "version": "1.5.13",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "c20d7e9c2a25050d419d2931712a14aa3149f739bbdc047cbfe075d7f78c8729",
+          "bytes": 40855,
+          "files": 34,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "379931a2-7419-40fb-90fb-34288ab4e971",
+              "module_name": null,
+              "version": "1.5.13"
+            }
+          ]
+        }
+      },
+      {
+        "order": 21,
+        "pack_id": "fdbc2404-8ecc-446d-b346-554d1bb6ba35",
+        "version": "1.0.2",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.0.2",
+          "min_engine_version": "1.21.120",
+          "sha256_tree": "edff8504f9ebc9effb7d0356d520aa72ae7a2b4bcb0a5627af6a23b48de2b218",
+          "bytes": 19757679,
+          "files": 62,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "d9bc53c2-f1d4-437f-8e54-1663b37550d7",
+              "module_name": null,
+              "version": "1.0.2"
+            }
+          ]
+        }
+      },
+      {
+        "order": 22,
+        "pack_id": "994f73a2-05ec-41ce-876c-d388a526d9f5",
+        "version": "2.6.29",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "A Magic Way 2.6.29 純魔法版 資源包",
+          "version": "2.6.29",
+          "min_engine_version": "1.26.50",
+          "sha256_tree": "f95393a51eaf81d9be32ffa56c10f36b65c23675b62a36fc5b25d59288c2f6ce",
+          "bytes": 18483334,
+          "files": 2429,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "cd107d2a-333f-4347-ab54-6917142be0d7",
+              "module_name": null,
+              "version": "2.6.29"
+            },
+            {
+              "uuid": "ea8da0de-83d7-4ae2-aa43-bbcd4192e0c7",
+              "module_name": null,
+              "version": "1.5.13"
+            }
+          ]
+        }
+      },
+      {
+        "order": 23,
+        "pack_id": "e1168f1a-83d6-4abc-8f4b-ecb86e0a91dd",
+        "version": "1.2.0",
+        "other_installed_versions": [],
+        "resolved": {
+          "name": "pack.name",
+          "version": "1.2.0",
+          "min_engine_version": "1.26.1",
+          "sha256_tree": "99a97915c3ded0daa433b7b846ec7744b6f371e409b11f46b8176f0c1aa16366",
+          "bytes": 2708274,
+          "files": 1136,
+          "vanilla_entity_overrides": [],
+          "entity_fragments_without_identifier": [],
+          "module_types": [
+            "resources"
+          ],
+          "dependencies": [
+            {
+              "uuid": "5e121bf2-1d2d-4da4-be15-cffc5f216d94",
+              "module_name": null,
+              "version": "1.2.0"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "problems": [],
+  "vanilla_entity_overrides": {
+    "minecraft:player": [
+      "Kaleidoscope Grilling BP"
+    ],
+    "minecraft:item": [
+      "pack.name"
+    ]
+  },
+  "warning_summary": {
+    "schema": 1,
+    "captured_at": "2026-10-18T22:41:19.275662+00:00",
+    "read_only": true,
+    "log_sha256": "43c2c10a6239b91c801e4d979584246eba90f1db786f94d13659ba31c767ae03",
+    "log_bytes": 66311,
+    "log_lines": 1228,
+    "warning_count": 489,
+    "error_count": 0,
+    "categories": {
+      "runtime_initialization_logged_at_warning_level": 4,
+      "mixed_material_render_methods": 1,
+      "item_overridden_by_higher_pack": 23,
+      "block_permutation_budget": 1,
+      "duplicate_crafting_ingredients": 1,
+      "watchdog_spike": 14,
+      "watchdog_high_memory": 1,
+      "watchdog_slowdown": 444
+    },
+    "overridden_item_identifiers": [
+      "kaleidoscope_cookery:baozi_plate",
+      "kaleidoscope_cookery:blaze_lamb_chop",
+      "kaleidoscope_cookery:buddha_jumps_over_the_wall",
+      "kaleidoscope_cookery:cold_style_sashimi",
+      "kaleidoscope_cookery:crystal_lamb_chop",
+      "kaleidoscope_cookery:desert_style_sashimi",
+      "kaleidoscope_cookery:dongpo_pork",
+      "kaleidoscope_cookery:end_style_sashimi",
+      "kaleidoscope_cookery:flower_tea",
+      "kaleidoscope_cookery:fondant_pie",
+      "kaleidoscope_cookery:four_joy_meatball_soup",
+      "kaleidoscope_cookery:fried_caterpillar",
+      "kaleidoscope_cookery:frost_lamb_chop",
+      "kaleidoscope_cookery:golden_salad",
+      "kaleidoscope_cookery:nether_style_sashimi",
+      "kaleidoscope_cookery:qingtuan_plate",
+      "kaleidoscope_cookery:red_mushroom_pot_soup",
+      "kaleidoscope_cookery:sakura_fubuki",
+      "kaleidoscope_cookery:spicy_blood_stew",
+      "kaleidoscope_cookery:spicy_chicken",
+      "kaleidoscope_cookery:spicy_rabbit_head",
+      "kaleidoscope_cookery:sweet_and_sour_ender_pearls",
+      "kaleidoscope_cookery:tundra_style_sashimi"
+    ],
+    "block_permutations_reported": 136951,
+    "duplicate_recipe_identifiers": [
+      "kaleidoscope_tavern:stepladder",
+      "kaleidoscope_deco:step_ladder"
+    ],
+    "limits": [
+      "Counts describe the complete captured log, not every historical log.",
+      "Item override warnings name the item, not the winning pack; ownership requires T1.7/T1.10.",
+      "Watchdog messages do not prove a root cause or client rendering/performance.",
+      "Mixed material warning does not identify the block.",
+      "Initialization notices are still preserved as engine warning-level records."
+    ]
+  },
+  "counts": {
+    "behavior_packs": 26,
+    "resource_packs": 24,
+    "scripted_behavior_packs": 25,
+    "unresolved_enabled_packs": 0,
+    "duplicate_enabled_installations": 0,
+    "dependency_or_input_problems": 0
+  },
+  "limitations": [
+    "Snapshot covers installed bytes and enabled order, not effective precedence of merged JSON definitions.",
+    "Vanilla entity ownership is collected from BP entities; valid version-overlay fragments without an identifier are listed separately.",
+    "RP client player/controller interactions and private Grilling overlap decisions are separate T1.9 work.",
+    "This does not establish LKG-0, offline census, staging entry, native validation, deployment or human acceptance."
+  ]
+}
