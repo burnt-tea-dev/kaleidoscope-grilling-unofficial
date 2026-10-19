@@ -91,6 +91,7 @@ function serialized (result, id, amount, multiplier, location, prefix) {
   if (typeof id !== 'string' || !ID.test(id) || !Number.isSafeInteger(amount) || amount < 1 || !Number.isSafeInteger(amount * multiplier)) {
     error(result, 'SERIALIZED_ITEM_SCHEMA', prefix); return false
   }
+  if (multiplier === 0) { error(result, 'EMPTY_CARRIER_CONTENTS', prefix); reference(result, id, location + '/empty_carrier_reference'); return false }
   if (ownedId(id) && amount * multiplier > 0) result.serializedItems.push({ id, location_type: location, quantity: amount * multiplier, stacks: 1 })
   return true
 }
@@ -154,7 +155,8 @@ function analyzeProperties (props, metadata, result, multiplier, location, depth
       references(data.filters, result, RACK, 'rack_filter_reference')
       for (const row of data.items) {
         if (row === null) continue
-        if (!record(row) || !serialized(result, row.typeId, row.amount, multiplier, location + '/rack_payload', RACK)) continue
+        if (!record(row)) { error(result, 'RACK_PAYLOAD_SCHEMA', RACK); continue }
+        if (!serialized(result, row.typeId, row.amount, multiplier, location + '/rack_payload', RACK)) continue
         const nested = plainProperties(row.dynamic, result, RACK, true)
         mergeProperties(nested, tokenProperties(row.rawLore, metadata, result), result, RACK)
         analyzeProperties(nested, metadata, result, multiplier * row.amount, location + '/rack_payload', depth + 1)
@@ -370,7 +372,7 @@ export function analyzeWorldProperties (typedRoot, prefixes) {
   return result
 }
 
-export function analyzeStackProperties (typedItem, worldMetadata) {
+export function analyzeStackProperties (typedItem, worldMetadata, inactiveCarrier = false) {
   const result = makeResult()
   const item = fields(typedItem)
   if (!item) { error(result, 'ITEM_COMPOUND_TYPE'); return result }
@@ -379,6 +381,7 @@ export function analyzeStackProperties (typedItem, worldMetadata) {
   if (count?.type === 'byte' && Number.isInteger(multiplier) && multiplier >= -128 && multiplier <= 255) multiplier &= 255
   else if (!count || !['short', 'int', 'long', 'float', 'double'].includes(count.type) || !safeCount(multiplier)) multiplier = undefined
   if (!safeCount(multiplier)) { error(result, 'ITEM_CARRIER_COUNT'); return result }
+  if (inactiveCarrier) multiplier = 0
   const tag = fields(item.tag)
   if (item.tag !== undefined && !tag) { error(result, 'ITEM_TAG_SCHEMA'); return result }
   const props = Object.create(null)

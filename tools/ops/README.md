@@ -54,6 +54,8 @@ Scheduled block ticks are references, not additional placed blocks. Recovery
 journals, recipe references and immutable item-metadata caches do not add active
 inventory; active carriers resolve their own serialized contents.
 
+Malformed non-null rack slots and non-compound block-entity roots make the census incomplete. An empty (zero-count) carrier never contributes active nested inventory. Any physical or serialized contents found beneath it, including nested empty carriers, are contradictory and make the result incomplete; owned identifiers remain references for review. No contents are repaired or removed.
+
 Actor records are scanned once. The `digp` index is used for diagnostics and
 never adds another entity count. Noncanonical actor keys retain their complete
 opaque bytes and are scanned with a warning. A duplicate identity involving any

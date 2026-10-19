@@ -545,6 +545,51 @@ process.stdout.write(JSON.stringify(output, (key, value) => typeof value === 'bi
         bad = self.root({'Inventory': (9, (10, [self.stack(extra={'Count': (8, 'private-count')})]))})
         self.assert_error(self.census([(b'~local_player', bad)]), 'ITEM_COUNT_TYPE')
 
+    def test_malformed_serialized_rack_slots_make_census_incomplete(self):
+        for bad in ('damaged', 123, [], False):
+            with self.subTest(slot=bad):
+                rack = json.dumps({'version': 1, 'items': [bad] + [None] * 8})
+                item = self.stack(self.KG + 'advanced_rack', 1, {'tag': (10, {
+                    'DynamicProperties': (10, {self.OWNER: (10, {self.KG + 'rack_payload': (8, rack)})})})})
+                result = self.census([(b'~local_player', self.root({'Inventory': (9, (10, [item]))}))])
+                self.assert_error(result, 'RACK_PAYLOAD_SCHEMA')
+                self.assertEqual(result['serialized_items'], [])
+
+    def test_empty_carriers_do_not_create_active_nested_inventory(self):
+        item = self.stack('minecraft:shulker_box', 0, {'tag': (10, {
+            'Items': (9, (10, [self.stack(amount=3)]))})})
+        result = self.census([(b'~local_player', self.root({'Inventory': (9, (10, [item]))}))])
+        self.assert_error(result, 'EMPTY_CARRIER_CONTENTS')
+        self.assertEqual(result['items'], [])
+        self.assertEqual(result['serialized_items'], [])
+        self.assertTrue(any(row['id'] == self.FOOD for row in result['references']))
+
+    def test_empty_carriers_cannot_hide_serialized_contents(self):
+        rack = json.dumps({'version': 1, 'items': [{'typeId': self.FOOD, 'amount': 3}] + [None] * 8})
+        item = self.stack(self.KG + 'advanced_rack', 0, {'tag': (10, {
+            'DynamicProperties': (10, {self.OWNER: (10, {self.KG + 'rack_payload': (8, rack)})})})})
+        result = self.census([(b'~local_player', self.root({'Inventory': (9, (10, [item]))}))])
+        self.assert_error(result, 'EMPTY_CARRIER_CONTENTS')
+        self.assertEqual(result['items'], [])
+        self.assertEqual(result['serialized_items'], [])
+
+    def test_nested_empty_carriers_cannot_hide_serialized_contents(self):
+        rack = json.dumps({'version': 1, 'items': [{'typeId': self.FOOD, 'amount': 3}] + [None] * 8})
+        inner = self.stack(self.KG + 'advanced_rack', 0, {'tag': (10, {
+            'DynamicProperties': (10, {self.OWNER: (10, {self.KG + 'rack_payload': (8, rack)})})})})
+        outer = self.stack('minecraft:shulker_box', 0, {'tag': (10, {'Items': (9, (10, [inner]))})})
+        result = self.census([(b'~local_player', self.root({'Inventory': (9, (10, [outer]))}))])
+        self.assert_error(result, 'EMPTY_CARRIER_CONTENTS')
+        self.assertEqual(result['items'], [])
+        self.assertEqual(result['serialized_items'], [])
+
+    def test_block_entity_roots_must_be_compounds(self):
+        for kind, value in ((8, self.FOOD), (9, (8, [self.FOOD]))):
+            with self.subTest(root_type=kind):
+                raw = bytes([kind]) + self.payload((8, '')) + self.payload((kind, value))
+                result = self.census([(self.chunk_key(tag=0x31), raw)])
+                self.assert_error(result, 'BLOCK_ENTITY_ROOT_SCHEMA')
+
     def test_palette_counts_are_used_voxels_not_palette_entries(self):
         indices = [0] * 4096
         indices[0] = 1
