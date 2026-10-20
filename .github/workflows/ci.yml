@@ -48,5 +48,9 @@ jobs:
           git ls-files -z -- '*.json' | xargs -0 -r python tools/check_json.py
       - name: Run retained gameplay rules
         run: python tools/run_legacy_tests.py
+      - name: Check retained guide and loot declarations
+        run: |
+          python tools/test_guide_icon_regression.py
+          python tools/test_fortress_loot_current.py
       - name: Run preserved Java extraction regressions
         run: python tools/test_java_extract.py

@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 FIXTURE=ROOT/'development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json'
 NATIVE_ALIAS_FIXTURE=ROOT/'development/gameplay_core/fixtures/java-projectile-dodge-native-alias-abi.json'
 OUTPUT=ROOT/'projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_catalog.js'
-DIAGNOSTICS=ROOT/'development/gameplay_core/fixtures/projectile-dodge-ground-diagnostics.json'
+DIAGNOSTICS=ROOT/'tests/legacy/fixtures/projectile-dodge-ground-diagnostics.json'
 VERSIONS=['1.20.1','1.21.1']
 
 def build():

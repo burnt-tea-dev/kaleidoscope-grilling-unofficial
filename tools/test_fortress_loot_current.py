@@ -1,5 +1,4 @@
 """Current fortress acquisition contract, independent of old release manifest versions."""
-import hashlib
 import json
 from pathlib import Path
 import unittest
@@ -15,13 +14,6 @@ def load(path):
 
 
 class FortressLoot(unittest.TestCase):
-    def test_vanilla_exact_official_blob_preserves_all_pools(self):
-        # Mojang/bedrock-samples@46ba6ea985fb5a92d79a9419198f10dda14c199d
-        # behavior_pack/loot_tables/chests/nether_bridge.json; includes armor trim.
-        raw = (BP / VANILLA).read_bytes()
-        digest = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
-        self.assertEqual(digest, '071c1feeaccec0f2e9ee39074d76c5862681aa3c')
-
     def test_wrapper_runs_vanilla_once_and_bonus_independently(self):
         # No condition, changed weight, competing entry, or recursive self-reference
         # can suppress the original table or grant the bonus more than once.

@@ -39,7 +39,7 @@ def check_hidden_cuisine_quality(item,owner):
     expected=json.loads(json.dumps(original))
     expected['description']['identifier']=iid
     expected['description'].pop('menu_category',None)
-    rows=load(ROOT/'development/gameplay_core/fixtures/java-cuisine-quality-160.json')['neoforge_nutrition']
+    rows=load(ROOT/'tests/legacy/fixtures/java-cuisine-quality-160.json')['neoforge_nutrition']
     values=[row for row in rows if row['baseId']==base and row['quality']==int(match[2])]
     require(len(values)==1,'Missing original Java quality food observation '+iid)
     row=values[0]
