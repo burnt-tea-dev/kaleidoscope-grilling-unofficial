@@ -107,4 +107,26 @@ baseline is not Java parity. Keep known defects in `docs/KNOWN-ISSUES.md` open.
    dynamic reference, absent before image or unavailable staging instance blocks
    the affected acceptance claim. Never use the live world as a substitute.
 
-No before/after GUI or staging result is supplied by this test design itself.
+### Preserve bridge. authoring settings during the comparison
+
+For the paired baseline in bridge. 2.7.54, turn off **Settings → Projects →
+Increment Version** and **Add "generated_with"**, close Settings to save, then
+import a pristine `.brproject` built by `tools/bridge_project.py`. Metadata can
+be injected when loading the project, so turning the options off after loading
+does not establish that its manifests are pristine. Download the completed
+export from its sidebar notification and run `--verify-export` on the actual
+download, not on a locally rebuilt substitute.
+
+A `.mcaddon` contains runtime packs, not the authoring `config.json`. Reimporting
+it can therefore create a different target version and default compiler chain,
+including `moLang` and `formatVersionCorrection`. Inspect that generated config
+before treating a reexport as an equivalent round trip. Preserve the imported
+BP/RP roots while restoring the original target version and explicit
+`simpleRewrite`-only compiler contract in the disposable authoring project.
+Verify the resulting download against the untouched canonical inputs; never
+repair the exported ZIP to make the comparison pass. This bypasses authoring
+transforms, not Bedrock validation: compiler silence and byte equality do not
+prove valid Molang, correct animation behavior or Java parity.
+
+No complete before/after GUI or staging result is supplied by this test design
+itself. Keep individual operator results and their limitations in the task PR.
