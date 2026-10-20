@@ -1,0 +1,1408 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Parse upstream tags/item and tags/items JSON, preserving tag references and loader paths.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "resources": {
+    "common/src/main/resources/data/c/tags/item/crops/canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/crops/canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/crops/canola.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/crops/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/crops/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/crops/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/crops/onion.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/crops/onion.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/crops/onion.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/crops/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/crops/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/crops/sweet_potato.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/crops.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/crops.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/crops.json",
+        "sha256": "a940323ed3dcdd8a278ef6ebbeaa26224b5cc94e28a133d72cf4722698038d48"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds",
+          "kaleidoscope_grilling:onion",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/foods/onion.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/foods/onion.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/foods/onion.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/foods/raw_beef.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/foods/raw_beef.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/foods/raw_beef.json",
+        "sha256": "c1cb876f5d32ef22bd057bb1dbc70a9dc50e7e543ee7ca3eaa7a6d80292c7b57"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/foods/raw_chicken.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/foods/raw_chicken.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/foods/raw_chicken.json",
+        "sha256": "13cfc49c70481c03d271c7947e9a75c5250c8b5c9fd703d1d66130ea622a6646"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_skin",
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/foods/vegetable.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/foods/vegetable.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/foods/vegetable.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/raw_meats.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/raw_meats.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/raw_meats.json",
+        "sha256": "6234833e1911ce44ae244e874d4737f22b5e50a472412b4f1e92dfe49c82ccaf"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks",
+          "kaleidoscope_grilling:chicken_skin",
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/seeds/canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/seeds/canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/seeds/canola.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/vegetables/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/vegetables/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/vegetables/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/vegetables/onion.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/vegetables/onion.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/vegetables/onion.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/vegetables/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/vegetables/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/vegetables/sweet_potato.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/item/vegetables.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/item/vegetables.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/item/vegetables.json",
+        "sha256": "a839110e603eefe70ea282a70a78404255883a63503beccdc519c92db84c5ce0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/c/tags/items/crops/tomato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/c/tags/items/crops/tomato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/c/tags/items/crops/tomato.json",
+        "sha256": "2d7827a6755d9d06c9b1c00254aaae67d6223b209beb7763b837a7dff27211af"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_cookery:tomato",
+          "#forge:crops/tomato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/crops/canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/crops/canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/crops/canola.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/crops/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/crops/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/crops/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/crops/onion.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/crops/onion.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/crops/onion.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/crops/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/crops/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/crops/sweet_potato.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/crops.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/crops.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/crops.json",
+        "sha256": "a940323ed3dcdd8a278ef6ebbeaa26224b5cc94e28a133d72cf4722698038d48"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds",
+          "kaleidoscope_grilling:onion",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/raw_beef.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/raw_beef.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/raw_beef.json",
+        "sha256": "c1cb876f5d32ef22bd057bb1dbc70a9dc50e7e543ee7ca3eaa7a6d80292c7b57"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/raw_chicken.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/raw_chicken.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/raw_chicken.json",
+        "sha256": "13cfc49c70481c03d271c7947e9a75c5250c8b5c9fd703d1d66130ea622a6646"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_skin",
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/raw_meats.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/raw_meats.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/raw_meats.json",
+        "sha256": "6234833e1911ce44ae244e874d4737f22b5e50a472412b4f1e92dfe49c82ccaf"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks",
+          "kaleidoscope_grilling:chicken_skin",
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/seeds/canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/seeds/canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/seeds/canola.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/vegetables/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/vegetables/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/vegetables/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/vegetables/onion.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/vegetables/onion.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/vegetables/onion.json",
+        "sha256": "cf783ac1f44b4cd51c6626a1096d62d8c180d7bb1981748ede4fc097344615d9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/vegetables/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/vegetables/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/vegetables/sweet_potato.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/forge/tags/items/vegetables.json": {
+      "source": {
+        "path": "common/src/main/resources/data/forge/tags/items/vegetables.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/forge/tags/items/vegetables.json",
+        "sha256": "a839110e603eefe70ea282a70a78404255883a63503beccdc519c92db84c5ce0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:onion",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_cookery/tags/item/meals.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_cookery/tags/item/meals.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_cookery/tags/item/meals.json",
+        "sha256": "697635f0f2f34694ac9a712c3247b0f7bea646ad5b5ff2e724be162fe76c71e0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_wing",
+          "kaleidoscope_grilling:houttuynia",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:roasted_sweet_potato",
+          "kaleidoscope_grilling:roasted_chicken_wing",
+          "kaleidoscope_grilling:cold_houttuynia",
+          "kaleidoscope_grilling:sugared_tomato",
+          "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "kaleidoscope_grilling:braised_chicken_wings",
+          "kaleidoscope_grilling:potato_beef_stew",
+          "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "kaleidoscope_grilling:sour_spicy_noodles",
+          "kaleidoscope_grilling:secret_skewer",
+          "kaleidoscope_grilling:mysterious_skewer",
+          "kaleidoscope_grilling:dark_grilling",
+          "#kaleidoscope_grilling:raw_skewers",
+          "#kaleidoscope_grilling:grilled_skewers"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_cookery/tags/items/meals.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_cookery/tags/items/meals.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_cookery/tags/items/meals.json",
+        "sha256": "697635f0f2f34694ac9a712c3247b0f7bea646ad5b5ff2e724be162fe76c71e0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_wing",
+          "kaleidoscope_grilling:houttuynia",
+          "kaleidoscope_grilling:sweet_potato",
+          "kaleidoscope_grilling:roasted_sweet_potato",
+          "kaleidoscope_grilling:roasted_chicken_wing",
+          "kaleidoscope_grilling:cold_houttuynia",
+          "kaleidoscope_grilling:sugared_tomato",
+          "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "kaleidoscope_grilling:braised_chicken_wings",
+          "kaleidoscope_grilling:potato_beef_stew",
+          "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "kaleidoscope_grilling:sour_spicy_noodles",
+          "kaleidoscope_grilling:secret_skewer",
+          "kaleidoscope_grilling:mysterious_skewer",
+          "kaleidoscope_grilling:dark_grilling",
+          "#kaleidoscope_grilling:raw_skewers",
+          "#kaleidoscope_grilling:grilled_skewers"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_seasonings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_seasonings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_seasonings.json",
+        "sha256": "46dd339388e20ef59d8fefcec2bdc9abeb6950fd10be2474cd728133bdc50652"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_cookery:oil_pot",
+          "kaleidoscope_grilling:empty_seasoning_bottle",
+          "kaleidoscope_grilling:pending_seasoning",
+          "kaleidoscope_grilling:special_seasoning"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_tools.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_tools.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/advanced_rack_tools.json",
+        "sha256": "449bfae981775c564ca87cb48f09a2845e04936438455c53c5bc8e25c9ec9e6c"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "#kaleidoscope_cookery:kitchen_knife",
+          "#kaleidoscope_cookery:kitchen_shovel",
+          "minecraft:flint_and_steel"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/grilled_skewers.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/grilled_skewers.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/grilled_skewers.json",
+        "sha256": "c79eef120d4ecb3101b585fde2d30c5414f0b03e37f44ff58fa1edc5a536c274"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:grilled_beef_skewer",
+          "kaleidoscope_grilling:grilled_pork_belly_skewer",
+          "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+          "kaleidoscope_grilling:grilled_mid_wing_skewer",
+          "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+          "kaleidoscope_grilling:grilled_fish_skewer",
+          "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+          "kaleidoscope_grilling:grilled_potato_slice_skewer",
+          "kaleidoscope_grilling:grilled_caterpillar_skewer",
+          "kaleidoscope_grilling:grilled_mushroom_skewer",
+          "kaleidoscope_grilling:grilled_bun_slice_skewer",
+          "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+          "kaleidoscope_grilling:grilled_meatball_skewer",
+          "kaleidoscope_grilling:grilled_slime_skewer",
+          "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+          "kaleidoscope_grilling:grilled_fried_egg_skewer",
+          "kaleidoscope_grilling:grilled_gluten_skewer",
+          "kaleidoscope_grilling:grilled_lamb_skewer",
+          "kaleidoscope_grilling:grilled_golden_skewer",
+          "kaleidoscope_grilling:ordinary_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/beef_chunks.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/beef_chunks.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/beef_chunks.json",
+        "sha256": "c1cb876f5d32ef22bd057bb1dbc70a9dc50e7e543ee7ca3eaa7a6d80292c7b57"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/canola_seeds.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/canola_seeds.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/canola_seeds.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/carrot_dice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/carrot_dice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/carrot_dice.json",
+        "sha256": "b5afb11f20cf36bf6a64cbab927e8f40c8ab94f78a50f0f49e95a5e686c3118b"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:carrot_dice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_skin.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_skin.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_skin.json",
+        "sha256": "3b9741a78648ae13e36b9693597c654022e0de59299c6713dce88bb651cea141"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_skin"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/chicken_wings.json",
+        "sha256": "06889823944c714dcf7ce6256efc39ea0b70fec8a0f364ee2514014442f9d8b0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/leafy_greens.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/leafy_greens.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/leafy_greens.json",
+        "sha256": "e31ba777a4daf54e4c48bee14d6fffc2dc50149bcc19bf396b637b93ec8957a9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_cookery:lettuce"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/minced_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/minced_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/minced_houttuynia.json",
+        "sha256": "67d9152704829f75fafb009522e6b30b47e4e196aa1666220295dc31f56fd826"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:minced_houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/onions.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/onions.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/onions.json",
+        "sha256": "b6fabc7cb8ecd27404fc541b5793be1616e198cb022fb12850a290f356a459c1"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "#c:crops/onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/potato_slices.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/potato_slices.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/potato_slices.json",
+        "sha256": "2930516404ed7507a0005a6ce39c1a00e8cd9e6ba09944a5b967648383e8443a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:potato_slice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_mantou_slices.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_mantou_slices.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_mantou_slices.json",
+        "sha256": "f0805f5faa69bf32d77003097dbe5b444dd72b0c0ac12b9271fe36d9450b8c46"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_mantou_slice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_sweet_potato_sheets.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_sweet_potato_sheets.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/raw_sweet_potato_sheets.json",
+        "sha256": "5e9879f8821f1dd2f431984fc1fe9882bb22601650b9147e9d940a218a23495a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_sweet_potato_sheet"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/squid_tentacles.json",
+        "sha256": "86f0d678c0c4937cbe3621f6ccdc77f10b83c3e5ccd654bb1615546ee3c84638"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:squid_tentacle"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/sweet_potatoes.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/sweet_potatoes.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/ingredients/sweet_potatoes.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/press_stones.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/press_stones.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/press_stones.json",
+        "sha256": "a1e79f41a4ea26ab71fc1817570ef082226d2fb5bc5581d89a31a6b36282be42"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "minecraft:stone",
+          "minecraft:cobblestone",
+          "minecraft:deepslate",
+          "minecraft:cobbled_deepslate",
+          "minecraft:blackstone"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/raw_skewers.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/raw_skewers.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/raw_skewers.json",
+        "sha256": "b3d9e38f874340600f90facc5eaf4f2875ef452948fd8fa7c17738369e324b92"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_beef_skewer",
+          "kaleidoscope_grilling:raw_pork_belly_skewer",
+          "kaleidoscope_grilling:raw_chicken_skin_skewer",
+          "kaleidoscope_grilling:raw_mid_wing_skewer",
+          "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+          "kaleidoscope_grilling:raw_fish_skewer",
+          "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+          "kaleidoscope_grilling:raw_potato_slice_skewer",
+          "kaleidoscope_grilling:raw_caterpillar_skewer",
+          "kaleidoscope_grilling:raw_mushroom_skewer",
+          "kaleidoscope_grilling:raw_bun_slice_skewer",
+          "kaleidoscope_grilling:raw_ender_pearl_skewer",
+          "kaleidoscope_grilling:raw_meatball_skewer",
+          "kaleidoscope_grilling:raw_slime_skewer",
+          "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+          "kaleidoscope_grilling:raw_fried_egg_skewer",
+          "kaleidoscope_grilling:raw_gluten_skewer",
+          "kaleidoscope_grilling:raw_lamb_skewer",
+          "kaleidoscope_grilling:raw_golden_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/skewerable_ingredients.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/skewerable_ingredients.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/skewerable_ingredients.json",
+        "sha256": "2bfddf4975eb95f6df75f9c53aa64e0574512af1ed2859691a52e9f1a34f9579"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "minecraft:bone",
+          "minecraft:ender_pearl",
+          "minecraft:slime_ball"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/item/unskewerable_ingredients.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/item/unskewerable_ingredients.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/item/unskewerable_ingredients.json",
+        "sha256": "0c615d27d6e7932dab70603593b0d4b2098f06e605c17c7e8549a677ec84ef94"
+      },
+      "data": {
+        "replace": false,
+        "values": []
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_seasonings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_seasonings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_seasonings.json",
+        "sha256": "46dd339388e20ef59d8fefcec2bdc9abeb6950fd10be2474cd728133bdc50652"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_cookery:oil_pot",
+          "kaleidoscope_grilling:empty_seasoning_bottle",
+          "kaleidoscope_grilling:pending_seasoning",
+          "kaleidoscope_grilling:special_seasoning"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_tools.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_tools.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/advanced_rack_tools.json",
+        "sha256": "449bfae981775c564ca87cb48f09a2845e04936438455c53c5bc8e25c9ec9e6c"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "#kaleidoscope_cookery:kitchen_knife",
+          "#kaleidoscope_cookery:kitchen_shovel",
+          "minecraft:flint_and_steel"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/grilled_skewers.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/grilled_skewers.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/grilled_skewers.json",
+        "sha256": "c79eef120d4ecb3101b585fde2d30c5414f0b03e37f44ff58fa1edc5a536c274"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:grilled_beef_skewer",
+          "kaleidoscope_grilling:grilled_pork_belly_skewer",
+          "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+          "kaleidoscope_grilling:grilled_mid_wing_skewer",
+          "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+          "kaleidoscope_grilling:grilled_fish_skewer",
+          "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+          "kaleidoscope_grilling:grilled_potato_slice_skewer",
+          "kaleidoscope_grilling:grilled_caterpillar_skewer",
+          "kaleidoscope_grilling:grilled_mushroom_skewer",
+          "kaleidoscope_grilling:grilled_bun_slice_skewer",
+          "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+          "kaleidoscope_grilling:grilled_meatball_skewer",
+          "kaleidoscope_grilling:grilled_slime_skewer",
+          "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+          "kaleidoscope_grilling:grilled_fried_egg_skewer",
+          "kaleidoscope_grilling:grilled_gluten_skewer",
+          "kaleidoscope_grilling:grilled_lamb_skewer",
+          "kaleidoscope_grilling:grilled_golden_skewer",
+          "kaleidoscope_grilling:ordinary_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/beef_chunks.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/beef_chunks.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/beef_chunks.json",
+        "sha256": "c1cb876f5d32ef22bd057bb1dbc70a9dc50e7e543ee7ca3eaa7a6d80292c7b57"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:beef_chunks"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/canola_seeds.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/canola_seeds.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/canola_seeds.json",
+        "sha256": "fdbc1d328981c5d4ff7d2e0075010421b2e8718920650d52be08a596a045dad0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:canola_seeds"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/carrot_dice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/carrot_dice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/carrot_dice.json",
+        "sha256": "b5afb11f20cf36bf6a64cbab927e8f40c8ab94f78a50f0f49e95a5e686c3118b"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:carrot_dice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_skin.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_skin.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_skin.json",
+        "sha256": "3b9741a78648ae13e36b9693597c654022e0de59299c6713dce88bb651cea141"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_skin"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/chicken_wings.json",
+        "sha256": "06889823944c714dcf7ce6256efc39ea0b70fec8a0f364ee2514014442f9d8b0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:chicken_wing"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/houttuynia.json",
+        "sha256": "2e4dda3164c18fb68c216f2f7f34cde93406ade7aa73836d2e198989b173d196"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/leafy_greens.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/leafy_greens.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/leafy_greens.json",
+        "sha256": "e31ba777a4daf54e4c48bee14d6fffc2dc50149bcc19bf396b637b93ec8957a9"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_cookery:lettuce"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/minced_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/minced_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/minced_houttuynia.json",
+        "sha256": "67d9152704829f75fafb009522e6b30b47e4e196aa1666220295dc31f56fd826"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:minced_houttuynia"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/onions.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/onions.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/onions.json",
+        "sha256": "d14f1195e31ba36c95243d820db4f679426670d77ebd6d7587170a41d3163df4"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "#forge:crops/onion"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/potato_slices.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/potato_slices.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/potato_slices.json",
+        "sha256": "2930516404ed7507a0005a6ce39c1a00e8cd9e6ba09944a5b967648383e8443a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:potato_slice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_mantou_slices.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_mantou_slices.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_mantou_slices.json",
+        "sha256": "f0805f5faa69bf32d77003097dbe5b444dd72b0c0ac12b9271fe36d9450b8c46"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_mantou_slice"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_sweet_potato_sheets.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_sweet_potato_sheets.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/raw_sweet_potato_sheets.json",
+        "sha256": "5e9879f8821f1dd2f431984fc1fe9882bb22601650b9147e9d940a218a23495a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_sweet_potato_sheet"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/squid_tentacles.json",
+        "sha256": "86f0d678c0c4937cbe3621f6ccdc77f10b83c3e5ccd654bb1615546ee3c84638"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:squid_tentacle"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/sweet_potatoes.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/sweet_potatoes.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/ingredients/sweet_potatoes.json",
+        "sha256": "5589d34b65b7bc0a2fed2136db51f2c7d74a10da6f44c61dd09c4cf88a638d7a"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:sweet_potato"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/press_stones.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/press_stones.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/press_stones.json",
+        "sha256": "a1e79f41a4ea26ab71fc1817570ef082226d2fb5bc5581d89a31a6b36282be42"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "minecraft:stone",
+          "minecraft:cobblestone",
+          "minecraft:deepslate",
+          "minecraft:cobbled_deepslate",
+          "minecraft:blackstone"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/raw_skewers.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/raw_skewers.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/raw_skewers.json",
+        "sha256": "b3d9e38f874340600f90facc5eaf4f2875ef452948fd8fa7c17738369e324b92"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:raw_beef_skewer",
+          "kaleidoscope_grilling:raw_pork_belly_skewer",
+          "kaleidoscope_grilling:raw_chicken_skin_skewer",
+          "kaleidoscope_grilling:raw_mid_wing_skewer",
+          "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+          "kaleidoscope_grilling:raw_fish_skewer",
+          "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+          "kaleidoscope_grilling:raw_potato_slice_skewer",
+          "kaleidoscope_grilling:raw_caterpillar_skewer",
+          "kaleidoscope_grilling:raw_mushroom_skewer",
+          "kaleidoscope_grilling:raw_bun_slice_skewer",
+          "kaleidoscope_grilling:raw_ender_pearl_skewer",
+          "kaleidoscope_grilling:raw_meatball_skewer",
+          "kaleidoscope_grilling:raw_slime_skewer",
+          "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+          "kaleidoscope_grilling:raw_fried_egg_skewer",
+          "kaleidoscope_grilling:raw_gluten_skewer",
+          "kaleidoscope_grilling:raw_lamb_skewer",
+          "kaleidoscope_grilling:raw_golden_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/skewerable_ingredients.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/skewerable_ingredients.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/skewerable_ingredients.json",
+        "sha256": "2bfddf4975eb95f6df75f9c53aa64e0574512af1ed2859691a52e9f1a34f9579"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "minecraft:bone",
+          "minecraft:ender_pearl",
+          "minecraft:slime_ball"
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/tags/items/unskewerable_ingredients.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/tags/items/unskewerable_ingredients.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/tags/items/unskewerable_ingredients.json",
+        "sha256": "0c615d27d6e7932dab70603593b0d4b2098f06e605c17c7e8549a677ec84ef94"
+      },
+      "data": {
+        "replace": false,
+        "values": []
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/leaves.json",
+        "sha256": "82097dbc9869a418bdd3b18dbab5d6b913e92fac25da6c7116b2233c6fbe21ac"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/logs.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/logs.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/logs.json",
+        "sha256": "8b3b09555e6672ad0294bec15a9add163051597fc900aaeb4acb1e1c682b9cd0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/logs_that_burn.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/logs_that_burn.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/logs_that_burn.json",
+        "sha256": "8b3b09555e6672ad0294bec15a9add163051597fc900aaeb4acb1e1c682b9cd0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/mineable/axe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/mineable/axe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/mineable/axe.json",
+        "sha256": "a1ca4b748a4c47940119f7db42a286601146d658f64891500d749358f2ee9771"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log",
+          "kaleidoscope_grilling:advanced_rack",
+          "kaleidoscope_grilling:oil_press"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/mineable/hoe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/mineable/hoe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/mineable/hoe.json",
+        "sha256": "82097dbc9869a418bdd3b18dbab5d6b913e92fac25da6c7116b2233c6fbe21ac"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/mineable/pickaxe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/mineable/pickaxe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/mineable/pickaxe.json",
+        "sha256": "54652aeb44030454d1419bedd08951a8cbb153d26c583af7b2f87b5160a9f3a4"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:big_vat",
+          "kaleidoscope_grilling:grill"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/block/saplings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/block/saplings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/block/saplings.json",
+        "sha256": "e097821b983809d977c38fb4d4e5e98689e309a6facce0efcf7b9455c1152423"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_sapling"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/leaves.json",
+        "sha256": "182f33bdab97d688a33a7027d7100fcc1beff7ba051b4c5058be537110e82fe5"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/logs.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/logs.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/logs.json",
+        "sha256": "5f0da294cc137668cbbeab72589cc0a8c26d6dff42a911639fd040135dbaab42"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/logs_that_burn.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/logs_that_burn.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/logs_that_burn.json",
+        "sha256": "5f0da294cc137668cbbeab72589cc0a8c26d6dff42a911639fd040135dbaab42"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/mineable/axe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/mineable/axe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/mineable/axe.json",
+        "sha256": "2fdd0a7c25fa3e3896cf8044a98c7b939423b38cf4134a93fb6a018253c8e764"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log",
+          "kaleidoscope_grilling:advanced_rack",
+          "kaleidoscope_grilling:oil_press"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/mineable/hoe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/mineable/hoe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/mineable/hoe.json",
+        "sha256": "182f33bdab97d688a33a7027d7100fcc1beff7ba051b4c5058be537110e82fe5"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/mineable/pickaxe.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/mineable/pickaxe.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/mineable/pickaxe.json",
+        "sha256": "54652aeb44030454d1419bedd08951a8cbb153d26c583af7b2f87b5160a9f3a4"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:big_vat",
+          "kaleidoscope_grilling:grill"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/blocks/saplings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/blocks/saplings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/blocks/saplings.json",
+        "sha256": "ec982ae87a7d4806ac9c83476b87d13f314929807024eeb967056eb7c7abc33e"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_sapling"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_armor.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_armor.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_armor.json",
+        "sha256": "b575408bb4399ca95c1705debed6ea08cbe3fb7cef0d4d2db9b370475ff9594f"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:ordinary_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json",
+        "sha256": "b575408bb4399ca95c1705debed6ea08cbe3fb7cef0d4d2db9b370475ff9594f"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:ordinary_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_resistance.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/damage_type/bypasses_resistance.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_resistance.json",
+        "sha256": "b575408bb4399ca95c1705debed6ea08cbe3fb7cef0d4d2db9b370475ff9594f"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:ordinary_skewer"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/item/leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/item/leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/item/leaves.json",
+        "sha256": "82097dbc9869a418bdd3b18dbab5d6b913e92fac25da6c7116b2233c6fbe21ac"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/item/logs_that_burn.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/item/logs_that_burn.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/item/logs_that_burn.json",
+        "sha256": "8b3b09555e6672ad0294bec15a9add163051597fc900aaeb4acb1e1c682b9cd0"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/item/saplings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/item/saplings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/item/saplings.json",
+        "sha256": "e097821b983809d977c38fb4d4e5e98689e309a6facce0efcf7b9455c1152423"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_sapling"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/items/leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/items/leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/items/leaves.json",
+        "sha256": "182f33bdab97d688a33a7027d7100fcc1beff7ba051b4c5058be537110e82fe5"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_leaves"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/items/logs_that_burn.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/items/logs_that_burn.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/items/logs_that_burn.json",
+        "sha256": "5f0da294cc137668cbbeab72589cc0a8c26d6dff42a911639fd040135dbaab42"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_log"
+        ]
+      }
+    },
+    "common/src/main/resources/data/minecraft/tags/items/saplings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/minecraft/tags/items/saplings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/items/saplings.json",
+        "sha256": "ec982ae87a7d4806ac9c83476b87d13f314929807024eeb967056eb7c7abc33e"
+      },
+      "data": {
+        "replace": false,
+        "values": [
+          "kaleidoscope_grilling:pepper_sapling"
+        ]
+      }
+    }
+  }
+}

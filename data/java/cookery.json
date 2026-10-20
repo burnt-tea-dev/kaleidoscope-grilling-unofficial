@@ -1,0 +1,297 @@
+{
+  "source_commit": {
+    "forge1.20.1": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+    "neoforge1.21.1": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c"
+  },
+  "source_repository": "KaleidoscopeMods/KaleidoscopeCookery",
+  "extraction_method": "Read six bounded Java files with git show at each exact revision; extract numeric fields, quality tiers and selected method expressions without execution.",
+  "licenses": [
+    "BSD-3-Clause; upstream LICENSE-CODE retained per loader"
+  ],
+  "loaders": {
+    "forge1.20.1": {
+      "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+      "sources": {
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/ProjectileDodgeEvent.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/ProjectileDodgeEvent.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "7447e7520753259f4603567aa028e2405189bf6d44deedde62b2fb8821190355",
+          "numeric_fields": [
+            {
+              "name": "DODGE_COST",
+              "expression": "200"
+            }
+          ],
+          "methods": {
+            "onProjectileHit": {
+              "line_start": 29,
+              "java_expression": "public static void onProjectileHit(ProjectileImpactEvent event) {\n        if (event.getEntity().level().isClientSide()) {\n            return;\n        }\n\n        HitResult hit = event.getRayTraceResult();\n        if (hit instanceof EntityHitResult hitResult\n            && hitResult.getEntity() instanceof LivingEntity living\n            && living.hasEffect(ModEffects.PROJECTILE_DODGE.get())\n        ) {\n            // 取消弹射物碰撞并随机传送\n            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);\n            randomTeleport(living.level(), living, 3, 16);\n\n            // 消耗持续时间\n            MobEffectInstance instance = living.getEffect(ModEffects.PROJECTILE_DODGE.get());\n            if (instance != null) {\n                // 如果是无限时间，不扣除\n                if (instance.isInfiniteDuration()){\n                    return;\n                }\n                if (instance.getDuration() <= DODGE_COST) {\n                    living.removeEffect(ModEffects.PROJECTILE_DODGE.get());\n                } else {\n                    instance.duration -= DODGE_COST;\n                    living.forceAddEffect(instance, null);\n                }\n            }\n        }\n    }"
+            },
+            "randomTeleport": {
+              "line_start": 68,
+              "java_expression": "public static void randomTeleport(Level level, LivingEntity living, double range, int maxAttempts) {\n        if (level.isClientSide) {\n            return;\n        }\n\n        double x = living.getX();\n        double y = living.getY();\n        double z = living.getZ();\n        int minH = level.getMinBuildHeight();\n        int maxH = ((ServerLevel) level).getLogicalHeight();\n\n        for (int i = 0; i < maxAttempts; ++i) {\n            double targetX = x + (living.getRandom().nextDouble() - 0.5) * range;\n            double targetY = Mth.clamp(y + (living.getRandom().nextDouble() - 0.5) * range, minH, minH + maxH - 1);\n            double targetZ = z + (living.getRandom().nextDouble() - 0.5) * range;\n\n            if (living.isPassenger()) {\n                living.stopRiding();\n            }\n\n            Vec3 previousPos = living.position();\n            level.gameEvent(GameEvent.TELEPORT, previousPos, GameEvent.Context.of(living));\n            if (living.randomTeleport(targetX, targetY, targetZ, true)) {\n                SoundEvent soundEvent = SoundEvents.ENDERMAN_TELEPORT;\n                level.playSound(null, x, y, z, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);\n                living.playSound(soundEvent, 1.0F, 1.0F);\n                break;\n            }\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/HinderEvent.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/HinderEvent.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "dd973e3ca9a6eb1bc94b8a80077d56a8058d4a43d3f966e80224b1d3dcc7b652",
+          "numeric_fields": [],
+          "methods": {
+            "onLivingDamage": {
+              "line_start": 16,
+              "java_expression": "public static void onLivingDamage(LivingDamageEvent event) {\n        LivingEntity target = event.getEntity();\n        if (target.level().isClientSide()) {\n            return;\n        }\n        DamageSource source = event.getSource();\n        if (source.getEntity() instanceof LivingEntity attacker && attacker.hasEffect(ModEffects.HINDER.get())) {\n            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/network/message/SimpleC2SModMessage.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/network/message/SimpleC2SModMessage.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "a17464db666ab0417698412e8f0faa9aa62ae5880cd214a6e4a865595bc44914",
+          "numeric_fields": [
+            {
+              "name": "FLATULENCE",
+              "expression": "0"
+            },
+            {
+              "name": "THROW_BAOZI",
+              "expression": "1"
+            }
+          ],
+          "methods": {
+            "handleFlatulenceEffect": {
+              "line_start": 48,
+              "java_expression": "private static void handleFlatulenceEffect(NetworkEvent.Context context) {\n        ServerPlayer player = context.getSender();\n        if (player != null && player.hasEffect(ModEffects.FLATULENCE.get())) {\n            ServerLevel serverLevel = player.serverLevel();\n            serverLevel.sendParticles(ParticleTypes.CLOUD, player.getX(),\n                    player.getY() + 0.25, player.getZ(),\n                    10, 0.25, 0.25, 0.25, 0.1);\n            serverLevel.playSound(null, player.blockPosition(),\n                    ModSounds.ENTITY_FART.get(), SoundSource.PLAYERS,\n                    1.0F, 0.8F + (float) Math.random() * 0.4F);\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityEvaluator.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityEvaluator.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "d7d8b53950b3c3ae6dc405dbd1e7b67b6adaba9a7b8e0ece7c6586c51c969d7b",
+          "numeric_fields": [
+            {
+              "name": "MAX_CAPACITY",
+              "expression": "9"
+            }
+          ],
+          "methods": {
+            "evaluate": {
+              "line_start": 20,
+              "java_expression": "public static Quality evaluate(List<ItemStack> inputs, List<Ingredient> ingredients,\n                                   ResourceLocation recipeId, long worldSeed) {\n        // 先剔除空占位符\n        List<Ingredient> nonEmpty = Lists.newArrayList();\n        ingredients.forEach(ingredient -> {\n            if (!ingredient.isEmpty()) {\n                nonEmpty.add(ingredient);\n            }\n        });\n\n        // 任意为空则直接返回 POOR 品质，避免除零和无意义的评估\n        if (inputs.isEmpty() || nonEmpty.isEmpty()) {\n            return Quality.POOR;\n        }\n\n        // 如果种类数量为 1，那么仅依据投料数量进行判断\n        if (nonEmpty.size() == 1) {\n            return oneInputQuality(inputs, recipeId, worldSeed);\n        }\n\n        var recipeVector = randomVector(nonEmpty, recipeId, worldSeed);\n        return evalQuality(inputs, recipeVector);\n    }"
+            },
+            "oneInputQuality": {
+              "line_start": 44,
+              "java_expression": "private static @NotNull Quality oneInputQuality(List<ItemStack> inputs, ResourceLocation recipeId, long worldSeed) {\n        // 生成专属的种子\n        long recipeSeed = worldSeed * 31 + recipeId.hashCode();\n        Random random = new Random(recipeSeed);\n\n        int count = inputs.size();\n        if (count <= 1) {\n            return Quality.POOR;\n        }\n\n        int standard = 1 + random.nextInt(2);\n        if (count <= standard) {\n            return Quality.STANDARD;\n        }\n\n        int excellent = 2 + random.nextInt(2);\n        if (count <= excellent) {\n            return Quality.EXCELLENT;\n        }\n\n        return Quality.SUPERB;\n    }"
+            },
+            "randomVector": {
+              "line_start": 70,
+              "java_expression": "private static List<Pair<Ingredient, Integer>> randomVector(List<Ingredient> ingredients, ResourceLocation id, long seed) {\n        // 生成专属的种子\n        long recipeSeed = seed * 31 + id.hashCode();\n        Random random = new Random(recipeSeed);\n\n        // 按总数生成比例\n        int size = ingredients.size();\n        IntList countPool = new IntArrayList(size);\n\n        switch (size) {\n            case 2:\n                // 主料 (2~4) + 辅料 (1~2)\n                countPool.add(2 + random.nextInt(3)); // 2, 3, 4\n                countPool.add(1 + random.nextInt(2)); // 1, 2\n                break;\n\n            case 3:\n                // 阶梯式：大 (2~4) + 中 (1~3) + 小 (1~2)\n                countPool.add(2 + random.nextInt(3)); // 2, 3, 4\n                countPool.add(1 + random.nextInt(3)); // 1, 2, 3\n                countPool.add(1 + random.nextInt(2)); // 1, 2\n                break;\n\n            default:\n                // 4种及以上，精细控量防止总数爆炸，全员 1~2\n                for (int i = 0; i < size; i++) {\n                    countPool.add(1 + random.nextInt(2)); // 1, 2\n                }\n                break;\n        }\n\n        Collections.shuffle(countPool, random);\n\n        // 5. 将打乱后的数量与 Ingredient 映射绑定\n        List<Pair<Ingredient, Integer>> recipeVector = Lists.newArrayList();\n        for (int i = 0; i < size; i++) {\n            recipeVector.add(Pair.of(ingredients.get(i), countPool.getInt(i)));\n        }\n\n        return recipeVector;\n    }"
+            },
+            "evalQuality": {
+              "line_start": 115,
+              "java_expression": "private static Quality evalQuality(List<ItemStack> inputs, List<Pair<Ingredient, Integer>> recipes) {\n        int size = recipes.size();\n\n        // 先获取投料和配方的比例向量\n        int[] inputsVec = new int[size];\n        int[] recipesVec = new int[size];\n        for (int i = 0; i < size; i++) {\n            var pair = recipes.get(i);\n            for (ItemStack stack : inputs) {\n                if (pair.left().test(stack)) {\n                    inputsVec[i]++;\n                }\n            }\n            recipesVec[i] = pair.right();\n        }\n\n        // 评估函数获取分数\n        double finalScore = getFinalScore(size, inputs.size(), inputsVec, recipesVec);\n\n        // 根据得分划分品质档位\n        for (Quality quality : Quality.values()) {\n            if (finalScore >= quality.getScore()) {\n                return quality;\n            }\n        }\n\n        return Quality.STANDARD;\n    }"
+            },
+            "getFinalScore": {
+              "line_start": 144,
+              "java_expression": "private static double getFinalScore(int size, int inputSize, int[] inputsVec, int[] recipesVec) {\n        // 计算基础余弦相似度\n        double dotProduct = 0.0;\n        double normA = 0.0;\n        double normB = 0.0;\n        for (int i = 0; i < size; i++) {\n            double a = inputsVec[i];\n            double b = recipesVec[i];\n            dotProduct += a * b;\n            normA += a * a;\n            normB += b * b;\n        }\n        double cosine = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));\n\n        // 四次方陡峭化，将低容量下密集的余弦值拉开档次\n        double similarityScore = Math.pow(cosine, 4);\n\n        // 数量因子\n        double quantityFactor = 0.8 + 0.2 * (inputSize / (double) MAX_CAPACITY);\n\n        // 复合得分\n        return Mth.clamp(similarityScore * quantityFactor, 0.0, 1.0);\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/Quality.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/Quality.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "97fb5e5105906745e717e1179c56828b36f82acdc3d1fef1831f72a64758e39c",
+          "numeric_fields": [],
+          "methods": {},
+          "tiers": [
+            {
+              "name": "SUPERB",
+              "id": 0,
+              "score": 0.95,
+              "ratio": 1.2
+            },
+            {
+              "name": "EXCELLENT",
+              "id": 1,
+              "score": 0.82,
+              "ratio": 0.9
+            },
+            {
+              "name": "STANDARD",
+              "id": 2,
+              "score": 0.55,
+              "ratio": 0.6
+            },
+            {
+              "name": "POOR",
+              "id": 3,
+              "score": 0.0,
+              "ratio": 0.3
+            }
+          ]
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityUtils.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityUtils.java",
+          "source_commit": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "sha256": "f6306a61100bf572f3f84fb9c6d1473fdcfa0f6dde571d08b188e4de9c32a801",
+          "numeric_fields": [],
+          "methods": {
+            "modifyEffects": {
+              "line_start": 29,
+              "java_expression": "public static List<MobEffectInstance> modifyEffects(List<MobEffectInstance> effectInstances, Quality quality) {\n        List<MobEffectInstance> list = Lists.newArrayList();\n        for (MobEffectInstance instance : effectInstances) {\n            int duration = (int) Math.round(quality.getRatio() * instance.getDuration());\n            if (duration > 0) {\n                list.add(new MobEffectInstance(instance.getEffect(), duration, instance.getAmplifier()));\n            }\n        }\n        return list;\n    }"
+            },
+            "modifyFoodProperties": {
+              "line_start": 40,
+              "java_expression": "public static FoodProperties modifyFoodProperties(FoodProperties raw, Quality quality) {\n        double ratio = quality.getRatio();\n\n        int nutrition = (int) Math.round(ratio * raw.getNutrition());\n        float saturationMod = (float) ratio * raw.getSaturationModifier();\n\n        FoodProperties.Builder builder = new FoodProperties.Builder();\n        builder.nutrition(nutrition).saturationMod(saturationMod);\n\n        raw.getEffects().forEach(effect -> {\n            if (effect.getSecond() >= 1F) {\n                MobEffectInstance instance = effect.getFirst();\n                int duration = (int) Math.round(ratio * instance.getDuration());\n                int amplifier = instance.getAmplifier();\n                if (duration > 0) {\n                    MobEffectInstance newEffect = new MobEffectInstance(instance.getEffect(), duration, amplifier);\n                    builder.effect(() -> newEffect, effect.getSecond());\n                }\n            }\n        });\n\n        if (raw.isMeat()) {\n            builder.meat();\n        }\n        if (raw.isFastFood()) {\n            builder.fast();\n        }\n        if (raw.canAlwaysEat()) {\n            builder.alwaysEat();\n        }\n\n        return builder.build();\n    }"
+            }
+          }
+        }
+      },
+      "license_text": "BSD 3-Clause License\n\nCopyright (c) 2025, Kaleidoscope Official Production Team\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
+    },
+    "neoforge1.21.1": {
+      "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+      "sources": {
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/ProjectileDodgeEvent.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/ProjectileDodgeEvent.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "62e2b731aabcf188e5e7e90a907414a532f0a1375cec61e9155acdd17af7bd60",
+          "numeric_fields": [
+            {
+              "name": "DODGE_COST",
+              "expression": "200"
+            }
+          ],
+          "methods": {
+            "onProjectileHit": {
+              "line_start": 29,
+              "java_expression": "public static void onProjectileHit(ProjectileImpactEvent event) {\n        if (event.getEntity().level().isClientSide()) {\n            return;\n        }\n\n        HitResult hit = event.getRayTraceResult();\n        if (hit instanceof EntityHitResult hitResult\n            && hitResult.getEntity() instanceof LivingEntity living\n            && living.hasEffect(ModEffects.PROJECTILE_DODGE)\n        ) {\n            // 取消弹射物碰撞并随机传送\n            event.setCanceled(true);\n            randomTeleport(living.level(), living, 3, 16);\n\n            // 消耗持续时间\n            MobEffectInstance instance = living.getEffect(ModEffects.PROJECTILE_DODGE);\n            if (instance != null) {\n                // 如果是无限时间，不扣除\n                if (instance.isInfiniteDuration()) {\n                    return;\n                }\n                if (instance.getDuration() <= DODGE_COST) {\n                    living.removeEffect(ModEffects.PROJECTILE_DODGE);\n                } else {\n                    instance.duration -= DODGE_COST;\n                    living.forceAddEffect(instance, null);\n                }\n            }\n        }\n    }"
+            },
+            "randomTeleport": {
+              "line_start": 68,
+              "java_expression": "public static void randomTeleport(Level level, LivingEntity living, double range, int maxAttempts) {\n        if (level.isClientSide) {\n            return;\n        }\n\n        double x = living.getX();\n        double y = living.getY();\n        double z = living.getZ();\n        int minH = level.getMinBuildHeight();\n        int maxH = ((ServerLevel) level).getLogicalHeight();\n\n        for (int i = 0; i < maxAttempts; ++i) {\n            double targetX = x + (living.getRandom().nextDouble() - 0.5) * range;\n            double targetY = Mth.clamp(y + (living.getRandom().nextDouble() - 0.5) * range, minH, minH + maxH - 1);\n            double targetZ = z + (living.getRandom().nextDouble() - 0.5) * range;\n\n            if (living.isPassenger()) {\n                living.stopRiding();\n            }\n\n            Vec3 previousPos = living.position();\n            level.gameEvent(GameEvent.TELEPORT, previousPos, GameEvent.Context.of(living));\n            if (living.randomTeleport(targetX, targetY, targetZ, true)) {\n                SoundEvent soundEvent = SoundEvents.ENDERMAN_TELEPORT;\n                level.playSound(null, x, y, z, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);\n                living.playSound(soundEvent, 1.0F, 1.0F);\n                break;\n            }\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/HinderEvent.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/event/effect/HinderEvent.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "4941d13949ce012530a1114fd6bf5c8a85c49f52bec9294b61b60619947f15e8",
+          "numeric_fields": [],
+          "methods": {
+            "onLivingDamage": {
+              "line_start": 16,
+              "java_expression": "public static void onLivingDamage(LivingDamageEvent.Pre event) {\n        LivingEntity target = event.getEntity();\n        if (target.level().isClientSide()) {\n            return;\n        }\n        DamageSource source = event.getSource();\n        if (source.getEntity() instanceof LivingEntity attacker && attacker.hasEffect(ModEffects.HINDER)) {\n            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/network/message/SimpleC2SModMessage.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/network/message/SimpleC2SModMessage.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "b373d6104477be744819dc7226c7e56e8f58415cc5f93a14b2fbb4ff0a0726a1",
+          "numeric_fields": [
+            {
+              "name": "FLATULENCE",
+              "expression": "0"
+            },
+            {
+              "name": "THROW_BAOZI",
+              "expression": "1"
+            }
+          ],
+          "methods": {
+            "handleFlatulenceEffect": {
+              "line_start": 48,
+              "java_expression": "private static void handleFlatulenceEffect(IPayloadContext context) {\n        if (context.player() instanceof ServerPlayer player && player.hasEffect(ModEffects.FLATULENCE)) {\n            ServerLevel serverLevel = player.serverLevel();\n            serverLevel.sendParticles(ParticleTypes.CLOUD, player.getX(),\n                    player.getY() + 0.25, player.getZ(),\n                    10, 0.25, 0.25, 0.25, 0.1);\n            serverLevel.playSound(null, player.blockPosition(),\n                    ModSounds.ENTITY_FART.get(), SoundSource.PLAYERS,\n                    1.0F, 0.8F + (float) Math.random() * 0.4F);\n        }\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityEvaluator.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityEvaluator.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "d7d8b53950b3c3ae6dc405dbd1e7b67b6adaba9a7b8e0ece7c6586c51c969d7b",
+          "numeric_fields": [
+            {
+              "name": "MAX_CAPACITY",
+              "expression": "9"
+            }
+          ],
+          "methods": {
+            "evaluate": {
+              "line_start": 20,
+              "java_expression": "public static Quality evaluate(List<ItemStack> inputs, List<Ingredient> ingredients,\n                                   ResourceLocation recipeId, long worldSeed) {\n        // 先剔除空占位符\n        List<Ingredient> nonEmpty = Lists.newArrayList();\n        ingredients.forEach(ingredient -> {\n            if (!ingredient.isEmpty()) {\n                nonEmpty.add(ingredient);\n            }\n        });\n\n        // 任意为空则直接返回 POOR 品质，避免除零和无意义的评估\n        if (inputs.isEmpty() || nonEmpty.isEmpty()) {\n            return Quality.POOR;\n        }\n\n        // 如果种类数量为 1，那么仅依据投料数量进行判断\n        if (nonEmpty.size() == 1) {\n            return oneInputQuality(inputs, recipeId, worldSeed);\n        }\n\n        var recipeVector = randomVector(nonEmpty, recipeId, worldSeed);\n        return evalQuality(inputs, recipeVector);\n    }"
+            },
+            "oneInputQuality": {
+              "line_start": 44,
+              "java_expression": "private static @NotNull Quality oneInputQuality(List<ItemStack> inputs, ResourceLocation recipeId, long worldSeed) {\n        // 生成专属的种子\n        long recipeSeed = worldSeed * 31 + recipeId.hashCode();\n        Random random = new Random(recipeSeed);\n\n        int count = inputs.size();\n        if (count <= 1) {\n            return Quality.POOR;\n        }\n\n        int standard = 1 + random.nextInt(2);\n        if (count <= standard) {\n            return Quality.STANDARD;\n        }\n\n        int excellent = 2 + random.nextInt(2);\n        if (count <= excellent) {\n            return Quality.EXCELLENT;\n        }\n\n        return Quality.SUPERB;\n    }"
+            },
+            "randomVector": {
+              "line_start": 70,
+              "java_expression": "private static List<Pair<Ingredient, Integer>> randomVector(List<Ingredient> ingredients, ResourceLocation id, long seed) {\n        // 生成专属的种子\n        long recipeSeed = seed * 31 + id.hashCode();\n        Random random = new Random(recipeSeed);\n\n        // 按总数生成比例\n        int size = ingredients.size();\n        IntList countPool = new IntArrayList(size);\n\n        switch (size) {\n            case 2:\n                // 主料 (2~4) + 辅料 (1~2)\n                countPool.add(2 + random.nextInt(3)); // 2, 3, 4\n                countPool.add(1 + random.nextInt(2)); // 1, 2\n                break;\n\n            case 3:\n                // 阶梯式：大 (2~4) + 中 (1~3) + 小 (1~2)\n                countPool.add(2 + random.nextInt(3)); // 2, 3, 4\n                countPool.add(1 + random.nextInt(3)); // 1, 2, 3\n                countPool.add(1 + random.nextInt(2)); // 1, 2\n                break;\n\n            default:\n                // 4种及以上，精细控量防止总数爆炸，全员 1~2\n                for (int i = 0; i < size; i++) {\n                    countPool.add(1 + random.nextInt(2)); // 1, 2\n                }\n                break;\n        }\n\n        Collections.shuffle(countPool, random);\n\n        // 5. 将打乱后的数量与 Ingredient 映射绑定\n        List<Pair<Ingredient, Integer>> recipeVector = Lists.newArrayList();\n        for (int i = 0; i < size; i++) {\n            recipeVector.add(Pair.of(ingredients.get(i), countPool.getInt(i)));\n        }\n\n        return recipeVector;\n    }"
+            },
+            "evalQuality": {
+              "line_start": 115,
+              "java_expression": "private static Quality evalQuality(List<ItemStack> inputs, List<Pair<Ingredient, Integer>> recipes) {\n        int size = recipes.size();\n\n        // 先获取投料和配方的比例向量\n        int[] inputsVec = new int[size];\n        int[] recipesVec = new int[size];\n        for (int i = 0; i < size; i++) {\n            var pair = recipes.get(i);\n            for (ItemStack stack : inputs) {\n                if (pair.left().test(stack)) {\n                    inputsVec[i]++;\n                }\n            }\n            recipesVec[i] = pair.right();\n        }\n\n        // 评估函数获取分数\n        double finalScore = getFinalScore(size, inputs.size(), inputsVec, recipesVec);\n\n        // 根据得分划分品质档位\n        for (Quality quality : Quality.values()) {\n            if (finalScore >= quality.getScore()) {\n                return quality;\n            }\n        }\n\n        return Quality.STANDARD;\n    }"
+            },
+            "getFinalScore": {
+              "line_start": 144,
+              "java_expression": "private static double getFinalScore(int size, int inputSize, int[] inputsVec, int[] recipesVec) {\n        // 计算基础余弦相似度\n        double dotProduct = 0.0;\n        double normA = 0.0;\n        double normB = 0.0;\n        for (int i = 0; i < size; i++) {\n            double a = inputsVec[i];\n            double b = recipesVec[i];\n            dotProduct += a * b;\n            normA += a * a;\n            normB += b * b;\n        }\n        double cosine = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));\n\n        // 四次方陡峭化，将低容量下密集的余弦值拉开档次\n        double similarityScore = Math.pow(cosine, 4);\n\n        // 数量因子\n        double quantityFactor = 0.8 + 0.2 * (inputSize / (double) MAX_CAPACITY);\n\n        // 复合得分\n        return Mth.clamp(similarityScore * quantityFactor, 0.0, 1.0);\n    }"
+            }
+          }
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/Quality.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/Quality.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "c7c36f8e541c45c264180c7c1eacb7cf89331244c85742fa20f16648e0044e01",
+          "numeric_fields": [],
+          "methods": {},
+          "tiers": [
+            {
+              "name": "SUPERB",
+              "id": 0,
+              "score": 0.95,
+              "ratio": 1.2
+            },
+            {
+              "name": "EXCELLENT",
+              "id": 1,
+              "score": 0.82,
+              "ratio": 0.9
+            },
+            {
+              "name": "STANDARD",
+              "id": 2,
+              "score": 0.55,
+              "ratio": 0.6
+            },
+            {
+              "name": "POOR",
+              "id": 3,
+              "score": 0.0,
+              "ratio": 0.3
+            }
+          ]
+        },
+        "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityUtils.java": {
+          "source_path": "src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityUtils.java",
+          "source_commit": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c",
+          "sha256": "d696f1d1887e220beb789f94c79834b3e7e3fdfc8d9fcbd4da00aed513370efb",
+          "numeric_fields": [],
+          "methods": {
+            "modifyEffects": {
+              "line_start": 27,
+              "java_expression": "public static List<MobEffectInstance> modifyEffects(List<MobEffectInstance> effectInstances, Quality quality) {\n        List<MobEffectInstance> list = Lists.newArrayList();\n        for (MobEffectInstance instance : effectInstances) {\n            int duration = (int) Math.round(quality.getRatio() * instance.getDuration());\n            if (duration > 0) {\n                list.add(new MobEffectInstance(instance.getEffect(), duration, instance.getAmplifier()));\n            }\n        }\n        return list;\n    }"
+            },
+            "modifyFoodProperties": {
+              "line_start": 38,
+              "java_expression": "public static FoodProperties modifyFoodProperties(FoodProperties raw, Quality quality) {\n        double ratio = quality.getRatio();\n\n        int nutrition = (int) Math.round(ratio * raw.nutrition());\n        float saturation = (float) ratio * raw.saturation();\n        List<FoodProperties.PossibleEffect> effects = Lists.newArrayList();\n\n        raw.effects().forEach(effect -> {\n            if (effect.probability() >= 1F) {\n                MobEffectInstance instance = effect.effect();\n                int duration = (int) Math.round(ratio * instance.getDuration());\n                int amplifier = instance.getAmplifier();\n                if (duration > 0) {\n                    MobEffectInstance newEffect = new MobEffectInstance(instance.getEffect(), duration, amplifier);\n                    var possibleEffect = new FoodProperties.PossibleEffect(() -> newEffect, effect.probability());\n                    effects.add(possibleEffect);\n                }\n            }\n        });\n\n        return new FoodProperties(\n                nutrition,\n                saturation,\n                raw.canAlwaysEat(),\n                raw.eatSeconds(),\n                raw.usingConvertsTo(),\n                effects\n        );\n    }"
+            }
+          }
+        }
+      },
+      "license_text": "BSD 3-Clause License\n\nCopyright (c) 2025, Kaleidoscope Official Production Team\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
+    }
+  }
+}

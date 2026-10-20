@@ -1,0 +1,2438 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Parse authored loot tables, advancements, worldgen and damage types; preserve original namespace and path.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "resources": {
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/a_handful_of_canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/a_handful_of_canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/a_handful_of_canola.json",
+        "sha256": "d4da98329d3fc63f0865f03f35b01bc8d6243c63c72635fef9a0bdb43f9af54d"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:canola_seeds"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.a_handful_of_canola.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.a_handful_of_canola.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/better_write_it_down.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/better_write_it_down.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/better_write_it_down.json",
+        "sha256": "28caed5bd22be62e27cdd2d5ce077dde8f9474a6000b0a4fac9591b6524f8d3b"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:skewer_recipe_book"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.better_write_it_down.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.better_write_it_down.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/eat_it_hot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/eat_it_hot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/eat_it_hot.json",
+        "sha256": "7efbdb8c7426ead965ae5602626a6521c524610dae12a6f9a04855a6b8f8d711"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:gleaming_with_oil",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:grilled_beef_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.eat_it_hot.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.eat_it_hot.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/fireworks_feast.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/fireworks_feast.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/fireworks_feast.json",
+        "sha256": "bc7a06811f1ca910f7e9ddea01c0b6b1f403de199e528a6e2e9df2175b6dcd7c"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:eat_it_hot",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:red_sweet_potato_porridge"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.fireworks_feast.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.fireworks_feast.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 100
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/gleaming_with_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/gleaming_with_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/gleaming_with_oil.json",
+        "sha256": "3b42b0aa792e3da4c7389d8649f7373d82cac343e579462fa21172266c3922b1"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:canola_oil_bucket"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.gleaming_with_oil.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.gleaming_with_oil.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/human_fireworks.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/human_fireworks.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/human_fireworks.json",
+        "sha256": "779c5e3d6c9b79c1549b93718ab546b64562c0a3ec7d8c8840e48aaab8dff430"
+      },
+      "data": {
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:grill"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.human_fireworks.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.human_fireworks.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false,
+          "background": "minecraft:textures/block/smoker_front.png"
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/looking_the_part.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/looking_the_part.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/looking_the_part.json",
+        "sha256": "18b4b94dbaefe8ce342d5872085cc7ea0645548dfbddf73d74004674b4d5f850"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:raw_beef_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.looking_the_part.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.looking_the_part.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/mental_preparation_failed.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/mental_preparation_failed.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/mental_preparation_failed.json",
+        "sha256": "45fc1eb182716c38cce976097cf460e8c1b68f0dec21ad137333138fe2d7a89c"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:raw_caterpillar_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.mental_preparation_failed.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.mental_preparation_failed.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/metal_tolerance_failed.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/metal_tolerance_failed.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/metal_tolerance_failed.json",
+        "sha256": "851656a888b393a8a28603f6118b0713c8cc464cb514190b978f67c9840a2b11"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:metallic_taste",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:totem_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.metal_tolerance_failed.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.metal_tolerance_failed.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/metallic_taste.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/metallic_taste.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/metallic_taste.json",
+        "sha256": "4d0da6473a4dcb766298c8228063922f1c9b90d5782a3a0a2c8f73304d41b889"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:world_in_a_bottle",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:totem_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.metallic_taste.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.metallic_taste.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/mountain_fragrance.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/mountain_fragrance.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/mountain_fragrance.json",
+        "sha256": "83f86cccb73944dcb2ed008ce8c2bdd9a2045510f297b9fe46709982957f4894"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.mountain_fragrance.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.mountain_fragrance.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/neat_and_orderly.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/neat_and_orderly.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/neat_and_orderly.json",
+        "sha256": "25bb91a7fa1471c7c2dc2a6598e9e87d8cb59aefc557344705c30b2c5229b015"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:better_write_it_down",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:advanced_rack"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.neat_and_orderly.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.neat_and_orderly.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/nether_taste.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/nether_taste.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/nether_taste.json",
+        "sha256": "db40559c0c62b40d24114bff759f7cdbd7b1e017e4d30de9ed600b49bb1811ea"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:houttuynia"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.nether_taste.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.nether_taste.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/strength_makes_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/strength_makes_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/strength_makes_oil.json",
+        "sha256": "817aa088d4b3488b98ee544fbb513f33cfa857247ec311b2302c29455f955568"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:a_handful_of_canola",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:oil_residue"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strength_makes_oil.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strength_makes_oil.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_shield.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_shield.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_shield.json",
+        "sha256": "460bc6f9aff992c584ab1052ae5c9e28911c4a3e513565ee62ac8286e853be3a"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:fireworks_feast",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:grilled_golden_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_shield.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_shield.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_spear.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_spear.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/strongest_spear.json",
+        "sha256": "b4dd04c574a8e8d8603d9b7df97d121e36f304fcc98c95bc1e5d0898639175d3"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:fireworks_feast",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:ordinary_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_spear.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_spear.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/sweet_potato.json",
+        "sha256": "99bdee76daad5a999afffe892aac3b68ab426d9d80265927c46447d254e3f4ad"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:sweet_potato"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.sweet_potato.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.sweet_potato.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/taste_of_dragon.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/taste_of_dragon.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/taste_of_dragon.json",
+        "sha256": "9e899051b4fe3f1e70486ba0e0cbf5923d89382c123e3319ddeed0cbb5062515"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:world_in_a_bottle",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:dragon_egg_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.taste_of_dragon.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.taste_of_dragon.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/three_flavors_base.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/three_flavors_base.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/three_flavors_base.json",
+        "sha256": "cfd6a1222c4f9612def0d97070e741fd5d43a7755b27ce063fd9f6725f63b5d6"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:gleaming_with_oil",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:green_chili_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.three_flavors_base.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.three_flavors_base.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/wedding_candy.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/wedding_candy.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/wedding_candy.json",
+        "sha256": "98455657346b741207b43b0997df87d227871133700ca16290dd696ba93bb776"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:wedding_candy"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.wedding_candy.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.wedding_candy.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": true
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancement/world_in_a_bottle.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancement/world_in_a_bottle.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancement/world_in_a_bottle.json",
+        "sha256": "7f91bb76f64c153b9f748c5cf7b55d51578b6449d9fbd9005473f961b2e25942"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:three_flavors_base",
+        "display": {
+          "icon": {
+            "id": "kaleidoscope_grilling:special_seasoning"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.world_in_a_bottle.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.world_in_a_bottle.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/a_handful_of_canola.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/a_handful_of_canola.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/a_handful_of_canola.json",
+        "sha256": "45ac5cdede22dd7db029799bb8ba230a2be3f78fda42377b291704ebb09f6110"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:canola_seeds"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.a_handful_of_canola.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.a_handful_of_canola.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/better_write_it_down.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/better_write_it_down.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/better_write_it_down.json",
+        "sha256": "5942d47be5bbcfe2bfa334ee34fe81107039465daf810500c4076c098a9dcbd8"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:skewer_recipe_book"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.better_write_it_down.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.better_write_it_down.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/eat_it_hot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/eat_it_hot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/eat_it_hot.json",
+        "sha256": "111ba290910283c48683e802e5226bbcd5b0ce6c6254fe3a8a731412a163579b"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:gleaming_with_oil",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:grilled_beef_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.eat_it_hot.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.eat_it_hot.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/fireworks_feast.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/fireworks_feast.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/fireworks_feast.json",
+        "sha256": "058a728fa59c2e3c2fdd7b979a63c4c57c49b2516be3b0fb1f307f77df9c7a93"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:eat_it_hot",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:red_sweet_potato_porridge"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.fireworks_feast.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.fireworks_feast.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 100
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/gleaming_with_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/gleaming_with_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/gleaming_with_oil.json",
+        "sha256": "a6e5de9b8d2971cde2d3826476f6f1a7635f5d6b8b3b334126003faec8dbf057"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:canola_oil_bucket"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.gleaming_with_oil.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.gleaming_with_oil.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/human_fireworks.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/human_fireworks.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/human_fireworks.json",
+        "sha256": "ee34bcb0a7e26adc5890195093354f0f6cedcfddda00778cb12c6cda3dff3ff2"
+      },
+      "data": {
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:grill"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.human_fireworks.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.human_fireworks.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false,
+          "background": "minecraft:textures/block/smoker_front.png"
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/looking_the_part.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/looking_the_part.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/looking_the_part.json",
+        "sha256": "c08c63cc71a20d5637269c870aebefc74406cb86b30babd0e1fabd3ff8985a0a"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:raw_beef_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.looking_the_part.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.looking_the_part.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/mental_preparation_failed.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/mental_preparation_failed.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/mental_preparation_failed.json",
+        "sha256": "94e5f542e3dd94a5ec9b375c57b8b6f5f2ff372a6fda1823033b436f4a1d574e"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:looking_the_part",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:raw_caterpillar_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.mental_preparation_failed.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.mental_preparation_failed.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/metal_tolerance_failed.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/metal_tolerance_failed.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/metal_tolerance_failed.json",
+        "sha256": "eb582e91ae4f4acd3447e49e7611bd91912d50cca4cc2b33a1f5eca27707e084"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:metallic_taste",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:totem_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.metal_tolerance_failed.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.metal_tolerance_failed.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/metallic_taste.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/metallic_taste.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/metallic_taste.json",
+        "sha256": "b6daf4a698931ffd052dc714c407e53295371c53478c67bfdae8a0fbf5eb8cf1"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:world_in_a_bottle",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:totem_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.metallic_taste.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.metallic_taste.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/mountain_fragrance.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/mountain_fragrance.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/mountain_fragrance.json",
+        "sha256": "3087e7048640f60836e86867d68fff95b2d6c6a230543878eab51144314a7cc4"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.mountain_fragrance.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.mountain_fragrance.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/neat_and_orderly.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/neat_and_orderly.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/neat_and_orderly.json",
+        "sha256": "58a06271b4e71c1bc241a0d4b98cb0f7b32ef1cb9cfae67365b4a0f1e67de90a"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:better_write_it_down",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:advanced_rack"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.neat_and_orderly.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.neat_and_orderly.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/nether_taste.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/nether_taste.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/nether_taste.json",
+        "sha256": "9386a499f2fd3b13ce30c8a3fe73f91d7627641a105ffd8252c0ba7401735a5f"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:houttuynia"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.nether_taste.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.nether_taste.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/strength_makes_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/strength_makes_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/strength_makes_oil.json",
+        "sha256": "c08bff242a18546047209a83953fae1f1597f914bfb7e810805b16dd9ebb532d"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:a_handful_of_canola",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:oil_residue"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strength_makes_oil.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strength_makes_oil.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_shield.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_shield.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_shield.json",
+        "sha256": "59eafdec4394a45b6d0ebf146e35fb407dd1cca445d9dce90d0e8df5f3d2fffd"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:fireworks_feast",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:grilled_golden_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_shield.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_shield.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_spear.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_spear.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/strongest_spear.json",
+        "sha256": "1b19aa58abf87b176e3c634f4d7a78657b8d2da6ac30459af7fd72453db43c89"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:fireworks_feast",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:ordinary_skewer"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_spear.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.strongest_spear.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/sweet_potato.json",
+        "sha256": "2a07de78152a39751f1e53c943d601141ed24884ca18d72e9799f67cc0c35536"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:sweet_potato"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.sweet_potato.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.sweet_potato.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/taste_of_dragon.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/taste_of_dragon.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/taste_of_dragon.json",
+        "sha256": "13b1543bfb6e92c5219b17a8bd9a8666d343090d3ec06f7035ddf302f95952f3"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:world_in_a_bottle",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:dragon_egg_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.taste_of_dragon.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.taste_of_dragon.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/three_flavors_base.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/three_flavors_base.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/three_flavors_base.json",
+        "sha256": "0fae66969042447ed78c7b56a4b85d1f48feba4cf464d48c54ba7147f5608652"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:gleaming_with_oil",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:green_chili_powder"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.three_flavors_base.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.three_flavors_base.description"
+          },
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 10
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/wedding_candy.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/wedding_candy.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/wedding_candy.json",
+        "sha256": "7789bc97231a4a8221d6cf54acfe5f1dc343829e2c8cdb996087e6528d2670be"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:human_fireworks",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:wedding_candy"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.wedding_candy.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.wedding_candy.description"
+          },
+          "frame": "challenge",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": true
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 50
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/advancements/world_in_a_bottle.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/advancements/world_in_a_bottle.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/advancements/world_in_a_bottle.json",
+        "sha256": "2f13208c9c91262dee4530fe653e7e86039e52c20569b72b75b71cf722181a38"
+      },
+      "data": {
+        "parent": "kaleidoscope_grilling:three_flavors_base",
+        "display": {
+          "icon": {
+            "item": "kaleidoscope_grilling:special_seasoning"
+          },
+          "title": {
+            "translate": "advancement.kaleidoscope_grilling.world_in_a_bottle.title"
+          },
+          "description": {
+            "translate": "advancement.kaleidoscope_grilling.world_in_a_bottle.description"
+          },
+          "frame": "goal",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "criteria": {
+          "event": {
+            "trigger": "minecraft:impossible"
+          }
+        },
+        "rewards": {
+          "experience": 25
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/damage_type/ordinary_skewer.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/damage_type/ordinary_skewer.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/damage_type/ordinary_skewer.json",
+        "sha256": "946c86007d77bd7b36d00d5b7ee5abd09ccdd2b81da5b888b7056341ccd804d3"
+      },
+      "data": {
+        "exhaustion": 0.0,
+        "message_id": "kaleidoscope_grilling.ordinary_skewer",
+        "scaling": "when_caused_by_living_non_player"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/forge/biome_modifier/add_pepper_tree.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/forge/biome_modifier/add_pepper_tree.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/forge/biome_modifier/add_pepper_tree.json",
+        "sha256": "6c9e3f408a4cea92b7346ffa7127af30fc9dd92f2fd9b5175c20528b52d01d03"
+      },
+      "data": {
+        "type": "forge:add_features",
+        "biomes": "#minecraft:is_forest",
+        "features": "kaleidoscope_grilling:pepper_tree",
+        "step": "vegetal_decoration"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/advanced_rack.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/advanced_rack.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/advanced_rack.json",
+        "sha256": "154f27b73db282273c95221c40fc1d7e2c9f5188fbee105293535f8d6b64b902"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:advanced_rack"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/canola_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/canola_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/canola_crop.json",
+        "sha256": "35181c62a901dae3ea57b7dcf0300b35df80b173ef4de6379de191661bad6ab1"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:canola_seeds"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:canola_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:canola_seeds",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 2,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/grill.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/grill.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/grill.json",
+        "sha256": "18d9a496965772286e14298e99b1670d6d25226782dd9eadcdeb42d6a0633592"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:grill"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/houttuynia_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/houttuynia_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/houttuynia_crop.json",
+        "sha256": "913e550125639298013352af4d2edba125e78620d9733e3b30448be4d6dec860"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:houttuynia"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:houttuynia_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:houttuynia",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 1,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/onion_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/onion_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/onion_crop.json",
+        "sha256": "88d09c466a4620fa8ca15c0eccfe4bbdabef93a6a766012054ee2ede47a1cf4a"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:onion"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:onion_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:onion",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 2,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_leaves.json",
+        "sha256": "52c249386abaa6b4a2d4fc9d0be77ad6fd278824ed8c8f9e7e8f9c2f4d061a44"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:alternatives",
+                "children": [
+                  {
+                    "type": "minecraft:item",
+                    "name": "kaleidoscope_grilling:pepper_leaves",
+                    "conditions": [
+                      {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                          "items": "minecraft:shears"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "kaleidoscope_grilling:pepper_leaves",
+                    "conditions": [
+                      {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                          "predicates": {
+                            "minecraft:enchantments": [
+                              {
+                                "enchantments": "minecraft:silk_touch",
+                                "levels": {
+                                  "min": 1
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_sapling"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:inverted",
+                "term": {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "items": "minecraft:shears"
+                      }
+                    },
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "predicates": {
+                          "minecraft:enchantments": [
+                            {
+                              "enchantments": "minecraft:silk_touch",
+                              "levels": {
+                                "min": 1
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "condition": "minecraft:table_bonus",
+                "enchantment": "minecraft:fortune",
+                "chances": [
+                  0.1,
+                  0.125,
+                  0.16667,
+                  0.2
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "minecraft:stick"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:inverted",
+                "term": {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "items": "minecraft:shears"
+                      }
+                    },
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "predicates": {
+                          "minecraft:enchantments": [
+                            {
+                              "enchantments": "minecraft:silk_touch",
+                              "levels": {
+                                "min": 1
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "condition": "minecraft:table_bonus",
+                "enchantment": "minecraft:fortune",
+                "chances": [
+                  0.02,
+                  0.02222,
+                  0.025,
+                  0.03333
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sichuan_pepper"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:pepper_leaves",
+                "properties": {
+                  "has_pepper": "true"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_log.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_log.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_log.json",
+        "sha256": "b572e76592b7dff3b70643c9f1f65b03bf0ff8b53cb6201df4a908023751edc7"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_log"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_sapling.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_sapling.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/pepper_sapling.json",
+        "sha256": "41fb7d4fc77e443ca04f41ef9d6bb84e42431076d4b83c967e384ac1e013c688"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_sapling"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/sweet_potato_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/sweet_potato_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_table/blocks/sweet_potato_crop.json",
+        "sha256": "35d7c1f9cc06ca2397e27fa0a0ff8616c3df88dac39b32836954b1b4a599c3f1"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sweet_potato"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:sweet_potato_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sweet_potato",
+                "functions": [
+                  {
+                    "function": "minecraft:set_count",
+                    "count": 2
+                  },
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 3,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/advanced_rack.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/advanced_rack.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/advanced_rack.json",
+        "sha256": "154f27b73db282273c95221c40fc1d7e2c9f5188fbee105293535f8d6b64b902"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:advanced_rack"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/canola_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/canola_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/canola_crop.json",
+        "sha256": "35181c62a901dae3ea57b7dcf0300b35df80b173ef4de6379de191661bad6ab1"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:canola_seeds"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:canola_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:canola_seeds",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 2,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/grill.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/grill.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/grill.json",
+        "sha256": "18d9a496965772286e14298e99b1670d6d25226782dd9eadcdeb42d6a0633592"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:grill"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/houttuynia_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/houttuynia_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/houttuynia_crop.json",
+        "sha256": "913e550125639298013352af4d2edba125e78620d9733e3b30448be4d6dec860"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:houttuynia"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:houttuynia_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:houttuynia",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 1,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/onion_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/onion_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/onion_crop.json",
+        "sha256": "88d09c466a4620fa8ca15c0eccfe4bbdabef93a6a766012054ee2ede47a1cf4a"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:onion"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:onion_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:onion",
+                "functions": [
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 2,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_leaves.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_leaves.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_leaves.json",
+        "sha256": "0b45bd8a37c283dbdb4262e2593e73671df9a1b90a2df1705d7955064b7eca1b"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:alternatives",
+                "children": [
+                  {
+                    "type": "minecraft:item",
+                    "name": "kaleidoscope_grilling:pepper_leaves",
+                    "conditions": [
+                      {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                          "items": [
+                            "minecraft:shears"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "kaleidoscope_grilling:pepper_leaves",
+                    "conditions": [
+                      {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                          "enchantments": [
+                            {
+                              "enchantment": "minecraft:silk_touch",
+                              "levels": {
+                                "min": 1
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_sapling"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:inverted",
+                "term": {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "items": [
+                          "minecraft:shears"
+                        ]
+                      }
+                    },
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "enchantments": [
+                          {
+                            "enchantment": "minecraft:silk_touch",
+                            "levels": {
+                              "min": 1
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "condition": "minecraft:table_bonus",
+                "enchantment": "minecraft:fortune",
+                "chances": [
+                  0.1,
+                  0.125,
+                  0.16667,
+                  0.2
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "minecraft:stick"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:inverted",
+                "term": {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "items": [
+                          "minecraft:shears"
+                        ]
+                      }
+                    },
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "enchantments": [
+                          {
+                            "enchantment": "minecraft:silk_touch",
+                            "levels": {
+                              "min": 1
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "condition": "minecraft:table_bonus",
+                "enchantment": "minecraft:fortune",
+                "chances": [
+                  0.02,
+                  0.02222,
+                  0.025,
+                  0.03333
+                ]
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sichuan_pepper"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:pepper_leaves",
+                "properties": {
+                  "has_pepper": "true"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_log.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_log.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_log.json",
+        "sha256": "b572e76592b7dff3b70643c9f1f65b03bf0ff8b53cb6201df4a908023751edc7"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_log"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_sapling.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_sapling.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/pepper_sapling.json",
+        "sha256": "41fb7d4fc77e443ca04f41ef9d6bb84e42431076d4b83c967e384ac1e013c688"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:pepper_sapling"
+              }
+            ],
+            "conditions": [
+              {
+                "condition": "minecraft:survives_explosion"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/sweet_potato_crop.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/sweet_potato_crop.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/loot_tables/blocks/sweet_potato_crop.json",
+        "sha256": "35d7c1f9cc06ca2397e27fa0a0ff8616c3df88dac39b32836954b1b4a599c3f1"
+      },
+      "data": {
+        "type": "minecraft:block",
+        "pools": [
+          {
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sweet_potato"
+              }
+            ]
+          },
+          {
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "kaleidoscope_grilling:sweet_potato_crop",
+                "properties": {
+                  "age": "7"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "name": "kaleidoscope_grilling:sweet_potato",
+                "functions": [
+                  {
+                    "function": "minecraft:set_count",
+                    "count": 2
+                  },
+                  {
+                    "function": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:binomial_with_bonus_count",
+                    "parameters": {
+                      "extra": 3,
+                      "probability": 0.5714286
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/neoforge/biome_modifier/add_pepper_tree.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/neoforge/biome_modifier/add_pepper_tree.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/neoforge/biome_modifier/add_pepper_tree.json",
+        "sha256": "7bc7de5060f7185343f01e842cdbd968dc412225b2a0f69004faf1adb559fbe3"
+      },
+      "data": {
+        "type": "neoforge:add_features",
+        "biomes": "#minecraft:is_forest",
+        "features": "kaleidoscope_grilling:pepper_tree",
+        "step": "vegetal_decoration"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/worldgen/configured_feature/pepper_tree.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/worldgen/configured_feature/pepper_tree.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/worldgen/configured_feature/pepper_tree.json",
+        "sha256": "49810d3147fa4769becb9cbb98356499839e712544b9e579591227ea8e12be5f"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:pepper_tree",
+        "config": {}
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/worldgen/placed_feature/pepper_tree.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/worldgen/placed_feature/pepper_tree.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/worldgen/placed_feature/pepper_tree.json",
+        "sha256": "69309e4a736687a19cb5b2001b6c3fc5e7eef116aecc7883ce3088e0be7ca3c5"
+      },
+      "data": {
+        "feature": "kaleidoscope_grilling:pepper_tree",
+        "placement": [
+          {
+            "type": "minecraft:rarity_filter",
+            "chance": 16
+          },
+          {
+            "type": "minecraft:in_square"
+          },
+          {
+            "type": "minecraft:surface_water_depth_filter",
+            "max_water_depth": 0
+          },
+          {
+            "type": "minecraft:heightmap",
+            "heightmap": "OCEAN_FLOOR"
+          },
+          {
+            "type": "minecraft:biome"
+          }
+        ]
+      }
+    }
+  }
+}
