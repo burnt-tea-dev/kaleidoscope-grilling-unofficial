@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path, PurePosixPath
 import zipfile
 
@@ -34,6 +35,43 @@ def inventory(folder):
     return {p.relative_to(folder).as_posix(): p.read_bytes() for p in sorted(folder.rglob('*')) if p.is_file()}
 
 
+def numeric_version(value):
+    assert isinstance(value, list) and len(value) == 3 and all(type(part) is int and part >= 0 for part in value), 'invalid numeric manifest version'
+    return tuple(value)
+
+
+def check_pack_structure(folder, manifest, pack, version):
+    """Validate executable pack declarations without a historical verifier chain."""
+    assert numeric_version(manifest['header']['version']) == tuple(version), f'{pack}: header version drift'
+    modules = manifest['modules']
+    assert isinstance(modules, list) and modules, f'{pack}: modules missing'
+    uuids = [module['uuid'] for module in modules]
+    assert len(uuids) == len(set(uuids)), f'{pack}: duplicate module UUID'
+    assert all(numeric_version(module['version']) == tuple(version) for module in modules), f'{pack}: module version drift'
+    for kind in (('data', 'script') if pack == 'BP' else ('resources',)):
+        matches = [module for module in modules if module.get('type') == kind]
+        assert len(matches) == 1, f'{pack}: expected one {kind} module'
+        if kind == 'script':
+            script = matches[0]
+            assert script.get('language') == 'javascript', 'unsupported script language'
+            entry = PurePosixPath(script['entry'])
+            assert not entry.is_absolute() and '..' not in entry.parts and not any(char in script['entry'] for char in ('\\', ':')), 'unsafe script entry'
+            resolved_entry = (folder / entry).resolve()
+            assert resolved_entry.is_relative_to(folder.resolve()), 'unsafe script entry'
+            assert resolved_entry.is_file(), 'missing script entry'
+    engine = numeric_version(manifest['header']['min_engine_version'])
+    if pack == 'RP':
+        capabilities = manifest.get('capabilities', [])
+        assert isinstance(capabilities, list) and 'pbr' in capabilities, 'Grilling RP lost the required pbr capability'
+        assert engine >= (1, 21, 120), 'pbr requires min_engine_version >= 1.21.120'
+    else:
+        pattern = re.compile(r"(?:from\s+|import\s*)['\"](\.[^'\"]+)['\"]")
+        for path in (folder / 'scripts').rglob('*.js'):
+            for specifier in pattern.findall(path.read_text(encoding='utf-8')):
+                target = (path.parent / specifier).resolve()
+                assert target.is_relative_to(folder.resolve()) and target.is_file(), f'missing or unsafe relative import: {path.name} -> {specifier}'
+
+
 def check(root=ROOT):
     config, baseline = load(root / 'config.json'), load(root / 'baseline.json')
     assert REQUIRED <= config.keys(), f'missing project fields: {REQUIRED - config.keys()}'
@@ -55,6 +93,7 @@ def check(root=ROOT):
         folder = root / relative
         files = inventory(folder)
         manifest = load(folder / 'manifest.json')
+        check_pack_structure(folder, manifest, pack, baseline['version'])
         assert manifest['header']['uuid'] == baseline['packs'][pack]['uuid']
         assert manifest['header']['version'] == baseline['version'], 'bridge. export changed the locked version'
         assert manifest['header']['name'] == 'Kaleidoscope Grilling ' + pack, 'stale version-labelled pack name'
