@@ -83,10 +83,12 @@ def scan(root, rp, files, consumers=()):
         for path in sorted(set(paths)):
             try:
                 path = path.absolute()
-                rel = path.relative_to(base).as_posix()
-                path.resolve().relative_to(base)
                 if path.is_symlink():
                     raise ValueError('symlink input requires manual review')
+                # Canonicalize both sides before containment checks: Windows TEMP
+                # may use an 8.3 user alias while base.resolve() uses the long name.
+                path = path.resolve()
+                rel = path.relative_to(base).as_posix()
                 if not path.is_file():
                     raise ValueError('missing or non-file input')
                 source = f'{label}:{rel}'
