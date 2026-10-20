@@ -134,6 +134,12 @@ def check_facts(s):
     check_roasted_wing_flow(s)
     check_millstone_installation_warning(s)
     check_houttuynia_acquisition(s)
+    java_recipes=load(ROOT/'data/java/recipes.json')['resources']
+    java_tags=load(ROOT/'data/java/tags.json')['resources']
+    java_root='common/src/main/resources/data/'
+    def ingredient_tag(tag):
+        namespace,name=tag.split(':',1)
+        return java_tags[java_root+namespace+'/tags/item/'+name+'.json']['data']
     owner={}
     for e in s['entries']:
         for iid in [e['id'],*e.get('related_ids',[])]:
@@ -189,16 +195,16 @@ def check_facts(s):
                 e=owner[o['id']]
                 require(any(x['method']=='Millstone' and x['ingredients']==[r['input']] and x['result']==o['id'] and x['count']==o['count'] for x in e['recipes']),'Millstone recipe drift')
                 require(e.get('process_contract')=={'kind':'millstone','input':r['input'],'output':o['id'],'count':o['count'],'station':'kaleidoscope_cookery:millstone','requires_host_extension_input_fix':True},'Missing powder process contract '+o['id'])
-                fixture=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/millstone'/(o['id'].split(':')[1]+'.json'))
+                fixture=java_recipes[java_root+'kaleidoscope_grilling/recipe/millstone/'+o['id'].split(':')[1]+'.json']['data']
                 require(fixture['result']=={'id':o['id'],'count':o['count']},'Java powder result drift '+o['id'])
                 ingredient=fixture['ingredient']
                 if 'item' in ingredient:require(ingredient['item']==r['input'],'Java powder input drift '+o['id'])
                 else:
-                    tag=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(ingredient['tag'].replace(':','/')).with_suffix('.json'))
+                    tag=ingredient_tag(ingredient['tag'])
                     values=list(tag['values'])
                     for v in list(values):
                         if v.startswith('#'):
-                            nested=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(v[1:].replace(':','/')).with_suffix('.json'))
+                            nested=ingredient_tag(v[1:])
                             values.extend(nested['values'])
                     require(r['input'] in values,'Java powder tag drift '+o['id'])
                 for loc in LOCALES:

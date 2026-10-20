@@ -15,7 +15,7 @@
 | 工程護欄 | `tools/guards/`、`tools/baseline_gate.py`；存檔與 bytes 邊界見 [SAVE-COMPAT](SAVE-COMPAT.md) |
 | 世界作業 | [tools/ops](../tools/ops/README.md)：盤點及停止備份副本的 ID 普查；目前 census 工具沒有改寫模式 |
 
-`development/`、舊產生器及保留測試不是第二份 canonical pack。已退役的版本層驗證不能重新作為 main 的建置入口。工具／文件不改輸出時，不 bump 包版本、不建 runtime 候選、不重啟 LIVE。
+`development/` 與依賴它的舊產生器已於 T2.7 退役；保留測試直接載入 canonical 模組，不另存第二份 pack。已退役的版本層驗證不能重新作為 main 的建置入口。工具／文件不改輸出時，不 bump 包版本、不建 runtime 候選、不重啟 LIVE。
 
 ## Runtime 的現況
 

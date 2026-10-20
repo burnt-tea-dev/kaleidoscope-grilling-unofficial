@@ -1659,7 +1659,8 @@
     {
       "original": "development/test_verify_dash_outputs.py",
       "decision": "retain_tool_safety",
-      "reason": "Generic export corruption/missing-file regression; existing dash-build caller retained until T2.7."
+      "reason": "Generic export corruption/missing-file regression; existing dash-build caller retained until T2.7.",
+      "subsequent_status": "T2.7 retired the older cumulative-asset exporter and dash-build caller. Canonical bridge export validation and its corruption/missing-file tests remain."
     },
     {
       "original": "development/tests/runtime/pepper_harvest_conservation.test.mjs",
@@ -1837,20 +1838,22 @@
     {
       "path": "tools/check_family_knives.mjs",
       "caller": ".github/workflows/family-candidate.yml",
-      "next": "T2.7 / T3.3 compat",
-      "action": "Remove development byte equality and runtime source-shape claims; preserve knife/tag behavior already exercised by canonical legacy tests."
+      "completed_static_cleanup": "T2.7 removed development byte equality and runtime source-shape claims; canonical knife/tag admission remains directly exercised.",
+      "next": "T3.3 compat",
+      "action": "Exercise actual knife-drop call sites, legacy oil cleanup and owned-station interaction routing through the runtime; pure admission rules do not establish those behaviors."
     },
     {
       "path": "tools/check_station_storage.py",
       "caller": ".github/workflows/family-candidate.yml",
-      "next": "T2.7 / T3.2",
-      "action": "Remove development equality/source includes; retain actual inventory entity, ownership/capacity, persistence and resource schema checks."
+      "completed_static_cleanup": "T2.7 removed development equality and runtime source-text assertions; actual inventory entity, ownership/capacity, persistence, bottle tick/movement and resource schemas remain checked.",
+      "next": "T3.2",
+      "action": "Preserve the fake-API native-ESM characterization mapped in native_scenario_addendum. Complete uncovered ownership, linked-inventory, metadata, quarantine and nonempty-retirement variants against Java-authoritative behavior, then validate the required engine scenarios. Resource schemas and fake-API characterization do not establish BDS or player acceptance."
     }
   ],
   "metric_limit": "source_text_slicing_tests counts named test files with a narrow pattern. Zero does not claim all non-test CLI source-text assertions are gone.",
   "native_scenario_addendum": {
     "base_commit": "d7adcef6fbeb9e5aa58b5a6e078bde79a6532cdd",
-    "scope": "Additive reconciliation of PR250 with merged PR251. The original 224-file classification, expectation corrections and pure assertions remain. Original retirement descriptions are historical; coverage is supplemented below, not full P3/P4 acceptance.",
+    "scope": "Additive reconciliation of PR250 with merged PR251. The original 224-file classification, expectation corrections and pure assertions remain. Original retirement descriptions are historical; coverage is supplemented below, not full P3/P4 acceptance. counted_test_files records the PR250/PR251 reconciliation before T2.7 retired the obsolete development dash test (101 to 100); all 93 legacy entrypoints and this additive coverage remain.",
     "counted_test_files": 101,
     "new_counted_entrypoints": 0,
     "coverage": {

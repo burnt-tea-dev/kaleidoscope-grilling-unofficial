@@ -2,7 +2,6 @@
 """Adversarial release tests in disposable Git repositories, never a game world."""
 import copy,importlib.util,json,os,subprocess,tempfile,unittest,zipfile,hashlib,shutil,sys,time
 from pathlib import Path
-from unittest.mock import patch
 spec=importlib.util.spec_from_file_location('gate',Path(__file__).with_name('baseline_gate.py'))
 gate=importlib.util.module_from_spec(spec);spec.loader.exec_module(gate)
 ReleaseClaimError,claim_release=gate.ReleaseClaimError,gate.claim_release
@@ -113,29 +112,17 @@ class BaselineGateTests(unittest.TestCase):
   finally:os.environ.pop('GITHUB_REPOSITORY')
 
 class JsonValidationTests(unittest.TestCase):
- def test_official_reference_header_parses_without_rewriting_original_bytes(self):
-  path=json_check.ROOT/json_check.REFERENCE;before=path.read_bytes()
-  parsed=json_check.load_json(path)
-  self.assertEqual(len(parsed),83);self.assertEqual(parsed[0]['atlas_tile'],'fire_0');self.assertEqual(path.read_bytes(),before)
- def test_ordinary_json_is_strict_and_renamed_reference_comments_reject(self):
+ def test_valid_json_with_bom_is_not_rewritten(self):
   with tempfile.TemporaryDirectory() as directory:
-   root=Path(directory);ordinary=root/'runtime.json';ordinary.write_text('{"label":"// literal"}')
-   self.assertEqual(json_check.load_json(ordinary),{'label':'// literal'})
-   ordinary.write_text('// unregistered comment\n{"valid":true}')
-   with self.assertRaises(json.JSONDecodeError):json_check.load_json(ordinary)
-   renamed=root/'renamed.json';renamed.write_bytes((json_check.ROOT/json_check.REFERENCE).read_bytes())
-   with self.assertRaises(json.JSONDecodeError):json_check.load_json(renamed)
- def test_reference_byte_hash_and_registered_source_identity_are_required(self):
-  raw=(json_check.ROOT/json_check.REFERENCE).read_bytes();source=json.loads((json_check.ROOT/json_check.FIXTURE/'source-manifest.json').read_text())
+   path=Path(directory)/'runtime.json';raw=b'\xef\xbb\xbf{"label":"// literal"}\n';path.write_bytes(raw)
+   self.assertEqual(json_check.load_json(path),{'label':'// literal'})
+   self.assertEqual(path.read_bytes(),raw)
+ def test_comments_are_rejected_for_every_filename(self):
   with tempfile.TemporaryDirectory() as directory:
-   root=Path(directory);path=root/json_check.REFERENCE;path.parent.mkdir(parents=True);manifest=root/json_check.FIXTURE/'source-manifest.json';manifest.write_text(json.dumps(source))
-   with patch.object(json_check,'ROOT',root):
-    path.write_bytes(raw+b'\n')
-    with self.assertRaisesRegex(ValueError,'fixture bytes changed'):json_check.load_json(path)
-    path.write_bytes(raw);wrong=copy.deepcopy(source);wrong['minecraft_bedrock']='1.26.51.1';manifest.write_text(json.dumps(wrong))
-    with self.assertRaisesRegex(ValueError,'source identity changed'):json_check.load_json(path)
-    wrong=copy.deepcopy(source);next(row for row in wrong['files'] if row['path']=='resource_pack/textures/flipbook_textures.json')['sha256']='unregistered';manifest.write_text(json.dumps(wrong))
-    with self.assertRaisesRegex(ValueError,'fixture record changed'):json_check.load_json(path)
+   for name in ['runtime.json','flipbook_textures.json']:
+    path=Path(directory)/name;path.write_text('// unregistered comment\n{"valid":true}')
+    with self.subTest(name=name):
+     with self.assertRaises(json.JSONDecodeError):json_check.load_json(path)
 class ReleaseClaimTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()

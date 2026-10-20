@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","category":"misc","pattern":["LIL","F F","LHL"],"key":{"L":{"tag":"minecraft:logs"},"I":{"tag":"c:ingots/iron"},"F":{"tag":"minecraft:fences"},"H":{"item":"minecraft:hopper"}},"result":{"id":"kaleidoscope_grilling:oil_press","count":1}}

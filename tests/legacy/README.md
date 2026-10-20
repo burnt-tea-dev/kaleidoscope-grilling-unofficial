@@ -5,7 +5,9 @@
 All 93 existing entrypoints and their pure assertions remain. Native ESM scenarios are now
 consolidated into the existing plate, oil, rack, bottle, food-finish and snapshot suites;
 shared queue/configuration assertions live in test_core. The rack suite also runs seven
-native-boundary regressions. Total counted test files remains 101; no ceiling is raised.
+native-boundary regressions. The PR250/PR251 reconciliation kept the counted total at 101.
+T2.7 subsequently retires the obsolete development dash test and its callers, reducing
+the counted total to 100. All 93 legacy entrypoints and additive native-ESM scenarios remain.
 The resolve-only loader supplies the external @minecraft/server boundary while canonical
 modules and registered handlers execute unchanged. No source slicing or appended exports.
 See classification.json native_scenario_addendum for the exact mapping and remaining gaps.
@@ -33,9 +35,11 @@ legacy 測試；不要把這裡的舊 Bedrock 實作當成 Java 正確答案。
 ## 逐檔決定與未覆蓋規則
 
 [`classification.json`](classification.json) 列出基準 `df0ff11` 的全部 224 個測試檔：
-93 個搬遷或抽留純函式部分、122 個退役、9 個留在原位置。最後一組包含 8 個工具／
-宣告檢查，以及隨 notebook 和兩個 caller 留至 T2.2 的 `notebook/test.mjs`。
-棘輪計數從 221 降至 101；3 個原始 `test.mjs` 不在該指標的命名範圍。
+93 個搬遷或抽留純函式部分、122 個退役、分流當時 9 個留在原位置。最後一組包含
+8 個工具／宣告檢查，以及隨 notebook 和兩個 caller 留至 T2.2 的 `notebook/test.mjs`。
+T2.5 的棘輪計數從 221 降至 101；3 個原始 `test.mjs` 不在該指標的命名範圍。
+T2.7 再退役舊累積資產專案的 `development/test_verify_dash_outputs.py` 與
+`dash-build.yml`；canonical bridge export 檢查和其安全測試仍保留。
 
 分類檔是審查索引，不是新的 CI gate、見證鏈或驗收收據。每個刪除的 source VM
 套件都有後續規則群與 T3／P4 任務；尤其以下流程仍需重建：
@@ -54,9 +58,12 @@ legacy 測試；不要把這裡的舊 Bedrock 實作當成 Java 正確答案。
 
 `source_text_slicing_tests = 0` 是測試棘輪的結果，**不表示整個 repo 已沒有原始碼
 文字斷言**。非 `test_*` 的 `tools/check_family_knives.mjs` 與
-`tools/check_station_storage.py` 仍由 family-candidate 使用；它們的 development
-副本相等／source includes 段落留待 T2.7／P3 處理。station 的真實 entity、inventory
-與 resource schema 檢查必須保留，不能把整支工具刪掉以取得零計數。
+`tools/check_station_storage.py` 仍由 family-candidate 使用；T2.7 已移除它們的
+development 副本相等與 runtime 原始碼文字斷言，保留直接 import 的 knife/tag
+規則和真實 entity、inventory、resource schema 檢查。#250 已補入分類 addendum
+列明的受控 API／原檔 ESM 情境；原生庫存遺失時不得清空內容、未知結果隔離、完整
+ItemStack metadata 與非空庫存退役仍須對照補足未覆蓋變體、Java 規則及引擎驗收。
+JSON 宣告及受控 API 情境不能代替 BDS、staging 或真人結果。
 
 ## 明確修正的舊期待
 
@@ -78,8 +85,9 @@ Java survival 配方測試改讀 `data/java/recipes.json` 的 1.21.1 `recipe/` �
 
 `fixtures/` 的 7 份 JSON 從原位置逐位元搬遷，保留原作者、版本、萃取方法與限制。
 它們是獨立 Java 向量／來源資料或既有公開的有限 Cookery 契約資料，不是從目前
-Bedrock 輸出重新錄製的答案。完整配方／tag 改讀 `data/java/`；原本的 Java 原始
-fixtures 與 `source_snapshots` 仍留待各自任務處理。
+Bedrock 輸出重新錄製的答案。完整配方／tag 改讀 `data/java/`。T2.7 已移除
+`development/` 中剩餘的歷史 fixtures，其來源仍可由 `data/java/` 與不可變 Git
+來源連結追溯；`projects/grilling/source_snapshots/` 保持原樣。
 
 存檔 guard、膨脹棘輪、baseline、bridge export、Java extraction 與 preview 工具
 安全測試維持。指南 icon 與真實 loot 宣告檢查保留；loot 的固定 blob-hash 斷言刪除。
