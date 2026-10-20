@@ -1,9 +1,0 @@
-{
-  "repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
-  "commit": "9a1acdab27698457bec16c9362678e574895a28c",
-  "files": {
-    "textures/item/advanced_rack.png": "72eed6a153ad7b3f0c7f3cad62db18e14967b5a51455fc794e2cb74bcf925153",
-    "models/item/grill.json": "334c9d451129528f936b26b791ded266c366b8734209ec0c56c6e2ca3ba93f36",
-    "models/item/oil_press.json": "570fd204b1c2caa1fa8f17f2340cf0f09f9a5804848c3cc1277238616e5a6116"
-  }
-}

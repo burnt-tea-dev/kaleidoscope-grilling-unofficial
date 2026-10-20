@@ -1,9 +1,0 @@
-{
-  "format_version": "1.20.10",
-  "minecraft:recipe_shapeless": {
-    "description": {"identifier": "kaleidoscope_grilling:oak_planks_from_pepper_log"},
-    "tags": ["crafting_table"],
-    "ingredients": [{"item": "kaleidoscope_grilling:pepper_log"}],
-    "result": {"item": "minecraft:oak_planks","count": 4}
-  }
-}

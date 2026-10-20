@@ -92,7 +92,7 @@ await client.request('replace_seasoning_data', {roots: [
 
 只有可信生成器能在新區塊生成後、公開給玩家操作前提交；`isNewChunk`、結構與 bounds 是**宿主的權威保證**，接口無法獨立驗證歷史。generatedAt 距當前最多 20 ticks，bounds 必須裁切在該新區塊，最多 128 個不同座標。逐點核對目前仍為 soul sand 上的原生 nether wart；當前安裝後被真人放置／破壞過的整個下界區塊永久排除。不得用本接口處理舊區塊或自行掃描附近磚塊猜要塞。
 
-選取遵循 Java 1.1.1 的 signed-long coordinate hash，`floorMod(hash,100)<25`；採四段 16-bit 精確整數，避免 2.8.50 在 BDS 的 BigInt 差異，並以 [277 筆獨立 Java 向量](../development/gameplay_core/fixtures/fortress-java-vectors.json) 核對。wart age 0／1／2–3 映射為紅魚腥草 0／3／7。操作具同一持久序號、讀回與失敗回復，重播不再改方塊。
+選取遵循 Java 1.1.1 的 signed-long coordinate hash，`floorMod(hash,100)<25`；採四段 16-bit 精確整數，避免 2.8.50 在 BDS 的 BigInt 差異，並以 [277 筆獨立 Java 向量](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/d7adcef6fbeb9e5aa58b5a6e078bde79a6532cdd/development/gameplay_core/fixtures/fortress-java-vectors.json) 核對。wart age 0／1／2–3 映射為紅魚腥草 0／3／7。操作具同一持久序號、讀回與失敗回復，重播不再改方塊。
 
 目前 `vanillaFortressCallbackInstalled:false`。官方 [WorldAfterEvents](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-stable) 沒有新區塊／要塞生成事件；[getGeneratedStructures](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/dimension?view=minecraft-bedrock-stable#getgeneratedstructures) 仍為 pre-release，僅查指定點的結構名稱，不能提供所需的新生成歷史。完整 vanilla 自然 25% 替換仍待可靠宿主；本接口及人工搭建的原生測試都不能冒充此項完成。
 

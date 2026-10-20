@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","category":"misc","pattern":["III"," R ","SSS"],"key":{"I":{"tag":"c:ingots/iron"},"S":{"tag":"minecraft:wooden_slabs"},"R":{"item":"kaleidoscope_cookery:kitchenware_racks"}},"result":{"id":"kaleidoscope_grilling:advanced_rack","count":1}}

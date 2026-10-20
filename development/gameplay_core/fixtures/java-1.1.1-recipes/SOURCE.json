@@ -1,6 +1,0 @@
-{
-  "source": "https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-grilling/files/8726014",
-  "version": "1.1.1-neoforge1.21.1",
-  "jar_sha256": "cf31071e4ba790bcd5c1d3f6005439bc512acba084e70b8ab6a767e8c8f99dd6",
-  "purpose": "Exact released recipe fixtures for implementation-independent parity regressions. Source fixtures do not certify native crafting or client rendering."
-}
