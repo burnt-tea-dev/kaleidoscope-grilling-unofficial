@@ -1,5 +1,21 @@
 # 重建期保留測試
 
+## PR250／PR251 additive reconciliation
+
+All 93 existing entrypoints and their pure assertions remain. Native ESM scenarios are now
+consolidated into the existing plate, oil, rack, bottle, food-finish and snapshot suites;
+shared queue/configuration assertions live in test_core. The rack suite also runs seven
+native-boundary regressions. Total counted test files remains 101; no ceiling is raised.
+The resolve-only loader supplies the external @minecraft/server boundary while canonical
+modules and registered handlers execute unchanged. No source slicing or appended exports.
+See classification.json native_scenario_addendum for the exact mapping and remaining gaps.
+
+The original classification below describes the first pure-only pass. Its statements that
+native callbacks/a2769 were not yet exercised are superseded by this addendum; BDS, staging,
+client acceptance and the broader P3/P4 work remain unclaimed.
+
+## Original first-pass classification
+
 這裡是 T2.5 第一輪分流後仍可在 Node 執行的 93 支測試檔。它們直接 import
 `projects/grilling/gameplay_core/behavior_pack/scripts/` 的匯出，不再使用
 `development/` 副本、切出原始碼函式、`node:vm` 或替換 runtime 模組。

@@ -18,7 +18,7 @@ def main():
     if not tests:
         raise RuntimeError('No classified legacy tests found')
     subprocess.run(
-        ['node', '--test', '--test-concurrency=1', *(str(path) for path in tests)],
+        ['node', '--import', str(ROOT / 'tests/helpers/register-minecraft-loader.mjs'), '--test', '--test-concurrency=1', *(str(path) for path in tests)],
         cwd=ROOT, check=True,
     )
     print(f'Passed {len(tests)} legacy test files; no engine or client acceptance claimed')

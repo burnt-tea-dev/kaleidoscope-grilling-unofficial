@@ -48,9 +48,9 @@ manifest 的 Cookery 相依只表示包身份要求，不證明每項 adapter／
 
 ## CI 與證據
 
-[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法規則與 Java 萃取測試；[guards.yml](../.github/workflows/guards.yml) 另以 base lock／ratchet 保護規則。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
+[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法測試、指南／戰利品宣告、Java 萃取與保留工具回歸；[guards.yml](../.github/workflows/guards.yml) 另以 base lock／ratchet 保護規則。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
 
-保留的純規則／API 模型測試不是完整 Player 事件情境。需要 native binding 的 census 合成測試另有隔離入口；既有工具能執行不代表真實 LKG 重跑或 staging 已通過。實際來源、CI、staging、部署、真人證據分開記錄。
+保留測試包含純規則，以及 #250 以[受控外部 API 邊界](../tests/helpers/README.md)執行 canonical ESM、已註冊事件與排程的情境；loader 只解析外部依賴，不切割、改寫或替換正式模組。具體覆蓋與未補場景見 [分類補充](../tests/legacy/classification.json) 的 `native_scenario_addendum`；受控 API 結果仍不等於完整 BDS／Player 流程。需要 native binding 的 census 合成測試另有隔離入口；既有工具能執行不代表真實 LKG 重跑或 staging 已通過。實際來源、CI、staging、部署、真人證據分開記錄。
 
 ## 授權與歷史
 

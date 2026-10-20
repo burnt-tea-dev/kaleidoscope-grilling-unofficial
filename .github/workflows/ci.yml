@@ -54,3 +54,8 @@ jobs:
           python tools/test_fortress_loot_current.py
       - name: Run preserved Java extraction regressions
         run: python tools/test_java_extract.py
+      - name: Run retained authoring regressions
+        run: |
+          python development/test_verify_dash_outputs.py
+          python tools/blockbench_preview/test_capture.py
+          python tools/test_bridge_project.py
