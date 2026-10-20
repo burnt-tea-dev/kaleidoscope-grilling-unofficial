@@ -1847,5 +1847,29 @@
       "action": "Remove development equality/source includes; retain actual inventory entity, ownership/capacity, persistence and resource schema checks."
     }
   ],
-  "metric_limit": "source_text_slicing_tests counts named test files with a narrow pattern. Zero does not claim all non-test CLI source-text assertions are gone."
+  "metric_limit": "source_text_slicing_tests counts named test files with a narrow pattern. Zero does not claim all non-test CLI source-text assertions are gone.",
+  "native_scenario_addendum": {
+    "base_commit": "d7adcef6fbeb9e5aa58b5a6e078bde79a6532cdd",
+    "scope": "Additive reconciliation of PR250 with merged PR251. The original 224-file classification, expectation corrections and pure assertions remain. Original retirement descriptions are historical; coverage is supplemented below, not full P3/P4 acceptance.",
+    "counted_test_files": 101,
+    "new_counted_entrypoints": 0,
+    "coverage": {
+      "test_plate_transactions.mjs": "93 native/pure PR250 cases added alongside all PR251 pure assertions: ownership, metadata, rollback, packed drops, support/explosion arbitration, quarantine/reload, recipe conversion and delivery.",
+      "test_oil_transactions.mjs": "51 PR250 cases added alongside all PR251 pure assertions: vat/press/container transfer failures, timer, quarantine/reload and seven world-source transfer cases.",
+      "test_rack_transactions.mjs": "61 PR250 cases plus seven native-boundary regressions added alongside all PR251 pure assertions: storage ownership, automation, metadata, packed drops, permutations and state-domain rejection.",
+      "test_bottle_raw_lore.mjs": "Native lore readback failure/ownership and actual itemData refresh; a2769 tooltip cases consolidated here; localized-lore parity assertion.",
+      "test_food_finish.mjs": "Native custom-effect timing and expiry; consumed native ingredient/container metadata and normalization; milk/public-food parity assertions.",
+      "test_skewer_item_snapshot.mjs": "Native metadata, corrupt/missing saved records, use/start/complete admission and fourth-flip cache atomicity/fallback.",
+      "test_core.mjs": "Eight shared-runtime queue/configuration parity cases consolidated in this existing entrypoint."
+    },
+    "limits": [
+      "Fake external server API only; no runtime source transformation and no production changes.",
+      "Seasoning hand/placed-storage, pepper harvest retry, restricted interaction/reservation, separate crafting debit/output and additional fourth-flip variants remain unported.",
+      "Original pending_rule_backlog is not marked globally complete: native characterization does not equal BDS/client/staging or Java-authoritative P3 validation."
+    ],
+    "claim": {
+      "client": false,
+      "production_ready": false
+    }
+  }
 }
