@@ -13,6 +13,60 @@ class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
 
+    def test_current_project_rejects_invalid_executable_declarations(self):
+        load = guard.load
+        baseline = load(guard.ROOT / 'baseline.json')
+        cases = [
+            ('BP', 'missing-entry'), ('BP', 'unsafe-entry'),
+            ('BP', 'missing-script'), ('BP', 'duplicate-data'),
+            ('BP', 'language'), ('BP', 'header-float'),
+            ('RP', 'module-float'), ('RP', 'pbr'), ('RP', 'engine'),
+        ]
+        for side, damage in cases:
+            manifest_path = guard.ROOT / baseline['runtime'][side] / 'manifest.json'
+            def invalid(path):
+                value = load(path)
+                if path != manifest_path:
+                    return value
+                if damage in ('missing-entry', 'unsafe-entry', 'missing-script', 'language'):
+                    script = next(module for module in value['modules'] if module['type'] == 'script')
+                    if damage == 'missing-entry': script['entry'] = 'scripts/does-not-exist.js'
+                    elif damage == 'unsafe-entry': script['entry'] = '../resource_pack/manifest.json'
+                    elif damage == 'missing-script': script['type'] = 'data'
+                    else: script['language'] = 'python'
+                elif damage == 'duplicate-data': value['modules'].append(copy.deepcopy(value['modules'][0]))
+                elif damage == 'header-float': value['header']['version'] = list(map(float, baseline['version']))
+                elif damage == 'module-float': value['modules'][0]['version'] = list(map(float, baseline['version']))
+                elif damage == 'pbr': value['capabilities'] = []
+                else: value['header']['min_engine_version'] = [1, 21, 119]
+                return value
+            with self.subTest(side=side, damage=damage), patch.object(guard, 'load', invalid):
+                with self.assertRaises(AssertionError):
+                    guard.check()
+
+    def test_pack_rejects_missing_relative_script_import(self):
+        baseline = guard.load(guard.ROOT / 'baseline.json')
+        manifest = guard.load(guard.ROOT / baseline['runtime']['BP'] / 'manifest.json')
+        with tempfile.TemporaryDirectory() as temporary:
+            folder = Path(temporary)
+            (folder / 'scripts').mkdir()
+            (folder / 'scripts/main.js').write_text("import './core.js';")
+            (folder / 'scripts/core.js').write_text('export const ready = true;')
+            guard.check_pack_structure(folder, manifest, 'BP', baseline['version'])
+            (folder / 'scripts/core.js').unlink()
+            with self.assertRaisesRegex(AssertionError, 'missing or unsafe relative import'):
+                guard.check_pack_structure(folder, manifest, 'BP', baseline['version'])
+
+    def test_pack_rejects_platform_specific_entry_paths(self):
+        baseline = guard.load(guard.ROOT / 'baseline.json')
+        folder = guard.ROOT / baseline['runtime']['BP']
+        manifest = guard.load(folder / 'manifest.json')
+        script = next(module for module in manifest['modules'] if module['type'] == 'script')
+        for entry in ['C:/scripts/main.js', 'scripts/main.js:stream', 'scripts\\main.js']:
+            script['entry'] = entry
+            with self.subTest(entry=entry), self.assertRaisesRegex(AssertionError, 'unsafe script entry'):
+                guard.check_pack_structure(folder, manifest, 'BP', baseline['version'])
+
     def test_project_rejects_stale_export_name_at_each_authoring_entry(self):
         load = guard.load
         for relative in ['config.json', 'projects/grilling/gameplay_core/config.json']:
