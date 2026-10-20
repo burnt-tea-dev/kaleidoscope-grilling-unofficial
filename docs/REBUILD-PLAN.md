@@ -30,7 +30,7 @@
 
 1. **一次只做一個任務（T-x.y），一個任務一個 PR。** PR 標題以任務編號開頭，例如 `T2.3: remove committed build artifacts`。
 2. **每個任務都有「驗收條件」**。沒有全部達成就不能標完成，不能用「測試通過」代替「玩法正確」。
-3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 必須證明 BP/RP 位元組不變（§4 P2 的 `runtime-bytes-unchanged` 檢查）。
+3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
 4. **任何 item／block／entity／state 值／persisted key 的移除**只能走 `docs/SAVE-COMPAT.md` 的退役流程。護欄會擋。
 5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。棘輪會擋。
 6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
@@ -78,9 +78,9 @@
 ### 1.3 已確認可以安全保留的資產
 
 - Java 原作 1.1.1（`breezeth-CN/KaleidoscopeGrilling@9a1acdab`）的素材已逐位元匯入於 `projects/grilling/source_snapshots/`，`source_manifest.json` 有逐檔雜湊與授權。**這是視覺還原的唯一正確來源**，保留。
-- `development/gameplay_core/fixtures/java-*` 中由 Java 原碼萃取的資料（配方、熱度期限、效果、HUD 尺寸、進食曲線、音效）有價值，**重新整理為 `data/java/` 的單一資料表**後保留（T3.2）。
+- `development/gameplay_core/fixtures/java-*` 中由 Java 原碼萃取的資料（配方、熱度期限、效果、HUD 尺寸、進食曲線、音效）有價值，**重新整理為 `data/java/` 的單一資料表**後保留（T2.3）。
 - BP/RP UUID、所有 item／block／entity ID、persisted key：存檔相依，**全部保留**（護欄已鎖）。
-- 已存在的交易安全觀念（先快照、寫入失敗回滾、不吞物品）：觀念保留，實作收斂到 `core/transaction.js` 一處（T3.4）。
+- 已存在的交易安全觀念（先快照、寫入失敗回滾、不吞物品）：觀念保留，實作收斂到 `core/transaction.js` 一處（T3.2）。
 
 ---
 
@@ -93,7 +93,7 @@
 | 存檔相容鎖 | `tools/guards/save_compat.py`、`save-compat.lock.json`、`id-retirements.json` | 任何 item／block／block state 值／entity／persisted key 字面值／pack UUID 的消失；CI 另用 base 分支的 lock 再查，手改 lock 藏不住 |
 | 膨脹棘輪 | `tools/guards/growth_ratchet.py`、`growth-ratchet.json` | 24 項反模式計數只能下降；CI 另用 base 分支的上限再查，PR 不能自己調高上限 |
 | 受保護檔案 | `guards.yml` | 刪除護欄、`AGENTS.md`、本計畫、`SAVE-COMPAT.md` 會直接失敗 |
-| 擁有者覆寫 | PR label `owner-approved-guard-change` | 只有擁有者能加；僅跳過「base 上限比較」，**不跳過存檔相容** |
+| 標籤不提供旁路 | `guards.yml` | PR label 不會跳過 base 分支的存檔鎖或棘輪上限比較；不得在任務 PR 中自行放寬護欄 |
 
 規則：
 
@@ -233,9 +233,11 @@ scripts/
 - `release.yml`（手動）：從已通過 CI 的 tag 建包、上傳 GitHub Release、寫 SHA256。
 - 版本號：語意版本。玩法／資產變更 bump minor 或 patch；文件／工具不 bump。**不再使用 G/T/W 代號與 `STATUS` 文件**；家族配對關係記在家族 repo 的單一 lock 檔。
 
-### 3.7 文件終態（只留 8 份）
+### 3.7 文件保留清單（與 §3.1 一致）
 
-`README.md`（安裝、相依、目前版本）、`AGENTS.md`、`CHANGELOG.md`（每版幾行）、`docs/ARCHITECTURE.md`、`docs/PARITY.md`（單一表格：Java 功能 × 狀態 × 測試 × 已知差異）、`docs/KNOWN-ISSUES.md`、`docs/RELEASING.md`（含部署手冊）、`docs/SAVE-COMPAT.md`；本計畫完成後移入 archive。
+根目錄保留 `README.md`（安裝、相依、目前版本）、`AGENTS.md`、`CHANGELOG.md`（每版幾行）。`docs/` 保留 `ARCHITECTURE.md`、`PARITY.md`（單一表格：Java 功能 × 狀態 × 測試 × 已知差異）、`KNOWN-ISSUES.md`、`RELEASING.md`（含部署手冊）、`SAVE-COMPAT.md`、`REBUILD-PLAN.md`、`GUIDE-STANDARD.md`、`BEDROCK-INTEGRATION-API.md`。P2 仍依 T2.6 驗收 `docs_files_total ≤ 12`；此處列出目標清單，不表示 T2.6 已完成。
+
+本計畫完成後在原路徑記錄完成狀態與歷史 tag 連結；`docs/REBUILD-PLAN.md` 仍受護欄保護，不由清理任務移走或刪除。若未來需要調整保留清單或受保護檔案的退場方式，另開規則修訂 PR 審查。
 
 ---
 
@@ -250,7 +252,7 @@ scripts/
 - T0.3 `guards.yml`（含 base 比較與受保護檔案）✅
 - T0.4 重寫 `AGENTS.md`、建立本計畫 ✅
 - T0.5 伺服器唯讀盤點工具 `tools/ops/server_inventory.py` ✅
-- **擁有者待辦**：在 GitHub 分支保護把 `Rebuild guards` 設為 main 的 required check；建立 label `owner-approved-guard-change` 並限制只有擁有者使用。
+- **分支保護核對**：確認 GitHub main 將 `Rebuild guards` 設為 required check，並以 GitHub 設定讀回為準；無法讀取時記為未能驗證。PR label 不提供任何護欄旁路。
 
 ### P1：凍結與盤點（不改任何 runtime、不改 luosen）
 
@@ -292,7 +294,7 @@ scripts/
 **T1.8 staging 伺服器**（§5.4）
 - 驗收：BSM 內有 `luosen-staging`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 luosen 相同；能正常開服、進入、重啟。
 
-**P1 出口條件**：T1.2–T1.10 全部完成（T1.4 的 pack 組合盤點已於 2026-10-19 完成，見 §5.0；剩 content log warning 分類）。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
+**P1 出口條件**：T1.2–T1.10 全部完成。T1.4 的 pack 組合盤點與 489 個 content log warning 分類已由 #240 完成；T1.5 的 LKG-0、還原與獨立副本收據見 #241。這些交付不代替修正版 T1.6 的真實副本重跑、私有整合盤點或 T1.8 staging 驗收。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
 
 ### P2：Repo 瘦身（runtime 位元組不得改變）
 
@@ -354,7 +356,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 以 `@minecraft/server` 的型別為準，只實作用到的子集；**不 mock 任何 runtime 模組**，透過 import map 把 `@minecraft/server` 換成 harness。
 - 驗收：用 harness 跑通「放烤架→點火→放 3 串生牛肉串→時間推進→取出熟串」的完整流程測試。
 
-**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 lock 中 48 個 key 字面值逐字集中；舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`、`storage.js`（搬入 `family_station_storage.js` 的邏輯，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
+**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 `tools/guards/save-compat.lock.json` 的 `persisted_key_literals` 全部逐字集中，含各 namespace 的 key 與前綴；清單與數量以執行任務時的鎖為準，舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`、`storage.js`（搬入 `family_station_storage.js` 的邏輯，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
 - 驗收：save_compat 鎖不變；新 core 單元測試覆蓋：寫入失敗回滾、容器滿時剩餘掉落、metadata 完整保留。
 
 **T3.3 逐域搬遷**（每個域一個 PR，順序：`grill` → `skewer` → `plate` → `recipe` → `seasoning` → `oil` → `rack` → `food`/`effect` → `crops` → `world` → `advancement` → `compat` → `guide`）
@@ -424,7 +426,9 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 > 以下 `<BDS>` 代表 luosen 的 BDS 根目錄。2026-10-19 盤點實測：BSM 以 Docker 容器執行（`dmedina559/bedrock-server-manager:3.10.6`，容器名 `bsm-container`），資料卷 `bsm_data` 掛在主機 `/var/lib/docker/volumes/bsm_data/_data`（容器內 `/root/bedrock-server-manager`）。所以 `<BDS>` = `/var/lib/docker/volumes/bsm_data/_data/servers/luosen`，世界 = `<BDS>/worlds/Bedrock level`。家族範本裡的 `/srv/bsm/...` 不是這台的實際路徑；`/srv/src`、`addon_quality`、`family_bundle` 的實際位置仍待確認。
 
-### 5.0 luosen 實測現況（2026-10-19 01:33 唯讀盤點）
+### 5.0 luosen 盤點紀錄（2026-10-19；各收據分別標示時點）
+
+> 下表保留最初盤點的環境描述，不能當作此刻 LIVE 的讀回。後續完整盤點與 warning 分類見 #240 的 `tools/ops/receipts/luosen-inventory-20261019.json`；#241 的 `luosen-lkg0-backup-20261019.json` 已記錄 LKG-0 對應的完整 26 BP／24 RP 順序、版本與樹雜湊，其首位私有 BP／RP 為 1.0.59。T1.9 與 T1.10 的離線比對應綁定這份 LKG-0 的實際包身份，保留下表的 1.0.57 為歷史對照。
 
 來源：擁有者電腦以 SSH 唯讀收集的 metadata（未停服、未寫入、不含憑證與世界資料庫內容）。原始報告不進公開 repo（含主機名稱與 port）；以下只記錄對重建有影響的事實。
 
@@ -433,13 +437,13 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 | BDS 版本 | 伺服器內附 vanilla pack 到 1.26.52 | GameTest／staging 用同版本 BDS |
 | 世界啟用 | **26 個 BP、24 個 RP**；manifest 全部可解析、相依沒有缺 | 排查衝突時要看整個組合，不只家族包 |
 | 腳本包 | 25 個 BP 帶 script 模組，`@minecraft/server` 版本從 1.13.0 到 2.10.0 混用 | 伺服器腳本負載高；煙火的逐 tick 迴圈與 16 個 interval 會和其他 24 個腳本包搶 tick 預算（伺服器設定 `script-watchdog-slow-threshold=10`、`spike=100`） |
-| **最高優先權包** | 第 1 位是「森羅私有修復支援 1.0.57」BP（純 data）＋RP；**RP 相依 Tavern、Grilling、World Liquor、A Magic Way、Java Saturation、Immersive Eating** | Bedrock 列在越前面優先權越高，同路徑檔案由它覆蓋下面的包。**repo 裡修好的 RP 檔案，在 luosen 可能被私有包覆蓋而看不到**——這是「視覺修了卻沒變」的直接可能原因（T1.9） |
+| **最高優先權包** | 第 1 位是「森羅私有修復支援 1.0.57」BP（純 data）＋RP；**RP 相依 Tavern、Grilling、World Liquor、A Magic Way、Java Saturation、Immersive Eating** | 相依宣告本身不能證明私有包內有哪些與 Grilling 同路徑的檔案。若有同路徑資產，較高優先權可能使 Grilling 的修正不生效；**實際覆蓋範圍與是否造成畫面未變，待 T1.9 逐檔清單與對照確認**。 |
 | Cookery | 作者 Cookery 1.6.2（BP 第 12 位）；其中 `scripts/api/cuisine_api_host.js`、`board_api_core.js`、`food_api_core.js` 與本 repo `host_api/` 同名檔**逐位元相同** | 需確認作者官方 1.6.2 發布包是否本來就含這些檔（作者採納）或是部署時被注入（宿主修補）（T1.10） |
 | 改版的第三方包 | 「森羅廚房：國味」標示「相容修補 1.0.55；作者原版 1.0.6」、版本號改成 1.0.10657；「Java Saturation」「UI Queue」「FP decode」都帶「Senluo HUD／Senluo FP decode」標記與改過的版本號 | 家族對第三方包也做了修補版，這些都屬於 §6 要收斂的私有整合範圍；HUD 通道衝突（`KT_HUD!` 原始碼外露）與這幾個包有關 |
 | 另一個進食包 | 「Kaleidoscope Immersive Eating 1.1.0」BP＋RP 同時啟用 | 與煙火自己的進食動畫／投影可能重疊；T3.4 與 D6 必須把它列入相容驗證（staging 第 11 項） |
 | 主機資源 | 16 GB RAM、可用約 4.2 GB；**2 GB swap 已用盡**；同時有 2 個 `bedrock_server` 程序 | 記憶體吃緊；巨型 geometry 與高頻腳本會放大問題。staging 伺服器要確認記憶體足夠再開，必要時先停掉另一個 BDS |
 | 磁碟 | 248 GB 中約 33 GB 可用 | 每份停服備份的大小要先量；保留策略（§5.3）要配合可用空間 |
-| content log | 最新一份尾段 1228 行：0 個 error、**489 個 warning** | 尚未分類；T1.4 補做 warning 分類（哪個包、哪類） |
+| content log | 該次盤點尾段 1228 行：0 個 error、**489 個 warning** | #240 收據已完成八類分類；分類不等於已修復全部 warning 的根因或完成性能／真人驗收。 |
 | 伺服器設定 | survival、easy、`allow-cheats=true`、`tick-distance=4`、`view-distance=8`、`max-players=10`、content log 有開 | — |
 
 新增 P1 任務：
@@ -518,9 +522,9 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 ## 6. senluo-family-integration-private 收斂方針
 
-> 本計畫撰寫時無法存取該私有 repo；以下是終態要求與盤點步驟，具體檔案清單由 T1.7 補上。
+> 本計畫撰寫時無法存取該私有 repo；2026-10-20 已確認來源可讀，私有 `INVENTORY.md` 仍是未完成草稿。來源存取不再是 T1.7 全面停工的理由；具體契約、分類與去處須在私有庫補齊，不能因已有草稿就將 T1.7、T1.9 或 T1.10 標為完成。
 >
-> 伺服器盤點（§5.0）已確認它在 luosen 的實際形態：最高優先權的「森羅私有修復支援 1.0.57」BP＋RP（覆蓋 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating 的資源），加上數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
+> 伺服器盤點（§5.0）記錄了最高優先權的「森羅私有修復支援 1.0.57」BP＋RP；其 RP manifest 相依 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating。**相依宣告不等同於已確認的檔案覆蓋**，實際與 Grilling 同路徑的檔案及其內容仍待 T1.9 盤點。同時存在數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
 
 ### 6.1 盤點（T1.7）
 
