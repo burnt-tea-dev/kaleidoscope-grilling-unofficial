@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "repository": "casama233/kaleidoscope-grilling-unofficial",
-  "repository_id": 1377218440,
-  "default_branch": "main",
-  "project": "Kaleidoscope Grilling unofficial Bedrock port",
-  "require_remote_identity_check_before_write": true,
-  "allow_writes_to_other_repositories": false
-}

@@ -1,1 +1,0 @@
-Assets A1.9.0: geometry and atlas candidates only. No gameplay wiring. Grill models recovered from pinned Arbousier1 fork. See source_manifest.json and ATTRIBUTION.md. Lighting and anchor behavior not validated.

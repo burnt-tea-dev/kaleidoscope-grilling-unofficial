@@ -1,5 +1,0 @@
-Original Grilling source code: BSD-3-Clause; original textures/models/audio: CC BY-NC-SA 4.0.
-Sources: breezeth-CN/KaleidoscopeGrilling 9a1acdab27698457bec16c9362678e574895a28c; grill models from the previously attributed Arbousier1 fork.
-Changes: timed Bedrock rehearsal, atlas packing, sprite extrusion, particles mapped to native Bedrock equivalents.
-No endorsement. No Cookery original bundle or private scripts included.
-https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode

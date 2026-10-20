@@ -1,6 +1,0 @@
-{
-  "first_person_brush": "OilBrushFirstPersonAnimation.java — absolute camera transform preserved in source, fixture anchor differs",
-  "first_person_season": "SeasoningFirstPersonAnimation.java — preserves extra Z 180-degree inversion",
-  "third_person_arms": "HumanoidAnvilPressMixin.java — source radians retained; native player binding pending",
-  "eating": "6 duration/bite profiles; both SkewerEatingAnimation and EnderPearlEatingAnimation channels preserved; active/helper hand retarget pending"
-}

@@ -1,5 +1,0 @@
-export const PROFILE_RULES=Object.freeze({"ONE":{"durationTicks":90,"bites":[1.16667,3.08333]},"TWO":{"durationTicks":90,"bites":[0.95833,4.0]},"THREE":{"durationTicks":100,"bites":[0.95833,2.33333,3.54167]},"THREE_ALT":{"durationTicks":90,"bites":[0.95833,2.16667,3.5]},"THREE_RANDOM":{"durationTicks":100,"bites":[0.95833,2.33333,3.54167]},"FOUR":{"durationTicks":90,"bites":[0.95833,2.33333,3.45833,4.08333]}});
-export const SELECTORS=Object.freeze({"kg_imm:eat_one":"ONE","kg_imm:eat_two":"TWO","kg_imm:eat_three":"THREE","kg_imm:eat_three_alt":"THREE_ALT","kg_imm:eat_three_random":"THREE_RANDOM","kg_imm:eat_four":"FOUR"});
-export function resolveProfile(profile,r=Math.random()){return profile==='THREE_RANDOM'?(r<.5?'THREE':'THREE_ALT'):profile;}
-export function soundFor(profile){return ({ONE:'one_skewer_eat',TWO:'two_skewer_eat',THREE:'three_skewer_eat',THREE_ALT:'three_skewer_eat',FOUR:'four_skewer_eat'})[profile];}
-export function stageAt(profile,seconds){let n=0;for(const t of PROFILE_RULES[profile].bites)if(seconds>=t)n++;return Math.min(4,n);}

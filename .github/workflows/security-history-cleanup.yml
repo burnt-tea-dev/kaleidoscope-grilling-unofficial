@@ -1,0 +1,37 @@
+name: Authorized sensitive history cleanup
+on:
+  push:
+    branches:
+      - security/history-cleanup-20261017
+permissions: {}
+concurrency:
+  group: authorized-history-cleanup-20261017
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Load the reviewed cleanup payload
+        env:
+          CLEANUP_REPOSITORY: ${{ github.repository }}
+          CLEANUP_SHA: ${{ github.sha }}
+          GIT_CONFIG_GLOBAL: /dev/null
+          GIT_CONFIG_NOSYSTEM: '1'
+          GIT_TERMINAL_PROMPT: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -c core.hooksPath=/dev/null init --quiet loader
+          cd loader
+          git -c core.hooksPath=/dev/null remote add origin "https://github.com/${CLEANUP_REPOSITORY}.git"
+          git -c core.hooksPath=/dev/null fetch --no-tags --depth=1 origin "$CLEANUP_SHA"
+          git -c core.hooksPath=/dev/null restore --source=FETCH_HEAD -- .github/security-cleanup
+      - name: Publish and verify the reviewed cleanup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: python loader/.github/security-cleanup/run_cleanup.py

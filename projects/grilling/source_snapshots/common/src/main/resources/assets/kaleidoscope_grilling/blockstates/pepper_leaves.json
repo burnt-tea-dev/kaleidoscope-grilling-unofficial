@@ -1,6 +1,0 @@
-{
-  "multipart": [
-    { "when": { "has_pepper": "false" }, "apply": { "model": "kaleidoscope_grilling:block/pepper_leaves" } },
-    { "when": { "has_pepper": "true" }, "apply": { "model": "kaleidoscope_grilling:block/pepper_leaves_fruiting" } }
-  ]
-}
