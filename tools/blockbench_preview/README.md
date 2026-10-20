@@ -58,3 +58,53 @@ python -m unittest discover -s tools/blockbench_preview -p 'test_*.py' -v
 Tests use a synthetic loopback mock MCP server and a generated one-pixel PNG. They cover JSON/SSE capture, fixture/live/name gates before mutation, project/camera drift during capture, active-view dimensions and no-camera-mutation behavior, cleanup, unsafe tools, untrusted resource links, redirects/non-loopback endpoints, mismatched responses, private-error redaction, invalid plans and read-only inspection. They do not launch Blockbench or Minecraft and do not establish native preview integration. Separate operator trials produced one guarded offscreen editor frame with a cleanup failure, followed by one guarded active-mode frame with exit 0 and no offscreen resource creation. These are limited integration observations of those tool revisions; final review fixes require their own exact-revision confirmation. No game acceptance is implied.
 
 PNG acceptance checks bounded chunk framing/CRC, a complete IHDR, consecutive IDAT and final IEND, plus bounded zlib pixel data and scanline filter values. Only canvas-style 8-bit RGB/RGBA noninterlaced PNGs are supported; unsupported formats fail closed. Encoded input is capped at 32 MiB and decoded scanlines at 64 MiB; screenshots are never trusted from a signature/header alone.
+
+## T2.8 before/after asset-removal test design
+
+This comparison tests whether cleanup changes existing output. Matching a broken
+baseline is not Java parity. Keep known defects in `docs/KNOWN-ISSUES.md` open.
+
+1. **Freeze inputs before editing.** Pin the before/after commits and exact pack
+   bytes, editor versions, texture filtering, lighting, viewport size and camera.
+   Work in separate disposable authoring copies. Build the case list from every
+   canonical item/attachable/client entity/block permutation, including items
+   without attachables; do not substitute the unused-assets candidate list for
+   the set of player-visible cases. Record an unsupported case as untested.
+2. **Enumerate visible states.** For each applicable item cover inventory icon,
+   right/left first person, third person and placed representation. Include all
+   referenced geometry/texture-array entries and bone-visibility states, not just
+   the default index. In particular cover all skewer bite stages, secret-skewer
+   ingredient slots, empty/pending/mixed seasoning, oil fill levels, plate/rack
+   contents and all crop growth stages. Inspect edges, back faces, alpha, UVs,
+   grip/pivots, clipping and missing textures; geometry and texture folders have
+   independent live consumers.
+3. **Sample actual animation boundaries.** Read the selected clips' keyframe
+   times, then capture start/end, each keyframe, transitions just before/after,
+   and midpoints for interpolation. Include idle/use/eat/shake and return-to-idle
+   only where the item actually defines them. Keep clip order, scopes, overrides
+   and locked secondary clips identical. Use the guarded capture CLI above with
+   independently reviewed fixtures; do not invent Bedrock query values that the
+   editor cannot reproduce. Save the visible editor-state evidence separately.
+4. **Compare captures.** Use identical camera and viewport settings and compare
+   decoded pixels, rather than only PNG file hashes. Investigate every changed
+   silhouette, UV/alpha edge, color, pose or missing surface. Repeat an unchanged
+   case to detect nondeterminism before setting any image tolerance; never raise
+   tolerance merely to accept a failed comparison. Keep licensed fixtures and
+   captures outside the public checkout.
+5. **Exercise bridge. independently.** In a fresh workspace import each complete
+   paired project, inspect diagnostics and resolve geometry/texture/animation/
+   controller references. Export both sides, unpack the output and compare pack
+   paths and file bytes with the corresponding candidate inputs. Only explicit
+   paired manifest/version changes and reviewed deleted RP assets are permitted;
+   ZIP timestamps or ordering are not gameplay differences. Reopen each export
+   to check that authoring round trips have not silently rewritten other assets.
+   `tools/test_bridge_project.py` covers structural/export guards, not this GUI
+   inspection and not full Bedrock schema acceptance.
+6. **Keep the staging gate.** Run the same held/placed/inventory cases on the
+   planned isolated world with the actual enabled family stack, including the
+   private first-person integration and Immersive Eating. Check content errors,
+   interaction transitions and restart behavior. A missing fixture, unknown
+   dynamic reference, absent before image or unavailable staging instance blocks
+   the affected acceptance claim. Never use the live world as a substitute.
+
+No before/after GUI or staging result is supplied by this test design itself.
