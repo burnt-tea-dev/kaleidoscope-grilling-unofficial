@@ -1,6 +1,6 @@
 # Guarded Blockbench capture toolkit
 
-Portable Python 3.10+ standard-library CLI for an already-open, reviewed native scoped fixture. This implements the capture step of the [official-source-first repair workflow](../../docs/ANIMATION-ITEM-REPAIR-WORKFLOW.md), not a Minecraft acceptance test. It neither installs software nor opens/imports a fixture. The operator retains the native UI.
+Portable Python 3.10+ standard-library CLI for an already-open, reviewed native scoped fixture. This implements the capture step of the [official-source-first repair workflow](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/ANIMATION-ITEM-REPAIR-WORKFLOW.md), not a Minecraft acceptance test. It neither installs software nor opens/imports a fixture. The operator retains the native UI.
 
 ## Before connecting
 

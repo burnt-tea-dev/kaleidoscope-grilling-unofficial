@@ -99,17 +99,6 @@ def lang_text(s,l):
         rows += [f'guide.kg.body.{e["id"]}.{i}={esc(v)}' for i,v in enumerate(e['body'][l],1)]
     return '\n'.join(rows)+'\n'
 
-def index_text(s):
-    rows=['# 煙火指南 A3：分類索引','','此索引由 canonical catalog 生成；實際入口仍在 Cookery 指南。',
-          '同一條目可在多個分類出現，但只保存一份條目；生熟烤串和調料瓶狀態已合頁。','']
-    for root in [c for c in s['categories'] if not c.get('parent')]:
-        rows.append('## '+root['title']['zh_TW'])
-        children=[c for c in s['categories'] if c.get('parent')==root['id']]
-        for c in children or [root]:
-            if children:rows.append('### '+c['title']['zh_TW'])
-            rows += ['、'.join(e['title']['zh_TW'] for e in s['entries'] if c['id'] in e['categories']), '']
-    return '\n'.join(rows)+'\n'
-
 LANG_BEGIN='## BEGIN GRILLING GUIDE A3 (generated)'
 LANG_END='## END GRILLING GUIDE A3 (generated)'
 def merged_lang(path,guide_text):
@@ -137,6 +126,5 @@ def main():
     write_or_check(BP/'scripts/guide/payload.js','export const GUIDE_PAYLOAD='+json.dumps(p,ensure_ascii=False,separators=(',',':'))+';\n',a.check)
     for l in LOCALES:write_or_check(RP/'texts'/f'{l}.lang',merged_lang(RP/'texts'/f'{l}.lang',lang_text(s,l)),a.check)
     for target,row in s['icon_sources'].items():write_or_check(RP/(target+'.png'),(ROOT/row['source']).read_bytes(),a.check)
-    write_or_check(ROOT/'docs/GUIDE-INDEX-A3.md',index_text(s),a.check)
     print(json.dumps({'guide_version':s['version'],'entries':len(p['entries']),'root_categories':len([c for c in s['categories'] if not c.get('parent')]),'child_categories':len([c for c in s['categories'] if c.get('parent')]),'category_memberships':dict(counts),'recipes':sum(len(e['recipes']) for e in p['entries']),'item_icons':len(s['icon_sources']),'transfer_chunks':chunks,'acquisition_gaps':len(s['acquisition_gaps']),'mode':'check' if a.check else 'write'},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

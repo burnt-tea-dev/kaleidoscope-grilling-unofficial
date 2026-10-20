@@ -1,5 +1,0 @@
-# Grilling A2.8.134 — eating HUD provider scope
-
-The player still sees neither shaker slots nor the eating HUD although real block use reaches ingredient settlement. The current native-screen mount declares the installed provider names again as local empty defaults, shadowing the global provider catalog. Move the fallbacks into that global catalog and remove the local shadows, retaining the same typed empty control for absent addons. The shared Tavern/Grilling bridge, World Liquor effect outlet and optional AMW/saturation outlets use the same rule. Native HUD controls, graphical packets, receivers, Java assets, timing and gameplay are unchanged.
-
-Existing checks now reject a local declaration of a provider key rather than assuming `globals.get(provider, local_default)` describes client resolution. This source check does not certify rendered output. CI, full-family admission and stopped-save first/restart precede live installation; `client=false`, `production_ready=false`, and actual UI recovery requires the player to confirm it.

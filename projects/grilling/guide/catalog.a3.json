@@ -353,7 +353,7 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
-        "docs/evidence/cuisine-quality-native-food-20261009.md"
+        "docs/PARITY.md#guide-cuisine-quality"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/braised_chicken_wings",
@@ -464,7 +464,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/canola_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/canola_powder",
@@ -839,7 +839,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/green_chili_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/green_chili_powder",
@@ -927,7 +927,7 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
-        "docs/evidence/cuisine-quality-native-food-20261009.md"
+        "docs/PARITY.md#guide-cuisine-quality"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/green_pepper_squid_tentacles",
@@ -1050,7 +1050,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia_powder.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_houttuynia",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "docs/evidence/guide-processing-audit-20261017.md",
+        "docs/PARITY.md#guide-processing",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -1144,7 +1144,7 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
-        "docs/evidence/cuisine-quality-native-food-20261009.md",
+        "docs/PARITY.md#guide-cuisine-quality",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -1348,10 +1348,10 @@
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
-        "docs/evidence/vanilla-plant-fertilizer.md",
-        "docs/evidence/stem-and-rooted-dirt-fertilizer-20261009.md",
-        "docs/evidence/nether-vine-fertilizer-20261009.md",
-        "docs/evidence/mangrove-and-fertilizer-ownership-20261009.md"
+        "docs/PARITY.md#guide-fertilizer-basics",
+        "docs/PARITY.md#guide-fertilizer-stem-rooted-dirt",
+        "docs/PARITY.md#guide-fertilizer-nether-vines",
+        "docs/PARITY.md#guide-fertilizer-mangrove-ownership"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/oil_residue",
@@ -1442,7 +1442,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/onion_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/onion_powder",
@@ -1893,7 +1893,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/red_chili_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/red_chili_powder",
@@ -2979,7 +2979,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/sweet_potato_powder.json",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
         "projects/grilling/guide/content.a2.json#guide_sweet_potato",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/sweet_potato_powder",
@@ -3054,7 +3054,7 @@
         "projects/grilling/guide/content.a2.json#guide_seasoning_totem",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/heavy_metal_damage_runtime.js",
-        "docs/evidence/guide-processing-audit-20261017.md"
+        "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/totem_powder",
@@ -5723,7 +5723,7 @@
       "icon": "textures/ui/kg_grilling/catalog/canola_powder",
       "recipes": [],
       "source_refs": [
-        "docs/evidence/guide-processing-audit-20261017.md",
+        "docs/PARITY.md#guide-processing",
         "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
       ]
     }
