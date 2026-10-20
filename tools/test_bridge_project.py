@@ -232,6 +232,38 @@ class UnusedAssetCandidateTests(unittest.TestCase):
         for needle in needles:
             self.assertEqual(found[needle], {name for name, text in sources if needle in text})
 
+    def test_cli_rejects_directory_and_file_consumer_symlinks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'rp').mkdir()
+            (root / 'baseline.json').write_text(json.dumps({'runtime': {'RP': 'rp'}}))
+            consumer, outside = root / 'family', root / 'outside'
+            consumer.mkdir()
+            outside.mkdir()
+            reference = outside / 'reference.json'
+            reference.write_text('{"geometry": "geometry.external"}')
+            try:
+                (consumer / 'linked-directory').symlink_to(outside, target_is_directory=True)
+                (consumer / 'linked-file.json').symlink_to(reference)
+            except OSError as exc:
+                if getattr(exc, 'winerror', None) == 1314:
+                    self.skipTest('Windows symlink creation privilege is unavailable')
+                raise
+            with patch.object(assets, 'ROOT', root), \
+                    patch.object(assets.subprocess, 'check_output', return_value=b''), \
+                    patch.object(sys, 'argv', ['validate.py', 'unused-assets',
+                                              '--consumer-root', str(consumer)]), \
+                    patch('builtins.print') as output:
+                self.assertEqual(assets.main(), 1)
+            output.assert_called_once()
+            result = json.loads(output.call_args.args[0])
+            self.assertEqual({entry['source'] for entry in result['errors']},
+                             {'consumer-0:linked-directory', 'consumer-0:linked-file.json'})
+            self.assertTrue(all(entry['error'] == 'symlink input requires manual review'
+                                for entry in result['errors']))
+            self.assertEqual(result['scanned_text_files'], 0)
+            self.assertFalse(result['deletion_authorized'])
+
     def test_candidate_scan_reports_parse_duplicates_and_missing_sources(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

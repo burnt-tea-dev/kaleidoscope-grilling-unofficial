@@ -176,8 +176,9 @@ def main():
     for _, path, _ in consumers:
         if not path.is_dir():
             parser.error(f'consumer root is not a directory: {path}')
-    # Directories are traversal entries, not scanned documents.
-    consumers = [(label, path, [p for p in files if not p.is_dir()]) for label, path, files in consumers]
+    # Keep directory symlinks so scan() reports them instead of silently skipping them.
+    consumers = [(label, path, [p for p in files if p.is_symlink() or not p.is_dir()])
+                 for label, path, files in consumers]
     result = scan(ROOT, ROOT / baseline['runtime']['RP'], [ROOT / p for p in tracked if p], consumers)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 1 if result['errors'] else 0
