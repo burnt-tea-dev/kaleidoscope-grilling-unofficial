@@ -1,8 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature,ingredientContentSignature} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js';
-import {configureItemDataWorld} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/itemDataCore.js';
-import {bottleLoreSignature,isOwnedBottleLore} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/bottle_lore_core.js';
+import {pathToFileURL} from 'node:url';
+
+// The override is for an isolated source checkout, never for production packs.
+const scripts = process.env.KG_CODEC_SCRIPTS
+  ? pathToFileURL(process.env.KG_CODEC_SCRIPTS.replace(/[\\/]$/, '') + '/')
+  : new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/', import.meta.url);
+const {captureSkewerMetadata, restoreSkewerMetadata, metadataSignature, ingredientContentSignature} =
+  await import(new URL('skewer_item_snapshot.js', scripts));
+const {configureItemDataWorld} = await import(new URL('itemDataCore.js', scripts));
+const {bottleLoreSignature, isOwnedBottleLore} = await import(new URL('bottle_lore_core.js', scripts));
 const copy = value => JSON.parse(JSON.stringify(value));
 const INGREDIENTS = 'kaleidoscope_grilling:seasonings';
 const lines = [

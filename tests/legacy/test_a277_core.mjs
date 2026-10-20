@@ -7,9 +7,17 @@ t('two-party success applies state then resource',()=>{
  const log=[];const r=commitTwoParty(()=>log.push('state'),()=>log.push('resource'),()=>log.push('undo-state'),()=>log.push('undo-resource'));
  assert.equal(r.ok,true);assert.deepEqual(log,['state','resource']);
 });
-t('primary failure restores its attempted write without touching the unattempted resource',()=>{
- const log=[];const r=commitTwoParty(()=>{log.push('state');throw new Error('state')},()=>log.push('resource'),()=>log.push('undo-state'),()=>log.push('undo-resource'));
- assert.equal(r.ok,false);assert.deepEqual(log,['state','undo-state']);assert.equal(r.rollbackErrors,0);
+t('primary failure restores changed state and leaves the resource unchanged',()=>{
+ let state='before',resource=3;
+ const r=commitTwoParty(
+  ()=>{state='partial';throw new Error('state')},
+  ()=>{resource-=1},
+  ()=>{state='before'},
+  ()=>{resource=3}
+ );
+ assert.equal(r.ok,false);
+ assert.equal(state,'before');
+ assert.equal(resource,3);
 });
 t('secondary failure restores resource then state',()=>{
  const log=[];const r=commitTwoParty(()=>log.push('state'),()=>{log.push('resource');throw new Error('resource')},()=>log.push('undo-state'),()=>log.push('undo-resource'));

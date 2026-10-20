@@ -1,7 +1,7 @@
 # Transitional behavior tests
 
-Run `python3 tools/run_legacy_tests.py`. Each retained file runs in a fresh Node
-process; failures are collected rather than hidden by the first failing file.
+Run `python3 tools/run_legacy_tests.py`. Each retained file runs in an isolated Node
+test process; all 93 existing entrypoints are discovered with no skip list.
 These tests characterize canonical source behavior during P2. They do not prove
 BDS compatibility, visual parity, staging success, or player acceptance.
 

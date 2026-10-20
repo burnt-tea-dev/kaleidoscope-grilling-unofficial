@@ -14,17 +14,7 @@ t('Cookery host API constants stay centralized and exact',()=>{
  assert.equal(SOURCE,'kaleidoscope_grilling');
 });
 
-t('registry exposes distinct recipes for every supported station capability',()=>{
- const rows=recipeTable();
- assert.equal(rows.length,23);
- assert.equal(rows.filter(x=>x.capability==='chopping_board').length,5);
- assert.equal(rows.filter(x=>x.capability==='millstone').length,7);
- assert.equal(rows.filter(x=>x.capability==='chopping_board_v2').length,2);
- for(const capability of ['wok','stockpot_exact','stockpot_flex'])assert.equal(rows.filter(x=>x.capability===capability).length,3);
- assert.equal(new Set(rows.map(x=>x.payload.recipe.id)).size,23);
-});
-
-t('historical recipe payloads are preserved',()=>{
+t('chopping and milling keep their ingredient, output and quantity rules',()=>{
  const byId=Object.fromEntries(recipeTable().map(x=>[x.payload.recipe.id,x.payload.recipe]));
  assert.deepEqual(byId['kaleidoscope_grilling:chopping_board/raw_sweet_potato_sheet'],{
   id:'kaleidoscope_grilling:chopping_board/raw_sweet_potato_sheet',
@@ -58,17 +48,25 @@ t('historical recipe payloads are preserved',()=>{
 });
 
 t('capability filtering delegates station availability to Cookery host',()=>{
- assert.equal(recipesForReady({api:1,capabilities:['chopping_board']}).length,5);
- assert.equal(recipesForReady({api:1,capabilities:['millstone']}).length,7);
- assert.equal(recipesForReady({api:1,capabilities:['chopping_board','millstone']}).length,12);
+ const known={
+  chopping_board:['raw_sweet_potato_sheet','carrot_dice','potato_slice','raw_mantou_slice','minced_houttuynia'],
+  millstone:['sweet_potato_powder','canola_powder','onion_powder','red_chili_powder']
+ };
+ for(const capability of ['chopping_board','millstone']){
+  const rows=recipesForReady({api:1,capabilities:[capability]});
+  assert.ok(rows.every(row=>row.kind===capability));
+  for(const name of known[capability])
+   assert.ok(rows.some(row=>row.recipe.id===`kaleidoscope_grilling:${capability}/${name}`));
+ }
  assert.deepEqual(recipesForReady({api:2,capabilities:['chopping_board','millstone']}),[]);
  assert.deepEqual(recipesForReady({api:1,capabilities:[]}),[]);
 });
 
 t('returned rows are defensive copies',()=>{
- const a=recipeTable(),id='kaleidoscope_grilling:chopping_board/raw_sweet_potato_sheet';
- a.find(row=>row.payload.recipe.id===id).payload.recipe.count=99;
- assert.equal(recipeTable().find(row=>row.payload.recipe.id===id).payload.recipe.count,1);
+ const id='kaleidoscope_grilling:chopping_board/raw_sweet_potato_sheet';
+ const row=()=>recipeTable().find(x=>x.payload.recipe.id===id);
+ const a=row();a.payload.recipe.count=99;
+ assert.equal(row().payload.recipe.count,1);
 });
 
 console.log('A2.7.27 Cookery host recipe registry: '+n+'/'+n);

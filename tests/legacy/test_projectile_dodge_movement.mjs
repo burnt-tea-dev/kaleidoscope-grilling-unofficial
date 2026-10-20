@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {PROJECTILE_DODGE_ATTEMPTS,PROJECTILE_DODGE_RANGE,projectileDodgeBounds,sampleProjectileDodgeAttempt} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_movement_core.js';
 import {tryProjectileDodgeMovement} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_movement_runtime.js';
-const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/java-projectile-dodge-movement-160.json',import.meta.url),'utf8'));
+const root=new URL('../../',import.meta.url),fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/java-projectile-dodge-movement-160.json',import.meta.url),'utf8'));
 function actor({dimensionId='minecraft:overworld',range={min:-64,max:320},position={x:1,y:80,z:2},succeedAt=1,mounted=false,remount=false,readBlock=()=>({typeId:'minecraft:air',isLiquid:false,isWaterlogged:false})}={}){
  const calls=[],ejected=[],order=[],reads=[];let riding=mounted,location={...position},reportedDimension=dimensionId;
  const mount={getComponent:id=>id==='minecraft:rideable'?{

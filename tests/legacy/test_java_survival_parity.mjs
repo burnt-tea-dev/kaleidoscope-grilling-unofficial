@@ -1,19 +1,26 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {fileURLToPath} from 'node:url';
 import {recipeTable as hosted,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js';
 import {recipeTable as skewers} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
 import {COOKED_EFFECTS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/data.js';
 import {initialState,light,brush,flip,season,tickState,canInsert,breakDisposition} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core_logic.js';
-const fixtures=new URL('./fixtures/java-1.1.1-recipes/',import.meta.url);
-const load=path=>JSON.parse(fs.readFileSync(new URL(path,fixtures),'utf8'));
+const javaData=new URL('../../data/java/',import.meta.url);
+const recipes=JSON.parse(fs.readFileSync(new URL('recipes.json',javaData),'utf8')).resources;
+const tags=JSON.parse(fs.readFileSync(new URL('tags.json',javaData),'utf8')).resources;
+// Java 1.21.1 resource schema uses recipe/ and result.id (not Forge recipes/ and result.item).
+const recipePrefix='common/src/main/resources/data/kaleidoscope_grilling/recipe/';
+const load=path=>{
+ if(path==='skewers.json')return recipes['common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json'].data;
+ if(path.startsWith('tags/')){const [namespace,...parts]=path.slice(5).split('/');return tags[`common/src/main/resources/data/${namespace}/tags/items/${parts.join('/')}`].data;}
+ return recipes[recipePrefix+path].data;
+};
 const runtime=new URL('../../projects/grilling/gameplay_core/behavior_pack/recipes/',import.meta.url);
 const actualRecipe=name=>{const d=JSON.parse(fs.readFileSync(new URL(name+'.json',runtime),'utf8'));return d[Object.keys(d).find(k=>k.startsWith('minecraft:recipe_'))]};
 let checked=0;
 const resolveTag=(tag,seen=[])=>{assert.ok(!seen.includes(tag),'cyclic source tag');return load('tags/'+tag.replace(':','/')+'.json').values.flatMap(x=>{const id=typeof x==='string'?x:x.id;return id.startsWith('#')?resolveTag(id.slice(1),[...seen,tag]):[id]})};
 const one=selector=>selector.item??resolveTag(selector.tag)[0];
 for(const kind of ['chopping_board','millstone']){
- for(const name of fs.readdirSync(new URL(kind+'/',fixtures))){
+ for(const name of Object.keys(recipes).filter(path=>path.startsWith(recipePrefix+kind+'/')).map(path=>path.slice((recipePrefix+kind+'/').length))){
   const java=load(kind+'/'+name),id='kaleidoscope_grilling:'+kind+'/'+name.replace(/\.json$/,'');
   const row=hosted().find(r=>r.payload.recipe.id===id)?.payload.recipe;
   assert.ok(row,`Survival chain missing: ${id}`);

@@ -8,12 +8,14 @@ import {
 
 // The expected slots come from the pinned Java data, independently of the
 // Bedrock table. Native storage/client rendering are covered separately.
-const javaRoot=new URL('fixtures/java-1.1.1-recipes/',import.meta.url);
-const javaRecipes=JSON.parse(fs.readFileSync(new URL('skewers.json',javaRoot),'utf8')).skewers.filter(r=>r.ingredients.length);
+const javaData=new URL('../../data/java/',import.meta.url);
+const recipes=JSON.parse(fs.readFileSync(new URL('recipes.json',javaData),'utf8')).resources;
+const tags=JSON.parse(fs.readFileSync(new URL('tags.json',javaData),'utf8')).resources;
+const javaRecipes=recipes['common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json'].data.skewers.filter(r=>r.ingredients.length);
 function javaSelectorRows(selector){
  if(!selector.startsWith('#'))return [{id:selector,tags:[]}];
  const tag=selector.slice(1),[ns,path]=tag.split(':');
- return JSON.parse(fs.readFileSync(new URL('tags/'+ns+'/'+path+'.json',javaRoot),'utf8')).values.map(id=>({id,tags:[tag]}));
+ return tags[`common/src/main/resources/data/${ns}/tags/items/${path}.json`].data.values.map(id=>({id,tags:[tag]}));
 }
 function combinations(slots){return slots.reduce((rows,slot)=>rows.flatMap(row=>slot.map(value=>[...row,value])),[[]]);}
 function javaMatches(recipe,rows){return rows.length<=recipe.ingredients.length&&rows.every((row,i)=>recipe.ingredients[i].some(selector=>selector.startsWith('#')?row.tags.includes(selector.slice(1)):row.id===selector));}

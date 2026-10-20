@@ -1,34 +1,31 @@
-"""Run the explicitly retained T2.5 behavior tests against canonical modules.
+"""Run the classified legacy rules against the canonical runtime exports.
 
-Each file gets a fresh Node process. The resolver substitutes Minecraft's native
-API only; runtime modules are imported normally without source transformations.
+Only tests/legacy contains runnable transition tests. Retired source-evaluated
+scenarios and pending engine work are listed in its classification.json.
 """
+import argparse
 from pathlib import Path
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-TEST_DIR = ROOT / 'tests/legacy'
-REGISTER = ROOT / 'tests/helpers/register-minecraft-loader.mjs'
 
 
 def main():
-    tests = [ROOT / 'tests/helpers/minecraft-fixture.test.mjs']
-    tests += sorted(TEST_DIR.glob('test_*.mjs')) + sorted(TEST_DIR.glob('*.test.mjs'))
-    if len(tests) == 1:
-        raise RuntimeError('No retained behavior tests found')
-    failed = []
-    for path in tests:
-        print(f'Running {path.relative_to(ROOT)}', flush=True)
-        result = subprocess.run(['node', '--import', str(REGISTER), str(path)], cwd=ROOT)
-        if result.returncode:
-            failed.append(path.relative_to(ROOT))
-    if failed:
-        print('Failed test files:', *failed, sep='\n', file=sys.stderr)
-        return 1
-    print(f'Passed {len(tests)} retained behavior and harness test files')
-    return 0
+    argparse.ArgumentParser(description=__doc__).parse_args()
+    directory = ROOT / 'tests/legacy'
+    tests = sorted(set(directory.glob('test_*.mjs')) | set(directory.glob('*.test.mjs')))
+    if not tests:
+        raise RuntimeError('No classified legacy tests found')
+    subprocess.run(
+        ['node', '--import', str(ROOT / 'tests/helpers/register-minecraft-loader.mjs'), '--test', '--test-concurrency=1', *(str(path) for path in tests)],
+        cwd=ROOT, check=True,
+    )
+    print(f'Passed {len(tests)} legacy test files; no engine or client acceptance claimed')
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    try:
+        main()
+    except subprocess.CalledProcessError as error:
+        sys.exit(error.returncode)

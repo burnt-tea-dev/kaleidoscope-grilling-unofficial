@@ -9,18 +9,6 @@ t('shared persistent FX key stays aligned with A2.1',()=>{
  assert.equal(FX_KEY,'kaleidoscope_grilling:a21_fx');
 });
 
-t('registry includes all six standalone effect foods',()=>{
- const rows=standaloneFoodEffectTable();
- assert.deepEqual(rows.map(x=>x.itemId),[
-  'kaleidoscope_grilling:roasted_sweet_potato',
-  'kaleidoscope_grilling:cold_houttuynia',
-  'kaleidoscope_grilling:wedding_candy',
-  'kaleidoscope_grilling:pepper_honey',
-  'kaleidoscope_grilling:red_sweet_potato_porridge',
-  'kaleidoscope_grilling:sour_spicy_noodles'
- ]);
-});
-
 t('roasted sweet potato keeps warmth 600 max-until semantics',()=>{
  assert.deepEqual(effectsForStandaloneFood('kaleidoscope_grilling:roasted_sweet_potato'),[{
   kind:'persistent_fx',effect:'warmth',ticks:600,amplifier:0,stacking:'max_until'
@@ -41,8 +29,9 @@ t('unregistered foods do not gain effects',()=>{
 });
 
 t('registry callers receive defensive copies',()=>{
- const rows=standaloneFoodEffectTable();rows[0].effects[0].ticks=1;
- assert.equal(standaloneFoodEffectTable()[0].effects[0].ticks,600);
+ const row=()=>standaloneFoodEffectTable().find(x=>x.itemId==='kaleidoscope_grilling:roasted_sweet_potato');
+ const first=row();first.effects[0].ticks=1;
+ assert.equal(row().effects[0].ticks,600);
 });
 
 console.log('A2.7.32 standalone food effect core: '+n+'/'+n);

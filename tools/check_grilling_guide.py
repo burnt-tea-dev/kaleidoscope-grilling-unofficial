@@ -189,16 +189,16 @@ def check_facts(s):
                 e=owner[o['id']]
                 require(any(x['method']=='Millstone' and x['ingredients']==[r['input']] and x['result']==o['id'] and x['count']==o['count'] for x in e['recipes']),'Millstone recipe drift')
                 require(e.get('process_contract')=={'kind':'millstone','input':r['input'],'output':o['id'],'count':o['count'],'station':'kaleidoscope_cookery:millstone','requires_host_extension_input_fix':True},'Missing powder process contract '+o['id'])
-                fixture=load(ROOT/'tests/legacy/fixtures/java-1.1.1-recipes/millstone'/(o['id'].split(':')[1]+'.json'))
+                fixture=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/millstone'/(o['id'].split(':')[1]+'.json'))
                 require(fixture['result']=={'id':o['id'],'count':o['count']},'Java powder result drift '+o['id'])
                 ingredient=fixture['ingredient']
                 if 'item' in ingredient:require(ingredient['item']==r['input'],'Java powder input drift '+o['id'])
                 else:
-                    tag=load(ROOT/'tests/legacy/fixtures/java-1.1.1-recipes/tags'/Path(ingredient['tag'].replace(':','/')).with_suffix('.json'))
+                    tag=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(ingredient['tag'].replace(':','/')).with_suffix('.json'))
                     values=list(tag['values'])
                     for v in list(values):
                         if v.startswith('#'):
-                            nested=load(ROOT/'tests/legacy/fixtures/java-1.1.1-recipes/tags'/Path(v[1:].replace(':','/')).with_suffix('.json'))
+                            nested=load(ROOT/'development/gameplay_core/fixtures/java-1.1.1-recipes/tags'/Path(v[1:].replace(':','/')).with_suffix('.json'))
                             values.extend(nested['values'])
                     require(r['input'] in values,'Java powder tag drift '+o['id'])
                 for loc in LOCALES:

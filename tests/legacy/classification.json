@@ -1,0 +1,1875 @@
+{
+  "task": "T2.5",
+  "base_commit": "df0ff11de5fbff8f0c64324d8e2c3bf7d618084b",
+  "scope": "First-pass per-file classification after T2.4. This is a review index and pending scenario list, not a gate, hash witness, Minecraft result or completed P3/P4 acceptance.",
+  "summary": {
+    "reviewed_original_files": 224,
+    "moved_or_extracted_legacy_files": 93,
+    "retired_test_files": 122,
+    "retained_original_files": 9,
+    "ratchet_counted_before": 221,
+    "ratchet_counted_after": 101,
+    "source_text_slicing_before": 33,
+    "source_text_slicing_after": 0
+  },
+  "pending_rule_backlog": {
+    "grill": {
+      "next": "T3.1; T3.2; T3.3 grill/skewer/seasoning",
+      "scenarios": [
+        "Place, light, insert three skewers, oil, flip four times, season and extract through real module imports.",
+        "Preserve original items and metadata on hand/storage/output failure; refuse stale hand or replaced block.",
+        "Burnout, destruction, full inventory and reload must not pay an output twice."
+      ]
+    },
+    "plate_recipe": {
+      "next": "T3.1; T3.2; T3.3 plate/recipe",
+      "scenarios": [
+        "Main/offhand insert, take and place preserve complete item metadata; post-write rejection restores owned values.",
+        "Full plate break produces one packed item; early/late/unreadable explosion cancellation and replaced blocks retain contents.",
+        "Unknown drop/rollback results stay quarantined across reload; acknowledged delivery only finishes cleanup and never reissues items.",
+        "Record, convert, place and retrieve recipe books with full inventories, native slot movement, support loss and foreign concurrent changes."
+      ]
+    },
+    "oil": {
+      "next": "T3.1; T3.2; T3.3 oil/compat",
+      "scenarios": [
+        "Main/offhand bucket stacks keep exact remainder; full inventory produces one spill; creative does not mint an extra output.",
+        "Press completion waits ten ticks, resumes after chunk unload and restores cakes/oil/residue on rejected output.",
+        "Deferred placement/hammer/break rejects stale hand, same-type replacement and cancellation; competing users retain each owner.",
+        "Unknown delivery or rollback stays quarantined after reload; registry/cache and retry work cannot retain a failed source.",
+        "Author oil placement must preserve captured quantity, reject unknown legacy quantity and honor other registered oil containers."
+      ]
+    },
+    "rack": {
+      "next": "T3.1; T3.2; T3.3 rack",
+      "scenarios": [
+        "Click every rack slot and facing; preserve exact item metadata for deposit, withdrawal, partial merge, hotbar swap and automation return.",
+        "Destination/source/filter faults restore earlier writes; ambiguous rollback quarantines and blocks replay.",
+        "Reject stale main/offhand, changed selected slot, changed facing/owner and cancelled/replaced explosion targets.",
+        "Crosshair versus direct-touch targeting selects the intended slot; display masks remain derived from unchanged native storage."
+      ]
+    },
+    "food_heat": {
+      "next": "T3.1; T3.2 item_meta; T3.3 food/compat",
+      "scenarios": [
+        "New heat uses Java buckets while existing saved deadlines remain precise; expiration and Cookery configuration do not rewrite unrelated metadata.",
+        "Keep all foreign RawMessage lore at the 20-line boundary; reject corrupt carriers and post-write/readback failures without losing prior heat.",
+        "Food and returned containers retain seasoning, quality, effects and oil type across takeout, destruction and reload.",
+        "Native author input admission, capacity and completion duration require supported host/engine integration, not source-evaluated callbacks."
+      ]
+    },
+    "eating": {
+      "next": "T3.1; T3.2; T3.3 skewer/food; T3.4",
+      "scenarios": [
+        "Main/offhand use, release at the Java minimum, native completion and shorter-profile completion settle exactly one serving.",
+        "Switch hands/items, disconnect, repeat eating and foreign metadata changes must not debit or reward the wrong stack.",
+        "Raw/failed/secret/alternate-profile ingredients preserve effects and returned containers; malformed or missing secret records reject use.",
+        "Verify the native consumption-cancels-use spike before replacing shadow IDs; client animation timing and other eating packs remain staging work."
+      ]
+    },
+    "lore": {
+      "next": "T3.1; T3.2 item_meta; T3.3 seasoning/food",
+      "scenarios": [
+        "Refresh only owned ingredient/maxim/heat lines, preserve foreign structured messages and stackable metadata tokens.",
+        "Native setter rejection, silent no-op, wrong readback and unavailable property enumeration must prevent a lossy commit.",
+        "a2769: foreign/raw items unchanged, maxim update idempotent, duplicate owned lines removed, full 20-line lore preserved and heat filtering leaves foreign text intact."
+      ]
+    },
+    "effect_feedback": {
+      "next": "T3.1; T3.3 effect/food",
+      "scenarios": [
+        "Native/custom hot effects merge against the correct start snapshot, including expiration during eating.",
+        "Damage, invincibility, ordinary shield and heavy-metal deferral settle once under reentrant or rejected callbacks.",
+        "Sound/particle failures remain cosmetic; native Molang velocity, cooldown and entity lifetime require engine validation."
+      ]
+    },
+    "projectile": {
+      "next": "T3.1; T3.3 effect",
+      "scenarios": [
+        "Reserve and release dodge destinations, including failed movement, replaced owner and concurrent claims.",
+        "Respect ground/liquid/collision boundaries and move/audio failures through the actual event adapter."
+      ]
+    },
+    "crops_world": {
+      "next": "T3.1; T3.3 crops/world",
+      "scenarios": [
+        "Harvest and replant preserve drops, seeds and crop state under write failure, cancellation and concurrent gestures.",
+        "Pepper contact/worldgen budgets avoid duplicate effects or missed eligible blocks; fertilizer storage survives reload.",
+        "Village/fortress acquisition probabilities and plantable outputs must use Java data, not obsolete version-plan hashes."
+      ]
+    },
+    "advancement": {
+      "next": "T3.1; T3.2; T3.3 advancement",
+      "scenarios": [
+        "Award 25 XP only after acknowledged ownership; existing completion and nested triggers cannot pay twice.",
+        "Rejected or unknown XP/claim/completion writes preserve pending recovery across reload; no command fallback repeats uncertain XP."
+      ]
+    },
+    "compat": {
+      "next": "T3.1; T3.2; T3.3 compat",
+      "scenarios": [
+        "Register only supported author capabilities/items, keep foreign registrants independent and reject conflicts.",
+        "Native author board/oil/millstone callbacks, inventory gates, host metadata and source-only fallback need actual supported integration.",
+        "Retirement of check_cookery162_host.py is not completion of T1.10 official-vs-server package comparison."
+      ]
+    },
+    "visual": {
+      "next": "T4.1; T4.2; relevant T3.3 domain staging",
+      "scenarios": [
+        "Review Java reference and Bedrock result for held, placed, first/third-person and eating surfaces using native state mechanisms.",
+        "Bottle fill, brush/rack tools, secret/failure ingredient order, slime clock and HUD must be checked in the real renderer.",
+        "Python baked projection, calibration, old lab geometry and source-shape agreement are retired checks, not evidence that their surfaces are correct."
+      ]
+    }
+  },
+  "expectation_changes": [
+    {
+      "test": "test_a2727_core.mjs",
+      "before": "Version inventory fixed at 9 total recipes and 4 millstone recipes; copy test selected array element 0.",
+      "after": "Retain nine exact ingredient/output rules, positive capability visibility and unsupported-API rejection; address copied recipe by ID. Remove version inventory limits without replacing them with current counts."
+    },
+    {
+      "test": "test_a2732_core.mjs",
+      "before": "Registry required exactly two foods and copied array element 0.",
+      "after": "Retain original two food effect/duration rules and unknown-food behavior; address roasted sweet potato by ID. Remove the fixed registry membership assertion without asserting six instead."
+    },
+    {
+      "test": "test_a277_core.mjs",
+      "before": "Primary failure required an undo callback for an unattempted secondary step.",
+      "after": "Inject a partial primary mutation, then require original primary state and unchanged resource quantity. Other rollback failure/delivery rules remain."
+    },
+    {
+      "test": "test_core.mjs",
+      "before": "Initial return object lacked seasonings; burnout reset asserted lit:false.",
+      "after": "Add the existing empty seasonings return field; assert burnout keeps lit:true from exact Java tick/resetProcess, not from Bedrock output.",
+      "oracle": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlockEntity.java"
+    },
+    {
+      "test": "test_java_survival_parity.mjs",
+      "before": "Read old extracted fixture directory; first data/java migration used Forge recipes/ with result.item.",
+      "after": "Use unmodified Java 1.21.1 recipe/ records with result.id in data/java; gameplay expectations unchanged."
+    },
+    {
+      "test": "test_a2740_core.mjs",
+      "before": "Ready HUD state expected message.kaleidoscope_grilling.grill_ready_to_take.",
+      "after": "Use jade.kaleidoscope_grilling.grill.ready from the exact Java Jade provider; interaction-message key remains a separate channel.",
+      "oracle": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/jade/GrillProvider.java"
+    },
+    {
+      "test": "test_a2769_core.mjs",
+      "before": "Plain Node fails while importing Minecraft server through the canonical tooltip dependency graph.",
+      "after": "Retire the executable old suite and retain explicit lore scenarios in this backlog; no passing engine/harness result claimed."
+    }
+  ],
+  "files": [
+    {
+      "original": "development/gameplay_core/test_a21_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a21_core.mjs",
+      "change": "a21_core_logic exports live in canonical core_logic; assertions unchanged"
+    },
+    {
+      "original": "development/gameplay_core/test_a21_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a22_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a23_hot_merge.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a23_hot_merge.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a23_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a24_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a24_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a25_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a25_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a26_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a26_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2710_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2710_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2710_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2711_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2711_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2711_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2712_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2712_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2712_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2713_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2713_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2713_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2714_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2714_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2714_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2715_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2715_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2715_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2716_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2716_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2716_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2717_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2717_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2717_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2718_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2718_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2718_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2719_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2719_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2719_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a271_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a271_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2720_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2720_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2720_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2722_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2722_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2724_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2724_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2727_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2727_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a272_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a272_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a272_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2730_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2730_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2731_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2731_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2732_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2732_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2732_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2734_adapter.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "compat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2734_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2734_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2735_player_io.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "compat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2736_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2736_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2737_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2737_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2738_integrated.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2738_integrated.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2738_shared_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2738_shared_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2739_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2739_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2740_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2740_core.mjs",
+      "change": "ready status translation key is from exact Java Jade provider 9a1acdab, not inferred from Bedrock output"
+    },
+    {
+      "original": "development/gameplay_core/test_a2741_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2741_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2742_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2742_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2743_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2743_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2744_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2744_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2745_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2745_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2746_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2746_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2747_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2747_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2748_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2748_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2749_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2749_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2750_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2750_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2752_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2752_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2752_host_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2752_host_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2753_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2753_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2754_core.mjs",
+      "decision": "retire_version_plan",
+      "reason": "Asserts a versioned authoring plan and source hashes rather than executing a current gameplay rule.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2755_core.mjs",
+      "decision": "retire_version_plan",
+      "reason": "Asserts a versioned authoring plan and source hashes rather than executing a current gameplay rule.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2756_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2756_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2758_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2758_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2759_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2759_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a275_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a275_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2762_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2762_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2762_restricted.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2766_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2766_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a2766_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2769_core.mjs",
+      "decision": "retire_engine_bound",
+      "reason": "Canonical tooltip import reaches @minecraft/server; no source rewrite, fake runtime module or silent skipped pass.",
+      "follow_up": [
+        "lore",
+        "food_heat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a276_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a276_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a2770_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a2770_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a277_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a277_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a278_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a278_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a278_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a279_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a279_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_a279_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a280_integrated.mjs",
+      "decision": "retire_history_source",
+      "reason": "Imports three historical trees and then asserts runtime source text; no historical fixture copied to keep it alive.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a2810_use.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a281_visual.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a283_feedback.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a283_geometry.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_a285_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_a285_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_a288_parity.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_advancement_settlement.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "advancement"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_all_skewer_integration.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_board_api.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_board_api.mjs",
+      "change": "Retain direct author-data recipe admission/output and fault-injected operation logic; remove source-sliced runtime registration and external author-file hash equality; native author integration deferred to T3.3 compat/staging.",
+      "follow_up": [
+        "compat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_book_ingredient_tags.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_book_ingredient_tags.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_fill_proxies.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_held_visual.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_pose_review.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_raw_lore.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_bottle_raw_lore.mjs",
+      "change": "Retain direct RawMessage ownership/signature and fail-closed shape cases; source-sliced refreshBottleIngredientLore and native setter fault cases deferred to T3.2 item_meta/T3.3 seasoning.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_single_pass.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_bottle_visual_assets.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_161_visual_extension.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_damage_feedback.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_millstone_admission.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "food_heat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_oil_placement.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_output_contract_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_cookery_output_contract_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_cookery_seasoning_uses_lore.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_cookery_seasoning_uses_lore.mjs",
+      "change": "Retain direct lore rules; remove the raw runtime-wiring includes assertion.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_core.mjs",
+      "change": "Retarget import to same canonical export; gameplay assertions retained."
+    },
+    {
+      "original": "development/gameplay_core/test_core_skewer_cycle.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_cuisine_quality_java.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_cuisine_quality_java.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_dragon_health.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_dragon_health.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_dragon_powder_transaction.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_eating_arms.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_eating_item_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_eating_native_completion.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_eating_route_resolver.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_effect_application_merge.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_failure_skewer_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_family_oil_food_api.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_family_oil_food_api.mjs",
+      "change": "Retain direct secret-food extension effects/damage/returned-container rule; source-evaluated host oil/food journal, storage, configuration and retry scenarios deferred to T3.2/T3.3 oil/food/compat.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_finished_bottle_icons.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_flatulence_sound.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_flatulence_sound.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_food_finish.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_food_finish.mjs",
+      "change": "Retain direct heat-at-completion and profile selection cases; source-sliced effect snapshot/doubling scenarios deferred to T3.3 food/effect and T3.4.",
+      "follow_up": [
+        "food_heat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_food_snapshot.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_food_snapshot.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_fourth_flip_snapshot.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_full_skewer_flow.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_generated_food_sprite_alignment.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_grill_destruction.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_grill_initial_orientation.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_grill_tick_native_reads.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_grill_visual.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_heavy_metal_deferred.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_hot_food_manual_merge.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "food_heat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_immersion_audio.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_immersion_audio.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_immersion_feedback.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_immersion_feedback.mjs",
+      "change": "Retain direct particle sampling/delivery, pitch/cooldown and parsed particle-declaration checks; source-evaluated engine adapters and damage feedback deferred to T3.3 effect and staging.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_integration_interfaces.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "compat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_active_eating_frames.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_dual_eating_frames.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_heat_deadlines.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_java_heat_deadlines.mjs",
+      "change": "Retain direct heat-bucket checks against executed Java vectors; VM-loaded food adapters, scheduling and native storage scenarios deferred to T3.2 item_meta/T3.3 food.",
+      "follow_up": [
+        "food_heat"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_hud.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_pot_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_java_pot_core.mjs",
+      "change": "Replace readFile/base64 module evaluation with direct canonical imports; all pot and recipe assertions unchanged."
+    },
+    {
+      "original": "development/gameplay_core/test_java_release_grace.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_java_survival_parity.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_java_survival_parity.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_java_use_gates.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_legacy_seasoning_heat_merge.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_localized_heat_lore.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_localized_heat_lore.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_native_bottle_fp.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_native_bottle_full_frustum.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_native_offhand_idle.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_native_skewer_fp.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_native_variant_ingredient_effects.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_numb_visual.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_offhand_eating_clock.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_ambient.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_api.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_oil_api.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_oil_brush_assets.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_brush_visual.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_flow_native_reads.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_registry_rollback.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_snapshot_intent.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_oil_source_registry_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_oil_source_registry_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_oil_transactions.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_oil_transactions.mjs",
+      "change": "Retain directly imported registry migration and press-stone rules; VM world/hand/placement, batch payout, deferred event and rollback scenarios deferred to T3.1/T3.2/T3.3 oil.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_ordinary_java_feedback.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_parity_review.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_pending_audio.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "effect_feedback"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_pending_completion_source.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_pepper_contact_budget.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_pepper_worldgen_seed.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_plant_fertilizer_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_plant_fertilizer_storage.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_plant_fertilizer_storage.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_plate_food_cache.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_plate_food_cache.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_plate_recipe_visual.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_plate_transactions.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_plate_transactions.mjs",
+      "change": "Retain direct storage decoding, facing/support rules and ownership/rollback functions; VM-loaded runtime, events, native hand and rendering scenarios deferred to T3.1/T3.2/T3.3 plate/recipe.",
+      "follow_up": [
+        "plate_recipe"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_audio.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "projectile"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_ground_catalog.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_ground_catalog.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_ground_composition.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_ground_composition.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_liquid.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_liquid.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_movement.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_movement.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_native_alias.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_native_alias.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_owned_ground.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_projectile_dodge_owned_ground.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_projectile_dodge_reservations.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "projectile"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_rack_aim_hit.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_rack_aim_hit.mjs",
+      "change": "Keep direct hit-selection rules and parsed block-data inputs; remove development/canonical source byte equality."
+    },
+    {
+      "original": "development/gameplay_core/test_rack_geometry.mjs",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_rack_tool_display.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_rack_tool_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "rack"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_rack_transactions.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_rack_transactions.mjs",
+      "change": "Retain direct per-slot tag/filter admission; VM runtime, input targeting, ownership rollback and display synchronization scenarios deferred to T3.1/T3.2/T3.3 rack.",
+      "follow_up": [
+        "rack"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_rack_visual_selection.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_raw_one_dispatch.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_recipe_book_safety.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_animation.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_ingredient_lore.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_motion_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_native_hands.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore",
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_native_storage.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "lore",
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_seasoning_tp_inversion.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_secret_catalog_transport.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_secret_compat_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_secret_compat_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_secret_geometry_roundtrip.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_secret_helper_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_secret_slot_order.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_secret_visual_state.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_secret_visual_state.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_skewer_compat_core.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/test_skewer_compat_core.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/gameplay_core/test_skewer_item_snapshot.mjs",
+      "decision": "retain_pure_part",
+      "target": "tests/legacy/test_skewer_item_snapshot.mjs",
+      "change": "Retain directly imported full metadata roundtrip, malformed snapshot/readback failures, duplicate-ingredient identity and storage-size boundary; source-sliced smoking/use/threading/cache flows deferred to T3.2/T3.3 skewer/T3.4.",
+      "follow_up": [
+        "eating"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_slime_clock_precision.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/gameplay_core/test_world_oil_transfers.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "oil"
+      ]
+    },
+    {
+      "original": "development/immersion/test.mjs",
+      "decision": "retire_experiment",
+      "reason": "Tests the superseded noncanonical rehearsal pack, not the shipped runtime.",
+      "follow_up": [
+        "eating",
+        "visual"
+      ]
+    },
+    {
+      "original": "development/immersion/test_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/player_binding/test.mjs",
+      "decision": "retire_experiment",
+      "reason": "Tests the superseded noncanonical rehearsal pack, not the shipped runtime.",
+      "follow_up": [
+        "eating",
+        "visual"
+      ]
+    },
+    {
+      "original": "development/player_binding/test_runtime.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "grill"
+      ]
+    },
+    {
+      "original": "development/test_verify_dash_outputs.py",
+      "decision": "retain_tool_safety",
+      "reason": "Generic export corruption/missing-file regression; existing dash-build caller retained until T2.7."
+    },
+    {
+      "original": "development/tests/runtime/pepper_harvest_conservation.test.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "crops_world"
+      ]
+    },
+    {
+      "original": "development/tests/runtime/slime_frame_transport.test.mjs",
+      "decision": "retire_source_vm",
+      "reason": "Reads/evaluates runtime source, or imports the retired source-evaluation harness; rule scenarios remain pending.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "development/tests/runtime/snapshot_raw_lore.test.mjs",
+      "decision": "move_canonical",
+      "target": "tests/legacy/snapshot_raw_lore.test.mjs",
+      "change": "Move existing canonical-import assertions; relocate data references where needed."
+    },
+    {
+      "original": "development/tests/test_snapshot_raw_lore_roundtrip_20261013.py",
+      "decision": "retire_wrapper",
+      "reason": "Redundant Python launcher; actual RawMessage test is in tests/legacy/snapshot_raw_lore.test.mjs."
+    },
+    {
+      "original": "notebook/test.mjs",
+      "decision": "defer_T2_2",
+      "reason": "Keep with notebook and import-assets/validate callers until the T2.2 historical-tree PR."
+    },
+    {
+      "original": "tools/blockbench_preview/test_capture.py",
+      "decision": "retain_tool_safety",
+      "reason": "Guard, release baseline, canonical export, Java extraction or local preview-tool safety regression."
+    },
+    {
+      "original": "tools/guards/test_guards.py",
+      "decision": "retain_tool_safety",
+      "reason": "Guard, release baseline, canonical export, Java extraction or local preview-tool safety regression."
+    },
+    {
+      "original": "tools/test_baseline_gate.py",
+      "decision": "retain_tool_safety",
+      "reason": "Guard, release baseline, canonical export, Java extraction or local preview-tool safety regression."
+    },
+    {
+      "original": "tools/test_bridge_project.py",
+      "decision": "retain_tool_safety",
+      "reason": "Guard, release baseline, canonical export, Java extraction or local preview-tool safety regression."
+    },
+    {
+      "original": "tools/test_crop_geometry.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "tools/test_eating_hud_layout.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "tools/test_fortress_loot_current.py",
+      "decision": "retain_declaration",
+      "reason": "Keep current loot wrapper/bonus and plantable item checks; delete exact official-blob hash assertion."
+    },
+    {
+      "original": "tools/test_guide_icon_regression.py",
+      "decision": "retain_declaration",
+      "reason": "Reject atlas-as-icon and invalid hidden-item declarations; no baked geometry or source slicing."
+    },
+    {
+      "original": "tools/test_java_custom_skewer_gui.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "tools/test_java_eating_hud_atlas.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "tools/test_java_extract.py",
+      "decision": "retain_tool_safety",
+      "reason": "Guard, release baseline, canonical export, Java extraction or local preview-tool safety regression."
+    },
+    {
+      "original": "tools/test_secret_food_palette.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    },
+    {
+      "original": "tools/test_skewer_inventory_icons.py",
+      "decision": "retire_projection",
+      "reason": "Baked assets, geometry, calibration or source/asset identity checks replaced by P4 visual work.",
+      "follow_up": [
+        "visual"
+      ]
+    }
+  ],
+  "retired_callers": [
+    {
+      "path": "development/gameplay_core/load_hot_runtime_vm.mjs",
+      "reason": "Only calls or supplies the retired tests/rehearsal workflow; not a canonical guard, baseline or export gate."
+    },
+    {
+      "path": "development/gameplay_core/a281_visual_contract.py",
+      "reason": "Only calls or supplies the retired tests/rehearsal workflow; not a canonical guard, baseline or export gate."
+    },
+    {
+      "path": "development/immersion/build.py",
+      "reason": "Only calls or supplies the retired tests/rehearsal workflow; not a canonical guard, baseline or export gate."
+    },
+    {
+      "path": ".github/workflows/immersion-build.yml",
+      "reason": "Only calls or supplies the retired tests/rehearsal workflow; not a canonical guard, baseline or export gate."
+    },
+    {
+      "path": ".github/workflows/player-binding-a116.yml",
+      "reason": "Only calls or supplies the retired tests/rehearsal workflow; not a canonical guard, baseline or export gate."
+    },
+    {
+      "path": "tools/check_cookery162_host.py",
+      "reason": "Retired source-evaluated author host checker; not the T1.10 official/server inventory comparison."
+    }
+  ],
+  "fixture_moves": [
+    {
+      "from": "development/gameplay_core/fixtures/java-cuisine-quality-160.json",
+      "to": "tests/legacy/fixtures/java-cuisine-quality-160.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/java-flatulence-sound-160.json",
+      "to": "tests/legacy/fixtures/java-flatulence-sound-160.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/java-projectile-dodge-liquid-160.json",
+      "to": "tests/legacy/fixtures/java-projectile-dodge-liquid-160.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/java-projectile-dodge-movement-160.json",
+      "to": "tests/legacy/fixtures/java-projectile-dodge-movement-160.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/projectile-dodge-ground-diagnostics.json",
+      "to": "tests/legacy/fixtures/projectile-dodge-ground-diagnostics.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/cookery161-skewer-input-contract.json",
+      "to": "tests/legacy/fixtures/cookery161-skewer-input-contract.json"
+    },
+    {
+      "from": "development/gameplay_core/fixtures/java-heat-deadlines.json",
+      "to": "tests/legacy/fixtures/java-heat-deadlines.json"
+    }
+  ],
+  "non_test_cli_follow_up": [
+    {
+      "path": "tools/check_family_knives.mjs",
+      "caller": ".github/workflows/family-candidate.yml",
+      "next": "T2.7 / T3.3 compat",
+      "action": "Remove development byte equality and runtime source-shape claims; preserve knife/tag behavior already exercised by canonical legacy tests."
+    },
+    {
+      "path": "tools/check_station_storage.py",
+      "caller": ".github/workflows/family-candidate.yml",
+      "next": "T2.7 / T3.2",
+      "action": "Remove development equality/source includes; retain actual inventory entity, ownership/capacity, persistence and resource schema checks."
+    }
+  ],
+  "metric_limit": "source_text_slicing_tests counts named test files with a narrow pattern. Zero does not claim all non-test CLI source-text assertions are gone.",
+  "native_scenario_addendum": {
+    "base_commit": "d7adcef6fbeb9e5aa58b5a6e078bde79a6532cdd",
+    "scope": "Additive reconciliation of PR250 with merged PR251. The original 224-file classification, expectation corrections and pure assertions remain. Original retirement descriptions are historical; coverage is supplemented below, not full P3/P4 acceptance.",
+    "counted_test_files": 101,
+    "new_counted_entrypoints": 0,
+    "coverage": {
+      "test_plate_transactions.mjs": "93 native/pure PR250 cases added alongside all PR251 pure assertions: ownership, metadata, rollback, packed drops, support/explosion arbitration, quarantine/reload, recipe conversion and delivery.",
+      "test_oil_transactions.mjs": "51 PR250 cases added alongside all PR251 pure assertions: vat/press/container transfer failures, timer, quarantine/reload and seven world-source transfer cases.",
+      "test_rack_transactions.mjs": "61 PR250 cases plus seven native-boundary regressions added alongside all PR251 pure assertions: storage ownership, automation, metadata, packed drops, permutations and state-domain rejection.",
+      "test_bottle_raw_lore.mjs": "Native lore readback failure/ownership and actual itemData refresh; a2769 tooltip cases consolidated here; localized-lore parity assertion.",
+      "test_food_finish.mjs": "Native custom-effect timing and expiry; consumed native ingredient/container metadata and normalization; milk/public-food parity assertions.",
+      "test_skewer_item_snapshot.mjs": "Native metadata, corrupt/missing saved records, use/start/complete admission and fourth-flip cache atomicity/fallback.",
+      "test_core.mjs": "Eight shared-runtime queue/configuration parity cases consolidated in this existing entrypoint."
+    },
+    "limits": [
+      "Fake external server API only; no runtime source transformation and no production changes.",
+      "Seasoning hand/placed-storage, pepper harvest retry, restricted interaction/reservation, separate crafting debit/output and additional fourth-flip variants remain unported.",
+      "Original pending_rule_backlog is not marked globally complete: native characterization does not equal BDS/client/staging or Java-authoritative P3 validation."
+    ],
+    "claim": {
+      "client": false,
+      "production_ready": false
+    }
+  }
+}

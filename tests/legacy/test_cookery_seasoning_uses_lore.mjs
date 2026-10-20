@@ -1,7 +1,6 @@
 // Pure lore-value regression. No game, player, world, or interaction simulation.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-
 import {seasoningLore} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/localized_lore_core.js';
 import {replaceSeasoningUsesLore,isOwnedSeasoningUsesLore,bottleLoreSignature} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/bottle_lore_core.js';
 const KEY='tooltip.kaleidoscope_grilling.seasoning.uses';

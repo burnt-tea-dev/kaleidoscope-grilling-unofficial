@@ -2,8 +2,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js';
 import {configureItemDataWorld,setItemProperty,getItemProperty,setItemLore,getItemRawLore} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/itemDataCore.js';
-import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
-import {createFixture} from '../helpers/minecraft-fixture.mjs';
 const records=new Map();configureItemDataWorld({getDynamicProperty:k=>records.get(k),setDynamicProperty:(k,v)=>records.set(k,v)});
 class Stack{
  constructor(typeId,amount=1){Object.assign(this,{typeId,amount,maxAmount:typeId.includes('sword')?1:64,lore:[],props:{},keepOnDeath:false,lockMode:'none',destroy:[],place:[],enchantments:[],damage:0});}
@@ -41,6 +39,8 @@ test('five ordinary cooked-secret plate snapshots fit native string storage',()=
  const wrapped=JSON.stringify({'kaleidoscope_grilling:plate_skewers':payload});assert.ok(Buffer.byteLength(wrapped,'utf8')<32767,Buffer.byteLength(wrapped));
 });
 
+import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
+import {createFixture} from '../helpers/minecraft-fixture.mjs';
 // Exercise the exported decoder itself. Event admission is a separate contract;
 // a valid decoded payload alone is not proof that an eating event may commit.
 const secretIds=['minecraft:apple','minecraft:carrot','minecraft:beef'];

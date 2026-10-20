@@ -42,6 +42,8 @@ t('phase two distinguishes seasoning and ready',()=>{
  let s={...initialState(),lit:true,phase:2,flips:4,seasoned:false};
  assert.equal(grillHudStatusKey(s,3),'jade.kaleidoscope_grilling.grill.need_seasoning');
  s={...s,seasoned:true};
+ // Java Jade statusKey uses this key; the message key is a separate interaction channel.
+ // https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/jade/GrillProvider.java#L37-L49
  assert.equal(grillHudStatusKey(s,3),'jade.kaleidoscope_grilling.grill.ready');
 });
 
