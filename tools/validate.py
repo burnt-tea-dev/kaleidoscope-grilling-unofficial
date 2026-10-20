@@ -12,7 +12,8 @@ from guards.jsonc import strip_jsonc
 from bridge_project import unique_object
 
 ROOT = Path(__file__).resolve().parents[1]
-TEXT = {'.json', '.jsonc', '.js', '.mjs', '.cjs', '.ts', '.py', '.molang'}
+TEXT = {'.json', '.jsonc', '.js', '.mjs', '.cjs', '.ts', '.py', '.molang',
+        '.mcfunction', '.material'}
 IMAGES = {'.png', '.tga', '.jpg', '.jpeg'}
 
 

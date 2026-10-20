@@ -264,6 +264,43 @@ class UnusedAssetCandidateTests(unittest.TestCase):
             self.assertEqual(result['scanned_text_files'], 0)
             self.assertFalse(result['deletion_authorized'])
 
+    def test_cli_keeps_mcfunction_and_material_literal_consumers(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rp, consumer = root / 'rp', root / 'family'
+            (rp / 'models').mkdir(parents=True)
+            (rp / 'textures').mkdir()
+            (consumer / 'functions').mkdir(parents=True)
+            (consumer / 'materials').mkdir()
+            (root / 'baseline.json').write_text(json.dumps({'runtime': {'RP': 'rp'}}))
+            model = rp / 'models/native.geo.json'
+            model.write_text(json.dumps({'minecraft:geometry': [
+                {'description': {'identifier': 'geometry.test.function'}},
+                {'description': {'identifier': 'geometry.test.material'}},
+            ]}))
+            textures = [rp / f'textures/native_{kind}.png' for kind in ('function', 'material')]
+            for texture in textures:
+                texture.write_bytes(b'fixture')
+            (consumer / 'functions/render.mcfunction').write_text(
+                'scriptevent test:render {"geometry":"geometry.test.function",'
+                '"texture":"textures/native_function"}')
+            (consumer / 'materials/entity.material').write_text(
+                r'{"materials":{"test":{"geometry":"geometry.test.m\u0061terial",'
+                r'"texture":"textures\/native_m\u0061terial"}}}')
+            tracked = ''.join(path.relative_to(root).as_posix() + '\0'
+                              for path in [model, *textures]).encode()
+            with patch.object(assets, 'ROOT', root), \
+                    patch.object(assets.subprocess, 'check_output', return_value=tracked), \
+                    patch.object(sys, 'argv', ['validate.py', 'unused-assets',
+                                              '--consumer-root', str(consumer)]), \
+                    patch('builtins.print') as output:
+                self.assertEqual(assets.main(), 0)
+            result = json.loads(output.call_args.args[0])
+            self.assertEqual(result['errors'], [])
+            self.assertEqual(result['geometry_candidates'], [])
+            self.assertEqual(result['texture_candidates'], [])
+            self.assertFalse(result['deletion_authorized'])
+
     def test_candidate_scan_reports_parse_duplicates_and_missing_sources(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
