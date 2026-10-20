@@ -6,7 +6,7 @@ HUD overlay, inventory polling or new food IDs are used.
 
 Sprite shell conversion is adapted from casama233/kaleidoscope-tavern-unofficial
 /tools/animated_item_render_contract.py, blob 6abe52081363b5f6964a4d3e20ef0e7092a89ea1
-(BSD-3-Clause; see docs/licenses/tavern-native-item-rendering.txt).
+(BSD-3-Clause; see projects/grilling/licenses/tavern-native-item-rendering.txt).
 Java GUI authority: breezeth-CN/KaleidoscopeGrilling @ 9a1acdab27698457bec16c9362678e574895a28c,
 SkewerGuiIconCache.fixedIcon/failedIcon: five GUI frames, gameTime / 4 % 5.
 This is not a per-stack custom-skewer compositor or rendered-client acceptance.

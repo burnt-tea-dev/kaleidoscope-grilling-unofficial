@@ -1,38 +1,23 @@
 # 煙火內建指南內容源
 
-`catalog.a3.json` 是玩家指南唯一可編輯內容源。A3／0.3.0 是內容資料版本，不是獨立 addon 版本。
+`catalog.a3.json` 是玩家指南唯一可編輯內容源。A3 是 catalog schema；內容版本以檔內 `version` 為準，不是獨立 addon 版本。
 
-自煙火 A2.7.65 起，指南直接隨煙火既有 BP／RP 安裝，透過 `kg_a1:grilling` 註冊為森羅本體原指南的一個附屬章節。
-不需要第三個指南 addon，不新增另一件實體指南書，也不覆蓋森羅本體 UI。
+指南隨 canonical Grilling BP/RP 安裝，透過 `kg_a1:grilling` 註冊為既有 Cookery 指南的一個煙火章節。不新增實體書、平行 UI 或宿主全檔替換；六個根類、三語與生存取得規則見 [GUIDE-STANDARD](../../../docs/GUIDE-STANDARD.md)。
 
-## 分類與條目
-
-沿用本體的工作站、食物百科、工具與裝備、儲存與實用功能、耕作與收成、進度與指南物品六類；食物按八種製作方式分組。
-76 個唯一條目涵蓋 88 個非歷史油刷 item，生熟烤串與調料瓶狀態合頁。取得、製作、用途與效果在同頁，不另拆同名配方頁。
-
-## 正常建置
+## 建置與檢查
 
 ```sh
 python tools/build_grilling_guide.py
 python tools/build_grilling_guide.py --check
 python tools/check_grilling_guide.py
-python tools/build_grilling_release.py
 ```
 
-輸出位置：
+產生的 payload 在 `gameplay_core/behavior_pack/scripts/guide/`，語言與 icon 在 `gameplay_core/resource_pack/`；`main.js` 載入 `guide/main.js` 一次。`--check` 保留 catalog／來源、payload、三語、icon 與序列化的實際驗證。分類以 catalog 為準，不再生成第二份文件索引。
 
-- `gameplay_core/behavior_pack/scripts/guide/`：資料、publisher、內建註冊。
-- `gameplay_core/behavior_pack/scripts/main.js`：唯一產品入口，載入 guide/main.js 一次。
-- `gameplay_core/resource_pack/textures/ui/kg_grilling/`：指南圖標。
-- `gameplay_core/resource_pack/texts/`：保留玩法文字，另加入生成的指南區段。
-- `docs/GUIDE-INDEX-A3.md`：分類索引。
+catalog 的 `source_refs` 對應實際來源檔或 [PARITY 的歷史來源索引](../../../docs/PARITY.md#指南內容的歷史來源索引)；歷史資料維持原候選，不認證今日原生或真人流程。靜態檢查不能代替觸控、排版、多語、返回路徑與多人隔離驗收。
 
-舊的 `build_grilling_guide_release.py` 指令只作棄用相容入口，會轉交完整煙火打包，不再產生獨立指南包。
+## 歷史與發布
 
-## 歷史與驗收
+舊的獨立指南包、一次性遷移與版本打包指令不再是目前入口。[收斂前記錄](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/projects/grilling/guide/README.md)保留當時整合與 Cookery 版本限制；`builtin-integration.verified.json` 也只保留原本的證據身份。
 
-舊 `content.json`／`content.a2.json` 和 `history/standalone-guide-a3` 只供追溯；一次性遷移脚本不參與預設建置。
-`builtin-integration.verified.json` 記錄這次整合時的來源保留與產品身份檢查。
-
-未修正的 Cookery 1.0.6 Guide API 可使用繁中正文 fallback；這是既有 host 語言限制，不是另裝指南包的理由。本次沒有打包或改寫 Cookery。
-靜態資料、序列化、Dash 與成品一致性檢查不代表實機觸控／排版驗收。詳見 `docs/STATUS-A2.7.65.md`。
+目前安裝、精確相依與發布規則見 [RELEASING](../../../docs/RELEASING.md)。P2 的 provenance 引用整理不改指南內容或 canonical pack bytes，不升版、不部署。

@@ -13,5 +13,5 @@
   "live": false,
   "live_deployment": false,
   "status": "source_candidate_pending_canonical_ci_family_gates_and_client_acceptance",
-  "public_notes_path": "docs/RELEASE-NOTES-A2.8.155.md"
+  "public_notes_path": "CHANGELOG.md"
 }

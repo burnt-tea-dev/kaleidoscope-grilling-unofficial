@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'development/gameplay_core'))
 from held_pose_frames import chain, rotate, scale, point, bedrock_rotation
 FIXTURE = ROOT / 'development/gameplay_core/fixtures/rack-tool-display.json'
+FIT_REPORT = ROOT / 'artifacts/rack-tool-display-fit.json'
 PROJECT = ROOT / 'projects/grilling/gameplay_core'
 BP, RP = PROJECT / 'behavior_pack', PROJECT / 'resource_pack'
 NS = 'kaleidoscope_grilling:'
@@ -130,7 +131,7 @@ def build():
                 'geometry': 'Array.models[' + prop('model') + ']', 'materials': [{'*': 'Material.default'}],
                 'textures': ['Array.items[' + prop('model') + ']']}}}),
     }
-    output[ROOT / 'docs/RACK-TOOL-DISPLAY-FIT.json'] = dump({'kind': 'uniform_four_cell_adaptation_not_client_acceptance', 'layout': layout, 'previous_native_anchor_y': .35, 'known_sprite_anchor_y': layout['centerY'], 'items': fits})
+    output[FIT_REPORT] = dump({'kind': 'uniform_four_cell_adaptation_not_client_acceptance', 'layout': layout, 'previous_native_anchor_y': .35, 'known_sprite_anchor_y': layout['centerY'], 'items': fits})
     entity = deepcopy(json.loads((BP / 'entities/grill_food_visual.json').read_text()))
     description = entity['minecraft:entity']['description']
     description['identifier'] = ENTITY
@@ -150,6 +151,8 @@ def main():
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     for path, data in build().items():
+        if args.check and path == FIT_REPORT:
+            continue  # Optional local diagnostics; all canonical pack outputs remain checked.
         if args.check:
             assert path.read_bytes() == data, 'rack visual source drift: ' + str(path.relative_to(ROOT))
         else:
