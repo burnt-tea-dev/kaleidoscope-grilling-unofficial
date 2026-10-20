@@ -3,8 +3,7 @@
 
 No network access, game runtime, fallback artwork, or source mutation. Unknown parents,
 textures, UV rotations and unsupported inverted cuboids stop that candidate instead of being repaired
-silently. Coordinate/UV conventions are documented in
-projects/grilling/docs/CONVERSION.zh-TW.md (relative to the repository root).
+silently. Coordinate/UV conventions are documented in docs/CONVERSION.zh-TW.md.
 """
 from __future__ import annotations
 
