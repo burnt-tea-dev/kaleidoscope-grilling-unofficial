@@ -2,9 +2,9 @@
 
 ## 重建期間的規則
 
-P2 只整理來源與工具，不產生新 runtime 候選。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
+P2 整理來源與工具；T2.8 依計畫例外清理未引用 RP 資產並同步配套版本，候選須完成完整 staging 驗收。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
-維護來源以 [baseline.json](../baseline.json) 為準：**2.8.155、Cookery 1.6.2**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+維護來源以 [baseline.json](../baseline.json) 為準：**2.8.156、Cookery 1.6.2**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
 
 ## 保留公開下載與相依
 
