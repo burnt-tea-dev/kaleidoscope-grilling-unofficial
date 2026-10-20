@@ -30,7 +30,7 @@
 
 1. **一次只做一個任務（T-x.y），一個任務一個 PR。** PR 標題以任務編號開頭，例如 `T2.3: remove committed build artifacts`。
 2. **每個任務都有「驗收條件」**。沒有全部達成就不能標完成，不能用「測試通過」代替「玩法正確」。
-3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
+3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外刪除 RP 資產並同步配套 manifest 版本／相依中繼資料，仍須完整 staging 驗收。
 4. **任何 item／block／entity／state 值／persisted key 的移除**只能走 `docs/SAVE-COMPAT.md` 的退役流程。護欄會擋。
 5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。棘輪會擋。
 6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
@@ -306,7 +306,7 @@ python3 tools/guards/save_compat.py check
 python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratchet.py tighten
 ```
 
-並在 PR 描述貼上 `git diff --stat origin/main -- projects/grilling/gameplay_core/behavior_pack projects/grilling/gameplay_core/resource_pack` 的輸出，**必須為空**。
+並在 PR 描述貼上 `git diff --stat origin/main -- projects/grilling/gameplay_core/behavior_pack projects/grilling/gameplay_core/resource_pack` 的輸出，**必須為空**；T2.8 僅按下述狹義例外逐檔審查差異，其餘 BP 檔案仍須完全相同。
 
 **T2.1 刪除已提交的建置產物**：`git rm -r artifacts/`；`.gitignore` 加 `/artifacts/`。驗收：`committed_artifact_files=0`。不要改寫 Git 歷史（D8）。
 
@@ -340,12 +340,14 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 **T2.7 刪除 `development/` 剩餘部分與重複 JS**：確認 `tests/legacy/` 不再 import `development/` 後整個刪除。驗收：`development/` 不存在。
 
 **T2.8 移除未引用的 RP 資產（不影響 runtime 行為，但改 RP 位元組）**
-- 這一項**例外**允許 RP 變動，但只能刪「完全沒有被任何 JSON／腳本以字串引用」的 geometry／貼圖。
-- 步驟：寫 `tools/validate.py` 的 `unused-assets` 子命令（以 geometry identifier 與貼圖路徑字串比對；同時掃描 render controller 陣列與腳本字串）；列出清單→人工抽查 10 個→刪除→ `baseline.json` 的 RP 樹雜湊更新、RP 版本 patch bump（這是一次資產變更，需完整 staging 驗證）。
+- 這一項**例外**允許 RP 資產刪除，但只能刪「完全沒有被任何 JSON／腳本以字串引用」的 geometry／貼圖。
+- **擁有者 2026-10-20 明確同意的配套版本例外**：資產變更時可同步 BP／RP manifest 的 header／module 版本，以及 BP 對 RP 的配套相依版本；僅限既有版本欄位，不改 UUID、模組類型／入口、權限或其他相依。不允許修改其他 BP 內容。同步更新既有 `baseline.json` 與版本歷史，沿用版本保留／衝突檢查選取未使用版本，不重用或預設版本號。
+- 工具與計畫準備階段保持 BP／RP 完全不變、不 bump 版本。候選清單只代表字串引用檢查結果；須另核動態組合與實際啟用家族包的引用。單一 geometry 未引用不代表可刪含其他 live geometry 的整個檔案。
+- 步驟：寫 `tools/validate.py` 的 `unused-assets` 子命令（以 geometry identifier 與貼圖路徑字串比對；同時掃描 render controller 陣列與腳本字串）；列出清單→人工抽查 10 個→刪除→ `baseline.json` 的 配套 BP／RP 樹雜湊更新、配套版本 patch bump（這是一次資產變更，需完整 staging 驗證）。
 - 預期移除：`models/entity/{a21,a22_bites,a2764_skewer_hand,a2766_special_seasoning,a283_hand,a286_hand}` 與 `a2770_placed` 中未引用的 16 個、對應未引用貼圖。
 - 驗收：staging 世界所有物品手持／放置／背包圖示與刪除前截圖一致；`rp_geometry_files`、`rp_total_mib`、`version_prefixed_model_dirs` 下降並 tighten。
 
-**P2 出口條件**：repo 工作樹 < 120 MB；CI < 5 分鐘；docs ≤ 12；`development/`、`artifacts/`、`history/` 不存在；runtime BP 位元組與 `4d5fb095` 相同（RP 僅 T2.8 的刪除）。
+**P2 出口條件**：repo 工作樹 < 120 MB；CI < 5 分鐘；docs ≤ 12；`development/`、`artifacts/`、`history/` 不存在；runtime BP 除 T2.8 明示允許的 manifest 版本／相依欄位外，位元組與 `4d5fb095` 相同（RP 僅 T2.8 資產刪除及配套 manifest 版本欄位）。
 
 ### P3：Runtime 重構（行為保持，先寫特徵測試再搬）
 
