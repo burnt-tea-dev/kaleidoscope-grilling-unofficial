@@ -1,0 +1,2044 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Parse authored sounds.json files and all source playSound/playLocalSound/playSeededSound/UI call arguments, retaining per-call volume and pitch expressions.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "resources": {
+    "common/src/main/resources/assets/kaleidoscope_grilling/sounds.json": {
+      "source": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "sha256": "70b4b34c227bab1908491c1a21fd84fd9842702dd4c042e776ada5f50f70f849"
+      },
+      "events": {
+        "action_success": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:action_success",
+              "volume": 0.85
+            }
+          ]
+        },
+        "grill_flip": {
+          "sounds": [
+            "kaleidoscope_grilling:grill_flip_1",
+            "kaleidoscope_grilling:grill_flip_2",
+            "kaleidoscope_grilling:grill_flip_3"
+          ]
+        },
+        "grill_loop": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:grill_loop",
+              "stream": true
+            }
+          ]
+        },
+        "pickup_item": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85
+            }
+          ]
+        },
+        "skewer_disassemble": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85,
+              "pitch": 0.82
+            }
+          ]
+        },
+        "season": {
+          "sounds": [
+            "kaleidoscope_grilling:season"
+          ]
+        },
+        "shake_seasoning": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:shake_seasoning",
+              "stream": true
+            }
+          ]
+        },
+        "seasoning_bottle_place": {
+          "sounds": [
+            "kaleidoscope_grilling:glass_place_1",
+            "kaleidoscope_grilling:glass_place_2",
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "pitch": 1.2
+            }
+          ]
+        },
+        "seasoning_bottle_stack": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:glass_clink_1",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_clink_2",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_1",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_2",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "weight": 1,
+              "pitch": 1.2
+            }
+          ]
+        }
+      }
+    },
+    "forge-1.20.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json": {
+      "source": {
+        "path": "forge-1.20.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "sha256": "ce5b0e27e5af10bb6f7f01e21281873b7b8dd7069e885f54229b9eaabc733d1f"
+      },
+      "events": {
+        "action_success": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:action_success",
+              "volume": 0.85
+            }
+          ]
+        },
+        "grill_flip": {
+          "sounds": [
+            "kaleidoscope_grilling:grill_flip_1",
+            "kaleidoscope_grilling:grill_flip_2",
+            "kaleidoscope_grilling:grill_flip_3"
+          ]
+        },
+        "grill_loop": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:grill_loop",
+              "stream": true
+            }
+          ]
+        },
+        "pickup_item": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85
+            }
+          ]
+        },
+        "skewer_disassemble": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85,
+              "pitch": 0.82
+            }
+          ]
+        },
+        "season": {
+          "sounds": [
+            "kaleidoscope_grilling:season"
+          ]
+        },
+        "shake_seasoning": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:shake_seasoning",
+              "stream": true
+            }
+          ]
+        },
+        "seasoning_bottle_place": {
+          "sounds": [
+            "kaleidoscope_grilling:glass_place_1",
+            "kaleidoscope_grilling:glass_place_2",
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "pitch": 1.2
+            }
+          ]
+        },
+        "seasoning_bottle_stack": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:glass_clink_1",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_clink_2",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_1",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_2",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "weight": 1,
+              "pitch": 1.2
+            }
+          ]
+        },
+        "one_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:one_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "two_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:two_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "three_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:three_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "four_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:four_skewer_eat",
+              "stream": true
+            }
+          ]
+        }
+      }
+    },
+    "neoforge-1.21.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/resources/assets/kaleidoscope_grilling/sounds.json",
+        "sha256": "ce5b0e27e5af10bb6f7f01e21281873b7b8dd7069e885f54229b9eaabc733d1f"
+      },
+      "events": {
+        "action_success": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:action_success",
+              "volume": 0.85
+            }
+          ]
+        },
+        "grill_flip": {
+          "sounds": [
+            "kaleidoscope_grilling:grill_flip_1",
+            "kaleidoscope_grilling:grill_flip_2",
+            "kaleidoscope_grilling:grill_flip_3"
+          ]
+        },
+        "grill_loop": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:grill_loop",
+              "stream": true
+            }
+          ]
+        },
+        "pickup_item": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85
+            }
+          ]
+        },
+        "skewer_disassemble": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:pickup_item",
+              "volume": 0.85,
+              "pitch": 0.82
+            }
+          ]
+        },
+        "season": {
+          "sounds": [
+            "kaleidoscope_grilling:season"
+          ]
+        },
+        "shake_seasoning": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:shake_seasoning",
+              "stream": true
+            }
+          ]
+        },
+        "seasoning_bottle_place": {
+          "sounds": [
+            "kaleidoscope_grilling:glass_place_1",
+            "kaleidoscope_grilling:glass_place_2",
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "pitch": 1.2
+            }
+          ]
+        },
+        "seasoning_bottle_stack": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:glass_clink_1",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_clink_2",
+              "weight": 3
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_1",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_2",
+              "weight": 1
+            },
+            {
+              "name": "kaleidoscope_grilling:glass_place_3",
+              "weight": 1,
+              "pitch": 1.2
+            }
+          ]
+        },
+        "one_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:one_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "two_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:two_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "three_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:three_skewer_eat",
+              "stream": true
+            }
+          ]
+        },
+        "four_skewer_eat": {
+          "sounds": [
+            {
+              "name": "kaleidoscope_grilling:four_skewer_eat",
+              "stream": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "calls": {
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java",
+        "sha256": "f8153e0678f3cb99d84ee083c61aeb80f8b4f0eef3d81d4791c532513854abf4"
+      },
+      "calls": [
+        {
+          "line": 196,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FLINTANDSTEEL_USE",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "level.random.nextFloat() * 0.4F + 0.8F"
+          ]
+        },
+        {
+          "line": 223,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FIRE_EXTINGUISH",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java",
+        "sha256": "2df242b15fca3bac877ab8dc29d5ebdeae5298ca9eb1dcda5fd22fd37f03981e"
+      },
+      "calls": [
+        {
+          "line": 603,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.55F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 614,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 618,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 625,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASON.get()",
+            "SoundSource.BLOCKS",
+            "0.85F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 639,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.PICKUP_ITEM.get()",
+            "SoundSource.BLOCKS",
+            "0.7F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 1304,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.CHEST_OPEN",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 1334,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "openContainerPos",
+            "SoundEvents.CHEST_CLOSE",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java",
+        "sha256": "c5cd50f04309d8670b27e6de2b19e070835b69447d611eca154c78da51830f20"
+      },
+      "calls": [
+        {
+          "line": 56,
+          "call": "playSound",
+          "arguments": [
+            "voiceFor(translationKey)",
+            "0.65F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "sha256": "a155d690b7989e8a016a484b6bec81ec390df9db16803c3cb525ec84509269e3"
+      },
+      "calls": [
+        {
+          "line": 26,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.SHIELD_BLOCK",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.25F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java",
+        "sha256": "91cff09de60c6bb6f45896f040fe39fb3d3161de42ee4e471cc14416524bce13"
+      },
+      "calls": [
+        {
+          "line": 44,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "e.blockPosition()",
+            "SoundEvents.ARMOR_EQUIP_LEATHER",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.1F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "sha256": "2a6e40a8e2f75698bc9f3f8a1185c3c08cb1104859525e0b1a865eacfac042e1"
+      },
+      "calls": [
+        {
+          "line": 155,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FLINTANDSTEEL_USE",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "level.random.nextFloat() * 0.4F + 0.8F"
+          ]
+        },
+        {
+          "line": 172,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FIRE_EXTINGUISH",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F"
+          ]
+        },
+        {
+          "line": 190,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 210,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASON.get()",
+            "SoundSource.BLOCKS",
+            "0.85F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 241,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 248,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 278,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.PICKUP_ITEM.get()",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java",
+        "sha256": "cbb6b5632830fc8f479d4bea356c7cb0e3e95b5f45ca1a8dc625c416e4420cc1"
+      },
+      "calls": [
+        {
+          "line": 108,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "blockEntity.getBlockPos()",
+            "sound",
+            "SoundSource.BLOCKS",
+            "volume",
+            "pitch"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java",
+        "sha256": "7b38993e97a818dad15b505bded913868dcf82b3f84b7ec026ea7797485603ae"
+      },
+      "calls": [
+        {
+          "line": 27,
+          "call": "playSound",
+          "arguments": [
+            "sound",
+            "volume",
+            "pitch"
+          ]
+        },
+        {
+          "line": 32,
+          "call": "playSound",
+          "arguments": [
+            "player",
+            "self.getX()",
+            "self.getY()",
+            "self.getZ()",
+            "sound",
+            "self.getSoundSource()",
+            "volume",
+            "pitch"
+          ]
+        },
+        {
+          "line": 62,
+          "call": "playSound",
+          "arguments": [
+            "SkewerRecipes.usesCustomEating(self.getUseItem()) && self instanceof Player player\n            ? player\n            : excluded",
+            "x",
+            "y",
+            "z",
+            "sound",
+            "source",
+            "volume",
+            "pitch"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java",
+        "sha256": "b50dcb79b3873981666ebe55c09a72784f20b666ff0a30c61d7a32743c0fe4d4"
+      },
+      "calls": [
+        {
+          "line": 80,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "\"premium_chili\".equals(oilType)\n                ? SoundEvents.BUCKET_EMPTY_LAVA\n                : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.BLOCKS",
+            "0.9F",
+            "0.8F + 0.5F * vat.amount() / BigVatBlockEntity.CAPACITY"
+          ]
+        },
+        {
+          "line": 108,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "\"premium_chili\".equals(oilType)\n                ? SoundEvents.BUCKET_EMPTY_LAVA\n                : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.PLAYERS",
+            "0.9F",
+            "0.8F\n                + 0.5F\n                    * OilPotCompat.getCount(pot)\n                    / OilPotCompat.FLUID_CAPACITY"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java",
+        "sha256": "97deb3b86d04891219b61e87d002394bc9d727951d8bbf9961ca6733278792dd"
+      },
+      "calls": [
+        {
+          "line": 75,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "\"premium_chili\".equals(type) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.PLAYERS",
+            "0.9F",
+            "0.8F\n                + 0.5F\n                    * Math.min(OilPotCompat.FLUID_CAPACITY, amount)\n                    / OilPotCompat.FLUID_CAPACITY"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java",
+        "sha256": "e428c0563304430581ef587dd4beb4477c1aff142f777ebf454c99455fa73038"
+      },
+      "calls": [
+        {
+          "line": 100,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.GRASS_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java",
+        "sha256": "e3adbaf3cd12a9bf98109a79e39775bbe039408f5377d810baa98d38c03ec940"
+      },
+      "calls": [
+        {
+          "line": 170,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ANVIL_LAND",
+            "SoundSource.BLOCKS",
+            "1.15F",
+            ".82F + level.random.nextFloat() * .12F"
+          ]
+        },
+        {
+          "line": 227,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.PISTON_CONTRACT",
+            "SoundSource.BLOCKS",
+            ".8F",
+            ".9F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java",
+        "sha256": "1fcf6ece63b5b3f5cca178f5b0071e5f062ca5f837e33493f81d7bd1d2872e0a"
+      },
+      "calls": [
+        {
+          "line": 250,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 256,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ITEM_FRAME_ADD_ITEM",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "sha256": "7ff7f0316c41af8853793703186134c415ea0267f50b2f70f4befb4c934a1b50"
+      },
+      "calls": [
+        {
+          "line": 45,
+          "call": "playSound",
+          "arguments": [
+            "player",
+            "player.blockPosition()",
+            "ModSounds.SHAKE_SEASONING.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 77,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "f3002be9c3e5bef5c532b432381f85630317d5bdfa3ac3e8b864371230ea6d2d"
+      },
+      "calls": [
+        {
+          "line": 118,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASONING_BOTTLE_STACK.get()",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 129,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 164,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASONING_BOTTLE_PLACE.get()",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "sha256": "d7ba50391332599c80bb4cb4e9afc5f3cfbe5dddb14fe9c2f796a1df1f0e2837"
+      },
+      "calls": [
+        {
+          "line": 20,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "ModSounds.SEASON.get()",
+            "SoundSource.PLAYERS",
+            "0.85F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "sha256": "d51c62c3f3b7e7e3530967747233b12a44caab095d71cb00366907414126fc3a"
+      },
+      "calls": [
+        {
+          "line": 45,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.SHIELD_BLOCK",
+            "SoundSource.PLAYERS",
+            "1.0F",
+            "0.8F"
+          ]
+        },
+        {
+          "line": 46,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.AMETHYST_BLOCK_CHIME",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.35F"
+          ]
+        },
+        {
+          "line": 51,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.ITEM_BREAK",
+            "SoundSource.PLAYERS",
+            "1.0F",
+            "0.65F"
+          ]
+        },
+        {
+          "line": 52,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.LIGHTNING_BOLT_IMPACT",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "0.55F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "sha256": "726093777c2136e85f0c1da5ab134de181faf638a23be02b88a9643be9e740c4"
+      },
+      "calls": [
+        {
+          "line": 22,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.BEACON_POWER_SELECT",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.15F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "sha256": "1ab537bc4963601f0f5994a66111dcfb3ea4cf0c33b03e8eecdf9c5b9c3dee4c"
+      },
+      "calls": [
+        {
+          "line": 74,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_ADD_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 86,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java",
+        "sha256": "495efc14209403ed21f461d44ee36032165f001224b2cf36ce1c13f00d505b27"
+      },
+      "calls": [
+        {
+          "line": 59,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getPos()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 77,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getPos()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 124,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "placePos",
+            "SoundEvents.WOOD_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "sha256": "0f4a491768b255c960b789f2c3146e48419ddbc429e086e189e13a8e6470ce0b"
+      },
+      "calls": [
+        {
+          "line": 103,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java",
+        "sha256": "099b952be3571801a04f203d251a32ef2e2dcd07880f3a19fb64a752ac34d907"
+      },
+      "calls": [
+        {
+          "line": 250,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 290,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "target",
+            "SoundEvents.ITEM_FRAME_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java",
+        "sha256": "3e94a335fa4edcd364da2b62129a16c7863515339ac3248626f28fa3152a4543"
+      },
+      "calls": [
+        {
+          "line": 47,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getEntity().blockPosition()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 108,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getEntity().blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "sha256": "24afd4423a701421582de59a5c142ef680d50f1d7e661d7762f7342dd4945e2a"
+      },
+      "calls": [
+        {
+          "line": 119,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "0.8F + level.random.nextFloat() * 0.4F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java",
+        "sha256": "ea38147d31d5568aedec01b758f8367ae3920b04d1b8b0809e5b0ed074231d5d"
+      },
+      "calls": [
+        {
+          "line": 196,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FLINTANDSTEEL_USE",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "level.random.nextFloat() * 0.4F + 0.8F"
+          ]
+        },
+        {
+          "line": 221,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.FIRE_EXTINGUISH",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingBehavior.java",
+        "sha256": "0069d8f7064880119fddd4c701e0b0f0287c9acc367840b8fb6fb6659978911a"
+      },
+      "calls": [
+        {
+          "line": 603,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.55F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 614,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 618,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 625,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASON.get()",
+            "SoundSource.BLOCKS",
+            "0.85F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 639,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.PICKUP_ITEM.get()",
+            "SoundSource.BLOCKS",
+            "0.7F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 1302,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.CHEST_OPEN",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 1332,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "openContainerPos",
+            "SoundEvents.CHEST_CLOSE",
+            "SoundSource.BLOCKS",
+            "0.5F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/compat/touhoulittlemaid/MaidGrillingSpeech.java",
+        "sha256": "c5cd50f04309d8670b27e6de2b19e070835b69447d611eca154c78da51830f20"
+      },
+      "calls": [
+        {
+          "line": 56,
+          "call": "playSound",
+          "arguments": [
+            "voiceFor(translationKey)",
+            "0.65F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "sha256": "6feeda4827adb45d77191eb9690084bbf1e5359695ca139bc4bc2a2ac15adab7"
+      },
+      "calls": [
+        {
+          "line": 26,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.SHIELD_BLOCK",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.25F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/SweetPotatoPowderItem.java",
+        "sha256": "8a7d6e796754fdc1bb33e4e62a85af85ba77146ae08f6633583dad8a30c66ea7"
+      },
+      "calls": [
+        {
+          "line": 43,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "e.blockPosition()",
+            "SoundEvents.ARMOR_EQUIP_LEATHER.value()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.1F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "sha256": "21bbcbf16249ab186f7e0eb29f9727214de2b0c0c52ac6cbe67fc7e9c9857c3b"
+      },
+      "calls": [
+        {
+          "line": 190,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 212,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASON.get()",
+            "SoundSource.BLOCKS",
+            "0.85F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 244,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 258,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.GRILL_FLIP.get()",
+            "SoundSource.BLOCKS",
+            "0.75F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 292,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.PICKUP_ITEM.get()",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/BeltDeployerCallbacksMixin.java",
+        "sha256": "7e95cab8c91e40568b62151325c9e78af9472b752d88eefa5029b046224fb181"
+      },
+      "calls": [
+        {
+          "line": 109,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "blockEntity.getBlockPos()",
+            "sound",
+            "SoundSource.BLOCKS",
+            "volume",
+            "pitch"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/LivingEntitySkewerEatingSoundMixin.java",
+        "sha256": "9e7d465e981a8a41e368de6de6cc28392844297ace98504a755dece0c7e1310c"
+      },
+      "calls": [
+        {
+          "line": 27,
+          "call": "playSound",
+          "arguments": [
+            "sound",
+            "volume",
+            "pitch"
+          ]
+        },
+        {
+          "line": 32,
+          "call": "playSound",
+          "arguments": [
+            "player",
+            "self.getX()",
+            "self.getY()",
+            "self.getZ()",
+            "sound",
+            "self.getSoundSource()",
+            "volume",
+            "pitch"
+          ]
+        },
+        {
+          "line": 63,
+          "call": "playSound",
+          "arguments": [
+            "SkewerRecipes.usesCustomEating(self.getUseItem()) && self instanceof Player player\n            ? player\n            : excluded",
+            "x",
+            "y",
+            "z",
+            "sound",
+            "source",
+            "volume",
+            "pitch"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/BigVatBlock.java",
+        "sha256": "6701724cd2b1e1f070f717e7f7aba5913477c93095828f63e8a774a3c7e0e16e"
+      },
+      "calls": [
+        {
+          "line": 92,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "\"premium_chili\".equals(oilType)\n                ? SoundEvents.BUCKET_EMPTY_LAVA\n                : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.BLOCKS",
+            "0.9F",
+            "0.8F + 0.5F * vat.amount() / BigVatBlockEntity.CAPACITY"
+          ]
+        },
+        {
+          "line": 120,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "\"premium_chili\".equals(oilType)\n                ? SoundEvents.BUCKET_EMPTY_LAVA\n                : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.PLAYERS",
+            "0.9F",
+            "0.8F\n                + 0.5F\n                    * OilPotCompat.getCount(pot)\n                    / OilPotCompat.FLUID_CAPACITY"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilFillingHandler.java",
+        "sha256": "d45333b6e490302fb7511ed890fd8b1408616aa9f69ad3beadde0f951f4d5879"
+      },
+      "calls": [
+        {
+          "line": 74,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "\"premium_chili\".equals(type) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY",
+            "SoundSource.PLAYERS",
+            "0.9F",
+            "0.8F\n                + 0.5F\n                    * Math.min(OilPotCompat.FLUID_CAPACITY, amount)\n                    / OilPotCompat.FLUID_CAPACITY"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlock.java",
+        "sha256": "4ed4dd420f8830b8f1feb00141da8818c3b349428091853d505bc8f07119f193"
+      },
+      "calls": [
+        {
+          "line": 107,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.GRASS_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPressBlockEntity.java",
+        "sha256": "244270196f168fd70fd2da13a49a0444907b38ac0d7aa68e4b552da0374699df"
+      },
+      "calls": [
+        {
+          "line": 170,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ANVIL_LAND",
+            "SoundSource.BLOCKS",
+            "1.15F",
+            "0.82F + level.random.nextFloat() * 0.12F"
+          ]
+        },
+        {
+          "line": 230,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.PISTON_CONTRACT",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "0.9F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlockEntity.java",
+        "sha256": "0893cf6defaba5a651e99bee067b27bae6ac02ff4c2ea10f23f3bea4484b7c8b"
+      },
+      "calls": [
+        {
+          "line": 238,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 245,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "worldPosition",
+            "SoundEvents.ITEM_FRAME_ADD_ITEM",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "sha256": "bf59e9c3d9dee89b2c1a20013488a3e52a41e0b2357d93b3cf9ec76fb2686b75"
+      },
+      "calls": [
+        {
+          "line": 44,
+          "call": "playSound",
+          "arguments": [
+            "player",
+            "player.blockPosition()",
+            "ModSounds.SHAKE_SEASONING.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 76,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "be9ab0a5ecd18eaa56fc2effe6d9ed69f82ff20236f520f8ef8d4c70033ad225"
+      },
+      "calls": [
+        {
+          "line": 123,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASONING_BOTTLE_STACK.get()",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 134,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.BLOCKS",
+            "0.65F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 174,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "ModSounds.SEASONING_BOTTLE_PLACE.get()",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "sha256": "d7ba50391332599c80bb4cb4e9afc5f3cfbe5dddb14fe9c2f796a1df1f0e2837"
+      },
+      "calls": [
+        {
+          "line": 20,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "ModSounds.SEASON.get()",
+            "SoundSource.PLAYERS",
+            "0.85F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "sha256": "190153a97395604b8b0c144353f16329757f625d8d97a470e197c116656e3d35"
+      },
+      "calls": [
+        {
+          "line": 44,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.SHIELD_BLOCK",
+            "SoundSource.PLAYERS",
+            "1.0F",
+            "0.8F"
+          ]
+        },
+        {
+          "line": 45,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.AMETHYST_BLOCK_CHIME",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.35F"
+          ]
+        },
+        {
+          "line": 50,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.ITEM_BREAK",
+            "SoundSource.PLAYERS",
+            "1.0F",
+            "0.65F"
+          ]
+        },
+        {
+          "line": 51,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.LIGHTNING_BOLT_IMPACT",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "0.55F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "sha256": "bccd939239ed4d6eb4788688427a318b57d2b67eb6f260a20f557430375b553d"
+      },
+      "calls": [
+        {
+          "line": 22,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "entity.blockPosition()",
+            "SoundEvents.BEACON_POWER_SELECT",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.15F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "sha256": "a07f2d872602ed35f128dc7fa12e7ee9d3cb7621aea5c944d26660a36ef028c9"
+      },
+      "calls": [
+        {
+          "line": 87,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_ADD_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 99,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlatePlacement.java",
+        "sha256": "f984490e6e84575972d9ecd03a0aa4d817accf5c8b78de5e4cefae54d3179790"
+      },
+      "calls": [
+        {
+          "line": 63,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getPos()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 85,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getPos()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 132,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "placePos",
+            "SoundEvents.WOOD_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "sha256": "65e50565af19aa4b6783b073a00be5758544f28d9035cb4849699e9c492d701a"
+      },
+      "calls": [
+        {
+          "line": 102,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.ITEM_FRAME_REMOVE_ITEM",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBookItem.java",
+        "sha256": "be9b950f76add68b045efe5b60ca0e596c5d257803adc5f002d9a9433526726b"
+      },
+      "calls": [
+        {
+          "line": 265,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "player.blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 306,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "target",
+            "SoundEvents.ITEM_FRAME_PLACE",
+            "SoundSource.BLOCKS",
+            "0.8F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java",
+        "sha256": "71a38eb533b3e956bca96d4dba5ec145c5a8b4a2224188ac32ed31d00d9a1c2a"
+      },
+      "calls": [
+        {
+          "line": 53,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getEntity().blockPosition()",
+            "ModSounds.SKEWER_DISASSEMBLE.get()",
+            "SoundSource.PLAYERS",
+            "0.8F",
+            "1.0F"
+          ]
+        },
+        {
+          "line": 114,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "event.getEntity().blockPosition()",
+            "ModSounds.ACTION_SUCCESS.get()",
+            "SoundSource.PLAYERS",
+            "0.7F",
+            "1.0F"
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "sha256": "bafbe2c2af4fdac9a363f2c000e6e98755faf894b19c8ddc44477633a16421a5"
+      },
+      "calls": [
+        {
+          "line": 125,
+          "call": "playSound",
+          "arguments": [
+            "null",
+            "pos",
+            "SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES",
+            "SoundSource.BLOCKS",
+            "1.0F",
+            "0.8F + level.random.nextFloat() * 0.4F"
+          ]
+        }
+      ]
+    }
+  }
+}

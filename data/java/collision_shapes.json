@@ -1,0 +1,1727 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Read every six-argument Block.box/Shapes.box call and its numeric operands. Preserve complete shape definitions, getShape/getCollisionShape selection bodies and ModBlocks registrations, including noCollission properties.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "classes": {
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "sha256": "2a6e40a8e2f75698bc9f3f8a1185c3c08cb1104859525e0b1a865eacfac042e1"
+      },
+      "boxes": [
+        {
+          "line": 58,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "2",
+            "16",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            2,
+            16,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 59,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "0",
+            "14",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            0,
+            14,
+            4,
+            16
+          ]
+        },
+        {
+          "line": 63,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "2",
+            "2",
+            "4",
+            "4"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            2,
+            2,
+            4,
+            4
+          ]
+        },
+        {
+          "line": 64,
+          "call": "Block.box",
+          "arguments": [
+            "14",
+            "0",
+            "2",
+            "16",
+            "4",
+            "4"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            14,
+            0,
+            2,
+            16,
+            4,
+            4
+          ]
+        },
+        {
+          "line": 65,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "12",
+            "2",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            12,
+            2,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 66,
+          "call": "Block.box",
+          "arguments": [
+            "14",
+            "0",
+            "12",
+            "16",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            14,
+            0,
+            12,
+            16,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 70,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "0",
+            "4",
+            "4",
+            "2"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            0,
+            4,
+            4,
+            2
+          ]
+        },
+        {
+          "line": 71,
+          "call": "Block.box",
+          "arguments": [
+            "12",
+            "0",
+            "0",
+            "14",
+            "4",
+            "2"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            12,
+            0,
+            0,
+            14,
+            4,
+            2
+          ]
+        },
+        {
+          "line": 72,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "14",
+            "4",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            14,
+            4,
+            4,
+            16
+          ]
+        },
+        {
+          "line": 73,
+          "call": "Block.box",
+          "arguments": [
+            "12",
+            "0",
+            "14",
+            "14",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            12,
+            0,
+            14,
+            14,
+            4,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "FLAT_Z",
+          "expression": "Block.box(0, 0, 2, 16, 4, 14)",
+          "line": 58
+        },
+        {
+          "name": "FLAT_X",
+          "expression": "Block.box(2, 0, 0, 14, 4, 16)",
+          "line": 59
+        },
+        {
+          "name": "LEGS_Z",
+          "expression": "Shapes.or(\n          FLAT_Z,\n          Block.box(0, 0, 2, 2, 4, 4),\n          Block.box(14, 0, 2, 16, 4, 4),\n          Block.box(0, 0, 12, 2, 4, 14),\n          Block.box(14, 0, 12, 16, 4, 14))",
+          "line": 60
+        },
+        {
+          "name": "LEGS_X",
+          "expression": "Shapes.or(\n          FLAT_X,\n          Block.box(2, 0, 0, 4, 4, 2),\n          Block.box(12, 0, 0, 14, 4, 2),\n          Block.box(2, 0, 14, 4, 4, 16),\n          Block.box(12, 0, 14, 14, 4, 16))",
+          "line": 67
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 116,
+          "body": "{\n    boolean x = s.getValue(FACING).getAxis() == Direction.Axis.X;\n    return s.getValue(LEGGED) ? (x ? LEGS_X : LEGS_Z) : (x ? FLAT_X : FLAT_Z);\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java",
+        "sha256": "a4d28876bd03dab5bf0c8aae5c498c12c6d4d976a057440f609ffdfcf415b920"
+      },
+      "boxes": [
+        {
+          "line": 36,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "5",
+            "11",
+            "15",
+            "14",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            5,
+            11,
+            15,
+            14,
+            16
+          ]
+        },
+        {
+          "line": 37,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "5",
+            "0",
+            "15",
+            "14",
+            "5"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            5,
+            0,
+            15,
+            14,
+            5
+          ]
+        },
+        {
+          "line": 38,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "5",
+            "1",
+            "5",
+            "14",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            5,
+            1,
+            5,
+            14,
+            15
+          ]
+        },
+        {
+          "line": 39,
+          "call": "Block.box",
+          "arguments": [
+            "11",
+            "5",
+            "1",
+            "16",
+            "14",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            11,
+            5,
+            1,
+            16,
+            14,
+            15
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "NORTH",
+          "expression": "Block.box(1, 5, 11, 15, 14, 16)",
+          "line": 36
+        },
+        {
+          "name": "SOUTH",
+          "expression": "Block.box(1, 5, 0, 15, 14, 5)",
+          "line": 37
+        },
+        {
+          "name": "EAST",
+          "expression": "Block.box(0, 5, 1, 5, 14, 15)",
+          "line": 38
+        },
+        {
+          "name": "WEST",
+          "expression": "Block.box(11, 5, 1, 16, 14, 15)",
+          "line": 39
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 69,
+          "body": "{\n    return switch (state.getValue(FACING)) {\n      case NORTH -> NORTH;\n      case SOUTH -> SOUTH;\n      case EAST -> EAST;\n      case WEST -> WEST;\n      default -> NORTH;\n    };\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "f3002be9c3e5bef5c532b432381f85630317d5bdfa3ac3e8b864371230ea6d2d"
+      },
+      "boxes": [
+        {
+          "line": 40,
+          "call": "Block.box",
+          "arguments": [
+            "5",
+            "0",
+            "5",
+            "11",
+            "12.25",
+            "11"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            5,
+            0,
+            5,
+            11,
+            12.25,
+            11
+          ]
+        },
+        {
+          "line": 40,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "4",
+            "15",
+            "12.25",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            4,
+            15,
+            12.25,
+            14
+          ]
+        },
+        {
+          "line": 41,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "1.25",
+            "15",
+            "12.25",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            1.25,
+            15,
+            12.25,
+            15
+          ]
+        },
+        {
+          "line": 41,
+          "call": "Block.box",
+          "arguments": [
+            "0.75",
+            "0",
+            "1.75",
+            "15",
+            "12.25",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0.75,
+            0,
+            1.75,
+            15,
+            12.25,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPES",
+          "expression": "{\n    Block.box(5, 0, 5, 11, 12.25, 11), Block.box(2, 0, 4, 15, 12.25, 14),\n    Block.box(2, 0, 1.25, 15, 12.25, 15), Block.box(0.75, 0, 1.75, 15, 12.25, 16)\n  }",
+          "line": 39
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 65,
+          "body": "{\n    return SHAPES[state.getValue(COUNT) - 1];\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "sha256": "1ab537bc4963601f0f5994a66111dcfb3ea4cf0c33b03e8eecdf9c5b9c3dee4c"
+      },
+      "boxes": [
+        {
+          "line": 31,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "0",
+            "1",
+            "15",
+            "7",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            0,
+            1,
+            15,
+            7,
+            15
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPE",
+          "expression": "Block.box(1, 0, 1, 15, 7, 15)",
+          "line": 31
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 55,
+          "body": "{\n    return SHAPE;\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "sha256": "0f4a491768b255c960b789f2c3146e48419ddbc429e086e189e13a8e6470ce0b"
+      },
+      "boxes": [
+        {
+          "line": 35,
+          "call": "Block.box",
+          "arguments": [
+            "3",
+            "1.5",
+            "15.75",
+            "13",
+            "14.5",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            3,
+            1.5,
+            15.75,
+            13,
+            14.5,
+            16
+          ]
+        },
+        {
+          "line": 36,
+          "call": "Block.box",
+          "arguments": [
+            "3",
+            "1.5",
+            "0",
+            "13",
+            "14.5",
+            "0.25"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            3,
+            1.5,
+            0,
+            13,
+            14.5,
+            0.25
+          ]
+        },
+        {
+          "line": 37,
+          "call": "Block.box",
+          "arguments": [
+            "15.75",
+            "1.5",
+            "3",
+            "16",
+            "14.5",
+            "13"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            15.75,
+            1.5,
+            3,
+            16,
+            14.5,
+            13
+          ]
+        },
+        {
+          "line": 38,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "1.5",
+            "3",
+            "0.25",
+            "14.5",
+            "13"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            1.5,
+            3,
+            0.25,
+            14.5,
+            13
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "NORTH",
+          "expression": "Block.box(3, 1.5, 15.75, 13, 14.5, 16)",
+          "line": 35
+        },
+        {
+          "name": "SOUTH",
+          "expression": "Block.box(3, 1.5, 0, 13, 14.5, 0.25)",
+          "line": 36
+        },
+        {
+          "name": "WEST",
+          "expression": "Block.box(15.75, 1.5, 3, 16, 14.5, 13)",
+          "line": 37
+        },
+        {
+          "name": "EAST",
+          "expression": "Block.box(0, 1.5, 3, 0.25, 14.5, 13)",
+          "line": 38
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 57,
+          "body": "{\n    return switch (state.getValue(FACING)) {\n      case SOUTH -> SOUTH;\n      case WEST -> WEST;\n      case EAST -> EAST;\n      default -> NORTH;\n    };\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "sha256": "24afd4423a701421582de59a5c142ef680d50f1d7e661d7762f7342dd4945e2a"
+      },
+      "boxes": [
+        {
+          "line": 36,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "15",
+            "0",
+            "16",
+            "16",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            15,
+            0,
+            16,
+            16,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "TOP_COLLISION_SHAPE",
+          "expression": "Block.box(0, 15, 0, 16, 16, 16)",
+          "line": 36
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getCollisionShape",
+          "line": 71,
+          "body": "{\n    return context.isAbove(TOP_COLLISION_SHAPE, pos, true)\n        ? TOP_COLLISION_SHAPE\n        : Shapes.empty();\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java",
+        "sha256": "c66b019fe1623c9825cbd7a2697a10849b8215c5746ab68503a8f30a1468f039"
+      },
+      "boxes": [
+        {
+          "line": 26,
+          "call": "Block.box",
+          "arguments": [
+            "2.0D",
+            "0.0D",
+            "2.0D",
+            "14.0D",
+            "12.0D",
+            "14.0D"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2.0,
+            0.0,
+            2.0,
+            14.0,
+            12.0,
+            14.0
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPE",
+          "expression": "Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D)",
+          "line": 26
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 41,
+          "body": "{\n    return SHAPE;\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/grill/GrillBlock.java",
+        "sha256": "21bbcbf16249ab186f7e0eb29f9727214de2b0c0c52ac6cbe67fc7e9c9857c3b"
+      },
+      "boxes": [
+        {
+          "line": 62,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "2",
+            "16",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            2,
+            16,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 63,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "0",
+            "14",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            0,
+            14,
+            4,
+            16
+          ]
+        },
+        {
+          "line": 67,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "2",
+            "2",
+            "4",
+            "4"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            2,
+            2,
+            4,
+            4
+          ]
+        },
+        {
+          "line": 68,
+          "call": "Block.box",
+          "arguments": [
+            "14",
+            "0",
+            "2",
+            "16",
+            "4",
+            "4"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            14,
+            0,
+            2,
+            16,
+            4,
+            4
+          ]
+        },
+        {
+          "line": 69,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "0",
+            "12",
+            "2",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            0,
+            12,
+            2,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 70,
+          "call": "Block.box",
+          "arguments": [
+            "14",
+            "0",
+            "12",
+            "16",
+            "4",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            14,
+            0,
+            12,
+            16,
+            4,
+            14
+          ]
+        },
+        {
+          "line": 74,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "0",
+            "4",
+            "4",
+            "2"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            0,
+            4,
+            4,
+            2
+          ]
+        },
+        {
+          "line": 75,
+          "call": "Block.box",
+          "arguments": [
+            "12",
+            "0",
+            "0",
+            "14",
+            "4",
+            "2"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            12,
+            0,
+            0,
+            14,
+            4,
+            2
+          ]
+        },
+        {
+          "line": 76,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "14",
+            "4",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            14,
+            4,
+            4,
+            16
+          ]
+        },
+        {
+          "line": 77,
+          "call": "Block.box",
+          "arguments": [
+            "12",
+            "0",
+            "14",
+            "14",
+            "4",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            12,
+            0,
+            14,
+            14,
+            4,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "FLAT_Z",
+          "expression": "Block.box(0, 0, 2, 16, 4, 14)",
+          "line": 62
+        },
+        {
+          "name": "FLAT_X",
+          "expression": "Block.box(2, 0, 0, 14, 4, 16)",
+          "line": 63
+        },
+        {
+          "name": "LEGS_Z",
+          "expression": "Shapes.or(\n          FLAT_Z,\n          Block.box(0, 0, 2, 2, 4, 4),\n          Block.box(14, 0, 2, 16, 4, 4),\n          Block.box(0, 0, 12, 2, 4, 14),\n          Block.box(14, 0, 12, 16, 4, 14))",
+          "line": 64
+        },
+        {
+          "name": "LEGS_X",
+          "expression": "Shapes.or(\n          FLAT_X,\n          Block.box(2, 0, 0, 4, 4, 2),\n          Block.box(12, 0, 0, 14, 4, 2),\n          Block.box(2, 0, 14, 4, 4, 16),\n          Block.box(12, 0, 14, 14, 4, 16))",
+          "line": 71
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 120,
+          "body": "{\n    boolean x = s.getValue(FACING).getAxis() == Direction.Axis.X;\n    return s.getValue(LEGGED) ? (x ? LEGS_X : LEGS_Z) : (x ? FLAT_X : FLAT_Z);\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/rack/AdvancedRackBlock.java",
+        "sha256": "b96ec9033bacff5534a0d20f432bb99b17dc662ac35aa3dddc27b49addcd566c"
+      },
+      "boxes": [
+        {
+          "line": 43,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "5",
+            "11",
+            "15",
+            "14",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            5,
+            11,
+            15,
+            14,
+            16
+          ]
+        },
+        {
+          "line": 44,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "5",
+            "0",
+            "15",
+            "14",
+            "5"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            5,
+            0,
+            15,
+            14,
+            5
+          ]
+        },
+        {
+          "line": 45,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "5",
+            "1",
+            "5",
+            "14",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            5,
+            1,
+            5,
+            14,
+            15
+          ]
+        },
+        {
+          "line": 46,
+          "call": "Block.box",
+          "arguments": [
+            "11",
+            "5",
+            "1",
+            "16",
+            "14",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            11,
+            5,
+            1,
+            16,
+            14,
+            15
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "NORTH",
+          "expression": "Block.box(1, 5, 11, 15, 14, 16)",
+          "line": 43
+        },
+        {
+          "name": "SOUTH",
+          "expression": "Block.box(1, 5, 0, 15, 14, 5)",
+          "line": 44
+        },
+        {
+          "name": "EAST",
+          "expression": "Block.box(0, 5, 1, 5, 14, 15)",
+          "line": 45
+        },
+        {
+          "name": "WEST",
+          "expression": "Block.box(11, 5, 1, 16, 14, 15)",
+          "line": 46
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 81,
+          "body": "{\n    return switch (state.getValue(FACING)) {\n      case NORTH -> NORTH;\n      case SOUTH -> SOUTH;\n      case EAST -> EAST;\n      case WEST -> WEST;\n      default -> NORTH;\n    };\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "be9ab0a5ecd18eaa56fc2effe6d9ed69f82ff20236f520f8ef8d4c70033ad225"
+      },
+      "boxes": [
+        {
+          "line": 43,
+          "call": "Block.box",
+          "arguments": [
+            "5",
+            "0",
+            "5",
+            "11",
+            "12.25",
+            "11"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            5,
+            0,
+            5,
+            11,
+            12.25,
+            11
+          ]
+        },
+        {
+          "line": 43,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "4",
+            "15",
+            "12.25",
+            "14"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            4,
+            15,
+            12.25,
+            14
+          ]
+        },
+        {
+          "line": 44,
+          "call": "Block.box",
+          "arguments": [
+            "2",
+            "0",
+            "1.25",
+            "15",
+            "12.25",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2,
+            0,
+            1.25,
+            15,
+            12.25,
+            15
+          ]
+        },
+        {
+          "line": 44,
+          "call": "Block.box",
+          "arguments": [
+            "0.75",
+            "0",
+            "1.75",
+            "15",
+            "12.25",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0.75,
+            0,
+            1.75,
+            15,
+            12.25,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPES",
+          "expression": "{\n    Block.box(5, 0, 5, 11, 12.25, 11), Block.box(2, 0, 4, 15, 12.25, 14),\n    Block.box(2, 0, 1.25, 15, 12.25, 15), Block.box(0.75, 0, 1.75, 15, 12.25, 16)\n  }",
+          "line": 42
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 73,
+          "body": "{\n    return SHAPES[state.getValue(COUNT) - 1];\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerPlateBlock.java",
+        "sha256": "a07f2d872602ed35f128dc7fa12e7ee9d3cb7621aea5c944d26660a36ef028c9"
+      },
+      "boxes": [
+        {
+          "line": 34,
+          "call": "Block.box",
+          "arguments": [
+            "1",
+            "0",
+            "1",
+            "15",
+            "7",
+            "15"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            1,
+            0,
+            1,
+            15,
+            7,
+            15
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPE",
+          "expression": "Block.box(1, 0, 1, 15, 7, 15)",
+          "line": 34
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 63,
+          "body": "{\n    return SHAPE;\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerRecipeBlock.java",
+        "sha256": "65e50565af19aa4b6783b073a00be5758544f28d9035cb4849699e9c492d701a"
+      },
+      "boxes": [
+        {
+          "line": 38,
+          "call": "Block.box",
+          "arguments": [
+            "3",
+            "1.5",
+            "15.75",
+            "13",
+            "14.5",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            3,
+            1.5,
+            15.75,
+            13,
+            14.5,
+            16
+          ]
+        },
+        {
+          "line": 39,
+          "call": "Block.box",
+          "arguments": [
+            "3",
+            "1.5",
+            "0",
+            "13",
+            "14.5",
+            "0.25"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            3,
+            1.5,
+            0,
+            13,
+            14.5,
+            0.25
+          ]
+        },
+        {
+          "line": 40,
+          "call": "Block.box",
+          "arguments": [
+            "15.75",
+            "1.5",
+            "3",
+            "16",
+            "14.5",
+            "13"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            15.75,
+            1.5,
+            3,
+            16,
+            14.5,
+            13
+          ]
+        },
+        {
+          "line": 41,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "1.5",
+            "3",
+            "0.25",
+            "14.5",
+            "13"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            1.5,
+            3,
+            0.25,
+            14.5,
+            13
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "NORTH",
+          "expression": "Block.box(3, 1.5, 15.75, 13, 14.5, 16)",
+          "line": 38
+        },
+        {
+          "name": "SOUTH",
+          "expression": "Block.box(3, 1.5, 0, 13, 14.5, 0.25)",
+          "line": 39
+        },
+        {
+          "name": "WEST",
+          "expression": "Block.box(15.75, 1.5, 3, 16, 14.5, 13)",
+          "line": 40
+        },
+        {
+          "name": "EAST",
+          "expression": "Block.box(0, 1.5, 3, 0.25, 14.5, 13)",
+          "line": 41
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 65,
+          "body": "{\n    return switch (state.getValue(FACING)) {\n      case SOUTH -> SOUTH;\n      case WEST -> WEST;\n      case EAST -> EAST;\n      default -> NORTH;\n    };\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java",
+        "sha256": "bafbe2c2af4fdac9a363f2c000e6e98755faf894b19c8ddc44477633a16421a5"
+      },
+      "boxes": [
+        {
+          "line": 37,
+          "call": "Block.box",
+          "arguments": [
+            "0",
+            "15",
+            "0",
+            "16",
+            "16",
+            "16"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            0,
+            15,
+            0,
+            16,
+            16,
+            16
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "TOP_COLLISION_SHAPE",
+          "expression": "Block.box(0, 15, 0, 16, 16, 16)",
+          "line": 37
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getCollisionShape",
+          "line": 82,
+          "body": "{\n    return context.isAbove(TOP_COLLISION_SHAPE, pos, true)\n        ? TOP_COLLISION_SHAPE\n        : Shapes.empty();\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperSaplingBlock.java",
+        "sha256": "db059f31cc72b2af0bf387c7ae82e1b121603e62acb0f3533fbc50a36b28f7c7"
+      },
+      "boxes": [
+        {
+          "line": 28,
+          "call": "Block.box",
+          "arguments": [
+            "2.0D",
+            "0.0D",
+            "2.0D",
+            "14.0D",
+            "12.0D",
+            "14.0D"
+          ],
+          "units": "sixteenths of a block",
+          "bounds": [
+            2.0,
+            0.0,
+            2.0,
+            14.0,
+            12.0,
+            14.0
+          ]
+        }
+      ],
+      "shape_definitions": [
+        {
+          "name": "SHAPE",
+          "expression": "Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D)",
+          "line": 28
+        }
+      ],
+      "shape_selection": [
+        {
+          "method": "getShape",
+          "line": 52,
+          "body": "{\n    return SHAPE;\n  }"
+        }
+      ],
+      "note": "Declared primitives, unions and facing/count selection are source rules, not a native collision verdict. See block_registrations for noCollission properties."
+    }
+  },
+  "block_registrations": {
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java",
+        "sha256": "74fe42165964378de8eb0b1e0bcecd708bb8c2e0a064757c035a5d5030909199"
+      },
+      "registrations": [
+        {
+          "name": "BLOCKS",
+          "expression": "DeferredRegister.create(ForgeRegistries.BLOCKS, KaleidoscopeGrilling.MOD_ID)",
+          "line": 44
+        },
+        {
+          "name": "GRILL",
+          "expression": "BLOCKS.register(\n          \"grill\",\n          () ->\n              new GrillBlock(\n                  BlockBehaviour.Properties.copy(Blocks.IRON_BARS)\n                      .sound(COOKERY_POT_SOUND)\n                      .strength(3.0F)\n                      .lightLevel(s -> s.getValue(GrillBlock.LIT) ? 7 : 0)\n                      .noOcclusion()))",
+          "line": 46
+        },
+        {
+          "name": "SEASONING_BOTTLE",
+          "expression": "BLOCKS.register(\n          \"seasoning_bottle\",\n          () ->\n              new SeasoningBottleBlock(\n                  BlockBehaviour.Properties.copy(Blocks.GLASS)\n                      .sound(seasoningBottleSound())\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 56
+        },
+        {
+          "name": "BIG_VAT",
+          "expression": "BLOCKS.register(\n          \"big_vat\",\n          () ->\n              new BigVatBlock(\n                  BlockBehaviour.Properties.copy(Blocks.BRICKS).strength(2.0F).noOcclusion()))",
+          "line": 65
+        },
+        {
+          "name": "OIL_PRESS",
+          "expression": "BLOCKS.register(\n          \"oil_press\",\n          () ->\n              new OilPressBlock(\n                  BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).strength(2.5F).noOcclusion()))",
+          "line": 71
+        },
+        {
+          "name": "ADVANCED_RACK",
+          "expression": "BLOCKS.register(\n          \"advanced_rack\",\n          () ->\n              new AdvancedRackBlock(\n                  BlockBehaviour.Properties.copy(Blocks.OAK_SLAB).strength(2.0F).noOcclusion()))",
+          "line": 77
+        },
+        {
+          "name": "SKEWER_RECIPE",
+          "expression": "BLOCKS.register(\n          \"skewer_recipe\",\n          () ->\n              new SkewerRecipeBlock(\n                  BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).instabreak().noOcclusion()))",
+          "line": 83
+        },
+        {
+          "name": "SKEWER_PLATE",
+          "expression": "BLOCKS.register(\n          \"skewer_plate\",\n          () ->\n              new SkewerPlateBlock(\n                  BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE)\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 89
+        },
+        {
+          "name": "CANOLA_CROP",
+          "expression": "BLOCKS.register(\n          \"canola_crop\",\n          () ->\n              new CanolaCropBlock(\n                  BlockBehaviour.Properties.copy(Blocks.WHEAT)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 97
+        },
+        {
+          "name": "ONION_CROP",
+          "expression": "BLOCKS.register(\n          \"onion_crop\",\n          () ->\n              new OnionCropBlock(\n                  BlockBehaviour.Properties.copy(Blocks.WHEAT)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 107
+        },
+        {
+          "name": "SWEET_POTATO_CROP",
+          "expression": "BLOCKS.register(\n          \"sweet_potato_crop\",\n          () ->\n              new SweetPotatoCropBlock(\n                  BlockBehaviour.Properties.copy(Blocks.BEETROOTS)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 117
+        },
+        {
+          "name": "HOUTTUYNIA_CROP",
+          "expression": "BLOCKS.register(\n          \"houttuynia_crop\",\n          () ->\n              new HouttuyniaCropBlock(\n                  BlockBehaviour.Properties.copy(Blocks.NETHER_WART)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 127
+        },
+        {
+          "name": "PEPPER_LOG",
+          "expression": "BLOCKS.register(\"pepper_log\", PepperLogBlock::new)",
+          "line": 137
+        },
+        {
+          "name": "PEPPER_LEAVES",
+          "expression": "BLOCKS.register(\"pepper_leaves\", PepperLeavesBlock::new)",
+          "line": 139
+        },
+        {
+          "name": "PEPPER_SAPLING",
+          "expression": "BLOCKS.register(\"pepper_sapling\", PepperSaplingBlock::new)",
+          "line": 141
+        },
+        {
+          "name": "PEPPER_LOG_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_log\", () -> new BlockItem(PEPPER_LOG.get(), new Item.Properties()))",
+          "line": 143
+        },
+        {
+          "name": "PEPPER_LEAVES_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_leaves\", () -> new BlockItem(PEPPER_LEAVES.get(), new Item.Properties()))",
+          "line": 146
+        },
+        {
+          "name": "PEPPER_SAPLING_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_sapling\", () -> new BlockItem(PEPPER_SAPLING.get(), new Item.Properties()))",
+          "line": 149
+        },
+        {
+          "name": "GRILL_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"grill\",\n          () ->\n              new FunctionalBlockItem(\n                  GRILL.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.grill.usage\",\n                  null))",
+          "line": 152
+        },
+        {
+          "name": "BIG_VAT_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"big_vat\",\n          () ->\n              new FunctionalBlockItem(\n                  BIG_VAT.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.big_vat.usage\",\n                  \"tooltip.kaleidoscope_grilling.big_vat.requirement\"))",
+          "line": 161
+        },
+        {
+          "name": "OIL_PRESS_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"oil_press\",\n          () ->\n              new FunctionalBlockItem(\n                  OIL_PRESS.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.oil_press.usage\",\n                  \"tooltip.kaleidoscope_grilling.oil_press.requirement\"))",
+          "line": 170
+        },
+        {
+          "name": "ADVANCED_RACK_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"advanced_rack\",\n          () -> new AdvancedRackBlockItem(ADVANCED_RACK.get(), new Item.Properties()))",
+          "line": 179
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java",
+        "sha256": "8f85cd761674f0e0402fc66cb58e9e00003e7e181d76ca59c6a22c5f1f4e2490"
+      },
+      "registrations": [
+        {
+          "name": "BLOCKS",
+          "expression": "DeferredRegister.create(BuiltInRegistries.BLOCK, KaleidoscopeGrilling.MOD_ID)",
+          "line": 44
+        },
+        {
+          "name": "GRILL",
+          "expression": "BLOCKS.register(\n          \"grill\",\n          () ->\n              new GrillBlock(\n                  BlockBehaviour.Properties.ofLegacyCopy(Blocks.IRON_BARS)\n                      .sound(COOKERY_POT_SOUND)\n                      .strength(3.0F)\n                      .lightLevel(s -> s.getValue(GrillBlock.LIT) ? 7 : 0)\n                      .noOcclusion()))",
+          "line": 46
+        },
+        {
+          "name": "SEASONING_BOTTLE",
+          "expression": "BLOCKS.register(\n          \"seasoning_bottle\",\n          () ->\n              new SeasoningBottleBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)\n                      .sound(seasoningBottleSound())\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 56
+        },
+        {
+          "name": "BIG_VAT",
+          "expression": "BLOCKS.register(\n          \"big_vat\",\n          () ->\n              new BigVatBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.BRICKS)\n                      .strength(2.0F)\n                      .noOcclusion()))",
+          "line": 65
+        },
+        {
+          "name": "OIL_PRESS",
+          "expression": "BLOCKS.register(\n          \"oil_press\",\n          () ->\n              new OilPressBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)\n                      .strength(2.5F)\n                      .noOcclusion()))",
+          "line": 73
+        },
+        {
+          "name": "ADVANCED_RACK",
+          "expression": "BLOCKS.register(\n          \"advanced_rack\",\n          () ->\n              new AdvancedRackBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)\n                      .strength(2.0F)\n                      .noOcclusion()))",
+          "line": 81
+        },
+        {
+          "name": "SKEWER_RECIPE",
+          "expression": "BLOCKS.register(\n          \"skewer_recipe\",\n          () ->\n              new SkewerRecipeBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 89
+        },
+        {
+          "name": "SKEWER_PLATE",
+          "expression": "BLOCKS.register(\n          \"skewer_plate\",\n          () ->\n              new SkewerPlateBlock(\n                  BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 97
+        },
+        {
+          "name": "CANOLA_CROP",
+          "expression": "BLOCKS.register(\n          \"canola_crop\",\n          () ->\n              new CanolaCropBlock(\n                  BlockBehaviour.Properties.ofLegacyCopy(Blocks.WHEAT)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 105
+        },
+        {
+          "name": "ONION_CROP",
+          "expression": "BLOCKS.register(\n          \"onion_crop\",\n          () ->\n              new OnionCropBlock(\n                  BlockBehaviour.Properties.ofLegacyCopy(Blocks.WHEAT)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 115
+        },
+        {
+          "name": "SWEET_POTATO_CROP",
+          "expression": "BLOCKS.register(\n          \"sweet_potato_crop\",\n          () ->\n              new SweetPotatoCropBlock(\n                  BlockBehaviour.Properties.ofLegacyCopy(Blocks.BEETROOTS)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 125
+        },
+        {
+          "name": "HOUTTUYNIA_CROP",
+          "expression": "BLOCKS.register(\n          \"houttuynia_crop\",\n          () ->\n              new HouttuyniaCropBlock(\n                  BlockBehaviour.Properties.ofLegacyCopy(Blocks.NETHER_WART)\n                      .noCollission()\n                      .randomTicks()\n                      .instabreak()\n                      .noOcclusion()))",
+          "line": 135
+        },
+        {
+          "name": "PEPPER_LOG",
+          "expression": "BLOCKS.register(\"pepper_log\", PepperLogBlock::create)",
+          "line": 145
+        },
+        {
+          "name": "PEPPER_LEAVES",
+          "expression": "BLOCKS.register(\"pepper_leaves\", PepperLeavesBlock::create)",
+          "line": 147
+        },
+        {
+          "name": "PEPPER_SAPLING",
+          "expression": "BLOCKS.register(\"pepper_sapling\", PepperSaplingBlock::create)",
+          "line": 149
+        },
+        {
+          "name": "PEPPER_LOG_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_log\", () -> new BlockItem(PEPPER_LOG.get(), new Item.Properties()))",
+          "line": 151
+        },
+        {
+          "name": "PEPPER_LEAVES_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_leaves\", () -> new BlockItem(PEPPER_LEAVES.get(), new Item.Properties()))",
+          "line": 154
+        },
+        {
+          "name": "PEPPER_SAPLING_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"pepper_sapling\", () -> new BlockItem(PEPPER_SAPLING.get(), new Item.Properties()))",
+          "line": 157
+        },
+        {
+          "name": "GRILL_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"grill\",\n          () ->\n              new FunctionalBlockItem(\n                  GRILL.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.grill.usage\",\n                  null))",
+          "line": 160
+        },
+        {
+          "name": "BIG_VAT_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"big_vat\",\n          () ->\n              new FunctionalBlockItem(\n                  BIG_VAT.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.big_vat.usage\",\n                  \"tooltip.kaleidoscope_grilling.big_vat.requirement\"))",
+          "line": 169
+        },
+        {
+          "name": "OIL_PRESS_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"oil_press\",\n          () ->\n              new FunctionalBlockItem(\n                  OIL_PRESS.get(),\n                  new Item.Properties(),\n                  \"tooltip.kaleidoscope_grilling.oil_press.usage\",\n                  \"tooltip.kaleidoscope_grilling.oil_press.requirement\"))",
+          "line": 178
+        },
+        {
+          "name": "ADVANCED_RACK_ITEM",
+          "expression": "ModItems.ITEMS.register(\n          \"advanced_rack\",\n          () -> new AdvancedRackBlockItem(ADVANCED_RACK.get(), new Item.Properties()))",
+          "line": 187
+        }
+      ]
+    }
+  }
+}

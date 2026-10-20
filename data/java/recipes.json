@@ -1,0 +1,3740 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Parse complete upstream recipe/, recipes/ and grilling/ JSON without merging loader-specific paths.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "resources": {
+    "common/src/main/resources/data/kaleidoscope_cookery/recipe/chopping_board/raw_cow_offal.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_cookery/recipe/chopping_board/raw_cow_offal.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_cookery/recipe/chopping_board/raw_cow_offal.json",
+        "sha256": "c0d81059e08a055dc4fee3bf5c2d5546164b0f683245306806dc963d95926c85"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:beef"
+        },
+        "model_id": "kaleidoscope_cookery:raw_cow_offal",
+        "result": {
+          "count": 2,
+          "id": "kaleidoscope_grilling:beef_chunks"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_cookery/recipes/chopping_board/raw_cow_offal.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_cookery/recipes/chopping_board/raw_cow_offal.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_cookery/recipes/chopping_board/raw_cow_offal.json",
+        "sha256": "2fd9b0149728141cb7df9e91300fc151e5a7f0ec993c73d5e645d8e9340bbbcb"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:beef"
+        },
+        "model_id": "kaleidoscope_cookery:raw_cow_offal",
+        "result": {
+          "count": 2,
+          "item": "kaleidoscope_grilling:beef_chunks"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json",
+        "sha256": "c0addb93147976a6fb7b4ba886d7457879a91ac56d6b62f3bc77eec39a53092a"
+      },
+      "data": {
+        "skewers": [
+          {
+            "id": "kaleidoscope_grilling:raw_beef_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_beef_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/beef_chunks"
+              ],
+              [
+                "kaleidoscope_cookery:red_chili"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/beef_chunks"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_pork_belly_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_pork_belly_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:raw_pork_belly"
+              ],
+              [
+                "kaleidoscope_cookery:green_chili"
+              ],
+              [
+                "kaleidoscope_cookery:raw_pork_belly"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_chicken_skin_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/chicken_skin"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/chicken_skin"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_mid_wing_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_mid_wing_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/chicken_wings"
+              ],
+              [
+                "kaleidoscope_cookery:red_chili"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/chicken_wings"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/squid_tentacles"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/squid_tentacles"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/squid_tentacles"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_fish_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_fish_skewer",
+            "ingredients": [
+              [
+                "minecraft:cod",
+                "minecraft:salmon",
+                "minecraft:tropical_fish",
+                "minecraft:pufferfish"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/raw_sweet_potato_sheets"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/minced_houttuynia"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/minced_houttuynia"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_potato_slice_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_potato_slice_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/potato_slices"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/potato_slices"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/potato_slices"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_caterpillar_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_caterpillar_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:caterpillar"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_mushroom_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_mushroom_skewer",
+            "ingredients": [
+              [
+                "minecraft:brown_mushroom",
+                "minecraft:red_mushroom"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/carrot_dice"
+              ],
+              [
+                "minecraft:brown_mushroom",
+                "minecraft:red_mushroom"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_bun_slice_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_bun_slice_skewer",
+            "ingredients": [
+              [
+                "#kaleidoscope_grilling:ingredients/raw_mantou_slices"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/raw_mantou_slices"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/raw_mantou_slices"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_ender_pearl_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+            "ingredients": [
+              [
+                "minecraft:ender_pearl"
+              ],
+              [
+                "minecraft:beetroot"
+              ],
+              [
+                "minecraft:ender_pearl"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_meatball_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_meatball_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:raw_meatball"
+              ],
+              [
+                "kaleidoscope_cookery:raw_meatball"
+              ],
+              [
+                "kaleidoscope_cookery:raw_meatball"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_slime_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_slime_skewer",
+            "ingredients": [
+              [
+                "minecraft:slime_ball"
+              ],
+              [
+                "#kaleidoscope_grilling:ingredients/houttuynia"
+              ],
+              [
+                "minecraft:slime_ball"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:raw_cut_small_meats"
+              ],
+              [
+                "minecraft:bone"
+              ],
+              [
+                "kaleidoscope_cookery:raw_cut_small_meats"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_fried_egg_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_fried_egg_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:fried_egg"
+              ],
+              [
+                "kaleidoscope_cookery:fried_egg"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_gluten_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_gluten_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:raw_dough"
+              ],
+              [
+                "kaleidoscope_cookery:raw_dough"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_lamb_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_lamb_skewer",
+            "ingredients": [
+              [
+                "kaleidoscope_cookery:raw_lamb_chops"
+              ],
+              [
+                "kaleidoscope_cookery:oil"
+              ],
+              [
+                "kaleidoscope_cookery:raw_lamb_chops"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:raw_golden_skewer",
+            "cooked_result": "kaleidoscope_grilling:grilled_golden_skewer",
+            "ingredients": [
+              [
+                "minecraft:golden_apple"
+              ],
+              [
+                "minecraft:totem_of_undying"
+              ],
+              [
+                "minecraft:golden_carrot"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:ordinary_skewer",
+            "ingredients": [
+              [
+                "minecraft:poisonous_potato"
+              ],
+              [
+                "minecraft:spider_eye"
+              ],
+              [
+                "minecraft:pufferfish"
+              ]
+            ]
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_beef_skewer",
+            "ingredients": [],
+            "effect": "minecraft:strength",
+            "effect_seconds": 10
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_pork_belly_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:vigor",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+            "ingredients": [],
+            "effect": "minecraft:speed",
+            "effect_seconds": 20
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_mid_wing_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:mustard",
+            "effect_seconds": 45
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+            "ingredients": [],
+            "effect": "minecraft:water_breathing",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_fish_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:tundra_strider",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:preservation",
+            "effect_seconds": 45
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_potato_slice_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:warmth",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_caterpillar_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:flatulence",
+            "effect_seconds": 15
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_mushroom_skewer",
+            "ingredients": [],
+            "effect": "minecraft:night_vision",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_bun_slice_skewer",
+            "ingredients": [],
+            "effect": "",
+            "effect_seconds": 0
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:projectile_dodge",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_meatball_skewer",
+            "ingredients": [],
+            "effect": "minecraft:strength",
+            "effect_seconds": 10
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_slime_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:hinder",
+            "effect_seconds": 45
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:vigor",
+            "effect_seconds": 20
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_fried_egg_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:sulfur",
+            "effect_seconds": 60
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_gluten_skewer",
+            "ingredients": [],
+            "effect": "minecraft:haste",
+            "effect_seconds": 30
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_lamb_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_cookery:warmth",
+            "effect_seconds": 45
+          },
+          {
+            "id": "kaleidoscope_grilling:grilled_golden_skewer",
+            "ingredients": [],
+            "effect": "kaleidoscope_grilling:invincible",
+            "effect_seconds": 10
+          }
+        ],
+        "seasoning_effects": [
+          {
+            "ingredient": "minecraft:redstone",
+            "kind": "speed"
+          },
+          {
+            "ingredient": "minecraft:gunpowder",
+            "kind": "strength"
+          },
+          {
+            "ingredient": "kaleidoscope_grilling:houttuynia_powder",
+            "kind": "duration"
+          },
+          {
+            "ingredient": "kaleidoscope_grilling:totem_powder",
+            "kind": "totem"
+          },
+          {
+            "ingredient": "kaleidoscope_grilling:dragon_egg_powder",
+            "kind": "vitality"
+          },
+          {
+            "ingredient": "kaleidoscope_grilling:sichuan_pepper",
+            "kind": "numbness"
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/advanced_rack.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/advanced_rack.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/advanced_rack.json",
+        "sha256": "5010e152727f1d68235dce770482110978f2ade03f9b56effd216aefe7783b77"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "III",
+          " R ",
+          "SSS"
+        ],
+        "key": {
+          "I": {
+            "tag": "c:ingots/iron"
+          },
+          "S": {
+            "tag": "minecraft:wooden_slabs"
+          },
+          "R": {
+            "item": "kaleidoscope_cookery:kitchenware_racks"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:advanced_rack",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/big_vat.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/big_vat.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/big_vat.json",
+        "sha256": "c31a7816dfc4d5b791baafeb40c8984ce8b62dd0b27ec62700e185ef95211f5f"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "B B",
+          "BUB",
+          "BBB"
+        ],
+        "key": {
+          "B": {
+            "tag": "c:bricks/normal"
+          },
+          "U": {
+            "item": "minecraft:bucket"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:big_vat",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/carrot_dice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/carrot_dice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/carrot_dice.json",
+        "sha256": "156d36618f5c180768c5012b6cdca5bc350be935f273cf4f2365a70df4e6c6f3"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:carrot"
+        },
+        "model_id": "kaleidoscope_grilling:carrot_dice",
+        "result": {
+          "id": "kaleidoscope_grilling:carrot_dice",
+          "count": 3
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/minced_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/minced_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/minced_houttuynia.json",
+        "sha256": "3b67de24d2b73ba7d3453d9d789f5727a9e46813da89d24b456b000145132ea1"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+        },
+        "model_id": "kaleidoscope_grilling:houttuynia",
+        "result": {
+          "id": "kaleidoscope_grilling:minced_houttuynia",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/potato_slice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/potato_slice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/potato_slice.json",
+        "sha256": "8545306bc508fe2defffa4ce57d7331382d5ab6c898488d24dd0aca143a6c7a7"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:potato"
+        },
+        "model_id": "kaleidoscope_grilling:potato_slice",
+        "result": {
+          "id": "kaleidoscope_grilling:potato_slice",
+          "count": 3
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_mantou_slice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_mantou_slice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_mantou_slice.json",
+        "sha256": "766025eae911c0576bbbb9dcbb21d3dc0c8685d251978590f45fdde0b137d1a5"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "kaleidoscope_cookery:mantou"
+        },
+        "model_id": "kaleidoscope_grilling:raw_mantou_slice",
+        "result": {
+          "id": "kaleidoscope_grilling:raw_mantou_slice",
+          "count": 3
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_sweet_potato_sheet.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_sweet_potato_sheet.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/chopping_board/raw_sweet_potato_sheet.json",
+        "sha256": "668f0e3002e4ce0916696e84a40c3d6a2f768cb6fbf7cbf0a1764bb481bb28e9"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "kaleidoscope_grilling:sweet_potato_powder"
+        },
+        "model_id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+        "result": {
+          "id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_seasoning.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_seasoning.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_seasoning.json",
+        "sha256": "6d24915d9d0f86f81e70557091bdde2734142adf6befef3b619aa4bac4687072"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:clear_seasoning",
+        "category": "misc"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_skewer_recipe_book.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_skewer_recipe_book.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/clear_skewer_recipe_book.json",
+        "sha256": "16839cefc5e9bfac624b8473786e5f2e2d36c6846051975ac4aad623800ac74a"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:skewer_recipe_book"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_cookery:recipe_item",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/cold_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/cold_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/cold_houttuynia.json",
+        "sha256": "8369ebada31aabe948045d5e638af5d36737293798e9d86bd5cf7fc8bc5c9f31"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:cold_houttuynia",
+        "category": "food"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/crushing/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/crushing/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/crushing/canola_powder.json",
+        "sha256": "d076e8ed07718116f74e5266d1c6dfe5378a38a5e51c4fd3da55e9e8d933af7f"
+      },
+      "data": {
+        "type": "create:crushing",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:canola_powder",
+            "amount": 1
+          }
+        ],
+        "processingTime": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/empty_seasoning_bottle.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/empty_seasoning_bottle.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/empty_seasoning_bottle.json",
+        "sha256": "908a3f69fbbd3b8a17ef182e5c850b51716a29a9b59052d3de444f5f4d2deb3b"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          " B ",
+          "GGG",
+          "GGG"
+        ],
+        "key": {
+          "B": {
+            "tag": "minecraft:wooden_buttons"
+          },
+          "G": {
+            "tag": "c:glass_blocks/colorless"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:empty_seasoning_bottle",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_bucket.json",
+        "sha256": "6151b8827dcd83f5c810b3e55d7f7260ecee8fbc91c34278d7a27031d165da0d"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "minecraft:bucket"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:canola_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:canola_oil_bucket"
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/canola_oil_pot.json",
+        "sha256": "23b7371e140bcbd21964c0fc3d697909ff166657002cfb3ba0c1b7172345bf2e"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:oil_pot"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:canola_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_cookery:oil_pot",
+            "components": {
+              "kaleidoscope_cookery:oil_pot_oil_count": 8,
+              "minecraft:custom_data": {
+                "grilling_oil_type": "canola"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_bucket.json",
+        "sha256": "fe273878d59fbe59d9bb0da5acfd93fcbb250ffdf764e793fa7f5eb7a0b2d566"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "minecraft:bucket"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:secret_chili_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:secret_chili_oil_bucket"
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/chili_oil_pot.json",
+        "sha256": "bea1c69ce9b062a7b624ddfdab17179f080006f3d29ac2a64dec4fd7385002ef"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:oil_pot"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:secret_chili_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_cookery:oil_pot",
+            "components": {
+              "kaleidoscope_cookery:oil_pot_oil_count": 8,
+              "minecraft:custom_data": {
+                "grilling_oil_type": "secret_chili"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_bucket.json",
+        "sha256": "f3e05ee2ddfbb37786e437255435ff2b2358f66bbb89bc55e8697abdf4e7575c"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "minecraft:bucket"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:premium_chili_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:premium_chili_oil_bucket"
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/filling/lava_chili_oil_pot.json",
+        "sha256": "4dac0518d07a81e042188bb1a8430ca3ad110d29e6c143f8eeea9188654cdfea"
+      },
+      "data": {
+        "type": "create:filling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:oil_pot"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:premium_chili_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_cookery:oil_pot",
+            "components": {
+              "kaleidoscope_cookery:oil_pot_oil_count": 8,
+              "minecraft:custom_data": {
+                "grilling_oil_type": "premium_chili"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/braised_chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/braised_chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/braised_chicken_wings.json",
+        "sha256": "ef18ebdffa5328fa41d5c3f2e94a6b2e7be45ea44cc5066a289330f0b5423e93"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:braised_chicken_wings",
+          "count": 1
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/green_pepper_squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/green_pepper_squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/green_pepper_squid_tentacles.json",
+        "sha256": "968dc74f3de803f8fa0d2c35682d5c916005efc177e638f12d092595169d5904"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "count": 1
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/houttuynia_stir_fried_pork.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/houttuynia_stir_fried_pork.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_pot/houttuynia_stir_fried_pork.json",
+        "sha256": "f172e615407d02f496628b306cc113a4772c67413bf0352c8d80f7f076cd2b39"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "item": "minecraft:porkchop"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "count": 1
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/potato_beef_stew.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/potato_beef_stew.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/potato_beef_stew.json",
+        "sha256": "a6922ebcd9ce431b9c238e133b57a316247621a963233fbb79f0362f6a039570"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "item": "minecraft:potato"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/carrot_dice"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:potato_beef_stew",
+          "count": 1
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/red_sweet_potato_porridge.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/red_sweet_potato_porridge.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/red_sweet_potato_porridge.json",
+        "sha256": "d34642e863cddf731346d27c491d57633d24e6782aeb416ea964ae59ce775987"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "count": 1
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/sour_spicy_noodles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/sour_spicy_noodles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/flex_stockpot/sour_spicy_noodles.json",
+        "sha256": "f5314a03ca50f6c83071aa661619c1d1ffcb6747e74ee49fff6bce131d30b976"
+      },
+      "data": {
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "kaleidoscope_tavern"
+          }
+        ],
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_tavern:vinegar"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/leafy_greens"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:sour_spicy_noodles",
+          "count": 1
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/grill.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/grill.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/grill.json",
+        "sha256": "cef1ff400f82fd00660cf216949f827e27ad20e0dd24ba4c29e79954a97db1d9"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "III",
+          "BCB",
+          "I I"
+        ],
+        "key": {
+          "I": {
+            "tag": "c:ingots/iron"
+          },
+          "B": {
+            "tag": "c:bricks/normal"
+          },
+          "C": {
+            "tag": "minecraft:coals"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:grill",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/canola_powder.json",
+        "sha256": "51684088aec64d537bb8af4887d1b13d33356ab7cdc3bad5e6b83702f4102263"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:canola_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/green_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/green_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/green_chili_powder.json",
+        "sha256": "51c0a79ec8b5c88a8cd14809d122930875c894796701b8c6cbc257268c5b1f54"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:green_chili_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/houttuynia_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/houttuynia_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/houttuynia_powder.json",
+        "sha256": "8b8f98174200d69ce7c5eae801a958ab6bcc8c0f10e85aca3e2d3dd179f713a5"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:houttuynia_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/onion_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/onion_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/onion_powder.json",
+        "sha256": "99c0ca22d162bbd1a4eb183578c146a55dd60d1397b6476d41c5c410d8c1f86c"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:onion_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/red_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/red_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/red_chili_powder.json",
+        "sha256": "d5fbac78e4d47bd5f840378343248ed699ae631a2bc97e11985bcd3ff557e275"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:red_chili_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/sweet_potato_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/sweet_potato_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/sweet_potato_powder.json",
+        "sha256": "a5c2652035ba26c2839ceda41df681a305224e68a12c46cc1cde3b9cee25f40f"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:sweet_potato_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/totem_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/totem_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/milling/totem_powder.json",
+        "sha256": "cc89130299b779597a1a5d318a2a45a922fa0793cf3a30b7218543825bbf11bb"
+      },
+      "data": {
+        "type": "create:milling",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "minecraft:totem_of_undying"
+          }
+        ],
+        "processing_time": 100,
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:totem_powder",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/canola_powder.json",
+        "sha256": "17fee9ca25a4f5d7e05d5060c87563922d3b7b2cf23a2c2430067d65fc6172e3"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:canola_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/green_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/green_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/green_chili_powder.json",
+        "sha256": "07b188225f04393f11daf32d7c8a38c56a71a249a1d4125fc98088d68a25f64d"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "kaleidoscope_cookery:green_chili"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:green_chili_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/houttuynia_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/houttuynia_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/houttuynia_powder.json",
+        "sha256": "a76db4f0b8b1be95762f3b5f77d0f5494756b9bfe0a8ce30773a484f413f7fe9"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:houttuynia_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/onion_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/onion_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/onion_powder.json",
+        "sha256": "6a106bdb1a269fe643b64d74b668d6715d682a87ffc5f99ab30fb94cc15023ef"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/onions"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:onion_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/red_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/red_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/red_chili_powder.json",
+        "sha256": "d29be68cb59a244f25bc4170291ad5a063c440f6dee8306896ba532277036277"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "kaleidoscope_cookery:red_chili"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:red_chili_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/sweet_potato_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/sweet_potato_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/sweet_potato_powder.json",
+        "sha256": "b091d09ac306471202171e9a853c704a43747f630715299629bd77df7145b3af"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:sweet_potato_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/totem_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/totem_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/millstone/totem_powder.json",
+        "sha256": "3102fb26e570a6feb63096deb37a07b4181fd93785c4b72b6495bc99f0ed684a"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "minecraft:totem_of_undying"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:totem_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/chili_oil_fluid.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/chili_oil_fluid.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/chili_oil_fluid.json",
+        "sha256": "d9abae2a7d2358bc3b75408dbd3b5cff17fcc71ac9b008213b386fc69378c7e5"
+      },
+      "data": {
+        "type": "create:mixing",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:canola_oil"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:secret_chili_oil",
+            "amount": 1000
+          }
+        ],
+        "processing_time": 100
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/lava_chili_oil_fluid.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/lava_chili_oil_fluid.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/mixing/lava_chili_oil_fluid.json",
+        "sha256": "dbcd1edafe319ac1a86ac0199801777c0024ce1930058825e01594e561676833"
+      },
+      "data": {
+        "type": "create:mixing",
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "create"
+          }
+        ],
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:houttuynia_powder"
+          },
+          {
+            "item": "minecraft:redstone"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "kaleidoscope_grilling:secret_chili_oil"
+          },
+          {
+            "type": "neoforge:single",
+            "amount": 1000,
+            "fluid": "minecraft:lava"
+          }
+        ],
+        "results": [
+          {
+            "id": "kaleidoscope_grilling:premium_chili_oil",
+            "amount": 1000
+          }
+        ],
+        "processing_time": 100
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/oak_planks_from_pepper_log.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/oak_planks_from_pepper_log.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/oak_planks_from_pepper_log.json",
+        "sha256": "9db6fc192258c0bdd02f321521d95d90f2289dc03f9f1d70acc2de64f2c79587"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "building",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:pepper_log"
+          }
+        ],
+        "result": {
+          "id": "minecraft:oak_planks",
+          "count": 4
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_cake.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_cake.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_cake.json",
+        "sha256": "6d5237a93d71886d64dac87758a3fe1a420a8e34b81ae969708dfffc7fc8c9e3"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "PPP",
+          "PWP",
+          "PPP"
+        ],
+        "key": {
+          "P": {
+            "item": "kaleidoscope_grilling:canola_powder"
+          },
+          "W": {
+            "tag": "c:crops/wheat"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:oil_cake",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_press.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_press.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/oil_press.json",
+        "sha256": "65691b94730c30d5eb1ddba473c70f8bf3aa770a421e970551ef5a961c8991ed"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "LIL",
+          "F F",
+          "LHL"
+        ],
+        "key": {
+          "L": {
+            "tag": "minecraft:logs"
+          },
+          "I": {
+            "tag": "c:ingots/iron"
+          },
+          "F": {
+            "tag": "minecraft:fences"
+          },
+          "H": {
+            "item": "minecraft:hopper"
+          }
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:oil_press",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/pepper_honey.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/pepper_honey.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/pepper_honey.json",
+        "sha256": "2156a7f1a881ac79384885d1cf411a982e434c0c45738ce6a5a4c46db3da7606"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "food",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "minecraft:honey_bottle"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:pepper_honey",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/braised_chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/braised_chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/braised_chicken_wings.json",
+        "sha256": "7524b1ac587529c6c8465db6e17d7d2ef70bddc8da2de8e2778294790654e849"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "item": "minecraft:sugar"
+          },
+          {
+            "item": "minecraft:sugar"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:braised_chicken_wings",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/green_pepper_squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/green_pepper_squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/green_pepper_squid_tentacles.json",
+        "sha256": "2a98ef05ce5f3cc1fb3bc780ee9f381b5528d60ac03e07c18cf49b25b428bb8b"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/houttuynia_stir_fried_pork.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/houttuynia_stir_fried_pork.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/pot/houttuynia_stir_fried_pork.json",
+        "sha256": "edb4286825003b88634a0adcb091f67a216b798def656f47da750e04e8645e9b"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "item": "minecraft:porkchop"
+          },
+          {
+            "item": "minecraft:porkchop"
+          },
+          {
+            "item": "minecraft:porkchop"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/premium_chili_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/premium_chili_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/premium_chili_oil.json",
+        "sha256": "a4a31be3b6086222622926001efad372a98abcfc9c628b450196e5751370784b"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:secret_chili_oil_bucket"
+          },
+          {
+            "item": "minecraft:lava_bucket"
+          },
+          {
+            "tag": "c:dusts/redstone"
+          },
+          {
+            "item": "kaleidoscope_grilling:houttuynia_powder"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:premium_chili_oil_bucket",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing.json",
+        "sha256": "76bc5c4a54c0e20fba08b0dfd093229f66c039f075729c3363d976c602f7458f"
+      },
+      "data": {
+        "type": "minecraft:smelting",
+        "category": "food",
+        "cookingtime": 200,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_chicken_wing"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_campfire.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_campfire.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_campfire.json",
+        "sha256": "fcfe9166d29b1ded2b46b018cfdaae64f051765c684f8b522e22f92bbaf6fcfe"
+      },
+      "data": {
+        "type": "minecraft:campfire_cooking",
+        "category": "food",
+        "cookingtime": 600,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_chicken_wing"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_smoking.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_smoking.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_chicken_wing_smoking.json",
+        "sha256": "88209bb34e96e841f77dadc579a2581764fae1649ac702bb71e116654248c434"
+      },
+      "data": {
+        "type": "minecraft:smoking",
+        "category": "food",
+        "cookingtime": 100,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_chicken_wing"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato.json",
+        "sha256": "8ef7792a782553798695b5c679d9cc426052ff7a6437130d29d870c87c7f4d0c"
+      },
+      "data": {
+        "type": "minecraft:smelting",
+        "category": "food",
+        "cookingtime": 200,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_sweet_potato"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_campfire.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_campfire.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_campfire.json",
+        "sha256": "a6f37dfb335b2b14f0b0d139d8f2ad01038a1ed61812996fb9d722292151c64e"
+      },
+      "data": {
+        "type": "minecraft:campfire_cooking",
+        "category": "food",
+        "cookingtime": 600,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_sweet_potato"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_smoking.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_smoking.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/roasted_sweet_potato_smoking.json",
+        "sha256": "7157a329fa796fb8eadca5a0747909853032f48344d1f5466824245b561eddbd"
+      },
+      "data": {
+        "type": "minecraft:smoking",
+        "category": "food",
+        "cookingtime": 100,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": {
+          "id": "kaleidoscope_grilling:roasted_sweet_potato"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/secret_chili_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/secret_chili_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/secret_chili_oil.json",
+        "sha256": "b1271a6495cb01060808fc6e911feefab97cf7ee51a351205ac48ea6c4fd42b0"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:canola_oil_bucket"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:secret_chili_oil_bucket",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/skewer_recipe_book.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/skewer_recipe_book.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/skewer_recipe_book.json",
+        "sha256": "040fd4d4d442fbc7f9635f30813a0944380b68eeef800bd6221cdf41dbb0a96e"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:skewer_recipe_book",
+        "category": "misc"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/potato_beef_stew.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/potato_beef_stew.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/potato_beef_stew.json",
+        "sha256": "5c2e837f97ad61a07994e7bf13d12e2252593703f9345239ad6f67897cee4efc"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "item": "minecraft:potato"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/carrot_dice"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:potato_beef_stew",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/red_sweet_potato_porridge.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/red_sweet_potato_porridge.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/red_sweet_potato_porridge.json",
+        "sha256": "9439634a013966948ed4f5450b433ca791761ea7378279cb144d855f1c82b9e5"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/sour_spicy_noodles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/sour_spicy_noodles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/stockpot/sour_spicy_noodles.json",
+        "sha256": "0f33350ac0969446cdd73a25c46a2255ed395047998b32d495418436cca3d429"
+      },
+      "data": {
+        "neoforge:conditions": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "kaleidoscope_tavern"
+          }
+        ],
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_tavern:vinegar"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/leafy_greens"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:sour_spicy_noodles",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipe/sugared_tomato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipe/sugared_tomato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipe/sugared_tomato.json",
+        "sha256": "7aa67a2b2471581c20be2269ebf93570d1b06c395a5fc9467f9d44527c459049"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "food",
+        "ingredients": [
+          {
+            "tag": "c:crops/tomato"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "id": "kaleidoscope_grilling:sugared_tomato",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/advanced_rack.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/advanced_rack.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/advanced_rack.json",
+        "sha256": "753f1fbdb0f5484bf3d184c5a40be0c8595bf0c48a6b8f666354ac8575023f95"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "III",
+          " R ",
+          "SSS"
+        ],
+        "key": {
+          "I": {
+            "tag": "forge:ingots/iron"
+          },
+          "S": {
+            "tag": "minecraft:wooden_slabs"
+          },
+          "R": {
+            "item": "kaleidoscope_cookery:kitchenware_racks"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:advanced_rack"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/big_vat.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/big_vat.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/big_vat.json",
+        "sha256": "593c282d52cae06014b03673346475bf7474caf88b83f2f7e2a38d5814d30131"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "B B",
+          "BUB",
+          "BBB"
+        ],
+        "key": {
+          "B": {
+            "tag": "forge:ingots/brick"
+          },
+          "U": {
+            "item": "minecraft:bucket"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:big_vat"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/carrot_dice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/carrot_dice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/carrot_dice.json",
+        "sha256": "edf4fad0f3d2fc7e6aae5c8f47bc6b08d41dc5776f185bda7ce1f755c32b5f54"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:carrot"
+        },
+        "model_id": "kaleidoscope_grilling:carrot_dice",
+        "result": {
+          "item": "kaleidoscope_grilling:carrot_dice",
+          "count": 3
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/minced_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/minced_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/minced_houttuynia.json",
+        "sha256": "b8629439e8ae6b9aeb3d5840afe8022f5b17867bdb3785d36d4ff7aed783720b"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+        },
+        "model_id": "kaleidoscope_grilling:houttuynia",
+        "result": {
+          "item": "kaleidoscope_grilling:minced_houttuynia"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/potato_slice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/potato_slice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/potato_slice.json",
+        "sha256": "46cf4f30bb998f1a7a02e798ee4dcc9a9c55533b207f603f590390fa236a3b01"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "minecraft:potato"
+        },
+        "model_id": "kaleidoscope_grilling:potato_slice",
+        "result": {
+          "count": 3,
+          "item": "kaleidoscope_grilling:potato_slice"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_mantou_slice.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_mantou_slice.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_mantou_slice.json",
+        "sha256": "8e965269516d82cbbff6cb9d67712ae05fbd3a8d80802abffb7111ff1eb2dc11"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "kaleidoscope_cookery:mantou"
+        },
+        "model_id": "kaleidoscope_grilling:raw_mantou_slice",
+        "result": {
+          "count": 3,
+          "item": "kaleidoscope_grilling:raw_mantou_slice"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_sweet_potato_sheet.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_sweet_potato_sheet.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/chopping_board/raw_sweet_potato_sheet.json",
+        "sha256": "fed4da9db2821690ce02c3d3aab82f282157dbea0f547a1cc72e4d87bc9e9ac3"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:chopping_board",
+        "cut_count": 4,
+        "ingredient": {
+          "item": "kaleidoscope_grilling:sweet_potato_powder"
+        },
+        "model_id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+        "result": {
+          "item": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_seasoning.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_seasoning.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_seasoning.json",
+        "sha256": "6d24915d9d0f86f81e70557091bdde2734142adf6befef3b619aa4bac4687072"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:clear_seasoning",
+        "category": "misc"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_skewer_recipe_book.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_skewer_recipe_book.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/clear_skewer_recipe_book.json",
+        "sha256": "8a0238d3f3d41b7da35e5dc1ecea9643517144429ff9561a50c4336dfcaa2cff"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:skewer_recipe_book"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_cookery:recipe_item",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/cold_houttuynia.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/cold_houttuynia.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/cold_houttuynia.json",
+        "sha256": "8369ebada31aabe948045d5e638af5d36737293798e9d86bd5cf7fc8bc5c9f31"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:cold_houttuynia",
+        "category": "food"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/crushing/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/crushing/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/crushing/canola_powder.json",
+        "sha256": "f16419343d8ac5f56ae4696bf65ab52eb1664c68bcba76f5f34acc129f188d40"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:crushing",
+              "ingredients": [
+                {
+                  "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:canola_powder",
+                  "count": 1
+                }
+              ],
+              "processingTime": 200
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/empty_seasoning_bottle.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/empty_seasoning_bottle.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/empty_seasoning_bottle.json",
+        "sha256": "44deddc8cb89a09dd9d389c8c09bec3b0483f1b3cf83c7d411d9a6defe19927f"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          " B ",
+          "GGG",
+          "GGG"
+        ],
+        "key": {
+          "B": {
+            "tag": "minecraft:wooden_buttons"
+          },
+          "G": {
+            "tag": "forge:glass/colorless"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:empty_seasoning_bottle",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_bucket.json",
+        "sha256": "6711e5ce2e616b87984be5c294e65ca468110c9d7d1e0650fc77675874612f3f"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "minecraft:bucket"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:canola_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:canola_oil_bucket"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/canola_oil_pot.json",
+        "sha256": "ba78db8ab914ee0a022ec6f3a04600042ddeadbffd402b9385865d452781d094"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:canola_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot",
+                  "nbt": {
+                    "grilling_oil_type": "canola",
+                    "oil_count": 8
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_bucket.json",
+        "sha256": "54fc932cb2b5970720bd62b210719638fe26f997b3afc7d1bda01b496ff16637"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "minecraft:bucket"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:secret_chili_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:secret_chili_oil_bucket"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/chili_oil_pot.json",
+        "sha256": "b2e84093981231bd1bfa12b175cd6a8cc134220d10bbd6b237cff9c1cc98d47e"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:secret_chili_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot",
+                  "nbt": {
+                    "grilling_oil_type": "secret_chili",
+                    "oil_count": 8
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_bucket.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_bucket.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_bucket.json",
+        "sha256": "e9354e1795771e804daec9fb616ee6ebdd3fd58f7e7def8879c513af604c30e9"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "minecraft:bucket"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:premium_chili_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:premium_chili_oil_bucket"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_pot.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_pot.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/filling/lava_chili_oil_pot.json",
+        "sha256": "ff892024a66bd84ded210db1906b747b20037c40694e669f273be345ec6fe04f"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:filling",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:premium_chili_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "item": "kaleidoscope_cookery:oil_pot",
+                  "nbt": {
+                    "grilling_oil_type": "premium_chili",
+                    "oil_count": 8
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/braised_chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/braised_chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/braised_chicken_wings.json",
+        "sha256": "b9e8c1332fd2e7e6b513d983586349e5d2809234f1b528e74400f9f393dca4cb"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:braised_chicken_wings"
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/green_pepper_squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/green_pepper_squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/green_pepper_squid_tentacles.json",
+        "sha256": "b9b889fa5dc49544b8c6e3c23338155acc4e6990f1c9a29429b61fec599754a7"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:green_pepper_squid_tentacles"
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/houttuynia_stir_fried_pork.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/houttuynia_stir_fried_pork.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_pot/houttuynia_stir_fried_pork.json",
+        "sha256": "bc99716e7c3c7e36b5e3b36e200b50439a0a4a8c375d4368a1f6f8ea7d69688f"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "item": "minecraft:porkchop"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:houttuynia_stir_fried_pork"
+        },
+        "stir_fry_count": 3,
+        "time": 200
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/potato_beef_stew.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/potato_beef_stew.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/potato_beef_stew.json",
+        "sha256": "8a0bfc85e9cf4cc2a633e1ab881535486909bdff3cee52af90c006e252b5b5a4"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "item": "minecraft:potato"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/carrot_dice"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:potato_beef_stew"
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/red_sweet_potato_porridge.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/red_sweet_potato_porridge.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/red_sweet_potato_porridge.json",
+        "sha256": "62ffed9222bc701d9b54b89d1ea49b492c62f968f3b59e91e8aa00ed98ab7334"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:red_sweet_potato_porridge"
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/sour_spicy_noodles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/sour_spicy_noodles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/flex_stockpot/sour_spicy_noodles.json",
+        "sha256": "4733bdf11b71864d3185f0af44d041ccf88f7c8628e7d9b4d141af7c8c1bf580"
+      },
+      "data": {
+        "conditions": [
+          {
+            "type": "forge:mod_loaded",
+            "modid": "kaleidoscope_tavern"
+          }
+        ],
+        "type": "kaleidoscope_cookery:flex_stockpot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_tavern:vinegar"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/leafy_greens"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:sour_spicy_noodles"
+        },
+        "soup_base": "minecraft:water",
+        "time": 300
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/grill.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/grill.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/grill.json",
+        "sha256": "2eb52e95f25cb38153b0fc731563741ae5b77a7f219d366d36cf317d17708a80"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "III",
+          "BCB",
+          "I I"
+        ],
+        "key": {
+          "I": {
+            "tag": "forge:ingots/iron"
+          },
+          "B": {
+            "tag": "forge:ingots/brick"
+          },
+          "C": {
+            "tag": "minecraft:coals"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:grill",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/canola_powder.json",
+        "sha256": "e79fc918c8cd70740cc6cd2006c2b48d427d7b4d1c80202d78eb1823c9506b19"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:canola_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/green_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/green_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/green_chili_powder.json",
+        "sha256": "66a625b5eae1f4632c291e302eef591279f338e8e86d579872e86f7f5a0cfd93"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_cookery:green_chili"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:green_chili_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/houttuynia_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/houttuynia_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/houttuynia_powder.json",
+        "sha256": "bc7e8111450a5efd13ec102a85452058b9870476891519517f03618ab341deb8"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:houttuynia_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/onion_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/onion_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/onion_powder.json",
+        "sha256": "03f563d65f2522f524ccfa3459a672d729dba9b1029121335731a31939ce5e94"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "tag": "kaleidoscope_grilling:ingredients/onions"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:onion_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/red_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/red_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/red_chili_powder.json",
+        "sha256": "e4e09d7286191ca38801b757fc489e86eeaa02cb2dbd3aad5574f9b72b2accb1"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_cookery:red_chili"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:red_chili_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/sweet_potato_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/sweet_potato_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/sweet_potato_powder.json",
+        "sha256": "af133b1f6d78ff9e79000a512c02292c8da13defd59d5670756173a539c9d325"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:sweet_potato_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/totem_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/totem_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/milling/totem_powder.json",
+        "sha256": "7c25844f38faafbbf020ba0fbc91964f48f77b9ee0500eed63b5b561072216b8"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:milling",
+              "ingredients": [
+                {
+                  "item": "minecraft:totem_of_undying"
+                }
+              ],
+              "processingTime": 100,
+              "results": [
+                {
+                  "item": "kaleidoscope_grilling:totem_powder",
+                  "count": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/canola_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/canola_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/canola_powder.json",
+        "sha256": "ea6b11b2512647b6f801aec9295d62f7789700499a8480042bc46c94e241d57e"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/canola_seeds"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:canola_powder"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/green_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/green_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/green_chili_powder.json",
+        "sha256": "ad6efaebee00f38bec01664084d21c368f782983f8f955b7d20951d05c44a25f"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "kaleidoscope_cookery:green_chili"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:green_chili_powder"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/houttuynia_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/houttuynia_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/houttuynia_powder.json",
+        "sha256": "3dd42d91e4d5611719d8384043cd77c3bf94784136216d05768bbcc927c35f7f"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:houttuynia_powder"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/onion_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/onion_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/onion_powder.json",
+        "sha256": "ee239d7e33be97db281f64bea0259b318904d78d358edc60d61684eeb5b0d182"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/onions"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:onion_powder"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/red_chili_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/red_chili_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/red_chili_powder.json",
+        "sha256": "551bb2a1d2e93b787f07c69f283a66573c644cb5500b6b4fdd03d4c7f3d4fc20"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "kaleidoscope_cookery:red_chili"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:red_chili_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/sweet_potato_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/sweet_potato_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/sweet_potato_powder.json",
+        "sha256": "1c65783c4561dc10e4e5f0874716edfc67607daf134966ddfe1477693e510fdb"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:sweet_potato_powder"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/totem_powder.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/totem_powder.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/millstone/totem_powder.json",
+        "sha256": "088baa199a192085761e21c50309b080a4c4eaea1ec890541655b6c11b87bfb8"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:millstone",
+        "ingredient": {
+          "item": "minecraft:totem_of_undying"
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:totem_powder",
+          "count": 1
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/chili_oil_fluid.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/chili_oil_fluid.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/chili_oil_fluid.json",
+        "sha256": "fc1767936b932206b91c69ea0edbe89a30704abceb3fb80463a48aa4ab9b12cf"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:mixing",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_grilling:red_chili_powder"
+                },
+                {
+                  "item": "kaleidoscope_grilling:red_chili_powder"
+                },
+                {
+                  "item": "kaleidoscope_grilling:red_chili_powder"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:canola_oil",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:secret_chili_oil"
+                }
+              ],
+              "processingTime": 100
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/lava_chili_oil_fluid.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/lava_chili_oil_fluid.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/mixing/lava_chili_oil_fluid.json",
+        "sha256": "0037570bf7bd132dadd66fd1cf004db3d2bcb998bf930cec29b4443a2983c351"
+      },
+      "data": {
+        "type": "forge:conditional",
+        "recipes": [
+          {
+            "conditions": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "create"
+              }
+            ],
+            "recipe": {
+              "type": "create:mixing",
+              "ingredients": [
+                {
+                  "item": "kaleidoscope_grilling:houttuynia_powder"
+                },
+                {
+                  "item": "minecraft:redstone"
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:secret_chili_oil",
+                  "nbt": {}
+                },
+                {
+                  "amount": 1000,
+                  "fluid": "minecraft:lava",
+                  "nbt": {}
+                }
+              ],
+              "results": [
+                {
+                  "amount": 1000,
+                  "fluid": "kaleidoscope_grilling:premium_chili_oil"
+                }
+              ],
+              "processingTime": 100
+            }
+          }
+        ]
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/oak_planks_from_pepper_log.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/oak_planks_from_pepper_log.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/oak_planks_from_pepper_log.json",
+        "sha256": "4742335f7a2a2859b585f2aa14e26fc60943715576070d299a33603af75ed28c"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "building",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:pepper_log"
+          }
+        ],
+        "result": {
+          "item": "minecraft:oak_planks",
+          "count": 4
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_cake.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_cake.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_cake.json",
+        "sha256": "8fbeee3ee3ac151f4d13a370130263710e16dd76a48f4e7088463dd85e6c9d3c"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "PPP",
+          "PWP",
+          "PPP"
+        ],
+        "key": {
+          "P": {
+            "item": "kaleidoscope_grilling:canola_powder"
+          },
+          "W": {
+            "tag": "forge:crops/wheat"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:oil_cake"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_press.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_press.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/oil_press.json",
+        "sha256": "2f4541b75520aa5c9ae978072ef9c62788fb3c5f2fb5974b79af3974eeb511eb"
+      },
+      "data": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": [
+          "LIL",
+          "F F",
+          "LHL"
+        ],
+        "key": {
+          "L": {
+            "tag": "minecraft:logs"
+          },
+          "I": {
+            "tag": "forge:ingots/iron"
+          },
+          "F": {
+            "tag": "minecraft:fences"
+          },
+          "H": {
+            "item": "minecraft:hopper"
+          }
+        },
+        "result": {
+          "item": "kaleidoscope_grilling:oil_press"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/pepper_honey.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/pepper_honey.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/pepper_honey.json",
+        "sha256": "3517ff8f2bf0e0e9f408e77e0abbaca6d384531f75a630fd22ca100061c0a6f5"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "food",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "kaleidoscope_grilling:sichuan_pepper"
+          },
+          {
+            "item": "minecraft:honey_bottle"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:pepper_honey"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/braised_chicken_wings.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/braised_chicken_wings.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/braised_chicken_wings.json",
+        "sha256": "2faf1b2d363df277f07fc5deb610d863c6b4c97bc530998d494362d3c2f8b05c"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+          },
+          {
+            "item": "minecraft:sugar"
+          },
+          {
+            "item": "minecraft:sugar"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:braised_chicken_wings"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/green_pepper_squid_tentacles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/green_pepper_squid_tentacles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/green_pepper_squid_tentacles.json",
+        "sha256": "e5bf5880d937a7413581a5b538330ab1a52b61233007451aaa5a771188013447"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "item": "kaleidoscope_cookery:green_chili"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/squid_tentacles"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:green_pepper_squid_tentacles"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/houttuynia_stir_fried_pork.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/houttuynia_stir_fried_pork.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/pot/houttuynia_stir_fried_pork.json",
+        "sha256": "bc1a56b1073066ab3b00f42bfe87b1805d1e2e048edc106fd98cda8a4372e4db"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:pot",
+        "carrier": {
+          "item": "minecraft:bowl"
+        },
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/houttuynia"
+          },
+          {
+            "item": "minecraft:porkchop"
+          },
+          {
+            "item": "minecraft:porkchop"
+          },
+          {
+            "item": "minecraft:porkchop"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:houttuynia_stir_fried_pork"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/premium_chili_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/premium_chili_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/premium_chili_oil.json",
+        "sha256": "1ab056b09eb57fff62c8bd6a386530beb2eee38721438abd1c5610c9898a8bbc"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:secret_chili_oil_bucket"
+          },
+          {
+            "item": "minecraft:lava_bucket"
+          },
+          {
+            "tag": "forge:dusts/redstone"
+          },
+          {
+            "item": "kaleidoscope_grilling:houttuynia_powder"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:premium_chili_oil_bucket"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing.json",
+        "sha256": "a3b7f6b26bcb4b98efc926c83348df58293a45f01052008f7ad88b01d192ae8c"
+      },
+      "data": {
+        "type": "minecraft:smelting",
+        "category": "food",
+        "cookingtime": 200,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": "kaleidoscope_grilling:roasted_chicken_wing"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_campfire.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_campfire.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_campfire.json",
+        "sha256": "ee2b295fbc43776ac870856792000036aa0a53c2a0bd7de92df87ee55ef83482"
+      },
+      "data": {
+        "type": "minecraft:campfire_cooking",
+        "category": "food",
+        "cookingtime": 600,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": "kaleidoscope_grilling:roasted_chicken_wing"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_smoking.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_smoking.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_chicken_wing_smoking.json",
+        "sha256": "ad69e8be1fb1547727c6303577b219a1ccd375111d7cced4a3231d1917e8e423"
+      },
+      "data": {
+        "type": "minecraft:smoking",
+        "category": "food",
+        "cookingtime": 100,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/chicken_wings"
+        },
+        "result": "kaleidoscope_grilling:roasted_chicken_wing"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato.json",
+        "sha256": "ef0a9112d556c3157926dd0304b6723bd6e65b03917dc1987777f702d6a98a3d"
+      },
+      "data": {
+        "type": "minecraft:smelting",
+        "category": "food",
+        "cookingtime": 200,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": "kaleidoscope_grilling:roasted_sweet_potato"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_campfire.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_campfire.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_campfire.json",
+        "sha256": "a03f9cb2d9e6d424ab87f9cb9f084a4cb84046b684f86a9fdc55c752496bf8f8"
+      },
+      "data": {
+        "type": "minecraft:campfire_cooking",
+        "category": "food",
+        "cookingtime": 600,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": "kaleidoscope_grilling:roasted_sweet_potato"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_smoking.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_smoking.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/roasted_sweet_potato_smoking.json",
+        "sha256": "8376f6558dbcefbcd42644796406f8079194f609a3cd2e0e62466940253004da"
+      },
+      "data": {
+        "type": "minecraft:smoking",
+        "category": "food",
+        "cookingtime": 100,
+        "experience": 0.35,
+        "ingredient": {
+          "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+        },
+        "result": "kaleidoscope_grilling:roasted_sweet_potato"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/secret_chili_oil.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/secret_chili_oil.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/secret_chili_oil.json",
+        "sha256": "abf386fc625ce5dff6abd01dc28fe921f4ffb0d585e3ee41b14cf1d6b82d00c5"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_grilling:canola_oil_bucket"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          },
+          {
+            "item": "kaleidoscope_grilling:red_chili_powder"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:secret_chili_oil_bucket"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/skewer_recipe_book.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/skewer_recipe_book.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/skewer_recipe_book.json",
+        "sha256": "040fd4d4d442fbc7f9635f30813a0944380b68eeef800bd6221cdf41dbb0a96e"
+      },
+      "data": {
+        "type": "kaleidoscope_grilling:skewer_recipe_book",
+        "category": "misc"
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/potato_beef_stew.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/potato_beef_stew.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/potato_beef_stew.json",
+        "sha256": "746b72e249e5b66bfd49bfd1d8d5ded3f36b4ae4a062bd1364be47ac6ddc0ca7"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/beef_chunks"
+          },
+          {
+            "item": "minecraft:potato"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/carrot_dice"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/onions"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:potato_beef_stew"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/red_sweet_potato_porridge.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/red_sweet_potato_porridge.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/red_sweet_potato_porridge.json",
+        "sha256": "2611484dbfc175f1aeff77b674f19501b91dd6143c4113e3e2b23baabd7403af"
+      },
+      "data": {
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/sweet_potatoes"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          },
+          {
+            "item": "kaleidoscope_cookery:rice"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:red_sweet_potato_porridge"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/sour_spicy_noodles.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/sour_spicy_noodles.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/stockpot/sour_spicy_noodles.json",
+        "sha256": "9669ab254c65b20b43f460682a44b21835208a398487adccb978b36fc7773e23"
+      },
+      "data": {
+        "conditions": [
+          {
+            "type": "forge:mod_loaded",
+            "modid": "kaleidoscope_tavern"
+          }
+        ],
+        "type": "kaleidoscope_cookery:stockpot",
+        "ingredients": [
+          {
+            "item": "kaleidoscope_tavern:vinegar"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_cookery:red_chili"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "item": "kaleidoscope_grilling:raw_sweet_potato_sheet"
+          },
+          {
+            "tag": "kaleidoscope_grilling:ingredients/leafy_greens"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:sour_spicy_noodles"
+        }
+      }
+    },
+    "common/src/main/resources/data/kaleidoscope_grilling/recipes/sugared_tomato.json": {
+      "source": {
+        "path": "common/src/main/resources/data/kaleidoscope_grilling/recipes/sugared_tomato.json",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/kaleidoscope_grilling/recipes/sugared_tomato.json",
+        "sha256": "409538b11cca52bfdf9e00d360ec9e648237dc716dba5cee512b42f24eb7b606"
+      },
+      "data": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "food",
+        "ingredients": [
+          {
+            "tag": "c:crops/tomato"
+          },
+          {
+            "item": "minecraft:sugar"
+          }
+        ],
+        "result": {
+          "item": "kaleidoscope_grilling:sugared_tomato"
+        }
+      }
+    }
+  }
+}
