@@ -50,3 +50,10 @@ jobs:
         run: python tools/run_legacy_tests.py
       - name: Run preserved Java extraction regressions
         run: python tools/test_java_extract.py
+      - name: Run retained authoring and acquisition regressions
+        run: |
+          python development/test_verify_dash_outputs.py
+          python tools/blockbench_preview/test_capture.py
+          python tools/test_bridge_project.py
+          python tools/test_guide_icon_regression.py
+          python tools/test_fortress_loot_current.py

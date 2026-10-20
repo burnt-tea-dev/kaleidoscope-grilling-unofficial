@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / 'development/gameplay_core/fixtures/java-projectile-dodge-liquid-160.json'
+FIXTURE = ROOT / 'tests/legacy/fixtures/java-projectile-dodge-liquid-160.json'
 OUTPUT = ROOT / 'projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_liquid_catalog.js'
 
 

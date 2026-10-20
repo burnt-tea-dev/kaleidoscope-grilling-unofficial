@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {KC_API,KC_READY_EVENT,KC_PING_EVENT,KC_REGISTER_EVENT,SOURCE,SWEET_POTATO_ID,POWDER_ID,SHEET_ID,BOARD_CUTS,recipeTable,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a272_cookery_processing_core.js';
+
+let n=0;const check=(name,fn)=>{fn();n++;console.log('PASS',name)};
+const rows=recipeTable();
+check('API/event contract is Cookery v1',()=>{assert.equal(KC_API,1);assert.equal(KC_READY_EVENT,'kaleidoscope_cookery:api_ready');assert.equal(KC_PING_EVENT,'kaleidoscope_cookery:api_ping');assert.equal(KC_REGISTER_EVENT,'kaleidoscope_cookery:register_recipe');assert.equal(SOURCE,'kaleidoscope_grilling')});
+check('Java sweet-potatoes tag resolves to the Grilling sweet potato item',()=>assert.equal(SWEET_POTATO_ID,'kaleidoscope_grilling:sweet_potato'));
+check('Java chopping result uses four cuts',()=>assert.equal(BOARD_CUTS,4));
+check('exactly two processing recipes are in this slice',()=>assert.equal(rows.length,2));
+const board=rows.find(x=>x.capability==='chopping_board').payload;
+const mill=rows.find(x=>x.capability==='millstone').payload;
+check('board recipe input/result match Java',()=>{assert.equal(board.kind,'chopping_board');assert.equal(board.recipe.input,POWDER_ID);assert.equal(board.recipe.result,SHEET_ID);assert.equal(board.recipe.count,1);assert.equal(board.recipe.cuts,4)});
+check('millstone recipe input matches the one-item Java tag',()=>{assert.equal(mill.kind,'millstone');assert.equal(mill.recipe.input,SWEET_POTATO_ID)});
+check('millstone output is deterministic one powder',()=>assert.deepEqual(mill.recipe.outputs,[{id:POWDER_ID,count:1,chance:1}]));
+check('ready with both capabilities registers both',()=>assert.equal(recipesForReady({api:1,capabilities:['chopping_board','millstone']}).length,2));
+check('capability gating can register only chopping board',()=>assert.deepEqual(recipesForReady({api:1,capabilities:['chopping_board']}).map(x=>x.kind),['chopping_board']));
+check('capability gating can register only millstone',()=>assert.deepEqual(recipesForReady({api:1,capabilities:['millstone']}).map(x=>x.kind),['millstone']));
+check('older ready payload without advertised station capabilities is not guessed',()=>assert.deepEqual(recipesForReady({api:1}),[]));
+check('wrong API version registers nothing',()=>assert.deepEqual(recipesForReady({api:2,capabilities:['chopping_board','millstone']}),[]));
+console.log('A2.7.2 Cookery processing core: '+n+'/'+n);
