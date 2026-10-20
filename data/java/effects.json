@@ -1,0 +1,5902 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Lex Java scalar/array declarations and numeric source expressions; evaluate literal arithmetic only. Preserve method, line, formula and original loader; symbolic rules are not gameplay execution.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "classes": {
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java",
+        "sha256": "55be249cc2201a7a82986a6265f4d2140e1bd8358e438a71124dc511d95bd91c"
+      },
+      "declarations": [
+        {
+          "name": "looting",
+          "java_type": "int",
+          "line": 27,
+          "expression": "EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, knife)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 28,
+          "expression": "1 + (looting == 0 ? 0 : level.random.nextInt(looting + 1))",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 28,
+          "method": "onRightClickBlock",
+          "expression": "int count = 1 + (looting == 0 ? 0 : level.random.nextInt(looting + 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 30,
+          "method": "onRightClickBlock",
+          "expression": "knife.hurtAndBreak(1, event.getEntity(), p -> p.broadcastBreakEvent(event.getHand()));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "sha256": "a155d690b7989e8a016a484b6bec81ec390df9db16803c3cb525ec84509269e3"
+      },
+      "declarations": [
+        {
+          "name": "now",
+          "java_type": "long",
+          "line": 21,
+          "expression": "entity.level().getGameTime()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "previous",
+          "java_type": "long",
+          "line": 22,
+          "expression": "entity.getPersistentData().getLong(FEEDBACK_TICK)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "angle",
+          "java_type": "double",
+          "line": 35,
+          "expression": "player.getRandom().nextDouble() * Math.PI * 2.0",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 23,
+          "method": "onDamage",
+          "expression": "if (now - previous < 6) return;",
+          "numeric_literals": [
+            {
+              "java": "6",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "method": "onDamage",
+          "expression": "level.playSound(null, entity.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 0.7F, 1.25F);",
+          "numeric_literals": [
+            {
+              "java": "0.7F",
+              "value": 0.7
+            },
+            {
+              "java": "1.25F",
+              "value": 1.25
+            }
+          ]
+        },
+        {
+          "line": 27,
+          "method": "onDamage",
+          "expression": "level.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX(), entity.getY() + entity.getBbHeight() * 0.55, entity.getZ(), 8, 0.35, 0.45, 0.35, 0.08);",
+          "numeric_literals": [
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.08",
+              "value": 0.08
+            }
+          ]
+        },
+        {
+          "line": 28,
+          "method": "onDamage",
+          "expression": "level.sendParticles(ParticleTypes.END_ROD, entity.getX(), entity.getY() + entity.getBbHeight() * 0.55, entity.getZ(), 4, 0.25, 0.35, 0.25, 0.03);",
+          "numeric_literals": [
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.03",
+              "value": 0.03
+            }
+          ]
+        },
+        {
+          "line": 34,
+          "method": "onPlayerTick",
+          "expression": "if (event.phase != TickEvent.Phase.END || player.tickCount % 10 != 0 || !player.hasEffect(ModEffects.INVINCIBLE.get()) || !(player.level() instanceof ServerLevel level)) return;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 35,
+          "method": "onPlayerTick",
+          "expression": "double angle = player.getRandom().nextDouble() * Math.PI * 2.0;",
+          "numeric_literals": [
+            {
+              "java": "2.0",
+              "value": 2.0
+            }
+          ]
+        },
+        {
+          "line": 36,
+          "method": "onPlayerTick",
+          "expression": "level.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX() + Math.cos(angle) * 0.45, player.getY() + 0.3 + player.getRandom().nextDouble() * 1.4, player.getZ() + Math.sin(angle) * 0.45, 1, 0, 0, 0, 0);",
+          "numeric_literals": [
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.3",
+              "value": 0.3
+            },
+            {
+              "java": "1.4",
+              "value": 1.4
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java",
+        "sha256": "a2a9a54f0dac78a29401d1ba6fe5285d8981764cb5f828218fbe6cce032881f8"
+      },
+      "declarations": [
+        {
+          "name": "HEAVY_METAL_COOLDOWN_TICKS",
+          "java_type": "int",
+          "line": 21,
+          "expression": "10 * 60 * 20",
+          "value": 12000
+        },
+        {
+          "name": "totem",
+          "java_type": "long",
+          "line": 27,
+          "expression": "GrillingDataManager.seasoningCount(ingredients, \"totem\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "dragon",
+          "java_type": "long",
+          "line": 28,
+          "expression": "GrillingDataManager.seasoningCount(ingredients, \"vitality\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "amount",
+          "java_type": "double",
+          "line": 60,
+          "expression": "dragon.getAmplifier() > 0 ? 10.0D : 6.0D",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "healedAmount",
+          "java_type": "double",
+          "line": 64,
+          "expression": "entity.getPersistentData().getDouble(DRAGON_HEALED_KEY)",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "private static final int HEAVY_METAL_COOLDOWN_TICKS = 10 * 60 * 20;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "60",
+              "value": 60
+            },
+            {
+              "java": "20",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": 29,
+          "method": "apply",
+          "expression": "if (totem > 0 && entity.hasEffect(ModEffects.HEAVY_METAL_POISONING.get())) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 31,
+          "method": "apply",
+          "expression": "} else if (totem > 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 33,
+          "method": "apply",
+          "expression": "new MobEffectInstance(ModEffects.HEAVY_METAL.get(), duration, totem >= 4 ? 1 : 0));",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 35,
+          "method": "apply",
+          "expression": "if (dragon > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 37,
+          "method": "apply",
+          "expression": "new MobEffectInstance(ModEffects.DRAGON_BLOOD.get(), duration, dragon >= 4 ? 1 : 0));",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "onDeath",
+          "expression": "entity.setHealth(1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "onDeath",
+          "expression": "entity.level().broadcastEntityEvent(entity, (byte) 35);",
+          "numeric_literals": [
+            {
+              "java": "35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "onLivingTick",
+          "expression": "double amount = dragon.getAmplifier() > 0 ? 10.0D : 6.0D;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "10.0D",
+              "value": 10.0
+            },
+            {
+              "java": "6.0D",
+              "value": 6.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java",
+        "sha256": "f36a880ecc8e8c81290ee2710f697fb9227c99f1628c19857a63c8caa23aa26c"
+      },
+      "declarations": [
+        {
+          "name": "found",
+          "java_type": "boolean",
+          "line": 43,
+          "expression": "false",
+          "value": false
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 44,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 34,
+          "method": "canCraftInDimensions",
+          "expression": "return width * height >= 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "isSingleSeasoningBottle",
+          "expression": "for (int i = 0; i < container.getContainerSize(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "sha256": "7ff7f0316c41af8853793703186134c415ea0267f50b2f70f4befb4c934a1b50"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 33,
+          "method": "getUseDuration",
+          "expression": "return 80;",
+          "numeric_literals": [
+            {
+              "java": "80",
+              "value": 80
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "use",
+          "expression": "0.8F,",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "use",
+          "expression": "1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 70,
+          "method": "finishUsingItem",
+          "expression": "entity.getY() + 1,",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "finishUsingItem",
+          "expression": "12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "finishUsingItem",
+          "expression": "0.25,",
+          "numeric_literals": [
+            {
+              "java": "0.25",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "finishUsingItem",
+          "expression": "0.35,",
+          "numeric_literals": [
+            {
+              "java": "0.35",
+              "value": 0.35
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "finishUsingItem",
+          "expression": "0.25,",
+          "numeric_literals": [
+            {
+              "java": "0.25",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "line": 76,
+          "method": "finishUsingItem",
+          "expression": "0.05);",
+          "numeric_literals": [
+            {
+              "java": "0.05",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "finishUsingItem",
+          "expression": "0.8F,",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "finishUsingItem",
+          "expression": "1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "f3002be9c3e5bef5c532b432381f85630317d5bdfa3ac3e8b864371230ea6d2d"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 38,
+          "method": "<class initializer>",
+          "expression": "public static final IntegerProperty COUNT = IntegerProperty.create(\"count\", 1, 4);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 40,
+          "method": "<class initializer>",
+          "expression": "Block.box(5, 0, 5, 11, 12.25, 11), Block.box(2, 0, 4, 15, 12.25, 14),",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "11",
+              "value": 11
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "11",
+              "value": 11
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "14",
+              "value": 14
+            }
+          ]
+        },
+        {
+          "line": 41,
+          "method": "<class initializer>",
+          "expression": "Block.box(2, 0, 1.25, 15, 12.25, 15), Block.box(0.75, 0, 1.75, 15, 12.25, 16)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1.25",
+              "value": 1.25
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "0.75",
+              "value": 0.75
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1.75",
+              "value": 1.75
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "SeasoningBottleBlock",
+          "expression": "stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(COUNT, 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "getShape",
+          "expression": "return SHAPES[state.getValue(COUNT) - 1];",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 117,
+          "method": "use",
+          "expression": "if (!player.getAbilities().instabuild) held.shrink(1);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 119,
+          "method": "use",
+          "expression": "null, pos, ModSounds.SEASONING_BOTTLE_STACK.get(), SoundSource.BLOCKS, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 128,
+          "method": "use",
+          "expression": "if (!player.getAbilities().instabuild) held.shrink(1);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 129,
+          "method": "use",
+          "expression": "level.playSound(null, pos, ModSounds.ACTION_SUCCESS.get(), SoundSource.BLOCKS, 0.65F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.65F",
+              "value": 0.65
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 133,
+          "method": "use",
+          "expression": "pos.getX() + 0.5,",
+          "numeric_literals": [
+            {
+              "java": "0.5",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 134,
+          "method": "use",
+          "expression": "pos.getY() + 0.7,",
+          "numeric_literals": [
+            {
+              "java": "0.7",
+              "value": 0.7
+            }
+          ]
+        },
+        {
+          "line": 135,
+          "method": "use",
+          "expression": "pos.getZ() + 0.5,",
+          "numeric_literals": [
+            {
+              "java": "0.5",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 136,
+          "method": "use",
+          "expression": "5,",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 137,
+          "method": "use",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 138,
+          "method": "use",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 139,
+          "method": "use",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 140,
+          "method": "use",
+          "expression": "0.01);",
+          "numeric_literals": [
+            {
+              "java": "0.01",
+              "value": 0.01
+            }
+          ]
+        },
+        {
+          "line": 147,
+          "method": "use",
+          "expression": "bottle.ingredients().size() >= 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 162,
+          "method": "pickupOne",
+          "expression": "if (bottle.count() == 0) level.removeBlock(pos, false);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 165,
+          "method": "pickupOne",
+          "expression": "null, pos, ModSounds.SEASONING_BOTTLE_PLACE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java",
+        "sha256": "2df8a7fec8380697008c34b52adb1fdf1e66df9baf58e9ec810641ace28fc973"
+      },
+      "declarations": [
+        {
+          "name": "CAPACITY",
+          "java_type": "int",
+          "line": 21,
+          "expression": "8",
+          "value": 8
+        },
+        {
+          "name": "MAX_BOTTLES",
+          "java_type": "int",
+          "line": 22,
+          "expression": "4",
+          "value": 4
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 30,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 42,
+          "expression": "MAX_BOTTLES - 1",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 97,
+          "expression": "count()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "visualCount",
+          "java_type": "int",
+          "line": 141,
+          "expression": "Math.max(1, count())",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 165,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "public static final int CAPACITY = 8;",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "public static final int MAX_BOTTLES = 4;",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 30,
+          "method": "count",
+          "expression": "int count = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 42,
+          "method": "top",
+          "expression": "for (int i = MAX_BOTTLES - 1; i >= 0; i--) if (!bottles.get(i).isEmpty()) return bottles.get(i);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "damage",
+          "expression": "return isFinished() ? SeasoningData.getUses(top()) : 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 84,
+          "method": "add",
+          "expression": "promotePendingIfReady(count() - 1, stack, values);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 91,
+          "method": "push",
+          "expression": "bottles.set(count(), stack.copyWithCount(1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 98,
+          "method": "pop",
+          "expression": "if (count == 0) return ItemStack.EMPTY;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 99,
+          "method": "pop",
+          "expression": "ItemStack result = normalizeForPickup(bottles.get(count - 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 100,
+          "method": "pop",
+          "expression": "bottles.set(count - 1, ItemStack.EMPTY);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "loadFrom",
+          "expression": "bottles.set(0, stack.copyWithCount(1));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 141,
+          "method": "sync",
+          "expression": "int visualCount = Math.max(1, count());",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 144,
+          "method": "sync",
+          "expression": "level.setBlock(worldPosition, state.setValue(SeasoningBottleBlock.COUNT, visualCount), 3);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 145,
+          "method": "sync",
+          "expression": "else if (!level.isClientSide) level.sendBlockUpdated(worldPosition, state, state, 3);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 164,
+          "method": "loadLegacy",
+          "expression": "ListTag list = tag.getList(\"Ingredients\", 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 165,
+          "method": "loadLegacy",
+          "expression": "for (int i = 0; i < list.size(); i++) ingredients.add(list.getString(i));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 178,
+          "method": "loadLegacy",
+          "expression": "bottles.set(0, stack);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java",
+        "sha256": "e65c51dfda3f7b313e25ecf645795f53d3a945816ba3f64e46eebdc9ba581dc0"
+      },
+      "declarations": [
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 39,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 15,
+          "method": "<class initializer>",
+          "expression": "{{0, 0}},",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 16,
+          "method": "<class initializer>",
+          "expression": "{{4, 3}, {-3, -1}},",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 17,
+          "method": "<class initializer>",
+          "expression": "{{4, 4}, {-3, 3}, {3, -3.75F}},",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3.75F",
+              "value": 3.75
+            }
+          ]
+        },
+        {
+          "line": 18,
+          "method": "<class initializer>",
+          "expression": "{{4, 5}, {-3, 4}, {3.5F, -3.25F}, {-4.25F, -3.25F}}",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3.5F",
+              "value": 3.5
+            },
+            {
+              "java": "3.25F",
+              "value": 3.25
+            },
+            {
+              "java": "4.25F",
+              "value": 4.25
+            },
+            {
+              "java": "3.25F",
+              "value": 3.25
+            }
+          ]
+        },
+        {
+          "line": 34,
+          "method": "render",
+          "expression": "pose.translate(0.5D, 0.5D, 0.5D);",
+          "numeric_literals": [
+            {
+              "java": "0.5D",
+              "value": 0.5
+            },
+            {
+              "java": "0.5D",
+              "value": 0.5
+            },
+            {
+              "java": "0.5D",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 37,
+          "method": "render",
+          "expression": "180.0F - bottle.getBlockState().getValue(SeasoningBottleBlock.FACING).toYRot()));",
+          "numeric_literals": [
+            {
+              "java": "180.0F",
+              "value": 180.0
+            }
+          ]
+        },
+        {
+          "line": 38,
+          "method": "render",
+          "expression": "float[][] offsets = OFFSETS[stacks.size() - 1];",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 39,
+          "method": "render",
+          "expression": "for (int i = 0; i < stacks.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 41,
+          "method": "render",
+          "expression": "pose.translate(offsets[i][0] / 16.0F, 0, offsets[i][1] / 16.0F);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "16.0F",
+              "value": 16.0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "16.0F",
+              "value": 16.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java",
+        "sha256": "5b4530c464181adf44be76b8acab65dbe8963a7c52868651e602f51c65c1be52"
+      },
+      "declarations": [
+        {
+          "name": "FALLBACK",
+          "java_type": "int[]",
+          "line": 18,
+          "expression": "{0xB86B45, 0xE0A56A}",
+          "value": [
+            12086085,
+            14722410
+          ]
+        },
+        {
+          "name": "layer",
+          "java_type": "int",
+          "line": 23,
+          "expression": "tintIndex / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "colors",
+          "java_type": "int[]",
+          "line": 29,
+          "expression": "CACHE.computeIfAbsent(id, ignored -> sample(new ItemStack(item)))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "width",
+          "java_type": "int",
+          "line": 45,
+          "expression": "sprite.contents().width(), height = sprite.contents().height()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 46,
+          "expression": "height / 4",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 47,
+          "expression": "width / 4",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "abgr",
+          "java_type": "int",
+          "line": 48,
+          "expression": "image.getPixelRGBA(x, y)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "rgb",
+          "java_type": "int",
+          "line": 50,
+          "expression": "(abgr & 0xFF) << 16 | (abgr >>> 8 & 0xFF) << 8 | (abgr >>> 16 & 0xFF)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "tint",
+          "java_type": "int",
+          "line": 53,
+          "expression": "minecraft.getItemColors().getColor(ingredient, 0)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "result",
+          "java_type": "int[]",
+          "line": 54,
+          "expression": "counts.entrySet().stream()\n              .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed())\n              .mapToInt(Map.Entry::getKey)\n              .limit(2)\n              .toArray()",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 18,
+          "method": "<class initializer>",
+          "expression": "private static final int[] FALLBACK = {0xB86B45, 0xE0A56A};",
+          "numeric_literals": [
+            {
+              "java": "0xB86B45",
+              "value": 12086085
+            },
+            {
+              "java": "0xE0A56A",
+              "value": 14722410
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "color",
+          "expression": "if (tintIndex < 0) return -1;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "color",
+          "expression": "int layer = tintIndex / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 25,
+          "method": "color",
+          "expression": "if (layer >= ingredients.size()) return -1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 28,
+          "method": "color",
+          "expression": "if (item == null) return 0xFF000000 | FALLBACK[tintIndex & 1];",
+          "numeric_literals": [
+            {
+              "java": "0xFF000000",
+              "value": -16777216
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 30,
+          "method": "color",
+          "expression": "return 0xFF000000 | colors[tintIndex & 1];",
+          "numeric_literals": [
+            {
+              "java": "0xFF000000",
+              "value": -16777216
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 40,
+          "method": "sample",
+          "expression": "BakedModel model = minecraft.getItemRenderer().getModel(ingredient, minecraft.level, null, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "sample",
+          "expression": "for (int y = height / 4; y < height * 3 / 4; y++)",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "sample",
+          "expression": "for (int x = width / 4; x < width * 3 / 4; x++) {",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "sample",
+          "expression": "if ((abgr >>> 24) < 48) continue;",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "48",
+              "value": 48
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "sample",
+          "expression": "int rgb = (abgr & 0xFF) << 16 | (abgr >>> 8 & 0xFF) << 8 | (abgr >>> 16 & 0xFF);",
+          "numeric_literals": [
+            {
+              "java": "0xFF",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "0xFF",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "0xFF",
+              "value": 255
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "sample",
+          "expression": "counts.merge(rgb, 1, Integer::sum);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "sample",
+          "expression": "int tint = minecraft.getItemColors().getColor(ingredient, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "sample",
+          "expression": ".limit(2)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "sample",
+          "expression": "if (result.length == 0) return FALLBACK.clone();",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 61,
+          "method": "sample",
+          "expression": "if (result.length == 1) result = new int[] {result[0], shade(result[0], 0.78F)};",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.78F",
+              "value": 0.78
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "sample",
+          "expression": "if (tint >= 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "sample",
+          "expression": "result[0] = multiply(result[0], tint);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "sample",
+          "expression": "result[1] = multiply(result[1], tint);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "multiply",
+          "expression": "return ((a >> 16 & 255) * (b >> 16 & 255) / 255) << 16",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "multiply",
+          "expression": "| ((a >> 8 & 255) * (b >> 8 & 255) / 255) << 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "multiply",
+          "expression": "| (a & 255) * (b & 255) / 255;",
+          "numeric_literals": [
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "shade",
+          "expression": "return (int) ((rgb >> 16 & 255) * f) << 16",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "shade",
+          "expression": "| (int) ((rgb >> 8 & 255) * f) << 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "shade",
+          "expression": "| (int) ((rgb & 255) * f);",
+          "numeric_literals": [
+            {
+              "java": "255",
+              "value": 255
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java",
+        "sha256": "3acb0c41a921919a09ce3cf311d7e318e05f9df131b7aca510fc7ce400816cb8"
+      },
+      "declarations": [
+        {
+          "name": "MAX_USES",
+          "java_type": "int",
+          "line": 10,
+          "expression": "16",
+          "value": 16
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 19,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 10,
+          "method": "<class initializer>",
+          "expression": "public static final int MAX_USES = 16;",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 18,
+          "method": "get",
+          "expression": "ListTag list = stack.getTag().getList(KEY, 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 19,
+          "method": "get",
+          "expression": "for (int i = 0; i < list.size(); i++) out.add(list.getString(i));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 31,
+          "method": "getVariant",
+          "expression": "? net.minecraft.util.Mth.clamp(stack.getTag().getInt(VARIANT_KEY), 0, 7)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "7",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "line": 32,
+          "method": "getVariant",
+          "expression": ": 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 36,
+          "method": "setVariant",
+          "expression": "stack.getOrCreateTag().putInt(VARIANT_KEY, net.minecraft.util.Mth.clamp(variant, 0, 7));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "7",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "line": 40,
+          "method": "setRandomVariant",
+          "expression": "setVariant(stack, net.minecraft.util.RandomSource.create().nextInt(8));",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "getUses",
+          "expression": "? net.minecraft.util.Mth.clamp(stack.getTag().getInt(USES_KEY), 0, MAX_USES)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "getUses",
+          "expression": ": 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "setUses",
+          "expression": "stack.getOrCreateTag().putInt(USES_KEY, net.minecraft.util.Mth.clamp(uses, 0, MAX_USES));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java",
+        "sha256": "9bf8b3720c88ad3584fbb299efa7d581e6b3161b526648d344cec03d49e349f4"
+      },
+      "declarations": [
+        {
+          "name": "count",
+          "java_type": "long",
+          "line": 17,
+          "expression": "GrillingDataManager.seasoningCount(values, kind)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "pepper",
+          "java_type": "long",
+          "line": 21,
+          "expression": "GrillingDataManager.seasoningCount(values, \"numbness\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 18,
+          "method": "describe",
+          "expression": "if (count > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "describe",
+          "expression": "if (pepper > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "method": "describe",
+          "expression": "+ (pepper >= 4 ? \"numbness\" : \"numbness_pending\"),",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java",
+        "sha256": "2fb7b985453fe87bb53352bcbbec576db9ead2bec16b0af8b220508c8fc20ec9"
+      },
+      "declarations": [
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 30,
+          "expression": "SeasoningData.MAX_USES - SeasoningData.getUses(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 42,
+          "expression": "SeasoningData.MAX_USES - SeasoningData.getUses(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 31,
+          "method": "isBarVisible",
+          "expression": "return remaining > 0 && remaining < SeasoningData.MAX_USES;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 37,
+          "method": "getBarWidth",
+          "expression": "13.0F - (float) SeasoningData.getUses(stack) * 13.0F / (float) SeasoningData.MAX_USES);",
+          "numeric_literals": [
+            {
+              "java": "13.0F",
+              "value": 13.0
+            },
+            {
+              "java": "13.0F",
+              "value": 13.0
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "getBarColor",
+          "expression": "Math.max(0.0F, (float) remaining) / (float) SeasoningData.MAX_USES / 3.0F, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.0F",
+              "value": 0.0
+            },
+            {
+              "java": "3.0F",
+              "value": 3.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java",
+        "sha256": "222afe1bac3bd83114c0e65b96b6a2ef494a7168b7d47b1fb6ea5c1d27b73dfc"
+      },
+      "declarations": [
+        {
+          "name": "CAPACITY",
+          "java_type": "int",
+          "line": 17,
+          "expression": "SeasoningBottleBlockEntity.CAPACITY",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 56,
+          "expression": "Math.max(0, SeasoningData.MAX_USES - SeasoningData.getUses(stack))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 99,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 56,
+          "method": "appendFinished",
+          "expression": "int remaining = Math.max(0, SeasoningData.MAX_USES - SeasoningData.getUses(stack));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 99,
+          "method": "joinedNames",
+          "expression": "for (int i = 0; i < ids.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 100,
+          "method": "joinedNames",
+          "expression": "if (i > 0) result.append(Component.literal(\"、\"));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "sha256": "d7ba50391332599c80bb4cb4e9afc5f3cfbe5dddb14fe9c2f796a1df1f0e2837"
+      },
+      "declarations": [
+        {
+          "name": "next",
+          "java_type": "int",
+          "line": 23,
+          "expression": "SeasoningData.getUses(seasoning) + 1",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "apply",
+          "expression": "null, player.blockPosition(), ModSounds.SEASON.get(), SoundSource.PLAYERS, 0.85F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.85F",
+              "value": 0.85
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "apply",
+          "expression": "int next = SeasoningData.getUses(seasoning) + 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java",
+        "sha256": "b21886c7dd8a868ffe2ab849b8913fdc6d61775f72e172e8f16cb3b5f88a3719"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 17,
+          "method": "ShakeSeasoningSound",
+          "expression": "this.volume = 0.8F;",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 29,
+          "method": "tick",
+          "expression": "y = player.getY() + 1.0;",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "sha256": "d51c62c3f3b7e7e3530967747233b12a44caab095d71cb00366907414126fc3a"
+      },
+      "declarations": [
+        {
+          "name": "challenged",
+          "java_type": "boolean",
+          "line": 40,
+          "expression": "entity.hasEffect(ModEffects.INVINCIBLE.get())",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "blocked",
+          "java_type": "boolean",
+          "line": 43,
+          "expression": "challenged && entity.getRandom().nextBoolean()",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 30,
+          "method": "CursedSkewerItem",
+          "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 0.8F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.35F);",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.35F",
+              "value": 1.35
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX(), entity.getY() + 1.0, entity.getZ(), 28, 0.55, 0.7, 0.55, 0.12);",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            },
+            {
+              "java": "28",
+              "value": 28
+            },
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "0.7",
+              "value": 0.7
+            },
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 1.0F, 0.65F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.65F",
+              "value": 0.65
+            }
+          ]
+        },
+        {
+          "line": 52,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 0.7F, 0.55F);",
+          "numeric_literals": [
+            {
+              "java": "0.7F",
+              "value": 0.7
+            },
+            {
+              "java": "0.55F",
+              "value": 0.55
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.DAMAGE_INDICATOR, entity.getX(), entity.getY() + 1.0, entity.getZ(), 24, 0.45, 0.65, 0.45, 0.12);",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 54,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY() + 0.8, entity.getZ(), 18, 0.4, 0.6, 0.4, 0.04);",
+          "numeric_literals": [
+            {
+              "java": "0.8",
+              "value": 0.8
+            },
+            {
+              "java": "18",
+              "value": 18
+            },
+            {
+              "java": "0.4",
+              "value": 0.4
+            },
+            {
+              "java": "0.6",
+              "value": 0.6
+            },
+            {
+              "java": "0.4",
+              "value": 0.4
+            },
+            {
+              "java": "0.04",
+              "value": 0.04
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "sha256": "726093777c2136e85f0c1da5ab134de181faf638a23be02b88a9643be9e740c4"
+      },
+      "declarations": [
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 23,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "angle",
+          "java_type": "double",
+          "line": 24,
+          "expression": "Math.PI * 2.0 * i / 18.0",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 16,
+          "method": "GoldenSkewerItem",
+          "expression": "super(properties, \"tooltip.kaleidoscope_grilling.grilled_golden_skewer.maxim\", new ResourceLocation(KaleidoscopeGrilling.MOD_ID, \"invincible\"), 200, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "200",
+              "value": 200
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 0.8F, 1.15F);",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.15F",
+              "value": 1.15
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "afterFoodCommitted",
+          "expression": "for (int i = 0; i < 18; i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "18",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "line": 24,
+          "method": "afterFoodCommitted",
+          "expression": "double angle = Math.PI * 2.0 * i / 18.0;",
+          "numeric_literals": [
+            {
+              "java": "2.0",
+              "value": 2.0
+            },
+            {
+              "java": "18.0",
+              "value": 18.0
+            }
+          ]
+        },
+        {
+          "line": 25,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX() + Math.cos(angle) * 0.65, entity.getY() + 0.25 + i * 0.06, entity.getZ() + Math.sin(angle) * 0.65, 1, 0, 0.02, 0, 0.02);",
+          "numeric_literals": [
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.06",
+              "value": 0.06
+            },
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.02",
+              "value": 0.02
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.02",
+              "value": 0.02
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java",
+        "sha256": "0f1a8df25476a2ea0b06a115a77a31656cdd91c214e1bc7e9949786f3832170b"
+      },
+      "declarations": [
+        {
+          "name": "totalNutrition",
+          "java_type": "int",
+          "line": 105,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "weightedSaturation",
+          "java_type": "float",
+          "line": 106,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 107,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "n",
+          "java_type": "int",
+          "line": 112,
+          "expression": "fp.getNutrition()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "coefficient",
+          "java_type": "float",
+          "line": 122,
+          "expression": "0.6F * (hasDuplicateIngredients(rawIngredients) ? 0.8F : 1.0F)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "nutrition",
+          "java_type": "int",
+          "line": 123,
+          "expression": "Math.max(1, (int) Math.floor(totalNutrition * coefficient))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "saturation",
+          "java_type": "float",
+          "line": 124,
+          "expression": "Math.max(0, weightedSaturation / totalNutrition)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "cooked",
+          "java_type": "boolean",
+          "line": 150,
+          "expression": "isCooked(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 167,
+          "expression": "1",
+          "value": 1
+        },
+        {
+          "name": "j",
+          "java_type": "int",
+          "line": 168,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 32,
+          "method": "SecretSkewerItem",
+          "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 38,
+          "method": "use",
+          "expression": "if (SkeweringHandler.ingredientCount(stack) != 3) {",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "getVisualStage",
+          "expression": "return stack.hasTag() ? stack.getTag().getInt(VISUAL_STAGE_TAG) : 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 85,
+          "method": "finishFoodAndEffect",
+          "expression": "ItemStack remainder = ingredient.copyWithCount(1).finishUsingItem(level, entity);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 102,
+          "method": "getFoodProperties",
+          "expression": "return new FoodProperties.Builder().nutrition(1).saturationMod(0).build();",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 105,
+          "method": "getFoodProperties",
+          "expression": "int totalNutrition = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 106,
+          "method": "getFoodProperties",
+          "expression": "float weightedSaturation = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "getFoodProperties",
+          "expression": "int count = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 118,
+          "method": "getFoodProperties",
+          "expression": "if (count == 0 || totalNutrition <= 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 119,
+          "method": "getFoodProperties",
+          "expression": "return new FoodProperties.Builder().nutrition(1).saturationMod(0).build();",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 122,
+          "method": "getFoodProperties",
+          "expression": "float coefficient = 0.6F * (hasDuplicateIngredients(rawIngredients) ? 0.8F : 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.6F",
+              "value": 0.6
+            },
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 123,
+          "method": "getFoodProperties",
+          "expression": "int nutrition = Math.max(1, (int) Math.floor(totalNutrition * coefficient));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 124,
+          "method": "getFoodProperties",
+          "expression": "float saturation = Math.max(0, weightedSaturation / totalNutrition);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 126,
+          "method": "getFoodProperties",
+          "expression": "nutrition = Math.max(1, (int) Math.floor(nutrition * 0.5F));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0.5F",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 127,
+          "method": "getFoodProperties",
+          "expression": "saturation *= 0.5F;",
+          "numeric_literals": [
+            {
+              "java": "0.5F",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 167,
+          "method": "hasDuplicateIngredients",
+          "expression": "for (int i = 1; i < ingredients.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 168,
+          "method": "hasDuplicateIngredients",
+          "expression": "for (int j = 0; j < i; j++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 177,
+          "method": "FoodSnapshot",
+          "expression": "if (!(entity instanceof Player player)) return new FoodSnapshot(0, 0, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/DragonEggPowderHandler.java",
+        "sha256": "0a0f9833f2272859c14c5cb01aaeaa232d86bfc96b8c9247257b4b471052d5bc"
+      },
+      "declarations": [
+        {
+          "name": "looting",
+          "java_type": "int",
+          "line": 34,
+          "expression": "EnchantmentHelper.getItemEnchantmentLevel(holder, knife)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 35,
+          "expression": "1 + (looting == 0 ? 0 : level.random.nextInt(looting + 1))",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 35,
+          "method": "onRightClickBlock",
+          "expression": "int count = 1 + (looting == 0 ? 0 : level.random.nextInt(looting + 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 37,
+          "method": "onRightClickBlock",
+          "expression": "knife.hurtAndBreak(1, event.getEntity(), net.minecraft.world.entity.EquipmentSlot.MAINHAND);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/effect/InvincibleHandler.java",
+        "sha256": "6feeda4827adb45d77191eb9690084bbf1e5359695ca139bc4bc2a2ac15adab7"
+      },
+      "declarations": [
+        {
+          "name": "now",
+          "java_type": "long",
+          "line": 21,
+          "expression": "entity.level().getGameTime()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "previous",
+          "java_type": "long",
+          "line": 22,
+          "expression": "entity.getPersistentData().getLong(FEEDBACK_TICK)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "angle",
+          "java_type": "double",
+          "line": 35,
+          "expression": "player.getRandom().nextDouble() * Math.PI * 2.0",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 23,
+          "method": "onDamage",
+          "expression": "if (now - previous < 6) return;",
+          "numeric_literals": [
+            {
+              "java": "6",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "method": "onDamage",
+          "expression": "level.playSound(null, entity.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 0.7F, 1.25F);",
+          "numeric_literals": [
+            {
+              "java": "0.7F",
+              "value": 0.7
+            },
+            {
+              "java": "1.25F",
+              "value": 1.25
+            }
+          ]
+        },
+        {
+          "line": 27,
+          "method": "onDamage",
+          "expression": "level.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX(), entity.getY() + entity.getBbHeight() * 0.55, entity.getZ(), 8, 0.35, 0.45, 0.35, 0.08);",
+          "numeric_literals": [
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.08",
+              "value": 0.08
+            }
+          ]
+        },
+        {
+          "line": 28,
+          "method": "onDamage",
+          "expression": "level.sendParticles(ParticleTypes.END_ROD, entity.getX(), entity.getY() + entity.getBbHeight() * 0.55, entity.getZ(), 4, 0.25, 0.35, 0.25, 0.03);",
+          "numeric_literals": [
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.35",
+              "value": 0.35
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.03",
+              "value": 0.03
+            }
+          ]
+        },
+        {
+          "line": 34,
+          "method": "onPlayerTick",
+          "expression": "if (player.tickCount % 10 != 0 || !player.hasEffect(ModEffects.INVINCIBLE) || !(player.level() instanceof ServerLevel level)) return;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 35,
+          "method": "onPlayerTick",
+          "expression": "double angle = player.getRandom().nextDouble() * Math.PI * 2.0;",
+          "numeric_literals": [
+            {
+              "java": "2.0",
+              "value": 2.0
+            }
+          ]
+        },
+        {
+          "line": 36,
+          "method": "onPlayerTick",
+          "expression": "level.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX() + Math.cos(angle) * 0.45, player.getY() + 0.3 + player.getRandom().nextDouble() * 1.4, player.getZ() + Math.sin(angle) * 0.45, 1, 0, 0, 0, 0);",
+          "numeric_literals": [
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.3",
+              "value": 0.3
+            },
+            {
+              "java": "1.4",
+              "value": 1.4
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java",
+        "sha256": "34784ebd24c5d9767385a71b713784c71330ef50d5c3bc80482126194150a635"
+      },
+      "declarations": [
+        {
+          "name": "HEAVY_METAL_COOLDOWN_TICKS",
+          "java_type": "int",
+          "line": 22,
+          "expression": "10 * 60 * 20",
+          "value": 12000
+        },
+        {
+          "name": "totem",
+          "java_type": "long",
+          "line": 29,
+          "expression": "GrillingDataManager.seasoningCount(ingredients, \"totem\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "dragon",
+          "java_type": "long",
+          "line": 30,
+          "expression": "GrillingDataManager.seasoningCount(ingredients, \"vitality\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "amount",
+          "java_type": "double",
+          "line": 62,
+          "expression": "dragon.getAmplifier() > 0 ? 10.0D : 6.0D",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "healedAmount",
+          "java_type": "double",
+          "line": 65,
+          "expression": "entity.getPersistentData().getDouble(DRAGON_HEALED_KEY)",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "private static final int HEAVY_METAL_COOLDOWN_TICKS = 10 * 60 * 20;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "60",
+              "value": 60
+            },
+            {
+              "java": "20",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": 31,
+          "method": "apply",
+          "expression": "if (totem > 0 && entity.hasEffect(ModEffects.HEAVY_METAL_POISONING)) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 33,
+          "method": "apply",
+          "expression": "} else if (totem > 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 34,
+          "method": "apply",
+          "expression": "entity.addEffect(new MobEffectInstance(ModEffects.HEAVY_METAL, duration, totem >= 4 ? 1 : 0));",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 36,
+          "method": "apply",
+          "expression": "if (dragon > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 38,
+          "method": "apply",
+          "expression": "new MobEffectInstance(ModEffects.DRAGON_BLOOD, duration, dragon >= 4 ? 1 : 0));",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "onDeath",
+          "expression": "entity.setHealth(1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "onDeath",
+          "expression": "entity.level().broadcastEntityEvent(entity, (byte) 35);",
+          "numeric_literals": [
+            {
+              "java": "35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "onEntityTick",
+          "expression": "double amount = dragon.getAmplifier() > 0 ? 10.0D : 6.0D;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "10.0D",
+              "value": 10.0
+            },
+            {
+              "java": "6.0D",
+              "value": 6.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ClearSeasoningCraftingRecipe.java",
+        "sha256": "e7fd2170fea82ddf2bcf56ec758d5cd8e299aec04472bef873cd3317e6a3bda9"
+      },
+      "declarations": [
+        {
+          "name": "found",
+          "java_type": "boolean",
+          "line": 42,
+          "expression": "false",
+          "value": false
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 43,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 33,
+          "method": "canCraftInDimensions",
+          "expression": "return width * height >= 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 43,
+          "method": "isSingleSeasoningBottle",
+          "expression": "for (int i = 0; i < input.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java",
+        "sha256": "bf59e9c3d9dee89b2c1a20013488a3e52a41e0b2357d93b3cf9ec76fb2686b75"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 32,
+          "method": "getUseDuration",
+          "expression": "return 80;",
+          "numeric_literals": [
+            {
+              "java": "80",
+              "value": 80
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "use",
+          "expression": "0.8F,",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "use",
+          "expression": "1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 69,
+          "method": "finishUsingItem",
+          "expression": "entity.getY() + 1,",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 71,
+          "method": "finishUsingItem",
+          "expression": "12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "finishUsingItem",
+          "expression": "0.25,",
+          "numeric_literals": [
+            {
+              "java": "0.25",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "finishUsingItem",
+          "expression": "0.35,",
+          "numeric_literals": [
+            {
+              "java": "0.35",
+              "value": 0.35
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "finishUsingItem",
+          "expression": "0.25,",
+          "numeric_literals": [
+            {
+              "java": "0.25",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "finishUsingItem",
+          "expression": "0.05);",
+          "numeric_literals": [
+            {
+              "java": "0.05",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "finishUsingItem",
+          "expression": "0.8F,",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "finishUsingItem",
+          "expression": "1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlock.java",
+        "sha256": "be9ab0a5ecd18eaa56fc2effe6d9ed69f82ff20236f520f8ef8d4c70033ad225"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 41,
+          "method": "<class initializer>",
+          "expression": "public static final IntegerProperty COUNT = IntegerProperty.create(\"count\", 1, 4);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 43,
+          "method": "<class initializer>",
+          "expression": "Block.box(5, 0, 5, 11, 12.25, 11), Block.box(2, 0, 4, 15, 12.25, 14),",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "11",
+              "value": 11
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "11",
+              "value": 11
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "14",
+              "value": 14
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "<class initializer>",
+          "expression": "Block.box(2, 0, 1.25, 15, 12.25, 15), Block.box(0.75, 0, 1.75, 15, 12.25, 16)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1.25",
+              "value": 1.25
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "0.75",
+              "value": 0.75
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1.75",
+              "value": 1.75
+            },
+            {
+              "java": "15",
+              "value": 15
+            },
+            {
+              "java": "12.25",
+              "value": 12.25
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "SeasoningBottleBlock",
+          "expression": "stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(COUNT, 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "getShape",
+          "expression": "return SHAPES[state.getValue(COUNT) - 1];",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 122,
+          "method": "useItemOn",
+          "expression": "if (!player.getAbilities().instabuild) held.shrink(1);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 124,
+          "method": "useItemOn",
+          "expression": "null, pos, ModSounds.SEASONING_BOTTLE_STACK.get(), SoundSource.BLOCKS, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 133,
+          "method": "useItemOn",
+          "expression": "if (!player.getAbilities().instabuild) held.shrink(1);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 134,
+          "method": "useItemOn",
+          "expression": "level.playSound(null, pos, ModSounds.ACTION_SUCCESS.get(), SoundSource.BLOCKS, 0.65F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.65F",
+              "value": 0.65
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 138,
+          "method": "useItemOn",
+          "expression": "pos.getX() + 0.5,",
+          "numeric_literals": [
+            {
+              "java": "0.5",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 139,
+          "method": "useItemOn",
+          "expression": "pos.getY() + 0.7,",
+          "numeric_literals": [
+            {
+              "java": "0.7",
+              "value": 0.7
+            }
+          ]
+        },
+        {
+          "line": 140,
+          "method": "useItemOn",
+          "expression": "pos.getZ() + 0.5,",
+          "numeric_literals": [
+            {
+              "java": "0.5",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 141,
+          "method": "useItemOn",
+          "expression": "5,",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 142,
+          "method": "useItemOn",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 143,
+          "method": "useItemOn",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 144,
+          "method": "useItemOn",
+          "expression": "0.12,",
+          "numeric_literals": [
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 145,
+          "method": "useItemOn",
+          "expression": "0.01);",
+          "numeric_literals": [
+            {
+              "java": "0.01",
+              "value": 0.01
+            }
+          ]
+        },
+        {
+          "line": 152,
+          "method": "useItemOn",
+          "expression": "bottle.ingredients().size() >= 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 172,
+          "method": "pickupOne",
+          "expression": "if (bottle.count() == 0) level.removeBlock(pos, false);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 175,
+          "method": "pickupOne",
+          "expression": "null, pos, ModSounds.SEASONING_BOTTLE_PLACE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleBlockEntity.java",
+        "sha256": "71f96588649b9ee5b90aa4df7f36e3ef8d1cd72fd2cf6f7361ac8b571d5efb33"
+      },
+      "declarations": [
+        {
+          "name": "CAPACITY",
+          "java_type": "int",
+          "line": 22,
+          "expression": "8",
+          "value": 8
+        },
+        {
+          "name": "MAX_BOTTLES",
+          "java_type": "int",
+          "line": 23,
+          "expression": "4",
+          "value": 4
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 31,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 43,
+          "expression": "MAX_BOTTLES - 1",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 98,
+          "expression": "count()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "visualCount",
+          "java_type": "int",
+          "line": 142,
+          "expression": "Math.max(1, count())",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 166,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "public static final int CAPACITY = 8;",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "<class initializer>",
+          "expression": "public static final int MAX_BOTTLES = 4;",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 31,
+          "method": "count",
+          "expression": "int count = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 43,
+          "method": "top",
+          "expression": "for (int i = MAX_BOTTLES - 1; i >= 0; i--) if (!bottles.get(i).isEmpty()) return bottles.get(i);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "damage",
+          "expression": "return isFinished() ? SeasoningData.getUses(top()) : 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 85,
+          "method": "add",
+          "expression": "promotePendingIfReady(count() - 1, stack, values);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 92,
+          "method": "push",
+          "expression": "bottles.set(count(), stack.copyWithCount(1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 99,
+          "method": "pop",
+          "expression": "if (count == 0) return ItemStack.EMPTY;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 100,
+          "method": "pop",
+          "expression": "ItemStack result = normalizeForPickup(bottles.get(count - 1));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 101,
+          "method": "pop",
+          "expression": "bottles.set(count - 1, ItemStack.EMPTY);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 108,
+          "method": "loadFrom",
+          "expression": "bottles.set(0, stack.copyWithCount(1));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 142,
+          "method": "sync",
+          "expression": "int visualCount = Math.max(1, count());",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 145,
+          "method": "sync",
+          "expression": "level.setBlock(worldPosition, state.setValue(SeasoningBottleBlock.COUNT, visualCount), 3);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 146,
+          "method": "sync",
+          "expression": "else if (!level.isClientSide) level.sendBlockUpdated(worldPosition, state, state, 3);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 165,
+          "method": "loadLegacy",
+          "expression": "ListTag list = tag.getList(\"Ingredients\", 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 166,
+          "method": "loadLegacy",
+          "expression": "for (int i = 0; i < list.size(); i++) ingredients.add(list.getString(i));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 179,
+          "method": "loadLegacy",
+          "expression": "bottles.set(0, stack);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleRenderer.java",
+        "sha256": "e65c51dfda3f7b313e25ecf645795f53d3a945816ba3f64e46eebdc9ba581dc0"
+      },
+      "declarations": [
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 39,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 15,
+          "method": "<class initializer>",
+          "expression": "{{0, 0}},",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 16,
+          "method": "<class initializer>",
+          "expression": "{{4, 3}, {-3, -1}},",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 17,
+          "method": "<class initializer>",
+          "expression": "{{4, 4}, {-3, 3}, {3, -3.75F}},",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3.75F",
+              "value": 3.75
+            }
+          ]
+        },
+        {
+          "line": 18,
+          "method": "<class initializer>",
+          "expression": "{{4, 5}, {-3, 4}, {3.5F, -3.25F}, {-4.25F, -3.25F}}",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3.5F",
+              "value": 3.5
+            },
+            {
+              "java": "3.25F",
+              "value": 3.25
+            },
+            {
+              "java": "4.25F",
+              "value": 4.25
+            },
+            {
+              "java": "3.25F",
+              "value": 3.25
+            }
+          ]
+        },
+        {
+          "line": 34,
+          "method": "render",
+          "expression": "pose.translate(0.5D, 0.5D, 0.5D);",
+          "numeric_literals": [
+            {
+              "java": "0.5D",
+              "value": 0.5
+            },
+            {
+              "java": "0.5D",
+              "value": 0.5
+            },
+            {
+              "java": "0.5D",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 37,
+          "method": "render",
+          "expression": "180.0F - bottle.getBlockState().getValue(SeasoningBottleBlock.FACING).toYRot()));",
+          "numeric_literals": [
+            {
+              "java": "180.0F",
+              "value": 180.0
+            }
+          ]
+        },
+        {
+          "line": 38,
+          "method": "render",
+          "expression": "float[][] offsets = OFFSETS[stacks.size() - 1];",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 39,
+          "method": "render",
+          "expression": "for (int i = 0; i < stacks.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 41,
+          "method": "render",
+          "expression": "pose.translate(offsets[i][0] / 16.0F, 0, offsets[i][1] / 16.0F);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "16.0F",
+              "value": 16.0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "16.0F",
+              "value": 16.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningColorProvider.java",
+        "sha256": "b7df25dbe5efe3b6d71569eef786971276e36f462d9a21eac958133e72d4f639"
+      },
+      "declarations": [
+        {
+          "name": "FALLBACK",
+          "java_type": "int[]",
+          "line": 17,
+          "expression": "{0xB86B45, 0xE0A56A}",
+          "value": [
+            12086085,
+            14722410
+          ]
+        },
+        {
+          "name": "layer",
+          "java_type": "int",
+          "line": 22,
+          "expression": "tintIndex / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "colors",
+          "java_type": "int[]",
+          "line": 26,
+          "expression": "CACHE.computeIfAbsent(id, ignored -> sample(new ItemStack(BuiltInRegistries.ITEM.get(id))))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "width",
+          "java_type": "int",
+          "line": 43,
+          "expression": "sprite.contents().width(), height = sprite.contents().height()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 44,
+          "expression": "height / 4",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 45,
+          "expression": "width / 4",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "abgr",
+          "java_type": "int",
+          "line": 46,
+          "expression": "image.getPixelRGBA(x, y)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "rgb",
+          "java_type": "int",
+          "line": 48,
+          "expression": "(abgr & 0xFF) << 16 | (abgr >>> 8 & 0xFF) << 8 | (abgr >>> 16 & 0xFF)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "tint",
+          "java_type": "int",
+          "line": 51,
+          "expression": "minecraft.getItemColors().getColor(ingredient, 0)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "result",
+          "java_type": "int[]",
+          "line": 52,
+          "expression": "counts.entrySet().stream()\n              .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed())\n              .mapToInt(Map.Entry::getKey)\n              .limit(2)\n              .toArray()",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 17,
+          "method": "<class initializer>",
+          "expression": "private static final int[] FALLBACK = {0xB86B45, 0xE0A56A};",
+          "numeric_literals": [
+            {
+              "java": "0xB86B45",
+              "value": 12086085
+            },
+            {
+              "java": "0xE0A56A",
+              "value": 14722410
+            }
+          ]
+        },
+        {
+          "line": 21,
+          "method": "color",
+          "expression": "if (tintIndex < 0) return -1;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "color",
+          "expression": "int layer = tintIndex / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 24,
+          "method": "color",
+          "expression": "if (layer >= ingredients.size()) return -1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 28,
+          "method": "color",
+          "expression": "return 0xFF000000 | colors[tintIndex & 1];",
+          "numeric_literals": [
+            {
+              "java": "0xFF000000",
+              "value": -16777216
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 38,
+          "method": "sample",
+          "expression": "BakedModel model = minecraft.getItemRenderer().getModel(ingredient, minecraft.level, null, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "sample",
+          "expression": "for (int y = height / 4; y < height * 3 / 4; y++)",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "sample",
+          "expression": "for (int x = width / 4; x < width * 3 / 4; x++) {",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "sample",
+          "expression": "if ((abgr >>> 24) < 48) continue;",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "48",
+              "value": 48
+            }
+          ]
+        },
+        {
+          "line": 48,
+          "method": "sample",
+          "expression": "int rgb = (abgr & 0xFF) << 16 | (abgr >>> 8 & 0xFF) << 8 | (abgr >>> 16 & 0xFF);",
+          "numeric_literals": [
+            {
+              "java": "0xFF",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "0xFF",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "0xFF",
+              "value": 255
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "sample",
+          "expression": "counts.merge(rgb, 1, Integer::sum);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "sample",
+          "expression": "int tint = minecraft.getItemColors().getColor(ingredient, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "sample",
+          "expression": ".limit(2)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "sample",
+          "expression": "if (result.length == 0) return FALLBACK.clone();",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "sample",
+          "expression": "if (result.length == 1) result = new int[] {result[0], shade(result[0], 0.78F)};",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.78F",
+              "value": 0.78
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "sample",
+          "expression": "if (tint >= 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 61,
+          "method": "sample",
+          "expression": "result[0] = multiply(result[0], tint);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "sample",
+          "expression": "result[1] = multiply(result[1], tint);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 71,
+          "method": "multiply",
+          "expression": "return ((a >> 16 & 255) * (b >> 16 & 255) / 255) << 16",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "multiply",
+          "expression": "| ((a >> 8 & 255) * (b >> 8 & 255) / 255) << 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "multiply",
+          "expression": "| (a & 255) * (b & 255) / 255;",
+          "numeric_literals": [
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "255",
+              "value": 255
+            }
+          ]
+        },
+        {
+          "line": 77,
+          "method": "shade",
+          "expression": "return (int) ((rgb >> 16 & 255) * f) << 16",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 78,
+          "method": "shade",
+          "expression": "| (int) ((rgb >> 8 & 255) * f) << 8",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "255",
+              "value": 255
+            },
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "shade",
+          "expression": "| (int) ((rgb & 255) * f);",
+          "numeric_literals": [
+            {
+              "java": "255",
+              "value": 255
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningData.java",
+        "sha256": "f1185be62608b4156f3b956a415d6dfc087cc5ee004a839303b909c1c067b85b"
+      },
+      "declarations": [
+        {
+          "name": "MAX_USES",
+          "java_type": "int",
+          "line": 13,
+          "expression": "16",
+          "value": 16
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 23,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 13,
+          "method": "<class initializer>",
+          "expression": "public static final int MAX_USES = 16;",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "get",
+          "expression": "ListTag list = data.copyTag().getList(KEY, 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "get",
+          "expression": "for (int i = 0; i < list.size(); i++) out.add(list.getString(i));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 39,
+          "method": "getVariant",
+          "expression": "? 0",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 40,
+          "method": "getVariant",
+          "expression": ": net.minecraft.util.Mth.clamp(data.copyTag().getInt(VARIANT_KEY), 0, 7);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "7",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "setVariant",
+          "expression": "tag.putInt(VARIANT_KEY, net.minecraft.util.Mth.clamp(variant, 0, 7));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "7",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "setRandomVariant",
+          "expression": "setVariant(stack, net.minecraft.util.RandomSource.create().nextInt(8));",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "getUses",
+          "expression": "? 0",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "getUses",
+          "expression": ": net.minecraft.util.Mth.clamp(data.copyTag().getInt(USES_KEY), 0, MAX_USES);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "setUses",
+          "expression": "tag.putInt(USES_KEY, net.minecraft.util.Mth.clamp(uses, 0, MAX_USES));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningEffects.java",
+        "sha256": "9bf8b3720c88ad3584fbb299efa7d581e6b3161b526648d344cec03d49e349f4"
+      },
+      "declarations": [
+        {
+          "name": "count",
+          "java_type": "long",
+          "line": 17,
+          "expression": "GrillingDataManager.seasoningCount(values, kind)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "pepper",
+          "java_type": "long",
+          "line": 21,
+          "expression": "GrillingDataManager.seasoningCount(values, \"numbness\")",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 18,
+          "method": "describe",
+          "expression": "if (count > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "describe",
+          "expression": "if (pepper > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "method": "describe",
+          "expression": "+ (pepper >= 4 ? \"numbness\" : \"numbness_pending\"),",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningItem.java",
+        "sha256": "8b3ae1f723c9873c597419d0345ae7faf68e6cdaf05c9d177584c897e12642d5"
+      },
+      "declarations": [
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 28,
+          "expression": "SeasoningData.MAX_USES - SeasoningData.getUses(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 40,
+          "expression": "SeasoningData.MAX_USES - SeasoningData.getUses(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 29,
+          "method": "isBarVisible",
+          "expression": "return remaining > 0 && remaining < SeasoningData.MAX_USES;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 35,
+          "method": "getBarWidth",
+          "expression": "13.0F - (float) SeasoningData.getUses(stack) * 13.0F / (float) SeasoningData.MAX_USES);",
+          "numeric_literals": [
+            {
+              "java": "13.0F",
+              "value": 13.0
+            },
+            {
+              "java": "13.0F",
+              "value": 13.0
+            }
+          ]
+        },
+        {
+          "line": 42,
+          "method": "getBarColor",
+          "expression": "Math.max(0.0F, (float) remaining) / (float) SeasoningData.MAX_USES / 3.0F, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.0F",
+              "value": 0.0
+            },
+            {
+              "java": "3.0F",
+              "value": 3.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningTooltip.java",
+        "sha256": "822ce1adfcec7f260fd27058007d91e52839d0f6f8eccc563a10b9d529aaea11"
+      },
+      "declarations": [
+        {
+          "name": "CAPACITY",
+          "java_type": "int",
+          "line": 14,
+          "expression": "SeasoningBottleBlockEntity.CAPACITY",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "remaining",
+          "java_type": "int",
+          "line": 50,
+          "expression": "Math.max(0, SeasoningData.MAX_USES - SeasoningData.getUses(stack))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 95,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 50,
+          "method": "appendFinished",
+          "expression": "int remaining = Math.max(0, SeasoningData.MAX_USES - SeasoningData.getUses(stack));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 95,
+          "method": "joinedNames",
+          "expression": "for (int i = 0; i < ids.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 96,
+          "method": "joinedNames",
+          "expression": "if (i > 0) result.append(Component.literal(\"、\"));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java",
+        "sha256": "d7ba50391332599c80bb4cb4e9afc5f3cfbe5dddb14fe9c2f796a1df1f0e2837"
+      },
+      "declarations": [
+        {
+          "name": "next",
+          "java_type": "int",
+          "line": 23,
+          "expression": "SeasoningData.getUses(seasoning) + 1",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "apply",
+          "expression": "null, player.blockPosition(), ModSounds.SEASON.get(), SoundSource.PLAYERS, 0.85F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.85F",
+              "value": 0.85
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "apply",
+          "expression": "int next = SeasoningData.getUses(seasoning) + 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/ShakeSeasoningSound.java",
+        "sha256": "b21886c7dd8a868ffe2ab849b8913fdc6d61775f72e172e8f16cb3b5f88a3719"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 17,
+          "method": "ShakeSeasoningSound",
+          "expression": "this.volume = 0.8F;",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 29,
+          "method": "tick",
+          "expression": "y = player.getY() + 1.0;",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+        "sha256": "190153a97395604b8b0c144353f16329757f625d8d97a470e197c116656e3d35"
+      },
+      "declarations": [
+        {
+          "name": "challenged",
+          "java_type": "boolean",
+          "line": 39,
+          "expression": "entity.hasEffect(ModEffects.INVINCIBLE)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "blocked",
+          "java_type": "boolean",
+          "line": 42,
+          "expression": "challenged && entity.getRandom().nextBoolean()",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 29,
+          "method": "CursedSkewerItem",
+          "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 0.8F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.8F",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.35F);",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.35F",
+              "value": 1.35
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX(), entity.getY() + 1.0, entity.getZ(), 28, 0.55, 0.7, 0.55, 0.12);",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            },
+            {
+              "java": "28",
+              "value": 28
+            },
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "0.7",
+              "value": 0.7
+            },
+            {
+              "java": "0.55",
+              "value": 0.55
+            },
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 1.0F, 0.65F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.65F",
+              "value": 0.65
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 0.7F, 0.55F);",
+          "numeric_literals": [
+            {
+              "java": "0.7F",
+              "value": 0.7
+            },
+            {
+              "java": "0.55F",
+              "value": 0.55
+            }
+          ]
+        },
+        {
+          "line": 52,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.DAMAGE_INDICATOR, entity.getX(), entity.getY() + 1.0, entity.getZ(), 24, 0.45, 0.65, 0.45, 0.12);",
+          "numeric_literals": [
+            {
+              "java": "1.0",
+              "value": 1.0
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "0.45",
+              "value": 0.45
+            },
+            {
+              "java": "0.12",
+              "value": 0.12
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY() + 0.8, entity.getZ(), 18, 0.4, 0.6, 0.4, 0.04);",
+          "numeric_literals": [
+            {
+              "java": "0.8",
+              "value": 0.8
+            },
+            {
+              "java": "18",
+              "value": 18
+            },
+            {
+              "java": "0.4",
+              "value": 0.4
+            },
+            {
+              "java": "0.6",
+              "value": 0.6
+            },
+            {
+              "java": "0.4",
+              "value": 0.4
+            },
+            {
+              "java": "0.04",
+              "value": 0.04
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+        "sha256": "bccd939239ed4d6eb4788688427a318b57d2b67eb6f260a20f557430375b553d"
+      },
+      "declarations": [
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 23,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "angle",
+          "java_type": "double",
+          "line": 24,
+          "expression": "Math.PI * 2.0 * i / 18.0",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 16,
+          "method": "GoldenSkewerItem",
+          "expression": "super(properties, \"tooltip.kaleidoscope_grilling.grilled_golden_skewer.maxim\", ResourceLocation.fromNamespaceAndPath(KaleidoscopeGrilling.MOD_ID, \"invincible\"), 200, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "200",
+              "value": 200
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "afterFoodCommitted",
+          "expression": "server.playSound(null, entity.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 0.8F, 1.15F);",
+          "numeric_literals": [
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.15F",
+              "value": 1.15
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "afterFoodCommitted",
+          "expression": "for (int i = 0; i < 18; i++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "18",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "line": 24,
+          "method": "afterFoodCommitted",
+          "expression": "double angle = Math.PI * 2.0 * i / 18.0;",
+          "numeric_literals": [
+            {
+              "java": "2.0",
+              "value": 2.0
+            },
+            {
+              "java": "18.0",
+              "value": 18.0
+            }
+          ]
+        },
+        {
+          "line": 25,
+          "method": "afterFoodCommitted",
+          "expression": "server.sendParticles(ParticleTypes.ELECTRIC_SPARK, entity.getX() + Math.cos(angle) * 0.65, entity.getY() + 0.25 + i * 0.06, entity.getZ() + Math.sin(angle) * 0.65, 1, 0, 0.02, 0, 0.02);",
+          "numeric_literals": [
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "0.25",
+              "value": 0.25
+            },
+            {
+              "java": "0.06",
+              "value": 0.06
+            },
+            {
+              "java": "0.65",
+              "value": 0.65
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.02",
+              "value": 0.02
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0.02",
+              "value": 0.02
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java",
+        "sha256": "15eb92aaab14e08706c780ab867d5e36561e2d750904f430274ab0a01ec2fed5"
+      },
+      "declarations": [
+        {
+          "name": "totalNutrition",
+          "java_type": "int",
+          "line": 120,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "weightedSaturation",
+          "java_type": "float",
+          "line": 121,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 122,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "n",
+          "java_type": "int",
+          "line": 127,
+          "expression": "fp.nutrition()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "coefficient",
+          "java_type": "float",
+          "line": 138,
+          "expression": "0.6F * (hasDuplicateIngredients(rawIngredients) ? 0.8F : 1.0F)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "nutrition",
+          "java_type": "int",
+          "line": 139,
+          "expression": "Math.max(1, (int) Math.floor(totalNutrition * coefficient))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "saturation",
+          "java_type": "float",
+          "line": 140,
+          "expression": "Math.max(0, weightedSaturation / totalNutrition)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "cooked",
+          "java_type": "boolean",
+          "line": 168,
+          "expression": "isCooked(stack)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 185,
+          "expression": "1",
+          "value": 1
+        },
+        {
+          "name": "j",
+          "java_type": "int",
+          "line": 186,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 35,
+          "method": "SecretSkewerItem",
+          "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 41,
+          "method": "use",
+          "expression": "if (SkeweringHandler.ingredientCount(stack) != 3) {",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 67,
+          "method": "getVisualStage",
+          "expression": "return data == null ? 0 : data.getUnsafe().getInt(VISUAL_STAGE_TAG);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 97,
+          "method": "finishFoodAndEffect",
+          "expression": "ItemStack remainder = ingredient.copyWithCount(1).finishUsingItem(level, entity);",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 111,
+          "method": "getFoodProperties",
+          "expression": "return new FoodProperties.Builder().nutrition(1).saturationModifier(0).build();",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 117,
+          "method": "getFoodProperties",
+          "expression": "return new FoodProperties.Builder().nutrition(1).saturationModifier(0).build();",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 120,
+          "method": "getFoodProperties",
+          "expression": "int totalNutrition = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 121,
+          "method": "getFoodProperties",
+          "expression": "float weightedSaturation = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 122,
+          "method": "getFoodProperties",
+          "expression": "int count = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 130,
+          "method": "getFoodProperties",
+          "expression": "weightedSaturation += fp.saturation() * 0.5F;",
+          "numeric_literals": [
+            {
+              "java": "0.5F",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 134,
+          "method": "getFoodProperties",
+          "expression": "if (count == 0 || totalNutrition <= 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 135,
+          "method": "getFoodProperties",
+          "expression": "return new FoodProperties.Builder().nutrition(1).saturationModifier(0).build();",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 138,
+          "method": "getFoodProperties",
+          "expression": "float coefficient = 0.6F * (hasDuplicateIngredients(rawIngredients) ? 0.8F : 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "0.6F",
+              "value": 0.6
+            },
+            {
+              "java": "0.8F",
+              "value": 0.8
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 139,
+          "method": "getFoodProperties",
+          "expression": "int nutrition = Math.max(1, (int) Math.floor(totalNutrition * coefficient));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 140,
+          "method": "getFoodProperties",
+          "expression": "float saturation = Math.max(0, weightedSaturation / totalNutrition);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 142,
+          "method": "getFoodProperties",
+          "expression": "nutrition = Math.max(1, (int) Math.floor(nutrition * 0.5F));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "0.5F",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 143,
+          "method": "getFoodProperties",
+          "expression": "saturation *= 0.5F;",
+          "numeric_literals": [
+            {
+              "java": "0.5F",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "line": 185,
+          "method": "hasDuplicateIngredients",
+          "expression": "for (int i = 1; i < ingredients.size(); i++) {",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 186,
+          "method": "hasDuplicateIngredients",
+          "expression": "for (int j = 0; j < i; j++) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 195,
+          "method": "FoodSnapshot",
+          "expression": "if (!(entity instanceof Player player)) return new FoodSnapshot(0, 0, 0);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

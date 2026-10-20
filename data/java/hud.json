@@ -1,0 +1,5521 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Lex Java scalar/array declarations and numeric source expressions; evaluate literal arithmetic only. Preserve method, line, formula and original loader; symbolic rules are not gameplay execution.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "classes": {
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java",
+        "sha256": "974aaab1a11899e92badc5eed76c198cc8810f11411b1b8bb04ccd738d47e8a9"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 46,
+          "method": "<class initializer>",
+          "expression": "Commands.argument(\"seconds\", FloatArgumentType.floatArg(0.0F, 5.0F))",
+          "numeric_literals": [
+            {
+              "java": "0.0F",
+              "value": 0.0
+            },
+            {
+              "java": "5.0F",
+              "value": 5.0
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "setAnimationDebug",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "disableAnimationDebug",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 86,
+          "method": "set",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java",
+        "sha256": "0e061689db2d75957ef727285a1423c2914c844fa9432e43fc21ca4d8b8a600e"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 28,
+          "expression": "194",
+          "value": 194
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 48,
+          "expression": "126, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 65,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 143,
+          "expression": "94, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "max",
+          "java_type": "int",
+          "line": 161,
+          "expression": "grill.getPhase() <= 2 ? 800 : 400",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 191,
+          "expression": "84, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "accent",
+          "java_type": "int",
+          "line": 192,
+          "expression": "vat.fluid().isEmpty()\n            ? 0xFFE0A83B\n            : vat.fluid().getFluid() == Fluids.WATER\n                ? 0xFF5AA6D6\n                : vat.fluid().getFluid() == Fluids.LAVA ? 0xFFFF6A22 : 0xFFE0A83B",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 28,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 194;",
+          "numeric_literals": [
+            {
+              "java": "194",
+              "value": 194
+            }
+          ]
+        },
+        {
+          "line": 48,
+          "method": "drawPress",
+          "expression": "int height = 126, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "126",
+              "value": 126
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "drawPress",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, height, 0xFFB9A06A);",
+          "numeric_literals": [
+            {
+              "java": "0xFFB9A06A",
+              "value": -4611990
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 54,
+          "method": "drawPress",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "drawPress",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 61,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "drawPress",
+          "expression": "y + 23,",
+          "numeric_literals": [
+            {
+              "java": "23",
+              "value": 23
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "drawPress",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 65,
+          "method": "drawPress",
+          "expression": "for (int i = 0; i < press.cakes(); i++)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "drawPress",
+          "expression": "graphics.renderItem(new ItemStack(ModItems.OIL_CAKE.get()), x + 12 + i * 19, y + 35);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "19",
+              "value": 19
+            },
+            {
+              "java": "35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "drawPress",
+          "expression": "y + 56,",
+          "numeric_literals": [
+            {
+              "java": "56",
+              "value": 56
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "drawPress",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "drawPress",
+          "expression": "y + 68,",
+          "numeric_literals": [
+            {
+              "java": "68",
+              "value": 68
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "drawPress",
+          "expression": "WIDTH - 24,",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 84,
+          "method": "drawPress",
+          "expression": "0xFFB9A06A);",
+          "numeric_literals": [
+            {
+              "java": "0xFFB9A06A",
+              "value": -4611990
+            }
+          ]
+        },
+        {
+          "line": 97,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 100,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 109,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 116,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFB8D8CD;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 121,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFB8D8CD;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 123,
+          "method": "drawPress",
+          "expression": "graphics.drawString(minecraft.font, vatState, x + 12, y + 79, vatColor, false);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "79",
+              "value": 79
+            }
+          ]
+        },
+        {
+          "line": 128,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 129,
+          "method": "drawPress",
+          "expression": "y + 92,",
+          "numeric_literals": [
+            {
+              "java": "92",
+              "value": 92
+            }
+          ]
+        },
+        {
+          "line": 130,
+          "method": "drawPress",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 135,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 136,
+          "method": "drawPress",
+          "expression": "y + 107,",
+          "numeric_literals": [
+            {
+              "java": "107",
+              "value": 107
+            }
+          ]
+        },
+        {
+          "line": 137,
+          "method": "drawPress",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 143,
+          "method": "drawGrill",
+          "expression": "int height = 94, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "94",
+              "value": 94
+            }
+          ]
+        },
+        {
+          "line": 144,
+          "method": "drawGrill",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, height, 0xFFE05A32);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 148,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 149,
+          "method": "drawGrill",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 150,
+          "method": "drawGrill",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 152,
+          "method": "drawGrill",
+          "expression": "if (grill.getPhase() == 2 && grill.isSeasoned())",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 156,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 157,
+          "method": "drawGrill",
+          "expression": "y + 22,",
+          "numeric_literals": [
+            {
+              "java": "22",
+              "value": 22
+            }
+          ]
+        },
+        {
+          "line": 158,
+          "method": "drawGrill",
+          "expression": "0xFFB8D8CD,",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 161,
+          "method": "drawGrill",
+          "expression": "int max = grill.getPhase() <= 2 ? 800 : 400;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "800",
+              "value": 800
+            },
+            {
+              "java": "400",
+              "value": 400
+            }
+          ]
+        },
+        {
+          "line": 166,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 167,
+          "method": "drawGrill",
+          "expression": "y + 37,",
+          "numeric_literals": [
+            {
+              "java": "37",
+              "value": 37
+            }
+          ]
+        },
+        {
+          "line": 168,
+          "method": "drawGrill",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 170,
+          "method": "drawGrill",
+          "expression": "bar(graphics, x + 12, y + 49, WIDTH - 24, grill.getPhaseTicks(), max, 0xFFE05A32);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "49",
+              "value": 49
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 174,
+          "method": "drawGrill",
+          "expression": "Component.translatable(\"hud.kaleidoscope_grilling.grill.flips\", grill.getFlips(), 4),",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 175,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 176,
+          "method": "drawGrill",
+          "expression": "y + 63,",
+          "numeric_literals": [
+            {
+              "java": "63",
+              "value": 63
+            }
+          ]
+        },
+        {
+          "line": 177,
+          "method": "drawGrill",
+          "expression": "grill.getFlips() >= 4 ? 0xFFB8D8CD : 0xFFE6B873,",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            },
+            {
+              "java": "0xFFE6B873",
+              "value": -1656717
+            }
+          ]
+        },
+        {
+          "line": 183,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 184,
+          "method": "drawGrill",
+          "expression": "y + 77,",
+          "numeric_literals": [
+            {
+              "java": "77",
+              "value": 77
+            }
+          ]
+        },
+        {
+          "line": 185,
+          "method": "drawGrill",
+          "expression": "grill.isSeasoned() ? 0xFFE0A83B : 0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            },
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 191,
+          "method": "drawVat",
+          "expression": "int height = 84, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "84",
+              "value": 84
+            }
+          ]
+        },
+        {
+          "line": 194,
+          "method": "drawVat",
+          "expression": "? 0xFFE0A83B",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 196,
+          "method": "drawVat",
+          "expression": "? 0xFF5AA6D6",
+          "numeric_literals": [
+            {
+              "java": "0xFF5AA6D6",
+              "value": -10836266
+            }
+          ]
+        },
+        {
+          "line": 197,
+          "method": "drawVat",
+          "expression": ": vat.fluid().getFluid() == Fluids.LAVA ? 0xFFFF6A22 : 0xFFE0A83B;",
+          "numeric_literals": [
+            {
+              "java": "0xFFFF6A22",
+              "value": -38366
+            },
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 202,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 203,
+          "method": "drawVat",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 204,
+          "method": "drawVat",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 211,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 212,
+          "method": "drawVat",
+          "expression": "y + 24,",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 213,
+          "method": "drawVat",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 221,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 222,
+          "method": "drawVat",
+          "expression": "y + 39,",
+          "numeric_literals": [
+            {
+              "java": "39",
+              "value": 39
+            }
+          ]
+        },
+        {
+          "line": 223,
+          "method": "drawVat",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 225,
+          "method": "drawVat",
+          "expression": "bar(graphics, x + 12, y + 54, WIDTH - 24, vat.amount(), BigVatBlockEntity.CAPACITY, accent);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "54",
+              "value": 54
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 229,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 230,
+          "method": "drawVat",
+          "expression": "y + 66,",
+          "numeric_literals": [
+            {
+              "java": "66",
+              "value": 66
+            }
+          ]
+        },
+        {
+          "line": 231,
+          "method": "drawVat",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 237,
+          "method": "bar",
+          "expression": "graphics.fill(x, y, x + width, y + 5, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 239,
+          "method": "bar",
+          "expression": "x, y, x + width * Math.max(0, Math.min(value, max)) / Math.max(1, max), y + 5, color);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 243,
+          "method": "centerY",
+          "expression": "return Math.max(8, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java",
+        "sha256": "2df7cf24076c9c39a4858676d1c6cfa7e37f4d0f876f698f953e7f6366ba72ad"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 21,
+          "expression": "174",
+          "value": 174
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 22,
+          "expression": "68",
+          "value": 68
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 40,
+          "expression": "oil.grilling$getOilCount()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "capacity",
+          "java_type": "int",
+          "line": 41,
+          "expression": "OilPotCompat.capacity(type)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "accent",
+          "java_type": "int",
+          "line": 43,
+          "expression": "switch (state) {\n          case \"canola\" -> 0xFFC08A24",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 51,
+          "expression": "panelX(minecraft, WIDTH)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 52,
+          "expression": "minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 82,
+          "expression": "minecraft.getWindow().getGuiScaledWidth() / 2 + 24",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 174;",
+          "numeric_literals": [
+            {
+              "java": "174",
+              "value": 174
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 68;",
+          "numeric_literals": [
+            {
+              "java": "68",
+              "value": 68
+            }
+          ]
+        },
+        {
+          "line": 42,
+          "method": "draw",
+          "expression": "String state = type.isEmpty() ? (count > 0 ? \"fat\" : \"empty\") : type;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "draw",
+          "expression": "case \"canola\" -> 0xFFC08A24;",
+          "numeric_literals": [
+            {
+              "java": "0xFFC08A24",
+              "value": -4158940
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "draw",
+          "expression": "case \"secret_chili\" -> 0xFFE05A32;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "draw",
+          "expression": "case \"premium_chili\" -> 0xFFB52828;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB52828",
+              "value": -4904920
+            }
+          ]
+        },
+        {
+          "line": 48,
+          "method": "draw",
+          "expression": "case \"fat\" -> 0xFFC7C9C8;",
+          "numeric_literals": [
+            {
+              "java": "0xFFC7C9C8",
+              "value": -3683896
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "draw",
+          "expression": "default -> 0xFFE0A83B;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 52,
+          "method": "draw",
+          "expression": "int y = minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 65,
+          "method": "draw",
+          "expression": "y + 23,",
+          "numeric_literals": [
+            {
+              "java": "23",
+              "value": 23
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "draw",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "draw",
+          "expression": "y + 36,",
+          "numeric_literals": [
+            {
+              "java": "36",
+              "value": 36
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 76,
+          "method": "draw",
+          "expression": "graphics.fill(x + 12, y + 52, x + WIDTH - 12, y + 57, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "52",
+              "value": 52
+            },
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "57",
+              "value": 57
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 78,
+          "method": "draw",
+          "expression": "x + 12, y + 52, x + 12 + (WIDTH - 24) * count / capacity, y + 57, accent);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "52",
+              "value": 52
+            },
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "57",
+              "value": 57
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "panelX",
+          "expression": "int x = minecraft.getWindow().getGuiScaledWidth() / 2 + 24;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "panelX",
+          "expression": "return Math.min(x, minecraft.getWindow().getGuiScaledWidth() - width - 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 88,
+          "method": "panel",
+          "expression": "graphics.fill(x + 3, y + 3, x + width + 3, y + height + 3, 0x55000000);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "0x55000000",
+              "value": 1426063360
+            }
+          ]
+        },
+        {
+          "line": 89,
+          "method": "panel",
+          "expression": "graphics.fill(x, y, x + width, y + height, 0xE6121718);",
+          "numeric_literals": [
+            {
+              "java": "0xE6121718",
+              "value": -435022056
+            }
+          ]
+        },
+        {
+          "line": 90,
+          "method": "panel",
+          "expression": "graphics.fill(x, y, x + 3, y + height, accent);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 91,
+          "method": "panel",
+          "expression": "graphics.fill(x + 3, y + 29, x + width, y + 30, 0x554F6265);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "29",
+              "value": 29
+            },
+            {
+              "java": "30",
+              "value": 30
+            },
+            {
+              "java": "0x554F6265",
+              "value": 1431265893
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java",
+        "sha256": "ee7b5d81acd8152953cfb042fb4093096b9527a0d6c957152af27e4a7e706a68"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 25,
+          "expression": "190",
+          "value": 190
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 26,
+          "expression": "106",
+          "value": 106
+        },
+        {
+          "name": "hasOil",
+          "java_type": "boolean",
+          "line": 40,
+          "expression": "state.getProperties().stream()\n            .filter(\n                property ->\n                    property instanceof BooleanProperty && property.getName().equals(\"has_oil\"))\n            .map(property -> state.getValue((BooleanProperty) property))\n            .findFirst()\n            .orElse(false)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 58,
+          "expression": "OilPotHud.panelX(minecraft, WIDTH)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 59,
+          "expression": "Math.max(10, minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "seasoned",
+          "java_type": "boolean",
+          "line": 97,
+          "expression": "!seasoning.grilling$getSeasoning().isEmpty()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "shown",
+          "java_type": "int",
+          "line": 114,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 25,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 190;",
+          "numeric_literals": [
+            {
+              "java": "190",
+              "value": 190
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 106;",
+          "numeric_literals": [
+            {
+              "java": "106",
+              "value": 106
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "draw",
+          "expression": "int y = Math.max(10, minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2);",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "draw",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, HEIGHT, 0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 65,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "draw",
+          "expression": "y + 21,",
+          "numeric_literals": [
+            {
+              "java": "21",
+              "value": 21
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "0xFFB8D8CD,",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "draw",
+          "expression": "y + 36,",
+          "numeric_literals": [
+            {
+              "java": "36",
+              "value": 36
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "draw",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "draw",
+          "expression": "drawIngredients(graphics, pot.grilling$getInputs(), x + 12, y + 47);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "47",
+              "value": 47
+            }
+          ]
+        },
+        {
+          "line": 93,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 94,
+          "method": "draw",
+          "expression": "y + 76,",
+          "numeric_literals": [
+            {
+              "java": "76",
+              "value": 76
+            }
+          ]
+        },
+        {
+          "line": 95,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 105,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 106,
+          "method": "draw",
+          "expression": "y + 90,",
+          "numeric_literals": [
+            {
+              "java": "90",
+              "value": 90
+            }
+          ]
+        },
+        {
+          "line": 108,
+          "method": "draw",
+          "expression": "? 0xFFE0A83B",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 109,
+          "method": "draw",
+          "expression": ": 0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 114,
+          "method": "drawIngredients",
+          "expression": "int shown = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 117,
+          "method": "drawIngredients",
+          "expression": "graphics.renderItem(stack, x + shown * 19, y);",
+          "numeric_literals": [
+            {
+              "java": "19",
+              "value": 19
+            }
+          ]
+        },
+        {
+          "line": 120,
+          "method": "drawIngredients",
+          "expression": "if (shown == 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 125,
+          "method": "drawIngredients",
+          "expression": "y + 4,",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 126,
+          "method": "drawIngredients",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 135,
+          "method": "status",
+          "expression": "if (pot.grilling$getStatus() >= 2)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 142,
+          "method": "status",
+          "expression": "if (pot.grilling$getStatus() == 1 || !seasoning.grilling$getSeasoning().isEmpty())",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java",
+        "sha256": "adb39274e8384de114117b9e38492a77e5cff4a16a16af219dc7a340974ce00a"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 29,
+          "expression": "164",
+          "value": 164
+        },
+        {
+          "name": "effectLines",
+          "java_type": "int",
+          "line": 55,
+          "expression": "Math.max(1, SeasoningEffects.describe(values).size())",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 56,
+          "expression": "49 + counts.size() * 18 + effectLines * 10 + 10",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 57,
+          "expression": "minecraft.getWindow().getGuiScaledWidth() / 2 + 24",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 58,
+          "expression": "Math.max(12, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "barX",
+          "java_type": "int",
+          "line": 86,
+          "expression": "x + 12",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "barY",
+          "java_type": "int",
+          "line": 87,
+          "expression": "y + 34",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "rowY",
+          "java_type": "int",
+          "line": 96,
+          "expression": "y + 44",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 29,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 164;",
+          "numeric_literals": [
+            {
+              "java": "164",
+              "value": 164
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "draw",
+          "expression": "REQUIRED.forEach(id -> counts.put(id, 0));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 54,
+          "method": "draw",
+          "expression": "values.forEach(id -> counts.merge(id, 1, Integer::sum));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "draw",
+          "expression": "int effectLines = Math.max(1, SeasoningEffects.describe(values).size());",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "draw",
+          "expression": "int height = 49 + counts.size() * 18 + effectLines * 10 + 10;",
+          "numeric_literals": [
+            {
+              "java": "49",
+              "value": 49
+            },
+            {
+              "java": "18",
+              "value": 18
+            },
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "10",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "draw",
+          "expression": "int x = minecraft.getWindow().getGuiScaledWidth() / 2 + 24;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "draw",
+          "expression": "int y = Math.max(12, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "draw",
+          "expression": "if (x + WIDTH > minecraft.getWindow().getGuiScaledWidth() - 8)",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "draw",
+          "expression": "x = minecraft.getWindow().getGuiScaledWidth() - WIDTH - 8;",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "draw",
+          "expression": "graphics.fill(x + 3, y + 3, x + WIDTH + 3, y + height + 3, 0x55000000);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "0x55000000",
+              "value": 1426063360
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "draw",
+          "expression": "graphics.fill(x, y, x + WIDTH, y + height, 0xE6121718);",
+          "numeric_literals": [
+            {
+              "java": "0xE6121718",
+              "value": -435022056
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "graphics.fill(x, y, x + 3, y + height, 0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 65,
+          "method": "draw",
+          "expression": "graphics.fill(x + 3, y + 29, x + WIDTH, y + 30, 0x554F6265);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "29",
+              "value": 29
+            },
+            {
+              "java": "30",
+              "value": 30
+            },
+            {
+              "java": "0x554F6265",
+              "value": 1431265893
+            }
+          ]
+        },
+        {
+          "line": 69,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 70,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 71,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "new ItemStack(ModItems.EMPTY_SEASONING_BOTTLE.get()), x + WIDTH - 27, y + 6);",
+          "numeric_literals": [
+            {
+              "java": "27",
+              "value": 27
+            },
+            {
+              "java": "6",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "draw",
+          "expression": "y + 20,",
+          "numeric_literals": [
+            {
+              "java": "20",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": 84,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 86,
+          "method": "draw",
+          "expression": "int barX = x + 12;",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 87,
+          "method": "draw",
+          "expression": "int barY = y + 34;",
+          "numeric_literals": [
+            {
+              "java": "34",
+              "value": 34
+            }
+          ]
+        },
+        {
+          "line": 88,
+          "method": "draw",
+          "expression": "graphics.fill(barX, barY, x + WIDTH - 12, barY + 4, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 92,
+          "method": "draw",
+          "expression": "barX + (WIDTH - 24) * values.size() / SeasoningBottleBlockEntity.CAPACITY,",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 93,
+          "method": "draw",
+          "expression": "barY + 4,",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 94,
+          "method": "draw",
+          "expression": "0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 96,
+          "method": "draw",
+          "expression": "int rowY = y + 44;",
+          "numeric_literals": [
+            {
+              "java": "44",
+              "value": 44
+            }
+          ]
+        },
+        {
+          "line": 101,
+          "method": "draw",
+          "expression": "graphics.renderItem(stack, x + 12, rowY - 3);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 102,
+          "method": "draw",
+          "expression": "graphics.drawString(minecraft.font, item.getDescription(), x + 34, rowY, 0xFFE5E8E8, false);",
+          "numeric_literals": [
+            {
+              "java": "34",
+              "value": 34
+            },
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 103,
+          "method": "draw",
+          "expression": "if (entry.getValue() == 0) {",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "draw",
+          "expression": "x + WIDTH - 35,",
+          "numeric_literals": [
+            {
+              "java": "35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "line": 109,
+          "method": "draw",
+          "expression": "0xFFE68B73,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 113,
+          "method": "draw",
+          "expression": "minecraft.font, \"x\" + entry.getValue(), x + WIDTH - 25, rowY, 0xFFAAB7B8, false);",
+          "numeric_literals": [
+            {
+              "java": "25",
+              "value": 25
+            },
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 115,
+          "method": "draw",
+          "expression": "rowY += 18;",
+          "numeric_literals": [
+            {
+              "java": "18",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "line": 120,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 121,
+          "method": "draw",
+          "expression": "rowY + 1,",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 122,
+          "method": "draw",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 124,
+          "method": "draw",
+          "expression": "rowY += 12;",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 129,
+          "method": "draw",
+          "expression": "graphics.drawString(minecraft.font, effect, x + 12, rowY, 0xFFB8D8CD, false);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 130,
+          "method": "draw",
+          "expression": "rowY += 10;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java": {
+      "source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+        "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 20,
+          "expression": "102",
+          "value": 102
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 21,
+          "expression": "5",
+          "value": 5
+        },
+        {
+          "name": "ICON_SIZE",
+          "java_type": "int",
+          "line": 22,
+          "expression": "16",
+          "value": 16
+        },
+        {
+          "name": "duration",
+          "java_type": "int",
+          "line": 42,
+          "expression": "profile.duration()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "elapsed",
+          "java_type": "float",
+          "line": 43,
+          "expression": "duration - player.getUseItemRemainingTicks() + minecraft.getPartialTick()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "progress",
+          "java_type": "float",
+          "line": 44,
+          "expression": "Math.min(1.0F, Math.max(0.0F, elapsed / duration))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "ready",
+          "java_type": "boolean",
+          "line": 45,
+          "expression": "elapsed >= MultiBiteSkewerItem.MINIMUM_EAT_TICKS",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "screenWidth",
+          "java_type": "int",
+          "line": 46,
+          "expression": "minecraft.getWindow().getGuiScaledWidth()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "screenHeight",
+          "java_type": "int",
+          "line": 47,
+          "expression": "minecraft.getWindow().getGuiScaledHeight()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 48,
+          "expression": "screenWidth / 2 + 50 - WIDTH / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 49,
+          "expression": "screenHeight - 54",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "fillWidth",
+          "java_type": "int",
+          "line": 50,
+          "expression": "Math.min(WIDTH, Math.max(0, Math.round(WIDTH * progress)))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "threshold",
+          "java_type": "int",
+          "line": 51,
+          "expression": "x + Math.round(WIDTH * MultiBiteSkewerItem.MINIMUM_EAT_TICKS / (float) duration)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "iconX",
+          "java_type": "int",
+          "line": 53,
+          "expression": "threshold - ICON_SIZE / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "iconY",
+          "java_type": "int",
+          "line": 54,
+          "expression": "y - (ICON_SIZE - HEIGHT) / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 20,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 102;",
+          "numeric_literals": [
+            {
+              "java": "102",
+              "value": 102
+            }
+          ]
+        },
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 5;",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "private static final int ICON_SIZE = 16;",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "draw",
+          "expression": "float progress = Math.min(1.0F, Math.max(0.0F, elapsed / duration));",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.0F",
+              "value": 0.0
+            }
+          ]
+        },
+        {
+          "line": 48,
+          "method": "draw",
+          "expression": "int x = screenWidth / 2 + 50 - WIDTH / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "50",
+              "value": 50
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "draw",
+          "expression": "int y = screenHeight - 54;",
+          "numeric_literals": [
+            {
+              "java": "54",
+              "value": 54
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "draw",
+          "expression": "int fillWidth = Math.min(WIDTH, Math.max(0, Math.round(WIDTH * progress)));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "draw",
+          "expression": "int iconX = threshold - ICON_SIZE / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 54,
+          "method": "draw",
+          "expression": "int iconY = y - (ICON_SIZE - HEIGHT) / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "draw",
+          "expression": "graphics.blit(BASE, x, y, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "draw",
+          "expression": "if (fillWidth > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "draw",
+          "expression": "0,",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "draw",
+          "expression": "0,",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "draw",
+          "expression": "RenderSystem.setShaderColor(0.36F, 0.36F, 0.36F, 0.86F);",
+          "numeric_literals": [
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.86F",
+              "value": 0.86
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "draw",
+          "expression": "graphics.blit(readyIcon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 76,
+          "method": "draw",
+          "expression": "graphics.blit(readyIcon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "draw",
+          "expression": "graphics.blit(ready ? READY : PENDING, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/HudControl.java",
+        "sha256": "7d98d614a732f17a352040533c7bd710056717476a5e000c000f10e8995d2854"
+      },
+      "declarations": [],
+      "rules": [
+        {
+          "line": 46,
+          "method": "<class initializer>",
+          "expression": "Commands.argument(\"seconds\", FloatArgumentType.floatArg(0.0F, 5.0F))",
+          "numeric_literals": [
+            {
+              "java": "0.0F",
+              "value": 0.0
+            },
+            {
+              "java": "5.0F",
+              "value": 5.0
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "setAnimationDebug",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "disableAnimationDebug",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 86,
+          "method": "set",
+          "expression": "return 1;",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/client/MachineHud.java",
+        "sha256": "0728242f4133aa4a2b3f0fe5a567688ac245ff47585267c70a1606f706a007cb"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 27,
+          "expression": "194",
+          "value": 194
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 46,
+          "expression": "126, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "i",
+          "java_type": "int",
+          "line": 63,
+          "expression": "0",
+          "value": 0
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 141,
+          "expression": "94, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "max",
+          "java_type": "int",
+          "line": 159,
+          "expression": "grill.getPhase() <= 2 ? 800 : 400",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 189,
+          "expression": "84, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "accent",
+          "java_type": "int",
+          "line": 190,
+          "expression": "vat.fluid().isEmpty()\n            ? 0xFFE0A83B\n            : vat.fluid().getFluid() == Fluids.WATER\n                ? 0xFF5AA6D6\n                : vat.fluid().getFluid() == Fluids.LAVA ? 0xFFFF6A22 : 0xFFE0A83B",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 27,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 194;",
+          "numeric_literals": [
+            {
+              "java": "194",
+              "value": 194
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "drawPress",
+          "expression": "int height = 126, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "126",
+              "value": 126
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "drawPress",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, height, 0xFFB9A06A);",
+          "numeric_literals": [
+            {
+              "java": "0xFFB9A06A",
+              "value": -4611990
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 52,
+          "method": "drawPress",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "drawPress",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 60,
+          "method": "drawPress",
+          "expression": "y + 23,",
+          "numeric_literals": [
+            {
+              "java": "23",
+              "value": 23
+            }
+          ]
+        },
+        {
+          "line": 61,
+          "method": "drawPress",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "drawPress",
+          "expression": "for (int i = 0; i < press.cakes(); i++)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "drawPress",
+          "expression": "graphics.renderItem(new ItemStack(ModItems.OIL_CAKE.get()), x + 12 + i * 19, y + 35);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "19",
+              "value": 19
+            },
+            {
+              "java": "35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "line": 71,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "drawPress",
+          "expression": "y + 56,",
+          "numeric_literals": [
+            {
+              "java": "56",
+              "value": 56
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "drawPress",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 77,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 78,
+          "method": "drawPress",
+          "expression": "y + 68,",
+          "numeric_literals": [
+            {
+              "java": "68",
+              "value": 68
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "drawPress",
+          "expression": "WIDTH - 24,",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "drawPress",
+          "expression": "0xFFB9A06A);",
+          "numeric_literals": [
+            {
+              "java": "0xFFB9A06A",
+              "value": -4611990
+            }
+          ]
+        },
+        {
+          "line": 95,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 98,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFE68B73;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            }
+          ]
+        },
+        {
+          "line": 114,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFB8D8CD;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 119,
+          "method": "drawPress",
+          "expression": "vatColor = 0xFFB8D8CD;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 121,
+          "method": "drawPress",
+          "expression": "graphics.drawString(minecraft.font, vatState, x + 12, y + 79, vatColor, false);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "79",
+              "value": 79
+            }
+          ]
+        },
+        {
+          "line": 126,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 127,
+          "method": "drawPress",
+          "expression": "y + 92,",
+          "numeric_literals": [
+            {
+              "java": "92",
+              "value": 92
+            }
+          ]
+        },
+        {
+          "line": 128,
+          "method": "drawPress",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 133,
+          "method": "drawPress",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 134,
+          "method": "drawPress",
+          "expression": "y + 107,",
+          "numeric_literals": [
+            {
+              "java": "107",
+              "value": 107
+            }
+          ]
+        },
+        {
+          "line": 135,
+          "method": "drawPress",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 141,
+          "method": "drawGrill",
+          "expression": "int height = 94, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "94",
+              "value": 94
+            }
+          ]
+        },
+        {
+          "line": 142,
+          "method": "drawGrill",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, height, 0xFFE05A32);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 146,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 147,
+          "method": "drawGrill",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 148,
+          "method": "drawGrill",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 150,
+          "method": "drawGrill",
+          "expression": "if (grill.getPhase() == 2 && grill.isSeasoned())",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 154,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 155,
+          "method": "drawGrill",
+          "expression": "y + 22,",
+          "numeric_literals": [
+            {
+              "java": "22",
+              "value": 22
+            }
+          ]
+        },
+        {
+          "line": 156,
+          "method": "drawGrill",
+          "expression": "0xFFB8D8CD,",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 159,
+          "method": "drawGrill",
+          "expression": "int max = grill.getPhase() <= 2 ? 800 : 400;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "800",
+              "value": 800
+            },
+            {
+              "java": "400",
+              "value": 400
+            }
+          ]
+        },
+        {
+          "line": 164,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 165,
+          "method": "drawGrill",
+          "expression": "y + 37,",
+          "numeric_literals": [
+            {
+              "java": "37",
+              "value": 37
+            }
+          ]
+        },
+        {
+          "line": 166,
+          "method": "drawGrill",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 168,
+          "method": "drawGrill",
+          "expression": "bar(graphics, x + 12, y + 49, WIDTH - 24, grill.getPhaseTicks(), max, 0xFFE05A32);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "49",
+              "value": 49
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 172,
+          "method": "drawGrill",
+          "expression": "Component.translatable(\"hud.kaleidoscope_grilling.grill.flips\", grill.getFlips(), 4),",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 173,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 174,
+          "method": "drawGrill",
+          "expression": "y + 63,",
+          "numeric_literals": [
+            {
+              "java": "63",
+              "value": 63
+            }
+          ]
+        },
+        {
+          "line": 175,
+          "method": "drawGrill",
+          "expression": "grill.getFlips() >= 4 ? 0xFFB8D8CD : 0xFFE6B873,",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            },
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            },
+            {
+              "java": "0xFFE6B873",
+              "value": -1656717
+            }
+          ]
+        },
+        {
+          "line": 181,
+          "method": "drawGrill",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 182,
+          "method": "drawGrill",
+          "expression": "y + 77,",
+          "numeric_literals": [
+            {
+              "java": "77",
+              "value": 77
+            }
+          ]
+        },
+        {
+          "line": 183,
+          "method": "drawGrill",
+          "expression": "grill.isSeasoned() ? 0xFFE0A83B : 0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            },
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 189,
+          "method": "drawVat",
+          "expression": "int height = 84, x = OilPotHud.panelX(minecraft, WIDTH), y = centerY(minecraft, height);",
+          "numeric_literals": [
+            {
+              "java": "84",
+              "value": 84
+            }
+          ]
+        },
+        {
+          "line": 192,
+          "method": "drawVat",
+          "expression": "? 0xFFE0A83B",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 194,
+          "method": "drawVat",
+          "expression": "? 0xFF5AA6D6",
+          "numeric_literals": [
+            {
+              "java": "0xFF5AA6D6",
+              "value": -10836266
+            }
+          ]
+        },
+        {
+          "line": 195,
+          "method": "drawVat",
+          "expression": ": vat.fluid().getFluid() == Fluids.LAVA ? 0xFFFF6A22 : 0xFFE0A83B;",
+          "numeric_literals": [
+            {
+              "java": "0xFFFF6A22",
+              "value": -38366
+            },
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 200,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 201,
+          "method": "drawVat",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 202,
+          "method": "drawVat",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 209,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 210,
+          "method": "drawVat",
+          "expression": "y + 24,",
+          "numeric_literals": [
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 211,
+          "method": "drawVat",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 219,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 220,
+          "method": "drawVat",
+          "expression": "y + 39,",
+          "numeric_literals": [
+            {
+              "java": "39",
+              "value": 39
+            }
+          ]
+        },
+        {
+          "line": 221,
+          "method": "drawVat",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 223,
+          "method": "drawVat",
+          "expression": "bar(graphics, x + 12, y + 54, WIDTH - 24, vat.amount(), BigVatBlockEntity.CAPACITY, accent);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "54",
+              "value": 54
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 227,
+          "method": "drawVat",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 228,
+          "method": "drawVat",
+          "expression": "y + 66,",
+          "numeric_literals": [
+            {
+              "java": "66",
+              "value": 66
+            }
+          ]
+        },
+        {
+          "line": 229,
+          "method": "drawVat",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 235,
+          "method": "bar",
+          "expression": "graphics.fill(x, y, x + width, y + 5, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 237,
+          "method": "bar",
+          "expression": "x, y, x + width * Math.max(0, Math.min(value, max)) / Math.max(1, max), y + 5, color);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 241,
+          "method": "centerY",
+          "expression": "return Math.max(8, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilPotHud.java",
+        "sha256": "7e7ce3d2f01e49cab4acd0163b1646be3c2dddcfcc3d710a3c88db31d0abfb7f"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 20,
+          "expression": "174",
+          "value": 174
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 21,
+          "expression": "68",
+          "value": 68
+        },
+        {
+          "name": "count",
+          "java_type": "int",
+          "line": 38,
+          "expression": "oil.grilling$getOilCount()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "capacity",
+          "java_type": "int",
+          "line": 39,
+          "expression": "OilPotCompat.capacity(type)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "accent",
+          "java_type": "int",
+          "line": 41,
+          "expression": "switch (state) {\n          case \"canola\" -> 0xFFC08A24",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 49,
+          "expression": "panelX(minecraft, WIDTH)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 50,
+          "expression": "minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 80,
+          "expression": "minecraft.getWindow().getGuiScaledWidth() / 2 + 24",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 20,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 174;",
+          "numeric_literals": [
+            {
+              "java": "174",
+              "value": 174
+            }
+          ]
+        },
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 68;",
+          "numeric_literals": [
+            {
+              "java": "68",
+              "value": 68
+            }
+          ]
+        },
+        {
+          "line": 40,
+          "method": "draw",
+          "expression": "String state = type.isEmpty() ? (count > 0 ? \"fat\" : \"empty\") : type;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 43,
+          "method": "draw",
+          "expression": "case \"canola\" -> 0xFFC08A24;",
+          "numeric_literals": [
+            {
+              "java": "0xFFC08A24",
+              "value": -4158940
+            }
+          ]
+        },
+        {
+          "line": 44,
+          "method": "draw",
+          "expression": "case \"secret_chili\" -> 0xFFE05A32;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE05A32",
+              "value": -2074062
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "draw",
+          "expression": "case \"premium_chili\" -> 0xFFB52828;",
+          "numeric_literals": [
+            {
+              "java": "0xFFB52828",
+              "value": -4904920
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "method": "draw",
+          "expression": "case \"fat\" -> 0xFFC7C9C8;",
+          "numeric_literals": [
+            {
+              "java": "0xFFC7C9C8",
+              "value": -3683896
+            }
+          ]
+        },
+        {
+          "line": 47,
+          "method": "draw",
+          "expression": "default -> 0xFFE0A83B;",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "draw",
+          "expression": "int y = minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "draw",
+          "expression": "y + 23,",
+          "numeric_literals": [
+            {
+              "java": "23",
+              "value": 23
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "0xFFE5E8E8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 70,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 71,
+          "method": "draw",
+          "expression": "y + 36,",
+          "numeric_literals": [
+            {
+              "java": "36",
+              "value": 36
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "graphics.fill(x + 12, y + 52, x + WIDTH - 12, y + 57, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "52",
+              "value": 52
+            },
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "57",
+              "value": 57
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 76,
+          "method": "draw",
+          "expression": "x + 12, y + 52, x + 12 + (WIDTH - 24) * count / capacity, y + 57, accent);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "52",
+              "value": 52
+            },
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "24",
+              "value": 24
+            },
+            {
+              "java": "57",
+              "value": 57
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "panelX",
+          "expression": "int x = minecraft.getWindow().getGuiScaledWidth() / 2 + 24;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "panelX",
+          "expression": "return Math.min(x, minecraft.getWindow().getGuiScaledWidth() - width - 8);",
+          "numeric_literals": [
+            {
+              "java": "8",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "line": 86,
+          "method": "panel",
+          "expression": "graphics.fill(x + 3, y + 3, x + width + 3, y + height + 3, 0x55000000);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "0x55000000",
+              "value": 1426063360
+            }
+          ]
+        },
+        {
+          "line": 87,
+          "method": "panel",
+          "expression": "graphics.fill(x, y, x + width, y + height, 0xE6121718);",
+          "numeric_literals": [
+            {
+              "java": "0xE6121718",
+              "value": -435022056
+            }
+          ]
+        },
+        {
+          "line": 88,
+          "method": "panel",
+          "expression": "graphics.fill(x, y, x + 3, y + height, accent);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 89,
+          "method": "panel",
+          "expression": "graphics.fill(x + 3, y + 29, x + width, y + 30, 0x554F6265);",
+          "numeric_literals": [
+            {
+              "java": "3",
+              "value": 3
+            },
+            {
+              "java": "29",
+              "value": 29
+            },
+            {
+              "java": "30",
+              "value": 30
+            },
+            {
+              "java": "0x554F6265",
+              "value": 1431265893
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/PotHud.java",
+        "sha256": "be3a7797542de927dacc7c10b2d460109d794562e5f28d1da788522e54dbcda0"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 24,
+          "expression": "190",
+          "value": 190
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 25,
+          "expression": "106",
+          "value": 106
+        },
+        {
+          "name": "hasOil",
+          "java_type": "boolean",
+          "line": 39,
+          "expression": "state.getProperties().stream()\n            .filter(\n                property ->\n                    property instanceof BooleanProperty && property.getName().equals(\"has_oil\"))\n            .map(property -> state.getValue((BooleanProperty) property))\n            .findFirst()\n            .orElse(false)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 57,
+          "expression": "OilPotHud.panelX(minecraft, WIDTH)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 58,
+          "expression": "Math.max(10, minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "seasoned",
+          "java_type": "boolean",
+          "line": 98,
+          "expression": "!seasoning.grilling$getSeasoning().isEmpty()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "shown",
+          "java_type": "int",
+          "line": 115,
+          "expression": "0",
+          "value": 0
+        }
+      ],
+      "rules": [
+        {
+          "line": 24,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 190;",
+          "numeric_literals": [
+            {
+              "java": "190",
+              "value": 190
+            }
+          ]
+        },
+        {
+          "line": 25,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 106;",
+          "numeric_literals": [
+            {
+              "java": "106",
+              "value": 106
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "draw",
+          "expression": "int y = Math.max(10, minecraft.getWindow().getGuiScaledHeight() / 2 - HEIGHT / 2);",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 59,
+          "method": "draw",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, HEIGHT, 0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 65,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 72,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "draw",
+          "expression": "y + 21,",
+          "numeric_literals": [
+            {
+              "java": "21",
+              "value": 21
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "0xFFB8D8CD,",
+          "numeric_literals": [
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 79,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "draw",
+          "expression": "y + 36,",
+          "numeric_literals": [
+            {
+              "java": "36",
+              "value": 36
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "draw",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "draw",
+          "expression": "drawIngredients(graphics, pot.grilling$getInputs(), x + 12, y + 47);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "47",
+              "value": 47
+            }
+          ]
+        },
+        {
+          "line": 94,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 95,
+          "method": "draw",
+          "expression": "y + 76,",
+          "numeric_literals": [
+            {
+              "java": "76",
+              "value": 76
+            }
+          ]
+        },
+        {
+          "line": 96,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 106,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "draw",
+          "expression": "y + 90,",
+          "numeric_literals": [
+            {
+              "java": "90",
+              "value": 90
+            }
+          ]
+        },
+        {
+          "line": 109,
+          "method": "draw",
+          "expression": "? 0xFFE0A83B",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 110,
+          "method": "draw",
+          "expression": ": 0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 115,
+          "method": "drawIngredients",
+          "expression": "int shown = 0;",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 118,
+          "method": "drawIngredients",
+          "expression": "graphics.renderItem(stack, x + shown * 19, y);",
+          "numeric_literals": [
+            {
+              "java": "19",
+              "value": 19
+            }
+          ]
+        },
+        {
+          "line": 121,
+          "method": "drawIngredients",
+          "expression": "if (shown == 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 126,
+          "method": "drawIngredients",
+          "expression": "y + 4,",
+          "numeric_literals": [
+            {
+              "java": "4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "line": 127,
+          "method": "drawIngredients",
+          "expression": "0xFF8D9697,",
+          "numeric_literals": [
+            {
+              "java": "0xFF8D9697",
+              "value": -7498089
+            }
+          ]
+        },
+        {
+          "line": 136,
+          "method": "status",
+          "expression": "if (pot.grilling$getStatus() >= 2)",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 143,
+          "method": "status",
+          "expression": "if (pot.grilling$getStatus() == 1 || !seasoning.grilling$getSeasoning().isEmpty())",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningBottleHud.java",
+        "sha256": "d8063874e345d646ac7c602df8404f60ea476e15f58f4962a1f135e35bfd7e3c"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 28,
+          "expression": "164",
+          "value": 164
+        },
+        {
+          "name": "height",
+          "java_type": "int",
+          "line": 53,
+          "expression": "49 + counts.size() * 18 + Math.max(1, effects.size()) * 10 + 10",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 54,
+          "expression": "OilPotHud.panelX(minecraft, WIDTH)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 55,
+          "expression": "Math.max(12, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "rowY",
+          "java_type": "int",
+          "line": 86,
+          "expression": "y + 44",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 28,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 164;",
+          "numeric_literals": [
+            {
+              "java": "164",
+              "value": 164
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "draw",
+          "expression": "REQUIRED.forEach(id -> counts.put(id, 0));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "draw",
+          "expression": "values.forEach(id -> counts.merge(id, 1, Integer::sum));",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 53,
+          "method": "draw",
+          "expression": "int height = 49 + counts.size() * 18 + Math.max(1, effects.size()) * 10 + 10;",
+          "numeric_literals": [
+            {
+              "java": "49",
+              "value": 49
+            },
+            {
+              "java": "18",
+              "value": 18
+            },
+            {
+              "java": "1",
+              "value": 1
+            },
+            {
+              "java": "10",
+              "value": 10
+            },
+            {
+              "java": "10",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "draw",
+          "expression": "int y = Math.max(12, minecraft.getWindow().getGuiScaledHeight() / 2 - height / 2);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "method": "draw",
+          "expression": "OilPotHud.panel(graphics, x, y, WIDTH, height, 0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 61,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 62,
+          "method": "draw",
+          "expression": "y + 9,",
+          "numeric_literals": [
+            {
+              "java": "9",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "draw",
+          "expression": "0xFFF3E9D2,",
+          "numeric_literals": [
+            {
+              "java": "0xFFF3E9D2",
+              "value": -792110
+            }
+          ]
+        },
+        {
+          "line": 66,
+          "method": "draw",
+          "expression": "new ItemStack(ModItems.EMPTY_SEASONING_BOTTLE.get()), x + WIDTH - 27, y + 6);",
+          "numeric_literals": [
+            {
+              "java": "27",
+              "value": 27
+            },
+            {
+              "java": "6",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "draw",
+          "expression": "y + 20,",
+          "numeric_literals": [
+            {
+              "java": "20",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": 76,
+          "method": "draw",
+          "expression": "0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 78,
+          "method": "draw",
+          "expression": "graphics.fill(x + 12, y + 34, x + WIDTH - 12, y + 38, 0xFF303B3D);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "34",
+              "value": 34
+            },
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "38",
+              "value": 38
+            },
+            {
+              "java": "0xFF303B3D",
+              "value": -13616323
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 81,
+          "method": "draw",
+          "expression": "y + 34,",
+          "numeric_literals": [
+            {
+              "java": "34",
+              "value": 34
+            }
+          ]
+        },
+        {
+          "line": 82,
+          "method": "draw",
+          "expression": "x + 12 + (WIDTH - 24) * values.size() / SeasoningBottleBlockEntity.CAPACITY,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "24",
+              "value": 24
+            }
+          ]
+        },
+        {
+          "line": 83,
+          "method": "draw",
+          "expression": "y + 38,",
+          "numeric_literals": [
+            {
+              "java": "38",
+              "value": 38
+            }
+          ]
+        },
+        {
+          "line": 84,
+          "method": "draw",
+          "expression": "0xFFE0A83B);",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 86,
+          "method": "draw",
+          "expression": "int rowY = y + 44;",
+          "numeric_literals": [
+            {
+              "java": "44",
+              "value": 44
+            }
+          ]
+        },
+        {
+          "line": 89,
+          "method": "draw",
+          "expression": "graphics.renderItem(new ItemStack(item), x + 12, rowY - 3);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "line": 90,
+          "method": "draw",
+          "expression": "graphics.drawString(minecraft.font, item.getDescription(), x + 34, rowY, 0xFFE5E8E8, false);",
+          "numeric_literals": [
+            {
+              "java": "34",
+              "value": 34
+            },
+            {
+              "java": "0xFFE5E8E8",
+              "value": -1709848
+            }
+          ]
+        },
+        {
+          "line": 92,
+          "method": "draw",
+          "expression": "entry.getValue() == 0",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 98,
+          "method": "draw",
+          "expression": "x + WIDTH - minecraft.font.width(value) - 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 100,
+          "method": "draw",
+          "expression": "entry.getValue() == 0 ? 0xFFE68B73 : 0xFFAAB7B8,",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0xFFE68B73",
+              "value": -1668237
+            },
+            {
+              "java": "0xFFAAB7B8",
+              "value": -5589064
+            }
+          ]
+        },
+        {
+          "line": 102,
+          "method": "draw",
+          "expression": "rowY += 18;",
+          "numeric_literals": [
+            {
+              "java": "18",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "line": 107,
+          "method": "draw",
+          "expression": "x + 12,",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 108,
+          "method": "draw",
+          "expression": "rowY + 1,",
+          "numeric_literals": [
+            {
+              "java": "1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "line": 109,
+          "method": "draw",
+          "expression": "0xFFE0A83B,",
+          "numeric_literals": [
+            {
+              "java": "0xFFE0A83B",
+              "value": -2054085
+            }
+          ]
+        },
+        {
+          "line": 111,
+          "method": "draw",
+          "expression": "rowY += 12;",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "line": 115,
+          "method": "draw",
+          "expression": "graphics.drawString(minecraft.font, effect, x + 12, rowY, 0xFFB8D8CD, false);",
+          "numeric_literals": [
+            {
+              "java": "12",
+              "value": 12
+            },
+            {
+              "java": "0xFFB8D8CD",
+              "value": -4663091
+            }
+          ]
+        },
+        {
+          "line": 116,
+          "method": "draw",
+          "expression": "rowY += 10;",
+          "numeric_literals": [
+            {
+              "java": "10",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java": {
+      "source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+        "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156"
+      },
+      "declarations": [
+        {
+          "name": "WIDTH",
+          "java_type": "int",
+          "line": 21,
+          "expression": "102",
+          "value": 102
+        },
+        {
+          "name": "HEIGHT",
+          "java_type": "int",
+          "line": 22,
+          "expression": "5",
+          "value": 5
+        },
+        {
+          "name": "ICON_SIZE",
+          "java_type": "int",
+          "line": 23,
+          "expression": "16",
+          "value": 16
+        },
+        {
+          "name": "duration",
+          "java_type": "int",
+          "line": 43,
+          "expression": "profile.duration()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "elapsed",
+          "java_type": "float",
+          "line": 44,
+          "expression": "duration - player.getUseItemRemainingTicks() + minecraft.getTimer().getGameTimeDeltaPartialTick(true)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "progress",
+          "java_type": "float",
+          "line": 45,
+          "expression": "Math.min(1.0F, Math.max(0.0F, elapsed / duration))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "ready",
+          "java_type": "boolean",
+          "line": 46,
+          "expression": "elapsed >= MultiBiteSkewerItem.MINIMUM_EAT_TICKS",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "screenWidth",
+          "java_type": "int",
+          "line": 47,
+          "expression": "minecraft.getWindow().getGuiScaledWidth()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "screenHeight",
+          "java_type": "int",
+          "line": 48,
+          "expression": "minecraft.getWindow().getGuiScaledHeight()",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "x",
+          "java_type": "int",
+          "line": 49,
+          "expression": "screenWidth / 2 + 50 - WIDTH / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "y",
+          "java_type": "int",
+          "line": 50,
+          "expression": "screenHeight - 54",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "fillWidth",
+          "java_type": "int",
+          "line": 51,
+          "expression": "Math.min(WIDTH, Math.max(0, Math.round(WIDTH * progress)))",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "threshold",
+          "java_type": "int",
+          "line": 52,
+          "expression": "x + Math.round(WIDTH * MultiBiteSkewerItem.MINIMUM_EAT_TICKS / (float) duration)",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "iconX",
+          "java_type": "int",
+          "line": 54,
+          "expression": "threshold - ICON_SIZE / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        },
+        {
+          "name": "iconY",
+          "java_type": "int",
+          "line": 55,
+          "expression": "y - (ICON_SIZE - HEIGHT) / 2",
+          "evaluation": "symbolic; expression retained, not executed"
+        }
+      ],
+      "rules": [
+        {
+          "line": 21,
+          "method": "<class initializer>",
+          "expression": "private static final int WIDTH = 102;",
+          "numeric_literals": [
+            {
+              "java": "102",
+              "value": 102
+            }
+          ]
+        },
+        {
+          "line": 22,
+          "method": "<class initializer>",
+          "expression": "private static final int HEIGHT = 5;",
+          "numeric_literals": [
+            {
+              "java": "5",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "method": "<class initializer>",
+          "expression": "private static final int ICON_SIZE = 16;",
+          "numeric_literals": [
+            {
+              "java": "16",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "line": 45,
+          "method": "draw",
+          "expression": "float progress = Math.min(1.0F, Math.max(0.0F, elapsed / duration));",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "0.0F",
+              "value": 0.0
+            }
+          ]
+        },
+        {
+          "line": 49,
+          "method": "draw",
+          "expression": "int x = screenWidth / 2 + 50 - WIDTH / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "50",
+              "value": 50
+            },
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 50,
+          "method": "draw",
+          "expression": "int y = screenHeight - 54;",
+          "numeric_literals": [
+            {
+              "java": "54",
+              "value": 54
+            }
+          ]
+        },
+        {
+          "line": 51,
+          "method": "draw",
+          "expression": "int fillWidth = Math.min(WIDTH, Math.max(0, Math.round(WIDTH * progress)));",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 54,
+          "method": "draw",
+          "expression": "int iconX = threshold - ICON_SIZE / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 55,
+          "method": "draw",
+          "expression": "int iconY = y - (ICON_SIZE - HEIGHT) / 2;",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "method": "draw",
+          "expression": "graphics.blit(BASE, x, y, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 58,
+          "method": "draw",
+          "expression": "if (fillWidth > 0)",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 63,
+          "method": "draw",
+          "expression": "0,",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 64,
+          "method": "draw",
+          "expression": "0,",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 73,
+          "method": "draw",
+          "expression": "RenderSystem.setShaderColor(0.36F, 0.36F, 0.36F, 0.86F);",
+          "numeric_literals": [
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.36F",
+              "value": 0.36
+            },
+            {
+              "java": "0.86F",
+              "value": 0.86
+            }
+          ]
+        },
+        {
+          "line": 74,
+          "method": "draw",
+          "expression": "graphics.blit(readyIcon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 75,
+          "method": "draw",
+          "expression": "RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);",
+          "numeric_literals": [
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            },
+            {
+              "java": "1.0F",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "line": 77,
+          "method": "draw",
+          "expression": "graphics.blit(readyIcon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 80,
+          "method": "draw",
+          "expression": "graphics.blit(ready ? READY : PENDING, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);",
+          "numeric_literals": [
+            {
+              "java": "0",
+              "value": 0
+            },
+            {
+              "java": "0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "line": 90,
+          "method": "draw",
+          "expression": "minecraft.font, debug, screenWidth / 2, y - 13, 0xFFFFFF55);",
+          "numeric_literals": [
+            {
+              "java": "2",
+              "value": 2
+            },
+            {
+              "java": "13",
+              "value": 13
+            },
+            {
+              "java": "0xFFFFFF55",
+              "value": -171
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "forge-1.20.1": {
+      "eating_bar_width": {
+        "value": 102,
+        "source": {
+          "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L20",
+          "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+          "line": 20,
+          "method": "WIDTH"
+        },
+        "expression": "102"
+      },
+      "eating_bar_height": {
+        "value": 5,
+        "source": {
+          "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L21",
+          "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+          "line": 21,
+          "method": "HEIGHT"
+        },
+        "expression": "5"
+      },
+      "icon_size": {
+        "value": 16,
+        "source": {
+          "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L22",
+          "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+          "line": 22,
+          "method": "ICON_SIZE"
+        },
+        "expression": "16"
+      },
+      "offset_from_screen_center_x_and_bottom_y": {
+        "x": {
+          "value": -1,
+          "expression": "screenWidth / 2 + 50 - WIDTH / 2",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L48",
+            "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+            "line": 48,
+            "method": "draw"
+          }
+        },
+        "y": {
+          "value": -54,
+          "expression": "screenHeight - 54",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L49",
+            "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+            "line": 49,
+            "method": "draw"
+          }
+        }
+      },
+      "pending_rgba": {
+        "value": [
+          0.36,
+          0.36,
+          0.36,
+          0.86
+        ],
+        "source": {
+          "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L72",
+          "sha256": "9f2058479e5d6bab4538cf7ae66603883bdadd7bfacf19bd953197d4516a170a",
+          "line": 72,
+          "method": "draw"
+        }
+      }
+    },
+    "neoforge-1.21.1": {
+      "eating_bar_width": {
+        "value": 102,
+        "source": {
+          "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L21",
+          "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+          "line": 21,
+          "method": "WIDTH"
+        },
+        "expression": "102"
+      },
+      "eating_bar_height": {
+        "value": 5,
+        "source": {
+          "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L22",
+          "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+          "line": 22,
+          "method": "HEIGHT"
+        },
+        "expression": "5"
+      },
+      "icon_size": {
+        "value": 16,
+        "source": {
+          "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L23",
+          "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+          "line": 23,
+          "method": "ICON_SIZE"
+        },
+        "expression": "16"
+      },
+      "offset_from_screen_center_x_and_bottom_y": {
+        "x": {
+          "value": -1,
+          "expression": "screenWidth / 2 + 50 - WIDTH / 2",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L49",
+            "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+            "line": 49,
+            "method": "draw"
+          }
+        },
+        "y": {
+          "value": -54,
+          "expression": "screenHeight - 54",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L50",
+            "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+            "line": 50,
+            "method": "draw"
+          }
+        }
+      },
+      "pending_rgba": {
+        "value": [
+          0.36,
+          0.36,
+          0.36,
+          0.86
+        ],
+        "source": {
+          "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java",
+          "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkewerEatingHud.java#L73",
+          "sha256": "6eea655974637eefb70b9e88636d16e21cb99d5b3fe5b24509b10950d8fa5156",
+          "line": 73,
+          "method": "draw"
+        }
+      }
+    }
+  }
+}

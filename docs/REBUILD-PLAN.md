@@ -311,6 +311,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 **T2.2 刪除歷史樹與舊實驗**：`history/`、`migration/`、`notebook/`、`docs/legacy_workflows/`、`docs/archive/`、`docs/history/`。驗收：`history_tree_files=0`。
 
 **T2.3 萃取 Java 資料表**
+- 執行註記（2026-10-20）：擁有者因目前 CI 仍依賴歷史樹，同意先做 T2.3、再處理 T2.2；此授權不代表已批准 T2.2／T2.4／T2.5 的其餘重排，原驗收條件不變。
 - 步驟：把 `development/gameplay_core/fixtures/java-*.json` 與 `projects/grilling/source_snapshots/` 內的資料（配方、熱度期限、效果、進食曲線、HUD 尺寸、調料顏色、音效對照、碰撞形狀）整理成 `data/java/*.json`，每檔頂端記 `source_commit: 9a1acdab…` 與萃取方法；寫 `tools/java_extract/` 腳本可從上游原碼重新產生（用 `git clone https://github.com/breezeth-CN/KaleidoscopeGrilling`，鎖定 commit）。
 - 驗收：`data/java/` 內容可由腳本重現；每個 runtime 用到的 Java 數值都能在這裡找到出處。
 - 不要做：不改 runtime 去讀這些檔（P3 才做）。

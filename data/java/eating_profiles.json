@@ -1,0 +1,1374 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "source_repository": "https://github.com/breezeth-CN/KaleidoscopeGrilling",
+  "extraction_method": "Parse both loaders MultiBiteSkewerItem enum, timing constants, constructor profiles and ModItems name-derived rules.",
+  "licenses": [
+    "LICENSE-CODE (BSD-3-Clause)",
+    "LICENSE-ASSETS (CC-BY-NC-SA-4.0)"
+  ],
+  "loaders": {
+    "forge-1.20.1": {
+      "profiles": {
+        "ONE": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            1.16667,
+            3.08333
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L33",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 33,
+            "method": "AnimationProfile",
+            "expression": "ONE(90, 1.16667F, 3.08333F)"
+          }
+        },
+        "TWO": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            4.0
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L34",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 34,
+            "method": "AnimationProfile",
+            "expression": "TWO(90, 0.95833F, 4.0F)"
+          }
+        },
+        "THREE": {
+          "duration_ticks": 100,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.54167
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L35",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 35,
+            "method": "AnimationProfile",
+            "expression": "THREE(100, 0.95833F, 2.33333F, 3.54167F)"
+          }
+        },
+        "THREE_ALT": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            2.16667,
+            3.5
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L36",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 36,
+            "method": "AnimationProfile",
+            "expression": "THREE_ALT(90, 0.95833F, 2.16667F, 3.5F)"
+          }
+        },
+        "THREE_RANDOM": {
+          "duration_ticks": 100,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.54167
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L37",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 37,
+            "method": "AnimationProfile",
+            "expression": "THREE_RANDOM(100, 0.95833F, 2.33333F, 3.54167F)"
+          }
+        },
+        "FOUR": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.45833,
+            4.08333
+          ],
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L38",
+            "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+            "line": 38,
+            "method": "AnimationProfile",
+            "expression": "FOUR(90, 0.95833F, 2.33333F, 3.45833F, 4.08333F)"
+          }
+        }
+      },
+      "profile_by_item": {
+        "kaleidoscope_grilling:dark_grilling": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L125",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 125,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"dark_grilling\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(1).saturationMod(0.0F).build()),\n                  \"tooltip.kaleidoscope_grilling.dark_grilling.maxim\",\n                  new ResourceLocation(\"minecraft\", \"blindness\"),\n                  200,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:grilled_beef_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L361",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 361,
+            "method": "multiBiteSkewer",
+            "expression": "multiBiteSkewer(\n        \"grilled_beef_skewer\",\n        5,\n        0.6F,\n        new ResourceLocation(\"minecraft\", \"strength\"),\n        10,\n        MultiBiteSkewerItem.AnimationProfile.FOUR)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_bun_slice_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L398",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 398,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_bun_slice_skewer\", 5, 0.6F, null, 0)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_caterpillar_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L391",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 391,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_caterpillar_skewer\", 12, 0.0833F, cookeryEffect(\"flatulence\"), 15)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_chicken_skin_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L369",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 369,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_chicken_skin_skewer\",\n        4,\n        0.5F,\n        new ResourceLocation(\"minecraft\", \"speed\"),\n        20)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_ender_pearl_skewer": {
+          "profile": "THREE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L399",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 399,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_ender_pearl_skewer\", 4, 0.1F, cookeryEffect(\"projectile_dodge\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_fish_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L383",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 383,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_fish_skewer\", 6, 0.45F, cookeryEffect(\"tundra_strider\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_fried_egg_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L409",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 409,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_fried_egg_skewer\", 4, 0.375F, cookeryEffect(\"sulfur\"), 60)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_gluten_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L410",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 410,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_gluten_skewer\",\n        6,\n        0.1F,\n        new ResourceLocation(\"minecraft\", \"haste\"),\n        30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_golden_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L330",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 330,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"grilled_golden_skewer\",\n          () ->\n              new GoldenSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(12).saturationMod(1.2F).build())))"
+          },
+          "constructor_source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java#L16",
+            "sha256": "726093777c2136e85f0c1da5ab134de181faf638a23be02b88a9643be9e740c4",
+            "line": 16,
+            "method": "GoldenSkewerItem",
+            "expression": "super(properties, \"tooltip.kaleidoscope_grilling.grilled_golden_skewer.maxim\", new ResourceLocation(KaleidoscopeGrilling.MOD_ID, \"invincible\"), 200, AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_lamb_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L308",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 308,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"grilled_lamb_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8F).build()),\n                  \"tooltip.kaleidoscope_grilling.grilled_lamb_skewer.maxim\",\n                  cookeryEffect(\"warmth\"),\n                  45 * 20,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:grilled_meat_and_bone_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L408",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 408,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_meat_and_bone_skewer\", 4, 0.5F, cookeryEffect(\"vigor\"), 20)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_meatball_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L401",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 401,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_meatball_skewer\",\n        12,\n        0.875F,\n        new ResourceLocation(\"minecraft\", \"strength\"),\n        10)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_mid_wing_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L375",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 375,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_mid_wing_skewer\", 7, 0.2143F, cookeryEffect(\"mustard\"), 45)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_mushroom_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L392",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 392,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_mushroom_skewer\",\n        5,\n        0.55F,\n        new ResourceLocation(\"minecraft\", \"night_vision\"),\n        30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_pork_belly_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L368",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 368,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_pork_belly_skewer\", 5, 0.6F, cookeryEffect(\"vigor\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_potato_slice_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L390",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 390,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_potato_slice_skewer\", 6, 0.1667F, cookeryEffect(\"warmth\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_slime_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L407",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 407,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_slime_skewer\", 4, 0.0F, cookeryEffect(\"hinder\"), 45)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_squid_tentacle_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L376",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 376,
+            "method": "multiBiteSkewer",
+            "expression": "multiBiteSkewer(\n        \"grilled_squid_tentacle_skewer\",\n        5,\n        0.4F,\n        new ResourceLocation(\"minecraft\", \"water_breathing\"),\n        30,\n        MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L384",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 384,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_sweet_potato_sheet_skewer\",\n        6,\n        1.1667F,\n        cookeryEffect(\"preservation\"),\n        45)"
+          }
+        },
+        "kaleidoscope_grilling:mysterious_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L114",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 114,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"mysterious_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(2).saturationMod(0.0F).build()),\n                  \"tooltip.kaleidoscope_grilling.mysterious_skewer.maxim\",\n                  new ResourceLocation(\"minecraft\", \"nausea\"),\n                  100,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:ordinary_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L337",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 337,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"ordinary_skewer\",\n          () ->\n              new CursedSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(5)\n                              .saturationMod(0.46F)\n                              .alwaysEat()\n                              .build())))"
+          },
+          "constructor_source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java#L30",
+            "sha256": "d51c62c3f3b7e7e3530967747233b12a44caab095d71cb00366907414126fc3a",
+            "line": 30,
+            "method": "CursedSkewerItem",
+            "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:raw_beef_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L417",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 417,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_beef_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_bun_slice_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L427",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 427,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_bun_slice_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_caterpillar_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L425",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 425,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_caterpillar_skewer\", 6, 0.0417F, true)"
+          }
+        },
+        "kaleidoscope_grilling:raw_chicken_skin_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L419",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 419,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_chicken_skin_skewer\", 2, 0.25F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_ender_pearl_skewer": {
+          "profile": "THREE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L428",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 428,
+            "method": "animatedRawSkewer",
+            "expression": "animatedRawSkewer(\n        \"raw_ender_pearl_skewer\",\n        2,\n        0.05F,\n        true,\n        MultiBiteSkewerItem.AnimationProfile.THREE)"
+          }
+        },
+        "kaleidoscope_grilling:raw_fish_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L422",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 422,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_fish_skewer\", 3, 0.225F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_fried_egg_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L437",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 437,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_fried_egg_skewer\", 2, 0.1875F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_gluten_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L438",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 438,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_gluten_skewer\", 3, 0.05F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_golden_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L319",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 319,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"raw_golden_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(6).saturationMod(1.2F).build()),\n                  null,\n                  null,\n                  0,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:raw_lamb_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L297",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 297,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"raw_lamb_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(new FoodProperties.Builder().nutrition(4).saturationMod(0.8F).build()),\n                  null,\n                  null,\n                  0,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:raw_meat_and_bone_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L436",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 436,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_meat_and_bone_skewer\", 2, 0.25F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_meatball_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L434",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 434,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_meatball_skewer\", 4, 0.4375F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_mid_wing_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L420",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 420,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_mid_wing_skewer\", 3, 0.1071F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_mushroom_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L426",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 426,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_mushroom_skewer\", 2, 0.275F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_pork_belly_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L418",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 418,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_pork_belly_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_potato_slice_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L424",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 424,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_potato_slice_skewer\", 3, 0.0833F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_slime_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L435",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 435,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_slime_skewer\", 2, 0.0F, true)"
+          }
+        },
+        "kaleidoscope_grilling:raw_squid_tentacle_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L421",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 421,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_squid_tentacle_skewer\", 2, 0.2F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L423",
+            "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+            "line": 423,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_sweet_potato_sheet_skewer\", 3, 0.5833F, false)"
+          }
+        }
+      },
+      "minimum_eat_ticks": 25,
+      "release_checkpoint_grace_ticks": 1,
+      "visual_stage_per_bite": 0.25,
+      "ticks_per_second": 20.0,
+      "random_profile_choices": [
+        "THREE",
+        "THREE_ALT"
+      ],
+      "random_selection": "nextBoolean, equal probability at use start",
+      "minimum_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L27",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 27,
+        "method": "MINIMUM_EAT_TICKS",
+        "expression": "MINIMUM_EAT_TICKS = 25;"
+      },
+      "grace_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L28",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 28,
+        "method": "RELEASE_CHECKPOINT_GRACE_TICKS",
+        "expression": "RELEASE_CHECKPOINT_GRACE_TICKS = 1;"
+      },
+      "name_rules": [
+        {
+          "names": [
+            "fish_skewer",
+            "caterpillar_skewer"
+          ],
+          "profile": "ONE",
+          "expression": "if (name.equals(\"fish_skewer\") || name.equals(\"caterpillar_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.ONE;"
+        },
+        {
+          "names": [
+            "bun_slice_skewer",
+            "fried_egg_skewer",
+            "slime_skewer",
+            "sweet_potato_sheet_skewer"
+          ],
+          "profile": "TWO",
+          "expression": "if (name.equals(\"bun_slice_skewer\")\n        || name.equals(\"fried_egg_skewer\")\n        || name.equals(\"slime_skewer\")\n        || name.equals(\"sweet_potato_sheet_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.TWO;"
+        },
+        {
+          "names": [
+            "beef_skewer",
+            "chicken_skin_skewer",
+            "pork_belly_skewer"
+          ],
+          "profile": "FOUR",
+          "expression": "if (name.equals(\"beef_skewer\")\n        || name.equals(\"chicken_skin_skewer\")\n        || name.equals(\"pork_belly_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.FOUR;"
+        },
+        {
+          "names": [
+            "ender_pearl_skewer"
+          ],
+          "profile": "THREE",
+          "expression": "if (name.equals(\"ender_pearl_skewer\")) return MultiBiteSkewerItem.AnimationProfile.THREE;"
+        }
+      ],
+      "name_replacements": [
+        [
+          "raw_",
+          ""
+        ],
+        [
+          "grilled_",
+          ""
+        ]
+      ],
+      "name_rule_default": "THREE_RANDOM",
+      "name_rules_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L562",
+        "sha256": "94a66413542352d5e85d904524330ccbd27984ca8cc201839f79a3516534d06e",
+        "line": 562,
+        "method": "animationProfile",
+        "expression": "animationProfile(String id) {\n    String name = id.replace(\"raw_\", \"\").replace(\"grilled_\", \"\");\n    if (name.equals(\"fish_skewer\") || name.equals(\"caterpillar_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.ONE;\n    if (name.equals(\"bun_slice_skewer\")\n        || name.equals(\"fried_egg_skewer\")\n        || name.equals(\"slime_skewer\")\n        || name.equals(\"sweet_potato_sheet_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.TWO;\n    if (name.equals(\"beef_skewer\")\n        || name.equals(\"chicken_skin_skewer\")\n        || name.equals(\"pork_belly_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.FOUR;\n    if (name.equals(\"ender_pearl_skewer\")) return MultiBiteSkewerItem.AnimationProfile.THREE;\n    return MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM;\n  }"
+      },
+      "animationProfile_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L69",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 69,
+        "method": "animationProfile",
+        "expression": "animationProfile(ItemStack stack) {\n    ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());\n    var skewerData =\n        itemId == null ? null : GrillingDataManager.skewerForItem(itemId.toString());\n    String configured = skewerData == null ? \"default\" : skewerData.eatingAnimation();\n    if (!configured.equals(\"default\")\n        && !configured.equals(\"provided\")\n        && !configured.equals(\"none\")) {\n      try {\n        return AnimationProfile.valueOf(configured.toUpperCase(java.util.Locale.ROOT));\n      } catch (IllegalArgumentException ignored) {\n                                                                        \n      }\n    }\n    if (animationProfile != AnimationProfile.THREE_RANDOM || !stack.hasTag())\n      return animationProfile == AnimationProfile.THREE_RANDOM ? AnimationProfile.THREE : animationProfile;\n    String value = stack.getTag().getString(ACTIVE_PROFILE_TAG);\n    return AnimationProfile.THREE_ALT.name().equals(value)\n        ? AnimationProfile.THREE_ALT\n        : AnimationProfile.THREE;\n  }"
+      },
+      "visualBiteStage_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L95",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 95,
+        "method": "visualBiteStage",
+        "expression": "visualBiteStage(ItemStack stack, @Nullable LivingEntity entity) {\n    if (!HotFoodConfig.ENABLE_SKEWER_EATING_ANIMATIONS.get()\n        || entity == null\n        || !entity.isUsingItem()\n        || !ItemStack.isSameItemSameTags(stack, entity.getUseItem())\n        || !(stack.getItem() instanceof MultiBiteSkewerItem animated)) return 0.0F;\n    AnimationProfile profile = animated.animationProfile(stack);\n    float elapsedSeconds = (profile.duration - entity.getUseItemRemainingTicks()) / 20.0F;\n    int completedBites = 0;\n    for (float biteSecond : profile.biteSeconds) {\n      if (elapsedSeconds < biteSecond) break;\n      completedBites++;\n    }\n    return completedBites * 0.25F;\n  }"
+      },
+      "use_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L124",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 124,
+        "method": "use",
+        "expression": "use(Level level, Player player, InteractionHand hand) {\n    ItemStack stack = player.getItemInHand(hand);\n    if (player.isShiftKeyDown()) return InteractionResultHolder.pass(stack);\n    if (!level.isClientSide) {\n      READY_EATS.remove(player);\n      SETTLED_EATS.remove(player);\n    }\n    if (!HotFoodConfig.ENABLE_SKEWER_EATING_ANIMATIONS.get()) {\n      clearActiveProfile(stack);\n      return super.use(level, player, hand);\n    }\n    AnimationProfile selected =\n        animationProfile == AnimationProfile.THREE_RANDOM\n            ? (player.getRandom().nextBoolean() ? AnimationProfile.THREE : AnimationProfile.THREE_ALT)\n            : animationProfile;\n\n    InteractionResultHolder<ItemStack> result;\n    if (stack.getCount() > 1) {\n      ItemStack serving = stack.copyWithCount(1);\n      setActiveProfile(serving, selected);\n      if (!level.isClientSide) {\n        ItemStack remainder = stack.copy();\n        clearActiveProfile(remainder);\n        remainder.shrink(1);\n        player.setItemInHand(hand, serving);\n        player.getInventory().placeItemBackInInventory(remainder);\n      }\n      result = super.use(level, player, hand);\n    } else {\n      setActiveProfile(stack, selected);\n      result = super.use(level, player, hand);\n    }\n    if (result.getResult().consumesAction() && player instanceof ServerPlayer serverPlayer) {\n      GrillingNetwork.setSkewerEatingSound(serverPlayer, selected, true);\n    } else if (!result.getResult().consumesAction()) {\n      clearActiveProfile(player.getItemInHand(hand));\n    }\n    return result;\n  }"
+      },
+      "settleIfEligible_source": {
+        "path": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L244",
+        "sha256": "45c57231630c421265e9a221d9dd90823856e2ee61d71665aace03b8310951e5",
+        "line": 244,
+        "method": "settleIfEligible",
+        "expression": "settleIfEligible(\n      ItemStack stack, Level level, LivingEntity entity, int remainingTicks) {\n    if (SETTLED_EATS.containsKey(entity)) return true;\n    ItemStack ready = READY_EATS.get(entity);\n    ItemStack timingStack = stack.isEmpty() ? ready : stack;\n    if (timingStack == null || timingStack.isEmpty()) return false;\n    int usedTicks = getUseDuration(timingStack) - remainingTicks;\n                                                                                         \n                                                                                         \n    if (ready == null\n        && usedTicks + RELEASE_CHECKPOINT_GRACE_TICKS < MINIMUM_EAT_TICKS) return false;\n    READY_EATS.remove(entity);\n    SETTLED_EATS.put(entity, Boolean.TRUE);\n    if (stack.isEmpty()) stack = ready;\n    ItemStack consumed = stack.copyWithCount(1);\n    clearActiveProfile(stack);\n    ItemStack result = finishFoodAndEffect(stack, level, entity);\n    afterFoodCommitted(consumed, level, entity);\n    result = ForgeEventFactory.onItemUseFinish(entity, consumed, 0, result);\n    entity.setItemInHand(entity.getUsedItemHand(), result);\n    return true;\n  }"
+      }
+    },
+    "neoforge-1.21.1": {
+      "profiles": {
+        "ONE": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            1.16667,
+            3.08333
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L36",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 36,
+            "method": "AnimationProfile",
+            "expression": "ONE(90, 1.16667F, 3.08333F)"
+          }
+        },
+        "TWO": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            4.0
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L37",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 37,
+            "method": "AnimationProfile",
+            "expression": "TWO(90, 0.95833F, 4.0F)"
+          }
+        },
+        "THREE": {
+          "duration_ticks": 100,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.54167
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L38",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 38,
+            "method": "AnimationProfile",
+            "expression": "THREE(100, 0.95833F, 2.33333F, 3.54167F)"
+          }
+        },
+        "THREE_ALT": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            2.16667,
+            3.5
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L39",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 39,
+            "method": "AnimationProfile",
+            "expression": "THREE_ALT(90, 0.95833F, 2.16667F, 3.5F)"
+          }
+        },
+        "THREE_RANDOM": {
+          "duration_ticks": 100,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.54167
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L40",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 40,
+            "method": "AnimationProfile",
+            "expression": "THREE_RANDOM(100, 0.95833F, 2.33333F, 3.54167F)"
+          }
+        },
+        "FOUR": {
+          "duration_ticks": 90,
+          "bite_seconds": [
+            0.95833,
+            2.33333,
+            3.45833,
+            4.08333
+          ],
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L41",
+            "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+            "line": 41,
+            "method": "AnimationProfile",
+            "expression": "FOUR(90, 0.95833F, 2.33333F, 3.45833F, 4.08333F)"
+          }
+        }
+      },
+      "profile_by_item": {
+        "kaleidoscope_grilling:dark_grilling": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L144",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 144,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"dark_grilling\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(1)\n                              .saturationModifier(0.0F)\n                              .build()),\n                  \"tooltip.kaleidoscope_grilling.dark_grilling.maxim\",\n                  ResourceLocation.withDefaultNamespace(\"blindness\"),\n                  200,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:grilled_beef_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L435",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 435,
+            "method": "multiBiteSkewer",
+            "expression": "multiBiteSkewer(\n        \"grilled_beef_skewer\",\n        5,\n        0.6F,\n        ResourceLocation.withDefaultNamespace(\"strength\"),\n        10,\n        MultiBiteSkewerItem.AnimationProfile.FOUR)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_bun_slice_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L472",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 472,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_bun_slice_skewer\", 5, 0.6F, null, 0)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_caterpillar_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L465",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 465,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_caterpillar_skewer\", 12, 0.0833F, cookeryEffect(\"flatulence\"), 15)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_chicken_skin_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L443",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 443,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_chicken_skin_skewer\",\n        4,\n        0.5F,\n        ResourceLocation.withDefaultNamespace(\"speed\"),\n        20)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_ender_pearl_skewer": {
+          "profile": "THREE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L473",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 473,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_ender_pearl_skewer\", 4, 0.1F, cookeryEffect(\"projectile_dodge\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_fish_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L457",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 457,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_fish_skewer\", 6, 0.45F, cookeryEffect(\"tundra_strider\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_fried_egg_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L483",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 483,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_fried_egg_skewer\", 4, 0.375F, cookeryEffect(\"sulfur\"), 60)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_gluten_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L484",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 484,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_gluten_skewer\",\n        6,\n        0.1F,\n        ResourceLocation.withDefaultNamespace(\"haste\"),\n        30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_golden_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L396",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 396,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"grilled_golden_skewer\",\n          () ->\n              new GoldenSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(12)\n                              .saturationModifier(1.2F)\n                              .build())))"
+          },
+          "constructor_source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/GoldenSkewerItem.java#L16",
+            "sha256": "bccd939239ed4d6eb4788688427a318b57d2b67eb6f260a20f557430375b553d",
+            "line": 16,
+            "method": "GoldenSkewerItem",
+            "expression": "super(properties, \"tooltip.kaleidoscope_grilling.grilled_golden_skewer.maxim\", ResourceLocation.fromNamespaceAndPath(KaleidoscopeGrilling.MOD_ID, \"invincible\"), 200, AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_lamb_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L366",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 366,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"grilled_lamb_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(8)\n                              .saturationModifier(0.8F)\n                              .build()),\n                  \"tooltip.kaleidoscope_grilling.grilled_lamb_skewer.maxim\",\n                  cookeryEffect(\"warmth\"),\n                  45 * 20,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:grilled_meat_and_bone_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L482",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 482,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_meat_and_bone_skewer\", 4, 0.5F, cookeryEffect(\"vigor\"), 20)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_meatball_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L475",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 475,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_meatball_skewer\",\n        12,\n        0.875F,\n        ResourceLocation.withDefaultNamespace(\"strength\"),\n        10)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_mid_wing_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L449",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 449,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_mid_wing_skewer\", 7, 0.2143F, cookeryEffect(\"mustard\"), 45)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_mushroom_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L466",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 466,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_mushroom_skewer\",\n        5,\n        0.55F,\n        ResourceLocation.withDefaultNamespace(\"night_vision\"),\n        30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_pork_belly_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L442",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 442,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_pork_belly_skewer\", 5, 0.6F, cookeryEffect(\"vigor\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_potato_slice_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L464",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 464,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_potato_slice_skewer\", 6, 0.1667F, cookeryEffect(\"warmth\"), 30)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_slime_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L481",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 481,
+            "method": "skewer",
+            "expression": "skewer(\"grilled_slime_skewer\", 4, 0.0F, cookeryEffect(\"hinder\"), 45)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_squid_tentacle_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L450",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 450,
+            "method": "multiBiteSkewer",
+            "expression": "multiBiteSkewer(\n        \"grilled_squid_tentacle_skewer\",\n        5,\n        0.4F,\n        ResourceLocation.withDefaultNamespace(\"water_breathing\"),\n        30,\n        MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L458",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 458,
+            "method": "skewer",
+            "expression": "skewer(\n        \"grilled_sweet_potato_sheet_skewer\",\n        6,\n        1.1667F,\n        cookeryEffect(\"preservation\"),\n        45)"
+          }
+        },
+        "kaleidoscope_grilling:mysterious_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L129",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 129,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"mysterious_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(2)\n                              .saturationModifier(0.0F)\n                              .build()),\n                  \"tooltip.kaleidoscope_grilling.mysterious_skewer.maxim\",\n                  ResourceLocation.withDefaultNamespace(\"nausea\"),\n                  100,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:ordinary_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L407",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 407,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"ordinary_skewer\",\n          () ->\n              new CursedSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(5)\n                              .saturationModifier(0.46F)\n                              .alwaysEdible()\n                              .build())))"
+          },
+          "constructor_source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java#L29",
+            "sha256": "190153a97395604b8b0c144353f16329757f625d8d97a470e197c116656e3d35",
+            "line": 29,
+            "method": "CursedSkewerItem",
+            "expression": "super(properties, null, null, 0, AnimationProfile.THREE_RANDOM)"
+          }
+        },
+        "kaleidoscope_grilling:raw_beef_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L491",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 491,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_beef_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_bun_slice_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L501",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 501,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_bun_slice_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_caterpillar_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L499",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 499,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_caterpillar_skewer\", 6, 0.0417F, true)"
+          }
+        },
+        "kaleidoscope_grilling:raw_chicken_skin_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L493",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 493,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_chicken_skin_skewer\", 2, 0.25F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_ender_pearl_skewer": {
+          "profile": "THREE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L502",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 502,
+            "method": "animatedRawSkewer",
+            "expression": "animatedRawSkewer(\n        \"raw_ender_pearl_skewer\",\n        2,\n        0.05F,\n        true,\n        MultiBiteSkewerItem.AnimationProfile.THREE)"
+          }
+        },
+        "kaleidoscope_grilling:raw_fish_skewer": {
+          "profile": "ONE",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L496",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 496,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_fish_skewer\", 3, 0.225F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_fried_egg_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L511",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 511,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_fried_egg_skewer\", 2, 0.1875F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_gluten_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L512",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 512,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_gluten_skewer\", 3, 0.05F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_golden_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L381",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 381,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"raw_golden_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(6)\n                              .saturationModifier(1.2F)\n                              .build()),\n                  null,\n                  null,\n                  0,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:raw_lamb_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L351",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 351,
+            "method": "ITEMS.register",
+            "expression": "ITEMS.register(\n          \"raw_lamb_skewer\",\n          () ->\n              new MultiBiteSkewerItem(\n                  new Item.Properties()\n                      .food(\n                          new FoodProperties.Builder()\n                              .nutrition(4)\n                              .saturationModifier(0.8F)\n                              .build()),\n                  null,\n                  null,\n                  0,\n                  MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM))"
+          }
+        },
+        "kaleidoscope_grilling:raw_meat_and_bone_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L510",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 510,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_meat_and_bone_skewer\", 2, 0.25F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_meatball_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L508",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 508,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_meatball_skewer\", 4, 0.4375F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_mid_wing_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L494",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 494,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_mid_wing_skewer\", 3, 0.1071F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_mushroom_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L500",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 500,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_mushroom_skewer\", 2, 0.275F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_pork_belly_skewer": {
+          "profile": "FOUR",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L492",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 492,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_pork_belly_skewer\", 2, 0.3F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_potato_slice_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L498",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 498,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_potato_slice_skewer\", 3, 0.0833F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_slime_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L509",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 509,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_slime_skewer\", 2, 0.0F, true)"
+          }
+        },
+        "kaleidoscope_grilling:raw_squid_tentacle_skewer": {
+          "profile": "THREE_RANDOM",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L495",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 495,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_squid_tentacle_skewer\", 2, 0.2F, false)"
+          }
+        },
+        "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer": {
+          "profile": "TWO",
+          "source": {
+            "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+            "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L497",
+            "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+            "line": 497,
+            "method": "rawSkewer",
+            "expression": "rawSkewer(\"raw_sweet_potato_sheet_skewer\", 3, 0.5833F, false)"
+          }
+        }
+      },
+      "minimum_eat_ticks": 25,
+      "release_checkpoint_grace_ticks": 1,
+      "visual_stage_per_bite": 0.25,
+      "ticks_per_second": 20.0,
+      "random_profile_choices": [
+        "THREE",
+        "THREE_ALT"
+      ],
+      "random_selection": "nextBoolean, equal probability at use start",
+      "minimum_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L30",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 30,
+        "method": "MINIMUM_EAT_TICKS",
+        "expression": "MINIMUM_EAT_TICKS = 25;"
+      },
+      "grace_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L31",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 31,
+        "method": "RELEASE_CHECKPOINT_GRACE_TICKS",
+        "expression": "RELEASE_CHECKPOINT_GRACE_TICKS = 1;"
+      },
+      "name_rules": [
+        {
+          "names": [
+            "fish_skewer",
+            "caterpillar_skewer"
+          ],
+          "profile": "ONE",
+          "expression": "if (name.equals(\"fish_skewer\") || name.equals(\"caterpillar_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.ONE;"
+        },
+        {
+          "names": [
+            "bun_slice_skewer",
+            "fried_egg_skewer",
+            "slime_skewer",
+            "sweet_potato_sheet_skewer"
+          ],
+          "profile": "TWO",
+          "expression": "if (name.equals(\"bun_slice_skewer\")\n        || name.equals(\"fried_egg_skewer\")\n        || name.equals(\"slime_skewer\")\n        || name.equals(\"sweet_potato_sheet_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.TWO;"
+        },
+        {
+          "names": [
+            "beef_skewer",
+            "chicken_skin_skewer",
+            "pork_belly_skewer"
+          ],
+          "profile": "FOUR",
+          "expression": "if (name.equals(\"beef_skewer\")\n        || name.equals(\"chicken_skin_skewer\")\n        || name.equals(\"pork_belly_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.FOUR;"
+        },
+        {
+          "names": [
+            "ender_pearl_skewer"
+          ],
+          "profile": "THREE",
+          "expression": "if (name.equals(\"ender_pearl_skewer\")) return MultiBiteSkewerItem.AnimationProfile.THREE;"
+        }
+      ],
+      "name_replacements": [
+        [
+          "raw_",
+          ""
+        ],
+        [
+          "grilled_",
+          ""
+        ]
+      ],
+      "name_rule_default": "THREE_RANDOM",
+      "name_rules_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java#L637",
+        "sha256": "0efba8a93eb6198d32cd8b93df7e4c770b84d22ee97672bcdb920066f3eb5a4f",
+        "line": 637,
+        "method": "animationProfile",
+        "expression": "animationProfile(String id) {\n    String name = id.replace(\"raw_\", \"\").replace(\"grilled_\", \"\");\n    if (name.equals(\"fish_skewer\") || name.equals(\"caterpillar_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.ONE;\n    if (name.equals(\"bun_slice_skewer\")\n        || name.equals(\"fried_egg_skewer\")\n        || name.equals(\"slime_skewer\")\n        || name.equals(\"sweet_potato_sheet_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.TWO;\n    if (name.equals(\"beef_skewer\")\n        || name.equals(\"chicken_skin_skewer\")\n        || name.equals(\"pork_belly_skewer\"))\n      return MultiBiteSkewerItem.AnimationProfile.FOUR;\n    if (name.equals(\"ender_pearl_skewer\")) return MultiBiteSkewerItem.AnimationProfile.THREE;\n    return MultiBiteSkewerItem.AnimationProfile.THREE_RANDOM;\n  }"
+      },
+      "animationProfile_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L72",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 72,
+        "method": "animationProfile",
+        "expression": "animationProfile(ItemStack stack) {\n    ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());\n    var skewerData = GrillingDataManager.skewerForItem(itemId.toString());\n    String configured = skewerData == null ? \"default\" : skewerData.eatingAnimation();\n    if (!configured.equals(\"default\")\n        && !configured.equals(\"provided\")\n        && !configured.equals(\"none\")) {\n      try {\n        return AnimationProfile.valueOf(configured.toUpperCase(java.util.Locale.ROOT));\n      } catch (IllegalArgumentException ignored) {\n                                                                        \n      }\n    }\n    if (animationProfile != AnimationProfile.THREE_RANDOM || !stack.has(DataComponents.CUSTOM_DATA))\n      return animationProfile == AnimationProfile.THREE_RANDOM ? AnimationProfile.THREE : animationProfile;\n    CustomData data = stack.get(DataComponents.CUSTOM_DATA);\n    String value = data == null ? \"\" : data.copyTag().getString(ACTIVE_PROFILE_TAG);\n    return AnimationProfile.THREE_ALT.name().equals(value)\n        ? AnimationProfile.THREE_ALT\n        : AnimationProfile.THREE;\n  }"
+      },
+      "visualBiteStage_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L98",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 98,
+        "method": "visualBiteStage",
+        "expression": "visualBiteStage(ItemStack stack, @Nullable LivingEntity entity) {\n    if (!HotFoodConfig.ENABLE_SKEWER_EATING_ANIMATIONS.get()\n        || entity == null\n        || !entity.isUsingItem()\n        || !ItemStack.isSameItemSameComponents(stack, entity.getUseItem())\n        || !(stack.getItem() instanceof MultiBiteSkewerItem animated)) return 0.0F;\n    AnimationProfile profile = animated.animationProfile(stack);\n    float elapsedSeconds = (profile.duration - entity.getUseItemRemainingTicks()) / 20.0F;\n    int completedBites = 0;\n    for (float biteSecond : profile.biteSeconds) {\n      if (elapsedSeconds < biteSecond) break;\n      completedBites++;\n    }\n    return completedBites * 0.25F;\n  }"
+      },
+      "use_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L127",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 127,
+        "method": "use",
+        "expression": "use(Level level, Player player, InteractionHand hand) {\n    ItemStack stack = player.getItemInHand(hand);\n    if (player.isShiftKeyDown()) return InteractionResultHolder.pass(stack);\n    if (!level.isClientSide) {\n      READY_EATS.remove(player);\n      SETTLED_EATS.remove(player);\n    }\n    if (!HotFoodConfig.ENABLE_SKEWER_EATING_ANIMATIONS.get()) {\n      clearActiveProfile(stack);\n      return super.use(level, player, hand);\n    }\n    AnimationProfile selected =\n        animationProfile == AnimationProfile.THREE_RANDOM\n            ? (player.getRandom().nextBoolean() ? AnimationProfile.THREE : AnimationProfile.THREE_ALT)\n            : animationProfile;\n\n    InteractionResultHolder<ItemStack> result;\n    if (stack.getCount() > 1) {\n      ItemStack serving = stack.copyWithCount(1);\n      setActiveProfile(serving, selected);\n      if (!level.isClientSide) {\n        ItemStack remainder = stack.copy();\n        clearActiveProfile(remainder);\n        remainder.shrink(1);\n        player.setItemInHand(hand, serving);\n        player.getInventory().placeItemBackInInventory(remainder);\n      }\n      result = super.use(level, player, hand);\n    } else {\n      setActiveProfile(stack, selected);\n      result = super.use(level, player, hand);\n    }\n    if (result.getResult().consumesAction() && player instanceof ServerPlayer serverPlayer) {\n      GrillingNetwork.setSkewerEatingSound(serverPlayer, selected, true);\n    } else if (!result.getResult().consumesAction()) {\n      clearActiveProfile(player.getItemInHand(hand));\n    }\n    return result;\n  }"
+      },
+      "settleIfEligible_source": {
+        "path": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java",
+        "url": "https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java#L250",
+        "sha256": "e350c1d628fe3067ad80b41a46928b2fb83727c9b37a1247a340fb58053e94a7",
+        "line": 250,
+        "method": "settleIfEligible",
+        "expression": "settleIfEligible(\n      ItemStack stack,\n      Level level,\n      LivingEntity entity,\n      int remainingTicks,\n      InteractionHand hand) {\n    if (SETTLED_EATS.containsKey(entity)) return true;\n    ItemStack ready = READY_EATS.get(entity);\n    ItemStack timingStack = stack.isEmpty() ? ready : stack;\n    if (timingStack == null || timingStack.isEmpty()) return false;\n    int usedTicks = getUseDuration(timingStack, entity) - remainingTicks;\n                                                                                         \n                                                                                         \n    if (ready == null\n        && usedTicks + RELEASE_CHECKPOINT_GRACE_TICKS < MINIMUM_EAT_TICKS) return false;\n    READY_EATS.remove(entity);\n    SETTLED_EATS.put(entity, Boolean.TRUE);\n    if (stack.isEmpty()) stack = ready;\n    ItemStack consumed = stack.copyWithCount(1);\n    clearActiveProfile(stack);\n    ItemStack result = finishFoodAndEffect(stack, level, entity);\n    afterFoodCommitted(consumed, level, entity);\n    result = EventHooks.onItemUseFinish(entity, consumed, 0, result);\n    entity.setItemInHand(hand, result);\n    return true;\n  }"
+      }
+    }
+  },
+  "runtime_tables": [
+    "PROFILE_BY_ITEM"
+  ]
+}
