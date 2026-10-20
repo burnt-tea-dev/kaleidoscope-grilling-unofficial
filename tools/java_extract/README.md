@@ -13,7 +13,7 @@ needed. The extractor never imports or executes upstream code.
 ```sh
 python3 tools/java_extract/extract.py
 python3 tools/java_extract/extract.py --check
-python3 tools/test_java_custom_skewer_gui.py
+python3 tools/test_java_extract.py
 ```
 
 The first command clones the official Grilling and Cookery repositories into

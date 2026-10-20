@@ -37,21 +37,10 @@ The owner's **all-item Blockbench first-person/side-texture review** and current
 [canonical RP](projects/grilling/gameplay_core/resource_pack/)。
 在 bridge 開啟倉庫根 `config.json`，直接編輯這組來源；不在安裝或封裝時注入玩法。
 
-從乾淨已提交的來源直接封裝：
-
-```sh
-python3 -B development/gameplay_core/package_current.py --output-dir artifacts/review
-```
-
-直接封裝需要 Git 與 Python 標準庫，輸出位於 checkout 內。
-官方 Dash 編譯由 [canonical CI](.github/workflows/gameplay-core.yml) 執行；
-本機若已安裝 bridge Dash，依 [BRIDGE-WORKFLOW.md](docs/BRIDGE-WORKFLOW.md) 使用。
-Linux 的 `/usr/bin/dash` 是 shell，不能當作 bridge 編譯器。
-
-`development/gameplay_core/build.py`、`augment_a*.py` 是歷史重建工具，**不是現行 release 的前置步驟**。
-舊 build 已改為預設拒絕，只有明確指定全新、位於 Git 工作樹外的輸出才能重建 A2.0；
-不能靠疊加舊 augment 重建 G114。使用界線見 [歷史工具說明](docs/LEGACY-AUTHORING.md)。
-歷史素材工程、驗收台及舊 artifacts 保留原用途，不是現行包的替代來源。
+重建 P2 期間停用舊版驗證器、疊加建置與發布／封裝入口，不產生新的正式包。
+既有下載與 BP/RP 位元組保持不變；不因工具清理部署 LIVE。
+[重建 CI](.github/workflows/ci.yml) 執行存檔護欄、膨脹棘輪、baseline、JSON 與保留的玩法／資料萃取測試。
+[bridge 匯出檢查](.github/workflows/bridge-project.yml) 仍驗證現有工程與 Dash 匯出，但不是發布授權。
 
 ## 最少而有效的驗證
 
@@ -59,10 +48,9 @@ Linux 的 `/usr/bin/dash` 是 shell，不能當作 bridge 編譯器。
 成功的同一份來源不重跑。新增測試必須能攔住既有檢查未涵蓋的具體故障，
 不以測試數、公式照抄或重複 hash 表示還原度。
 
-CI 的當前入口是 `development/gameplay_core/verify_current.py`；
-來源檢查一次完成後，其精確收據供 Dash 輸出比對重用。
-來源／發版、原包、候選、停服備份／遷移與部署邊界仍保留完整性關卡。
-詳見 [維護流程](docs/BASELINE-MAINTENANCE.md)、[Phase 0 測試盤點](docs/audit/TEST-AUDIT.md)。
+本機可執行 `python3 tools/run_legacy_tests.py` 與 `python3 tools/test_java_extract.py`；
+完整入口見 [重建 CI](.github/workflows/ci.yml)。測試分流與後續發布流程依 [重建計畫](docs/REBUILD-PLAN.md) 推進。
+舊版收據、守恆與投影驗證不再作為當前重建的准入條件。
 
 玩法或輸出變更必須換版本，完成 canonical PR／檢查／合併及完整家族准入後更新 LIVE，
 讓使用者實測。工具／文件沒有改輸出 runtime 時不升包、不重啟。

@@ -21,4 +21,3 @@ jobs:
           python-version: '3.12'
       - run: python tools/baseline_gate.py check --release --history-base "${{ github.event.pull_request.base.sha || github.event.before }}"
       - run: python tools/test_baseline_gate.py
-      - run: python tools/test_release_claim.py
