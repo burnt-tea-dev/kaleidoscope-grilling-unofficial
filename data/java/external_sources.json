@@ -1,0 +1,408 @@
+{
+  "source_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+  "source_repository": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial",
+  "extraction_method": "Static provenance index of the original 21 fixtures. Archive links only; no old port Git objects or fixture payloads read during generation. Independent source extraction targets do not reproduce archived experiments.",
+  "licenses": [
+    "Grilling and Cookery code: BSD-3-Clause; their assets: CC-BY-NC-SA-4.0",
+    "Mojang and Tavern sources retain their own rights; archive links do not relicense content"
+  ],
+  "sources": {
+    "grilling": {
+      "repository": "breezeth-CN/KaleidoscopeGrilling",
+      "source_commit": "9a1acdab27698457bec16c9362678e574895a28c"
+    },
+    "cookery": {
+      "repository": "KaleidoscopeMods/KaleidoscopeCookery",
+      "source_commit": {
+        "forge1.20.1": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+        "neoforge1.21.1": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c"
+      }
+    },
+    "mojang": {
+      "publisher": "Mojang",
+      "minecraft_versions": [
+        "1.20.1",
+        "1.21.1"
+      ],
+      "client_archive_sha1": {
+        "1.20.1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838",
+        "1.21.1": "30c73b1c5da787909b2f73340419fdf13b9def88"
+      }
+    },
+    "tavern": {
+      "repository": "casama233/kaleidoscope-tavern-unofficial",
+      "source_commit": "a11a0eea4971373d2be71d5bcd4900e641fb015d"
+    },
+    "port": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "category": "Port adaptations, historical experiments and Bedrock API observations; not upstream Java semantics"
+    }
+  },
+  "source_paths": [
+    "development/gameplay_core/fixtures/java-cookery-effect-feedback-160.json",
+    "development/gameplay_core/fixtures/java-cuisine-quality-160.json",
+    "development/gameplay_core/fixtures/java-eating-curves-1.1.1.json",
+    "development/gameplay_core/fixtures/java-eating-piece-1.1.1.json",
+    "development/gameplay_core/fixtures/java-feedback-audio-1.21.1.json",
+    "development/gameplay_core/fixtures/java-flatulence-sound-160.json",
+    "development/gameplay_core/fixtures/java-flatulence-world-160.json",
+    "development/gameplay_core/fixtures/java-heat-deadlines.json",
+    "development/gameplay_core/fixtures/java-hud-1.1.1.json",
+    "development/gameplay_core/fixtures/java-ordinary-particles-1.21.1.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-audio-160.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-liquid-160.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-liquid-forge-proof.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-movement-160.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-native-alias-abi.json",
+    "development/gameplay_core/fixtures/java-projectile-dodge-owned-ground.json",
+    "development/gameplay_core/fixtures/java-seasoning-animation-1.1.1.json",
+    "development/gameplay_core/fixtures/java-seasoning-colors-1.1.1.json",
+    "development/gameplay_core/fixtures/java-seasoning-motion-1.1.1.json",
+    "development/gameplay_core/fixtures/java-secret-framing-1.1.1.json"
+  ],
+  "fixtures": [
+    {
+      "fixture": "java-cookery-effect-feedback-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-cookery-effect-feedback-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-cookery-effect-feedback-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "mojang",
+        "tavern",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json"
+      ],
+      "scope": "Hinder and flatulence source methods regenerated; historical host audio/particle adaptations remain archived."
+    },
+    {
+      "fixture": "java-cuisine-quality-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-cuisine-quality-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-cuisine-quality-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json"
+      ],
+      "scope": "Quality fields, tiers and evaluation methods regenerated; historical executed case vectors not replayed."
+    },
+    {
+      "fixture": "java-eating-curves-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-eating-curves-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-eating-curves-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "animation_curves.json"
+      ],
+      "scope": "Authored curve arrays regenerated; client acceptance not asserted."
+    },
+    {
+      "fixture": "java-eating-piece-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-eating-piece-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-eating-piece-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "eating_profiles.json",
+        "gameplay_rules.json"
+      ],
+      "scope": "Pinned source data regenerated; old embedded full Java copy remains archived."
+    },
+    {
+      "fixture": "java-feedback-audio-1.21.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-feedback-audio-1.21.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-feedback-audio-1.21.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "minecraft_assets.json"
+      ],
+      "scope": "All six original publisher event entries and sample identities independently regenerated; old port output paths remain archived."
+    },
+    {
+      "fixture": "java-flatulence-sound-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-flatulence-sound-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-flatulence-sound-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json"
+      ],
+      "scope": "Sound call volume/pitch expressions regenerated; old release-bytecode receipt not replayed."
+    },
+    {
+      "fixture": "java-flatulence-world-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-flatulence-world-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-flatulence-world-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json"
+      ],
+      "scope": "Original server-level source method regenerated; historical before-source comparison not reproduced."
+    },
+    {
+      "fixture": "java-heat-deadlines.json",
+      "source_path": "development/gameplay_core/fixtures/java-heat-deadlines.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-heat-deadlines.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "heat.json"
+      ],
+      "scope": "Heat declarations and bucket rules regenerated; historical Java execution receipt not replayed."
+    },
+    {
+      "fixture": "java-hud-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-hud-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-hud-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "hud.json"
+      ],
+      "scope": "Source HUD dimensions regenerated; historical packaged-JAR receipts not reproduced."
+    },
+    {
+      "fixture": "java-ordinary-particles-1.21.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-ordinary-particles-1.21.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-ordinary-particles-1.21.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "minecraft_assets.json"
+      ],
+      "scope": "All nine publisher PNG identities/dimensions independently regenerated; particle equations and Bedrock integrator adaptations remain outside this extraction."
+    },
+    {
+      "fixture": "java-projectile-dodge-audio-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-audio-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-audio-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json",
+        "minecraft_assets.json"
+      ],
+      "scope": "Cookery teleport sound calls and Minecraft 1.21.1 event/sample identities regenerated; 1.20.1 publisher metadata and historical binary receipts remain archived."
+    },
+    {
+      "fixture": "java-projectile-dodge-ground-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-ground-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "archived_reference_only",
+      "independent_extraction_targets": [],
+      "scope": "Historical vanilla registry blocksMotion observations remain archived; no publisher runtime execution."
+    },
+    {
+      "fixture": "java-projectile-dodge-liquid-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-liquid-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-liquid-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json"
+      ],
+      "scope": "Cookery randomTeleport caller regenerated; native fluid registry/API observations remain archived."
+    },
+    {
+      "fixture": "java-projectile-dodge-liquid-forge-proof.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-liquid-forge-proof.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-liquid-forge-proof.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "archived_reference_only",
+      "independent_extraction_targets": [],
+      "scope": "Historical selected bytecode/delegate analysis remains archived; not a fresh binary verification."
+    },
+    {
+      "fixture": "java-projectile-dodge-movement-160.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-movement-160.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-movement-160.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "cookery",
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "cookery.json",
+        "minecraft_dimensions.json"
+      ],
+      "scope": "Sampling range, attempts, coordinate expressions and both publisher versions’ dimension logical bounds regenerated; registry/native observations remain archived."
+    },
+    {
+      "fixture": "java-projectile-dodge-native-alias-abi.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-native-alias-abi.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-native-alias-abi.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "archived_reference_only",
+      "independent_extraction_targets": [],
+      "scope": "Bedrock API observations only; not Java upstream data and not regenerated."
+    },
+    {
+      "fixture": "java-projectile-dodge-owned-ground.json",
+      "source_path": "development/gameplay_core/fixtures/java-projectile-dodge-owned-ground.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-projectile-dodge-owned-ground.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "cookery",
+        "mojang",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "collision_shapes.json",
+        "gameplay_rules.json"
+      ],
+      "scope": "Grilling authored shape expressions regenerated; native ID mapping and engine predicate observations remain archived."
+    },
+    {
+      "fixture": "java-seasoning-animation-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-seasoning-animation-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-seasoning-animation-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "animation_curves.json",
+        "gameplay_rules.json"
+      ],
+      "scope": "Pinned authored animation parameters regenerated; old embedded source copies remain archived."
+    },
+    {
+      "fixture": "java-seasoning-colors-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-seasoning-colors-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-seasoning-colors-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "mojang"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "seasoning_colors.json"
+      ],
+      "scope": "All eight RGB pairs independently regenerated from pinned sprites and Java sampler."
+    },
+    {
+      "fixture": "java-seasoning-motion-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-seasoning-motion-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-seasoning-motion-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "animation_curves.json",
+        "gameplay_rules.json"
+      ],
+      "scope": "Authored parameters regenerated; Bedrock idle-hand anchoring remains a port adaptation."
+    },
+    {
+      "fixture": "java-secret-framing-1.1.1.json",
+      "source_path": "development/gameplay_core/fixtures/java-secret-framing-1.1.1.json",
+      "archive_url": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/2a3fecc2fd7a419a331e34129d5c0592075bf4d0/development/gameplay_core/fixtures/java-secret-framing-1.1.1.json",
+      "archive_commit": "2a3fecc2fd7a419a331e34129d5c0592075bf4d0",
+      "source_categories": [
+        "grilling",
+        "port"
+      ],
+      "reproduction_status": "archived_reference_only",
+      "independent_extraction_status": "source_semantics_extracted_separately",
+      "independent_extraction_targets": [
+        "model_frames.json"
+      ],
+      "scope": "Model display and element data regenerated; old renderer/parity statements remain archived."
+    }
+  ]
+}

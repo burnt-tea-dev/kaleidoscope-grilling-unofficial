@@ -1,4 +1,4 @@
-> **重建進行中（2026-10-18 起）：** 本 repo 依 [docs/REBUILD-PLAN.md](docs/REBUILD-PLAN.md) 重建。P3 完成前只接受存檔安全修補；所有變更受 [存檔相容規則](docs/SAVE-COMPAT.md) 與 `tools/guards/` 護欄約束。代理請先讀 [AGENTS.md](AGENTS.md)。
+> **重建進行中（2026-10-18 起）：** 本 repo 依 [docs/REBUILD-PLAN.md](docs/REBUILD-PLAN.md) 重建。P3 前只接受 P0 等級存檔安全修補；所有變更受 [存檔相容規則](docs/SAVE-COMPAT.md) 與 `tools/guards/` 護欄約束。代理請先讀 [AGENTS.md](AGENTS.md)。
 
 > **Published-download notice (2026-10-18):** Actual G138 TEST/G149 stable fault-injection replay found item-loss, overwrite and duplication paths. These are API-model findings, not native frequency claims. Exact Cookery dependencies, historical release-text corrections and the public assembler's TEST/stable source-lock boundaries are in [published installation and safety guidance](docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md). Existing download bytes are unchanged.
 
@@ -14,7 +14,7 @@
 
 G145–G149 presentation corrections are already retained in current main and included in G149's published runtime; their older “local candidate / publication pending” prose is historical. [Earlier README](https://github.com/casama233/kaleidoscope-grilling-unofficial/blob/2422c2ab217aadc0d4ca56b6fd560ad9ed233a1f/README.md) and versioned notes retain their original source and evidence.
 
-**Current work:** the exact plate continuation from [#232](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/232) is included in G155 together with the host adaptation. Both conflicting G154 histories remain preserved. The earlier [#214](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/214), [#217](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/217), [#220](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/220) and [#222](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/222) still require residual source review before closure. [PR triage](docs/audit/PR-TRIAGE.md) records their earlier scope.
+**Current work:** the exact plate continuation from [#232](https://github.com/casama233/kaleidoscope-grilling-unofficial/pull/232) is included in G155 together with the host adaptation. Both conflicting G154 histories remain preserved. Under rebuild task T1.3, [#214](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/214), [#217](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/217), [#220](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/220), [#222](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/222) and [#232](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/232) have been closed; their player-visible requirements and preserved source heads are recorded in [#239](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/239) for transfer to `docs/PARITY.md` at T2.6. Closure does not establish gameplay or client acceptance. [PR triage](docs/audit/PR-TRIAGE.md) records their historical scope.
 
 The owner's **all-item Blockbench first-person/side-texture review** and current complete skewer/bottle/plate gameplay acceptance remain open. Per-stack custom inventory icons are still missing; bottles and plates already have source implementations. `client=false`, `production_ready=false`. See [PARITY-MATRIX](docs/PARITY-MATRIX.md) and [BUGS](docs/BUGS.md).
 
@@ -86,4 +86,4 @@ Minecraft 模板不套用原作素材聲明。出處見 [ATTRIBUTION.md](project
 
 指南維持既有 Cookery 書內的一個煙火入口與六個料理分類，不另發書物品。
 不公開作者完整 Cookery 包、私人宿主腳本、世界或憑證。
-唯一寫入遠端為 `casama233/kaleidoscope-grilling-unofficial`，repository ID **1377218440**。
+唯一寫入遠端為 `burnt-tea-dev/kaleidoscope-grilling-unofficial`，repository ID **1377218440**；寫入前依 [.repo-target.json](.repo-target.json) 核對完整名稱與數字 ID。

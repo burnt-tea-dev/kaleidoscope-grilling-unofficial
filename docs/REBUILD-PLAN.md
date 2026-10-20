@@ -294,7 +294,7 @@ scripts/
 **T1.8 staging 伺服器**（§5.4）
 - 驗收：BSM 內有 `luosen-staging`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 luosen 相同；能正常開服、進入、重啟。
 
-**P1 出口條件**：T1.2–T1.10 全部完成（T1.4 的 pack 組合盤點已於 2026-10-19 完成，見 §5.0；剩 content log warning 分類）。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
+**P1 出口條件**：T1.2–T1.10 全部完成。T1.4 的 pack 組合盤點與 489 個 content log warning 分類已由 #240 完成；T1.5 的 LKG-0、還原與獨立副本收據見 #241。這些交付不代替修正版 T1.6 的真實副本重跑、私有整合盤點或 T1.8 staging 驗收。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
 
 ### P2：Repo 瘦身（runtime 位元組不得改變）
 
@@ -313,6 +313,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 **T2.2 刪除歷史樹與舊實驗**：`history/`、`migration/`、`notebook/`、`docs/legacy_workflows/`、`docs/archive/`、`docs/history/`。驗收：`history_tree_files=0`。
 
 **T2.3 萃取 Java 資料表**
+- 執行註記（2026-10-20）：擁有者因目前 CI 仍依賴歷史樹，同意先做 T2.3、再處理 T2.2；此授權不代表已批准 T2.2／T2.4／T2.5 的其餘重排，原驗收條件不變。
 - 步驟：把 `development/gameplay_core/fixtures/java-*.json` 與 `projects/grilling/source_snapshots/` 內的資料（配方、熱度期限、效果、進食曲線、HUD 尺寸、調料顏色、音效對照、碰撞形狀）整理成 `data/java/*.json`，每檔頂端記 `source_commit: 9a1acdab…` 與萃取方法；寫 `tools/java_extract/` 腳本可從上游原碼重新產生（用 `git clone https://github.com/breezeth-CN/KaleidoscopeGrilling`，鎖定 commit）。
 - 驗收：`data/java/` 內容可由腳本重現；每個 runtime 用到的 Java 數值都能在這裡找到出處。
 - 不要做：不改 runtime 去讀這些檔（P3 才做）。
@@ -425,7 +426,9 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 > 以下 `<BDS>` 代表 luosen 的 BDS 根目錄。2026-10-19 盤點實測：BSM 以 Docker 容器執行（`dmedina559/bedrock-server-manager:3.10.6`，容器名 `bsm-container`），資料卷 `bsm_data` 掛在主機 `/var/lib/docker/volumes/bsm_data/_data`（容器內 `/root/bedrock-server-manager`）。所以 `<BDS>` = `/var/lib/docker/volumes/bsm_data/_data/servers/luosen`，世界 = `<BDS>/worlds/Bedrock level`。家族範本裡的 `/srv/bsm/...` 不是這台的實際路徑；`/srv/src`、`addon_quality`、`family_bundle` 的實際位置仍待確認。
 
-### 5.0 luosen 實測現況（2026-10-19 01:33 唯讀盤點）
+### 5.0 luosen 盤點紀錄（2026-10-19；各收據分別標示時點）
+
+> 下表保留最初盤點的環境描述，不能當作此刻 LIVE 的讀回。後續完整盤點與 warning 分類見 #240 的 `tools/ops/receipts/luosen-inventory-20261019.json`；#241 的 `luosen-lkg0-backup-20261019.json` 已記錄 LKG-0 對應的完整 26 BP／24 RP 順序、版本與樹雜湊，其首位私有 BP／RP 為 1.0.59。T1.9 與 T1.10 的離線比對應綁定這份 LKG-0 的實際包身份，保留下表的 1.0.57 為歷史對照。
 
 來源：擁有者電腦以 SSH 唯讀收集的 metadata（未停服、未寫入、不含憑證與世界資料庫內容）。原始報告不進公開 repo（含主機名稱與 port）；以下只記錄對重建有影響的事實。
 
@@ -440,7 +443,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 | 另一個進食包 | 「Kaleidoscope Immersive Eating 1.1.0」BP＋RP 同時啟用 | 與煙火自己的進食動畫／投影可能重疊；T3.4 與 D6 必須把它列入相容驗證（staging 第 11 項） |
 | 主機資源 | 16 GB RAM、可用約 4.2 GB；**2 GB swap 已用盡**；同時有 2 個 `bedrock_server` 程序 | 記憶體吃緊；巨型 geometry 與高頻腳本會放大問題。staging 伺服器要確認記憶體足夠再開，必要時先停掉另一個 BDS |
 | 磁碟 | 248 GB 中約 33 GB 可用 | 每份停服備份的大小要先量；保留策略（§5.3）要配合可用空間 |
-| content log | 最新一份尾段 1228 行：0 個 error、**489 個 warning** | 尚未分類；T1.4 補做 warning 分類（哪個包、哪類） |
+| content log | 該次盤點尾段 1228 行：0 個 error、**489 個 warning** | #240 收據已完成八類分類；分類不等於已修復全部 warning 的根因或完成性能／真人驗收。 |
 | 伺服器設定 | survival、easy、`allow-cheats=true`、`tick-distance=4`、`view-distance=8`、`max-players=10`、content log 有開 | — |
 
 新增 P1 任務：
@@ -519,7 +522,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 ## 6. senluo-family-integration-private 收斂方針
 
-> 本計畫撰寫時無法存取該私有 repo；以下是終態要求與盤點步驟，具體檔案清單由 T1.7 補上。
+> 本計畫撰寫時無法存取該私有 repo；2026-10-20 已確認來源可讀，私有 `INVENTORY.md` 仍是未完成草稿。來源存取不再是 T1.7 全面停工的理由；具體契約、分類與去處須在私有庫補齊，不能因已有草稿就將 T1.7、T1.9 或 T1.10 標為完成。
 >
 > 伺服器盤點（§5.0）記錄了最高優先權的「森羅私有修復支援 1.0.57」BP＋RP；其 RP manifest 相依 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating。**相依宣告不等同於已確認的檔案覆蓋**，實際與 Grilling 同路徑的檔案及其內容仍待 T1.9 盤點。同時存在數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
 

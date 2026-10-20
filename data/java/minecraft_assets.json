@@ -1,0 +1,356 @@
+{
+  "source_commit": null,
+  "source_commit_note": "Mojang publisher assets have release hashes, not a Git source commit.",
+  "minecraft": "1.21.1",
+  "extraction_method": "Verify publisher client/index/sounds hashes, parse seven selected original sound entries and sample references, and read nine PNG identities/dimensions directly from the client ZIP. No OGG downloads and no fixture values used.",
+  "licenses": [
+    "Minecraft assets copyright Mojang; separate from Grilling/Cookery code and asset licenses. Only metadata and hashes reproduced."
+  ],
+  "publisher_inputs": {
+    "client": {
+      "sha1": "30c73b1c5da787909b2f73340419fdf13b9def88",
+      "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar"
+    },
+    "asset_index": {
+      "id": "17",
+      "sha1": "9b16298b1dc0697878cec88bb2d96168f5239e4f",
+      "url": "https://piston-meta.mojang.com/v1/packages/9b16298b1dc0697878cec88bb2d96168f5239e4f/17.json"
+    },
+    "sounds_manifest": {
+      "sha1": "09eab141cce7550f9a74c65db0e9abbb342cf50f",
+      "size": 514016,
+      "url": "https://resources.download.minecraft.net/09/09eab141cce7550f9a74c65db0e9abbb342cf50f"
+    }
+  },
+  "source_paths": [
+    "minecraft/sounds.json",
+    "assets/minecraft/textures/particle/damage.png",
+    "assets/minecraft/textures/particle/generic_7.png",
+    "assets/minecraft/textures/particle/generic_6.png",
+    "assets/minecraft/textures/particle/generic_5.png",
+    "assets/minecraft/textures/particle/generic_4.png",
+    "assets/minecraft/textures/particle/generic_3.png",
+    "assets/minecraft/textures/particle/generic_2.png",
+    "assets/minecraft/textures/particle/generic_1.png",
+    "assets/minecraft/textures/particle/generic_0.png"
+  ],
+  "events": {
+    "shield": {
+      "event": "item.shield.block",
+      "source_path": "minecraft/sounds.json#item.shield.block",
+      "original": {
+        "sounds": [
+          "item/shield/block1",
+          "item/shield/block2",
+          "item/shield/block3",
+          "item/shield/block4",
+          "item/shield/block5"
+        ],
+        "subtitle": "subtitles.item.shield.block"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/item/shield/block1.ogg",
+          "publisher_sha1": "d9a379040a1b2f288664f303e99147dabb1afdf6",
+          "size": 5951,
+          "url": "https://resources.download.minecraft.net/d9/d9a379040a1b2f288664f303e99147dabb1afdf6",
+          "declared_attributes": {
+            "name": "item/shield/block1"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/item/shield/block2.ogg",
+          "publisher_sha1": "fe54cc09b73e7910090edfbb93854746f816e0fa",
+          "size": 5396,
+          "url": "https://resources.download.minecraft.net/fe/fe54cc09b73e7910090edfbb93854746f816e0fa",
+          "declared_attributes": {
+            "name": "item/shield/block2"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/item/shield/block3.ogg",
+          "publisher_sha1": "e0b2b3e082199d91b1e1ee93c714d5aad124e28a",
+          "size": 5915,
+          "url": "https://resources.download.minecraft.net/e0/e0b2b3e082199d91b1e1ee93c714d5aad124e28a",
+          "declared_attributes": {
+            "name": "item/shield/block3"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/item/shield/block4.ogg",
+          "publisher_sha1": "a33fba87abfde6b5bb2acc4f116c2cbe7c8c3eb6",
+          "size": 5656,
+          "url": "https://resources.download.minecraft.net/a3/a33fba87abfde6b5bb2acc4f116c2cbe7c8c3eb6",
+          "declared_attributes": {
+            "name": "item/shield/block4"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/item/shield/block5.ogg",
+          "publisher_sha1": "0161e1249adc4244fe3a83675d2b9533209948f7",
+          "size": 5763,
+          "url": "https://resources.download.minecraft.net/01/0161e1249adc4244fe3a83675d2b9533209948f7",
+          "declared_attributes": {
+            "name": "item/shield/block5"
+          }
+        }
+      ]
+    },
+    "chime": {
+      "event": "block.amethyst_block.chime",
+      "source_path": "minecraft/sounds.json#block.amethyst_block.chime",
+      "original": {
+        "sounds": [
+          {
+            "name": "block/amethyst/shimmer",
+            "volume": 0.2
+          }
+        ],
+        "subtitle": "subtitles.block.amethyst_block.chime"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/block/amethyst/shimmer.ogg",
+          "publisher_sha1": "da0969aedca90796e6828293b6d8f85f4c1a35f8",
+          "size": 77363,
+          "url": "https://resources.download.minecraft.net/da/da0969aedca90796e6828293b6d8f85f4c1a35f8",
+          "declared_attributes": {
+            "name": "block/amethyst/shimmer",
+            "volume": 0.2
+          }
+        }
+      ]
+    },
+    "golden": {
+      "event": "block.beacon.power_select",
+      "source_path": "minecraft/sounds.json#block.beacon.power_select",
+      "original": {
+        "sounds": [
+          "block/beacon/power1",
+          "block/beacon/power2",
+          "block/beacon/power3"
+        ],
+        "subtitle": "subtitles.block.beacon.power_select"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/block/beacon/power1.ogg",
+          "publisher_sha1": "f524f055d0caa8764e472ab1bfc822ab8d631177",
+          "size": 58640,
+          "url": "https://resources.download.minecraft.net/f5/f524f055d0caa8764e472ab1bfc822ab8d631177",
+          "declared_attributes": {
+            "name": "block/beacon/power1"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/block/beacon/power2.ogg",
+          "publisher_sha1": "99462b03d2b63e37a0e737e6053c883b41c953a6",
+          "size": 54437,
+          "url": "https://resources.download.minecraft.net/99/99462b03d2b63e37a0e737e6053c883b41c953a6",
+          "declared_attributes": {
+            "name": "block/beacon/power2"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/block/beacon/power3.ogg",
+          "publisher_sha1": "70404bf7f36e330293abe69d4afa6d615b5a38fe",
+          "size": 52954,
+          "url": "https://resources.download.minecraft.net/70/70404bf7f36e330293abe69d4afa6d615b5a38fe",
+          "declared_attributes": {
+            "name": "block/beacon/power3"
+          }
+        }
+      ]
+    },
+    "ordinary_break": {
+      "event": "entity.item.break",
+      "source_path": "minecraft/sounds.json#entity.item.break",
+      "original": {
+        "sounds": [
+          "random/break"
+        ],
+        "subtitle": "subtitles.entity.item.break"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/random/break.ogg",
+          "publisher_sha1": "8bf3ecb0fe9a6a615f5995e3dd21b6c39adc21d5",
+          "size": 6551,
+          "url": "https://resources.download.minecraft.net/8b/8bf3ecb0fe9a6a615f5995e3dd21b6c39adc21d5",
+          "declared_attributes": {
+            "name": "random/break"
+          }
+        }
+      ]
+    },
+    "ordinary_impact": {
+      "event": "entity.lightning_bolt.impact",
+      "source_path": "minecraft/sounds.json#entity.lightning_bolt.impact",
+      "original": {
+        "sounds": [
+          "random/explode1",
+          "random/explode2",
+          "random/explode3",
+          "random/explode4"
+        ],
+        "subtitle": "subtitles.entity.lightning_bolt.impact"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/random/explode1.ogg",
+          "publisher_sha1": "cd46e41023887558b134547e28327de6e7df189a",
+          "size": 19732,
+          "url": "https://resources.download.minecraft.net/cd/cd46e41023887558b134547e28327de6e7df189a",
+          "declared_attributes": {
+            "name": "random/explode1"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/random/explode2.ogg",
+          "publisher_sha1": "a116e396d95a0ee245000dd4cdcc333d38ea9e3b",
+          "size": 25246,
+          "url": "https://resources.download.minecraft.net/a1/a116e396d95a0ee245000dd4cdcc333d38ea9e3b",
+          "declared_attributes": {
+            "name": "random/explode2"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/random/explode3.ogg",
+          "publisher_sha1": "a94a69e56568f5789cab05382cfd81f601189fd1",
+          "size": 25298,
+          "url": "https://resources.download.minecraft.net/a9/a94a69e56568f5789cab05382cfd81f601189fd1",
+          "declared_attributes": {
+            "name": "random/explode3"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/random/explode4.ogg",
+          "publisher_sha1": "f259be40364341edcaf88e339bc24ab01e49845a",
+          "size": 25090,
+          "url": "https://resources.download.minecraft.net/f2/f259be40364341edcaf88e339bc24ab01e49845a",
+          "declared_attributes": {
+            "name": "random/explode4"
+          }
+        }
+      ]
+    },
+    "heavy_metal": {
+      "event": "item.totem.use",
+      "source_path": "minecraft/sounds.json#item.totem.use",
+      "original": {
+        "sounds": [
+          "item/totem/use_totem"
+        ],
+        "subtitle": "subtitles.item.totem.use"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/item/totem/use_totem.ogg",
+          "publisher_sha1": "e7f0337931cdb05c4234d2a9bc1f38ead675db26",
+          "size": 35952,
+          "url": "https://resources.download.minecraft.net/e7/e7f0337931cdb05c4234d2a9bc1f38ead675db26",
+          "declared_attributes": {
+            "name": "item/totem/use_totem"
+          }
+        }
+      ]
+    },
+    "projectile_dodge": {
+      "event": "entity.enderman.teleport",
+      "source_path": "minecraft/sounds.json#entity.enderman.teleport",
+      "original": {
+        "sounds": [
+          "mob/endermen/portal",
+          "mob/endermen/portal2"
+        ],
+        "subtitle": "subtitles.entity.enderman.teleport"
+      },
+      "samples": [
+        {
+          "author_asset": "minecraft/sounds/mob/endermen/portal.ogg",
+          "publisher_sha1": "7b4b5323ef066caa1ae43cbe66fffd9dfce4ed32",
+          "size": 10010,
+          "url": "https://resources.download.minecraft.net/7b/7b4b5323ef066caa1ae43cbe66fffd9dfce4ed32",
+          "declared_attributes": {
+            "name": "mob/endermen/portal"
+          }
+        },
+        {
+          "author_asset": "minecraft/sounds/mob/endermen/portal2.ogg",
+          "publisher_sha1": "35461b6a4253db40973549e82d91f267c686be85",
+          "size": 7442,
+          "url": "https://resources.download.minecraft.net/35/35461b6a4253db40973549e82d91f267c686be85",
+          "declared_attributes": {
+            "name": "mob/endermen/portal2"
+          }
+        }
+      ]
+    }
+  },
+  "particle_sprites": [
+    {
+      "asset": "damage",
+      "source_path": "assets/minecraft/textures/particle/damage.png",
+      "sha256": "b90f5b80b15144c2ccae58164635cca4dff02e2486df4d828081857fd0cc0157",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_7",
+      "source_path": "assets/minecraft/textures/particle/generic_7.png",
+      "sha256": "858a9804aef73be823a616e0faf518ee425421a20ffbb68f2a686ac76c017ca3",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_6",
+      "source_path": "assets/minecraft/textures/particle/generic_6.png",
+      "sha256": "1d0bce47b910d93d60de34deca732abeeea2dcdf0d2ed16bf8881f1f2ee92442",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_5",
+      "source_path": "assets/minecraft/textures/particle/generic_5.png",
+      "sha256": "ea3bb652d7604349517ceb17061b0007578ff70f86e1adc5e823da767a315fcf",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_4",
+      "source_path": "assets/minecraft/textures/particle/generic_4.png",
+      "sha256": "2cacbc3e1b3297b34997fdb46aa35bbc3597d4f1a608f7412aa843a22bfb4a28",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_3",
+      "source_path": "assets/minecraft/textures/particle/generic_3.png",
+      "sha256": "0988037438acb1dab7e583e6e17dbdc0d47c51721d237ea628311fc7ae3e355a",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_2",
+      "source_path": "assets/minecraft/textures/particle/generic_2.png",
+      "sha256": "b685389739d5add8d9240511f15b60e3365262c9e557b80fc3bf352dc30564a2",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_1",
+      "source_path": "assets/minecraft/textures/particle/generic_1.png",
+      "sha256": "85fb6789e97a9385e823a6da6f6fbdd376c6e8165a449e8f1613ef34592afb2e",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "asset": "generic_0",
+      "source_path": "assets/minecraft/textures/particle/generic_0.png",
+      "sha256": "040799acfd2e753632cef5642ab07e0182a973cc990cbfcb6bf7d201f10cfa03",
+      "width": 8,
+      "height": 8
+    }
+  ],
+  "scope": "Sound entries retain exact publisher volume/pitch/weight declarations where present; absent attributes are not fabricated. Sprite metadata does not reproduce particle equations, collision, engine jitter, sound mixing or client playback. Minecraft 1.20.1 is outside this extraction."
+}
