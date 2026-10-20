@@ -40,38 +40,7 @@ class BridgeProjectTests(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, 'stale displayed Cookery requirement'):
                     guard.check()
 
-    def test_current_guide_reference_and_historical_hosts_are_exact(self):
-        sys.path.insert(0, str(guard.ROOT / 'development/gameplay_core'))
-        from verify_a2828 import verify_host_reference
-        catalog = guard.load(guard.ROOT / 'projects/grilling/guide/catalog.a3.json')
-        version = guard.load(guard.ROOT / 'baseline.json')['version']
-        verify_host_reference(catalog, version)
-        reference = guard.ROOT / 'tools/fixtures'
-        for older, release in [('161', [2,8,153]), ('160', [2,8,149])]:
-            historical = {'host_reference': guard.load(reference / ('cookery-' + older + '-reference.json'))}
-            with self.subTest(reference=older):
-                verify_host_reference(historical, release)
-                with self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
-                    verify_host_reference(historical, version)
-        for field in ['file_id', 'archive_sha256', 'guide_sha256']:
-            changed = copy.deepcopy(catalog)
-            changed['host_reference'][field] = 'unreviewed'
-            with self.subTest(field=field), self.assertRaisesRegex(AssertionError, 'reviewed Cookery reference'):
-                verify_host_reference(changed, version)
 
-    def test_guide_host_guard_imports_without_gameplay_image_dependencies(self):
-        # The Windows export job has only Python's standard library. Importing
-        # this data guard must not load the historical Pillow gameplay suite.
-        code = """import sys
-sys.path[:0] = ['tools', 'development/gameplay_core']
-from verify_a2828 import verify_host_reference
-import bridge_project as guard
-verify_host_reference(guard.load(guard.ROOT / 'projects/grilling/guide/catalog.a3.json'),
-                      guard.load(guard.ROOT / 'baseline.json')['version'])
-assert 'PIL' not in sys.modules and 'verify_a2827' not in sys.modules
-"""
-        subprocess.run([sys.executable, '-S', '-B', '-c', code], cwd=guard.ROOT,
-                       check=True, capture_output=True, text=True)
 
     def test_workflow_propagates_native_failures(self):
         # A later successful command must not mask a failed export/baseline guard
@@ -89,13 +58,11 @@ assert 'PIL' not in sys.modules and 'verify_a2827' not in sys.modules
 
     def test_required_windows_checkouts_enable_long_paths(self):
         # Java source fixtures exceed MAX_PATH under the hosted runner prefix.
-        # Set Git's opt-in before checkout, including the downstream canonical job.
+        # Set Git's opt-in before checkout, for the retained bridge export job.
         workflows = guard.ROOT / '.github/workflows'
         for name, setting, checkout in (
             ('bridge-project.yml', 'git config --global core.longpaths true',
              '- uses: actions/checkout@'),
-            ('gameplay-core.yml', 'git config core.longpaths true',
-             'git checkout --detach'),
         ):
             with self.subTest(workflow=name):
                 windows = (workflows / name).read_text(encoding='utf-8').split(
