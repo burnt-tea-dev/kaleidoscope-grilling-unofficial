@@ -29,7 +29,8 @@ jobs:
         with:
           node-version: '22'
       - name: Install pinned Java extraction image reader
-        run: python -m pip install --only-binary=:all: --require-hashes -r tools/fixtures/g66-pillow-linux-requirements.txt
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r tools/fixtures/g66-pillow-linux-requirements.txt
       # guards.yml also compares the PR against the base locks and protects files.
       - name: Check save compatibility and growth ceilings
         run: |
