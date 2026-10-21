@@ -116,7 +116,19 @@ def build():
             if changed:output[path]=dump(data)
     for path in (RP/'render_controllers').glob('*.json'):
         data=json.loads(path.read_text());changed=False
-        for controller in data.get('render_controllers',{}).values():
+        for controller_name,controller in data.get('render_controllers',{}).items():
+            if controller_name in ('controller.render.kg_secret_held.piece',
+                                   'controller.render.kg_failure_held.helper'):
+                # Helper slot zero is the shaft fallback, not food_0/piece_0.
+                # Select by the owned controller contract instead of guessing
+                # from every array entry's prefix (which skipped both arrays).
+                pieces=controller['arrays']['geometries']['Array.pieces']
+                foods=controller['arrays']['textures']['Array.food']
+                assert len(pieces)>=218 and pieces[0]=='Geometry.java_secret_piece'
+                assert foods[:218]==['Texture.stick']+[f'Texture.food_{i}' for i in range(1,218)]
+                controller['arrays']['geometries']['Array.pieces']=pieces[:218]+['Geometry.'+selected[i] for i in range(218,226)]
+                controller['arrays']['textures']['Array.food']=foods[:218]+[f'Texture.food_{i}' for i in range(218,226)]
+                changed=True
             for kind,arrays in controller.get('arrays',{}).items():
                 for key,values in arrays.items():
                     if kind=='textures' and values in ([f'Texture.food_{i}_s{s}' for s in range(7) for i in range(n)] for n in (218,226)):

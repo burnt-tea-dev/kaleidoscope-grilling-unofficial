@@ -145,3 +145,40 @@ for(const id of ids)for(let style=0;style<7;style++)for(let shape=4;shape<=6;sha
  for(const row of cases)assert.equal(row.pass,true,JSON.stringify(row));
  assert.equal(cases.length,1008);
 });
+
+test('new raw ingredient helpers resolve through actual secret and failure controller arrays to nonempty models and existing textures',()=>{
+ const rp=new URL('../../projects/grilling/gameplay_core/resource_pack/',import.meta.url),geometries=new Map();
+ function collect(path){for(const row of fs.readdirSync(path,{withFileTypes:true})){
+  const child=new URL(row.name+(row.isDirectory()?'/':''),path);
+  if(row.isDirectory())collect(child);
+  else if(row.name.endsWith('.json'))for(const model of JSON.parse(fs.readFileSync(child))['minecraft:geometry']??[])geometries.set(model.description.identifier,model);
+ }}
+ collect(new URL('models/',rp));
+ const plain=json('resource_pack/attachables/secret_skewer_native_plain.attachable.json')['minecraft:attachable'].description;
+ assert.equal(plain.render_controllers.includes('controller.render.kg_secret_held.piece'),false,'native plain intentionally has no opposite-hand helper');
+ for(const [file,controller,names] of [
+  ['secret_held','controller.render.kg_secret_held.piece',['secret_skewer','secret_skewer_java_three_alt']],
+  ['failure_skewer_held','controller.render.kg_failure_held.helper',['mysterious_skewer','mysterious_skewer_java_three_alt','mysterious_skewer_native_plain','dark_grilling','dark_grilling_java_three_alt','dark_grilling_native_plain']]
+ ]){
+  const rc=json(`resource_pack/render_controllers/${file}.render_controllers.json`).render_controllers[controller];
+  for(const name of names){
+   const desc=json(`resource_pack/attachables/${name}.attachable.json`)['minecraft:attachable'].description;
+   for(const hand of ['main_hand','off_hand'])for(let food=218;food<=225;food++){
+    const v={},arrays={};
+    const scriptPrefixes=file==='secret_held'?['v.kg_secret_marker =','v.kg_secret_piece_index =']:['v.kg_failure_helper_index ='];
+    for(const statement of desc.scripts.pre_animation.filter(s=>typeof s==='string'&&scriptPrefixes.some(p=>s.startsWith(p))))expression(statement,v,file==='secret_held'?secretHeldMarker(food):food,hand);
+    assert.equal(v[file==='secret_held'?'kg_secret_piece_index':'kg_failure_helper_index'],food,`${name}/${hand}/${food}: actual decoded helper`);
+    if(!desc.render_controllers.includes(controller)){assert.ok(name.endsWith('_native_plain'),'only plain variants intentionally suppress the helper controller');continue;}
+    for(const entries of Object.values(rc.arrays))for(const [key,items] of Object.entries(entries))arrays[key.split('.')[1]]=items.map(ref=>{
+     const [kind,alias]=ref.split('.');return (kind==='Geometry'?desc.geometry:desc.textures)[alias];
+    });
+    const evaluate=expr=>Function('Array','v','return '+expr)(arrays,v);
+    const geometry=evaluate(rc.geometry),texture=evaluate(rc.textures[0]);
+    assert.ok(geometry,`${name}/${food}: controller geometry must resolve`);
+    assert.ok(texture,`${name}/${food}: controller texture must resolve`);
+    assert.ok(geometries.get(geometry)?.bones?.some(b=>b.cubes?.length),`${name}/${food}: helper must have visible geometry`);
+    assert.ok(fs.existsSync(new URL(texture+'.png',rp)),`${name}/${food}: helper texture must exist`);
+   }
+  }
+ }
+});
