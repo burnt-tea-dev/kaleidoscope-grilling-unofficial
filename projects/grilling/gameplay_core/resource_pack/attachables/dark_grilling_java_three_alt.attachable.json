@@ -409,7 +409,15 @@
         "food_214": "textures/items/kc_tea_egg",
         "food_215": "textures/items/kc_butter_tea",
         "food_216": "textures/items/kc_clay_pot_milk_tea",
-        "food_217": "textures/items/kc_mystery_tea"
+        "food_217": "textures/items/kc_mystery_tea",
+        "food_218": "textures/items/beef_chunks",
+        "food_219": "textures/items/chicken_skin",
+        "food_220": "textures/items/squid_tentacle",
+        "food_221": "textures/items/raw_sweet_potato_sheet",
+        "food_222": "textures/items/minced_houttuynia",
+        "food_223": "textures/items/potato_slice",
+        "food_224": "textures/items/carrot_dice",
+        "food_225": "textures/items/raw_mantou_slice"
       },
       "geometry": {
         "model_0": "geometry.kg_failure_held.dark_grilling_0",
@@ -766,7 +774,15 @@
         "piece_166": "geometry.kg_secret_held.piece_166",
         "piece_167": "geometry.kg_secret_held.piece_167",
         "piece_168": "geometry.kg_secret_held.piece_168",
-        "piece_169": "geometry.kg_secret_held.piece_169"
+        "piece_169": "geometry.kg_secret_held.piece_169",
+        "food_piece_218": "geometry.kg_secret_held.food_piece_218",
+        "food_piece_219": "geometry.kg_secret_held.food_piece_219",
+        "food_piece_220": "geometry.kg_secret_held.food_piece_220",
+        "food_piece_221": "geometry.kg_secret_held.food_piece_221",
+        "food_piece_222": "geometry.kg_secret_held.food_piece_222",
+        "food_piece_223": "geometry.kg_secret_held.food_piece_223",
+        "food_piece_224": "geometry.kg_secret_held.food_piece_224",
+        "food_piece_225": "geometry.kg_secret_held.food_piece_225"
       },
       "animations": {
         "fp_right": "animation.kg_a287.skewer_fp_right",
@@ -799,7 +815,7 @@
           "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && v.kg_owner_eat_hand == 1) || (c.item_slot == 'off_hand' && v.kg_owner_eat_hand == 2))) ? (v.kg_owner_eat_profile == 4 ? (v.kg_eat_seconds >= 3.5 ? 3 : (v.kg_eat_seconds >= 2.16667 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0))) : (v.kg_eat_seconds >= 3.54167 ? 3 : (v.kg_eat_seconds >= 2.33333 ? 2 : (v.kg_eat_seconds >= 0.95833 ? 1 : 0)))) : 0;",
           "v.kg_failure_source = math.floor(math.clamp((c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_off_0') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_off_0') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_main_0') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_main_0') : 0)),0,19));",
           "v.kg_failure_state = math.floor(math.clamp((c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_off_1') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_off_1') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_main_1') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_main_1') : 0)),0,63));",
-          "v.kg_failure_helper_index = math.floor(math.clamp((c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_off_2') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_off_2') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_main_2') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_main_2') : 0)),0,217));",
+          "v.kg_failure_helper_index = math.floor(math.clamp((c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_off_2') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_off_2') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:bottle_main_2') ? c.owning_entity->q.property('kaleidoscope_grilling:bottle_main_2') : 0)),0,225));",
           "v.kg_failure_ready = ((c.item_slot == 'main_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:dark_grilling_java_three_alt')) || (c.item_slot == 'off_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.offhand','kaleidoscope_grilling:dark_grilling_java_three_alt'))) && (c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_off_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_off_piece') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_main_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_main_piece') : 0)) == 220;",
           "v.kg_failure_helper_visible = 0;",
           "v.kg_bite_stage = (q.is_using_item && ((c.item_slot == 'main_hand' && v.kg_owner_eat_hand == 1) || (c.item_slot == 'off_hand' && v.kg_owner_eat_hand == 2))) ? (v.kg_owner_eat_elapsed_ticks >= 70 ? 3 : (v.kg_owner_eat_elapsed_ticks >= 44 ? 2 : (v.kg_owner_eat_elapsed_ticks >= 20 ? 1 : 0))) : 0;"
