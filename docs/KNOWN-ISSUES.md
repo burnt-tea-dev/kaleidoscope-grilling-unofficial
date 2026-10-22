@@ -48,3 +48,48 @@
 [T1.3-1 至 T1.3-5](PARITY.md#舊-pr-保留需求)完整保留交易所有權、碰撞／選取、20 種 THREE 食用、固定五幀 icon 及併發餐盤／食譜需求。舊 PR 關閉是工作整理，不是修復或驗收。
 
 原始回報與更細的歷史限定保留於[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)、[PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)及[公開下載稽核](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md)。舊工具／workflow 風險以 T2.4 後的實際入口為準，不能把已退役的驗證鏈描述成仍在執行；玩家缺口不因工具退役而被刪除。
+
+## Grill display facing repair proposal
+
+Early isolated T4.2 code proposal; not completion of T2.8, P2, P3 or P4.
+The P2 behavior freeze and phase prerequisites remain unresolved. Keep the PR
+**draft** pending the owner's phase decision. No release, deployment, merge or
+phase acceptance is requested: `publication_request=false`, `client=false`,
+`production_ready=false`.
+
+### Source diagnosis
+
+Java 1.1.1 `GrillBlock.getStateForPlacement` selects the placing player's opposite
+horizontal direction. `GrillRenderer` rotates its pose by minus the facing angle
+(north0/east90/south180/west270). The source fish model has wood z0..12.5 and food
+z4..13.25, so its exposed handle points toward local negative Z. The converted
+fixed and secret grill geometries retain that axis.
+
+The Bedrock helper reuses Java pose rotation as entity yaw. The two coordinate
+conventions differ: for cardinal angle `a`, the desired world handle vector is
+`(sin(a), -cos(a))`, requiring entity yaw `a - 180`. The prior formula reverses
+north/south, while east/west are equivalent. Both spawn and teleport expressions
+are corrected to avoid mismatched birth and update poses. Slot centers/order,
+block placement traits, geometry, inventories, IDs, UUIDs, persisted keys and
+flip animation remain unchanged.
+
+### Portable regression and acceptance boundary
+
+`tests/legacy/test_a275_core.mjs` uses ordinary native ESM imports and the existing
+Minecraft API fixture; it does not read, extract or transform runtime JavaScript.
+It checks three slots on four cardinals, spawn/update agreement, world handle
+direction, slot centers, three stage/flip updates, cleanup and helper respawn
+without consuming the stored items. The original runtime fails north/south and
+passes east/west; the correction passes all four cases. The retained suite passes
+774 tests across93 files. These tests exercise code, not a renderer or live server.
+
+Run the existing grill suite using Node with the standard Minecraft loader, or
+`python3 tools/run_legacy_tests.py` for all retained tests. Save compatibility,
+growth ratchet and canonical baseline checks pass locally. No native, staging,
+multiplayer, animation or Java-screenshot acceptance is claimed by this PR.
+
+This branch starts at main `ae4cd8c32eb56170fa7488544c8d94c66fa75346` and does not
+include PR255's asset removal or PR256's ingredient catalog changes. Proposal
+identity **2.8.159** uses standard baseline freeze and synchronized manifests;
+it is neither a released package nor a fully accepted runtime. Required next
+steps are phase approval and independent native/staging validation before merge.
