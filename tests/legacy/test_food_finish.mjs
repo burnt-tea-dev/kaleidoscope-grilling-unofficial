@@ -148,3 +148,162 @@ test('public native variant survives heat metadata rewrites and rejects invalid 
  writePublicFood(stack,{...state,hotUntil:1200});assert.equal(readPublicFood(stack).state.nativeVariant,7);
  for(const nativeVariant of [-1,1.5,32768,'7'])assert.equal(normalizePublicFood({v:1,hotUntil:0,seasoning:[],nativeVariant}),undefined);
 });
+
+// T3.4 preparation: executable state timelines; no production behavior changes.
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {createEatingLab,routes,java,beef} from '../helpers/eating-lab.mjs';
+import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+
+// This is a logic-level event experiment, not a native client/BDS test.
+// Completion inputs deliberately bracket engine debit and both event orders.
+test('every skewer route keeps its clock until native settlement in either hand',async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  for(const route of routes)for(const hand of ['main','off']) {
+    const a=lab.actor(route,hand);a.begin();lab.assertUsing(a);
+    a.advance(route.duration-1,true);
+    const last=lab.assertUsing(a);
+    assert.equal(last.clock,route.duration-1);
+    if(route.kind!=='plain'){
+      const bites=java.profiles[route.profile].bite_seconds.filter(s=>s<=(route.duration-1)/20).length;
+      assert.equal(last.crumbs,bites*5,`${route.id} Java bite checkpoints`);
+    }
+    a.nativeDebit();a.sample('engine-debit-before-callback');
+    a.event('itemCompleteUse',0);const done=a.sample('complete');
+    assert.equal(done.profile,0);assert.equal(done.clock,0);assert.equal(a.p[hand].amount,1);
+    const effects=done.effects,hunger=done.hunger;
+    a.event('itemStopUse',0);a.event('itemCompleteUse',0);a.advance(1);
+    assert.equal(a.p[hand].amount,1);assert.equal(a.sample('duplicate-events').effects,effects);
+    assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
+    a.retire();
+  }
+  if(process.env.EATING_TIMELINE_DIR){mkdirSync(process.env.EATING_TIMELINE_DIR,{recursive:true});writeFileSync(join(process.env.EATING_TIMELINE_DIR,'normal.json'),JSON.stringify({boundary:'real runtime / fake Minecraft API; debit supplied by driver; no native nutrition or rendering',routeCount:routes.length,rows:lab.rows},null,2));}
+});
+
+test('each route cancels below the checkpoint, settles at its grace boundary, and restarts cleanly',async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  for(const route of routes)for(const hand of ['main','off'])for(const elapsed of [23,24,25]) {
+    const a=lab.actor(route,hand);a.case='release-'+elapsed;a.begin();a.advance(elapsed);
+    a.sample('before-stop');a.event('itemStopUse',Math.max(1,route.duration-elapsed));a.advance(1);a.sample('after-stop');
+    const settled=route.kind!=='plain'&&elapsed+java.release_checkpoint_grace_ticks>=java.minimum_eat_ticks;
+    assert.equal(a.p[hand].amount,settled?1:2,`${route.id} ${hand} release at ${elapsed}`);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(lab.data.getItemProperty(a.p[hand],'foreign:timeline'),'retained');
+    // A completed release cannot settle twice or cancel the following start.
+    a.event('itemStopUse',1);a.advance(1);
+    assert.equal(a.p[hand].amount,settled?1:2);
+    a.begin();assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),0);
+    a.advance(2);assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),2);
+    a.retire();
+  }
+  if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'release.json'),JSON.stringify(lab.rows,null,2));
+});
+
+test('every route consumes its final serving once with stop before complete and then starts another meal',async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  for(const route of routes)for(const hand of ['main','off']) {
+    const a=lab.actor(route,hand,1);a.case='last-serving';a.begin();a.advance(route.duration-1);
+    a.event('itemStopUse',0);a.sample('stop-before-complete');
+    a.nativeDebit();assert.equal(a.p[hand],undefined);
+    a.event('itemCompleteUse',0);a.sample('completed-empty-hand');
+    const hunger=a.p.components['minecraft:player.hunger'].currentValue,effects=lab.f.effects.filter(e=>e.source===a.p).length;
+    // Reholding and starting before the old deferred stop runs must retain the
+    // newer session, even when the new item is indistinguishable from the old.
+    a.p[hand]=a.stack;a.begin();a.advance(1);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),1);
+    a.advance(route.duration-2);a.nativeDebit();a.event('itemCompleteUse',0);
+    a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.advance(1);
+    assert.equal(a.p[hand],undefined);assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    // Fixed/native food nutrition is intentionally not emulated by this driver.
+    if(route.base.endsWith(':secret_skewer'))assert.ok(a.p.components['minecraft:player.hunger'].currentValue>hunger);
+    const finalEffects=lab.f.effects.filter(e=>e.source===a.p).length;
+    assert.equal(finalEffects,effects*2);
+    a.sample('second-complete');a.retire();
+  }
+  if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'last-serving.json'),JSON.stringify(lab.rows,null,2));
+});
+
+test('every route rejects release debit after slot, hand, or metadata replacement and clears on reconnect',async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  for(const route of routes)for(const hand of ['main','off'])for(const change of ['slot','hand','metadata']) {
+    const a=lab.actor(route,hand);a.case=change;a.begin();a.advance(20);
+    if(change==='slot')a.p.selectedSlotIndex=1;
+    if(change==='hand'){a.p[hand]=undefined;a.p[hand==='main'?'off':'main']=a.stack;}
+    if(change==='metadata'){const replacement=a.p[hand];replacement.nameTag='Replacement';a.p[hand]=replacement;}
+    a.advance(5);a.sample('changed');
+    // Idle prepareEatingItems may choose a fresh route after a cancelled use;
+    // ownership is canonical food + count + saved metadata, not shadow ID.
+    const inventory=()=>a.p.inventory.items().filter(Boolean).map(x=>[canonicalFoodId(x.typeId),x.amount,x.nameTag]);
+    const before=inventory();
+    a.event('itemStopUse',Math.max(1,route.duration-25));a.advance(1);
+    // Offhand use is independent of the selected main-hand slot.
+    const validOffhandSlot=hand==='off'&&change==='slot'&&route.kind!=='plain';
+    if(validOffhandSlot)assert.equal(a.p.off.amount,1);
+    else assert.deepEqual(inventory(),before);
+    if(!validOffhandSlot)assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+    lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+    a.p.selectedSlotIndex=0;a.p.main=undefined;a.p.off=undefined;a.p[hand]=a.stack;
+    lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:true});a.advance(2);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),0);
+    a.begin();a.advance(2);assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),2);
+    a.retire();
+  }
+  if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'switch-reconnect.json'),JSON.stringify(lab.rows,null,2));
+});
+
+test('beef terminal timeline distinguishes callback reset from an earlier inventory view change',async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const route=routes.find(x=>x.id===beef);
+  for(const mode of ['unchanged','engine-debit-first','metadata-first','complete-before-debit','stop-before-complete','new-use-before-deferred-stop']) {
+    const a=lab.actor(route);a.case=mode;a.begin();a.advance(86,true);lab.assertUsing(a);
+    if(mode==='engine-debit-first')a.nativeDebit();
+    if(mode==='metadata-first'){const changed=a.p.main;changed.nameTag='Changed';a.p.main=changed;}
+    a.advance(1,true);
+    const observed=a.sample('pre-complete');
+    assert.equal(observed.profile,['engine-debit-first','metadata-first'].includes(mode)?0:5);
+    assert.equal(a.p.main.amount,mode==='engine-debit-first'?1:2);
+    a.advance(2,true);
+    if(mode==='stop-before-complete')a.event('itemStopUse',0);
+    if(mode==='new-use-before-deferred-stop'){
+      a.event('itemStopUse',0);a.begin();a.advance(1,true);
+      assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),5);
+      assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),1);
+    }else{
+      if(mode==='complete-before-debit'){
+        a.event('itemCompleteUse',0);const r=a.sample('complete-held-original');
+        assert.equal(r.profile,0);assert.equal(r.main.amount,2);a.nativeDebit();
+      }else{
+        if(mode!=='engine-debit-first')a.nativeDebit();
+        a.event('itemCompleteUse',0);a.sample('complete');
+      }
+    }
+    a.retire();
+  }
+  if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'beef-terminal.json'),JSON.stringify(lab.rows,null,2));
+});
+
+// Desired safety properties intentionally remain TODO failures until T3.4.
+// Do not turn an observed old bug into an assertion of correct behavior.
+test('a stale fixed-skewer completion cannot reward a newly selected item',{todo:'T3.4: fixed completion lacks the current-hand check used for secret skewers'},async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(88);
+  a.p.selectedSlotIndex=1;a.p.main=lab.f.item('minecraft:stone');a.advance(1);
+  a.event('itemCompleteUse',0);
+  assert.equal(lab.f.effects.filter(e=>e.source===a.p&&e.effect==='strength').length,0);
+});
+
+test('a brief inventory-view mismatch does not strand an active meal at profile zero',{todo:'T3.4: current-identity mismatch clears presentation without ending or restoring the session'},async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(70);
+  a.nativeDebit();a.advance(1);a.p.main=a.stack;a.advance(1);
+  assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),5);
+});
+
+test('logging out after the Java checkpoint settles a meal even without a stop event',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},async t=>{
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(java.minimum_eat_ticks);
+  lab.f.emit('world.beforeEvents.playerLeave',{player:a.p});
+  lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+  assert.equal(a.p.main.amount,1);
+});
