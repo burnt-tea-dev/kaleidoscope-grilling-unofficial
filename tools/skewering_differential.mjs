@@ -1,23 +1,102 @@
 /** Executable diagnostic: unchanged production ESM + existing Minecraft API boundary.
- * Usage: node tools/skewering_differential.mjs <checkout> <report.json> [group]
+ * Usage: node tools/skewering_differential.mjs <checkout> <report.json> [group] [exact case name]
  * Repro only: use group immediate-disassembly (two controlled random branches).
  * Oracle: pinned Java common/.../grilling/skewers.json and tags from data/java.
  * Does not certify native event dispatch, BDS, rendering or human acceptance.
  */
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync} from 'node:fs';
-import {resolve} from 'node:path';
-import {pathToFileURL} from 'node:url';
-import {execFileSync} from 'node:child_process';
+import {readFileSync,writeFileSync,mkdtempSync,unlinkSync,rmdirSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {pathToFileURL,fileURLToPath} from 'node:url';
+import {execFileSync,spawnSync} from 'node:child_process';
+
+// Error stacks are diagnostics, never comparison evidence. Schema 2 fails
+// closed on legacy text-only errors and errors we cannot classify safely.
+function stableValue(value){
+ if(value===undefined)return {$type:'undefined'};
+ if(value===null||typeof value==='string'||typeof value==='boolean')return value;
+ if(typeof value==='number')return Number.isFinite(value)?value:{$type:String(value)};
+ if(Array.isArray(value))return value.map(stableValue);
+ if(value&&Object.getPrototypeOf(value)===Object.prototype)return Object.fromEntries(Object.keys(value).sort().map(k=>[k,stableValue(value[k])]));
+ throw Error('Unsupported assertion value; failure cannot be compared safely');
+}
+function classifiedFailure(error){
+ if(error?.code==='ERR_ASSERTION'&&typeof error.operator==='string'){
+  try{return {classification:'assertion-mismatch',name:error.name,code:error.code,operator:error.operator,actual:stableValue(error.actual),expected:stableValue(error.expected)};}catch{}
+ }
+ return {classification:'unclassified-error',name:String(error?.name??'Error'),code:String(error?.code??'')};
+}
+function layerSummary(results){return Object.fromEntries(['pure-module','runtime-callback'].map(layer=>{
+ const rows=results.filter(row=>row.layer===layer);
+ return [layer,{total:rows.length,passed:rows.filter(row=>row.status==='pass').length,failed:rows.filter(row=>row.status==='fail').length}];
+}));}
+function observable(report){
+ assert.equal(report.schema,2,'comparison requires structured schema 2 reports');
+ assert(Array.isArray(report.results)&&report.results.length>0,'empty reports are not evidence');
+ const counts={total:report.results.length,passed:0,failed:0},keys=new Set();
+ const results=report.results.map(row=>{
+  assert.equal(typeof row.group,'string');assert.equal(typeof row.name,'string');
+  const key=JSON.stringify([row.group,row.name]);assert(!keys.has(key),'duplicate case');keys.add(key);
+  assert(['pure-module','runtime-callback'].includes(row.layer),'unknown execution layer');
+  assert(['pass','fail'].includes(row.status),'unknown result status');
+  counts[row.status==='pass'?'passed':'failed']++;
+  if(row.status==='fail'){
+   assert(row.error&&typeof row.error==='object'&&!Array.isArray(row.error),'text-only failure is not comparable');
+   assert.equal(row.error.classification,'assertion-mismatch','unclassified failures cannot prove equivalence');
+   assert.equal(row.error.code,'ERR_ASSERTION');assert.equal(typeof row.error.name,'string');assert.equal(typeof row.error.operator,'string');
+   assert(Object.hasOwn(row.error,'actual')&&Object.hasOwn(row.error,'expected'),'missing assertion operands');
+   assert(row.actual?.complete===true&&row.actual?.player&&typeof row.actual.phase==='string','missing or unreadable failure state');
+   return {group:row.group,name:row.name,layer:row.layer,status:row.status,error:row.error,actual:row.actual};
+  }
+  return {group:row.group,name:row.name,layer:row.layer,status:row.status,...(row.actual===undefined?{}:{actual:row.actual})};
+ });
+ assert.deepEqual(report.summary,counts,'report summary disagrees with cases');
+ assert.deepEqual(report.layers,layerSummary(report.results),'execution layer counts disagree with cases');
+ return results;
+}
 if(process.argv[2]==='--compare'){
  const reports=process.argv.slice(3,5).map(path=>JSON.parse(readFileSync(resolve(path),'utf8')));
- const observable=report=>report.results.map(({group,name,status,actual})=>({group,name,status,...(actual===undefined?{}:{actual})}));
+ assert.equal(reports.length,2,'provide exactly two report paths');
  assert.deepEqual(observable(reports[0]),observable(reports[1]),'version behavior differs');
  console.log(JSON.stringify({sameObservations:true,commits:reports.map(r=>r.commit),summaries:reports.map(r=>r.summary)}));
  process.exit(0);
 }
+if(process.argv[2]==='--self-test'){
+ const dir=mkdtempSync(join(resolve(process.argv[3]??tmpdir()),'skewering-compare-'));
+ const left=join(dir,'left.json'),right=join(dir,'right.json'),controls=[];
+ const base={schema:2,scope:'synthetic comparator control; not a runtime observation',commit:'synthetic',summary:{total:1,passed:0,failed:1},results:[{
+  group:'synthetic-control',name:'different failures must differ',layer:'runtime-callback',status:'fail',
+  error:{classification:'assertion-mismatch',name:'AssertionError',code:'ERR_ASSERTION',operator:'strictEqual',actual:'secret_skewer_java_three_alt',expected:{$type:'undefined'}},
+  actual:{complete:true,phase:'deferred-action-finished',player:{main:null,off:{nativeId:'secret_skewer_java_three_alt',amount:1},inventory:[],drops:[]}},diagnosticStack:'Error at /machine-A/test.mjs:1:1'
+ }]};
+ base.layers=layerSummary(base.results);
+ function control(name,expectedExit,mutate){
+  const changed=structuredClone(base);mutate(changed);
+  writeFileSync(left,JSON.stringify(base));writeFileSync(right,JSON.stringify(changed));
+  const child=spawnSync(process.execPath,[fileURLToPath(import.meta.url),'--compare',left,right],{encoding:'utf8'});
+  assert.ifError(child.error);assert.notEqual(child.status,null,'comparison process must exit');
+  assert.equal(child.status===0,expectedExit===0,name+'\n'+child.stderr);
+  controls.push({name,expected:expectedExit===0?'equal':'reject',exit:child.status,status:'pass'});
+ }
+ try{
+  control('identical structured observations',0,()=>{});
+  control('different diagnostic paths and stacks remain equal',0,r=>{r.results[0].diagnosticStack='Error at C:\\machine-B\\other.mjs:999:5';});
+  control('reviewer text-only lost-items mutation is rejected',1,r=>{r.results[0].error='offhand unexpectedly lost all items';});
+  control('structured actual offhand loss is rejected',1,r=>{r.results[0].actual.player.off=null;});
+  control('different assertion actual is rejected',1,r=>{r.results[0].error.actual='all items lost';});
+  control('different assertion expected is rejected',1,r=>{r.results[0].error.expected=null;});
+  control('unclassified error is rejected',1,r=>{r.results[0].error.classification='unclassified-error';});
+  control('missing actual state is rejected',1,r=>{delete r.results[0].actual;});
+  control('legacy text-only schema is rejected',1,r=>{r.schema=1;});
+ }finally{for(const file of [left,right])try{unlinkSync(file)}catch{}rmdirSync(dir);}
+ const report={scope:'synthetic comparator controls only; not runtime evidence',passed:controls.length,failed:0,controls};
+ if(process.argv[4])writeFileSync(resolve(process.argv[4]),JSON.stringify(report,null,2)+'\n');
+ console.log(JSON.stringify(report));process.exit(0);
+}
 const root=resolve(process.argv[2]??'.'),reportPath=process.argv[3];
 const selectedGroup=process.argv[4];
+const selectedCase=process.argv[5];
 const url=pathToFileURL(root+'/');
 const json=path=>JSON.parse(readFileSync(new URL(path,url),'utf8'));
 const N='kaleidoscope_grilling:',IK=N+'skewer_ingredients';
@@ -35,7 +114,26 @@ config.setGrillingConfig('enableEatingAnimations',true);
 config.setGrillingConfig('graphicalEatingHud',false);
 const p=f.player({name:'Diagnostic',location:{x:0,y:80,z:2}});
 const results=[];
-function run(group,name,body){if(selectedGroup&&selectedGroup!==group)return;try{const actual=body();results.push({group,name,status:'pass',actual});}catch(e){results.push({group,name,status:'fail',error:e.stack});}}
+let observation;
+function observe(phase,details={}){observation={phase,...details};}
+function observedStack(stack){
+ if(!stack)return null;
+ const ingredients=data.getItemProperty(stack,IK);
+ return {nativeId:stack.typeId,canonicalId:canonical(stack),amount:stack.amount,
+  ingredients:ingredients===undefined?null:JSON.parse(ingredients).map(row=>row.id)};
+}
+function failureState(){
+ try{return {...observation,complete:true,player:{main:observedStack(p.main),off:observedStack(p.off),
+  inventory:p.inventory.items().map(observedStack),drops:f.drops.filter(d=>d.isValid).map(d=>observedStack(d.itemStack))}};}
+ catch{return {...observation,complete:false};}
+}
+function run(group,name,body){
+ if((selectedGroup&&selectedGroup!==group)||(selectedCase&&selectedCase!==name))return;
+ const layer=['order','failure-metadata','failure-source'].includes(group)?'pure-module':'runtime-callback';
+ observe('case-entry');
+ try{const actual=body();results.push({group,name,layer,status:'pass',actual});}
+ catch(e){results.push({group,name,layer,status:'fail',error:classifiedFailure(e),actual:failureState(),diagnosticStack:e.stack});}
+}
 // Existing eating presentation may choose a random shadow route on any tick.
 // Material identity comparisons normalize that route using the real export.
 function raw(stack){return stack&&{id:ids.canonicalFoodId(stack.typeId),amount:stack.amount,name:stack.nameTag,lore:stack.getRawLore(),props:[...stack.dynamicProperties]};}
@@ -120,16 +218,37 @@ run('metadata','thread and disassemble three differently named foods',()=>{
 });
 for(const random of [.25,.75])run('immediate-disassembly',`new Secret with random=${random}`,()=>{
  thread(secret,N+'secret_skewer');p.main=undefined;p.isSneaking=true;
+ const before=inventory(),input=snapshot.captureSkewerMetadata(p.off);
+ const beforeCounts=materialCounts();
  const block=f.block('minecraft:stone',{x:0,y:80,z:0}),oldRandom=Math.random;
  let event;
  try{
   Math.random=()=>random;
   event=f.emit('world.beforeEvents.playerInteractWithBlock',{block,player:p,itemStack:undefined,blockFace:'Up',isFirstEvent:true,cancel:false});
+  observe('interaction-admitted',{random,eventCancelled:event.cancel});
   assert.equal(event.cancel,true);f.flush();
+  observe('deferred-action-finished',{random,eventCancelled:event.cancel});
  }finally{Math.random=oldRandom;}
+ const afterCounts=materialCounts(),refunds=Object.fromEntries([...new Set([...Object.keys(beforeCounts),...Object.keys(afterCounts)])].sort().map(id=>[id,(afterCounts[id]??0)-(beforeCounts[id]??0)]).filter(([,amount])=>amount!==0));
+ const expectedRefunds={'minecraft:apple':1,'minecraft:bread':1,'minecraft:carrot':1,'minecraft:stick':1};
+ observe('deferred-action-finished',{random,eventCancelled:event.cancel,refunds,expectedRefunds});
+ if(p.off){
+  const after=inventory(),retained=snapshot.captureSkewerMetadata(p.off);
+  assert.deepEqual(after.items,before.items,'cancelled disassembly must not change inventory');
+  assert.deepEqual(after.drops,before.drops,'cancelled disassembly must not change drops');
+  assert.equal(p.off.amount,before.off.amount);
+  assert.deepEqual({...retained,id:ids.canonicalFoodId(retained.id)},{...input,id:ids.canonicalFoodId(input.id)},'cancelled disassembly must retain ingredient lore and properties');
+  observe('deferred-action-finished',{random,eventCancelled:event.cancel,refunds,expectedRefunds,retainedInputUnchanged:true});
+ }
  assert.equal(p.off?.typeId,undefined,'cancelled immediate disassembly must return the three ingredients; offhand retained after deferred action');
- return {offhandEmpty:true};
+ assert.deepEqual(refunds,expectedRefunds,'successful disassembly must return one of every ingredient and one stick');
+ return {offhandEmpty:true,refunds};
 });
+function materialCounts(){
+ const counts={};
+ for(const stack of [...p.inventory.items(),...f.drops.filter(d=>d.isValid).map(d=>d.itemStack)])if(stack){const id=canonical(stack);counts[id]=(counts[id]??0)+stack.amount;}
+ return counts;
+}
 for(const kind of ['main-before','main-after','off-before','off-after','output-before','output-after','switched-main','switched-off','corrupt-prefix','nonfood','full-secret'])run('rejected-or-failed',kind,()=>{
  clear();p.main=f.item('minecraft:apple',4);p.off=f.item('minecraft:stick',3);
  if(kind==='nonfood')p.main=f.item('minecraft:cobblestone',4);
@@ -190,8 +309,8 @@ for(const source of [N+'raw_beef_skewer',N+'secret_skewer'])for(const action of 
  return {id:canonical(output),source:data.getItemProperty(output,failures.FAILED_SOURCE_KEY),metadataRetained:true};
 });
 f.dispose();
-const report={schema:1,commit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),node:process.version,scope:'unchanged production imports and actual subscribed callbacks; Minecraft API doubles only; client=false; production_ready=false',summary:{total:results.length,passed:results.filter(x=>x.status==='pass').length,failed:results.filter(x=>x.status==='fail').length},results};
+const report={schema:2,commit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),node:process.version,scope:'55 pure-module cases and 50 runtime-callback cases in the full matrix; unchanged production imports; Minecraft API doubles only, not native end-to-end; failure state compares native/canonical IDs, counts and ingredient IDs; full metadata assertions retain their own operands; client=false; production_ready=false',summary:{total:results.length,passed:results.filter(x=>x.status==='pass').length,failed:results.filter(x=>x.status==='fail').length},layers:layerSummary(results),results};
 if(reportPath)writeFileSync(resolve(reportPath),JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({commit:report.commit,...report.summary}));
-for(const r of results.filter(x=>x.status==='fail'))console.error(r.group,r.name,r.error);
+console.log(JSON.stringify({commit:report.commit,...report.summary,layers:report.layers}));
+for(const r of results.filter(x=>x.status==='fail'))console.error(r.group,r.name,JSON.stringify({error:r.error,actual:r.actual}),r.diagnosticStack);
 process.exitCode=report.summary.failed?1:0;
