@@ -96,6 +96,104 @@ for(const fault of ['throw','reject','dropCustom','wrongCount','dropToken'])test
  assert.ok(b.f.logs.some(row=>row.text.includes('[Grilling block action]')),'refusal surfaced through the registered event');
 });
 
+function bottleInteract(b,block){
+ const event=b.f.emit('world.beforeEvents.playerInteractWithBlock',{player:b.player,block,itemStack:b.player.main,isFirstEvent:true,blockFace:'Up',cancel:false});
+ assert.equal(event.cancel,true);b.f.tick();
+}
+function queueFreshBottle(b){
+ const target=b.f.block('minecraft:air',{x:0,y:0,z:0});b.f.block('minecraft:stone',{x:0,y:-1,z:0});
+ const event={player:b.player,block:target,face:'Up',permutationToPlace:b.f.BlockPermutation.resolve('kaleidoscope_grilling:seasoning_bottle_1'),cancel:false};
+ b.f.component('senluo:grilling_bottle_place','beforeOnPlayerPlace',event);
+ assert.equal(event.cancel,true);return target;
+}
+for(const hand of ['main','off'])test('registered '+hand+' bottle placement and pickup retain raw lore and stable metadata',async t=>{
+ const b=await bottleFixture('wrapper');t.after(()=>b.f.dispose());b.f.startup();
+ const custom=b.data.getItemRawLore(b.stack)[0];b.data.setItemLore(b.stack,[custom,...fresh]);
+ b.player.isSneaking=true;b.player[hand]=b.stack;const before=b.snapshot(b.stack),target=queueFreshBottle(b);
+ b.f.tick();assert.equal(b.player[hand],undefined);assert.equal(target.typeId,'kaleidoscope_grilling:seasoning_bottle_1');
+ const storage=await b.f.load('family_station_storage.js'),inventory=storage.stationContainer(target);
+ assert.deepEqual(b.snapshot(inventory.getItem(0)),before);assert.equal(inventory.getItem(0).amount,1);
+ bottleInteract(b,target);assert.deepEqual(b.snapshot(b.player.main),before);assert.equal(b.player.main.amount,1);
+ assert.equal(inventory.getItem(0),undefined);assert.equal(b.f.drops.length,0);
+});
+
+test('registered bottle placement refuses a changed source hand without restoring over the new item',async t=>{
+ const b=await bottleFixture('wrapper');t.after(()=>b.f.dispose());b.f.startup();
+ b.player.isSneaking=true;b.player.main=b.stack;
+ const before=b.snapshot(b.stack),target=queueFreshBottle(b),foreign=b.f.item('minecraft:diamond',2,{nameTag:'Other transaction'});
+ b.player.main=foreign;b.f.tick();
+ assert.equal(target.typeId,'minecraft:air');assert.equal(b.player.main.typeId,foreign.typeId);assert.equal(b.player.main.amount,2);
+ assert.deepEqual(b.snapshot(b.stack),before);assert.equal(b.f.drops.length,0);
+});
+
+async function seasoningGrillFixture(){
+ const b=await bottleFixture('wrapper');
+ const visual=await b.f.load('a2766_special_seasoning_visual_core.js'),state=await b.f.load('a2740_grill_state_adapter.js'),storage=await b.f.load('family_station_storage.js'),core=await b.f.load('core_logic.js');
+ const grill=b.f.block('kaleidoscope_grilling:grill',{x:3,y:0,z:0}),inventory=storage.stationContainer(grill);
+ inventory.setItem(0,b.f.item('kaleidoscope_grilling:raw_beef_skewer',1));
+ const bottle=b.f.item(visual.specialSeasoningVisualId(4,0),1,{nameTag:'Special saved',keepOnDeath:true});
+ b.data.setItemLore(bottle,[{translate:'foreign:bottle',with:['kept']},...seasoningLore(12,8)]);
+ for(const [key,value] of [['kaleidoscope_grilling:uses',4],['kaleidoscope_grilling:variant',0],['kaleidoscope_grilling:seasonings',JSON.stringify(Array(8).fill('minecraft:redstone'))],['foreign:owner','retained']])b.data.setItemProperty(bottle,key,value);
+ b.player.main=bottle;
+ b.f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({...core.initialState(),lit:true,phase:2,flips:4,heatTicks:1200}));
+ return {...b,grill,grillInventory:inventory,state};
+}
+test('registered grill seasoning spends exactly one use while preserving bottle ownership and custom lore',async t=>{
+ const b=await seasoningGrillFixture();t.after(()=>b.f.dispose());
+ bottleInteract(b,b.grill);
+ assert.equal(b.data.getItemProperty(b.player.main,'kaleidoscope_grilling:uses'),5);
+ assert.equal(b.data.getItemProperty(b.player.main,'foreign:owner'),'retained');assert.equal(b.player.main.nameTag,'Special saved');
+ assert.equal(b.state.readGrillState(b.grill).seasoned,true);assert.equal(b.grillInventory.getItem(0).amount,1);
+});
+for(const phase of ['before','after'])test('registered seasoning rolls back a failed bottle debit '+phase+' the hand write',async t=>{
+ const b=await seasoningGrillFixture();t.after(()=>b.f.dispose());
+ const before=b.snapshot(b.player.main),stateBefore=b.state.readGrillState(b.grill),properties=b.f.snapshotProperties(),slotBefore=b.snapshot(b.grillInventory.getItem(0));
+ let matches=0;
+ b.f.faults.failNext(b.player.inventory,'setItem',{phase,predicate:slot=>{if(slot!==b.player.selectedSlotIndex)return false;matches++;return true;}});
+ bottleInteract(b,b.grill);assert.equal(matches,1);assert.equal(b.f.faults.pending.length,0);
+ assert.deepEqual(b.snapshot(b.player.main),before);assert.equal(b.player.main.amount,1);assert.deepEqual(b.state.readGrillState(b.grill),stateBefore);
+ assert.deepEqual(b.snapshot(b.grillInventory.getItem(0)),slotBefore);
+ for(const [key,value] of Object.entries(properties))assert.equal(b.f.world.getDynamicProperty(key),value);
+ assert.equal(b.f.drops.length,0);
+});
+for(const phase of ['before','after'])test('registered seasoning retains its original bottle when the use-count metadata setter fails '+phase,async t=>{
+ const b=await seasoningGrillFixture();t.after(()=>b.f.dispose());
+ const before=b.snapshot(b.player.main),stateBefore=b.state.readGrillState(b.grill),properties=b.f.snapshotProperties();
+ const clone=b.f.ItemStack.prototype.clone;let attempts=0;
+ b.f.ItemStack.prototype.clone=function(){
+  const out=clone.call(this),set=out.setDynamicProperty;
+  out.setDynamicProperty=function(key,value){
+   if(key==='kaleidoscope_grilling:uses'&&value===5){
+    attempts++;if(phase==='after')set.call(this,key,value);
+    throw Error('Injected use-count metadata failure');
+   }
+   return set.call(this,key,value);
+  };
+  return out;
+ };
+ bottleInteract(b,b.grill);assert.equal(attempts,1,'failure reached the decrement metadata setter');
+ assert.deepEqual(b.snapshot(b.player.main),before);assert.deepEqual(b.state.readGrillState(b.grill),stateBefore);
+ for(const [key,value] of Object.entries(properties))assert.equal(b.f.world.getDynamicProperty(key),value);
+ assert.equal(b.f.drops.length,0);
+});
+
+test('failed seasoning debit must not roll back over a replacement owned by another transaction',async t=>{
+ const b=await seasoningGrillFixture();t.after(()=>b.f.dispose());
+ const foreign=b.f.item('minecraft:diamond',2,{nameTag:'Replacement owner'}),foreignSnapshot=b.snapshot(foreign);
+ let replaced=false;
+ b.f.faults.failNext(b.player.inventory,'setItem',{phase:'after',predicate:(slot,next)=>{
+  if(slot!==b.player.selectedSlotIndex||b.data.getItemProperty(next,'kaleidoscope_grilling:uses')!==5)return false;
+  // Simulate an external owner taking the slot at the failing native boundary.
+  // Disarm this injector before the external write; the production rollback
+  // remains fully active and must decide whether it still owns the slot.
+  b.f.faults.clear();b.player.main=foreign;replaced=true;return true;
+ }});
+ bottleInteract(b,b.grill);assert.equal(replaced,true,'replacement occurred after the actual debit write');
+ assert.equal(b.f.faults.pending.length,0);
+ assert.deepEqual(b.snapshot(b.player.main),foreignSnapshot,'rollback must retain the replacement owner');
+ assert.equal(b.player.main.amount,2);assert.equal(b.f.drops.length,0);
+});
+
 // The retained food-tooltip rules share this lore behavior suite.
 test('food maxim lore preserves every translated and custom item message',async t=>{
  const f=createFixture();t.after(()=>f.dispose());

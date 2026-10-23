@@ -5,11 +5,16 @@ import unittest
 import tempfile
 import importlib.util
 import hashlib
+import subprocess
+from copy import deepcopy
 from pathlib import Path
+from uuid import uuid4
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import save_compat as sc  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ops"))
+import persistence_spotcheck as spot  # noqa: E402
 
 
 class SaveCompat(unittest.TestCase):
@@ -1010,6 +1015,133 @@ process.stdout.write(JSON.stringify(output, (key, value) => typeof value === 'bi
             self.assertIn('db must be a real directory', run.stderr)
             self.assertEqual(self.fingerprint(replacement), before)
             self.assertEqual(list(scratch.iterdir()), [])
+
+
+def persistence_fixture_pair():
+    """Deliberately synthetic values, unrelated to any player or saved world."""
+    before = {"schema": 1, "evidence_kind": "synthetic_fixture",
+              "world_ref": str(uuid4()), "run_ref": str(uuid4()),
+              "capture_ref": str(uuid4()), "phase": "before",
+              "captured_at": "2026-01-01T00:00:00Z", "pack_set_sha256": "0" * 64,
+              "checks": {"joined": True, "normal_gameplay": True, "normal_restart_completed": False},
+              "samples": []}
+    for kind in sorted(spot.KINDS):
+        before["samples"].append({"sample_id": kind + "-01", "kind": kind,
+                                  "locator_ref": str(uuid4()), "evidence_ref": str(uuid4()),
+                                  "state": {"synthetic_level": 2, "nested": {"a": [1, False]}},
+                                  "items": [{"slot": 0, "type_id": "fixture:example", "amount": 3,
+                                             "lore": ["synthetic lore", "§rformatting"],
+                                             "properties": {"fixture:contents": ["a", "b"]}, "name": ""}]})
+    after = deepcopy(before)
+    after.update(phase="after", captured_at="2026-01-01T00:05:00Z", capture_ref=str(uuid4()))
+    after["checks"]["normal_restart_completed"] = True
+    for row in after["samples"]:
+        row["evidence_ref"] = str(uuid4())
+    return before, after
+
+
+class PersistenceSpotcheck(unittest.TestCase):
+    def test_equal_samples_are_only_equal_supplied_observations(self):
+        a, b = persistence_fixture_pair()
+        b["samples"].reverse()
+        result = spot.compare(a, b)
+        self.assertEqual(result["result"], "equal_supplied_observations")
+        self.assertEqual(result["sample_count"], 6)
+        self.assertEqual(result["evidence_kind"], "synthetic_fixture")
+        self.assertEqual(result["staging_acceptance"], "not_established")
+        self.assertFalse(result["client"] or result["production_ready"])
+
+    def test_every_station_reports_lost_state(self):
+        for kind in spot.KINDS:
+            with self.subTest(kind=kind):
+                a, b = persistence_fixture_pair()
+                row = next(s for s in b["samples"] if s["kind"] == kind)
+                row["state"]["nested"]["a"][1] = 0  # Distinguish bool from int.
+                result = spot.compare(a, b)
+                changed = [r for r in result["samples"] if not r["equal"]]
+                self.assertEqual(changed, [{"sample_id": kind + "-01", "equal": False,
+                                           "differences": [{"field": "state"}]}])
+
+    def test_item_loss_slot_move_quantity_lore_properties_and_name(self):
+        changes = {"type_id": "fixture:different", "amount": 2, "lore": ["changed"],
+                   "properties": {"fixture:contents": ["b", "a"]}, "name": "private-name"}
+        for field, value in changes.items():
+            with self.subTest(field=field):
+                a, b = persistence_fixture_pair()
+                b["samples"][0]["items"][0][field] = value
+                changed = spot.compare(a, b)["samples"][0]
+                self.assertEqual(changed["differences"], [{"field": field, "slot": 0}])
+        a, b = persistence_fixture_pair()
+        b["samples"][0]["items"][0]["slot"] = 1
+        self.assertEqual(spot.compare(a, b)["samples"][0]["differences"],
+                         [{"field": "item_presence", "slot": 0}, {"field": "item_presence", "slot": 1}])
+        b["samples"][0]["items"] = []
+        self.assertEqual(spot.compare(a, b)["samples"][0]["differences"],
+                         [{"field": "item_presence", "slot": 0}])
+
+    def test_incomplete_or_unrelated_pairs_cannot_succeed(self):
+        edits = [lambda d: d.update(world_ref=str(uuid4())),
+                 lambda d: d.update(run_ref=str(uuid4())),
+                 lambda d: d.update(pack_set_sha256="1" * 64),
+                 lambda d: d.update(evidence_kind="manual_staging"),
+                 lambda d: d.update(captured_at="2025-12-31T23:00:00Z"),
+                 lambda d: d["checks"].update(joined=False),
+                 lambda d: d["checks"].update(normal_gameplay=False),
+                 lambda d: d["checks"].update(normal_restart_completed=False),
+                 lambda d: d["samples"].pop(),
+                 lambda d: d["samples"][0].update(state={}),
+                 lambda d: d["samples"][0].update(locator_ref=str(uuid4())),
+                 lambda d: d["samples"][0]["items"][0].pop("lore"),
+                 lambda d: d["samples"][0]["items"][0].update(amount=True),
+                 lambda d: d["samples"].append(deepcopy(d["samples"][0]))]
+        for index, edit in enumerate(edits):
+            with self.subTest(edit=index):
+                a, b = persistence_fixture_pair()
+                edit(b)
+                with self.assertRaises(spot.InputError):
+                    spot.compare(a, b)
+        a, b = persistence_fixture_pair()
+        b["capture_ref"] = a["capture_ref"]
+        with self.assertRaises(spot.InputError):
+            spot.compare(a, b)
+        b["capture_ref"] = str(uuid4())
+        b["samples"][0]["evidence_ref"] = a["samples"][0]["evidence_ref"]
+        with self.assertRaises(spot.InputError):
+            spot.compare(a, b)
+
+    def test_cli_exit_codes_privacy_and_inputs_unchanged(self):
+        with tempfile.TemporaryDirectory() as temp:
+            paths = [Path(temp) / name for name in ("before.json", "after.json")]
+            command = [sys.executable, str(Path(spot.__file__)), *map(str, paths)]
+            a, b = persistence_fixture_pair()
+            sentinel = "SYNTHETIC-PRIVATE-SENTINEL"
+            for d in (a, b):
+                d["samples"][0]["state"] = {sentinel: sentinel}
+                d["samples"][0]["items"][0]["lore"] = [sentinel]
+            for expected in (0, 1, 2):
+                if expected == 1:
+                    b["samples"][0]["items"][0]["lore"].append("changed")
+                for path, doc in zip(paths, (a, b)):
+                    path.write_text(json.dumps(doc), encoding="utf-8")
+                if expected == 2:
+                    paths[1].write_text('{"secret": "' + sentinel, encoding="utf-8")
+                hashes = [hashlib.sha256(p.read_bytes()).digest() for p in paths]
+                run = subprocess.run(command, capture_output=True, text=True, check=False)
+                self.assertEqual(run.returncode, expected, run.stdout + run.stderr)
+                self.assertNotIn(sentinel, run.stdout + run.stderr)
+                self.assertNotIn(str(paths[0]), run.stdout + run.stderr)
+                self.assertEqual(run.stderr, "")
+                self.assertEqual(hashes, [hashlib.sha256(p.read_bytes()).digest() for p in paths])
+                json.loads(run.stdout)
+
+    def test_bad_json_duplicate_keys_nonfinite_and_size_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "input.json"
+            for text in ('{"a":1,"a":2}', '{"a":NaN}', '{"a":1e999}', ' ' * (spot.MAX_BYTES + 1)):
+                path.write_text(text, encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    spot.read_sample(path)
+
 
 
 if __name__ == "__main__":
