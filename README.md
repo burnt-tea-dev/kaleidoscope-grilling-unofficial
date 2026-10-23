@@ -9,7 +9,7 @@
 | 用途 | 版本與相依 |
 | --- | --- |
 | 保留公開下載 | [A2.8.149](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，需要作者 Cookery **1.6.0** 的 BP/RP |
-| 目前維護來源 | [baseline.json](baseline.json) 的 **2.8.155**，需要 Cookery **1.6.2**；P2 沒有發布新包 |
+| 本分支修正提案 | [baseline.json](baseline.json) 的 **2.8.159**，需要 Cookery **1.6.2**；獨立 draft，未發布、未完成階段驗收，見 [烤架方向說明](docs/KNOWN-ISSUES.md#grill-display-facing-repair-proposal) |
 
 公開 G138 TEST／G149 stable 的 API 故障模型曾重現物品遺失、覆寫與重複產物；這不是原生發生率證明，後續來源修補也沒有改變既有下載 bytes。測試前保留世界備份。精確檔案、雜湊、相依與安裝限制見 [RELEASING](docs/RELEASING.md)；勿把不同 Cookery 版本互換。
 
