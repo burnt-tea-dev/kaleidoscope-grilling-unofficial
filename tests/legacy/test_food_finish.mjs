@@ -153,7 +153,6 @@ test('public native variant survives heat metadata rewrites and rejects invalid 
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {createEatingLab,routes,java,beef} from '../helpers/eating-lab.mjs';
-import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 
 // This is a logic-level event experiment, not a native client/BDS test.
 // Completion inputs deliberately bracket engine debit and both event orders.
@@ -226,20 +225,24 @@ test('every route consumes its final serving once with stop before complete and 
 test('every route rejects release debit after slot, hand, or metadata replacement and clears on reconnect',async t=>{
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
   for(const route of routes)for(const hand of ['main','off'])for(const change of ['slot','hand','metadata']) {
-    const a=lab.actor(route,hand);a.case=change;a.begin();a.advance(20);
+    const a=lab.actor(route,hand);a.case=change;
+    const otherHand=hand==='main'?'off':'main';
+    a.p[otherHand]=lab.f.item('minecraft:diamond',3,{nameTag:'Other hand',lore:['Keep other hand lore']});
+    a.p.inventory.setItem(7,lab.f.item('minecraft:stone',7,{nameTag:'Backpack reserve',lore:['Keep reserve lore']}));
+    a.begin();a.advance(20);a.sample('before-switch',true);
     if(change==='slot')a.p.selectedSlotIndex=1;
-    if(change==='hand'){a.p[hand]=undefined;a.p[hand==='main'?'off':'main']=a.stack;}
+    if(change==='hand'){const other=a.p[otherHand];a.p[otherHand]=a.p[hand];a.p[hand]=other;}
     if(change==='metadata'){const replacement=a.p[hand];replacement.nameTag='Replacement';a.p[hand]=replacement;}
-    a.advance(5);a.sample('changed');
+    a.advance(5);a.sample('before-stop',true);
     // Idle prepareEatingItems may choose a fresh route after a cancelled use;
     // ownership is canonical food + count + saved metadata, not shadow ID.
-    const inventory=()=>a.p.inventory.items().filter(Boolean).map(x=>[canonicalFoodId(x.typeId),x.amount,x.nameTag]);
-    const before=inventory();
+    const before=lab.inventory(a.p),expected=structuredClone(before);
     a.event('itemStopUse',Math.max(1,route.duration-25));a.advance(1);
     // Offhand use is independent of the selected main-hand slot.
     const validOffhandSlot=hand==='off'&&change==='slot'&&route.kind!=='plain';
-    if(validOffhandSlot)assert.equal(a.p.off.amount,1);
-    else assert.deepEqual(inventory(),before);
+    if(validOffhandSlot)expected.off.amount--;
+    assert.deepEqual(lab.inventory(a.p),expected,`${route.id} ${hand} ${change}: both hands and every slot, including metadata/lore`);
+    a.sample('after-stop',true);
     if(!validOffhandSlot)assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
     lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
     a.p.selectedSlotIndex=0;a.p.main=undefined;a.p.off=undefined;a.p[hand]=a.stack;
@@ -283,27 +286,51 @@ test('beef terminal timeline distinguishes callback reset from an earlier invent
   if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'beef-terminal.json'),JSON.stringify(lab.rows,null,2));
 });
 
-// Desired safety properties intentionally remain TODO failures until T3.4.
-// Do not turn an observed old bug into an assertion of correct behavior.
-test('a stale fixed-skewer completion cannot reward a newly selected item',{todo:'T3.4: fixed completion lacks the current-hand check used for secret skewers'},async t=>{
+// Run setup, runtime and shape assertions in ordinary blocking parents. Only a
+// pure assertion of the desired replacement behavior belongs inside each TODO.
+// Unexpected exceptions or a different corruption must fail the parent normally.
+test('a stale fixed-skewer completion cannot reward a newly selected item',async t=>{
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
   const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(88);
   a.p.selectedSlotIndex=1;a.p.main=lab.f.item('minecraft:stone');a.advance(1);
+  const before=lab.inventory(a.p);
   a.event('itemCompleteUse',0);
-  assert.equal(lab.f.effects.filter(e=>e.source===a.p&&e.effect==='strength').length,0);
+  const actualEffects=lab.f.effects.filter(e=>e.source===a.p);
+  assert.deepEqual(actualEffects.map(e=>[e.effect,e.duration]),[['strength',200]],'known failure shape, not any new effect or exception');
+  assert.deepEqual(lab.inventory(a.p),before);
+  assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+  assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+  a.event('itemCompleteUse',0);assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,1);
+  await t.test('desired: the stale completion awards no effect',{todo:'T3.4: fixed completion lacks the current-hand check used for secret skewers'},()=>assert.equal(actualEffects.length,0));
 });
 
-test('a brief inventory-view mismatch does not strand an active meal at profile zero',{todo:'T3.4: current-identity mismatch clears presentation without ending or restoring the session'},async t=>{
+test('a brief inventory-view mismatch does not strand an active meal at profile zero',async t=>{
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
-  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(70);
-  a.nativeDebit();a.advance(1);a.p.main=a.stack;a.advance(1);
-  assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),5);
+  const a=lab.actor(routes.find(x=>x.id===beef)),before=lab.inventory(a.p);a.begin();a.advance(70);
+  a.nativeDebit();a.advance(1);
+  assert.equal(a.p.main.amount,1);
+  for(const key of ['eat_profile','eat_hand','eat_native_ticks','eat_elapsed_ticks'])assert.equal(a.p.getProperty('kaleidoscope_grilling:'+key),0);
+  a.p.main=a.stack;a.advance(1);
+  const observed=a.sample('restored-view',true);
+  assert.equal(observed.profile,0);assert.equal(observed.handCode,0);assert.equal(observed.nativeTicks,0);assert.equal(observed.clock,72);
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(observed.hunger,2);assert.equal(observed.saturation,0);assert.equal(observed.effects,0);
+  await t.test('desired: restored use has its FOUR profile',{todo:'T3.4: current-identity mismatch clears presentation without ending or restoring the session'},()=>assert.equal(observed.profile,5));
 });
 
-test('logging out after the Java checkpoint settles a meal even without a stop event',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},async t=>{
+test('logging out after the Java checkpoint settles a meal even without a stop event',async t=>{
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
-  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(java.minimum_eat_ticks);
+  // Java use() splits a stack first: one active serving, with the cleared-profile
+  // remainder returned to inventory. Model that shape, not two held servings.
+  // This driver still does not execute Java use() or Java logout itself.
+  const a=lab.actor(routes.find(x=>x.id===beef),'main',1);
+  a.p.inventory.setItem(7,a.stack.clone());
+  const before=lab.inventory(a.p);a.begin();a.advance(java.minimum_eat_ticks);
   lab.f.emit('world.beforeEvents.playerLeave',{player:a.p});
   lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.inventory.getItem(7).amount,1);
   assert.equal(a.p.main.amount,1);
+  assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+  assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,0);
+  const heldCount=a.p.main.amount;
+  await t.test('desired: logout settles the one active serving',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},()=>assert.equal(heldCount,0));
 });

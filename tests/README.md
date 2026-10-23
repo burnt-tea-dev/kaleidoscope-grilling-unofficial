@@ -62,6 +62,11 @@ switching selected slots, moving hands, replacing metadata, leave/spawn and
 reholding. An offhand meal correctly survives a change of selected main slot.
 Idle random route preparation may select a different shadow ID after cancellation;
 the ownership assertions compare canonical food, quantity and saved metadata.
+The switch matrix now snapshots both hands and every numbered inventory slot,
+including full exposed metadata and raw lore, before and after stop. The other
+hand and a reserve slot contain named/lored control stacks. Moving hands swaps
+stacks rather than discarding the control stack. Only a valid offhand meal's
+single-serving debit is allowed; every other slot and metadata field must match.
 
 Java expectations come from `data/java/eating_profiles.json`, pinned to
 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`:
@@ -75,16 +80,24 @@ client rendering bug.
 
 Executed on G155 `cccc9689a86f0e724c229208ab9cae26ff7999f1` and G156
 `00fc8453d6d36602cc14b64a0d70de39ccf8b035`: five scenario groups passed and
-three desired safety properties failed as explicit `todo` tests. Node exits
-successfully for TODO failures; this must not be reported as eight passing tests.
-The retained gameplay run on G155 recorded 776 passes, zero ordinary failures
-and these three TODO failures (779 tests). These are logic results only.
+three desired safety properties failed as explicit `todo` tests at the original
+head. After review, eight ordinary top-level tests pass, with three nested TODO
+assertions still failing (11 Node tests, not 212 independent tests). The 106
+routes and both hands are loops inside the top-level groups. Each TODO's setup,
+runtime calls, exact observed failure shape, inventory and effects checks run
+in its ordinary blocking parent; only the pure desired-state assertion is TODO.
+Unexpected setup exceptions or different state damage therefore fail normally.
+Node exits successfully for the three expected TODO failures; this does not mean
+the three runtime behavior gaps have been fixed. These are logic results only.
+The full retained gameplay rerun after the review changes records 782 Node tests:
+779 passes, zero ordinary failures and three TODO assertion failures. The two
+review negative controls each record one ordinary failure, zero TODOs and exit 1.
 
 | Minimal reproduction | Executed result | T3.4 follow-up |
 | --- | --- | --- |
 | Start beef with two servings; at elapsed 70 supply an inventory view with one fewer; tick; restore original view; tick | Profile remains 0 instead of 5; the elapsed clock resumes but presentation profile/hand/native-duration do not | Resolve session identity/debit ordering and presentation lifecycle together |
 | Start beef; elapsed 88; select a stone slot; tick; deliver the old complete event with zero remaining | One strength-effect call is still awarded | Apply current-hand/slot ownership checks consistently to fixed food completion |
-| Start beef; elapsed 25; leave without a stop event | Two servings remain; Java logout would settle one | Verify real Bedrock stop/leave ordering before choosing a safe logout adapter |
+| Start with one held beef serving and one reserve in slot 7; elapsed 25; supply leave without a stop event | Held serving and reserve both remain; Java logout has a branch to settle the active serving | Verify real Bedrock stop/leave ordering before choosing a safe logout adapter |
 
 The beef terminal experiment also distinguishes two candidate reset paths:
 
@@ -101,6 +114,22 @@ food nutrition, actual engine consumption, network packets, animation evaluation
 render controllers, or displayed geometry. Requested clip names are not rendered
 animation evidence. Java sources were inspected; a Java game/JVM oracle was not
 run. `client=false`, `production_ready=false`.
+
+In particular, selecting stone and then supplying the old completion, or
+supplying a one-fewer inventory view and then restoring it, are synthetic
+event-race probes. They do not prove Bedrock actually delivers those sequences.
+The logout fixture now models Java's post-`use()` split shape: one active serving
+plus one inventory reserve, instead of the former two held servings. It does
+not execute Java's stack splitting, random custom-data selection, logout, or
+finish hooks. The remaining difference is a desired-property candidate under
+the explicitly supplied no-Stop leave input, not a native parity verdict.
+
+Review negative controls modify only disposable test-source copies: clearing
+offhand after the offhand/metadata stop, and throwing an unrelated setup error
+before the stale-completion runtime call. Both must fail an ordinary parent
+with exit 1. They are synthetic checks of test sensitivity, not observations
+that the runtime drops an item or throws that injected exception. The original
+three desired-property TODO assertions remain present and fail as documented.
 
 The reported G155 final-bite full-model flash remains unlocated. The experiment
 does not reproduce its three displayed frames or replace the existing 89

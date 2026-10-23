@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFixture} from './minecraft-fixture.mjs';
+import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 
 // Java 1.1.1 NeoForge MultiBiteSkewerItem: AnimationProfile L36-41,
 // visualBiteStage L98, use L127, release/settlement L250. This reads extracted
@@ -33,6 +34,9 @@ export async function createEatingLab() {
   const snapshot = await f.load('skewer_item_snapshot.js');
   const effects = await f.load('effect_state_runtime.js');
   const lab = {f,data,config,snapshot,effects,rows:[]};
+  lab.ownedStack=stack=>stack?{...snapshot.captureSkewerMetadata(stack),id:canonicalFoodId(stack.typeId),amount:stack.amount}:null;
+  lab.inventory=p=>({selectedSlot:p.selectedSlotIndex,main:lab.ownedStack(p.main),off:lab.ownedStack(p.off),
+    slots:p.inventory.items().map((stack,slot)=>({slot,stack:lab.ownedStack(stack)}))});
   lab.actor = (route, hand='main', amount=2) => {
     config.setGrillingConfig('enableEatingAnimations',route.kind !== 'plain');
     config.setGrillingConfig('graphicalEatingHud',false);
@@ -51,14 +55,14 @@ export async function createEatingLab() {
     const a={route,hand,p,stack:stack.clone(),start:f.system.currentTick,animations};
     a.event=(name,remaining)=>f.emit('world.afterEvents.'+name,{source:p,itemStack:a.stack.clone(),useDuration:remaining});
     a.begin=()=>{a.start=f.system.currentTick;a.stack=p[hand].clone();a.event('itemStartUse',route.duration);};
-    a.sample=(phase)=>{
+    a.sample=(phase,ownership=false)=>{
       const row={case:a.case??'normal',base:route.base,id:route.id,kind:route.kind,hand,tick:f.system.currentTick,elapsed:f.system.currentTick-a.start,phase,
         profile:p.getProperty(N+'eat_profile')??0,handCode:p.getProperty(N+'eat_hand')??0,projection:p.getProperty(N+'eat_projection')??false,
         clock:p.getProperty(N+'eat_elapsed_ticks')??0,nativeTicks:p.getProperty(N+'eat_native_ticks')??0,
         main:p.main?{id:p.main.typeId,amount:p.main.amount}:null,off:p.off?{id:p.off.typeId,amount:p.off.amount}:null,
         hunger:p.components['minecraft:player.hunger'].currentValue,saturation:p.components['minecraft:player.saturation'].currentValue,
         effects:f.effects.filter(e=>e.source===p).length,crumbs:f.particles.filter(e=>e.particle===N+'skewer_crumb').length,
-        clips:animations.map(e=>e.name)};
+        clips:animations.map(e=>e.name),...(ownership?{ownership:lab.inventory(p)}:{})};
       lab.rows.push(row);return row;
     };
     a.advance=(ticks,record=false)=>{for(let i=0;i<ticks;i++){f.tick();if(record)a.sample('tick');f.writes.length=0;}};
