@@ -113,11 +113,15 @@ def compare(before, after):
     require(before["capture_ref"] != after["capture_ref"], "CAPTURE_REUSED")
     require(timestamp(before["captured_at"]) < timestamp(after["captured_at"]), "CAPTURE_ORDER")
     require(set(left) == set(right), "SAMPLE_SET_MISMATCH")
+    # One photo may support multiple samples within one capture. Every after
+    # photo must still be new: borrowing another before sample's ref is reuse.
+    before_evidence = {sample["evidence_ref"] for sample in left.values()}
+    after_evidence = {sample["evidence_ref"] for sample in right.values()}
+    require(before_evidence.isdisjoint(after_evidence), "CAPTURE_EVIDENCE_REUSED")
     rows = []
     for sid in sorted(left):
         a, b = left[sid], right[sid]
         require(a["kind"] == b["kind"] and a["locator_ref"] == b["locator_ref"], "SAMPLE_IDENTITY_MISMATCH")
-        require(a["evidence_ref"] != b["evidence_ref"], "SAMPLE_EVIDENCE_REUSED")
         differences = []
         if canonical(a["state"]) != canonical(b["state"]):
             differences.append({"field": "state"})

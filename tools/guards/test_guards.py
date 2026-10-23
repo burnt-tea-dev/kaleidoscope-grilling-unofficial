@@ -1041,6 +1041,54 @@ def persistence_fixture_pair():
 
 
 class PersistenceSpotcheck(unittest.TestCase):
+    def test_before_evidence_cannot_be_borrowed_by_a_different_after_sample(self):
+        before, fresh = persistence_fixture_pair()
+        refs = [row["evidence_ref"] for row in before["samples"]]
+        for shift in range(1, len(refs)):
+            after = deepcopy(fresh)
+            for index, row in enumerate(after["samples"]):
+                row["evidence_ref"] = refs[(index + shift) % len(refs)]
+            with self.subTest(rotation=shift), self.assertRaisesRegex(spot.InputError, "CAPTURE_EVIDENCE_REUSED"):
+                spot.compare(before, after)
+        after = deepcopy(fresh)
+        after["samples"][0]["evidence_ref"] = refs[1]
+        with self.assertRaisesRegex(spot.InputError, "CAPTURE_EVIDENCE_REUSED"):
+            spot.compare(before, after)
+        with tempfile.TemporaryDirectory() as temp:
+            paths = [Path(temp) / name for name in ("before.json", "after.json")]
+            for path, doc in zip(paths, (before, after)):
+                path.write_text(json.dumps(doc), encoding="utf-8")
+            run = subprocess.run([sys.executable, str(Path(spot.__file__)), *map(str, paths)],
+                                 capture_output=True, text=True, check=False)
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual(json.loads(run.stdout)["result"], "invalid_or_incomplete_input")
+            self.assertEqual(run.stderr, "")
+            for ref in refs:
+                self.assertNotIn(ref, run.stdout)
+
+    def test_independent_captures_can_each_share_one_photo_between_samples(self):
+        before, after = persistence_fixture_pair()
+        for shared in (False, True):
+            if shared:
+                for doc in (before, after):
+                    ref = doc["samples"][0]["evidence_ref"]
+                    for row in doc["samples"]:
+                        row["evidence_ref"] = ref
+            with self.subTest(shared_within_capture=shared):
+                self.assertEqual(spot.compare(before, after)["result"], "equal_supplied_observations")
+                with tempfile.TemporaryDirectory() as temp:
+                    paths = [Path(temp) / name for name in ("before.json", "after.json")]
+                    for path, doc in zip(paths, (before, after)):
+                        path.write_text(json.dumps(doc), encoding="utf-8")
+                    run = subprocess.run([sys.executable, str(Path(spot.__file__)), *map(str, paths)],
+                                         capture_output=True, text=True, check=False)
+                    self.assertEqual(run.returncode, 0)
+                    self.assertEqual(json.loads(run.stdout)["result"], "equal_supplied_observations")
+                    self.assertEqual(run.stderr, "")
+                    for doc in (before, after):
+                        for row in doc["samples"]:
+                            self.assertNotIn(row["evidence_ref"], run.stdout)
+
     def test_equal_samples_are_only_equal_supplied_observations(self):
         a, b = persistence_fixture_pair()
         b["samples"].reverse()
