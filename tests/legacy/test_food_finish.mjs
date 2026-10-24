@@ -1175,7 +1175,7 @@ test('ONE native EAT control restores the item component while retaining the ONE
  assert.equal(item.description.identifier,oneId);
  assert.deepEqual(c['minecraft:use_animation'],{value:'eat'});
  assert.equal(c['minecraft:use_modifiers'].use_duration*20,eatingProfile('ONE').duration);
- assert.equal(c['minecraft:use_modifiers'].start_using,'always');
+ assert.equal(c['minecraft:use_modifiers'].start_using,'if_first');
  assert.equal(c['minecraft:food'].can_always_eat,true);assert.equal(c['minecraft:allow_off_hand'],true);
  // This validates configuration only. Native EAT poses/particles and the held
  // model must be distinguished in actual footage; this is not a renderer test.

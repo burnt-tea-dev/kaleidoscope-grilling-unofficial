@@ -21,7 +21,7 @@
       "minecraft:allow_off_hand": true,
       "minecraft:hand_equipped": true,
       "minecraft:use_modifiers": {
-        "start_using": "always",
+        "start_using": "if_first",
         "use_duration": 4.5,
         "movement_modifier": 0.35
       },

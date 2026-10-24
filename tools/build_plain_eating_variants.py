@@ -16,6 +16,10 @@ def build():
         plain=copy.deepcopy(doc);item=plain['minecraft:item'];item['description']['identifier']=identifier+SUFFIX;item['description'].pop('menu_category',None)
         item['components']['minecraft:use_modifiers']['use_duration']=1.25
         item['components']['minecraft:use_animation']={'value':'eat'}
+        # Native arbitration probe: public ONE only; keep its plain control unchanged.
+        if identifier=='kaleidoscope_grilling:grilled_caterpillar_skewer':
+            doc['minecraft:item']['components']['minecraft:use_modifiers']['start_using']='if_first'
+            item['components']['minecraft:use_modifiers']['start_using']='always'
         outputs[BP/'items'/f'{name}{SUFFIX}.json']=plain
     def ingredients(value):
         if isinstance(value,dict):
