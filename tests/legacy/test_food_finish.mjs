@@ -1226,7 +1226,7 @@ test('released-use trace caps total rows and ticks without rearming or changing 
  }
 });
 
-test('released-use trace closes on scope leave and death and ignores unrelated players',async t=>{
+test('released-use trace keeps ownership-loss rows informational and closes explicit scopes',async t=>{
  for(const change of ['slot','other-item','offhand','leave','death','other-start']){
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();
   const unrelated=lab.actor(handoffRoute(),'main',2),count=releaseRows(lab.f).length;unrelated.begin();assert.equal(releaseRows(lab.f).length,count);
@@ -1236,9 +1236,14 @@ test('released-use trace closes on scope leave and death and ignores unrelated p
   if(change==='leave')lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
   if(change==='death')lab.f.emit('world.afterEvents.entityDie',{deadEntity:a.p});
   if(change==='other-start')lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:lab.f.item(beef,2),useDuration:90});
-  a.advance(1);const rows=releaseRows(lab.f);assert.equal(rows.at(-1)[2],({leave:92,death:94,'other-start':90,offhand:95})[change]??91);
+  a.advance(1);const rows=releaseRows(lab.f),informational=['slot','other-item'].includes(change);
+  if(informational){assert.ok(rows.some(x=>x[2]===91));assert.equal(rows.at(-1)[2],100);}
+  else assert.equal(rows.at(-1)[2],({leave:92,death:94,'other-start':90,offhand:95})[change]);
   if(change==='leave')assert.equal(rows.at(-1)[18],-1,'leave never reads offline inventory');
-  const n=rows.length;a.advance(3);assert.equal(releaseRows(lab.f).length,n);unrelated.retire();a.retire();
+  const n=rows.length;a.advance(3);
+  if(informational){assert.ok(releaseRows(lab.f).length>n);a.advance(300);const capped=releaseRows(lab.f);assert.ok(capped.length<=512);assert.equal(capped.at(-1)[2],98);const end=capped.length;a.advance(2);assert.equal(releaseRows(lab.f).length,end);}
+  else assert.equal(releaseRows(lab.f).length,n);
+  unrelated.retire();a.retire();
  }
 });
 
@@ -1297,5 +1302,29 @@ test('released-use trace preserves original Stop payload getter throws and never
   if(key==='useDuration'&&used===10){assert.doesNotThrow(()=>lab.f.emit('world.afterEvents.itemStopUse',event));assert.equal(reads,0,'original early guard does not evaluate remaining');}
   else{assert.throws(()=>lab.f.emit('world.afterEvents.itemStopUse',event),/original payload read failed/);assert.equal(reads,1,'observer must not consume the one-shot failure');}
   assert.equal(a.p.main.amount,2);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);assert.ok(releaseRows(lab.f).filter(x=>x[2]===20).every(x=>x[11]===-1),'entry marker has no premature remaining snapshot');a.retire();
+ }
+});
+
+
+test('released-use trace retains Complete and Stop after scheduler ownership mismatch',async t=>{
+ for(const deferred of [false,true])for(const interposedTick of [false,true]){
+  const lab=await createEatingLab({deferEntityProperties:deferred});t.after(()=>lab.f.dispose());
+  const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(88);
+  // Explicit synthetic external quantity change, not an implementation of native debit.
+  // Both event schedules complete at age89; only move the change across the scheduler.
+  if(interposedTick){a.nativeDebit();lab.f.tick();}else{lab.f.tick();a.nativeDebit();}
+  if(interposedTick)assert.ok(releaseRows(lab.f).some(x=>x[2]===91));
+  lab.f.writes.length=0;a.event('itemCompleteUse',0);a.event('itemStopUse',0);
+  let rows=releaseRows(lab.f);const completion=rows.findIndex(x=>x[2]===30),stop=rows.findIndex(x=>x[2]===20);
+  assert.ok(completion>=0&&stop>completion,'late native callback markers remain observable');
+  if(interposedTick)assert.ok(rows.findIndex(x=>x[2]===91)<completion);
+  assert.equal(a.p.main.amount,1);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+  assert.ok(!rows.some(x=>[50,51].includes(x[2])),'external quantity change is not invented as script debit');
+  assert.ok(!lab.f.writes.some(x=>x.target===a.p.inventory||x.target===a.p.equipment),'completion observer does not write held inventory');
+  a.advance(2);assert.equal(handoffProperties(a.p).eat_profile,0);
+  a.begin();a.advance(5);a.event('itemStopUse',85);a.advance(2);rows=releaseRows(lab.f);
+  assert.deepEqual(rows.filter(x=>x[2]===11).map(x=>x[8]),[1,2],'second accepted script use stays visible');
+  assert.equal(a.p.main.amount,1);assert.ok(rows.some(x=>x[2]===27&&x[8]===2&&x[17]===0));
+  assert.equal(handoffProperties(a.p).eat_profile,0);a.retire();
  }
 });
