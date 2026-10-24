@@ -26,6 +26,12 @@ def validate(config):
    for line in path.read_text(encoding='utf-8').splitlines():
     for prefix in ['## Current maintained baseline: ','## 當前維護基線：']:
      if line.startswith(prefix) and line[len(prefix):]!='.'.join(map(str,config['version'])):fail(name+' maintained version differs from release version')
+ # Authoring metadata must match the post-bump identity before freeze creates
+ # its immutable claim. Minimal non-authoring fixture repos have no config.
+ if (ROOT/'config.json').exists():
+  from bridge_project import check_export_version
+  try:check_export_version(ROOT,config['version'])
+  except (AssertionError,KeyError,IndexError,TypeError,ValueError,OSError) as error:fail(str(error))
  manifests={};trees={};files={}
  for side,relative in config['runtime'].items():
   root=ROOT/relative;manifests[side]=m=read(root/'manifest.json')

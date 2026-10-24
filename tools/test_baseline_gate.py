@@ -33,6 +33,27 @@ class BaselineGateTests(unittest.TestCase):
  def test_readme_version_rejected(self):
   (self.root/'README.md').write_text('## Current maintained baseline: 0.0.1\n')
   self.reject('maintained version',lambda:gate.validate(self.config))
+ def test_post_bump_authoring_names_are_checked_before_runtime_claim(self):
+  paths=[self.root/'config.json',self.root/'projects/grilling/gameplay_core/config.json']
+  def write_name(path,version):
+   path.parent.mkdir(parents=True,exist_ok=True)
+   path.write_text(json.dumps({'compiler':{'plugins':[['simpleRewrite',{'packName':'Kaleidoscope_Grilling_'+version+'_Canonical'}]]}}))
+  def reject_freeze(config):
+   baseline=self.root/'baseline.json';history=self.root/'release-history.json'
+   baseline.write_text(json.dumps(config));before=(baseline.read_bytes(),history.read_bytes())
+   argv=sys.argv
+   try:
+    sys.argv=['baseline_gate.py','freeze']
+    self.reject('bridge build name drifted',gate.main)
+   finally:sys.argv=argv
+   self.assertEqual((baseline.read_bytes(),history.read_bytes()),before)
+   self.assertFalse((self.root/'.git/release-claims/v1'/('.'.join(map(str,config['version']))+'.json')).exists())
+  for path in paths:write_name(path,'1_0_0')
+  gate.validate(self.config)
+  for path in paths:
+   write_name(path,'0_9_9');reject_freeze(self.config);write_name(path,'1_0_0')
+  bumped=copy.deepcopy(self.config);bumped['version']=[1,0,1]
+  reject_freeze(bumped)
  def test_runtime_edit_rejected(self):
   (self.root/'runtime/BP/content.json').write_text('{"silent":"patch"}')
   self.reject('runtime changed',lambda:gate.check(self.config))
