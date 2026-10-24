@@ -48,3 +48,14 @@
 [T1.3-1 至 T1.3-5](PARITY.md#舊-pr-保留需求)完整保留交易所有權、碰撞／選取、20 種 THREE 食用、固定五幀 icon 及併發餐盤／食譜需求。舊 PR 關閉是工作整理，不是修復或驗收。
 
 原始回報與更細的歷史限定保留於[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)、[PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)及[公開下載稽核](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md)。舊工具／workflow 風險以 T2.4 後的實際入口為準，不能把已退役的驗證鏈描述成仍在執行；玩家缺口不因工具退役而被刪除。
+
+### Isolated animation reconstruction boundaries
+
+The 2026-10-24 T4.2 candidate covers source motion/selection for fixed families,
+not the three composited secret/mysterious/dark surfaces. Native clock origin,
+property-packet ordering, final-bite full-model flash, left-dominant-hand mapping,
+standard/slim camera fit and occupied-helper-hand rendering remain unverified.
+Unsupported non-upright states retain the existing fallback. The new source
+regressions do not close the existing three T3.4 lifecycle TODOs. Blockbench
+editor acceptance and paired native recordings are still required; see
+[scope](../tools/skewer_animation/README.md).

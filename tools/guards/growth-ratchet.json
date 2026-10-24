@@ -11,7 +11,7 @@
   "docs_files_total": 9,
   "committed_artifact_files": 0,
   "history_tree_files": 0,
-  "script_modules": 265,
+  "script_modules": 262,
   "version_prefixed_script_modules": 125,
   "global_block_interact_handlers": 12,
   "global_break_handlers": 13,
@@ -21,9 +21,9 @@
   "vanilla_entity_overrides": 1,
   "item_definitions": 249,
   "shadow_route_items": 64,
-  "rp_geometry_files": 923,
+  "rp_geometry_files": 922,
   "version_prefixed_model_dirs": 7,
   "largest_geometry_kib": 7291,
-  "rp_total_mib": 57
+  "rp_total_mib": 50
  }
 }

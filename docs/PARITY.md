@@ -1,6 +1,6 @@
 # Java 與 Bedrock 功能對照
 
-這份表記錄玩家能力、目前來源及尚缺的證據。維護來源為 `baseline.json` 的 **2.8.155／Cookery 1.6.2**；公開保留下載 **A2.8.149／Cookery 1.6.0** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
+這份表記錄玩家能力、目前來源及尚缺的證據。維護來源為 `baseline.json` 的 **2.8.161 隔離候選／Cookery 1.6.2**；公開保留下載 **A2.8.149／Cookery 1.6.0** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
 
 Java 對照固定為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`，以計畫所列 NeoForge 1.21.1 路徑為主要邏輯來源。原始素材保留於 `projects/grilling/source_snapshots/`；[data/java](../data/java/) 與[萃取方法](../tools/java_extract/README.md)提供可重現資料。數值與來源差異以這些資料和原碼為準，不從舊 Bedrock 行為反推 Java。
 
@@ -83,3 +83,18 @@ Java 對照固定為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c936
 本表合併舊對照的 21 個詳細項、進度獎勵邊界、BUGS 的 19 個問題區段及上述五項需求。原候選與細節保留於[收斂前 PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)、[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)及各自連結；完整重建前樹見 [archive tag](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。收斂前 commit 與較早 archive tag 是不同時間點，不把後來的證據改寫成 tag 已有。
 
 後續每次更新必須把來源 commit／候選、實際場景、測試位置及未覆蓋範圍寫在同一列。刪除過時測試可保留其歷史證據連結，但不能把它計作現行自動化覆蓋。文件清理不關閉尚未驗收的玩家需求。
+
+## Isolated T4.2 skewer-animation candidate (2026-10-24)
+
+User-authorized parallel source work, **not P3 completion**. The candidate
+reconstructs five Java FP motion families and both sides, consolidates 58 fixed
+routes and separates integer bite checkpoints from render interpolation. Normal
+FP/TP holds and actual per-family geometry remain unchanged. Three composited
+families/six routes retain their previous selectors and are not reconstructed.
+The prior ONE/right +4.67658183-pixel arm offset is removed in the inherited
+binding basis; its actual camera result is pending. See
+[implementation and acceptance scope](../tools/skewer_animation/README.md).
+Source execution: 3,730 unmodified-Java samples with documented dependency
+surrogates; this is not Java-client or Bedrock rendering evidence. Mandatory
+Blockbench and same-candidate native acceptance are pending. `client=false`,
+`production_ready=false`; no merge, publication or live deployment is requested.

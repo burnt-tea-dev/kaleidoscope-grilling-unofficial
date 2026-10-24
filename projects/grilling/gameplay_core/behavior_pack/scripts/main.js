@@ -13,10 +13,6 @@ import {handleHeavyMetalBeforeHurt,forgetHeavyMetalRescue} from './heavy_metal_d
 import {retargetBottleFillStack,prepareBottleFillItems} from './bottle_fill_item_runtime.js';
 import {isPlainEatingId,SKEWER_EATING_IDS} from './eating_profile_ids.js';
 import {beginSeasoningMotion,syncSeasoningMotion} from './seasoning_motion_runtime.js';
-import {supportsJavaEatingProjection} from './java_eating_projection_items.js';
-import {supportsFailureEating,failureEatingAnimation} from './failure_skewer_projection.js';
-import {supportsRawOne,rawOneAnimation} from './raw_one_projection.js';
-import {supportsReviewedThree,reviewedThreeAnimation} from './review_three_projection.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {prepareEatingItems,forgetEatingItem,selectedEatingProfile} from './eating_item_runtime.js';
 import {invincibleDamageFeedback,invincibleAmbientFeedback,goldenSkewerFeedback,ordinaryShieldFeedback,ordinaryFatalFeedback} from './immersion_effect_feedback.js';
