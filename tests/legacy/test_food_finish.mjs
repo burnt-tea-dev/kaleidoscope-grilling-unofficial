@@ -690,3 +690,166 @@ test('terminal handoff documents the supplied-query same-ID replacement gap befo
   a.retire();
  }
 });
+
+// 164 diagnostic only. These evaluate the appended numeric q.log expressions
+// and unchanged runtime through test API boundaries, not a native Molang VM,
+// renderer, packet stream, or a successful client-log capture.
+const trace164Id='kaleidoscope_grilling:grilled_caterpillar_skewer';
+const trace164ClientFields=['row','evaluation','seconds','using','ownerUsing','profile','hand','projection','nativeTicks','elapsedTicks','remaining','alpha','activeSlot','sameItem','usingOwned','terminalWait','sourceProjection','biteStage','helperVisible'];
+function trace164ClientRows(logs){
+ const values=logs.filter(value=>value!==164001),rows=[];
+ for(let offset=0;offset<values.length;offset+=21){
+  assert.equal(values[offset],164010);assert.equal(values[offset+20],164011);
+  const fields=values.slice(offset+1,offset+20);assert.equal(fields.length,19);assert.ok(fields.every(Number.isFinite));
+  rows.push(Object.fromEntries(trace164ClientFields.map((name,index)=>[name,fields[index]])));
+ }
+ return rows;
+}
+function trace164ServerRows(f){
+ return f.logs.filter(row=>row.text.startsWith('[KG164] ')).map(row=>{
+  const fields=JSON.parse(row.text.slice('[KG164] '.length));
+  assert.equal(fields.length,13);assert.ok(fields.every(Number.isFinite));return fields;
+ });
+}
+
+test('164 client trace emits one idle sentinel, one start row, then the terminal window and final inactive row',()=>{
+ const state={},logs=[];
+ const frame=options=>{const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,state,delta:.25,...options});logs.push(...result.logs);return result;};
+ for(let i=0;i<4;i++)frame({using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0});
+ assert.deepEqual(logs,[164001]);assert.equal(state.kg_diag_rows,0);
+ frame({using:true,tick:0});
+ assert.equal(trace164ClientRows(logs).length,1);
+ for(let i=1;i<13;i++)frame({using:true,tick:i*5});
+ assert.equal(trace164ClientRows(logs).length,1,'middle motion is not logged before age3.5');
+ frame({using:true,tick:65});
+ let rows=trace164ClientRows(logs);assert.equal(rows.length,2);assert.equal(rows[1].seconds,3.5);
+ assert.equal(rows[0].using,1);assert.equal(rows[0].ownerUsing,1);assert.equal(rows[0].profile,1);assert.equal(rows[0].hand,1);
+ frame({using:false,ownerUsing:true,tick:90});
+ rows=trace164ClientRows(logs);assert.equal(rows.at(-1).using,0);assert.equal(rows.at(-1).ownerUsing,1);assert.equal(state.kg_diag_done,false);
+ frame({using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0,tick:0});
+ rows=trace164ClientRows(logs);const final=rows.at(-1);
+ assert.deepEqual([final.using,final.ownerUsing,final.profile,final.hand,final.projection],[0,0,0,0,0]);
+ assert.equal(state.kg_diag_done,true,'all-inactive row is emitted before ending this instance trace');
+ const count=logs.length;
+ for(let i=0;i<10;i++)frame({using:true,tick:i});
+ assert.equal(logs.length,count,'the next use cannot rearm the same attachable instance');
+ assert.equal(logs.filter(value=>value===164001).length,1);
+});
+
+test('164 client trace bounds rows independently of its timer and bounds time independently of native clocks',()=>{
+ const capState={},capLogs=[];
+ const collect=(state,logs,options)=>logs.push(...presentation(trace164Id,{profile:1,hand:'main',duration:90,state,...options}).logs);
+ collect(capState,capLogs,{using:true,delta:0});
+ for(let i=0;i<400;i++)collect(capState,capLogs,{using:false,ownerUsing:true,delta:0,tick:0});
+ const capped=trace164ClientRows(capLogs);
+ assert.equal(capped.length,300);assert.equal(capped.at(-1).row,300);assert.equal(capped.at(-1).seconds,0);assert.equal(capState.kg_diag_done,true);
+ const timedState={},timedLogs=[];
+ for(let i=0;i<12;i++)collect(timedState,timedLogs,{using:true,ownerUsing:true,delta:1,tick:0});
+ const timed=trace164ClientRows(timedLogs);
+ assert.equal(timed.at(-1).seconds,7);assert.ok(timed.length<300);assert.equal(timedState.kg_diag_done,true);
+ assert.equal(timedState.kg_diag_age,7,'diagnostic age stops advancing after its independent timeout');
+});
+
+test('164 client trace does not spam offhand, third person, never-used items, or the unchanged raw counterpart',()=>{
+ for(const options of [{hand:'off',using:true},{first:false,using:true},{using:false,profile:0,ownerHand:0,projection:false,duration:0}]){
+  const state={},logs=[];
+  for(let i=0;i<20;i++)logs.push(...presentation(trace164Id,{profile:1,duration:90,state,...options}).logs);
+  assert.deepEqual(logs,options.using===false?[164001]:[]);
+  assert.equal(state.kg_diag_rows,0);assert.equal(state.kg_diag_age,0);
+ }
+ const other=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{profile:1,tick:80});
+ assert.deepEqual(other.logs,[]);
+});
+
+test('164 client trace leaves all non-diagnostic ONE state, clips and visibility equal to the unchanged163 counterpart',()=>{
+ const tracedState={},controlState={};
+ const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_'))),clips:result.clips,visibility:result.visibility});
+ const cases=[{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:23},{tick:24},{tick:61},{tick:62},{tick:89},{tick:90,using:false},
+  {tick:90,using:false,oppositeOccupied:true},{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:70,hand:'off'},
+  {tick:70,first:false},{tick:70,same:false},{tick:70,projection:false},{tick:70,alpha:.999}];
+ for(const options of cases){
+  const input={profile:1,hand:'main',duration:90,...options};
+  const traced=presentation(trace164Id,{...input,state:tracedState}),control=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{...input,state:controlState});
+  assert.deepEqual(core(traced),core(control),JSON.stringify(options));assert.deepEqual(control.logs,[]);
+ }
+});
+
+test('164 server trace records numeric event and property handoff order without owning food debit or rewards',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute(),'main');a.begin();
+ let rows=trace164ServerRows(lab.f);assert.deepEqual(rows.map(row=>row[0]),[10,11]);
+ assert.deepEqual(rows[0].slice(8),[0,0,0,0,0]);assert.deepEqual(rows[1].slice(8),[1,1,1,90,0]);
+ assert.equal(rows[0][3],90);assert.equal(rows[0][7],1);
+ a.advance(89);a.nativeDebit();const before=lab.inventory(a.p);
+ a.event('itemStopUse',0);a.event('itemCompleteUse',0);a.advance(1);
+ rows=trace164ServerRows(lab.f);
+ const stop=rows.find(row=>row[0]===20),complete=rows.find(row=>row[0]===30),handoff=rows.find(row=>row[0]===31);
+ assert.equal(stop[3],0);assert.equal(complete[3],0);assert.equal(complete[5],1);assert.equal(complete[6],0);assert.equal(complete[7],1);
+ assert.equal(handoff[7],0);assert.deepEqual(handoff.slice(8),[1,1,1,90,90]);
+ const clearing=rows.findIndex(row=>row[0]===40),cleared=rows.findIndex(row=>row[0]===41);
+ assert.ok(clearing>=0&&cleared>clearing);assert.deepEqual(rows[cleared].slice(8),[0,0,0,0,0]);
+ assert.ok(rows.every(row=>row[1]-row[2]===a.start));
+ assert.deepEqual(lab.inventory(a.p),before);assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,0);
+ const count=rows.length;a.advance(3);
+ assert.equal(trace164ServerRows(lab.f).length,count,'the first all-inactive scheduled row closes the trace');
+ a.retire();
+});
+
+test('164 server trace arms only the first public mainhand actor and ignores other players',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ const off=lab.actor(handoffRoute(),'off'),other=lab.actor(routes.find(route=>route.id===beef),'main');
+ off.begin();other.begin();off.advance(1);assert.deepEqual(trace164ServerRows(lab.f),[]);
+ const a=lab.actor(handoffRoute(),'main');a.begin();let count=trace164ServerRows(lab.f).length;assert.equal(count,2);
+ const second=lab.actor(handoffRoute(),'main');second.begin();assert.equal(trace164ServerRows(lab.f).length,count);
+ a.advance(1);assert.equal(trace164ServerRows(lab.f).length,count+1,'only the traced player emits the scheduled row');
+ for(const actor of [off,other,a,second])actor.retire();
+});
+
+test('164 server trace has independent row and140-tick limits and never rearms after closing',async t=>{
+ for(const bound of ['rows','ticks']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const a=lab.actor(handoffRoute(),'main');a.begin();const before=lab.inventory(a.p);
+  if(bound==='rows')for(let i=0;i<150;i++)a.event('itemStopUse',90);
+  else a.advance(141);
+  const rows=trace164ServerRows(lab.f),count=rows.length;
+  if(bound==='rows'){assert.equal(count,300);assert.ok(rows.every(row=>row[2]===0));}
+  else{assert.ok(count<300);assert.equal(Math.max(...rows.map(row=>row[2])),140);}
+  a.advance(1);a.begin();a.advance(2);
+  assert.equal(trace164ServerRows(lab.f).length,count,'closed VM trace cannot be rearmed by another use');
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,0);a.retire();
+ }
+});
+
+test('164 client trace captures owner/local-use divergence and published ownership without inventing a native query result',()=>{
+ for(const input of [{using:false,ownerUsing:true,profile:0,ownerHand:0,projection:false,duration:0},
+  {using:false,ownerUsing:false,profile:1,ownerHand:1,projection:true,duration:90}]){
+  const state={},sample=presentation(trace164Id,{hand:'main',state,delta:0,...input}),rows=trace164ClientRows(sample.logs);
+  assert.equal(rows.length,1);assert.equal(rows[0].using,0);assert.equal(rows[0].ownerUsing,input.ownerUsing?1:0);
+  assert.equal(rows[0].profile,input.profile);assert.equal(rows[0].projection,input.projection?1:0);
+  assert.equal(Boolean(state.kg_diag_armed),true,'a source-supported owner signal arms the diagnostic without local using');
+ }
+ const idle=presentation(trace164Id,{using:false,ownerUsing:false,profile:1,ownerHand:1,projection:false,duration:90,state:{}});
+ assert.deepEqual(idle.logs,[164001],'an unprojected idle item is not a published ONE use');
+});
+
+test('164 server trace closes at a new native use boundary before logging unrelated subsequent state',async t=>{
+ for(const next of ['same','offhand','different','leave']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const a=lab.actor(handoffRoute(),'main');a.begin();a.advance(10);
+  const before=trace164ServerRows(lab.f).length,inventory=lab.inventory(a.p);
+  if(next==='leave')lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+  else{
+   const stack=next==='different'?lab.f.item(beef):a.stack.clone();
+   if(next==='offhand'){a.p.main=undefined;a.p.off=stack;}else a.p.main=stack;
+   lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:stack.clone(),useDuration:90});
+  }
+  const rows=trace164ServerRows(lab.f);
+  if(next==='leave')assert.equal(rows.length,before);
+  else{assert.equal(rows.length,before+1);assert.equal(rows.at(-1)[0],60);assert.deepEqual(rows.at(-1).slice(8),[1,1,1,90,10]);}
+  const count=rows.length;a.advance(2);
+  lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:a.stack.clone(),useDuration:90});a.advance(1);
+  assert.equal(trace164ServerRows(lab.f).length,count,'later native uses cannot rearm the closed first-use trace');
+  if(next==='same'||next==='leave')assert.deepEqual(lab.inventory(a.p),inventory);
+  a.retire();
+ }
+});

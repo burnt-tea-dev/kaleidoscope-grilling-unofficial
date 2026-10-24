@@ -113,3 +113,52 @@ and actual JSON-expression tests cannot establish packet order, visual absence
 of flash, or continuous-use smoothness. Native completion/cancel/switch/stack
 recordings on the new immutable candidate are still required. Existing T3.4
 TODOs (including stale completion effects and logout settlement) are not closed.
+
+## Isolated ONE terminal trace (diagnostic, not a fix)
+
+The native 163 recording still showed terminal full-model flash, so extending
+presentation ticks is not justified. The next isolated diagnostic changes only
+telemetry in the public grilled-caterpillar route, plus required version metadata.
+All existing poses, selectors, mask expressions and settlement remain unchanged.
+It inherits the ONE-only `none` experiment and all its limitations.
+
+The operator enables **Content Log File** through native Creator settings and
+records the exact displayed path and prior setting. Do not read launcher/auth
+logs. First hold one public caterpillar in first-person main hand without using
+it. The actual attachable emits numeric sentinel **164001** once per instance
+through documented [`query.log`](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/molangreference/examples/molangconcepts/queryfunctions/query_log?view=minecraft-bedrock-stable).
+If the sentinel is missing or parser errors occur, stop before consuming food;
+source syntax checks are not proof of a retail-client log sink.
+
+After sentinel confirmation, one normal main-hand use arms an independent local
+`query.delta_time` clock from local use, owning-entity use, or matching published
+ONE ownership. This also records a divergence where both client use queries stay
+false while the server ownership has arrived. Numeric rows begin **164010** and end **164011**, with
+19 values in order: row, render-evaluation index, relative seconds, local using,
+owning-entity using, owner profile, owner hand, owner projection, owner native
+ticks, owner elapsed ticks, local main-use duration, frame alpha, active-slot,
+same-item, using-owned, terminal-wait, source-projection, bite-stage, helper-visible.
+Emit the first sample, then the >=3.5-second terminal window or a local-use=false
+sample. Stop after recording the first all-inactive sample, or at **300 rows /
+7 seconds**. The one-shot latch is per attachable instance; unloading/recreating
+it resets that latch, so only one operator-controlled serving/use is allowed.
+Attachable disappearance on debit ends the trace; missing later rows are not
+proof that properties reached zero. Render evaluations are not video frames.
+
+Server lines use `[KG164]` plus a numeric JSON array: phase, server tick, relative
+tick, event remaining ticks (-1 outside events), selected slot, main-hand count,
+same-use-identity boolean, active-session boolean, and the same five owner fields
+(profile, hand, projection, native ticks, elapsed ticks). Phases: 10 start,
+11 published, 20 stop callback, 30 complete callback, 31 handoff publication,
+40/41 before/after clearing, 50 existing scheduler observation, 60 a new native
+use boundary (closes the old trace before any new presentation change). The
+server trace also closes after recording an all-inactive scheduler sample or
+player leave. A stable player ID is used internally, never logged. Only the first
+public main-hand ONE session per script lifetime is armed; **300 rows / 140
+ticks** bound output. Instrumentation exceptions cannot alter gameplay.
+
+No player names/IDs, lore, coordinates, world data or credentials are logged.
+Inspect only this bounded task trace from the exact native content-log path,
+record actual syntax/format before decoding, and restore the prior logging
+setting afterward. Logging can perturb timing; a trace is diagnostic evidence,
+not a parity pass or permission to retune offsets or settlement.
