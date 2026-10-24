@@ -875,7 +875,7 @@ function trace164ServerRows(f){
 
 test('ONE flash colors leave functional state, clips and visibility equal to the unchanged raw counterpart',()=>{
  const tracedState={},controlState={};
- const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_'))),clips:result.clips,visibility:Object.fromEntries(Object.entries(result.visibility).map(([name,value])=>[name==='controller.render.kg_diagnostic.one_marker'?'controller.render.kg_a22.bite':name,value]))});
+ const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_')&&!name.startsWith('kg_local_'))),clips:result.clips,visibility:Object.fromEntries(Object.entries(result.visibility).map(([name,value])=>[name==='controller.render.kg_diagnostic.one_marker'?'controller.render.kg_a22.bite':name,value]))});
  const cases=[{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:23},{tick:24},{tick:61},{tick:62},{tick:89},{tick:90,using:false},
   {tick:90,using:false,oppositeOccupied:true},{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:70,hand:'off'},
   {tick:70,first:false},{tick:70,same:false},{tick:70,projection:false},{tick:70,alpha:.999}];
@@ -1079,7 +1079,8 @@ test('ONE local countdown observer classifies the last owned native sample only 
   assert.equal(stop.variables.kg_diag_state,3);assert.equal(stop.variables.kg_diag_clock_bucket,bucket);
   assert.equal(stop.variables.kg_diag_clock_last,remaining,'do not sample native zero-reset at stop');
   assert.equal(stop.texture,'textures/blocks/concrete_'+clockColors[bucket]);
-  assert.equal(stop.visibility[markerController]['*'],true,'observer does not hide the flash');
+  assert.equal(stop.visibility[markerController]['*'],remaining>1,'only the observed local terminal edge adds masking');
+  assert.equal(Boolean(stop.variables.kg_local_terminal),remaining<=1);
  }
 });
 test('ONE local countdown observer distinguishes missing samples from a nonpositive owner duration',()=>{
@@ -1127,14 +1128,17 @@ test('ONE local countdown observer overwrites a last sample rather than latching
 });
 test('ONE local countdown observer leaves functional outputs and nonflash textures unchanged',()=>{
  const tracked={},control={};
- const functional=r=>({variables:Object.fromEntries(Object.entries(r.variables).filter(([k])=>!k.startsWith('kg_diag_'))),clips:r.clips,visibility:Object.values(r.visibility)});
- const cases=[{using:true,nativeRemaining:89},{using:true,nativeRemaining:1},{using:false,nativeRemaining:0},
-  {using:false,nativeRemaining:0,tick:88},{using:false,projection:false},{using:true,nativeRemaining:89},
+ const functional=r=>({variables:Object.fromEntries(Object.entries(r.variables).filter(([k])=>!k.startsWith('kg_diag_')&&!k.startsWith('kg_local_'))),clips:r.clips,visibility:Object.values(r.visibility)});
+ const cases=[{using:true,nativeRemaining:89},{using:true,nativeRemaining:1},{using:false,nativeRemaining:0,expectedLocalHold:true},
+  {using:false,nativeRemaining:0,tick:88,expectedLocalHold:true},{using:false,projection:false},{using:true,nativeRemaining:89},
   {using:true,nativeRemaining:0},{using:false,nativeRemaining:0},{using:false,duration:0}];
  for(const input of cases){
   const options={profile:1,hand:'main',duration:90,tick:10,nativeMaximum:90,...input};
   const a=presentation(trace164Id,{...options,state:tracked}),b=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{...options,state:control});
-  assert.deepEqual(functional(a),functional(b),'all masks/clips/clocks/bites remain the same');
+  const expected=functional(b);
+  if(input.expectedLocalHold)expected.visibility[0]['*']=false;
+  assert.equal(Boolean(a.variables.kg_local_terminal),!!input.expectedLocalHold);
+  assert.deepEqual(functional(a),expected,'only the explicit ONE-main local mask exception may differ; clips/clocks/bites remain equal');
   if(a.variables.kg_diag_state!==3)assert.equal(flashTexture(a.variables),'textures/blocks/concrete_'+flashColors[a.variables.kg_diag_state]);
  }
  for(const first of [false,true])for(const hand of ['main','off']){
@@ -1150,4 +1154,111 @@ test('ONE local countdown observer actual RC supports every bucket without attac
   const state=Object.freeze({kg_diag_main:1,kg_diag_state:3,kg_diag_clock_bucket:bucket});
   assert.equal(flashTexture(state),'textures/blocks/concrete_'+clockColors[bucket]);
  }
+});
+
+
+test('ONE local terminal edge hides the observed cache-positive stale model even when owner elapsed is below the server window',()=>{
+ const state={};
+ const active=localClockFrame(state,{using:true,nativeRemaining:1,nativeMaximum:90,tick:80});
+ assert.equal(active.visibility[markerController]['*'],true);
+ const stopped=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:80});
+ // Regression assertion first: actual169 JSON remains visible here. The local
+ // native query and owner elapsed are explicit independent client inputs.
+ assert.equal(stopped.visibility[markerController]['*'],false,'same owned native-use falling edge hides the stale full model');
+ assert.equal(stopped.variables.kg_terminal_wait,false,'server elapsed is deliberately too early');
+ assert.equal(stopped.variables.kg_local_terminal,1);
+ assert.equal(stopped.texture,'textures/blocks/concrete_blue','original observation classifier is not changed to manufacture success');
+ for(let frame=0;frame<3;frame++){
+  const held=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:80});
+  assert.equal(held.visibility[markerController]['*'],false);
+  assert.ok(!held.clips.some(x=>x.startsWith('animation.kg_java_eating.')),'no arm/helper/pose extension');
+ }
+ const cleared=localClockFrame(state,{using:false,profile:0,ownerHand:0,projection:false,duration:0,nativeRemaining:0,nativeMaximum:0});
+ assert.equal(cleared.visibility[markerController]['*'],true);assert.equal(cleared.variables.kg_local_terminal,0);
+});
+test('ONE local terminal edge requires an observed valid owned use and never treats absent cache as zero',()=>{
+ for(const state of [{},{kg_diag_clock_seen:1,kg_diag_clock_last:1,kg_diag_clock_last_max:90}]){
+  const view=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:80});
+  assert.equal(view.visibility[markerController]['*'],true,'without observed previous using frame a cached numeric value cannot arm');
+  assert.equal(view.variables.kg_local_terminal,0);
+ }
+ for(const bad of [{nativeRemaining:0},{nativeRemaining:-1},{nativeRemaining:91},{nativeMaximum:0},{nativeMaximum:89},{oppositeOccupied:true},{sneaking:true}]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+  localClockFrame(state,{using:true,nativeRemaining:1,...bad});
+  const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:80});
+  assert.equal(stop.visibility[markerController]['*'],true,JSON.stringify(bad));assert.equal(stop.variables.kg_local_terminal,0);
+ }
+});
+test('ONE local terminal edge does not mask early or ordinary eligible release and resets on every observed new use',()=>{
+ for(const remaining of [89,70,65,64,2,1.01]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:remaining,tick:10});
+  const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:10});
+  assert.equal(stop.visibility[markerController]['*'],true);assert.equal(stop.variables.kg_local_terminal,0);
+ }
+ for(const remaining of [89,0]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+  localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
+  const next=localClockFrame(state,{using:true,nativeRemaining:remaining});
+  assert.equal(next.variables.kg_local_terminal,0);assert.equal(next.visibility[markerController]['*'],true);
+  const cancel=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
+  assert.equal(cancel.visibility[markerController]['*'],true,'new observed use cannot inherit previous terminal hold');
+ }
+ // No observed false frame: the new countdown still overwrites the sample.
+ const continuous={};localClockFrame(continuous,{using:true,nativeRemaining:1});localClockFrame(continuous,{using:true,nativeRemaining:89});
+ assert.equal(localClockFrame(continuous,{using:false,nativeRemaining:0,nativeMaximum:0}).visibility[markerController]['*'],true);
+});
+test('ONE local terminal edge is main-FP only and clears on observed item owner or duration mismatch',()=>{
+ for(const change of [{first:false},{hand:'off',ownerHand:2},{same:false},{profile:2},{ownerHand:2},{projection:false},{duration:100},{duration:0}]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1});localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
+  const lost=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,...change});
+  assert.equal(lost.variables.kg_local_terminal,0,JSON.stringify(change));
+  assert.equal(lost.visibility[markerController]['*'],true);
+  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0}).visibility[markerController]['*'],true,'restored identity does not rearm without a new use edge');
+ }
+});
+test('ONE local terminal edge leaves existing server masking and every other fixed or composite RC route unchanged',()=>{
+ for(const [id,profile] of fixedPresentation){
+  for(const hand of ['main','off']){
+   const state={},options={profile:presentationCodes[profile],hand,duration:profile==='THREE'?100:90,tick:10,state};
+   presentation(id,{...options,using:true,nativeRemaining:1});
+   const stopped=presentation(id,{...options,using:false,nativeRemaining:0,nativeMaximum:0});
+   assert.equal(Object.values(stopped.visibility)[0]['*'],!(id===trace164Id&&hand==='main'),id+' '+hand);
+  }
+ }
+ for(const id of Array.from(compositedPresentation).flatMap(id=>[id,id+'_java_three_alt']))assert.ok(!markerAttachable(id).render_controllers.includes(markerController));
+ const server=localClockFrame({}, {using:false,nativeRemaining:0,nativeMaximum:0,tick:88});
+ assert.equal(server.variables.kg_local_terminal,0);assert.equal(server.variables.kg_terminal_wait,true);
+ assert.equal(server.visibility[markerController]['*'],false,'old server terminal predicate remains active without any local cache');
+});
+test('ONE local terminal edge releases after failed near-terminal settlement or same-ID identity replacement without inventory writes',async t=>{
+ for(const mode of ['failed-settlement','metadata','slot']){
+  const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+  const a=lab.actor(handoffRoute(),'main',2),state={};a.begin();a.advance(88);
+  const draw=using=>{const o=handoffProperties(a.p);return localClockFrame(state,{using,profile:o.eat_profile,ownerHand:o.eat_hand,projection:o.eat_projection,duration:o.eat_native_ticks,tick:o.eat_elapsed_ticks,nativeRemaining:using?1:0,nativeMaximum:using?90:0});};
+  draw(true);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,87);
+  if(mode==='metadata'){const x=a.p.main;x.nameTag='Replacement metadata';a.p.main=x;}
+  if(mode==='slot'){a.p.selectedSlotIndex=1;a.p.main=a.stack.clone();}
+  const before=lab.inventory(a.p),hunger=a.p.components['minecraft:player.hunger'].currentValue;
+  assert.equal(draw(false).visibility[markerController]['*'],false,'same-ID replacement is not visible to these client predicates until reset');
+  if(mode==='failed-settlement'){
+   lab.f.faults.failNext(a.p.inventory,'setItem');a.event('itemStopUse',2);
+  }
+  a.advance(2);
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);assert.equal(draw(false).visibility[markerController]['*'],true);
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
+  a.retire();
+ }
+});
+test('ONE local terminal edge cannot hide a fresh continuous serving or let old cleanup debit it twice',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute(),'main',2),state={};a.begin();a.advance(89);
+ localClockFrame(state,{using:true,nativeRemaining:1,tick:87});
+ assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87}).visibility[markerController]['*'],false);
+ a.nativeDebit();a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.begin();
+ assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],true);
+ assert.equal(state.kg_local_terminal,0);
+ a.advance(2);assert.equal(a.p.main.amount,1);assert.equal(handoffProperties(a.p).eat_profile,1);
+ assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
+ a.advance(87);a.nativeDebit();a.event('itemCompleteUse',0);a.advance(2);
+ assert.equal(a.p.main,undefined);assert.deepEqual(handoffProperties(a.p),clearedHandoff);a.retire();
 });
