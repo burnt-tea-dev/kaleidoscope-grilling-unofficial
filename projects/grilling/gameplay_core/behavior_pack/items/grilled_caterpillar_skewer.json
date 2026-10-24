@@ -31,7 +31,7 @@
         "saturation_modifier": 0.0833
       },
       "minecraft:use_animation": {
-        "value": "none"
+        "value": "eat"
       },
       "minecraft:tags": {
         "tags": [
