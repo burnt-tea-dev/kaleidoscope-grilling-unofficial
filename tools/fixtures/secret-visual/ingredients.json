@@ -1,0 +1,144 @@
+{
+  "source_commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "sampler_restored_from": "61efa642cbb29983e149a7fa7d81146ebca73037",
+  "base_texture_sha256": "6ad27d2fa69de165de0aca11f7906d4b3ff25aed635c16a81d4971ce3a93fe73",
+  "items": [
+    {
+      "id": "kaleidoscope_grilling:beef_chunks",
+      "index": 218,
+      "texture": "textures/items/beef_chunks",
+      "texture_sha256": "02d6c3c09e11904b1d7f59260d9d433c16b49329647b49de0e088687b126264d",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/beef_chunks.json",
+        "git_blob": "11bf9fbb482faaa7afa47306b1c7bce346ae1f3c",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/beef_chunks"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/beef_chunks.png",
+        "git_blob": "6b9a7d3f3b153ab42c0f725abc34b4b56003c5e1"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:chicken_skin",
+      "index": 219,
+      "texture": "textures/items/chicken_skin",
+      "texture_sha256": "e8049de55eca1f9923c19b739cf6eb5fe92458e8e2654456f4e610f83107a260",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/chicken_skin.json",
+        "git_blob": "e76588f6b09fb711f289e6bcd071323467f493d1",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/chicken_skin"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/chicken_skin.png",
+        "git_blob": "5a8517468ed9da877b219047e1032d3a4c728bfc"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:squid_tentacle",
+      "index": 220,
+      "texture": "textures/items/squid_tentacle",
+      "texture_sha256": "7f89c8b6ba1bf3c0ae650315974369a790b1310dd8fd9c2c78769a0fff942e40",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/squid_tentacle.json",
+        "git_blob": "95e58ff0083d07688d2bc99a6869693232761282",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/squid_tentacle"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/squid_tentacle.png",
+        "git_blob": "60aab20cf2c9c4b250780430f7114c22ae7b9dff"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+      "index": 221,
+      "texture": "textures/items/raw_sweet_potato_sheet",
+      "texture_sha256": "6814d93b559e202148e5886016e1ed989cd2c182e443bfb0899df6eb04c8ad1b",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/raw_sweet_potato_sheet.json",
+        "git_blob": "807fbc882600304ee19cdc1f93a52bcbe991e85d",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/raw_sweet_potato_sheet"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/raw_sweet_potato_sheet.png",
+        "git_blob": "a537de022aa9cc50b99dfec6f0fedd0046cb2d2f"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:minced_houttuynia",
+      "index": 222,
+      "texture": "textures/items/minced_houttuynia",
+      "texture_sha256": "73eb98eca924f35db6a85baf4ad420b730c297ec7ec0bdcf4cfb72208d4d81f3",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/minced_houttuynia.json",
+        "git_blob": "088247daf6be8fffd84bf332a6df89ded5acdedd",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/minced_houttuynia"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/minced_houttuynia.png",
+        "git_blob": "c6653c730bb5d1fefab02db05388b0f2e6aefc30"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:potato_slice",
+      "index": 223,
+      "texture": "textures/items/potato_slice",
+      "texture_sha256": "3acd102c1b35600a5120ee5202a5099ff774c2687eb106725e92a0fe3eca5c16",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/potato_slice.json",
+        "git_blob": "3a161d31c965f466fb915918c8b86593bee2589d",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/potato_slice"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/potato_slice.png",
+        "git_blob": "9562676753ad5e32ea0e1345236e314ad4767b85"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:carrot_dice",
+      "index": 224,
+      "texture": "textures/items/carrot_dice",
+      "texture_sha256": "985e9007e23c95af07b168233ecd898bd492b22581f01570189ad112d8475ff4",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/carrot_dice.json",
+        "git_blob": "a4c66fffb175c78181d7591b40572c9e7612be8a",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/carrot_dice"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/carrot_dice.png",
+        "git_blob": "c5359f186611411d51f1fe55077357d2c16efa61"
+      },
+      "item_tint": -1
+    },
+    {
+      "id": "kaleidoscope_grilling:raw_mantou_slice",
+      "index": 225,
+      "texture": "textures/items/raw_mantou_slice",
+      "texture_sha256": "7618934d46f8b59c6b9fc5934959e62b8ab9de3aa19114f27d7b77f1759d3867",
+      "source_model": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/models/item/raw_mantou_slice.json",
+        "git_blob": "662dbe74144f9483278ef4800f022c47d91994de",
+        "parent": "minecraft:item/generated",
+        "layer0": "kaleidoscope_grilling:item/raw_mantou_slice"
+      },
+      "source_texture": {
+        "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/raw_mantou_slice.png",
+        "git_blob": "c89c916e0611d7de9d821e122b2d88c099809cbf"
+      },
+      "item_tint": -1
+    }
+  ],
+  "sampler_source_sha256": "8c58e70f7f581ac548c99667bea315e594407b4b35a5a9cc29c0bbeda435a4cb"
+}

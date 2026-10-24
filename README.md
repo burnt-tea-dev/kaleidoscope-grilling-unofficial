@@ -4,12 +4,14 @@
 
 目前仍未完成 Java 1.1.1 的全部玩法、畫面與真人驗收；`client=false`、`production_ready=false`。來源已實作、CI、staging、部署及真人結果分開記錄，不能用測試數或載入成功代替還原度。
 
+本分支依擁有者要求提前準備 T4.2 秘製串視覺修補；不是 P2／T2.8 的 BP/RP 位元組不變整理，不代表階段門檻已豁免。維持 draft、`publication_request=false`，不合併、不發布、不部署；staging／真人驗收尚未完成。
+
 ## 安裝與版本
 
 | 用途 | 版本與相依 |
 | --- | --- |
 | 保留公開下載 | [A2.8.149](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，需要作者 Cookery **1.6.0** 的 BP/RP |
-| 目前維護來源 | [baseline.json](baseline.json) 的 **2.8.155**，需要 Cookery **1.6.2**；P2 沒有發布新包 |
+| 目前維護來源 | [baseline.json](baseline.json) 的 **2.8.158**，需要 Cookery **1.6.2**；T4.2 提前隔離修補草稿，未發布新包 |
 
 公開 G138 TEST／G149 stable 的 API 故障模型曾重現物品遺失、覆寫與重複產物；這不是原生發生率證明，後續來源修補也沒有改變既有下載 bytes。測試前保留世界備份。精確檔案、雜湊、相依與安裝限制見 [RELEASING](docs/RELEASING.md)；勿把不同 Cookery 版本互換。
 
