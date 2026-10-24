@@ -23,7 +23,11 @@
         "clock_blue": "textures/blocks/concrete_blue",
         "clock_yellow": "textures/blocks/concrete_yellow",
         "clock_purple": "textures/blocks/concrete_purple",
-        "clock_brown": "textures/blocks/concrete_brown"
+        "clock_brown": "textures/blocks/concrete_brown",
+        "live_gray": "textures/blocks/concrete_gray",
+        "live_light_blue": "textures/blocks/concrete_light_blue",
+        "live_pink": "textures/blocks/concrete_pink",
+        "live_green": "textures/blocks/concrete_green"
       },
       "geometry": {
         "stage0": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage0",
@@ -62,7 +66,8 @@
           "v.kg_diag_clock_last_max = v.kg_diag_using ? (v.kg_diag_clock_valid ? v.kg_diag_clock_max : 0) : (v.kg_diag_clock_seen ? (v.kg_diag_clock_last_max ?? 0) : 0);",
           "v.kg_diag_clock_bucket = v.kg_owner_eat_native_ticks <= 0 ? 1 : (!v.kg_diag_clock_seen || v.kg_diag_clock_last_max != v.kg_owner_eat_native_ticks || v.kg_diag_clock_last <= 0 ? 0 : (v.kg_diag_clock_last <= 1 ? 2 : (v.kg_diag_clock_last <= 2 ? 3 : (v.kg_diag_clock_last <= 4 ? 4 : 5))));",
           "v.kg_local_terminal = !v.kg_diag_clock_context || v.kg_diag_using || !v.kg_diag_clock_seen || v.kg_diag_clock_last_max != v.kg_owner_eat_native_ticks || v.kg_diag_clock_last <= 0 || v.kg_diag_clock_last > 1 ? 0 : ((v.kg_local_prev_using ?? 0) ? 1 : (v.kg_local_terminal ?? 0));",
-          "v.kg_local_prev_using = v.kg_diag_clock_context && v.kg_diag_using;"
+          "v.kg_local_prev_using = v.kg_diag_clock_context && v.kg_diag_using;",
+          "v.kg_diag_live_bucket = v.kg_owner_eat_native_ticks <= 0 ? 1 : (v.kg_diag_clock_max <= 0 || v.kg_diag_clock_max != v.kg_owner_eat_native_ticks || v.kg_diag_clock_remaining < 0 || v.kg_diag_clock_remaining > v.kg_diag_clock_max ? 2 : (v.kg_diag_clock_remaining == 0 ? 3 : (v.kg_diag_clock_remaining <= 1 ? 4 : 5)));"
         ],
         "animate": [
           {
