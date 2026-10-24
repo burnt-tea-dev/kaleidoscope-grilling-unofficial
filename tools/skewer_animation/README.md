@@ -602,3 +602,26 @@ engine ordering, client rendering or sink acceptance. The observer itself can
 perturb wall time. Native input-up requires separate approved evidence, not caller
 return or ItemStopUse; those clocks retain explicit uncertainty. Independent review
 and a frozen candidate are required before publication or any native trial.
+
+
+## Ownership-loss observation correction (176 candidate, not a gameplay fix)
+
+Native175 B produced95 rows and then phase91 at age89, before any observed
+Complete/Stop marker. The original observer closed on that existing scheduler
+ownership mismatch, so absence of subsequent rows could not establish absence
+of callbacks. The visible2→1 change remains unattributed by that truncated trace.
+
+This candidate changes only that phase91 call from close to informational.
+Original ownership/presentation cleanup, settlement, nutrition, EAT, RP, getters
+and input policy remain unchanged. Other-target Start, invalid accepted setup,
+leave/death, third target Start and the shared300tick/512row caps still close.
+Repeated ownership mismatch may reach the row cap sooner; item/slot replacement
+without another Start now remains numerically observed within those same bounds,
+without querying any new payload, inventory or metadata. No extra event nonce,
+quantity inference, timer or logger is introduced.
+
+An actual-module regression interposes the existing scheduler between an explicit
+synthetic external count change and Complete/Stop, preserving later callback rows
+and second-use early-cancel observation. Frozen175 is a failing observation
+control, not a failing gameplay/debit control. Source-only validation cannot prove
+retail event order or physical release;176 has no native trial scheduled.
