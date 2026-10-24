@@ -67,7 +67,13 @@
             "Texture.diag_red",
             "Texture.diag_cyan",
             "Texture.diag_magenta",
-            "Texture.diag_white"
+            "Texture.diag_white",
+            "Texture.diag_white",
+            "Texture.clock_black",
+            "Texture.clock_blue",
+            "Texture.clock_yellow",
+            "Texture.clock_purple",
+            "Texture.clock_brown"
           ]
         }
       },
@@ -83,7 +89,7 @@
         }
       ],
       "textures": [
-        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? 5 + (v.kg_diag_state ?? 5) : v.kg_bite_stage]"
+        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? ((v.kg_diag_state ?? 5) == 3 ? 11 + (v.kg_diag_clock_bucket ?? 0) : 5 + (v.kg_diag_state ?? 5)) : v.kg_bite_stage]"
       ]
     }
   }

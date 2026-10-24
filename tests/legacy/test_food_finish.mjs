@@ -981,7 +981,7 @@ test('ONE flash colors partition actual mainhand use ownership and terminal-cloc
   assert.equal(Boolean(v.kg_terminal_wait),masked);
   assert.equal(v.kg_diag_state===4,masked,'magenta corresponds to the actual mask, not just a clock label');
   assert.equal(result.visibility[markerController]['*'],!masked,'diagnostics never make masked food visible');
-  assert.equal(flashTexture(v),'textures/blocks/concrete_'+flashColors[expected]);
+  assert.equal(flashTexture(v),'textures/blocks/concrete_'+(expected===3?(duration<=0?'black':'white'):flashColors[expected]));
   assert.deepEqual(result.logs,[],'client q.log telemetry is no longer executed');
   observed.add(expected);count++;
  }
@@ -1016,7 +1016,7 @@ test('ONE flash color RC uses white for uninitialized observers and reads frozen
  // only actual pre-animation results above are evidence for the five gates.
  for(let phase=0;phase<6;phase++){
   const state={kg_diag_main:1,kg_diag_state:phase};
-  assert.equal(flashTexture(state),'textures/blocks/concrete_'+flashColors[phase]);
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===3?'white':flashColors[phase]));
  }
 });
 
@@ -1036,7 +1036,7 @@ test('ONE flash colors recompute across completion cancellation and restart inst
   const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,state,...input});
   assert.equal(state.kg_diag_state,phase);
   assert.equal(result.visibility[markerController]['*'],visible);
-  assert.equal(flashTexture(state),'textures/blocks/concrete_'+flashColors[phase]);
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===3?'white':flashColors[phase]));
   assert.deepEqual(result.logs,[]);
  }
 });
@@ -1058,5 +1058,96 @@ test('ONE flash colors keep nonmain bite textures despite persisted observer sta
  for(const id of otherRoutes){
   if(id===trace164Id)continue;
   assert.ok(!markerAttachable(id).render_controllers.includes(markerController),id);
+ }
+});
+
+
+// ONE native countdown observer: replay actual JSON with independently supplied
+// owner elapsed and native queries. No native clock/renderer behavior is mocked.
+const clockColors=['white','black','blue','yellow','purple','brown'];
+function localClockFrame(state,input={}){
+ const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,tick:10,state,...input});
+ return {...result,texture:flashTexture(result.variables)};
+}
+test('ONE local countdown observer classifies the last owned native sample only on the old cyan branch',()=>{
+ for(const [remaining,bucket] of [[.25,2],[1,2],[1.0001,3],[2,3],[2.0001,4],[4,4],[4.0001,5],[89,5],[90,5]]){
+  const state={};
+  const using=localClockFrame(state,{using:true,nativeRemaining:remaining,nativeMaximum:90,tick:10});
+  assert.equal(Boolean(using.variables.kg_diag_clock_seen),true);assert.equal(using.variables.kg_diag_clock_last,remaining);
+  assert.equal(using.texture,'textures/blocks/concrete_lime','using colors do not become countdown buckets');
+  const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:10});
+  assert.equal(stop.variables.kg_diag_state,3);assert.equal(stop.variables.kg_diag_clock_bucket,bucket);
+  assert.equal(stop.variables.kg_diag_clock_last,remaining,'do not sample native zero-reset at stop');
+  assert.equal(stop.texture,'textures/blocks/concrete_'+clockColors[bucket]);
+  assert.equal(stop.visibility[markerController]['*'],true,'observer does not hide the flash');
+ }
+});
+test('ONE local countdown observer distinguishes missing samples from a nonpositive owner duration',()=>{
+ for(const input of [{},{nativeRemaining:0},{nativeRemaining:1},{nativeRemaining:90}]){
+  const state={},stop=localClockFrame(state,{...input,using:false,nativeMaximum:90});
+  assert.equal(Boolean(stop.variables.kg_diag_clock_seen),false);assert.equal(stop.variables.kg_diag_clock_last,-1);
+  assert.equal(stop.texture,'textures/blocks/concrete_white','no while-using sample is unknown, never a terminal zero');
+ }
+ const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+ const zero=localClockFrame(state,{using:false,duration:0,nativeRemaining:0,nativeMaximum:0});
+ assert.equal(zero.variables.kg_diag_state,3);assert.equal(zero.variables.kg_diag_clock_bucket,1);
+ assert.equal(zero.texture,'textures/blocks/concrete_black');assert.equal(Boolean(zero.variables.kg_diag_clock_seen),false);
+ assert.equal(flashTexture({kg_diag_main:1,kg_diag_state:3}),'textures/blocks/concrete_white');
+});
+test('ONE local countdown observer invalidates unusable samples and observed context changes',()=>{
+ const invalid=[{nativeRemaining:0},{nativeRemaining:-1},{nativeRemaining:91},{nativeMaximum:0},{nativeMaximum:89},
+  {projection:false},{same:false},{ownerHand:2},{profile:2},{oppositeOccupied:true},{sneaking:true},{swimming:true},{gliding:true},{riding:true}];
+ for(const bad of invalid){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+  const using=localClockFrame(state,{using:true,nativeRemaining:50,nativeMaximum:90,...bad});
+  assert.equal(Boolean(using.variables.kg_diag_clock_seen),false,JSON.stringify(bad));
+  assert.equal(using.variables.kg_diag_clock_last,-1);assert.equal(using.variables.kg_diag_clock_last_max,0);
+  const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
+  assert.equal(stop.texture,'textures/blocks/concrete_white','do not reuse a previous session terminal sample');
+ }
+ for(const context of [{first:false},{hand:'off',ownerHand:2},{same:false},{profile:2},{ownerHand:2},{projection:false},{duration:100}]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+  localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,...context});
+  assert.equal(Boolean(state.kg_diag_clock_seen),false,JSON.stringify(context));
+  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0}).texture,'textures/blocks/concrete_white');
+ }
+});
+test('ONE local countdown observer overwrites a last sample rather than latching terminal across restarts',()=>{
+ const state={};localClockFrame(state,{using:true,nativeRemaining:1});
+ // A countdown increase can represent a new use without a rendered false frame.
+ localClockFrame(state,{using:true,nativeRemaining:89});
+ assert.equal(state.kg_diag_clock_last,89);
+ const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
+ assert.equal(stop.texture,'textures/blocks/concrete_brown');
+ localClockFrame(state,{using:true,nativeRemaining:1});
+ localClockFrame(state,{using:false,projection:false,nativeRemaining:0,nativeMaximum:0});
+ assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0}).texture,'textures/blocks/concrete_white');
+ // A recreated attachable has no prior sample and must not guess completion.
+ assert.equal(localClockFrame({}, {using:false,nativeRemaining:0,nativeMaximum:0}).texture,'textures/blocks/concrete_white');
+});
+test('ONE local countdown observer leaves functional outputs and nonflash textures unchanged',()=>{
+ const tracked={},control={};
+ const functional=r=>({variables:Object.fromEntries(Object.entries(r.variables).filter(([k])=>!k.startsWith('kg_diag_'))),clips:r.clips,visibility:Object.values(r.visibility)});
+ const cases=[{using:true,nativeRemaining:89},{using:true,nativeRemaining:1},{using:false,nativeRemaining:0},
+  {using:false,nativeRemaining:0,tick:88},{using:false,projection:false},{using:true,nativeRemaining:89},
+  {using:true,nativeRemaining:0},{using:false,nativeRemaining:0},{using:false,duration:0}];
+ for(const input of cases){
+  const options={profile:1,hand:'main',duration:90,tick:10,nativeMaximum:90,...input};
+  const a=presentation(trace164Id,{...options,state:tracked}),b=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{...options,state:control});
+  assert.deepEqual(functional(a),functional(b),'all masks/clips/clocks/bites remain the same');
+  if(a.variables.kg_diag_state!==3)assert.equal(flashTexture(a.variables),'textures/blocks/concrete_'+flashColors[a.variables.kg_diag_state]);
+ }
+ for(const first of [false,true])for(const hand of ['main','off']){
+  if(first&&hand==='main')continue;
+  for(const stage of [0,1,2]){
+   const state=Object.freeze({kg_diag_main:0,kg_diag_state:3,kg_diag_clock_bucket:2,kg_bite_stage:stage});
+   assert.equal(flashTexture(state),markerAttachable(trace164Id).textures['stage'+stage]);
+  }
+ }
+});
+test('ONE local countdown observer actual RC supports every bucket without attachable context or state writes',()=>{
+ for(let bucket=0;bucket<6;bucket++){
+  const state=Object.freeze({kg_diag_main:1,kg_diag_state:3,kg_diag_clock_bucket:bucket});
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+clockColors[bucket]);
  }
 });
