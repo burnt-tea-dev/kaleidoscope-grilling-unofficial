@@ -534,7 +534,7 @@ test('source routing preserves every slime frame at every bite stage and does no
  }
  const rp=new URL('../../projects/grilling/gameplay_core/resource_pack/',import.meta.url);
  const caterpillar=JSON.parse(readPresentationJson(new URL('attachables/grilled_caterpillar_skewer.attachable.json',rp),'utf8'))['minecraft:attachable'].description;
- assert.deepEqual(caterpillar.render_controllers,['controller.render.kg_a22.bite','controller.render.kg_java_eating.piece']);
+ assert.deepEqual(caterpillar.render_controllers,['controller.render.kg_diagnostic.one_marker','controller.render.kg_java_eating.piece']);
  assert.ok(caterpillar.geometry.java_piece);
 });
 import {sourcePlayerBlend} from '../helpers/skewer-presentation.mjs';
@@ -560,7 +560,7 @@ test('terminal handoff masks all 58 fixed main models without extending helper o
  for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
   const duration=javaPresentation.profiles[p].duration_ticks;
   const options={profile:presentationCodes[p],hand,tick:duration-1,duration};
-  const mainController=id==='kaleidoscope_grilling:grilled_slime_skewer'?'controller.render.kg_slime.frame':'controller.render.kg_a22.bite';
+  const mainController=id==='kaleidoscope_grilling:grilled_slime_skewer'?'controller.render.kg_slime.frame':id==='kaleidoscope_grilling:grilled_caterpillar_skewer'?'controller.render.kg_diagnostic.one_marker':'controller.render.kg_a22.bite';
   const active=presentation(id,options),terminal=presentation(id,{...options,using:false});
   assert.equal(active.visibility[mainController]['*'],true,id+' active '+hand);
   assert.equal(terminal.variables.kg_terminal_wait,true,id+' terminal '+hand);
@@ -650,7 +650,7 @@ test('terminal handoff retirement tolerates one reset failure without a hidden i
   // Keep the original hand in this pure expression evaluation: clearing other
   // owner gates must suffice even without relying on a cleared hand field.
   const rendered=presentation(handoffRoute().id,{profile:partial.eat_profile,hand,projection:partial.eat_projection,duration:partial.eat_native_ticks,tick:partial.eat_elapsed_ticks,using:false});
-  assert.equal(rendered.visibility['controller.render.kg_a22.bite']['*'],true,failedField+' reset failure cannot strand terminal masking');
+  assert.equal(rendered.visibility['controller.render.kg_diagnostic.one_marker']['*'],true,failedField+' reset failure cannot strand terminal masking');
   assert.deepEqual(lab.inventory(a.p),before);
   if(startNext){
    a.begin();a.advance(1);
@@ -672,7 +672,7 @@ test('terminal handoff documents the supplied-query same-ID replacement gap befo
   const before=lab.inventory(a.p),effects=lab.f.effects.filter(row=>row.source===a.p).length;
   const visible=using=>{
    const owner=handoffProperties(a.p);
-   return presentation(handoffRoute().id,{profile:owner.eat_profile,hand,projection:owner.eat_projection,duration:owner.eat_native_ticks,tick:owner.eat_elapsed_ticks,using}).visibility['controller.render.kg_a22.bite']['*'];
+   return presentation(handoffRoute().id,{profile:owner.eat_profile,hand,projection:owner.eat_projection,duration:owner.eat_native_ticks,tick:owner.eat_elapsed_ticks,using}).visibility['controller.render.kg_diagnostic.one_marker']['*'];
   };
   // Deliberately supply ended native use with old published owner fields. The
   // client expression knows the ID, not stack metadata: it can mask this new
@@ -763,7 +763,7 @@ test('164 client trace does not spam offhand, third person, never-used items, or
 
 test('164 client trace leaves all non-diagnostic ONE state, clips and visibility equal to the unchanged163 counterpart',()=>{
  const tracedState={},controlState={};
- const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_'))),clips:result.clips,visibility:result.visibility});
+ const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_'))),clips:result.clips,visibility:Object.fromEntries(Object.entries(result.visibility).map(([name,value])=>[name==='controller.render.kg_diagnostic.one_marker'?'controller.render.kg_a22.bite':name,value]))});
  const cases=[{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:23},{tick:24},{tick:61},{tick:62},{tick:89},{tick:90,using:false},
   {tick:90,using:false,oppositeOccupied:true},{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:70,hand:'off'},
   {tick:70,first:false},{tick:70,same:false},{tick:70,projection:false},{tick:70,alpha:.999}];
@@ -851,5 +851,39 @@ test('164 server trace closes at a new native use boundary before logging unrela
   assert.equal(trace164ServerRows(lab.f).length,count,'later native uses cannot rearm the closed first-use trace');
   if(next==='same'||next==='leave')assert.deepEqual(lab.inventory(a.p),inventory);
   a.retire();
+ }
+});
+
+import {presentationTextures} from '../helpers/skewer-presentation.mjs';
+const markerController='controller.render.kg_diagnostic.one_marker';
+const markerAttachable=id=>JSON.parse(readPresentationJson(new URL('../../projects/grilling/gameplay_core/resource_pack/attachables/'+id.split(':')[1]+'.attachable.json',import.meta.url),'utf8'))['minecraft:attachable'].description;
+const markerTexture=(options={})=>presentationTextures(trace164Id,options)[markerController][0];
+test('ONE render marker distinguishes selected RC without pre-execution from the exact idle sentinel predicate',()=>{
+ assert.equal(markerTexture(),'textures/blocks/concrete_cyan','unexecuted/default latch is the cyan control');
+ const state={},idle={using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0,state};
+ const first=presentation(trace164Id,idle);
+ assert.deepEqual(first.logs,[164001]);assert.equal(Boolean(state.kg_diag_marker),true);
+ assert.equal(markerTexture({state}),'textures/blocks/concrete_magenta');
+ const again=presentation(trace164Id,idle);
+ assert.deepEqual(again.logs,[]);assert.equal(markerTexture({state}),'textures/blocks/concrete_magenta','latch persists after the one sentinel');
+ assert.equal(Boolean(state.kg_diag_armed),false);assert.equal(state.kg_diag_rows,0,'holding never arms a meal trace');
+});
+test('ONE render marker latches only when the unchanged sentinel condition is eligible',()=>{
+ for(const input of [{first:false},{hand:'off'},{state:{kg_diag_seen:1}}]){
+  const state=input.state??{};
+  const result=presentation(trace164Id,{using:false,profile:0,ownerHand:0,projection:false,duration:0,...input,state});
+  assert.deepEqual(result.logs,[]);assert.equal(Boolean(state.kg_diag_marker),false);
+  assert.equal(markerTexture({state}),'textures/blocks/concrete_cyan');
+ }
+});
+test('ONE render marker leaves third-person and offhand textures and all other attachable routes intact',()=>{
+ const doc=markerAttachable(trace164Id),state={kg_diag_marker:1,kg_bite_stage:0};
+ for(const first of [false,true])for(const slot of ['main','off']){
+  if(first&&slot==='main')continue;
+  assert.equal(markerTexture({state,first,slot}),doc.textures.stage0);
+ }
+ for(const [id] of fixedPresentation){
+  if(id===trace164Id)continue;
+  assert.ok(!markerAttachable(id).render_controllers.includes(markerController),id);
  }
 });

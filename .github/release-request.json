@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.164",
-  "tag": "A2.8.164",
+  "version": "A2.8.165",
+  "tag": "A2.8.165",
   "publication_request": false,
   "prerelease": false,
   "make_latest": "false",
@@ -12,6 +12,6 @@
   "production_ready": false,
   "live": false,
   "live_deployment": false,
-  "status": "bounded_ONE_terminal_client_and_server_telemetry_diagnostic_not_a_fix",
+  "status": "ONE_RP_identity_and_sentinel_predicate_color_diagnostic_no_use_not_a_fix",
   "public_notes_path": "CHANGELOG.md"
 }

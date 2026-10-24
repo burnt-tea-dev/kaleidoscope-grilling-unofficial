@@ -23,7 +23,11 @@
         }
       },
       "geometry": "Array.kg_bite_geo[v.kg_bite_stage]",
-      "part_visibility": [{"*": "!v.kg_terminal_wait"}],
+      "part_visibility": [
+        {
+          "*": "!v.kg_terminal_wait"
+        }
+      ],
       "materials": [
         {
           "*": "Material.default"
@@ -31,6 +35,46 @@
       ],
       "textures": [
         "Array.kg_bite_tex[v.kg_bite_stage]"
+      ]
+    },
+    "controller.render.kg_diagnostic.one_marker": {
+      "arrays": {
+        "geometries": {
+          "Array.kg_bite_geo": [
+            "Geometry.stage0",
+            "Geometry.stage1",
+            "Geometry.stage2",
+            "Geometry.stage3",
+            "Geometry.stage4"
+          ]
+        },
+        "textures": {
+          "Array.kg_bite_tex": [
+            "Texture.stage0",
+            "Texture.stage1",
+            "Texture.stage2",
+            "Texture.stage3",
+            "Texture.stage4"
+          ],
+          "Array.kg_marker_tex": [
+            "Texture.diag_cyan",
+            "Texture.diag_magenta"
+          ]
+        }
+      },
+      "geometry": "Array.kg_bite_geo[v.kg_bite_stage]",
+      "part_visibility": [
+        {
+          "*": "!v.kg_terminal_wait"
+        }
+      ],
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "c.is_first_person == 1 && c.item_slot == 'main_hand' ? Array.kg_marker_tex[(v.kg_diag_marker ?? 0) ? 1 : 0] : Array.kg_bite_tex[v.kg_bite_stage]"
       ]
     }
   }

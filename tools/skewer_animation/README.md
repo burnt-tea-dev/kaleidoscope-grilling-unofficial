@@ -41,7 +41,7 @@ handoff below.
 python tools/skewer_animation/compiler.py --output /tmp/skewer-clips
 python tools/skewer_animation/compiler.py --review-bundle --output /tmp/skewer-review
 python tools/test_java_extract.py
-node --test --test-name-pattern='^(every fixed|fixed bite|fixed presentation|source routing|dual helper|terminal presentation)' tests/legacy/test_food_finish.mjs
+node --test --test-name-pattern='^(every fixed|fixed bite|fixed presentation|source routing|dual helper|terminal presentation|ONE render marker)' tests/legacy/test_food_finish.mjs
 ```
 
 The review bundle contains actual per-family geometry/texture pairs, current
@@ -162,3 +162,43 @@ Inspect only this bounded task trace from the exact native content-log path,
 record actual syntax/format before decoding, and restore the prior logging
 setting afterward. Logging can perturb timing; a trace is diagnostic evidence,
 not a parity pass or permission to retune offsets or settlement.
+
+## ONE render identity / sentinel predicate marker (diagnostic only)
+
+The 164 sentinel-only native attempt did not consume food. After normal close,
+its exact content file flushed scripting verbose/info but no `164001` or Molang
+row. Thus file writing/flush is evidenced, not the attachable predicate or the
+retail `query.log` output path. The installed bytes, world RP reference and lack
+of a duplicate target identifier are not proof of the active runtime RP.
+
+165 tests this distinction with **one first-person main-hand hold, no use**.
+Only the public grilled-caterpillar attachable selects a dedicated main render
+controller. The original geometry, material, all curves, visibility, helper and
+BP gameplay are unchanged. Third-person/offhand texture selection remains the
+original bite texture. In first-person main hand, the diagnostic texture is:
+
+- **Cyan concrete** before the marker latch is set (including a never-executed
+  pre-animation control): the dedicated RC rendered, but the predicate latch
+  is not evidenced.
+- **Magenta concrete** after the same `!v.kg_diag_seen && v.kg_diag_main`
+  predicate used by the unchanged sentinel has latched. The assignment sits
+  immediately before that sentinel, without modifying either input variable.
+- Original yellow/brown texture: the diagnostic RP/RC/context is not established;
+  do not interpret it as a logging result. Missing-texture checkerboard, invisible
+  model or other colors are invalid/inconclusive controls, not magenta success.
+
+The referenced existing Vanilla paths are `textures/blocks/concrete_cyan` and
+`textures/blocks/concrete_magenta`, also present in the installed 1.26.52.3 terrain
+atlas. [Mojang samples](https://github.com/Mojang/bedrock-samples/tree/main/resource_pack/textures/blocks)
+provide the color sources; no Vanilla images are copied into this pack and no
+permanent art/geometry is created. Lighting may change perceived brightness.
+
+Hold once, capture the color, then normally close and inspect only the one
+UI-selected content file after flush; restore its previous logging setting.
+Magenta plus no sentinel narrows the problem to the call/output path after its
+predicate (it does not prove optimization, unsupported syntax or filtering).
+Magenta plus sentinel demonstrates that sentinel path, **not** eating timing.
+Do not consume in this candidate even if the sentinel appears. Do not retest
+other colors, slots or versions without a separately authorized discriminator.
+The inherited ONE `none`, 163 failed flash handoff and 164 bounded trace remain
+experiments, not production fixes. `client=false`, `production_ready=false`.

@@ -38,3 +38,15 @@ export function sourcePlayerBlend(id,profile,hand,oppositeOccupied,using=true) {
   property:key=>({eat_projection:1,eat_profile:code,eat_hand:hand==='main'?1:2}[key.split(':')[1]])}});
  return {weight:new Script(clip.blend_weight).runInContext(context,{timeout:100}),bones:clip.bones};
 }
+
+// Actual RC texture selection under supplied values; still not a renderer or
+// Molang runtime. This permits an explicitly unexecuted pre_animation control.
+export function presentationTextures(id,{state={},first=true,slot='main'}={}) {
+ const doc=JSON.parse(readFileSync(new URL(`attachables/${id.split(':')[1]}.attachable.json`,RP),'utf8'))['minecraft:attachable'].description;
+ return Object.fromEntries(doc.render_controllers.map(name=>{
+  const rc=renderControllers[name],arrays={};
+  for(const [key,values] of Object.entries(rc.arrays?.textures??{}))arrays[key.split('.')[1]]=values.map(value=>doc.textures[value.split('.')[1]]);
+  const context=createContext({v:state,c:{is_first_person:first?1:0,item_slot:slot+'_hand'},Array:arrays,Texture:doc.textures});
+  return [name,rc.textures.map(value=>new Script(value).runInContext(context,{timeout:100}))];
+ }));
+}
