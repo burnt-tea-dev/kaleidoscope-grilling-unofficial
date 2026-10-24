@@ -557,3 +557,48 @@ and visibility output across independent query values and transitions. These
 are source-level evidence, not a native Molang engine or client-rendering proof.
 The restored material needs its own isolated native check; no production or
 all-family acceptance is claimed.
+
+## Released-use two-session observation (175 source candidate, not a fix)
+
+The user identified continuation after release/a single tap, not normal held
+continuous eating; whether another item was deducted is unknown. This isolated
+observer leaves174 EAT, normal textures, cache/hold and all gameplay decisions
+unchanged. The two rejected same-tick cleanup prototypes are not included.
+
+One nonpersistent server observer emits script readiness from the existing
+single-player/no-active scheduler result. It deliberately does not query held
+inventory; the operator must verify count2 separately and the first accepted
+public ONE main Start checks its captured initial-use count2. The numeric sentinel must
+actually appear in the designated contentlog before use; source execution cannot
+prove disk flush. There is no client q.log fallback. A two-use label follows
+existing use-object identity for script callback comparison only, not a native
+nonce. Inactivity does not close it. The second Start never resets300tick/512row
+budgets; a third target Start records then closes logging only. Existing observed
+Start/ownership-loss/leave/death branches close scope. An inactive slot/item change
+is not polled; the next Start check or budget bounds that missing observation.
+
+The initial observer design was rejected because extra inventory/component reads
+could consume transient original failures and change a debit into success. The
+lean revision performs no such reads (including native event/ItemStack payload
+re-reads) and never fabricates empty count0 from a
+failed tolerant getter. It records original event payloads/guard outcomes/script
+owner lifecycle, the existing hungerSettle held-count read, and actual original
+write callback requests/return-or-throw receipts. Requested count is not inventory
+readback; external/native quantity changes are unknown unless independently
+observed. No health/stat or replicated-property snapshots are claimed.
+
+Original Stop/Complete predicates/evaluation order remain intact. Actual debit/
+restore and nutrition callbacks are bracketed in try/finally preserving returns,
+throws and rollback. The original held amount/remaining reads are stored at their original
+evaluation points, not repeated or forced through a short circuit. Entry fields
+therefore deliberately remain unknown; initial amount comes only from the
+immutable identity already captured by gameplay. No input control, stack/metadata mutation, interval,
+listener, player property, cooldown or repeat-policy fix is introduced. Only
+numeric fields are serialized; identities/lore/coordinates are excluded. Owner
+lifecycle rows do not claim HUD show/hide intent or client display.
+
+Source tests and actual174-module differential scenarios are not physical release,
+engine ordering, client rendering or sink acceptance. The observer itself can
+perturb wall time. Native input-up requires separate approved evidence, not caller
+return or ItemStopUse; those clocks retain explicit uncertainty. Independent review
+and a frozen candidate are required before publication or any native trial.

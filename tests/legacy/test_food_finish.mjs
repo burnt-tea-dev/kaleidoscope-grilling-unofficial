@@ -1180,3 +1180,122 @@ test('ONE native EAT control restores the item component while retaining the ONE
  // This validates configuration only. Native EAT poses/particles and the held
  // model must be distinguished in actual footage; this is not a renderer test.
 });
+
+// Source-only bounded released-use observer. These rows describe Script API
+// callback ordering under the fixture, never physical input or native origin.
+const releaseRows=f=>f.logs.filter(x=>x.text.startsWith('[KG_RELEASE_TRACE] ')).map(x=>{
+ const row=JSON.parse(x.text.slice('[KG_RELEASE_TRACE] '.length));
+ assert.equal(row.length,22);assert.ok(row.every(Number.isFinite));assert.equal(row[0],1);return row;
+});
+function readyReleaseTrace(lab,a){a.advance(1);const rows=releaseRows(lab.f);assert.deepEqual(rows.map(x=>x[2]),[1]);assert.equal(rows[0][6],0);assert.equal(rows[0][18],-1,'readiness does not query held inventory');}
+
+test('released-use trace emits idle single-player script readiness without reading held inventory',async t=>{
+ for(const mode of ['valid','one','offhand','other','multiplayer','already-using']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+  const route=mode==='other'?routes.find(x=>x.id===beef):handoffRoute();
+  const a=lab.actor(route,mode==='offhand'?'off':'main',mode==='one'?1:2);
+  if(mode==='multiplayer')lab.actor(handoffRoute(),'main',2);
+  if(mode==='already-using')a.begin();
+  a.advance(1);const rows=releaseRows(lab.f);
+  assert.equal(rows.length,['multiplayer','already-using'].includes(mode)?0:1,mode);
+  if(rows.length){assert.equal(rows[0][2],1);assert.equal(rows[0][5],-1);assert.equal(rows[0][6],0);assert.equal(rows[0][18],-1);assert.equal(rows[0][19],-1);}
+  a.advance(3);assert.equal(releaseRows(lab.f).length,rows.length,'no idle readiness spam');assert.equal(a.p[a.hand].amount,mode==='one'?1:2);a.retire();
+ }
+});
+
+test('released-use trace spans two accepted sessions and inactive gap then observes third Start without blocking it',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(10);a.event('itemStopUse',80);a.advance(3);
+ let rows=releaseRows(lab.f);assert.ok(rows.some(x=>x[2]===100&&x[6]===1&&x[7]===0),'inactive gap is still sampled');
+ a.begin();a.advance(10);a.event('itemStopUse',80);a.advance(2);
+ rows=releaseRows(lab.f);assert.deepEqual(rows.filter(x=>x[2]===11).map(x=>x[8]),[1,2]);
+ const first=rows.find(x=>x[2]===10)[3];assert.ok(rows.every(x=>x[5]<0||x[3]-x[5]===first),'second Start never resets budget');
+ a.begin();rows=releaseRows(lab.f);assert.equal(rows.at(-1)[2],93);const count=rows.length;
+ a.advance(2);assert.equal(handoffProperties(a.p).eat_profile,1,'third Start is not blocked by observer closure');
+ assert.equal(a.p.main.amount,2);assert.equal(releaseRows(lab.f).length,count);a.event('itemStopUse',88);a.advance(2);assert.equal(releaseRows(lab.f).length,count);a.retire();
+});
+
+test('released-use trace caps total rows and ticks without rearming or changing input policy',async t=>{
+ for(const limit of ['ticks','rows']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();
+  if(limit==='ticks')a.advance(301);
+  else{const foreign=a.stack.clone();foreign.nameTag='unrelated Stop payload';for(let i=0;i<300;i++)lab.f.emit('world.afterEvents.itemStopUse',{source:a.p,itemStack:foreign,useDuration:90});}
+  const rows=releaseRows(lab.f);assert.ok(rows.length<=512);assert.equal(rows.at(-1)[2],98);assert.equal(rows.at(-1)[17],limit==='ticks'?1:2);
+  if(limit==='ticks')assert.equal(rows.at(-1)[5],300);else assert.equal(rows.length,512);
+  assert.equal(a.p.main.amount,2);const count=rows.length;a.begin();a.advance(2);assert.equal(releaseRows(lab.f).length,count);a.retire();
+ }
+});
+
+test('released-use trace closes on scope leave and death and ignores unrelated players',async t=>{
+ for(const change of ['slot','other-item','offhand','leave','death','other-start']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();
+  const unrelated=lab.actor(handoffRoute(),'main',2),count=releaseRows(lab.f).length;unrelated.begin();assert.equal(releaseRows(lab.f).length,count);
+  if(change==='slot')a.p.selectedSlotIndex=1;
+  if(change==='other-item')a.p.main=lab.f.item(beef,2);
+  if(change==='offhand'){const x=a.p.main;a.p.main=undefined;a.p.off=x;lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:x.clone(),useDuration:90});}
+  if(change==='leave')lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+  if(change==='death')lab.f.emit('world.afterEvents.entityDie',{deadEntity:a.p});
+  if(change==='other-start')lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:lab.f.item(beef,2),useDuration:90});
+  a.advance(1);const rows=releaseRows(lab.f);assert.equal(rows.at(-1)[2],({leave:92,death:94,'other-start':90,offhand:95})[change]??91);
+  if(change==='leave')assert.equal(rows.at(-1)[18],-1,'leave never reads offline inventory');
+  const n=rows.length;a.advance(3);assert.equal(releaseRows(lab.f).length,n);unrelated.retire();a.retire();
+ }
+});
+
+test('released-use trace records existing held snapshots and script write receipts without inventing external debit',async t=>{
+ for(const mode of ['release','rollback','external']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(mode==='external'?89:25);
+  if(mode==='external'){a.nativeDebit();a.event('itemCompleteUse',0);}
+  else{if(mode==='rollback')lab.f.faults.failNext(a.p.inventory,'setItem',{phase:'after'});a.event('itemStopUse',65);}
+  const rows=releaseRows(lab.f);
+  if(mode==='external'){
+   const row=rows.find(x=>x[2]===30);assert.equal(row[18],-1);assert.equal(row[19],-1);assert.equal(row[20],0,'no held query or inferred native debit');assert.ok(!rows.some(x=>x[2]===50));
+  }else{
+   const held=rows.find(x=>x[2]===43);assert.equal(held[18],2);assert.equal(held[20],1);
+   const debit=rows.find(x=>x[2]===51);assert.equal(debit[19],1);assert.equal(debit[20],2);assert.equal(debit[17],mode==='rollback'?0:1);assert.equal(debit[18],-1,'callback return is not inventory readback');
+  }
+  if(mode==='rollback'){const restore=rows.find(x=>x[2]===53);assert.equal(restore[19],2);assert.equal(restore[20],3);assert.equal(a.p.main.amount,2);assert.equal(lab.f.faults.pending.length,0);}
+  else assert.equal(a.p.main.amount,1);
+  a.retire();
+ }
+});
+
+test('released-use trace observes unchanged same-tick guard and distinguishes captured callback from current owner',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(89);a.nativeDebit();
+ a.event('itemStopUse',0);a.event('itemCompleteUse',0);a.begin();a.event('itemStopUse',89);a.advance(2);
+ const rows=releaseRows(lab.f),guard=rows.find(x=>x[2]===23),stale=rows.find(x=>x[2]===26);
+ assert.equal(guard[7],2);assert.equal(guard[8],2);assert.equal(stale[7],2);assert.equal(stale[8],1);
+ assert.equal(handoffProperties(a.p).eat_profile,1,'known same-tick ownership ambiguity is observed, not repaired');assert.equal(a.p.main.amount,1);a.retire();
+});
+
+test('released-use trace contains throwing log sinks without suppressing original transactions',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);
+ const original=console.warn;t.after(()=>{console.warn=original;});
+ console.warn=(...args)=>{if(String(args[0]).startsWith('[KG_RELEASE_TRACE] '))throw new Error('diagnostic sink failed');return original(...args);};
+ a.begin();a.advance(25);a.event('itemStopUse',65);a.advance(2);assert.equal(a.p.main.amount,1);assert.ok(a.p.components['minecraft:player.hunger'].currentValue>2);a.retire();
+});
+
+test('released-use trace cannot consume transient original held hunger or saturation read failures',async t=>{
+ for(const fault of ['held','hunger','saturation']){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(25);
+  const original=a.p.getComponent;let reads=0;
+  if(fault==='held')lab.f.faults.failNext(a.p.inventory,'getItem',{error:new Error('original held failure')});
+  else a.p.getComponent=key=>{if(key==='minecraft:player.'+fault&&++reads===1)throw new Error('original component failure');return original(key);};
+  if(fault==='held')assert.doesNotThrow(()=>a.event('itemStopUse',65));
+  else assert.throws(()=>a.event('itemStopUse',65),/original component failure/);
+  a.p.getComponent=original;lab.f.faults.clear();assert.equal(a.p.main.amount,2);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);assert.equal(a.p.components['minecraft:player.saturation'].currentValue,0);
+  assert.ok(!releaseRows(lab.f).some(x=>[50,51].includes(x[2])),'rejected/throwing original reads must not turn into a debit');
+  a.advance(3);assert.equal(a.p.main.amount,2);a.retire();
+ }
+});
+
+test('released-use trace preserves original Stop payload getter throws and never forces a short-circuited read',async t=>{
+ for(const key of ['amount','useDuration'])for(const used of [10,25]){
+  const lab=await createEatingLab();t.after(()=>lab.f.dispose());const a=lab.actor(handoffRoute(),'main',2);readyReleaseTrace(lab,a);a.begin();a.advance(used);
+  const stack=a.stack.clone(),event={source:a.p,itemStack:stack,useDuration:90-used},target=key==='amount'?stack:event,value=target[key];let reads=0;
+  Object.defineProperty(target,key,{get(){if(++reads===1)throw new Error('original payload read failed');return value;},configurable:true});
+  if(key==='useDuration'&&used===10){assert.doesNotThrow(()=>lab.f.emit('world.afterEvents.itemStopUse',event));assert.equal(reads,0,'original early guard does not evaluate remaining');}
+  else{assert.throws(()=>lab.f.emit('world.afterEvents.itemStopUse',event),/original payload read failed/);assert.equal(reads,1,'observer must not consume the one-shot failure');}
+  assert.equal(a.p.main.amount,2);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);assert.ok(releaseRows(lab.f).filter(x=>x[2]===20).every(x=>x[11]===-1),'entry marker has no premature remaining snapshot');a.retire();
+ }
+});
