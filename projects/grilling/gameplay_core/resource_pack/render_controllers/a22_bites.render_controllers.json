@@ -55,31 +55,6 @@
             "Texture.stage2",
             "Texture.stage3",
             "Texture.stage4"
-          ],
-          "Array.kg_marker_tex": [
-            "Texture.stage0",
-            "Texture.stage1",
-            "Texture.stage2",
-            "Texture.stage3",
-            "Texture.stage4",
-            "Texture.diag_lime",
-            "Texture.diag_orange",
-            "Texture.diag_red",
-            "Texture.diag_cyan",
-            "Texture.diag_magenta",
-            "Texture.diag_white",
-            "Texture.diag_white",
-            "Texture.clock_black",
-            "Texture.clock_blue",
-            "Texture.clock_yellow",
-            "Texture.clock_purple",
-            "Texture.clock_brown",
-            "Texture.diag_white",
-            "Texture.clock_black",
-            "Texture.live_gray",
-            "Texture.live_light_blue",
-            "Texture.live_pink",
-            "Texture.live_green"
           ]
         }
       },
@@ -95,7 +70,7 @@
         }
       ],
       "textures": [
-        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? ((v.kg_diag_state ?? 5) == 0 ? 17 + (v.kg_diag_live_bucket ?? 0) : ((v.kg_diag_state ?? 5) == 3 ? 11 + (v.kg_diag_clock_bucket ?? 0) : 5 + (v.kg_diag_state ?? 5))) : v.kg_bite_stage]"
+        "Array.kg_bite_tex[v.kg_bite_stage]"
       ]
     }
   }

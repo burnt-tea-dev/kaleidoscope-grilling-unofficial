@@ -521,3 +521,39 @@ No color removal, particle workaround, TP adjustment, FP offset or repeat-eating
 prototype is included. The new test checks the actual item configuration only,
 not native visuals. One reviewed native meal is required before any later plan
 to remove diagnostics or expand families; no universal fix is claimed here.
+
+## ONE normal-material diagnostic cleanup (2.8.174 candidate)
+
+173's single EAT control did not show the specified solid-color main-skewer
+terminal rebound in its reviewed interval. Large original-textured planes did
+return and remained visible after the first empty-slot frame. This does not
+identify their renderer/emitter or accept first-person fit, TP/offhand, other
+families, or repeat-input policy. EAT remains enabled here.
+
+Only public ONE returns to its original five stage texture aliases. The private
+RC keeps its existing identifier (despite the historical `diagnostic` name),
+geometry, material and visibility expression. Fifteen color aliases and three
+pure classifiers (`kg_diag_state`, `kg_diag_clock_bucket`,
+`kg_diag_live_bucket`) are removed. The remaining 28 pre-animation statements
+are unchanged, including `kg_diag_main`, `kg_diag_using` and the `kg_diag_clock_*`
+cache variables: they are functional inputs to the tested local hold, not dead
+telemetry. No rename or broader refactor is hidden in this cleanup.
+
+The one-shot server `ONE_TRACE` state, `traceOneEating`, and its logging/read-only
+hooks are removed. No client `q.log` remains to remove: that failed observation
+path was already retired in167. No new subscriber, timer, property, item ID,
+geometry, pose, particle edit, or settlement/input policy is introduced. All
+other57 fixed and six composite visual routes remain unchanged. The pre-existing
+same-tick StopUse ambiguity and local hold's missing-sample/reset/identity limits
+remain; removing diagnostics does not resolve them.
+
+Existing tests now check normal textures and no diagnostic output while retaining
+cache, terminal-edge, owner-reset, early-cancel, fault, replacement and continuous
+serving behavior. An external read-only comparison executes the frozen173 and
+candidate174 actual modules on the same deterministic event graphs and compares
+inventory, nutrition, owner properties, animation selection and nontrace logs.
+A separate actual-JSON comparison checks every retained variable, clip selector
+and visibility output across independent query values and transitions. These
+are source-level evidence, not a native Molang engine or client-rendering proof.
+The restored material needs its own isolated native check; no production or
+all-family acceptance is claimed.
