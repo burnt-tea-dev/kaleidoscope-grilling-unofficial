@@ -233,3 +233,48 @@ magenta and pre-derived third-person/offhand controls. This is a regression for
 the observed context boundary, not a substitute Molang VM or texture renderer.
 The authorized next native test is one idle held screenshot, no recording needed,
 then normal close/same-file flush/settings restoration; never use the food.
+
+## ONE visible-flash gate colors (isolated167 diagnostic)
+
+166 produced a visible magenta held model in the one idle screenshot. The exact
+post-close content file had scripting verbose/info but zero errors and zero
+164001. This supports the active RP and preceding sentinel predicate/latch,
+not a working retail q.log sink or successful eating. Do not retry q.log.
+
+167 replaces only the public ONE's client diagnostic expressions: preserve all
+15 functional pre-animation assignments verbatim, remove37 client-telemetry
+statements and the165 latch, add3 observer assignments (main-FP, local using,
+state). The BP's existing bounded `[KG164]` event trace is byte-identical166.
+There are no new clocks, offsets, inventories, use policies or geometry/pose changes.
+The dedicated RC still uses only pre variables and a numeric texture-array index.
+
+For a main-FP visible model, the actual pre-computed gates select these mutually
+exclusive states, in priority order:
+
+| State | Color | Exact source decision |
+|---|---|---|
+|4|Magenta|`kg_terminal_wait` is true; original mask should hide this main model. If visibly magenta, record the contradiction; never disable the mask to see it.|
+|0|Lime|Otherwise `kg_source_projection` is true (the existing active native-use/owner/route predicate).|
+|1|Orange|Otherwise the same pre-animation's captured `q.is_using_item` is true: native use without the source projection.|
+|2|Red|Otherwise one of active-slot, same-item, owner profile1, owner projection1 is false.|
+|3|Cyan|Otherwise native duration is notpositive or owner elapsed is less than native duration−1: the exact terminal clock condition is not yet true.|
+|5|White|Uninitialized observer or otherwise unclassified/inconsistent inputs; do not infer a clock or ownership state.|
+
+The numeric observer has no side effects on functional variables. Real main-FP
+input combinations make magenta equivalent to the actual original terminal mask,
+not an invented substitute. The untouched part_visibility still hides masked
+models. Therefore **invisible frames provide no color/state observation**. The
+same applies to cropped/obscured/blurred models or ambiguous lighting. Nonmain-FP
+uses the original bite texture even if a diagnostic state persisted. White is a
+separate unknown fallback, never conflated with cyan or the original food texture.
+The six colors reference existing Vanilla concrete textures; no new art is added.
+
+The sole native trial is one normal main-hand serving/use, recorded at30fps in a
+new isolated world with the same Cookery. Read only the actual visible flash
+frames' color, alongside the unchanged bounded numeric scripting event log from
+the UI-selected content file after normal close. No offhand/second-serving/offset
+retry. A native-use property and a video frame are not synchronized clocks;
+scripting rows may narrow event order but do not timestamp a client frame exactly.
+This diagnostic deliberately changes model color and removes the unused client
+log calls, so its recording is not a normal-texture performance/parity pair.
+Inherited ONE `none`, low framing and terminal flash remain unresolved experiments.
