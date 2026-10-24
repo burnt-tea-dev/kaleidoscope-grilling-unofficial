@@ -41,6 +41,26 @@ test('five ordinary cooked-secret plate snapshots fit native string storage',()=
 
 import {secretEatingRows} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_eating_core.js';
 import {createFixture} from '../helpers/minecraft-fixture.mjs';
+test('fixture nth failure lets earlier matching writes complete and retains successive failNext semantics',()=>{
+ const f=createFixture();
+ try{
+  for(const phase of ['before','after']){
+   const inventory=f.container(3),stack=f.item('minecraft:apple',1);
+   f.faults.failNth(inventory,'setItem',{nth:2,phase,predicate:slot=>slot!==2});
+   inventory.setItem(2,stack);inventory.setItem(0,stack);
+   assert.equal(inventory.getItem(0).typeId,stack.typeId);assert.equal(f.faults.pending.length,1);
+   assert.throws(()=>inventory.setItem(1,stack),/Injected/);
+   assert.equal(inventory.getItem(1)?.typeId,phase==='after'?stack.typeId:undefined);
+   assert.equal(f.faults.pending.length,0);inventory.setItem(1,stack);
+  }
+  const inventory=f.container(1),stack=f.item('minecraft:carrot',1);
+  f.faults.failNext(inventory,'setItem',{times:2});
+  assert.throws(()=>inventory.setItem(0,stack),/Injected/);
+  assert.throws(()=>inventory.setItem(0,stack),/Injected/);
+  inventory.setItem(0,stack);assert.equal(inventory.getItem(0).typeId,stack.typeId);
+  for(const nth of [0,-1,1.5,NaN])assert.throws(()=>f.faults.failNth(inventory,'setItem',{nth}),/positive integer/);
+ }finally{f.dispose()}
+});
 // Exercise the exported decoder itself. Event admission is a separate contract;
 // a valid decoded payload alone is not proof that an eating event may commit.
 const secretIds=['minecraft:apple','minecraft:carrot','minecraft:beef'];
@@ -285,6 +305,52 @@ for(const field of [secretIngredientsKey,cookedIngredientsKey])test('native four
   const state=f.flip();
   assert.deepEqual(state,stateBefore);assert.deepEqual(f.grillInventory.items().map(stack=>stack&&f.snapshot.captureSkewerMetadata(stack)),before);
   assert.equal(f.data.getItemProperty(f.grillInventory.getItem(1),field),'{bad');
+  assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
+
+for(const phase of ['before','after'])for(const nth of [2,3])test('native fourth flip retains all three slots and original metadata when cooked cache write '+nth+' fails '+phase,async()=>{
+ const f=await fourthFlipFixture();
+ try{
+  for(let slot=0;slot<3;slot++){
+   const stack=f.secret();stack.nameTag='Original slot '+slot;
+   f.data.setItemProperty(stack,secretCookedKey,false);f.data.setItemProperty(stack,'foreign:slot',slot);
+   f.grillInventory.setItem(slot,stack);
+  }
+  const before=f.grillInventory.items().map(stack=>({amount:stack.amount,native:f.snapshot.captureSkewerMetadata(stack)}));
+  const stateBefore=f.grillState.readGrillState(f.grill),properties=f.snapshotProperties(),start=f.writes.length;
+  let matches=0;
+  f.faults.failNth(f.world,'setDynamicProperty',{nth,phase,predicate:(key,value)=>{
+   const match=key.startsWith('senluo:grilling_item_')&&typeof value==='string'&&Object.hasOwn(JSON.parse(value),cookedIngredientsKey);
+   if(match)matches++;return match;
+  }});
+  assert.deepEqual(f.flip(),stateBefore);assert.equal(matches,nth,'failure reached the intended cache write');
+  assert.equal(f.faults.pending.length,0);
+  assert.deepEqual(f.grillInventory.items().map(stack=>({amount:stack.amount,native:f.snapshot.captureSkewerMetadata(stack)})),before);
+  assert.equal(f.writes.slice(start).filter(row=>row.target===f.grillInventory&&row.method==='setItem').length,0,'all caches are prepared before committing slots');
+  assert.equal(f.writes.slice(start).filter(row=>row.target===f.world&&row.method==='setDynamicProperty'&&row.args[0].startsWith('senluo:grilling_item_')).length,nth-(phase==='before'?1:0),'earlier cache writes really completed');
+  for(const [key,value] of Object.entries(properties))assert.equal(f.world.getDynamicProperty(key),value,'original saved metadata remains readable');
+  for(let slot=0;slot<3;slot++)assert.equal(f.data.getItemProperty(f.grillInventory.getItem(slot),cookedIngredientsKey),undefined,'original item did not acquire an incomplete cache');
+  assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
+
+for(const phase of ['before','after'])test('native fourth flip rolls back earlier slot commits when the second slot write fails '+phase,async()=>{
+ const f=await fourthFlipFixture();
+ try{
+  for(let slot=0;slot<3;slot++){
+   const stack=f.secret();stack.nameTag='Original slot '+slot;
+   f.data.setItemProperty(stack,secretCookedKey,false);f.data.setItemProperty(stack,'foreign:slot',slot);
+   f.grillInventory.setItem(slot,stack);
+  }
+  const before=f.grillInventory.items().map(stack=>({amount:stack.amount,native:f.snapshot.captureSkewerMetadata(stack)}));
+  const properties=f.snapshotProperties(),stateBefore=f.grillState.readGrillState(f.grill),start=f.writes.length;
+  let matches=0;
+  f.faults.failNth(f.grillInventory,'setItem',{nth:2,phase,predicate:()=>{matches++;return true;}});
+  assert.deepEqual(f.flip(),stateBefore);assert.equal(matches,2);assert.equal(f.faults.pending.length,0);
+  assert.ok(f.writes.slice(start).some(row=>row.target===f.grillInventory&&row.method==='setItem'&&row.args[0]===0),'first slot reached its actual write');
+  assert.deepEqual(f.grillInventory.items().map(stack=>({amount:stack.amount,native:f.snapshot.captureSkewerMetadata(stack)})),before);
+  for(const [key,value] of Object.entries(properties))assert.equal(f.world.getDynamicProperty(key),value);
   assert.equal(f.drops.length,0);
  }finally{f.dispose()}
 });

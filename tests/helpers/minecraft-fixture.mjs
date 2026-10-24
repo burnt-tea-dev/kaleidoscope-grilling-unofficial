@@ -98,11 +98,23 @@ export function createFixture(options = {}) {
       faults.push(rule);
       return rule;
     },
+    // failNext(times:N) rejects N successive matches. This distinct operation
+    // allows the first N-1 matches to complete and rejects only match N.
+    failNth(target, method, {nth = 1, ...options} = {}) {
+      if (!Number.isSafeInteger(nth) || nth < 1) throw new Error('Fault nth must be a positive integer');
+      const rule = f.faults.failNext(target, method, {...options, times: 1});
+      rule.skipMatches = nth - 1;
+      return rule;
+    },
     clear() { faults.length = 0; },
     get pending() { return [...faults]; },
   };
   function fault(target, method, phase, args) {
-    const rule = faults.find(row => row.target === target && row.method === method && row.phase === phase && row.predicate(...args));
+    const rule = faults.find(row => {
+      if (row.target !== target || row.method !== method || row.phase !== phase || !row.predicate(...args)) return false;
+      if (row.skipMatches > 0) {row.skipMatches--;return false;}
+      return true;
+    });
     if (!rule) return;
     if (--rule.times <= 0) faults.splice(faults.indexOf(rule), 1);
     throw rule.error;
