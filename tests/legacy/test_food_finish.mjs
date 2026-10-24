@@ -981,7 +981,7 @@ test('ONE flash colors partition actual mainhand use ownership and terminal-cloc
   assert.equal(Boolean(v.kg_terminal_wait),masked);
   assert.equal(v.kg_diag_state===4,masked,'magenta corresponds to the actual mask, not just a clock label');
   assert.equal(result.visibility[markerController]['*'],!masked,'diagnostics never make masked food visible');
-  assert.equal(flashTexture(v),'textures/blocks/concrete_'+(expected===3?(duration<=0?'black':'white'):flashColors[expected]));
+  assert.equal(flashTexture(v),'textures/blocks/concrete_'+(expected===0?(duration<=0?'black':duration-tick-1<0?'gray':duration-tick-1===0?'light_blue':duration-tick-1<=1?'pink':'green'):expected===3?(duration<=0?'black':'white'):flashColors[expected]));
   assert.deepEqual(result.logs,[],'client q.log telemetry is no longer executed');
   observed.add(expected);count++;
  }
@@ -1016,7 +1016,7 @@ test('ONE flash color RC uses white for uninitialized observers and reads frozen
  // only actual pre-animation results above are evidence for the five gates.
  for(let phase=0;phase<6;phase++){
   const state={kg_diag_main:1,kg_diag_state:phase};
-  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===3?'white':flashColors[phase]));
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===0||phase===3?'white':flashColors[phase]));
  }
 });
 
@@ -1036,7 +1036,7 @@ test('ONE flash colors recompute across completion cancellation and restart inst
   const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,state,...input});
   assert.equal(state.kg_diag_state,phase);
   assert.equal(result.visibility[markerController]['*'],visible);
-  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===3?'white':flashColors[phase]));
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+(phase===0?'green':phase===3?'white':flashColors[phase]));
   assert.deepEqual(result.logs,[]);
  }
 });
@@ -1074,7 +1074,7 @@ test('ONE local countdown observer classifies the last owned native sample only 
   const state={};
   const using=localClockFrame(state,{using:true,nativeRemaining:remaining,nativeMaximum:90,tick:10});
   assert.equal(Boolean(using.variables.kg_diag_clock_seen),true);assert.equal(using.variables.kg_diag_clock_last,remaining);
-  assert.equal(using.texture,'textures/blocks/concrete_lime','using colors do not become countdown buckets');
+  assert.equal(using.texture,'textures/blocks/concrete_'+(remaining<=1?'pink':'green'),'live bins do not replace stopped-cache bins');
   const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:10});
   assert.equal(stop.variables.kg_diag_state,3);assert.equal(stop.variables.kg_diag_clock_bucket,bucket);
   assert.equal(stop.variables.kg_diag_clock_last,remaining,'do not sample native zero-reset at stop');
@@ -1139,7 +1139,7 @@ test('ONE local countdown observer leaves functional outputs and nonflash textur
   if(input.expectedLocalHold)expected.visibility[0]['*']=false;
   assert.equal(Boolean(a.variables.kg_local_terminal),!!input.expectedLocalHold);
   assert.deepEqual(functional(a),expected,'only the explicit ONE-main local mask exception may differ; clips/clocks/bites remain equal');
-  if(a.variables.kg_diag_state!==3)assert.equal(flashTexture(a.variables),'textures/blocks/concrete_'+flashColors[a.variables.kg_diag_state]);
+  if(![0,3].includes(a.variables.kg_diag_state))assert.equal(flashTexture(a.variables),'textures/blocks/concrete_'+flashColors[a.variables.kg_diag_state]);
  }
  for(const first of [false,true])for(const hand of ['main','off']){
   if(first&&hand==='main')continue;
@@ -1261,4 +1261,54 @@ test('ONE local terminal edge cannot hide a fresh continuous serving or let old 
  assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
  a.advance(87);a.nativeDebit();a.event('itemCompleteUse',0);a.advance(2);
  assert.equal(a.p.main,undefined);assert.deepEqual(handoffProperties(a.p),clearedHandoff);a.retire();
+});
+
+
+// Live observer changes only the old source-projection (LIME) texture branch.
+const liveColors=['white','black','gray','light_blue','pink','green'];
+test('ONE live clock observer separates the two full-model counterexamples from a zero remaining terminal stick',()=>{
+ for(const [input,color,stage,seconds] of [
+  [{duration:0,nativeMaximum:0,nativeRemaining:0},'black',0,0],
+  [{duration:90,nativeMaximum:90,nativeRemaining:89},'green',0,0],
+  [{duration:90,nativeMaximum:90,nativeRemaining:0},'light_blue',2,4.45]]){
+  const r=localClockFrame({}, {using:true,tick:10,...input});
+  assert.equal(Boolean(r.variables.kg_source_projection),true);
+  assert.equal(r.variables.kg_diag_state,0);assert.equal(r.texture,'textures/blocks/concrete_'+color);
+  assert.equal(r.variables.kg_bite_stage,stage);assert.equal(r.variables.kg_eat_seconds,seconds);
+  assert.equal(r.visibility[markerController]['*'],true,'observer does not repair or hide the counterexample');
+ }
+});
+test('ONE live clock observer exhaustively classifies observed duration maximum and remaining ranges',()=>{
+ for(const duration of [0,90])for(const nativeMaximum of [0,89,90,100])for(const nativeRemaining of [-1,0,.5,1,1.001,2,89,90,91,101]){
+  const r=localClockFrame({}, {using:true,duration,nativeMaximum,nativeRemaining});
+  const bucket=duration<=0?1:nativeMaximum!==duration||nativeRemaining<0||nativeRemaining>nativeMaximum?2:nativeRemaining===0?3:nativeRemaining<=1?4:5;
+  assert.equal(r.variables.kg_diag_live_bucket,bucket,JSON.stringify({duration,nativeMaximum,nativeRemaining}));
+  assert.equal(r.texture,'textures/blocks/concrete_'+liveColors[bucket]);
+  assert.equal(r.visibility[markerController]['*'],true);
+ }
+});
+test('ONE live clock observer unknown state stays white and actual RC has no attachable context or writes',()=>{
+ for(const state of [{},{kg_diag_main:1,kg_diag_state:0},{kg_diag_main:1,kg_diag_state:0,kg_diag_live_bucket:undefined}]){
+  assert.equal(flashTexture(Object.freeze(state)),'textures/blocks/concrete_white');
+ }
+ for(let bucket=0;bucket<6;bucket++)assert.equal(flashTexture(Object.freeze({kg_diag_main:1,kg_diag_state:0,kg_diag_live_bucket:bucket})),'textures/blocks/concrete_'+liveColors[bucket]);
+});
+test('ONE live clock observer recomputes current values without changing stop cache or local hold',()=>{
+ const state={};
+ const use=localClockFrame(state,{using:true,nativeRemaining:1,nativeMaximum:90,tick:80});
+ assert.equal(use.texture,'textures/blocks/concrete_pink');
+ const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:80});
+ assert.equal(stop.variables.kg_diag_live_bucket,2,'current zero max is invalid, but stopped texture uses the prior cache');
+ assert.equal(stop.texture,'textures/blocks/concrete_blue');assert.equal(stop.variables.kg_diag_clock_last,1);
+ assert.equal(stop.variables.kg_local_terminal,1);assert.equal(stop.visibility[markerController]['*'],false);
+ const next=localClockFrame(state,{using:true,nativeRemaining:89,nativeMaximum:90,tick:80});
+ assert.equal(next.texture,'textures/blocks/concrete_green');assert.equal(next.variables.kg_diag_clock_last,89);
+ assert.equal(next.variables.kg_local_terminal,0);assert.equal(next.visibility[markerController]['*'],true);
+});
+test('ONE live clock observer cannot change non-source or nonmain texture branches',()=>{
+ for(const bucket of [undefined,0,1,2,3,4,5]){
+  for(const phase of [1,2,4,5])assert.equal(flashTexture({kg_diag_main:1,kg_diag_state:phase,kg_diag_live_bucket:bucket}),'textures/blocks/concrete_'+flashColors[phase]);
+  for(let old=0;old<6;old++)assert.equal(flashTexture({kg_diag_main:1,kg_diag_state:3,kg_diag_clock_bucket:old,kg_diag_live_bucket:bucket}),'textures/blocks/concrete_'+clockColors[old]);
+  for(let stage=0;stage<5;stage++)assert.equal(flashTexture({kg_diag_main:0,kg_diag_state:0,kg_diag_live_bucket:bucket,kg_bite_stage:stage}),markerAttachable(trace164Id).textures['stage'+stage]);
+ }
 });

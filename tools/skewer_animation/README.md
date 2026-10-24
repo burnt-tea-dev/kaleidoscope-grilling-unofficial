@@ -407,3 +407,37 @@ new-use reset, owner/context changes, failed settlement, same-ID replacements,
 and continuous servings. There is no extension of the arm/helper animation or
 new debit. The next native trial must determine whether this ONE full-completion
 flash disappears; source tests alone cannot accept it or the broader Java poses.
+
+
+## ONE live source-route clock observer (2.8.171)
+
+170 still showed a full angled LIME main model before an empty-hand frame.
+A same-session CRF25/lossless-CQP0 recording control also showed it in both
+valid meals. This excludes lossy quantization and B-frame reordering as necessary
+causes, not X11/compositor sampling, forced-CFR effects or arbitrary capture load.
+Video frames are not game ticks; server and client frame clocks remain unsynced.
+
+This diagnostic appends one private observer after all28 unchanged pre-animation
+statements. Only the former LIME (actual `kg_source_projection=true`) texture
+branch changes; no visibility, cache, local hold, clock, geometry, pose, helper,
+BP event trace, use policy or settlement changes. Every other route is unchanged.
+The existing native remaining/maximum samples are read, not resampled or clamped:
+
+| Source-route color | Meaning of the current observed inputs |
+| --- | --- |
+| WHITE | New observer uninitialized/unknown; never treated as numeric zero |
+| BLACK | Owner duration observed nonpositive (including existing missing-property-to-zero mapping) |
+| GRAY | Positive owner duration but native maximum nonpositive/different, or remaining outside `[0,max]` |
+| LIGHT_BLUE | Matching positive maximum and current remaining exactly zero |
+| PINK | Matching positive maximum and current remaining in `(0,1]` |
+| GREEN | Matching positive maximum and current remaining in `(1,max]` |
+
+BLACK does not prove an absent property or a server-side zero. GREEN does not
+identify89 or a new use. In actual JSON counterexamples, D0/remaining0 and
+D90/remaining89 both give stage0/clock0, whereas D90/remaining0 gives stage2 and
+4.45seconds. The next single-meal observation can distinguish these broad
+branches, not prove the underlying lifecycle or packet cause. No color may be
+assigned when the independent model is invisible or ambiguous. The stopped-cache
+BLUE/YELLOW/PURPLE/BROWN/WHITE/BLACK branches and other gates retain their meaning;
+non-main-FP retains original textures. All concrete aliases are installed vanilla
+assets, not proposed final skewer art. This is not an animation or repeat-eating fix.
