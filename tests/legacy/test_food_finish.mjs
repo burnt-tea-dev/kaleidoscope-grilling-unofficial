@@ -334,3 +334,81 @@ test('logging out after the Java checkpoint settles a meal even without a stop e
   const heldCount=a.p.main.amount;
   await t.test('desired: logout settles the one active serving',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},()=>assert.equal(heldCount,0));
 });
+
+// Source-grounded presentation selection; native rendering remains a separate gate.
+import {presentation} from '../helpers/skewer-presentation.mjs';
+import {admitEatingProjection,selectEatingProjection,supportsSourceFixedProjection} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_projection_routes.js';
+import {readFileSync as readPresentationJson} from 'node:fs';
+const javaPresentation=JSON.parse(readPresentationJson(new URL('../../data/java/eating_profiles.json',import.meta.url),'utf8')).loaders['forge-1.20.1'];
+const compositedPresentation=new Set(['kaleidoscope_grilling:secret_skewer','kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grilling:dark_grilling']);
+const fixedPresentation=Object.entries(javaPresentation.profile_by_item).filter(([id])=>!compositedPresentation.has(id)).flatMap(([id,{profile}])=>profile==='THREE_RANDOM'?[[id,'THREE'],[id+'_java_three_alt','THREE_ALT']]:[[id,profile]]);
+const presentationCodes={ONE:1,TWO:2,THREE:3,THREE_ALT:4,FOUR:5};
+test('every fixed family uses one Java source profile in either hand without consuming the other hand',()=>{
+ assert.equal(fixedPresentation.length,58);
+ for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
+  const other={typeId:'minecraft:diamond',amount:3,nameTag:'control'};
+  const e={itemStack:{typeId:id},source:{}};
+  assert.equal(admitEatingProjection(e,p,hand,()=>other),!['ONE','THREE'].includes(p),id+' occupied '+hand);
+  assert.equal(admitEatingProjection(e,p,hand,()=>undefined),true,id+' empty '+hand);
+  assert.deepEqual(other,{typeId:'minecraft:diamond',amount:3,nameTag:'control'});
+  assert.equal(selectEatingProjection(e,p,hand),'animation.kg_java_eating.player.'+p.toLowerCase()+'.'+(hand==='main'?'right':'left'));
+  assert.equal(supportsSourceFixedProjection(id+'_native_plain',p,hand),false);
+ }
+});
+test('fixed bite geometry advances on Java integer checkpoints, not a render fraction',()=>{
+ for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
+  const profile=javaPresentation.profiles[p],code=presentationCodes[p],duration=profile.duration_ticks;
+  for(const seconds of profile.bite_seconds){
+   const boundary=Math.ceil(seconds*20);
+   for(const tick of [boundary-1,boundary])for(const alpha of [0,.5,.999]){
+    const result=presentation(id,{profile:code,hand,tick,alpha,duration});
+    assert.equal(result.variables.kg_bite_stage,profile.bite_seconds.filter(s=>tick/20>=s).length,`${id} ${hand} tick=${tick} alpha=${alpha}`);
+    assert.deepEqual(result.clips,['animation.kg_java_eating.item.'+p.toLowerCase()+'.'+(hand==='main'?'right':'left')]);
+   }
+  }
+ }
+});
+test('fixed presentation returns to holding on interruption and starts a fresh continuous serving',()=>{
+ for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
+  const options={profile:presentationCodes[p],hand,duration:javaPresentation.profiles[p].duration_ticks};
+  const terminal=presentation(id,{...options,tick:options.duration-1});
+  assert.equal(terminal.variables.kg_bite_stage,javaPresentation.profiles[p].bite_seconds.length);
+  for(const extra of [{using:false},{same:false},{profile:0},{slot:hand==='main'?'off':'main'}]){
+   const stopped=presentation(id,{...options,tick:options.duration-1,...extra});
+   assert.equal(stopped.variables.kg_bite_stage,0);
+   assert.equal(stopped.clips.filter(x=>x.startsWith('animation.kg_java_eating.')).length,0);
+  }
+  assert.equal(presentation(id,{...options,tick:0}).variables.kg_bite_stage,0);
+  const tp=presentation(id,{...options,tick:30,first:false});
+  assert.deepEqual(tp.clips,['animation.kg_a287.skewer_tp_'+(hand==='main'?'right':'left')]);
+ }
+});
+test('source routing preserves every slime frame at every bite stage and does not duplicate the caterpillar helper',()=>{
+ const id='kaleidoscope_grilling:grilled_slime_skewer';
+ for(const hand of ['main','off'])for(const [tick,stage]of [[0,0],[20,1],[80,2]])for(let frame=0;frame<5;frame++){
+  const result=presentation(id,{profile:2,hand,tick,duration:90,slimeFrame:frame});
+  assert.equal(result.variables.kg_slime_frame,frame);
+  assert.equal(result.variables.kg_slime_index,stage*5+frame);
+ }
+ const rp=new URL('../../projects/grilling/gameplay_core/resource_pack/',import.meta.url);
+ const caterpillar=JSON.parse(readPresentationJson(new URL('attachables/grilled_caterpillar_skewer.attachable.json',rp),'utf8'))['minecraft:attachable'].description;
+ assert.deepEqual(caterpillar.render_controllers,['controller.render.kg_a22.bite','controller.render.kg_java_eating.piece']);
+ assert.ok(caterpillar.geometry.java_piece);
+});
+import {sourcePlayerBlend} from '../helpers/skewer-presentation.mjs';
+test('dual helper fallback masks source rendering when the opposite held item is present or arrives mid-use',()=>{
+ for(const [id,p]of fixedPresentation.filter(([,p])=>['ONE','THREE'].includes(p)))for(const hand of ['main','off']){
+  const options={profile:presentationCodes[p],hand,tick:30,duration:javaPresentation.profiles[p].duration_ticks};
+  assert.equal(sourcePlayerBlend(id,p,hand,false).weight,true);
+  assert.equal(presentation(id,options).variables.kg_source_projection,true);
+  // Replicated projection remains true after start, but current equipment wins.
+  const active=presentation(id,{...options,oppositeOccupied:true});
+  const otherSlot=hand==='main'?'off':'main';
+  const inactive=presentation('kaleidoscope_grilling:grilled_beef_skewer',{...options,slot:otherSlot,oppositeOccupied:true});
+  assert.equal(active.variables.kg_java_piece_visible,false);
+  assert.equal(active.clips.some(clip=>clip.startsWith('animation.kg_java_eating.')),false);
+  assert.deepEqual(inactive.clips,['animation.kg_a287.skewer_fp_'+(otherSlot==='main'?'right':'left')]);
+  assert.equal(sourcePlayerBlend(id,p,hand,true).weight,false);
+  assert.equal(presentation(id,options).variables.kg_source_projection,true,'removing opposite stack permits the source route again');
+ }
+});

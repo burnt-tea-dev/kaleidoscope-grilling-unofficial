@@ -1,5 +1,7 @@
 # 變更摘要
 
+- Unreleased isolated T4.2 candidate: reconstruct fixed-skewer Java FP source motion, consolidate 58 routes and use tick-only bite checkpoints; Blockbench/native review pending, no publication.
+
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
 ## 重建 P2（不變更 runtime 版本）
