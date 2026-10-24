@@ -82,6 +82,7 @@ export function createFixture(options = {}) {
   const id = String(nextFixture++);
   let nextEntity = 1, nextJob = 1;
   const jobs = new Map(), dimensions = new Map(), entities = new Map();
+  const pendingEntityProperties = new Map();
   const f = {
     id, logs: [], drops: [], sounds: [], particles: [], messages: [], effects: [],
     scriptEvents: [], commandCalls: [], writes: [], subscribers: new Map(),
@@ -281,7 +282,14 @@ export function createFixture(options = {}) {
         fault(e, 'getComponent', 'after', [name]);return component;
       },
       getTags() {return [...e.tags];}, hasTag(tag) {return e.tags.has(tag);}, addTag(tag) {e.tags.add(tag);return true;}, removeTag(tag) {return e.tags.delete(tag);},
-      setProperty(key, value) {return operation(e, 'setProperty', [key, value], () => {e.properties[key] = copy(value);});},
+      setProperty(key, value) {return operation(e, 'setProperty', [key, value], () => {
+        if (!options.deferEntityProperties) {e.properties[key] = copy(value);return;}
+        // Opt-in Entity.setProperty boundary: writes become readable at the
+        // next tick before jobs run. This is not client packet simulation.
+        let pending = pendingEntityProperties.get(e);
+        if (!pending) pendingEntityProperties.set(e, pending = new Map());
+        pending.set(key, copy(value));
+      });},
       getProperty(key) {return copy(e.properties[key]);},
       remove() {return operation(e, 'remove', [], () => {e.isValid = false;});},
       kill() {return e.remove();},
@@ -457,6 +465,8 @@ export function createFixture(options = {}) {
     let ran = 0;
     for (let step = 0; step < count; step++) {
       system.currentTick++;
+      for (const [entity, values] of pendingEntityProperties) for (const [key, value] of values) entity.properties[key] = value;
+      pendingEntityProperties.clear();
       const due = [...jobs].filter(([, job]) => job.tick <= system.currentTick).sort(([a], [b]) => a - b);
       for (const [id, job] of due) {
         if (!jobs.has(id)) continue;
@@ -469,7 +479,7 @@ export function createFixture(options = {}) {
   f.flush = (ticks = 1) => f.tick(ticks);
   f.pendingJobs = () => [...jobs].map(([id, job]) => ({id, tick: job.tick, interval: job.interval}));
   f.snapshotProperties = () => Object.fromEntries([...world.dynamicProperties].map(([key, value]) => [key, copy(value)]));
-  f.dispose = () => {jobs.clear();registry.delete(id);};
+  f.dispose = () => {jobs.clear();pendingEntityProperties.clear();registry.delete(id);};
   registry.set(id, f);
   return f;
 }

@@ -26,8 +26,8 @@ export const routes = Object.entries({...java.profile_by_item, [N+'secret_skewer
   return {...route,duration:nativeDuration};
 });
 
-export async function createEatingLab() {
-  const f = createFixture({currentTick:1000});
+export async function createEatingLab({deferEntityProperties=false}={}) {
+  const f = createFixture({currentTick:1000,deferEntityProperties});
   await f.load('main.js');
   const data = await f.load('itemData.js');
   const config = await f.load('server_config_runtime.js');

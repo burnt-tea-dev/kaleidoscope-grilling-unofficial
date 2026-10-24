@@ -278,3 +278,38 @@ scripting rows may narrow event order but do not timestamp a client frame exactl
 This diagnostic deliberately changes model color and removes the unused client
 log calls, so its recording is not a normal-texture performance/parity pair.
 Inherited ONE `none`, low framing and terminal flash remain unresolved experiments.
+
+
+## Full-completion property boundary candidate (2.8.168)
+
+The 167 isolated native run still showed a full **cyan** model on two terminal
+frames, then an empty-hand frame. Cyan only establishes the published clock predicate
+was false; it does not measure exact client elapsed or packet timing. The bounded
+server trace separately records native completion at start+89 for duration90,
+with published elapsed88. The terminal write90 becomes readable next tick; the
+subsequent clear becomes readable one tick later. This matches the documented
+[Entity getProperty/setProperty next-tick semantics](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable).
+
+This candidate changes only the fixed58 terminal clock comparison from `D-1` to
+`D-2`: native completion includes its start tick (`start+D-1`), and the existing
+scheduler's most recent readable property is from the preceding tick (`D-2`).
+It does not change source curves, arm/helper gating, bite clocks, use duration,
+settlement/debit, handoff lifetime, properties, timers, transactions or the six
+composited routes. The ONE color observer follows the same changed comparison;
+all other diagnostic colors and bounded server trace remain. The inherited
+public ONE `use_animation: none` is still an experiment, not a general particle
+or third-person fix.
+
+Tests exercise the actual event graph with an optional next-tick property
+boundary and actual attachable/RC expressions. The prior `D-1` candidate fails
+the reproduced readable-elapsed window; this is not an emulated native renderer
+or a claim about arbitrary network delay. There is no new extra-tick hold and
+no broadening to the 25-tick release settlement threshold. Release eligibility
+alone does not prove inventory/metadata/transaction settlement succeeded.
+
+A same-ID slot/metadata replacement or failed near-terminal settlement can still
+be hidden transiently until authoritative property resets become visible. The
+new window begins exactly one readable tick earlier; it cannot guarantee zero
+wrong-hide frames or arbitrary delayed packets. Early cancellations and earlier
+eligible releases retain their prior predicates. This is an isolated candidate
+requiring a new native meal observation, not a flash fix or Java parity result.
