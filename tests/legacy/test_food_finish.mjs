@@ -1408,3 +1408,16 @@ test('ONE owned handoff retires a same-ID early-cancelled second serving before 
  assert.equal(state.kg_local_terminal,0);assert.equal(a.p.main.amount,1);
  assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);a.retire();
 });
+
+
+test('ONE native EAT control restores the item component while retaining the ONE use contract',()=>{
+ const path=new URL('../../projects/grilling/gameplay_core/behavior_pack/items/grilled_caterpillar_skewer.json',import.meta.url);
+ const item=JSON.parse(readPresentationJson(path,'utf8'))['minecraft:item'],c=item.components;
+ assert.equal(item.description.identifier,trace164Id);
+ assert.deepEqual(c['minecraft:use_animation'],{value:'eat'});
+ assert.equal(c['minecraft:use_modifiers'].use_duration*20,eatingProfile('ONE').duration);
+ assert.equal(c['minecraft:use_modifiers'].start_using,'always');
+ assert.equal(c['minecraft:food'].can_always_eat,true);assert.equal(c['minecraft:allow_off_hand'],true);
+ // This validates configuration only. Native EAT poses/particles and the held
+ // model must be distinguished in actual footage; this is not a renderer test.
+});

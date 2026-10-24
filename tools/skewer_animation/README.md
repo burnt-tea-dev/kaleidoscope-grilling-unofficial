@@ -89,7 +89,7 @@ between native use ending and the consumed inventory view disappearing. The
 removed the large icon-textured planes in that recording, while custom crumbs
 remained. The actor changed from Kai to Sunny; this is not an arm/skin pixel pair
 or evidence for expanding `none` to every food. Low framing and terminal flash
-remained. All other item use-animation values stay unchanged. The next candidate inherits
+remained. All other item use-animation values stay unchanged. Candidates163–172 inherited
 this **ONE-only diagnostic `none`**, not a production particle fix. Java itself
 uses EAT; occupied-hand fallback and third-person native pose regressions from
 `none` remain unaccepted, so it must not be generalized or silently promoted.
@@ -491,3 +491,33 @@ from an immediate new-session StopUse on that exact completion tick. The new
 actual-main early-cancel control starts the second serving on the next tick and
 cancels before its reset publishes; it does not claim that older input-order
 ambiguity is fixed. Repeat-eating policy remains a separate investigation.
+
+
+## ONE native EAT single-factor control (2.8.173)
+
+172's isolated public ONE meal and subsequent bounded A/B/C/D controls showed no
+specified complete terminal model rebound at the reviewed completion boundaries.
+The early release retained its item/idle view, and the second continuous serving
+was visible. These limited observations do not establish all-family, TP/offhand,
+normal-material, Java-pose or repeat-eating-policy acceptance.
+
+This control changes only public `grilled_caterpillar_skewer`'s item component
+`minecraft:use_animation.value` from diagnostic `none` back to `eat`. The pinned
+Java `MultiBiteSkewerItem.getUseAnimation` returns `UseAnim.EAT`, and the original161
+Bedrock item used `eat`. All172 RP content (including diagnostic colors, cache,
+local hold and poses), BP scripts/debit, duration/nutrition and other item values
+remain identical apart from required version manifests.
+
+The native item component is not main-FP-scoped: it applies to this ONE item
+across relevant first-/third-person and offhand contexts. Only a main-hand meal
+is tested here; matching the Java EAT name is not proof of Bedrock pose parity.
+
+The purpose is to test whether the narrow172 terminal protection depends on the
+experimental native-pose suppression. Native icon-textured food particles may
+return; that is expected for this control and must not be confused with the
+solid diagnostic-color held model. The helper remains original food-textured,
+so any ambiguous fragment must remain unclassified rather than assigned a cause.
+No color removal, particle workaround, TP adjustment, FP offset or repeat-eating
+prototype is included. The new test checks the actual item configuration only,
+not native visuals. One reviewed native meal is required before any later plan
+to remove diagnostics or expand families; no universal fix is claimed here.
