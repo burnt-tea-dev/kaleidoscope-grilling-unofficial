@@ -57,6 +57,11 @@
             "Texture.stage4"
           ],
           "Array.kg_marker_tex": [
+            "Texture.stage0",
+            "Texture.stage1",
+            "Texture.stage2",
+            "Texture.stage3",
+            "Texture.stage4",
             "Texture.diag_cyan",
             "Texture.diag_magenta"
           ]
@@ -74,7 +79,7 @@
         }
       ],
       "textures": [
-        "c.is_first_person == 1 && c.item_slot == 'main_hand' ? Array.kg_marker_tex[(v.kg_diag_marker ?? 0) ? 1 : 0] : Array.kg_bite_tex[v.kg_bite_stage]"
+        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? ((v.kg_diag_marker ?? 0) ? 6 : 5) : v.kg_bite_stage]"
       ]
     }
   }

@@ -873,14 +873,18 @@ test('ONE render marker latches only when the unchanged sentinel condition is el
   const state=input.state??{};
   const result=presentation(trace164Id,{using:false,profile:0,ownerHand:0,projection:false,duration:0,...input,state});
   assert.deepEqual(result.logs,[]);assert.equal(Boolean(state.kg_diag_marker),false);
-  assert.equal(markerTexture({state}),'textures/blocks/concrete_cyan');
+  assert.equal(markerTexture({state}),state.kg_diag_main?'textures/blocks/concrete_cyan':markerAttachable(trace164Id).textures.stage0);
  }
 });
 test('ONE render marker leaves third-person and offhand textures and all other attachable routes intact',()=>{
- const doc=markerAttachable(trace164Id),state={kg_diag_marker:1,kg_bite_stage:0};
+ const doc=markerAttachable(trace164Id);
  for(const first of [false,true])for(const slot of ['main','off']){
   if(first&&slot==='main')continue;
-  assert.equal(markerTexture({state,first,slot}),doc.textures.stage0);
+  for(const [tick,stage] of [[0,0],[24,1],[62,2]]){
+   const state={kg_diag_marker:1};
+   presentation(trace164Id,{state,first,hand:slot,using:true,profile:1,duration:90,tick});
+   assert.equal(markerTexture({state}),doc.textures['stage'+stage]);
+  }
  }
  for(const [id] of fixedPresentation){
   if(id===trace164Id)continue;

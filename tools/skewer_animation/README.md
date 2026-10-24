@@ -202,3 +202,34 @@ Do not consume in this candidate even if the sentinel appears. Do not retest
 other colors, slots or versions without a separately authorized discriminator.
 The inherited ONE `none`, 163 failed flash handoff and 164 bounded trace remain
 experiments, not production fixes. `client=false`, `production_ready=false`.
+
+### Native165 context failure and the isolated166 RC correction
+
+The one held165 screenshot had no visible model/color. Its same content file,
+after normal close, recorded4,441 repetitions of each: unknown
+`context.is_first_person`, incompatible Molang argument type, and the dedicated
+marker RC missing its default texture. Zero use/consumption and zero164001.
+This is a failed marker control, not a predicate or animation acceptance.
+The new165 read of attachable context inside the RC is unsupported in that
+observed render context; the unchanged pre-animation has not thereby been proven
+executed or invalid. The texture/type errors may be a downstream failure to
+produce a texture, rather than a misspelled PNG path; native revalidation is
+required to separate these. Do not globally replace context queries on that basis.
+
+166 changes only that diagnostic RC (plus required version metadata): it uses
+one texture array and a **numeric index**, as in the official
+[render-controller array examples](https://learn.microsoft.com/en-us/minecraft/creator/documents/animations/animationrendercontroller?view=minecraft-bedrock-stable).
+There is no `c.*` read in this RC. The existing pre-animation `kg_diag_main`
+bridges its main-FP decision: false selects the original bite texture, true
+selects cyan/magenta from the existing latch. If that bridge variable is absent,
+`?? 1` intentionally selects the diagnostic branch and the absent latch selects
+cyan. Thus **cyan never proves pre-animation execution**. All53 pre-animation
+statements, including the unchanged sentinel and165 latch, are byte-identical.
+
+The test-only RC evaluator now deliberately omits attachable context `c`.
+The actual165 expression fails that restricted execution with `c is not defined`;
+the actual166 numeric-index expression passes empty-variable cyan, exact-predicate
+magenta and pre-derived third-person/offhand controls. This is a regression for
+the observed context boundary, not a substitute Molang VM or texture renderer.
+The authorized next native test is one idle held screenshot, no recording needed,
+then normal close/same-file flush/settings restoration; never use the food.
