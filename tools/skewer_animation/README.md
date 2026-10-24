@@ -362,3 +362,48 @@ does not guarantee attachable continuity across replacement or count changes.
 One native meal determines whether a local snapshot supplies useful evidence.
 If not, retain a bounded presentation limitation rather than guessing `D-3` or
 claiming that cancellation and completion are distinguishable from this cache.
+
+
+## ONE-main local stop presentation candidate (2.8.170)
+
+169's isolated native flash was BLUE: a valid cached native remaining sample in
+`(0,1]`, with native maximum equal to positive owner duration. The next recorded
+frame was empty-hand. This establishes one usable local snapshot, not a universal
+completion/cancel detector or packet-delay measurement.
+
+Only the public ONE attachable appends two local presentation variables after
+its unchanged26 pre-animation statements. The first observes a same-owned main-FP
+`using=true` to `using=false` edge and arms only with retained valid remaining in
+`(0,1]` and matching native maximum/owner duration. It can remain armed on later
+stopped frames only while that same context/cache remains valid. The second saves
+the current owned-use flag for the next evaluation. Every observed using frame
+clears the hold (and the existing observer overwrites/invalidates its sample).
+Observed identity/owner/profile/hand/duration/context loss or invalid cache clears
+it, even if that permits a later packet-order flash. Missing cache or a fresh
+instance without an observed using edge cannot arm it.
+
+The dedicated public ONE main-model RC adds `!kg_local_terminal` to its existing
+visibility predicate. The original server `kg_terminal_wait`, clocks, textures,
+geometry, poses, arms/helper, use policy and every BP gameplay/transaction byte
+remain unchanged. Other57 fixed routes, six composites and offhand receive no
+local mask. This is not a generic cleanup or expansion of the inherited ONE
+`none` experiment. BLUE still reports the unchanged observer classifier; with a
+valid observed edge this model should now be hidden by the added local mask.
+
+The hold has **no independent timeout**. Its bound is observed ownership reset
+or new use, not a promised number of frames. Indefinitely stale owner fields can
+retain it; no arbitrary packet-delay or zero-residual guarantee is claimed.
+Same-ID metadata/slot replacement and a whole use between rendered samples are
+not distinguishable from these inputs. A failed near-terminal settlement or
+same-ID replacement can therefore be hidden until the existing authoritative
+clear becomes observable. Tests explicitly preserve this limitation, inventory
+and nutrition; they do not silently treat release eligibility as settlement.
+
+Regression tests run actual emitted JSON with persistent render-state inputs
+and the unchanged server event graph. The same targeted visibility assertions
+fail against immutable169 JSON. Coverage includes early/eligible releases,
+invalid/no sample, no observed false frame between uses, fresh-instance stop,
+new-use reset, owner/context changes, failed settlement, same-ID replacements,
+and continuous servings. There is no extension of the arm/helper animation or
+new debit. The next native trial must determine whether this ONE full-completion
+flash disappears; source tests alone cannot accept it or the broader Java poses.
