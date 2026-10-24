@@ -7,7 +7,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 const RP=new URL('../../projects/grilling/gameplay_core/resource_pack/',import.meta.url);
 const cache=new Map();
 const renderControllers=Object.assign({},...readdirSync(new URL('render_controllers/',RP)).filter(name=>name.endsWith('.json')).map(name=>JSON.parse(readFileSync(new URL('render_controllers/'+name,RP),'utf8')).render_controllers));
-export function presentation(id,{profile=5,hand='main',slot=hand,tick=0,alpha=0,duration=90,using=true,same=true,first=true,projection=true,slimeFrame=0,oppositeOccupied=false,state={},delta=1/60,ownerUsing=using,ownerHand=hand==='main'?1:2,sneaking=false,swimming=false,gliding=false,riding=false}={}) {
+export function presentation(id,{profile=5,hand='main',slot=hand,tick=0,alpha=0,duration=90,nativeRemaining=duration-tick-1,nativeMaximum=duration,using=true,same=true,first=true,projection=true,slimeFrame=0,oppositeOccupied=false,state={},delta=1/60,ownerUsing=using,ownerHand=hand==='main'?1:2,sneaking=false,swimming=false,gliding=false,riding=false}={}) {
  let spec=cache.get(id);
  if(!spec){
   const doc=JSON.parse(readFileSync(new URL(`attachables/${id.split(':')[1]}.attachable.json`,RP),'utf8'))['minecraft:attachable'].description;
@@ -21,7 +21,7 @@ export function presentation(id,{profile=5,hand='main',slot=hand,tick=0,alpha=0,
  const logs=[];
  const owner={is_using_item:ownerUsing?1:0,is_item_name_any:matches,has_property:name=>Object.hasOwn(properties,name.split(':')[1]),property:name=>properties[name.split(':')[1]]};
  const context=createContext({v:state,owner,c:{is_first_person:first?1:0,item_slot:slot+'_hand'},
-  math:{floor:Math.floor,clamp:(n,a,b)=>Math.max(a,Math.min(n,b))},q:{delta_time:delta,log:value=>{logs.push(Number(value));return 0;},is_item_equipped:which=>which===hand+'_hand'||oppositeOccupied,is_using_item:using?1:0,main_hand_item_use_duration:duration-tick-1,frame_alpha:alpha,
+  math:{floor:Math.floor,clamp:(n,a,b)=>Math.max(a,Math.min(n,b))},q:{delta_time:delta,log:value=>{logs.push(Number(value));return 0;},is_item_equipped:which=>which===hand+'_hand'||oppositeOccupied,is_using_item:using?1:0,main_hand_item_use_duration:nativeRemaining,main_hand_item_max_duration:nativeMaximum,frame_alpha:alpha,
    is_sneaking:sneaking?1:0,is_swimming:swimming?1:0,is_gliding:gliding?1:0,is_riding:riding?1:0,
    is_item_name_any:(query,...ids)=>same&&query==='slot.weapon.'+(slot==='main'?'mainhand':'offhand')&&ids.includes(id)}});
  spec.pre.runInContext(context,{timeout:100});

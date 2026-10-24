@@ -313,3 +313,52 @@ new window begins exactly one readable tick earlier; it cannot guarantee zero
 wrong-hide frames or arbitrary delayed packets. Early cancellations and earlier
 eligible releases retain their prior predicates. This is an isolated candidate
 requiring a new native meal observation, not a flash fix or Java parity result.
+
+
+## ONE last native countdown observer (2.8.169)
+
+168 still displayed one full cyan terminal frame. Its five green CI checks and
+source-derived `D-2` boundary did not remove the native flash; do not infer a
+stable improvement from one frame versus167's two. This observer leaves every
+168 mask, clock, pose and gameplay byte unchanged except version manifests.
+Only public ONE appends eight observer-only diagnostic assignments and a texture
+branch to the existing dedicated render controller. All eighteen prior
+pre-animation assignments remain exact; no latch changes visibility.
+
+The installed Vanilla player's pre-animation and the [official attachable
+example](https://learn.microsoft.com/en-us/minecraft/creator/documents/custom_projectiles?view=minecraft-bedrock-stable)
+use `max_duration - (use_duration - frame_alpha + 1)` while the main-hand native
+use duration is positive. This diagnostic samples those existing main-hand
+queries, not generic crossbow/brush queries. It does not assume a final native
+countdown is rendered or equate a cached sample with confirmed completion.
+
+On **each observed using frame**, a valid actual source-projection sample must
+have positive owner duration, equal native maximum, and remaining in `(0,max]`.
+The cache overwrites the last remaining/max; an invalid using frame clears it.
+It never retains a maximum/sticky terminal flag. On a stopped frame it does not
+sample the zero-reset native query. It retains only an existing snapshot while
+main-FP/item/owner/profile/projection and cached maximum still match. Context
+loss clears it. Observed restart/countdown increase overwrites the old sample;
+a whole session or same-ID metadata replacement between frames is not detectable.
+
+Only the **original cyan branch** gets a new texture interpretation; idle RED,
+active LIME, other nonflash colors, and nonmain original bite textures remain.
+
+| Flash color | Exact observation |
+|---|---|
+| Black | Current owner native duration is nonpositive (tested before cache validity). |
+| White | No usable cached sample, invalid observed using sample, context/max mismatch, or uninitialized/recreated observer. Not proof of any one cause. |
+| Blue | Valid last native remaining is greater than0 and at most1. |
+| Yellow | Valid last native remaining is greater than1 and at most2. |
+| Purple | Valid last native remaining is greater than2 and at most4. |
+| Brown | Valid last native remaining is greater than4. |
+
+The blue/yellow/purple/brown bins require the stored native maximum to equal
+the current positive owner duration. They measure query values, not confirmed render-time ticks or network
+latency. Missing/cropped/ambiguous frames cannot be assigned a bin; white is not
+zero. The variables are renderer-instance observations, not durable ItemStack
+identity. [Molang variable lifetime](https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable)
+does not guarantee attachable continuity across replacement or count changes.
+One native meal determines whether a local snapshot supplies useful evidence.
+If not, retain a bounded presentation limitation rather than guessing `D-3` or
+claiming that cancellation and completion are distinguishable from this cache.

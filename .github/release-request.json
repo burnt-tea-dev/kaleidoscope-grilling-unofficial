@@ -2,8 +2,8 @@
   "schema": 1,
   "repository": "casama233/kaleidoscope-grilling-unofficial",
   "repository_id": 1377218440,
-  "version": "A2.8.168",
-  "tag": "A2.8.168",
+  "version": "A2.8.169",
+  "tag": "A2.8.169",
   "publication_request": false,
   "prerelease": false,
   "make_latest": "false",
@@ -12,6 +12,6 @@
   "production_ready": false,
   "live": false,
   "live_deployment": false,
-  "status": "full_completion_deferred_property_clock_candidate_native_unverified",
+  "status": "ONE_last_native_remaining_observer_only_not_a_fix",
   "public_notes_path": "CHANGELOG.md"
 }
