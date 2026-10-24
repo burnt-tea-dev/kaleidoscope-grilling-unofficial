@@ -1189,7 +1189,7 @@ test('ONE local terminal edge requires an observed valid owned use and never tre
   assert.equal(stop.visibility[markerController]['*'],true,JSON.stringify(bad));assert.equal(stop.variables.kg_local_terminal,0);
  }
 });
-test('ONE local terminal edge does not mask early or ordinary eligible release and resets on every observed new use',()=>{
+test('ONE local terminal edge does not mask early release and unlocks an observed owner-clock reset',()=>{
  for(const remaining of [89,70,65,64,2,1.01]){
   const state={};localClockFrame(state,{using:true,nativeRemaining:remaining,tick:10});
   const stop=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:10});
@@ -1198,7 +1198,7 @@ test('ONE local terminal edge does not mask early or ordinary eligible release a
  for(const remaining of [89,0]){
   const state={};localClockFrame(state,{using:true,nativeRemaining:1});
   localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
-  const next=localClockFrame(state,{using:true,nativeRemaining:remaining});
+  const next=localClockFrame(state,{using:true,nativeRemaining:remaining,tick:0});
   assert.equal(next.variables.kg_local_terminal,0);assert.equal(next.visibility[markerController]['*'],true);
   const cancel=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0});
   assert.equal(cancel.visibility[markerController]['*'],true,'new observed use cannot inherit previous terminal hold');
@@ -1249,15 +1249,17 @@ test('ONE local terminal edge releases after failed near-terminal settlement or 
   a.retire();
  }
 });
-test('ONE local terminal edge cannot hide a fresh continuous serving or let old cleanup debit it twice',async t=>{
+test('ONE local terminal edge releases a fresh continuous serving after replicated reset without double debit',async t=>{
  const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
  const a=lab.actor(handoffRoute(),'main',2),state={};a.begin();a.advance(89);
  localClockFrame(state,{using:true,nativeRemaining:1,tick:87});
  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87}).visibility[markerController]['*'],false);
  a.nativeDebit();a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.begin();
- assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],true);
+ assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],false,'a fresh serving may be hidden until its delayed owner reset is observed');
+ a.advance(1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,0);
+ assert.equal(localClockFrame(state,{using:true,nativeRemaining:88,tick:handoffProperties(a.p).eat_elapsed_ticks}).visibility[markerController]['*'],true);
  assert.equal(state.kg_local_terminal,0);
- a.advance(2);assert.equal(a.p.main.amount,1);assert.equal(handoffProperties(a.p).eat_profile,1);
+ a.advance(1);assert.equal(a.p.main.amount,1);assert.equal(handoffProperties(a.p).eat_profile,1);
  assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
  a.advance(87);a.nativeDebit();a.event('itemCompleteUse',0);a.advance(2);
  assert.equal(a.p.main,undefined);assert.deepEqual(handoffProperties(a.p),clearedHandoff);a.retire();
@@ -1301,7 +1303,7 @@ test('ONE live clock observer recomputes current values without changing stop ca
  assert.equal(stop.variables.kg_diag_live_bucket,2,'current zero max is invalid, but stopped texture uses the prior cache');
  assert.equal(stop.texture,'textures/blocks/concrete_blue');assert.equal(stop.variables.kg_diag_clock_last,1);
  assert.equal(stop.variables.kg_local_terminal,1);assert.equal(stop.visibility[markerController]['*'],false);
- const next=localClockFrame(state,{using:true,nativeRemaining:89,nativeMaximum:90,tick:80});
+ const next=localClockFrame(state,{using:true,nativeRemaining:89,nativeMaximum:90,tick:0});
  assert.equal(next.texture,'textures/blocks/concrete_green');assert.equal(next.variables.kg_diag_clock_last,89);
  assert.equal(next.variables.kg_local_terminal,0);assert.equal(next.visibility[markerController]['*'],true);
 });
@@ -1311,4 +1313,98 @@ test('ONE live clock observer cannot change non-source or nonmain texture branch
   for(let old=0;old<6;old++)assert.equal(flashTexture({kg_diag_main:1,kg_diag_state:3,kg_diag_clock_bucket:old,kg_diag_live_bucket:bucket}),'textures/blocks/concrete_'+clockColors[old]);
   for(let stage=0;stage<5;stage++)assert.equal(flashTexture({kg_diag_main:0,kg_diag_state:0,kg_diag_live_bucket:bucket,kg_bite_stage:stage}),markerAttachable(trace164Id).textures['stage'+stage]);
  }
+});
+
+
+test('ONE owned handoff retains an already armed hold across native-use rebound without an owner-clock reset',()=>{
+ for(const elapsed of [87,88,90]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});
+  localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  const rebound=localClockFrame(state,{using:true,nativeRemaining:89,nativeMaximum:90,tick:elapsed});
+  // Actual171 is visible GREEN here: this is an observable RC counterfactual.
+  assert.equal(rebound.visibility[markerController]['*'],false,'native query rebound alone is not owner-session reset evidence');
+  assert.equal(rebound.texture,'textures/blocks/concrete_green');assert.equal(rebound.variables.kg_bite_stage,0);
+  assert.equal(rebound.variables.kg_eat_seconds,0);assert.equal(rebound.variables.kg_diag_clock_last,89);
+  assert.equal(rebound.variables.kg_local_terminal,1);assert.equal(rebound.variables.kg_local_owner_elapsed,87);
+  assert.equal(rebound.variables.kg_local_owner_duration,90);
+  const stoppedAgain=localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:elapsed});
+  assert.equal(stoppedAgain.variables.kg_local_terminal,1,'an existing eligible hold also survives a second stopped frame after rebound');
+  assert.equal(stoppedAgain.visibility[markerController]['*'],false);
+ }
+});
+test('ONE owned handoff waits through delayed reset then releases on observed elapsed regression',()=>{
+ for(const reset of [0,1,86]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});
+  localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  for(const tick of [87,88,90])assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick}).visibility[markerController]['*'],false);
+  const restarted=localClockFrame(state,{using:true,nativeRemaining:88,tick:reset});
+  assert.equal(restarted.variables.kg_local_terminal,0);assert.equal(restarted.visibility[markerController]['*'],true);
+  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:reset+1}).visibility[markerController]['*'],true,'early cancel of the fresh sample does not inherit terminal status');
+ }
+});
+test('ONE owned handoff cannot infer a terminal session without a sampled stop edge or valid last sample',()=>{
+ for(const prior of [undefined,0,2,89]){
+  const state={};if(prior!==undefined)localClockFrame(state,{using:true,nativeRemaining:prior,tick:87});
+  if(prior!==undefined)localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  const next=localClockFrame(state,{using:true,nativeRemaining:89,tick:87});
+  assert.equal(next.variables.kg_local_terminal,0);assert.equal(next.visibility[markerController]['*'],true);
+ }
+ const noEdge={};localClockFrame(noEdge,{using:true,nativeRemaining:1,tick:87});
+ assert.equal(localClockFrame(noEdge,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],true,'remaining rebound never creates a new hold');
+});
+test('ONE owned handoff binds duration and context independently of the overwritten native cache',()=>{
+ for(const change of [{duration:100,nativeMaximum:100},{duration:0,nativeMaximum:0},{same:false},{profile:2},{ownerHand:2},{projection:false},{first:false},{hand:'off',ownerHand:2}]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  const changed=localClockFrame(state,{using:true,nativeRemaining:89,tick:87,...change});
+  assert.equal(changed.variables.kg_local_terminal,0,JSON.stringify(change));assert.equal(changed.visibility[markerController]['*'],true);
+ }
+});
+test('ONE owned handoff falls back to prior behavior for zero invalid or missing anchors and invalid rebound samples',()=>{
+ for(const anchor of [0,-1,91]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:anchor});
+  localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:anchor});
+  const rebound=localClockFrame(state,{using:true,nativeRemaining:89,tick:anchor});
+  assert.equal(rebound.variables.kg_local_terminal,0);assert.equal(rebound.visibility[markerController]['*'],true,'an unusable anchor cannot extend masking into resumed native use');
+ }
+ for(const missing of ['kg_local_owner_elapsed','kg_local_owner_duration']){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  delete state[missing];assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],true);
+ }
+ for(const input of [{nativeRemaining:0},{nativeMaximum:0},{nativeMaximum:89},{nativeRemaining:91}]){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87,...input}).visibility[markerController]['*'],true,'invalid current use retains the old fail-visible branch');
+ }
+});
+test('ONE owned handoff distinguishes source-route fallback from actual owner-context loss',()=>{
+ for(const gate of ['oppositeOccupied','sneaking','swimming','gliding','riding']){
+  const state={};localClockFrame(state,{using:true,nativeRemaining:1,tick:87});localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87});
+  const fallback=localClockFrame(state,{using:true,nativeRemaining:89,tick:87,[gate]:true});
+  assert.equal(Boolean(fallback.variables.kg_source_projection),false);
+  assert.equal(fallback.texture,'textures/blocks/concrete_orange');
+  assert.equal(fallback.variables.kg_local_terminal,0);assert.equal(fallback.visibility[markerController]['*'],true,'using source fallback must not inherit the new retention extension');
+  assert.equal(localClockFrame(state,{using:true,nativeRemaining:89,tick:87}).visibility[markerController]['*'],true);
+  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0,tick:87}).variables.kg_local_terminal,0,'return from fallback without a valid terminal edge cannot rearm');
+  assert.equal(localClockFrame(state,{using:false,projection:false,tick:87}).visibility[markerController]['*'],true);
+ }
+});
+test('ONE owned handoff retires a same-ID early-cancelled second serving before reset publication without another debit',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute(),'main',2),state={};a.begin();a.advance(89);
+ const draw=(using,remaining)=>{const o=handoffProperties(a.p);return localClockFrame(state,{using,profile:o.eat_profile,ownerHand:o.eat_hand,projection:o.eat_projection,duration:o.eat_native_ticks,tick:o.eat_elapsed_ticks,nativeRemaining:remaining,nativeMaximum:90});};
+ draw(true,1);assert.equal(draw(false,0).visibility[markerController]['*'],false);
+ a.nativeDebit();a.event('itemCompleteUse',0);a.event('itemStopUse',0);
+ // Separate the previous completion tick from this new release: the unchanged
+ // BP intentionally ignores same-tick StopUse after SETTLED, which cannot
+ // identify an old stop versus a new-session stop without a native session ID.
+ a.advance(1);a.begin();
+ assert.equal(a.p.main.amount,1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,90);
+ const before=lab.inventory(a.p),hunger=a.p.components['minecraft:player.hunger'].currentValue;
+ assert.equal(draw(true,89).visibility[markerController]['*'],false,'second start reset has not published yet');
+ a.event('itemStopUse',89);
+ assert.equal(handoffProperties(a.p).eat_profile,1,'property retirement is deferred, not a synchronous client guarantee');
+ a.advance(2);
+ assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+ assert.equal(draw(false,0).visibility[markerController]['*'],true);
+ assert.equal(state.kg_local_terminal,0);assert.equal(a.p.main.amount,1);
+ assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);a.retire();
 });
