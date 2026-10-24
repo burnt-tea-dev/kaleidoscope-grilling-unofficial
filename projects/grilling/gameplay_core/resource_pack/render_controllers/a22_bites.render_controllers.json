@@ -62,8 +62,12 @@
             "Texture.stage2",
             "Texture.stage3",
             "Texture.stage4",
+            "Texture.diag_lime",
+            "Texture.diag_orange",
+            "Texture.diag_red",
             "Texture.diag_cyan",
-            "Texture.diag_magenta"
+            "Texture.diag_magenta",
+            "Texture.diag_white"
           ]
         }
       },
@@ -79,7 +83,7 @@
         }
       ],
       "textures": [
-        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? ((v.kg_diag_marker ?? 0) ? 6 : 5) : v.kg_bite_stage]"
+        "Array.kg_marker_tex[(v.kg_diag_main ?? 1) ? 5 + (v.kg_diag_state ?? 5) : v.kg_bite_stage]"
       ]
     }
   }

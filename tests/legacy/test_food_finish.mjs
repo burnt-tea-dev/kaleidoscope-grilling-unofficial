@@ -691,20 +691,10 @@ test('terminal handoff documents the supplied-query same-ID replacement gap befo
  }
 });
 
-// 164 diagnostic only. These evaluate the appended numeric q.log expressions
-// and unchanged runtime through test API boundaries, not a native Molang VM,
-// renderer, packet stream, or a successful client-log capture.
+// Bounded server diagnostics retained from164. Client color controls below
+// evaluate actual JSON under supplied queries, not a Molang VM, renderer,
+// native packet stream, or successful content-log capture.
 const trace164Id='kaleidoscope_grilling:grilled_caterpillar_skewer';
-const trace164ClientFields=['row','evaluation','seconds','using','ownerUsing','profile','hand','projection','nativeTicks','elapsedTicks','remaining','alpha','activeSlot','sameItem','usingOwned','terminalWait','sourceProjection','biteStage','helperVisible'];
-function trace164ClientRows(logs){
- const values=logs.filter(value=>value!==164001),rows=[];
- for(let offset=0;offset<values.length;offset+=21){
-  assert.equal(values[offset],164010);assert.equal(values[offset+20],164011);
-  const fields=values.slice(offset+1,offset+20);assert.equal(fields.length,19);assert.ok(fields.every(Number.isFinite));
-  rows.push(Object.fromEntries(trace164ClientFields.map((name,index)=>[name,fields[index]])));
- }
- return rows;
-}
 function trace164ServerRows(f){
  return f.logs.filter(row=>row.text.startsWith('[KG164] ')).map(row=>{
   const fields=JSON.parse(row.text.slice('[KG164] '.length));
@@ -712,56 +702,7 @@ function trace164ServerRows(f){
  });
 }
 
-test('164 client trace emits one idle sentinel, one start row, then the terminal window and final inactive row',()=>{
- const state={},logs=[];
- const frame=options=>{const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,state,delta:.25,...options});logs.push(...result.logs);return result;};
- for(let i=0;i<4;i++)frame({using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0});
- assert.deepEqual(logs,[164001]);assert.equal(state.kg_diag_rows,0);
- frame({using:true,tick:0});
- assert.equal(trace164ClientRows(logs).length,1);
- for(let i=1;i<13;i++)frame({using:true,tick:i*5});
- assert.equal(trace164ClientRows(logs).length,1,'middle motion is not logged before age3.5');
- frame({using:true,tick:65});
- let rows=trace164ClientRows(logs);assert.equal(rows.length,2);assert.equal(rows[1].seconds,3.5);
- assert.equal(rows[0].using,1);assert.equal(rows[0].ownerUsing,1);assert.equal(rows[0].profile,1);assert.equal(rows[0].hand,1);
- frame({using:false,ownerUsing:true,tick:90});
- rows=trace164ClientRows(logs);assert.equal(rows.at(-1).using,0);assert.equal(rows.at(-1).ownerUsing,1);assert.equal(state.kg_diag_done,false);
- frame({using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0,tick:0});
- rows=trace164ClientRows(logs);const final=rows.at(-1);
- assert.deepEqual([final.using,final.ownerUsing,final.profile,final.hand,final.projection],[0,0,0,0,0]);
- assert.equal(state.kg_diag_done,true,'all-inactive row is emitted before ending this instance trace');
- const count=logs.length;
- for(let i=0;i<10;i++)frame({using:true,tick:i});
- assert.equal(logs.length,count,'the next use cannot rearm the same attachable instance');
- assert.equal(logs.filter(value=>value===164001).length,1);
-});
-
-test('164 client trace bounds rows independently of its timer and bounds time independently of native clocks',()=>{
- const capState={},capLogs=[];
- const collect=(state,logs,options)=>logs.push(...presentation(trace164Id,{profile:1,hand:'main',duration:90,state,...options}).logs);
- collect(capState,capLogs,{using:true,delta:0});
- for(let i=0;i<400;i++)collect(capState,capLogs,{using:false,ownerUsing:true,delta:0,tick:0});
- const capped=trace164ClientRows(capLogs);
- assert.equal(capped.length,300);assert.equal(capped.at(-1).row,300);assert.equal(capped.at(-1).seconds,0);assert.equal(capState.kg_diag_done,true);
- const timedState={},timedLogs=[];
- for(let i=0;i<12;i++)collect(timedState,timedLogs,{using:true,ownerUsing:true,delta:1,tick:0});
- const timed=trace164ClientRows(timedLogs);
- assert.equal(timed.at(-1).seconds,7);assert.ok(timed.length<300);assert.equal(timedState.kg_diag_done,true);
- assert.equal(timedState.kg_diag_age,7,'diagnostic age stops advancing after its independent timeout');
-});
-
-test('164 client trace does not spam offhand, third person, never-used items, or the unchanged raw counterpart',()=>{
- for(const options of [{hand:'off',using:true},{first:false,using:true},{using:false,profile:0,ownerHand:0,projection:false,duration:0}]){
-  const state={},logs=[];
-  for(let i=0;i<20;i++)logs.push(...presentation(trace164Id,{profile:1,duration:90,state,...options}).logs);
-  assert.deepEqual(logs,options.using===false?[164001]:[]);
-  assert.equal(state.kg_diag_rows,0);assert.equal(state.kg_diag_age,0);
- }
- const other=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{profile:1,tick:80});
- assert.deepEqual(other.logs,[]);
-});
-
-test('164 client trace leaves all non-diagnostic ONE state, clips and visibility equal to the unchanged163 counterpart',()=>{
+test('ONE flash colors leave functional state, clips and visibility equal to the unchanged raw counterpart',()=>{
  const tracedState={},controlState={};
  const core=result=>({variables:Object.fromEntries(Object.entries(result.variables).filter(([name])=>!name.startsWith('kg_diag_'))),clips:result.clips,visibility:Object.fromEntries(Object.entries(result.visibility).map(([name,value])=>[name==='controller.render.kg_diagnostic.one_marker'?'controller.render.kg_a22.bite':name,value]))});
  const cases=[{using:false,profile:0,ownerHand:0,projection:false,duration:0},{tick:0},{tick:23},{tick:24},{tick:61},{tick:62},{tick:89},{tick:90,using:false},
@@ -770,7 +711,7 @@ test('164 client trace leaves all non-diagnostic ONE state, clips and visibility
  for(const options of cases){
   const input={profile:1,hand:'main',duration:90,...options};
   const traced=presentation(trace164Id,{...input,state:tracedState}),control=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{...input,state:controlState});
-  assert.deepEqual(core(traced),core(control),JSON.stringify(options));assert.deepEqual(control.logs,[]);
+  assert.deepEqual(core(traced),core(control),JSON.stringify(options));assert.deepEqual(traced.logs,[]);assert.deepEqual(control.logs,[]);
  }
 });
 
@@ -820,18 +761,6 @@ test('164 server trace has independent row and140-tick limits and never rearms a
  }
 });
 
-test('164 client trace captures owner/local-use divergence and published ownership without inventing a native query result',()=>{
- for(const input of [{using:false,ownerUsing:true,profile:0,ownerHand:0,projection:false,duration:0},
-  {using:false,ownerUsing:false,profile:1,ownerHand:1,projection:true,duration:90}]){
-  const state={},sample=presentation(trace164Id,{hand:'main',state,delta:0,...input}),rows=trace164ClientRows(sample.logs);
-  assert.equal(rows.length,1);assert.equal(rows[0].using,0);assert.equal(rows[0].ownerUsing,input.ownerUsing?1:0);
-  assert.equal(rows[0].profile,input.profile);assert.equal(rows[0].projection,input.projection?1:0);
-  assert.equal(Boolean(state.kg_diag_armed),true,'a source-supported owner signal arms the diagnostic without local using');
- }
- const idle=presentation(trace164Id,{using:false,ownerUsing:false,profile:1,ownerHand:1,projection:false,duration:90,state:{}});
- assert.deepEqual(idle.logs,[164001],'an unprojected idle item is not a published ONE use');
-});
-
 test('164 server trace closes at a new native use boundary before logging unrelated subsequent state',async t=>{
  for(const next of ['same','offhand','different','leave']){
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
@@ -858,35 +787,104 @@ import {presentationTextures} from '../helpers/skewer-presentation.mjs';
 const markerController='controller.render.kg_diagnostic.one_marker';
 const markerAttachable=id=>JSON.parse(readPresentationJson(new URL('../../projects/grilling/gameplay_core/resource_pack/attachables/'+id.split(':')[1]+'.attachable.json',import.meta.url),'utf8'))['minecraft:attachable'].description;
 const markerTexture=(options={})=>presentationTextures(trace164Id,options)[markerController][0];
-test('ONE render marker distinguishes selected RC without pre-execution from the exact idle sentinel predicate',()=>{
- assert.equal(markerTexture(),'textures/blocks/concrete_cyan','unexecuted/default latch is the cyan control');
- const state={},idle={using:false,ownerUsing:false,profile:0,ownerHand:0,projection:false,duration:0,state};
- const first=presentation(trace164Id,idle);
- assert.deepEqual(first.logs,[164001]);assert.equal(Boolean(state.kg_diag_marker),true);
- assert.equal(markerTexture({state}),'textures/blocks/concrete_magenta');
- const again=presentation(trace164Id,idle);
- assert.deepEqual(again.logs,[]);assert.equal(markerTexture({state}),'textures/blocks/concrete_magenta','latch persists after the one sentinel');
- assert.equal(Boolean(state.kg_diag_armed),false);assert.equal(state.kg_diag_rows,0,'holding never arms a meal trace');
+const flashColors=['lime','orange','red','cyan','magenta','white'];
+const flashTexture=state=>markerTexture({state:Object.freeze({...state})});
+
+test('ONE flash colors partition actual mainhand use ownership and terminal-clock inputs without changing the mask',()=>{
+ const observed=new Set();let count=0;
+ for(const using of [false,true])for(const ownerHand of [0,1,2])for(const profile of [0,1,2])
+ for(const projection of [false,true])for(const same of [false,true])for(const duration of [0,1,90])
+ for(const tick of [0,.999,1,88,89,90])for(const oppositeOccupied of [false,true]){
+  const input={hand:'main',using,ownerHand,profile,projection,same,duration,tick,oppositeOccupied};
+  const result=presentation(trace164Id,input),v=result.variables;
+  const owner=ownerHand===1&&profile===1&&projection&&same;
+  const clock=duration>0&&tick>=duration-1;
+  // Independent partition from supplied engine-query/property inputs. These
+  // controls do not assert when a retail client receives those values.
+  const predicates=[using&&owner&&!oppositeOccupied,using&&!(owner&&!oppositeOccupied),
+   !using&&!owner,!using&&owner&&!clock,!using&&owner&&clock];
+  assert.equal(predicates.filter(Boolean).length,1,JSON.stringify(input));
+  const expected=predicates.findIndex(Boolean),masked=!using&&owner&&clock;
+  assert.equal(v.kg_diag_state,expected,JSON.stringify(input));
+  assert.equal(Boolean(v.kg_diag_using),using);
+  assert.equal(Boolean(v.kg_terminal_wait),masked);
+  assert.equal(v.kg_diag_state===4,masked,'magenta corresponds to the actual mask, not just a clock label');
+  assert.equal(result.visibility[markerController]['*'],!masked,'diagnostics never make masked food visible');
+  assert.equal(flashTexture(v),'textures/blocks/concrete_'+flashColors[expected]);
+  assert.deepEqual(result.logs,[],'client q.log telemetry is no longer executed');
+  observed.add(expected);count++;
+ }
+ assert.equal(count,2592);assert.deepEqual([...observed].sort(),[0,1,2,3,4]);
 });
-test('ONE render marker latches only when the unchanged sentinel condition is eligible',()=>{
- for(const input of [{first:false},{hand:'off'},{state:{kg_diag_seen:1}}]){
-  const state=input.state??{};
-  const result=presentation(trace164Id,{using:false,profile:0,ownerHand:0,projection:false,duration:0,...input,state});
-  assert.deepEqual(result.logs,[]);assert.equal(Boolean(state.kg_diag_marker),false);
-  assert.equal(markerTexture({state}),state.kg_diag_main?'textures/blocks/concrete_cyan':markerAttachable(trace164Id).textures.stage0);
+
+test('ONE flash colors distinguish source-route fallback and local use from unrelated owner-use queries',()=>{
+ for(const gate of ['oppositeOccupied','sneaking','swimming','gliding','riding']){
+  const result=presentation(trace164Id,{profile:1,hand:'main',using:true,ownerUsing:false,[gate]:true});
+  assert.equal(result.variables.kg_diag_state,1,gate+' blocks source route while native using remains true');
+  assert.equal(flashTexture(result.variables),'textures/blocks/concrete_orange');
+  assert.ok(!result.clips.some(name=>name.startsWith('animation.kg_java_eating.')));
+  assert.deepEqual(result.logs,[]);
+ }
+ for(const ownerUsing of [false,true])for(const [input,expected] of [
+  [{using:true,tick:0},0],
+  [{using:false,tick:88},3],
+  [{using:false,tick:89},4],
+  [{using:false,profile:0,ownerHand:0,projection:false,duration:0},2]]){
+  const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,...input,ownerUsing});
+  assert.equal(result.variables.kg_diag_state,expected);
+  assert.deepEqual(result.logs,[]);
  }
 });
-test('ONE render marker leaves third-person and offhand textures and all other attachable routes intact',()=>{
+
+test('ONE flash color RC uses white for uninitialized observers and reads frozen state without attachable context',()=>{
+ for(const state of [{},{kg_diag_main:1},{kg_diag_main:undefined,kg_diag_state:undefined},{kg_diag_main:1,kg_diag_state:5}]){
+  const snapshot={...state};assert.equal(flashTexture(state),'textures/blocks/concrete_white');
+  assert.deepEqual(state,snapshot,'RC evaluation does not initialize or mutate observer state');
+ }
+ // Explicit decoder controls include the otherwise-unreachable WHITE branch;
+ // only actual pre-animation results above are evidence for the five gates.
+ for(let phase=0;phase<6;phase++){
+  const state={kg_diag_main:1,kg_diag_state:phase};
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+flashColors[phase]);
+ }
+});
+
+test('ONE flash colors recompute across completion cancellation and restart instead of retaining a prior color',()=>{
+ const state={};
+ const cases=[
+  [{using:false,profile:0,ownerHand:0,projection:false,duration:0},2,true],
+  [{using:true,tick:0},0,true],
+  [{using:true,projection:false,tick:10},1,true],
+  [{using:false,tick:10},3,true],
+  [{using:false,tick:88},3,true],
+  [{using:false,tick:89},4,false],
+  [{using:false,profile:0,ownerHand:0,projection:false,duration:0},2,true],
+  [{using:true,tick:0},0,true]
+ ];
+ for(const [input,phase,visible] of cases){
+  const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,state,...input});
+  assert.equal(state.kg_diag_state,phase);
+  assert.equal(result.visibility[markerController]['*'],visible);
+  assert.equal(flashTexture(state),'textures/blocks/concrete_'+flashColors[phase]);
+  assert.deepEqual(result.logs,[]);
+ }
+});
+
+test('ONE flash colors keep nonmain bite textures despite persisted observer state and do not affect other routes',()=>{
  const doc=markerAttachable(trace164Id);
- for(const first of [false,true])for(const slot of ['main','off']){
-  if(first&&slot==='main')continue;
+ for(const first of [false,true])for(const hand of ['main','off']){
+  if(first&&hand==='main')continue;
   for(const [tick,stage] of [[0,0],[24,1],[62,2]]){
-   const state={kg_diag_marker:1};
-   presentation(trace164Id,{state,first,hand:slot,using:true,profile:1,duration:90,tick});
-   assert.equal(markerTexture({state}),doc.textures['stage'+stage]);
+   const state={kg_diag_main:1,kg_diag_state:4};
+   const result=presentation(trace164Id,{state,first,hand,using:true,profile:1,duration:90,tick});
+   assert.equal(Boolean(state.kg_diag_main),false);
+   assert.equal(flashTexture(state),doc.textures['stage'+stage]);
+   assert.deepEqual(result.logs,[]);
   }
  }
- for(const [id] of fixedPresentation){
+ const otherRoutes=[...fixedPresentation.map(([id])=>id),...Array.from(compositedPresentation).flatMap(id=>[id,id+'_java_three_alt'])];
+ assert.equal(otherRoutes.length,64);
+ for(const id of otherRoutes){
   if(id===trace164Id)continue;
   assert.ok(!markerAttachable(id).render_controllers.includes(markerController),id);
  }
