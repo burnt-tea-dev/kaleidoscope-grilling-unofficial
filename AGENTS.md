@@ -20,7 +20,7 @@
 1. **存檔相容**：item／block／block state 值／entity／persisted key／pack UUID 只增不減；移除只能走 `docs/SAVE-COMPAT.md` 退役流程。`python3 tools/guards/save_compat.py check` 必須通過。
 2. **膨脹棘輪**：`python3 tools/guards/growth_ratchet.py check` 必須通過；計數下降後同 PR 執行 `tighten`。不得在 PR 中調高上限。
 3. **禁止模式**（詳見計畫 §2.2）：不新增每版驗證器、`augment_a*`、`tools/gNNN_*`、`STATUS-*` 文件；不寫切原始碼文字的測試；不為選動畫／圖示新增或替換 item ID；不新增全域 `playerInteractWithBlock`／`runInterval`；不 commit 建置產物；不修改作者 Cookery 檔案；不擴充 `player.json`。
-4. **P2 之前不改 runtime 行為**；P2 的 PR 必須證明 BP 位元組不變（計畫 §4 P2 共通驗收）。
+4. **P2 之前不改 runtime 行為**；P2 的 PR 必須證明 BP 位元組不變；T2.8 僅依計畫 §4 的擁有者批准例外同步 manifest 版本／RP 相依欄位，其餘 BP 位元組不變。
 5. **不刪護欄與計畫**：`tools/guards/*`、`AGENTS.md`、`docs/REBUILD-PLAN.md`、`docs/SAVE-COMPAT.md` 受 CI 保護。
 6. **不改寫 Git 歷史、不 force push main、不刪 tag**。分支刪除需擁有者決策 D7。
 

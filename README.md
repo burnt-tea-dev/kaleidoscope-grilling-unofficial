@@ -1,6 +1,6 @@
 # 煙火：非官方 Bedrock 移植
 
-> **重建進行中：P3 前只接受 P0 等級存檔安全修補。** 工作順序見 [REBUILD-PLAN](docs/REBUILD-PLAN.md)，代理先讀 [AGENTS](AGENTS.md)。
+> **重建進行中：P3 前維持玩法凍結，依計畫進行 P0 存檔安全修補與 T2.8 資產清理。** 工作順序見 [REBUILD-PLAN](docs/REBUILD-PLAN.md)，代理先讀 [AGENTS](AGENTS.md)。
 
 目前仍未完成 Java 1.1.1 的全部玩法、畫面與真人驗收；`client=false`、`production_ready=false`。來源已實作、CI、staging、部署及真人結果分開記錄，不能用測試數或載入成功代替還原度。
 
@@ -9,7 +9,7 @@
 | 用途 | 版本與相依 |
 | --- | --- |
 | 保留公開下載 | [A2.8.149](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，需要作者 Cookery **1.6.0** 的 BP/RP |
-| 目前維護來源 | [baseline.json](baseline.json) 的 **2.8.155**，需要 Cookery **1.6.2**；P2 沒有發布新包 |
+| 目前維護來源 | [baseline.json](baseline.json) 的 **2.8.156** 資產清理候選，需要 Cookery **1.6.2**；完整 staging 尚待驗收，公開下載維持原版 |
 
 公開 G138 TEST／G149 stable 的 API 故障模型曾重現物品遺失、覆寫與重複產物；這不是原生發生率證明，後續來源修補也沒有改變既有下載 bytes。測試前保留世界備份。精確檔案、雜湊、相依與安裝限制見 [RELEASING](docs/RELEASING.md)；勿把不同 Cookery 版本互換。
 
