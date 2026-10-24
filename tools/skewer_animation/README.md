@@ -441,3 +441,53 @@ assigned when the independent model is invisible or ambiguous. The stopped-cache
 BLUE/YELLOW/PURPLE/BROWN/WHITE/BLACK branches and other gates retain their meaning;
 non-main-FP retains original textures. All concrete aliases are installed vanilla
 assets, not proposed final skewer art. This is not an animation or repeat-eating fix.
+
+
+## ONE owned presentation handoff candidate (2.8.172)
+
+171's visible full model was GREEN: source projection true, matching positive
+native maximum/owner duration, and current remaining greater than1. This does not
+prove a particular counter value or new session. Actual171 JSON shows an armed
+local hold is unconditionally discarded when native using returns true, including
+when owner elapsed stays87 or rises88. The same branch is indistinguishable there
+from a genuine fresh owner clock at0/1.
+
+Only public ONE changes its already-armed local hold. Two private snapshots capture
+owner elapsed and duration while unarmed, before evaluating the stop-edge rule.
+Context here is the original main-FP/item-ID/owner profile/hand/projection/positive-duration tuple; posture or occupied opposite hand blocks the source route but is not itself owner-context loss.
+Once armed, those snapshots remain stable. Extension across native using=true
+requires a saved anchor in `(0,savedDuration]` and a currently valid owned native
+sample/source admission. Missing/zero/out-of-range anchors, invalid using samples
+or using source fallback retain the prior170 fail-visible behavior. With those
+checks satisfied, a native-use rebound alone no longer unlocks the hold. Observed context/identity loss, duration mismatch, or owner
+elapsed strictly below the captured anchor unlocks it. An unarmed instance retains
+the original valid-last-sample `(0,1]` plus observed true-to-false use-edge rule;
+a rising counter or missing stop edge cannot arm it. The existing native sample
+cache still overwrites/invalidates normally. RC predicates, server mask, clocks,
+clips, helper/arm poses, all other57 fixed/six composite routes and BP bytes are
+unchanged (apart from required version manifests). No debit or input-policy fix.
+
+An elapsed regression is **reset-like evidence, not a session nonce**. A genuine
+continuous serving may remain masked until its owner reset reaches the client.
+Low frame rate may miss that reset; a nonpositive/missing anchor cannot distinguish a reset and therefore does not
+extend masking into resumed use;
+same-ID metadata/slot replacement remains invisible to these client inputs.
+Failed settlement or replacement can be hidden until authoritative context clears.
+There is no independent timeout or arbitrary-latency guarantee under an otherwise
+valid indefinitely stale tuple. Invalid native using samples deliberately unlock
+the retention extension. New stop-edge admission is unchanged; an existing eligible hold stays pending
+until observed reset/context loss, including a second stopped frame after rebound. Context loss still clears
+it, even if another delivery order later exposes a full model.
+
+Actual171 counterfactual visibility tests must fail before this change. Tests also
+cover delayed replicated new-start reset, normal continuous servings, early cancel,
+failed settlement, same-ID replacement, missing sample/edge and duration changes.
+Native acceptance remains pending. If a new terminal flash remains, do not widen
+the hold or add guessed timing thresholds: stop and design an explicit session-ID/
+atomic presentation contract with its compatibility costs before another fix.
+
+The unchanged BP same-tick `SETTLED` guard cannot distinguish a prior StopUse
+from an immediate new-session StopUse on that exact completion tick. The new
+actual-main early-cancel control starts the second serving on the next tick and
+cancels before its reset publishes; it does not claim that older input-order
+ambiguity is fixed. Repeat-eating policy remains a separate investigation.
