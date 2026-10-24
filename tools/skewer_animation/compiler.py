@@ -128,6 +128,9 @@ def fixed_attachable(document,profile):
       "v.kg_active_slot = (c.item_slot == 'main_hand' && v.kg_owner_eat_hand == 1) || (c.item_slot == 'off_hand' && v.kg_owner_eat_hand == 2);",
       "v.kg_same_item = c.item_slot == 'main_hand' ? q.is_item_name_any('slot.weapon.mainhand','"+ident+"') : q.is_item_name_any('slot.weapon.offhand','"+ident+"');",
       "v.kg_using_owned = q.is_using_item && v.kg_active_slot && v.kg_same_item && v.kg_owner_eat_profile == "+str(PROFILE_CODES[profile])+";",
+      # Hide only the stale full item during the native-use/inventory handoff.
+      # The script releases these owner fields at the next actual tick boundary.
+      "v.kg_terminal_wait = c.is_first_person == 1 && !q.is_using_item && v.kg_owner_eat_native_ticks > 0 && v.kg_owner_eat_elapsed_ticks >= v.kg_owner_eat_native_ticks - 1 && v.kg_active_slot && v.kg_same_item && v.kg_owner_eat_profile == "+str(PROFILE_CODES[profile])+" && v.kg_owner_eat_projection == 1;",
       # Match the pre-existing main-hand countdown origin but remove alpha;
       # the offhand/observer path already uses a replicated integer tick.
       "v.kg_bite_ticks = c.is_first_person == 1 && c.item_slot == 'main_hand' ? math.clamp(v.kg_owner_eat_native_ticks - q.main_hand_item_use_duration - 1, 0, v.kg_owner_eat_native_ticks) : v.kg_owner_eat_elapsed_ticks;",

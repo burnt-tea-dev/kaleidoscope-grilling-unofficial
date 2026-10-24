@@ -72,6 +72,15 @@ def check_pack_structure(folder, manifest, pack, version):
                 assert target.is_relative_to(folder.resolve()) and target.is_file(), f'missing or unsafe relative import: {path.name} -> {specifier}'
 
 
+def check_export_version(root, version):
+    """Check both authoring outputs after a bump, before claiming runtime bytes."""
+    expected = 'Kaleidoscope_Grilling_' + '_'.join(map(str, version)) + '_Canonical'
+    for relative in ('config.json', 'projects/grilling/gameplay_core/config.json'):
+        plugins = load(root / relative)['compiler']['plugins']
+        assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
+        assert plugins[0][1]['packName'] == expected, 'bridge build name drifted from canonical version: ' + relative
+
+
 def check(root=ROOT):
     config, baseline = load(root / 'config.json'), load(root / 'baseline.json')
     assert REQUIRED <= config.keys(), f'missing project fields: {REQUIRED - config.keys()}'
@@ -81,8 +90,7 @@ def check(root=ROOT):
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
-    expected_name = 'Kaleidoscope_Grilling_' + '_'.join(map(str, baseline['version'])) + '_Canonical'
-    assert plugins[0][1]['packName'] == expected_name, 'bridge build name drifted from canonical version'
+    check_export_version(root, baseline['version'])
     nested = load(root / 'projects/grilling/gameplay_core/config.json')
     assert nested['compiler']['plugins'] == plugins, 'nested bridge compiler differs from canonical export'
     report = {'project': config['name'], 'target_version': config['targetVersion'], 'packs': {}}
