@@ -691,6 +691,177 @@ test('terminal handoff documents the supplied-query same-ID replacement gap befo
  }
 });
 
+// Optional next-tick Entity.setProperty publication is a server API boundary,
+// not a simulated renderer/transport. Supply the observed stale-held native
+// use=false view explicitly, then evaluate actual emitted RP expressions.
+function publishedEatingView(a,using=false){
+ const o=handoffProperties(a.p);
+ const view=presentation(a.route.id,{hand:a.hand,ownerHand:o.eat_hand,profile:o.eat_profile,
+  projection:o.eat_projection,duration:o.eat_native_ticks,tick:o.eat_elapsed_ticks,using});
+ return {...view,visible:Object.values(view.visibility)[0]['*']};
+}
+
+test('deferred entity properties publish before next-tick jobs without changing the default fixture',t=>{
+ const immediate=createFixture(),deferred=createFixture({deferEntityProperties:true});
+ t.after(()=>{immediate.dispose();deferred.dispose();});
+ const direct=immediate.player(),p=deferred.player(),other=deferred.player();
+ direct.setProperty('test:value',1);assert.equal(direct.getProperty('test:value'),1);
+ p.setProperty('test:value',1);p.setProperty('test:value',2);other.setProperty('test:value',9);
+ assert.equal(p.getProperty('test:value'),undefined);assert.equal(other.getProperty('test:value'),undefined);
+ const reads=[];deferred.system.run(()=>{
+  reads.push(p.getProperty('test:value'));p.setProperty('test:value',3);reads.push(p.getProperty('test:value'));
+ });
+ deferred.tick();assert.deepEqual(reads,[2,2]);assert.equal(p.getProperty('test:value'),2);
+ assert.equal(other.getProperty('test:value'),9);
+ deferred.tick();assert.equal(p.getProperty('test:value'),3);
+});
+
+test('deferred completion properties reproduce start zero, complete at89 reading88, handoff90 then clear',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute(),'main',1);a.begin();
+ assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+ let rows=trace164ServerRows(lab.f);assert.deepEqual(rows.map(row=>row[0]),[10,11]);
+ assert.ok(rows.every(row=>row.slice(8).every(value=>value===0)),'both start callbacks read old published properties');
+ a.advance(89);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,88);
+ a.event('itemStopUse',0);a.nativeDebit();a.event('itemCompleteUse',0);
+ const before=lab.inventory(a.p);rows=trace164ServerRows(lab.f);
+ for(const event of [20,30,31]){
+  const row=rows.find(row=>row[0]===event);assert.equal(row[2],89);
+  assert.deepEqual(row.slice(8),[1,1,1,90,88],'event '+event+' reads the previous tick, not its queued write');
+ }
+ assert.equal(publishedEatingView(a).visible,false,'completion stale-held frame is hidden before the handoff write publishes');
+ a.advance(1);assert.deepEqual(handoffProperties(a.p),{eat_profile:1,eat_hand:1,eat_projection:true,eat_native_ticks:90,eat_elapsed_ticks:90});
+ assert.equal(publishedEatingView(a).visible,false);
+ rows=trace164ServerRows(lab.f);
+ for(const event of [40,41])assert.deepEqual(rows.find(row=>row[0]===event).slice(8),[1,1,1,90,90]);
+ a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+ assert.equal(publishedEatingView(a).visible,true);assert.deepEqual(lab.inventory(a.p),before);
+ assert.equal(a.p.main,undefined);a.retire();
+});
+
+test('deferred completion hides the first stale frame for58 fixed routes in both hands without extending active motion or debit',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const profiles=new Set();let count=0;
+ for(const [id,profile] of fixedPresentation)for(const hand of ['main','off']){
+  const route=routes.find(row=>row.id===id);assert.ok(route,id);
+  const a=lab.actor(route,hand,2);a.begin();
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  a.advance(route.duration-2);
+  assert.equal(handoffProperties(a.p).eat_elapsed_ticks,route.duration-3);
+  assert.equal(publishedEatingView(a).visible,true,id+' remains visible before the completion window');
+  a.advance(1);
+  const current=handoffProperties(a.p);assert.equal(current.eat_profile,presentationCodes[profile]);
+  assert.equal(current.eat_elapsed_ticks,route.duration-2);assert.equal(current.eat_projection,true);
+  const active=publishedEatingView(a,true),ended=publishedEatingView(a);
+  assert.equal(active.visible,true,id+' ongoing native use is never hidden');
+  assert.equal(ended.visible,false,id+' '+hand+' stale frame at inclusive completion');
+  assert.equal(ended.clips.some(clip=>clip.startsWith('animation.kg_java_eating.')),false);
+  a.nativeDebit();const inventory=lab.inventory(a.p);a.event('itemCompleteUse',0);
+  assert.deepEqual(handoffProperties(a.p),current,'completion writes are not readable in their own tick');
+  assert.deepEqual(lab.inventory(a.p),inventory,'presentation never owns inventory settlement');
+  a.advance(1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,route.duration);
+  assert.equal(publishedEatingView(a).visible,false);
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.equal(publishedEatingView(a).visible,true);assert.deepEqual(lab.inventory(a.p),inventory);
+  assert.equal(a.p[hand].amount,1);profiles.add(profile);count++;a.retire();
+ }
+ assert.equal(count,116);assert.deepEqual([...profiles].sort(),['FOUR','ONE','THREE','THREE_ALT','TWO']);
+});
+
+test('deferred completion respects stop and native-debit ordering without repeating rewards',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const amount of [1,2])for(const debitOrder of ['before','after'])for(const stopOrder of ['before','after']){
+  const a=lab.actor(routes.find(row=>row.id===beef),hand,amount);a.begin();a.advance(89);
+  if(debitOrder==='before')a.nativeDebit();if(stopOrder==='before')a.event('itemStopUse',0);
+  const before=lab.inventory(a.p);a.event('itemCompleteUse',0);
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,88);
+  assert.equal(publishedEatingView(a).visible,false);
+  if(debitOrder==='after')a.nativeDebit();if(stopOrder==='after')a.event('itemStopUse',0);
+  const settled=lab.inventory(a.p),effects=()=>lab.f.effects.filter(row=>row.source===a.p).map(row=>[row.effect,row.duration]);
+  assert.deepEqual(effects(),[['strength',200]]);a.event('itemCompleteUse',0);a.event('itemStopUse',0);
+  a.advance(1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,90);
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.deepEqual(lab.inventory(a.p),settled);assert.equal(a.p[hand]?.amount??0,amount-1);
+  assert.deepEqual(effects(),[['strength',200]]);a.retire();
+ }
+});
+
+test('deferred completion keeps early cancellation visible and preserves successful or failed early-release settlement',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ const representatives=[...new Map(fixedPresentation.map(([id,profile])=>[profile,id])).values()];
+ for(const id of representatives)for(const hand of ['main','off'])for(const mode of ['early','release','failed-release']){
+  const a=lab.actor(routes.find(row=>row.id===id),hand);a.begin();a.advance(mode==='early'?23:25);
+  assert.equal(publishedEatingView(a).visible,true,id+' native end well before completion is visible');
+  const before=lab.inventory(a.p),hunger=a.p.components['minecraft:player.hunger'].currentValue;
+  if(mode==='failed-release')lab.f.faults.failNext(hand==='main'?a.p.inventory:a.p.equipment,hand==='main'?'setItem':'setEquipment');
+  a.event('itemStopUse',a.route.duration-(mode==='early'?23:25));
+  assert.equal(publishedEatingView(a).visible,true,'a stop callback cannot publish properties in the same tick');
+  if(mode==='release')assert.equal(a.p[hand].amount,1,'eligible release still debits immediately');
+  else {assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);}
+  const settled=lab.inventory(a.p);a.event('itemStopUse',a.route.duration-25);a.advance(1);
+  if(mode==='release'){
+   assert.equal(handoffProperties(a.p).eat_elapsed_ticks,a.route.duration);
+   assert.equal(publishedEatingView(a).visible,false,'existing successful-release handoff behavior is retained');
+  }else {assert.deepEqual(handoffProperties(a.p),clearedHandoff);assert.equal(publishedEatingView(a).visible,true);}
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.deepEqual(lab.inventory(a.p),settled);a.retire();
+ }
+});
+
+test('deferred completion failed terminal release restores visibility after publication without debit or nutrition',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off']){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(89);
+  const inventory=lab.inventory(a.p),hunger=a.p.components['minecraft:player.hunger'].currentValue,
+   saturation=a.p.components['minecraft:player.saturation'].currentValue,effects=lab.f.effects.filter(row=>row.source===a.p).length;
+  assert.equal(handoffProperties(a.p).eat_elapsed_ticks,88);assert.equal(publishedEatingView(a).visible,false);
+  lab.f.faults.failNext(hand==='main'?a.p.inventory:a.p.equipment,hand==='main'?'setItem':'setEquipment');
+  a.event('itemStopUse',0);assert.deepEqual(lab.inventory(a.p),inventory);
+  a.advance(1);assert.equal(publishedEatingView(a).visible,false,'deferred failure queues the reset, not immediate publication');
+  assert.deepEqual(lab.inventory(a.p),inventory);
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);assert.equal(publishedEatingView(a).visible,true);
+  assert.deepEqual(lab.inventory(a.p),inventory);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
+  assert.equal(a.p.components['minecraft:player.saturation'].currentValue,saturation);
+  assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,effects);a.retire();
+ }
+ // Two fixture boundaries: deferred stop settlement, then Entity.setProperty.
+ // This bound is not a network-packet or retail-frame delivery guarantee.
+});
+
+test('deferred completion bounds stale same-ID replacement masking and cannot clear a fresh continuous serving',async t=>{
+ const lab=await createEatingLab({deferEntityProperties:true});t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const change of ['metadata','slot','continuous','restart','restart-after-retirement']){
+  if(hand==='off'&&change==='slot')continue; // Hotbar selection does not replace the offhand slot.
+  const a=lab.actor(handoffRoute(),hand,2);a.begin();a.advance(89);
+  if(change==='metadata'||change==='slot'){
+   if(change==='slot'){a.p.selectedSlotIndex=1;a.p.main=a.stack.clone();}
+   else {const stack=a.p[hand];stack.nameTag='Same ID different serving';a.p[hand]=stack;}
+   const before=lab.inventory(a.p);
+   // Same ID is insufficient client evidence until the server identity check
+   // clears ownership and that reset crosses the explicit property boundary.
+   assert.equal(publishedEatingView(a).visible,false);
+   a.advance(1);assert.equal(publishedEatingView(a).visible,false);
+   a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+   assert.equal(publishedEatingView(a).visible,true);assert.deepEqual(lab.inventory(a.p),before);
+  }else{
+   a.nativeDebit();a.event('itemCompleteUse',0);a.event('itemStopUse',0);
+   if(change.startsWith('restart')){const next=a.p[hand];next.nameTag='New metadata owner';a.p[hand]=next;}
+   if(change==='restart-after-retirement')a.advance(1); // A reset is already queued; the fresh start must supersede it.
+   a.begin();const before=lab.inventory(a.p);
+   a.advance(1);assert.equal(handoffProperties(a.p).eat_profile,1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,0);
+   assert.equal(publishedEatingView(a,true).visible,true);
+   a.advance(1);assert.equal(handoffProperties(a.p).eat_profile,1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
+   assert.deepEqual(lab.inventory(a.p),before,'old-token cleanup cannot consume or reset the new serving');
+   a.advance(87);a.nativeDebit();a.event('itemCompleteUse',0);a.advance(2);
+   assert.deepEqual(handoffProperties(a.p),clearedHandoff);assert.equal(a.p[hand],undefined);
+  }
+  a.retire();
+ }
+ const idle=lab.actor(handoffRoute(),'off');const before=lab.inventory(idle.p);
+ idle.advance(100);idle.event('itemStopUse',0);idle.event('itemCompleteUse',0);idle.advance(2);
+ assert.deepEqual(handoffProperties(idle.p),clearedHandoff);assert.deepEqual(lab.inventory(idle.p),before);idle.retire();
+});
+
 // Bounded server diagnostics retained from164. Client color controls below
 // evaluate actual JSON under supplied queries, not a Molang VM, renderer,
 // native packet stream, or successful content-log capture.
@@ -794,11 +965,11 @@ test('ONE flash colors partition actual mainhand use ownership and terminal-cloc
  const observed=new Set();let count=0;
  for(const using of [false,true])for(const ownerHand of [0,1,2])for(const profile of [0,1,2])
  for(const projection of [false,true])for(const same of [false,true])for(const duration of [0,1,90])
- for(const tick of [0,.999,1,88,89,90])for(const oppositeOccupied of [false,true]){
+ for(const tick of [0,.999,1,87,88,90])for(const oppositeOccupied of [false,true]){
   const input={hand:'main',using,ownerHand,profile,projection,same,duration,tick,oppositeOccupied};
   const result=presentation(trace164Id,input),v=result.variables;
   const owner=ownerHand===1&&profile===1&&projection&&same;
-  const clock=duration>0&&tick>=duration-1;
+  const clock=duration>0&&tick>=duration-2;
   // Independent partition from supplied engine-query/property inputs. These
   // controls do not assert when a retail client receives those values.
   const predicates=[using&&owner&&!oppositeOccupied,using&&!(owner&&!oppositeOccupied),
@@ -827,7 +998,7 @@ test('ONE flash colors distinguish source-route fallback and local use from unre
  }
  for(const ownerUsing of [false,true])for(const [input,expected] of [
   [{using:true,tick:0},0],
-  [{using:false,tick:88},3],
+  [{using:false,tick:87},3],
   [{using:false,tick:89},4],
   [{using:false,profile:0,ownerHand:0,projection:false,duration:0},2]]){
   const result=presentation(trace164Id,{profile:1,hand:'main',duration:90,...input,ownerUsing});
@@ -856,7 +1027,7 @@ test('ONE flash colors recompute across completion cancellation and restart inst
   [{using:true,tick:0},0,true],
   [{using:true,projection:false,tick:10},1,true],
   [{using:false,tick:10},3,true],
-  [{using:false,tick:88},3,true],
+  [{using:false,tick:87},3,true],
   [{using:false,tick:89},4,false],
   [{using:false,profile:0,ownerHand:0,projection:false,duration:0},2,true],
   [{using:true,tick:0},0,true]
