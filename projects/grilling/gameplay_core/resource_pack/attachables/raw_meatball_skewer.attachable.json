@@ -33,6 +33,7 @@
           "v.kg_active_slot = (c.item_slot == 'main_hand' && v.kg_owner_eat_hand == 1) || (c.item_slot == 'off_hand' && v.kg_owner_eat_hand == 2);",
           "v.kg_same_item = c.item_slot == 'main_hand' ? q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:raw_meatball_skewer') : q.is_item_name_any('slot.weapon.offhand','kaleidoscope_grilling:raw_meatball_skewer');",
           "v.kg_using_owned = q.is_using_item && v.kg_active_slot && v.kg_same_item && v.kg_owner_eat_profile == 3;",
+          "v.kg_terminal_wait = c.is_first_person == 1 && !q.is_using_item && v.kg_owner_eat_native_ticks > 0 && v.kg_owner_eat_elapsed_ticks >= v.kg_owner_eat_native_ticks - 1 && v.kg_active_slot && v.kg_same_item && v.kg_owner_eat_profile == 3 && v.kg_owner_eat_projection == 1;",
           "v.kg_bite_ticks = c.is_first_person == 1 && c.item_slot == 'main_hand' ? math.clamp(v.kg_owner_eat_native_ticks - q.main_hand_item_use_duration - 1, 0, v.kg_owner_eat_native_ticks) : v.kg_owner_eat_elapsed_ticks;",
           "v.kg_bite_stage = v.kg_using_owned ? (v.kg_bite_ticks >= 71 ? 3 : (v.kg_bite_ticks >= 47 ? 2 : (v.kg_bite_ticks >= 20 ? 1 : 0))) : 0;",
           "v.kg_source_projection = c.is_first_person == 1 && v.kg_using_owned && v.kg_owner_eat_projection == 1 && q.is_sneaking == 0 && q.is_swimming == 0 && q.is_gliding == 0 && q.is_riding == 0 && (c.item_slot == 'main_hand' ? q.is_item_equipped('off_hand') : q.is_item_equipped('main_hand')) == 0;",

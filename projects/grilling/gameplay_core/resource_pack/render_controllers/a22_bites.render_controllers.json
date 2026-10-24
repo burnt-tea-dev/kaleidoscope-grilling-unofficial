@@ -23,6 +23,7 @@
         }
       },
       "geometry": "Array.kg_bite_geo[v.kg_bite_stage]",
+      "part_visibility": [{"*": "!v.kg_terminal_wait"}],
       "materials": [
         {
           "*": "Material.default"

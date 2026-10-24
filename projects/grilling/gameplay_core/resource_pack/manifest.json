@@ -2,12 +2,12 @@
   "format_version": 2,
   "header": {
     "name": "Kaleidoscope Grilling RP",
-    "description": "\u68ee\u7f85\u7269\u8a9e\uff1a\u7159\u706b \u975e\u5b98\u65b9\u57fa\u5ca9\u7248\uff1b\u9700\u8981\u516c\u958b\u7248 Cookery 1.6.2",
+    "description": "森羅物語：煙火 非官方基岩版；需要公開版 Cookery 1.6.2",
     "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
     "version": [
       2,
       8,
-      162
+      163
     ],
     "min_engine_version": [
       1,
@@ -22,7 +22,7 @@
       "version": [
         2,
         8,
-        162
+        163
       ]
     }
   ],

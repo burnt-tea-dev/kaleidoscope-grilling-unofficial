@@ -169,9 +169,12 @@ test('every skewer route keeps its clock until native settlement in either hand'
     }
     a.nativeDebit();a.sample('engine-debit-before-callback');
     a.event('itemCompleteUse',0);const done=a.sample('complete');
-    assert.equal(done.profile,0);assert.equal(done.clock,0);assert.equal(a.p[hand].amount,1);
+    const handoff=supportsSourceFixedProjection(route.id,route.profile,hand)&&last.projection;
+    assert.equal(done.profile,handoff?last.profile:0);assert.equal(done.clock,handoff?route.duration:0);assert.equal(a.p[hand].amount,1);
     const effects=done.effects,hunger=done.hunger;
     a.event('itemStopUse',0);a.event('itemCompleteUse',0);a.advance(1);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),0);
     assert.equal(a.p[hand].amount,1);assert.equal(a.sample('duplicate-events').effects,effects);
     assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
     a.retire();
@@ -275,7 +278,7 @@ test('beef terminal timeline distinguishes callback reset from an earlier invent
     }else{
       if(mode==='complete-before-debit'){
         a.event('itemCompleteUse',0);const r=a.sample('complete-held-original');
-        assert.equal(r.profile,0);assert.equal(r.main.amount,2);a.nativeDebit();
+        assert.equal(r.profile,5);assert.equal(r.clock,90);assert.equal(r.main.amount,2);a.nativeDebit();
       }else{
         if(mode!=='engine-debit-first')a.nativeDebit();
         a.event('itemCompleteUse',0);a.sample('complete');
@@ -289,6 +292,145 @@ test('beef terminal timeline distinguishes callback reset from an earlier invent
 // Run setup, runtime and shape assertions in ordinary blocking parents. Only a
 // pure assertion of the desired replacement behavior belongs inside each TODO.
 // Unexpected exceptions or a different corruption must fail the parent normally.
+// Presentation-only handoff: these run unchanged main.js through the external
+// API fixture. They do not emulate client packet ordering or native item debit.
+const handoffPropertyNames=['eat_profile','eat_hand','eat_projection','eat_native_ticks','eat_elapsed_ticks'];
+const handoffProperties=p=>Object.fromEntries(handoffPropertyNames.map(key=>[key,p.getProperty('kaleidoscope_grilling:'+key)??(key==='eat_projection'?false:0)]));
+const clearedHandoff={eat_profile:0,eat_hand:0,eat_projection:false,eat_native_ticks:0,eat_elapsed_ticks:0};
+const handoffRoute=()=>routes.find(row=>row.id==='kaleidoscope_grilling:grilled_caterpillar_skewer');
+
+test('terminal handoff retains only presentation across completion event orders and never delays or repeats debit',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const amount of [1,2])for(const debitOrder of ['before','after'])for(const stopOrder of ['before','after']){
+  const a=lab.actor(handoffRoute(),hand,amount);a.begin();a.advance(89);
+  const owned={...handoffProperties(a.p),eat_elapsed_ticks:90};assert.equal(owned.eat_projection,true);
+  if(debitOrder==='before')a.nativeDebit();
+  if(stopOrder==='before')a.event('itemStopUse',0);
+  const before=lab.inventory(a.p);a.event('itemCompleteUse',0);
+  assert.deepEqual(handoffProperties(a.p),owned,`${hand}/${amount}/${debitOrder}/${stopOrder}`);
+  assert.deepEqual(lab.inventory(a.p),before,'completion handoff never writes the food');
+  const effects=lab.f.effects.filter(row=>row.source===a.p).length;
+  if(debitOrder==='after')a.nativeDebit();
+  if(stopOrder==='after')a.event('itemStopUse',0);
+  a.event('itemCompleteUse',0);a.event('itemStopUse',0);
+  assert.equal(a.p[hand]?.amount??0,amount-1);
+  assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,effects,'retired gameplay session cannot reward twice');
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.equal(a.p[hand]?.amount??0,amount-1);a.retire();
+ }
+});
+
+test('terminal handoff waits for an actual tick boundary even if system.run callbacks execute in the event tick',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ const a=lab.actor(handoffRoute());a.begin();a.advance(89);
+ const owned={...handoffProperties(a.p),eat_elapsed_ticks:90},scheduled=[],run=lab.f.system.run;
+ // Official System.run may execute an event's callback in the same tick.
+ // Override only this external scheduling boundary, never production source.
+ lab.f.system.run=callback=>{scheduled.push(callback);return -scheduled.length;};
+ try{
+  a.event('itemCompleteUse',0);
+  for(const callback of scheduled.splice(0))callback();
+  assert.deepEqual(handoffProperties(a.p),owned,'same-tick callbacks cannot retire presentation');
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.equal(a.p.main.amount,2,'even an unchanged server snapshot cannot strand presentation');
+ }finally{lab.f.system.run=run;a.retire();}
+});
+
+test('terminal handoff early cancellation and failed release clear immediately while successful release debits exactly once',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const mode of ['early','success','failed-write']){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(mode==='early'?23:25);
+  const owned=handoffProperties(a.p),before=lab.inventory(a.p);
+  if(mode==='failed-write')lab.f.faults.failNext(hand==='main'?a.p.inventory:a.p.equipment,hand==='main'?'setItem':'setEquipment');
+  a.event('itemStopUse',mode==='early'?67:65);
+  if(mode==='success'){
+   assert.equal(a.p[hand].amount,1,'eligible release debits in its event, not in retirement');
+   assert.deepEqual(handoffProperties(a.p),{...owned,eat_elapsed_ticks:90});
+  }else{
+   assert.deepEqual(lab.inventory(a.p),before);
+   assert.deepEqual(handoffProperties(a.p),clearedHandoff,mode+' does not arm terminal masking');
+   assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+  }
+  const inventory=lab.inventory(a.p),hunger=a.p.components['minecraft:player.hunger'].currentValue;
+  a.event('itemStopUse',65);a.advance(1);
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.deepEqual(lab.inventory(a.p),inventory);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
+  a.retire();
+ }
+});
+
+test('terminal handoff cannot clear a fresh same-ID serving or consume its metadata',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const replacement of ['identical','metadata','slot','other-hand']){
+  if(hand==='off'&&replacement==='slot')continue;
+  const a=lab.actor(handoffRoute(),hand,1);a.begin();a.advance(89);
+  a.event('itemStopUse',0);a.nativeDebit();a.event('itemCompleteUse',0);
+  let next=a.stack.clone();
+  if(replacement==='metadata'){next.nameTag='New serving';lab.data.setItemProperty(next,'foreign:timeline','new-owner');}
+  if(replacement==='slot')a.p.selectedSlotIndex=1;
+  if(replacement==='other-hand'){a.p[hand]=undefined;a.hand=hand==='main'?'off':'main';}
+  // The lab event helper captures its original hand; send the next real event
+  // directly so captureInteractionIntent, not the test, chooses the new hand.
+  a.p[a.hand]=next;
+  lab.f.emit('world.afterEvents.itemStartUse',{source:a.p,itemStack:next.clone(),useDuration:90});
+  lab.f.emit('world.afterEvents.itemStopUse',{source:a.p,itemStack:a.stack.clone(),useDuration:0});
+  const inventory=lab.inventory(a.p);a.advance(1);
+  const current=handoffProperties(a.p);
+  assert.equal(current.eat_profile,1);assert.equal(current.eat_hand,a.hand==='main'?1:2);
+  assert.equal(current.eat_elapsed_ticks,1);assert.equal(current.eat_projection,true);
+  assert.deepEqual(lab.inventory(a.p),inventory,'stale retirement neither debits nor replaces the new serving');
+  a.retire();
+ }
+});
+
+test('terminal handoff same-ID slot and metadata replacement restore normal ownership without modifying either stack',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const change of ['metadata','slot']){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(89);a.event('itemCompleteUse',0);
+  if(change==='slot'){
+   a.p.selectedSlotIndex=1;a.p.main=a.stack.clone();
+  }else{
+   const replacement=a.p[hand];replacement.nameTag='Replacement after completion';a.p[hand]=replacement;
+  }
+  const before=lab.inventory(a.p);a.advance(1);
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.deepEqual(lab.inventory(a.p),before);a.retire();
+ }
+});
+
+test('terminal handoff supports two continuous servings and bounded creative completion',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off']){
+  const a=lab.actor(handoffRoute(),hand,2);a.begin();
+  for(const remaining of [1,0]){
+   a.advance(remaining?89:88);a.event('itemStopUse',0);a.nativeDebit();a.event('itemCompleteUse',0);
+   assert.equal(a.p[hand]?.amount??0,remaining);
+   if(remaining){a.begin();a.advance(1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);}
+   else a.advance(1);
+  }
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);a.retire();
+  const c=lab.actor(handoffRoute(),hand,2);c.p.gameMode=lab.f.server.GameMode.Creative;
+  c.begin();c.advance(89);c.event('itemCompleteUse',0);
+  assert.equal(handoffProperties(c.p).eat_profile,1);assert.equal(c.p[hand].amount,2);
+  c.advance(1);assert.deepEqual(handoffProperties(c.p),clearedHandoff);assert.equal(c.p[hand].amount,2);c.retire();
+ }
+});
+
+test('terminal handoff has no offhand no-start state and cannot survive spawn or leave',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ const idle=lab.actor(handoffRoute(),'off');idle.advance(100);
+ const before=lab.inventory(idle.p);idle.event('itemStopUse',0);idle.event('itemCompleteUse',0);idle.advance(1);
+ assert.deepEqual(handoffProperties(idle.p),clearedHandoff);assert.deepEqual(lab.inventory(idle.p),before);idle.retire();
+ for(const boundary of ['spawn','leave']){
+  const a=lab.actor(handoffRoute());a.begin();a.advance(89);a.event('itemCompleteUse',0);
+  if(boundary==='leave')lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+  lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:boundary==='leave'});
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  a.begin();a.advance(1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
+  assert.equal(handoffProperties(a.p).eat_profile,1);a.retire();
+ }
+});
+
 test('a stale fixed-skewer completion cannot reward a newly selected item',async t=>{
   const lab=await createEatingLab();t.after(()=>lab.f.dispose());
   const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(88);
@@ -410,5 +552,141 @@ test('dual helper fallback masks source rendering when the opposite held item is
   assert.deepEqual(inactive.clips,['animation.kg_a287.skewer_fp_'+(otherSlot==='main'?'right':'left')]);
   assert.equal(sourcePlayerBlend(id,p,hand,true).weight,false);
   assert.equal(presentation(id,options).variables.kg_source_projection,true,'removing opposite stack permits the source route again');
+ }
+});
+
+test('terminal handoff masks all 58 fixed main models without extending helper or player motion',()=>{
+ assert.equal(fixedPresentation.length,58);
+ for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
+  const duration=javaPresentation.profiles[p].duration_ticks;
+  const options={profile:presentationCodes[p],hand,tick:duration-1,duration};
+  const mainController=id==='kaleidoscope_grilling:grilled_slime_skewer'?'controller.render.kg_slime.frame':'controller.render.kg_a22.bite';
+  const active=presentation(id,options),terminal=presentation(id,{...options,using:false});
+  assert.equal(active.visibility[mainController]['*'],true,id+' active '+hand);
+  assert.equal(terminal.variables.kg_terminal_wait,true,id+' terminal '+hand);
+  assert.equal(terminal.visibility[mainController]['*'],false,id+' stale serving '+hand);
+  if(['ONE','THREE'].includes(p))assert.equal(terminal.visibility['controller.render.kg_java_eating.piece']['*'],false,id+' helper stopped '+hand);
+  else assert.equal(terminal.visibility['controller.render.kg_java_eating.piece'],undefined,id+' no helper in this source family');
+  assert.equal(terminal.clips.some(clip=>clip.startsWith('animation.kg_java_eating.')),false,id+' item motion stopped');
+  assert.equal(Boolean(sourcePlayerBlend(id,p,hand,false,false).weight),false,id+' player motion stopped');
+  for(const cleared of [{profile:0},{same:false},{slot:hand==='main'?'off':'main'},{projection:false},{first:false}]){
+   const other=presentation(id,{...options,using:false,...cleared});
+   assert.equal(other.variables.kg_terminal_wait,false,id+' not owned '+JSON.stringify(cleared));
+   assert.equal(other.visibility[mainController]['*'],true,id+' unrelated/TP model visible');
+  }
+  // The live helper admission may change while stopping. The consumed active
+  // serving stays masked; no empty-opposite-hand latch extends its helper.
+  const occupied=presentation(id,{...options,using:false,oppositeOccupied:true});
+  assert.equal(occupied.visibility[mainController]['*'],false,id+' occupied opposite hand at completion');
+  if(['ONE','THREE'].includes(p))assert.equal(occupied.visibility['controller.render.kg_java_eating.piece']['*'],false);
+  const early=presentation(id,{...options,tick:23,using:false});
+  assert.equal(early.visibility[mainController]['*'],true,id+' early cancellation is not a terminal serving');
+  const next=presentation(id,{...options,tick:0});
+  assert.equal(next.visibility[mainController]['*'],true);
+  assert.equal(next.variables.kg_bite_stage,0,'a new native use starts the next whole serving');
+ }
+});
+
+test('terminal handoff for a near-end release starts after its deferred settlement and never repeats it',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off']){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(89);a.event('itemStopUse',1);
+  assert.equal(a.p[hand].amount,2,'terminal stop leaves existing completion arbitration unchanged');
+  a.advance(1);
+  assert.equal(a.p[hand].amount,1,'deferred release settles exactly once when no completion arrives');
+  assert.equal(handoffProperties(a.p).eat_profile,1);
+  assert.equal(handoffProperties(a.p).eat_elapsed_ticks,90);
+  const hunger=a.p.components['minecraft:player.hunger'].currentValue;
+  a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.advance(1);
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.equal(a.p[hand].amount,1);assert.equal(a.p.components['minecraft:player.hunger'].currentValue,hunger);
+  a.retire();
+ }
+});
+
+test('terminal handoff snapshot or property failure cannot suppress completion rewards or repeat debit',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const failure of ['clone','property']){
+  const a=lab.actor(routes.find(route=>route.id===beef),hand);a.begin();a.advance(89);a.nativeDebit();
+  const before=lab.inventory(a.p),eventStack=a.stack.clone();
+  // Only the presentation token's snapshot fails. The event and current item
+  // remain readable for the unchanged completion/identity/reward contract.
+  if(failure==='clone')eventStack.clone=()=>{throw new Error('Injected presentation snapshot failure');};
+  else lab.f.faults.failNext(a.p,'setProperty',{phase:'after',predicate:(key,value)=>key==='kaleidoscope_grilling:eat_elapsed_ticks'&&value===90});
+  assert.doesNotThrow(()=>lab.f.emit('world.afterEvents.itemCompleteUse',{source:a.p,itemStack:eventStack,useDuration:0}));
+  assert.deepEqual(lab.inventory(a.p),before,'presentation failure never owns food writes');
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff,'failed token cannot leave a stale owner gate');
+  assert.deepEqual(lab.f.effects.filter(row=>row.source===a.p).map(row=>[row.effect,row.duration]),[['strength',200]]);
+  a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.advance(1);
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,1);a.retire();
+ }
+});
+
+test('terminal handoff leaves composite and unadmitted fixed cancellation timing unchanged',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ const composite=new Set(['kaleidoscope_grilling:secret_skewer','kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grilling:dark_grilling']);
+ const excluded=routes.filter(row=>row.kind!=='plain'&&composite.has(row.base));assert.equal(excluded.length,6);
+ for(const hand of ['main','off'])for(const route of [...excluded,handoffRoute()]){
+  const a=lab.actor(route,hand);
+  if(route.id===handoffRoute().id)a.p[hand==='main'?'off':'main']=lab.f.item('minecraft:diamond',3,{nameTag:'Occupied fallback'});
+  a.begin();a.advance(23);const owned=handoffProperties(a.p),before=lab.inventory(a.p);
+  if(route.id===handoffRoute().id)assert.equal(owned.eat_projection,false);
+  a.event('itemStopUse',route.duration-23);
+  assert.deepEqual(handoffProperties(a.p),owned,route.id+' retains its pre-existing deferred cancel');
+  assert.deepEqual(lab.inventory(a.p),before);
+  a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.deepEqual(lab.inventory(a.p),before);a.retire();
+ }
+});
+
+test('terminal handoff retirement tolerates one reset failure without a hidden item or a stale retry clearing the next use',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off'])for(const failedField of handoffPropertyNames)for(const startNext of [false,true]){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(89);a.nativeDebit();a.event('itemCompleteUse',0);
+  const before=lab.inventory(a.p),effects=lab.f.effects.filter(row=>row.source===a.p).length;
+  lab.f.faults.failNext(a.p,'setProperty',{predicate:(key,value)=>key==='kaleidoscope_grilling:'+failedField&&value===(failedField==='eat_projection'?false:0)});
+  a.advance(1);
+  const partial=handoffProperties(a.p);
+  // Keep the original hand in this pure expression evaluation: clearing other
+  // owner gates must suffice even without relying on a cleared hand field.
+  const rendered=presentation(handoffRoute().id,{profile:partial.eat_profile,hand,projection:partial.eat_projection,duration:partial.eat_native_ticks,tick:partial.eat_elapsed_ticks,using:false});
+  assert.equal(rendered.visibility['controller.render.kg_a22.bite']['*'],true,failedField+' reset failure cannot strand terminal masking');
+  assert.deepEqual(lab.inventory(a.p),before);
+  if(startNext){
+   a.begin();a.advance(1);
+   assert.equal(handoffProperties(a.p).eat_profile,1);assert.equal(handoffProperties(a.p).eat_elapsed_ticks,1);
+   assert.equal(handoffProperties(a.p).eat_projection,true,'new start owns its properties, not the old retry');
+  }else{
+   a.advance(1);assert.deepEqual(handoffProperties(a.p),clearedHandoff,'existing scheduler retries the failed reset');
+  }
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,effects);a.retire();
+ }
+});
+
+test('terminal handoff documents the supplied-query same-ID replacement gap before server identity refresh',async t=>{
+ const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+ for(const hand of ['main','off']){
+  const a=lab.actor(handoffRoute(),hand);a.begin();a.advance(89);
+  const replacement=a.p[hand];replacement.nameTag='Different serving with the same public ID';
+  lab.data.setItemProperty(replacement,'foreign:timeline','replacement-owner');a.p[hand]=replacement;
+  const before=lab.inventory(a.p),effects=lab.f.effects.filter(row=>row.source===a.p).length;
+  const visible=using=>{
+   const owner=handoffProperties(a.p);
+   return presentation(handoffRoute().id,{profile:owner.eat_profile,hand,projection:owner.eat_projection,duration:owner.eat_native_ticks,tick:owner.eat_elapsed_ticks,using}).visibility['controller.render.kg_a22.bite']['*'];
+  };
+  // Deliberately supply ended native use with old published owner fields. The
+  // client expression knows the ID, not stack metadata: it can mask this new
+  // serving until a server identity refresh arrives. This is a documented
+  // packet-boundary limitation, NOT observed native timing or desired parity.
+  assert.equal(visible(false),false,'same ID alone cannot disprove stale client ownership');
+  assert.deepEqual(lab.inventory(a.p),before);
+  a.advance(1);
+  assert.deepEqual(handoffProperties(a.p),clearedHandoff);
+  assert.equal(visible(false),true,'server metadata mismatch clears the old owner gate');
+  assert.deepEqual(lab.inventory(a.p),before);
+  a.begin();assert.equal(visible(true),true,'a fresh native use shows its new whole serving');
+  a.advance(1);assert.equal(visible(true),true);
+  assert.deepEqual(lab.inventory(a.p),before);assert.equal(lab.f.effects.filter(row=>row.source===a.p).length,effects);
+  a.retire();
  }
 });

@@ -50,6 +50,11 @@
       ],
       "textures": [
         "Array.kg_slime_tex[v.kg_slime_index]"
+      ],
+      "part_visibility": [
+        {
+          "*": "!v.kg_terminal_wait"
+        }
       ]
     }
   }

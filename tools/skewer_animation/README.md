@@ -32,8 +32,8 @@ an explicit Java-parity gap, not a supported occupied-helper-hand case.
 The three composited surfaces (secret, mysterious, dark; six routes with ALT)
 retain their prior selectors and models and are **not reconstructed** here.
 Their use of the common item clips does not make their ingredient/held behavior
-accepted. No terminal latch or speculative fix for the final full-model flash
-was added.
+accepted. Their lifecycle/visibility selectors are not changed by the fixed-route
+handoff below.
 
 ## Author and review
 
@@ -41,7 +41,7 @@ was added.
 python tools/skewer_animation/compiler.py --output /tmp/skewer-clips
 python tools/skewer_animation/compiler.py --review-bundle --output /tmp/skewer-review
 python tools/test_java_extract.py
-node --test --test-name-pattern='^(every fixed|fixed bite|fixed presentation|source routing|dual helper)' tests/legacy/test_food_finish.mjs
+node --test --test-name-pattern='^(every fixed|fixed bite|fixed presentation|source routing|dual helper|terminal presentation)' tests/legacy/test_food_finish.mjs
 ```
 
 The review bundle contains actual per-family geometry/texture pairs, current
@@ -80,3 +80,36 @@ sampled at at least 480 Hz; ONE uses an exact step, THREE an explicit clamped
 source cubic, and fixed helper visibility follows the source `scale > 0.001`.
 These finite-grid bounds are numerical candidate checks, not global proofs,
 Minecraft rendering tolerances, or acceptance of camera/skin alignment.
+
+## Native findings and bounded terminal handoff
+
+The isolated 2.8.161/162 native ONE trials reproduced a full held-model flash
+between native use ending and the consumed inventory view disappearing. The
+162 single-factor change (`grilled_caterpillar_skewer` native `eat` → `none`)
+removed the large icon-textured planes in that recording, while custom crumbs
+remained. The actor changed from Kai to Sunny; this is not an arm/skin pixel pair
+or evidence for expanding `none` to every food. Low framing and terminal flash
+remained. All other item use-animation values stay unchanged. The next candidate inherits
+this **ONE-only diagnostic `none`**, not a production particle fix. Java itself
+uses EAT; occupied-hand fallback and third-person native pose regressions from
+`none` remain unaccepted, so it must not be generalized or silently promoted.
+
+The next candidate separates presentation retirement from gameplay settlement.
+Successful admitted fixed-route completion/release removes the gameplay session
+and performs the existing debit/reward immediately, retaining its five existing
+owner fields only until the next **actual scheduler tick**. A fixed attachable's
+main render controller hides the stale full model when native use is false and
+that owner/hand/item still matches at the terminal clock. Successful release
+publishes that terminal presentation clock; early cancellation clears it
+immediately without changing deferred gameplay cleanup. It does not hold an arm, extend the helper,
+change third person, or defer/repeat consumption. New starts invalidate the old
+presentation token; cancellation, identity/slot mismatch, spawn and leave clear
+it. Both normal and animated-slime controllers use the same ownership mask.
+
+This one-boundary handoff is a bounded renderer-adapter candidate, **not** an
+acknowledgement of client inventory packets. The client query cannot distinguish
+same-ID replacement metadata before server properties arrive. Server-only event
+and actual JSON-expression tests cannot establish packet order, visual absence
+of flash, or continuous-use smoothness. Native completion/cancel/switch/stack
+recordings on the new immutable candidate are still required. Existing T3.4
+TODOs (including stale completion effects and logout settlement) are not closed.

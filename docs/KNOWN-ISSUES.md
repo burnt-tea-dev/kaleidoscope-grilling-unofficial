@@ -53,8 +53,11 @@
 
 The 2026-10-24 T4.2 candidate covers source motion/selection for fixed families,
 not the three composited secret/mysterious/dark surfaces. Native clock origin,
-property-packet ordering, final-bite full-model flash, left-dominant-hand mapping,
+property-packet ordering, left-dominant-hand mapping,
 standard/slim camera fit and occupied-helper-hand rendering remain unverified.
+The final-bite full-model flash was reproduced in native 161/162; the bounded
+fixed-route presentation handoff is a new candidate, not yet a native-verified
+fix. The ONE-only native particle diagnostic did not fix framing or lifecycle.
 Unsupported non-upright states retain the existing fallback. The new source
 regressions do not close the existing three T3.4 lifecycle TODOs. Blockbench
 editor acceptance and paired native recordings are still required; see
