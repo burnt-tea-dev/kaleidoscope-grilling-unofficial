@@ -625,3 +625,29 @@ synthetic external count change and Complete/Stop, preserving later callback row
 and second-use early-cancel observation. Frozen175 is a failing observation
 control, not a failing gameplay/debit control. Source-only validation cannot prove
 retail event order or physical release;176 has no native trial scheduled.
+
+## Public ONE helper-exclusion control (177 source diagnostic)
+
+This deliberately incomplete visual diagnostic excludes only the existing
+`grilled_caterpillar_skewer` helper draw by adding `&& 0` to that attachable's
+`kg_java_piece_visible` assignment. The shared piece render controller and
+source-projection admission stay unchanged. Native EAT, main-model/player-arm
+transforms, helper scale/motion, clocks, textures, geometry, third-person and
+occupied-opposite-hand fallback remain the176 bytes. Other ONE/THREE helpers
+are not excluded. This is not a plane-cause finding, a production fix or Java
+parity acceptance; native camera-facing item particles remain another hypothesis.
+
+The compiler also explicitly authors the existing thirteen ONE presentation
+clock/terminal-hold statements. Its former regeneration dropped those statements;
+this supporting source correction preserves them verbatim instead of reading
+back the previous generated tail. An empty-output regeneration matches all60
+outputs, including when those thirteen input statements are absent.
+
+Focused tests evaluate the actual JSON expressions and render-controller
+visibility across FP/TP, both hands, occupied-hand fallback and interruption.
+They use the existing Molang-subset evaluator, not Minecraft's Molang engine or
+renderer. Independent source review accepted this isolated control; metadata
+freeze, pack build and draft publication do not establish native behavior.
+Import, Blockbench/native validation and actor-matched paired trials await
+separate scheduling after the vanilla input control. No merge, release or live
+deployment is authorized. `client=false`, `production_ready=false`.

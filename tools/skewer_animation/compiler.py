@@ -150,6 +150,27 @@ def fixed_attachable(document,profile):
           "v.kg_slime_frame = (((c.item_slot == 'main_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_grilling:grilled_slime_skewer')) || (c.item_slot == 'off_hand' && c.owning_entity->q.is_item_name_any('slot.weapon.offhand','kaleidoscope_grilling:grilled_slime_skewer'))) && v.kg_slime_marker >= 215 && v.kg_slime_marker <= 219) ? v.kg_slime_marker - 215 : 0;",
           "v.kg_slime_index = math.clamp(math.floor(v.kg_bite_stage), 0, 2) * 5 + v.kg_slime_frame;"]
     if ident=='kaleidoscope_grilling:grilled_caterpillar_skewer':
+        # Source-only helper-exclusion diagnostic: keep the existing FP route,
+        # scale, clocks and arm/main-model motion; suppress only its helper draw.
+        pre[-1]=pre[-1][:-1]+' && 0;'
+        # Existing ONE clock/terminal-hold transport is authored here, not
+        # recovered from a previous generated attachable. It remains unchanged
+        # by the helper-exclusion diagnostic.
+        pre += [
+          "v.kg_diag_main = c.is_first_person == 1 && c.item_slot == 'main_hand';",
+          "v.kg_diag_using = q.is_using_item;",
+          "v.kg_diag_clock_context = v.kg_diag_main && v.kg_active_slot && v.kg_same_item && v.kg_owner_eat_profile == 1 && v.kg_owner_eat_projection == 1 && v.kg_owner_eat_native_ticks > 0;",
+          "v.kg_diag_clock_remaining = q.main_hand_item_use_duration;",
+          "v.kg_diag_clock_max = q.main_hand_item_max_duration;",
+          "v.kg_diag_clock_valid = v.kg_diag_clock_context && v.kg_diag_using && v.kg_source_projection && v.kg_diag_clock_max == v.kg_owner_eat_native_ticks && v.kg_diag_clock_remaining > 0 && v.kg_diag_clock_remaining <= v.kg_diag_clock_max;",
+          "v.kg_diag_clock_seen = !v.kg_diag_clock_context ? 0 : (v.kg_diag_using ? v.kg_diag_clock_valid : ((v.kg_diag_clock_last_max ?? 0) == v.kg_owner_eat_native_ticks ? (v.kg_diag_clock_seen ?? 0) : 0));",
+          "v.kg_diag_clock_last = v.kg_diag_using ? (v.kg_diag_clock_valid ? v.kg_diag_clock_remaining : -1) : (v.kg_diag_clock_seen ? (v.kg_diag_clock_last ?? -1) : -1);",
+          "v.kg_diag_clock_last_max = v.kg_diag_using ? (v.kg_diag_clock_valid ? v.kg_diag_clock_max : 0) : (v.kg_diag_clock_seen ? (v.kg_diag_clock_last_max ?? 0) : 0);",
+          "v.kg_local_owner_elapsed = (v.kg_local_terminal ?? 0) ? (v.kg_local_owner_elapsed ?? 0) : v.kg_owner_eat_elapsed_ticks;",
+          "v.kg_local_owner_duration = (v.kg_local_terminal ?? 0) ? (v.kg_local_owner_duration ?? 0) : v.kg_owner_eat_native_ticks;",
+          "v.kg_local_terminal = !v.kg_diag_clock_context || v.kg_local_owner_duration != v.kg_owner_eat_native_ticks ? 0 : ((v.kg_local_terminal ?? 0) && v.kg_local_owner_elapsed > 0 && v.kg_local_owner_elapsed <= v.kg_local_owner_duration && (!v.kg_diag_using || v.kg_diag_clock_valid) ? (v.kg_owner_eat_elapsed_ticks < v.kg_local_owner_elapsed ? 0 : 1) : (!v.kg_diag_using && v.kg_diag_clock_seen && v.kg_diag_clock_last_max == v.kg_owner_eat_native_ticks && v.kg_diag_clock_last > 0 && v.kg_diag_clock_last <= 1 ? ((v.kg_local_prev_using ?? 0) ? 1 : (v.kg_local_terminal ?? 0)) : 0));",
+          "v.kg_local_prev_using = v.kg_diag_clock_context && v.kg_diag_using;",
+        ]
         # The source ONE helper replaces, rather than stacks with, the old probe.
         d['geometry'].pop('probe_piece',None);d['textures'].pop('probe_piece',None)
         d['render_controllers']=[ref for ref in d['render_controllers']if ref!='controller.render.kg_probe_caterpillar.piece']

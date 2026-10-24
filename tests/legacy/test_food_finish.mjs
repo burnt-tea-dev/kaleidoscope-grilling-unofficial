@@ -555,6 +555,43 @@ test('dual helper fallback masks source rendering when the opposite held item is
  }
 });
 
+test('ONE helper-exclusion control hides only its helper while FP, TP and occupied-hand routes stay selected',()=>{
+ const id='kaleidoscope_grilling:grilled_caterpillar_skewer';
+ for(const first of [true,false])for(const hand of ['main','off'])for(const oppositeOccupied of [false,true])for(const tick of [0,23,24,30,61,62,89]){
+  const result=presentation(id,{profile:1,hand,first,oppositeOccupied,tick});
+  const side=hand==='main'?'right':'left';
+  assert.equal(result.visibility['controller.render.kg_java_eating.piece']['*'],false,`${hand} FP=${first} occupied=${oppositeOccupied} tick=${tick}`);
+  assert.equal(result.visibility['controller.render.kg_diagnostic.one_marker']['*'],true,'the main model remains rendered during use');
+  assert.equal(result.variables.kg_source_projection,first&&!oppositeOccupied);
+  assert.equal(result.variables.kg_source_piece_scale,tick>=24?1:0,'the source helper scale still advances');
+  assert.deepEqual(result.clips,!first?['animation.kg_a287.skewer_tp_'+side]:oppositeOccupied?
+   ['animation.kg_a287.skewer_fp_'+side,'animation.kg_eating.item.one.'+side]:['animation.kg_java_eating.item.one.'+side]);
+  assert.equal(sourcePlayerBlend(id,'ONE',hand,oppositeOccupied).weight,!oppositeOccupied,'FP arm admission is not changed by helper exclusion');
+ }
+});
+
+test('ONE helper-exclusion control does not hide other ONE or THREE helpers and keeps dynamic fallback',()=>{
+ const excluded='kaleidoscope_grilling:grilled_caterpillar_skewer',helper='controller.render.kg_java_eating.piece';
+ for(const hand of ['main','off']){
+  for(const [id,profile,tick]of [['kaleidoscope_grilling:grilled_fish_skewer',1,30],['kaleidoscope_grilling:raw_caterpillar_skewer',1,30],['kaleidoscope_grilling:grilled_ender_pearl_skewer',3,75]]){
+   const result=presentation(id,{profile,hand,tick,duration:profile===3?100:90});
+   assert.equal(result.visibility[helper]['*'],true,id+' retains its source helper');
+   assert.equal(presentation(id,{profile,hand,tick,oppositeOccupied:true}).visibility[helper]['*'],false);
+  }
+  const state={};
+  for(const oppositeOccupied of [false,true,false]){
+   const result=presentation(excluded,{profile:1,hand,tick:30,oppositeOccupied,state});
+   assert.equal(result.visibility[helper]['*'],false);
+   assert.equal(result.variables.kg_source_projection,!oppositeOccupied,'normal dynamic admission remains intact');
+  }
+  for(const extra of [{using:false},{same:false},{projection:false},{profile:0},{slot:hand==='main'?'off':'main'}]){
+   const result=presentation(excluded,{profile:1,hand,tick:30,...extra});
+   assert.equal(result.visibility[helper]['*'],false);
+   assert.equal(result.clips.some(clip=>clip.startsWith('animation.kg_java_eating.')),false);
+  }
+ }
+});
+
 test('terminal handoff masks all 58 fixed main models without extending helper or player motion',()=>{
  assert.equal(fixedPresentation.length,58);
  for(const [id,p]of fixedPresentation)for(const hand of ['main','off']){
@@ -927,9 +964,10 @@ test('ONE local countdown cache overwrites terminal samples on an observed unint
  assert.equal(localClockFrame(state,{using:false,nativeRemaining:0,nativeMaximum:0}).visibility[markerController]['*'],true);
 });
 
-test('ONE normal presentation retains clocks clips and the helper route independently of main visibility',()=>{
+test('ONE normal presentation retains clocks clips and main visibility with helper exclusion',()=>{
  const tracked={},control={};
- const functional=r=>({variables:Object.fromEntries(Object.entries(r.variables).filter(([k])=>!k.startsWith('kg_diag_')&&!k.startsWith('kg_local_'))),clips:r.clips,visibility:Object.values(r.visibility)});
+ const helper='controller.render.kg_java_eating.piece';
+ const functional=r=>({variables:Object.fromEntries(Object.entries(r.variables).filter(([k])=>!k.startsWith('kg_diag_')&&!k.startsWith('kg_local_')&&k!=='kg_java_piece_visible')),clips:r.clips,visibility:Object.entries(r.visibility).filter(([k])=>k!==helper).map(([,v])=>v)});
  const cases=[{using:true,nativeRemaining:89},{using:true,nativeRemaining:1},{using:false,nativeRemaining:0,expectedLocalHold:true},
   {using:false,nativeRemaining:0,tick:88,expectedLocalHold:true},{using:false,projection:false},{using:true,nativeRemaining:89},
   {using:true,nativeRemaining:0},{using:false,nativeRemaining:0},{using:false,duration:0}];
@@ -938,7 +976,10 @@ test('ONE normal presentation retains clocks clips and the helper route independ
   const a=presentation(oneId,{...options,state:tracked}),b=presentation('kaleidoscope_grilling:raw_caterpillar_skewer',{...options,state:control});
   const expected=functional(b);if(input.expectedLocalHold)expected.visibility[0]['*']=false;
   assert.equal(Boolean(a.variables.kg_local_terminal),!!input.expectedLocalHold);
-  assert.deepEqual(functional(a),expected,'only the ONE-main local mask differs; clocks/clips/helper remain equal');
+  assert.equal(Boolean(a.variables.kg_java_piece_visible),false,'the diagnostic excludes only this helper');
+  assert.equal(a.visibility[helper]['*'],false);
+  assert.equal(b.visibility[helper]['*'],Boolean(b.variables.kg_source_projection&&b.variables.kg_source_piece_scale>0.001),'the control helper still follows its source gate');
+  assert.deepEqual(functional(a),expected,'only the ONE-main local mask and excluded helper differ; all other clocks/clips/visibility remain equal');
  }
 });
 
