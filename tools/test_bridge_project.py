@@ -1,6 +1,8 @@
 """Regression tests for bridge. authoring/export guards (no simulated players)."""
 from pathlib import Path
 import copy
+import json
+import validate as assets
 import sys
 import subprocess
 import tempfile
@@ -169,6 +171,158 @@ class BridgeProjectTests(unittest.TestCase):
                         expected.add(item)
                         self.assertEqual(z.read(item), data)
                 self.assertEqual(set(z.namelist()), expected)
+
+class UnusedAssetCandidateTests(unittest.TestCase):
+    def test_candidates_preserve_arrays_same_file_and_external_references(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rp = root / 'rp'
+            def write(rel, value):
+                path = root / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps(value))
+                return path
+            mixed = write('rp/models/mixed.geo.json', {'minecraft:geometry': [
+                {'description': {'identifier': 'geometry.test.live'}, 'bones': []},
+                {'description': {'identifier': 'geometry.test.dead'}, 'bones': []},
+                {'description': {'identifier': 'geometry.test.self'}, 'consumer': 'geometry.test.self'},
+            ]})
+            write('rp/controllers.json', {'arrays': {'geometries': {'array.g': ['geometry.test.live']}}})
+            write('rp/models/old.geo.json', {'geometry.test.legacy': {'bones': []}})
+            texture = rp / 'textures/dead.png'
+            texture.parent.mkdir()
+            texture.write_bytes(b'fixture')
+            files = [p for p in root.rglob('*') if p.is_file()]
+            result = assets.scan(root, rp, files)
+            self.assertEqual(result['errors'], [])
+            self.assertEqual({x['id'] for x in result['geometry_candidates']},
+                             {'geometry.test.dead', 'geometry.test.legacy'})
+            self.assertNotIn('rp/models/mixed.geo.json', result['whole_geometry_file_candidates'])
+            self.assertEqual(result['whole_geometry_file_candidates'], ['rp/models/old.geo.json'])
+            self.assertEqual(len(result['texture_candidates']), 1)
+            self.assertFalse(result['deletion_authorized'])
+            consumer = root / 'family'
+            external = write('family/consumer.json', {'g': 'geometry.test.dead', 't': 'textures/dead'})
+            result = assets.scan(root, rp, files, [('family', consumer, [external])])
+            self.assertEqual([x['id'] for x in result['geometry_candidates']], ['geometry.test.legacy'])
+            self.assertEqual(result['texture_candidates'], [])
+
+    def test_candidate_scan_retains_historical_identifiers_and_escaped_script_strings(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rp = root / 'rp'
+            (rp / 'models').mkdir(parents=True)
+            model = rp / 'models/old.geo.json'
+            model.write_text('{' + '"minecraft:geometry": [{"description": {"identifier": "geometry.test.old"}}]}')
+            history = root / 'history.json'
+            history.write_text('{"negative_reference": "geometry.test.old"}')
+            (rp / 'textures').mkdir()
+            texture = rp / 'textures/test.png'
+            texture.write_bytes(b'fixture')
+            script = root / 'consumer.js'
+            script.write_text(r'const t = "textures\/te\u0073t";')
+            result = assets.scan(root, rp, [model, history, texture, script])
+            self.assertEqual(result['geometry_candidates'], [])
+            self.assertEqual(result['texture_candidates'], [])
+
+    def test_reference_index_keeps_overlapping_substrings(self):
+        needles = {'geometry.x', 'geometry.x.contents', 'textures/a', 'a', 'missing'}
+        sources = [('one', 'geometry.x.contents textures/a.png'), ('two', 'baaa')]
+        found = assets.reference_index(needles, sources)
+        for needle in needles:
+            self.assertEqual(found[needle], {name for name, text in sources if needle in text})
+
+    def test_cli_rejects_directory_and_file_consumer_symlinks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'rp').mkdir()
+            (root / 'baseline.json').write_text(json.dumps({'runtime': {'RP': 'rp'}}))
+            consumer, outside = root / 'family', root / 'outside'
+            consumer.mkdir()
+            outside.mkdir()
+            reference = outside / 'reference.json'
+            reference.write_text('{"geometry": "geometry.external"}')
+            try:
+                (consumer / 'linked-directory').symlink_to(outside, target_is_directory=True)
+                (consumer / 'linked-file.json').symlink_to(reference)
+            except OSError as exc:
+                if getattr(exc, 'winerror', None) == 1314:
+                    self.skipTest('Windows symlink creation privilege is unavailable')
+                raise
+            with patch.object(assets, 'ROOT', root), \
+                    patch.object(assets.subprocess, 'check_output', return_value=b''), \
+                    patch.object(sys, 'argv', ['validate.py', 'unused-assets',
+                                              '--consumer-root', str(consumer)]), \
+                    patch('builtins.print') as output:
+                self.assertEqual(assets.main(), 1)
+            output.assert_called_once()
+            result = json.loads(output.call_args.args[0])
+            self.assertEqual({entry['source'] for entry in result['errors']},
+                             {'consumer-0:linked-directory', 'consumer-0:linked-file.json'})
+            self.assertTrue(all(entry['error'] == 'symlink input requires manual review'
+                                for entry in result['errors']))
+            self.assertEqual(result['scanned_text_files'], 0)
+            self.assertFalse(result['deletion_authorized'])
+
+    def test_cli_keeps_mcfunction_and_material_literal_consumers(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rp, consumer = root / 'rp', root / 'family'
+            (rp / 'models').mkdir(parents=True)
+            (rp / 'textures').mkdir()
+            (consumer / 'functions').mkdir(parents=True)
+            (consumer / 'materials').mkdir()
+            (root / 'baseline.json').write_text(json.dumps({'runtime': {'RP': 'rp'}}))
+            model = rp / 'models/native.geo.json'
+            model.write_text(json.dumps({'minecraft:geometry': [
+                {'description': {'identifier': 'geometry.test.function'}},
+                {'description': {'identifier': 'geometry.test.material'}},
+            ]}))
+            textures = [rp / f'textures/native_{kind}.png' for kind in ('function', 'material')]
+            for texture in textures:
+                texture.write_bytes(b'fixture')
+            (consumer / 'functions/render.mcfunction').write_text(
+                'scriptevent test:render {"geometry":"geometry.test.function",'
+                '"texture":"textures/native_function"}')
+            (consumer / 'materials/entity.material').write_text(
+                r'{"materials":{"test":{"geometry":"geometry.test.m\u0061terial",'
+                r'"texture":"textures\/native_m\u0061terial"}}}')
+            tracked = ''.join(path.relative_to(root).as_posix() + '\0'
+                              for path in [model, *textures]).encode()
+            with patch.object(assets, 'ROOT', root), \
+                    patch.object(assets.subprocess, 'check_output', return_value=tracked), \
+                    patch.object(sys, 'argv', ['validate.py', 'unused-assets',
+                                              '--consumer-root', str(consumer)]), \
+                    patch('builtins.print') as output:
+                self.assertEqual(assets.main(), 0)
+            result = json.loads(output.call_args.args[0])
+            self.assertEqual(result['errors'], [])
+            self.assertEqual(result['geometry_candidates'], [])
+            self.assertEqual(result['texture_candidates'], [])
+            self.assertFalse(result['deletion_authorized'])
+
+    def test_candidate_scan_reports_parse_duplicates_and_missing_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rp = root / 'rp'
+            rp.mkdir()
+            broken = root / 'broken.json'
+            broken.write_text('{"a": 1, "a": 2}')
+            result = assets.scan(root, rp, [broken, root / 'absent.js'])
+            self.assertEqual(len(result['errors']), 2)
+            models = rp / 'models'
+            models.mkdir()
+            data = {'minecraft:geometry': [{'description': {'identifier': 'geometry.duplicate'}}]}
+            first, second = models / 'a.json', models / 'b.json'
+            first.write_text(json.dumps(data))
+            second.write_text(json.dumps(data))
+            duplicate = assets.scan(root, rp, [first, second])
+            self.assertTrue(any(x['error'] == 'duplicate geometry definition' for x in duplicate['errors']))
+            first.write_text('{"format_version": "unknown"}')
+            unknown = assets.scan(root, rp, [first])
+            self.assertTrue(any(x['error'] == 'unsupported geometry schema' for x in unknown['errors']))
+            self.assertFalse(result['deletion_authorized'])
+
 
 if __name__ == '__main__':
     unittest.main()
