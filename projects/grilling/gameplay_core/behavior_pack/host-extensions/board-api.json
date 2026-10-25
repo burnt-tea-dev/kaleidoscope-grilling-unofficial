@@ -6,31 +6,31 @@
     2,
     13
   ],
-  "host_uuid": "439d9798-118a-43ad-8a91-aab3161d9cb5",
-  "archive_sha256": "f994f8aa3b3aa4ab323c021f871f05291a827e7957aa265e17e91a085ba85b81",
+  "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+  "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
   "original_files": {
-    "scripts/api/extensionRegistry.js": "edeecd66d82d8bab6299717d8424133971bb47f26aacda0892d5e7ae9261b497",
-    "scripts/custom_components/blocks/directStation.js": "d107c42f21b394e1273f0e8dcf3701fb97a97a7775d26da0010a447a9c085c57",
+    "scripts/api/extensionRegistry.js": "7e626c498f320a24aef19caf8191921bd21ec15e3299ef97ea852303bfadf3bc",
+    "scripts/custom_components/blocks/directStation.js": "66289fe81a61ce29d3a4d40159da0fe90f598b1a65abf9a87158d20bce5ff98a",
     "scripts/custom_components/blocks/oilPot.js": "c34d1cb0c6f125db7ebbe4e7dc1d251efd92a261dac964e4bf9d09d6e981222c",
     "items/kitchen/oil_pot.json": "f881cc3144f2b46fe075339a0713af8f627dbdb80c31a33a32cea3e7a4010b17",
     "items/kitchen/oil_pot_filled.json": "12eacddb8ad48c8f8d3510f78f0e6489244e7bc1d4ff7ca4aa0d73c44776f1f2",
-    "scripts/events/guidebook.js": "aae402d3fc7ed52db9cda72459fbd8207f86689adc86c379cc79ccca6b9cf169",
+    "scripts/events/guidebook.js": "79b8d7b6b7afae8abfb0e81a1e579f88ad35a5f8d10d934c50f5da08a9f18d44",
     "scripts/events/foodItemReturns.js": "4b02c6ba37e41a311ebfc9fbac3dbbbbb6c36c33658ab2588e169e63ff1604fe",
     "scripts/data/foodEffects.js": "f0a1750a2f22ee9335e15ef17a0d0f5791435564aad8e85aea69cfbc764b2149",
-    "scripts/api/guidebookExtensionRegistry.js": "a273bc82dc64c6899957ab51a52a08f0177292a334c8b5bbf81e823360135cd9",
-    "scripts/custom_components/blocks/millstone.js": "5922c65c0c9b945371a560b97ee774c6c97b2ebc7b019a484ca00241cf297a5f"
+    "scripts/api/guidebookExtensionRegistry.js": "fee24bd265e46d0e4c8fcad2d8c03892362dd60f1e2f50a315509e401173e2ab",
+    "scripts/custom_components/blocks/millstone.js": "24a348ac26c379d4e9d6726d169a88f943e2c0e649ee7e69dd11bfb8bcd2340f"
   },
   "patched_files": {
-    "scripts/api/extensionRegistry.js": "e1541b3f71a49c49af4adc3ec88507d24643188fb2cda532b84668c1550ee48b",
-    "scripts/custom_components/blocks/directStation.js": "1de0db1ca1f59d055c01133fb7f7481a675ef480f6b48a4bc984f39a4db0b7c4",
+    "scripts/api/extensionRegistry.js": "7f585f6433b27c89f6885a61833fa3bb382ac69966a9698fba3f566f17555d13",
+    "scripts/custom_components/blocks/directStation.js": "f59cc187375f55aa68878992d97d85792f5d268096671d2f97e41f6e86576302",
     "scripts/custom_components/blocks/oilPot.js": "09a82c98f105472f7e4c1d12fe0e561d7185ff3e707b3c701367427d90a4a582",
     "items/kitchen/oil_pot.json": "fba383920613d0e153bfd1438eaf2825b97bbce2c26486995448b14d35b83f0f",
     "items/kitchen/oil_pot_filled.json": "0296061e7db00b0979303f6800f829daf628cab4929e7e0825125a3a470ff7f3",
-    "scripts/events/guidebook.js": "f4043c895c276b77a49016a633bfd73f329a6fddd770608b11adba79148ea67a",
+    "scripts/events/guidebook.js": "b1e5e8d50159823bd9c04a303f5f3e69d1b6b1100ae4617ea17b2b6402655139",
     "scripts/events/foodItemReturns.js": "54d25ce087ea2c502023072ea6f3b9fa800bd35189cd0db7addb4a82abe4d087",
     "scripts/data/foodEffects.js": "5c43d22512262e288f88e752903fc88ea46c50d6f575ebac312422abd903cf35",
-    "scripts/api/guidebookExtensionRegistry.js": "a273bc82dc64c6899957ab51a52a08f0177292a334c8b5bbf81e823360135cd9",
-    "scripts/custom_components/blocks/millstone.js": "7e87f4ecfcc3a64bdd046a8138e21ba368d8a8069d3047eee920e2532acd4776"
+    "scripts/api/guidebookExtensionRegistry.js": "fee24bd265e46d0e4c8fcad2d8c03892362dd60f1e2f50a315509e401173e2ab",
+    "scripts/custom_components/blocks/millstone.js": "36767b01f6ef0d2300ae16713b4496f906cdca90b9679091a394f0659af3d22e"
   },
   "imports": {
     "scripts/api/extensionRegistry.js": "import {BOARD_CAPABILITIES,registerBoardV2Recipe} from \"./board_api_runtime.js\";\nimport {OIL_CAPABILITIES} from \"./oil_api_core.js\";\nimport {CUISINE_CAPABILITIES} from \"./cuisine_api_host.js\";\nimport {GUIDE_CAPABILITIES} from \"./guide_labels_core.js\";\nimport {INGREDIENT_CAPABILITIES} from \"./ingredient_api_host.js\";\nimport {JAVA_POT_CAPABILITIES} from \"./pot_api_host.js\";\n",
@@ -194,7 +194,7 @@
     },
     {
       "path": "scripts/custom_components/blocks/directStation.js",
-      "anchor": "    d.result={id:d.recipe.result,count:d.recipe.count,carrier:d.recipe.carrier};",
+      "anchor": "    d.result=d.recipe.plainMeat?{outputs:[...d.recipe.outputs],carrier:\"\"}:{id:d.recipe.result,count:d.recipe.count,carrier:d.recipe.carrier};",
       "position": "after",
       "text": "d.grillingOutputEpoch=nextCuisineBatch(b);"
     },
@@ -347,18 +347,6 @@
       "anchor": "    const st=ent.getComponent(\"minecraft:item\")?.itemStack;if(!st||!RECIPES[st.typeId])continue;",
       "position": "after",
       "text": "*/"
-    },
-    {
-      "path": "scripts/custom_components/blocks/millstone.js",
-      "anchor": "    if(held&&RECIPES[held.typeId]){",
-      "position": "before",
-      "text": "    if(held&&admitPublicMillstoneInput(held.typeId,RECIPES,getExtensionMillstoneRecipe)){/*"
-    },
-    {
-      "path": "scripts/custom_components/blocks/millstone.js",
-      "anchor": "    if(held&&RECIPES[held.typeId]){",
-      "position": "after",
-      "text": "*/"
     }
   ],
   "copies": {
@@ -377,9 +365,9 @@
     "scripts/host_api/millstone_api_core.js": "scripts/api/millstone_api_core.js"
   },
   "expires": "2026-11-02",
-  "removal_condition": "Remove each reviewed hook when the pinned author release provides the tested portable oil item/placed-state, output receipts, board contracts and shared Tavern guide projection. Cookery 1.6.2 owns canonical guide locale validation, registration cache batching and explicit carrier defaults; retain these author fixes. Re-review every author update; preserve author identities and migrate saved ownership. Unknown legacy placed quantities remain fail-closed. Remove the millstone admission hooks when all three author hand, worker-inventory and dropped-item gates use the same extension-aware lookup as tryLoad; retain author100-tick timing, capacity, worker and output behavior.",
+  "removal_condition": "Remove each reviewed hook when the pinned author release provides the tested portable oil item/placed-state, output receipts, board contracts and shared Tavern guide projection. Cookery 1.6.4 owns canonical guide locale validation, registration cache batching and explicit carrier defaults; retain these author fixes. Re-review every author update; preserve author identities and migrate saved ownership. Unknown legacy placed quantities remain fail-closed. Remove the millstone admission hooks when all three author hand, worker-inventory and dropped-item gates use the same extension-aware lookup as tryLoad; retain author100-tick timing, capacity, worker and output behavior.",
   "feedback": "docs/COOKERY-FAMILY-API-PROPOSAL.md",
-  "authorization": "Owner 2026-10-18 requests the latest stable Senluo family and concrete gameplay/performance repairs with canonical full-family LIVE deployment; adapt reviewed public API to clean Cookery 1.6.2 without publishing author scripts.",
+  "authorization": "Owner 2026-10-26 requests the latest stable Senluo family for a fresh world. Adapt the existing public host API to clean Cookery 1.6.4 without publishing author scripts; keep unrelated reconstruction work separate.",
   "json_updates": [
     {
       "path": "items/kitchen/oil_pot.json",
