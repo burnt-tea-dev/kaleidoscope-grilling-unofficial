@@ -6693,9 +6693,9 @@
     "kaleidoscope_grilling:premium_chili_oil_brush"
   ],
   "host_reference": {
-    "version": "1.6.2",
+    "version": "1.6.4",
     "guide_path": "scripts/events/guidebook.js",
-    "guide_sha256": "aae402d3fc7ed52db9cda72459fbd8207f86689adc86c379cc79ccca6b9cf169",
+    "guide_sha256": "79b8d7b6b7afae8abfb0e81a1e579f88ad35a5f8d10d934c50f5da08a9f18d44",
     "root_category_ids": [
       "workstations",
       "food_encyclopedia",
@@ -6705,8 +6705,8 @@
       "progression_guide"
     ],
     "supported_shape": "root categories, one child layer, multi-category entries; no host UI override",
-    "archive_sha256": "f994f8aa3b3aa4ab323c021f871f05291a827e7957aa265e17e91a085ba85b81",
-    "file_id": 9227406
+    "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+    "file_id": 9317031
   },
   "acquisition_gaps": [],
   "host_extension": {

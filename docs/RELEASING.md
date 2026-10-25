@@ -4,7 +4,9 @@
 
 P2 只整理來源與工具，不產生新 runtime 候選。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
-維護來源以 [baseline.json](../baseline.json) 為準：**2.8.155、Cookery 1.6.2**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+維護來源以 [baseline.json](../baseline.json) 為準：**2.8.157、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+
+2026-10-26 擁有者要求為全新家族更新最新穩定相依；本次 G157 只做 Cookery 1.6.4 的來源相容維護，不合併 G156／PR #255 的資產清理，也不宣告 P3 玩法或真人驗收完成。
 
 ## 保留公開下載與相依
 
