@@ -1,6 +1,6 @@
 # Java 與 Bedrock 功能對照
 
-這份表記錄玩家能力、目前來源及尚缺的證據。維護來源為 `baseline.json` 的 **2.8.155／Cookery 1.6.2**；公開保留下載 **A2.8.149／Cookery 1.6.0** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
+這份表記錄玩家能力、目前來源及尚缺的證據。維護來源與相依以 [baseline.json](../baseline.json) 為準；本分支為 **2.8.180／Cookery 1.6.4** 的 T2.8 整合候選；公開保留下載 **A2.8.149／Cookery 1.6.0** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
 
 Java 對照固定為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`，以計畫所列 NeoForge 1.21.1 路徑為主要邏輯來源。原始素材保留於 `projects/grilling/source_snapshots/`；[data/java](../data/java/) 與[萃取方法](../tools/java_extract/README.md)提供可重現資料。數值與來源差異以這些資料和原碼為準，不從舊 Bedrock 行為反推 Java。
 

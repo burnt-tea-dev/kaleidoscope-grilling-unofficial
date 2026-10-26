@@ -269,7 +269,7 @@ def main():
     facts=check_facts(s)
     require([c['id'] for c in s['categories'] if not c.get('parent')]==s['host_reference']['root_category_ids'],'Host taxonomy drift')
     if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,72):
-        reference='cookery-162-reference.json' if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,154) else 'cookery-161-reference.json' if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,150) else 'cookery-160-reference.json'
+        reference='cookery-current-reference.json'
         ref=load(ROOT/'tools/fixtures'/reference)
         require(all(s['host_reference'][key]==value for key,value in ref.items()),'Reviewed Cookery host reference differs')
     else:

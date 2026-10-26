@@ -90,7 +90,7 @@ class BridgeProjectTests(unittest.TestCase):
             def stale(path):
                 value = load(path)
                 if path == manifest_path:
-                    value['header']['description'] = value['header']['description'].replace('Cookery 1.6.2', 'Cookery 1.6.1')
+                    value['header']['description'] = 'Cookery 0.0.0'
                 return value
             with self.subTest(side=side), patch.object(guard, 'load', stale):
                 with self.assertRaisesRegex(AssertionError, 'stale displayed Cookery requirement'):

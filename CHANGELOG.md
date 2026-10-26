@@ -2,7 +2,12 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
-## 2.8.156 資產清理候選（T2.8，待完整 staging）
+## 2.8.180 資產清理整合候選（T2.8，待完整 staging）
+
+- 將 G156 的既有 RP 刪減整合到 G157／Cookery 1.6.4，保留作者相依、公開 API 與指南適配；其他 BP 內容不改，僅同步配套 manifest 版本。
+- G156／G157 原身份和舊驗收範圍保留；未納入 G158–G178 視覺診斷，未宣告 P2／P3、完整家族或真人驗收完成，沒有發布或部署。
+
+## 2.8.156 歷史資產清理候選（T2.8）
 
 - 移除 667 個未引用 geometry 檔與 179 張未引用貼圖，並從混合模型精確移除 16 個舊定義，保留 40 個仍用定義。
 - 退役已完成用途的 `apply_skewer_display_parity.py`；原碼與 Java 輸入保持歷史可查，不改玩法、持久化 item／block／entity ID、pack UUID 或存檔資料。
@@ -13,6 +18,10 @@
 - 依重建計畫整理來源、Java 資料、驗證工具、測試與文件；canonical BP/RP 不因文件清理變更。
 - 文件集中到 PARITY、KNOWN-ISSUES、ARCHITECTURE、RELEASING 及四份既有規範；保留原始失敗、舊 PR 玩家需求與來源連結。
 - 不發布新包、不重啟 LIVE，不以 CI 或文件整理宣稱玩法完成。
+
+## 2.8.157 Cookery 1.6.4 相容維護
+
+- 同步作者 Cookery 1.6.4 的 BP/RP 身份、公開 API 來源宣告、指南宿主參考與生成器；保持既有 Grilling 玩法。該次維護未合併 G156 資產清理，未更新公開下載或真人驗收狀態。
 
 ## 2.8.155 維護來源
 

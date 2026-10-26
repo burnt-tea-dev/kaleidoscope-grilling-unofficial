@@ -97,7 +97,11 @@ def check(root=ROOT):
         assert manifest['header']['uuid'] == baseline['packs'][pack]['uuid']
         assert manifest['header']['version'] == baseline['version'], 'bridge. export changed the locked version'
         assert manifest['header']['name'] == 'Kaleidoscope Grilling ' + pack, 'stale version-labelled pack name'
-        cookery='1.6.2' if tuple(baseline['version']) >= (2,8,154) else '1.6.1' if tuple(baseline['version']) >= (2,8,150) else '1.6.0' if tuple(baseline['version']) >= (2,8,72) else '1.0.8'
+        own_uuids = {row['uuid'] for row in baseline['packs'].values()}
+        host_dependencies = [dep for dep in baseline['packs'][pack]['dependencies']
+                             if 'uuid' in dep and dep['uuid'] not in own_uuids]
+        assert len(host_dependencies) == 1, 'Grilling requires one reviewed Cookery pack per side'
+        cookery = '.'.join(map(str, host_dependencies[0]['version']))
         assert 'Cookery '+cookery in manifest['header']['description'], 'stale displayed Cookery requirement'
         assert all(m['version'] == baseline['version'] for m in manifest['modules'])
         assert tuple(map(int, config['targetVersion'].split('.'))) >= tuple(manifest['header']['min_engine_version'])

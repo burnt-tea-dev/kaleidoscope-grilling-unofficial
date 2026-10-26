@@ -4,7 +4,15 @@
 
 P2 整理來源與工具；T2.8 依計畫例外清理未引用 RP 資產並同步配套版本，候選須完成完整 staging 驗收。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
-維護來源以 [baseline.json](../baseline.json) 為準：**2.8.156、Cookery 1.6.2**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+維護來源以 [baseline.json](../baseline.json) 為準：**2.8.180、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+
+## T2.8 與 Cookery 1.6.4 的整合候選（2026-10-26）
+
+G157／`2e3ef63839e38f84b4a0109957077ac00a140697` 已承接擁有者要求的 Cookery 1.6.4 相容維護；本候選把 PR #255 的既有資產刪減接到該來源，另以 **2.8.180** 保留身份。G156 與 G157 的原版本歷史均保留，沒有把不同內容覆寫成既有版本，也沒有納入 G158–G178 的視覺／診斷候選。
+
+相對 G157，BP 僅同步既有 manifest 的 header／module 版本及 BP→RP 配套版本；其他 BP 檔案、Cookery 1.6.4 的 UUID／相依及公開 API 宣告保持不變。RP 僅保留原 T2.8 的 667 個 geometry 檔、179 張貼圖和混合模型 16 個定義刪減，再同步 manifest 版本。
+
+G155／G156 的既有畫面與重播結果維持原候選身份，不改稱 G180／Cookery 1.6.4 的真人或家族驗收。T1.8 真人進服的 **OWNER WAIVED** 狀態維持；最終逐 ID／可達表面對應、完整相關家族乾淨相容、同世界 BDS 正常重啟後資料抽查及適用 P1／P2 出口仍須閉合。G180 維持 draft、`publication_request=false`、`client=false`、`production_ready=false`；不更動另外的 G157 家族配套來源鎖。
 
 ## 保留公開下載與相依
 
