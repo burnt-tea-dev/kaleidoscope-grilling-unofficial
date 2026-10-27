@@ -6,11 +6,26 @@ P2 只整理來源與工具，不產生新 runtime 候選。`publication_request
 
 維護來源以 [baseline.json](../baseline.json) 為準：**2.8.157、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
 
-2026-10-26 擁有者要求為全新家族更新最新穩定相依；本次 G157 只做 Cookery 1.6.4 的來源相容維護，不合併 G156／PR #255 的資產清理，也不宣告 P3 玩法或真人驗收完成。
+G157 承接 2026-10-26 已凍結的 Cookery 1.6.4 相容維護；2026-10-27 發布相同自有 runtime，未合併 G156／PR #255 的資產清理。本次發布不宣告 P3 或真人驗收完成。
 
-## 保留公開下載與相依
+## 目前公開下載與安裝邊界
 
-以下是 2026-10-18 已記錄的實際下載身份；T2.6 沒有發布、替換或重新標記任何資產。
+[A2.8.157 公開下載](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.157) 於 2026-10-27 發布；只包含自有 Grilling BP/RP，不含作者 Cookery 包或私人整合。
+
+| 項目 | 已發布內容 |
+| --- | --- |
+| 檔案 | `Kaleidoscope_Grilling_A2.8.157_baseline1.mcaddon` |
+| SHA256 | `f5da55c63558dd2552616c3774545eb60248b065b335f01e8c678ea450936216` |
+| 大小與範圍 | 15,429,509 bytes；791 BP 檔案與 3762 RP 檔案 |
+| 凍結內容來源 | `2e3ef63839e38f84b4a0109957077ac00a140697` |
+
+這份自有 runtime 已在 Tavern 0.6.185／Grilling 2.8.157／World Liquor 0.1.164 的完整 47 包家族中，通過 2026-10-27 的 static、原生首啟／重啟、安裝及正常運行讀回。這是該次精確配套的結果，不是一般單包安裝或完整 Java 還原證明。實際玩法、畫面與真人仍待驗收，`client=false`、`production_ready=false` 保持。
+
+啟用兩份 Grilling pack 與精確且已套用相容整合的 Cookery 1.6.4 BP/RP。普通 mcaddon 匯入不執行 `host-extensions/board-api.json` 的來源組裝；宣告相依不等於砧板／油壺／料理／指南能力皆可用。完整家族組裝是另一個流程，必須遵守其完整原版輸入與來源 lock。作者包從其官方渠道取得；本下載不提供完整家族的一鍵組裝。
+
+## 歷史保留下載與其相依
+
+以下兩項是 2026-10-18 保留的下載身份；本次 G157 發布不替換、重新標記或修改這些資產。
 
 | 公開包 | 檔案與 SHA256 | 原內容 commit |
 | --- | --- | --- |
@@ -18,8 +33,6 @@ P2 只整理來源與工具，不產生新 runtime 候選。`publication_request
 | [A2.8.138-beta.1 TEST](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.138-beta.1) | `Kaleidoscope_Grilling_A2.8.138_Review.mcaddon`；`bd2d3abe0190027a0ba47de95eaef9dd88657647b0c586431863fceb5c4a5a71` | `d0fb23b98e3cad60340ba202effd44a05baad707` |
 
 TEST 比上述 stable 更舊，不是降版建議。兩者都要求作者 [Cookery **1.6.0／file 9054164**](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9054164) 的 BP/RP，原 archive SHA256 為 `da12fe6d39d7514aff1de3c963d69899324d771be5ca0fc3da1ccb759c7ad458`；BP UUID `5df753c9-3436-4fba-87f1-a2da3651cfcf`、RP UUID `f1d333ca-2d6b-4566-8005-e6c309816324`，版本均為 `[1,6,0]`。Cookery 1.6.1／1.6.2 不是這兩個公開下載的替代相依。
-
-啟用兩份 Grilling pack 與精確相依。普通 mcaddon 匯入不執行 `host-extensions/board-api.json` 的來源組裝；宣告相依不等於砧板／油壺／料理／指南能力皆可用。公開家族組裝是另一個流程，必須遵守其完整原版輸入與來源 lock，不把舊示例說成今日一鍵安裝器。
 
 公開 G138／G149 的程式在 API 故障模型中曾重現物品遺失、覆寫及重複產物；[KNOWN-ISSUES](KNOWN-ISSUES.md#公開下載的物品安全限制)保留四種結果與限制。後續 G155 修補尚未成為上述下載 bytes。測試前保留備份；`client=false`、`production_ready=false`。
 
