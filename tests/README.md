@@ -33,6 +33,26 @@ observable native boundary honestly, without replacing production domain logic.
 The helper regression suite covers state-domain rejection, world isolation,
 metadata persistence, fault injection, and scheduling.
 
+## Deferred hand actions and the core skewer flow
+
+The existing `legacy/test_skewer_item_snapshot.mjs` entrypoint now drives
+`main.js` subscribers for fresh Secret disassembly and grill insertion, with
+both animation settings and the random alternate route. Other cases change the
+selected slot, main hand, or offhand metadata before dispatch, and inject a
+failed offhand write. Those actions must retain ownership checks, release their
+temporary reservation, and permit a new gesture.
+
+One continuous scenario threads one-ingredient fish, two-ingredient fried egg,
+and three-ingredient meatball skewers; ignites and fills the three-slot grill;
+uses the final three oil and seasoning points; flips, seasons, extracts, and
+eats each output through the actual registered callbacks. It verifies leftover
+ingredients, empty tool containers, rejection of unseasoned extraction,
+23-tick cancellation, 25-tick release settlement, and duplicate completion.
+Prepared public-API oil and seasoning are explicit inputs. The fixture does not
+execute Cookery production, native packet/event ordering, renderer/audio, disk
+restart, or a human client. Native completion and the known eating TODOs below
+remain separate acceptance work.
+
 ## T3.4 preparation: eating timelines
 
 The eating scenarios are appended to the existing `legacy/test_food_finish.mjs`

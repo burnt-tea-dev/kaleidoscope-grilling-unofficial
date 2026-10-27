@@ -183,6 +183,149 @@ async function nativeSecretFixture(options={}){
  function removeItemRecords(){for(const key of f.world.getDynamicPropertyIds())if(key.startsWith('senluo:grilling_item_'))f.world.setDynamicProperty(key,undefined)}
  return Object.assign(f,{data,snapshot,p,secret,admit,start,complete,saved,removeItemRecords});
 }
+async function newlyThreadedSecretFixture(animations=true){
+ const f=await nativeSecretFixture(),config=await f.load('server_config_runtime.js');
+ config.setGrillingConfig('enableEatingAnimations',animations);
+ const ingredients=['minecraft:apple','minecraft:carrot','minecraft:bread'];
+ f.p.off=f.item('minecraft:stick',3);
+ for(const id of ingredients){
+  f.p.main=f.item(id,4);
+  assert.equal(f.admit().cancel,true);f.flush();assert.equal(f.p.main.amount,3);
+ }
+ assert.equal(f.p.off.typeId,N+'secret_skewer');assert.equal(f.p.off.amount,1);
+ assert.deepEqual(JSON.parse(f.data.getItemProperty(f.p.off,secretIngredientsKey)).map(row=>row.id),ingredients);
+ f.p.main=undefined;f.p.isSneaking=true;
+ const block=f.block('minecraft:stone',{x:0,y:80,z:0});
+ const disassemble=()=>f.emit('world.beforeEvents.playerInteractWithBlock',{block,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
+ const materialCounts=()=>{
+  const counts={};
+  for(const stack of [...f.p.inventory.items(),...f.drops.filter(drop=>drop.isValid).map(drop=>drop.itemStack)])if(stack)counts[stack.typeId]=(counts[stack.typeId]??0)+stack.amount;
+  return counts;
+ };
+ return Object.assign(f,{disassemble,materialCounts});
+}
+for(const [animations,random] of [[true,.25],[true,.75],[false,.75]])test(`newly threaded Secret can be immediately disassembled with animations=${animations}, random=${random}`,async()=>{
+ const f=await newlyThreadedSecretFixture(animations),originalRandom=Math.random;
+ try{
+  Math.random=()=>random;
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.p.off?.typeId,undefined);
+  assert.deepEqual(f.materialCounts(),{'minecraft:stick':3,'minecraft:apple':1,'minecraft:carrot':1,'minecraft:bread':1});
+ }finally{Math.random=originalRandom;f.dispose()}
+});
+for(const changed of ['selected slot','main hand','offhand metadata'])test('pending Secret disassembly rejects changed '+changed+' and permits the next gesture',async()=>{
+ const f=await newlyThreadedSecretFixture(),originalRandom=Math.random;
+ try{
+  Math.random=()=>.75;
+  assert.equal(f.disassemble().cancel,true);
+  if(changed==='selected slot')f.p.selectedSlotIndex=2;
+  if(changed==='main hand')f.p.main=f.item('minecraft:carrot',4);
+  if(changed==='offhand metadata'){const replacement=f.p.off;replacement.nameTag='Changed after admission';f.p.off=replacement;}
+  const before=f.snapshot.captureSkewerMetadata(f.p.off),inventory=f.materialCounts();
+  f.flush();assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.off),before);assert.deepEqual(f.materialCounts(),inventory);
+  // Rejection must release presentation preparation and the next actual press.
+  f.flush();assert.equal(f.p.off.typeId,N+'secret_skewer_java_three_alt');
+  assert.equal(f.p.off.nameTag,before.name);
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.p.off?.typeId,undefined);
+  const expected={...inventory};for(const id of ['minecraft:stick','minecraft:apple','minecraft:carrot','minecraft:bread'])expected[id]=(expected[id]??0)+1;
+  assert.deepEqual(f.materialCounts(),expected);
+ }finally{Math.random=originalRandom;f.dispose()}
+});
+test('failed Secret disassembly releases presentation preparation and permits retry',async()=>{
+ const f=await newlyThreadedSecretFixture(),originalRandom=Math.random;
+ try{
+  Math.random=()=>.75;
+  f.faults.failNext(f.p.equipment,'setEquipment',{phase:'before',predicate:slot=>slot===f.EquipmentSlot.Offhand});
+  const before=f.snapshot.captureSkewerMetadata(f.p.off),inventory=f.materialCounts();
+  assert.equal(f.disassemble().cancel,true);f.flush();
+  assert.equal(f.faults.pending.length,0);assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.off),before);assert.deepEqual(f.materialCounts(),inventory);
+  f.flush();
+  assert.equal(f.p.off.typeId,N+'secret_skewer_java_three_alt');
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.p.off?.typeId,undefined);
+  assert.deepEqual(f.materialCounts(),{'minecraft:stick':3,'minecraft:apple':1,'minecraft:carrot':1,'minecraft:bread':1});
+ }finally{Math.random=originalRandom;f.dispose()}
+});
+for(const animations of [true,false])test('newly threaded Secret enters a lit grill immediately with animations='+animations,async()=>{
+ const f=await newlyThreadedSecretFixture(animations),originalRandom=Math.random;
+ try{
+  const state=await f.load('a2740_grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+  const input=f.p.off;f.p.off=undefined;f.p.isSneaking=false;
+  function interact(){return f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});}
+  f.p.main=f.item('minecraft:flint_and_steel');assert.equal(interact().cancel,true);f.flush();
+  assert.equal(state.readGrillState(grill).lit,true);
+  f.p.main=input;Math.random=()=>.75;
+  assert.equal(interact().cancel,true);f.flush();
+  assert.equal(f.p.main?.typeId,undefined,'one raw Secret moves from the hand into the grill');
+  const inserted=storage.stationContainer(grill).getItem(0);
+  assert.equal(inserted.amount,1);assert.deepEqual(f.snapshot.captureSkewerMetadata(inserted),f.snapshot.captureSkewerMetadata(input));
+  assert.equal(storage.stationContainer(grill).getItem(1),undefined);assert.equal(storage.stationContainer(grill).getItem(2),undefined);
+ }finally{Math.random=originalRandom;f.dispose()}
+});
+test('one, two and three ingredient skewers traverse player callbacks through grilling, seasoning, extraction and release eating',async()=>{
+ const f=await nativeSecretFixture(),originalRandom=Math.random;
+ try{
+  Math.random=()=>.25;
+  const config=await f.load('server_config_runtime.js');config.setGrillingConfig('enableEatingAnimations',true);
+  const state=await f.load('a2740_grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const oil=await f.load('a2734_cookery_oil_pot_adapter.js'),food=await f.load('a2750_food_state_adapter.js');
+  const ids=await f.load('eating_profile_ids.js');
+  // Java recipe/profile data: fish ONE, fried egg TWO, meatball THREE_RANDOM.
+  const recipes=[['minecraft:cod','fish',1,90],['kaleidoscope_cookery:fried_egg','fried_egg',2,90],['kaleidoscope_cookery:raw_meatball','meatball',3,100]];
+  recipes.forEach(([input],slot)=>f.p.inventory.setItem(slot,f.item(input,4)));
+  f.p.off=f.item('minecraft:stick',3);
+  for(const [slot,[,name,count]] of recipes.entries()){
+   f.p.selectedSlotIndex=slot;
+   for(let n=0;n<count;n++){assert.equal(f.admit().cancel,true);f.flush();assert.equal(f.p.main.amount,3-n);}
+   assert.equal(ids.canonicalFoodId(f.p.off.typeId),N+'raw_'+name+'_skewer');
+   f.p.inventory.setItem(4+slot,f.p.off);f.p.off=undefined;
+   if(slot<2){f.p.off=f.p.inventory.getItem(3);f.p.inventory.setItem(3,undefined);}
+  }
+  assert.deepEqual([0,1,2].map(slot=>f.p.inventory.getItem(slot).amount),[3,2,1]);
+  assert.equal(f.p.inventory.getItem(3),undefined);
+  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+  function interact(){const event=f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});assert.equal(event.cancel,true);f.flush();}
+  f.p.selectedSlotIndex=7;f.p.main=f.item('minecraft:flint_and_steel');interact();assert.equal(state.readGrillState(grill).lit,true);
+  for(let slot=4;slot<=6;slot++){f.p.selectedSlotIndex=slot;interact();assert.equal(f.p.main,undefined);}
+  const contents=storage.stationContainer(grill);assert.equal([0,1,2].filter(slot=>contents.getItem(slot)).length,3);
+  // Host public oil payload and a prepared seasoning bottle are boundary inputs;
+  // this scenario does not claim to have exercised Cookery oil production.
+  f.p.selectedSlotIndex=8;f.p.main=oil.buildCookeryOilPot('canola',3);assert.ok(f.p.main);interact();
+  assert.equal(oil.readCookeryOilPot(f.p.main).empty,true);assert.equal(f.p.main.amount,1);assert.equal(state.readGrillState(grill).phase,1);
+  f.p.selectedSlotIndex=4;
+  for(let flip=1;flip<=4;flip++){
+   interact();assert.equal(state.readGrillState(grill).flips,flip);
+   for(let tick=0;tick<20;tick++){f.tick();f.component(N+'grill_tick','onTick',{block:grill});}
+  }
+  assert.equal(state.readGrillState(grill).phase,2);
+  interact();assert.equal([0,1,2].filter(slot=>contents.getItem(slot)).length,3,'unseasoned cooked skewers stay on the grill');
+  f.p.selectedSlotIndex=9;f.p.main=f.item(N+'special_seasoning');
+  const bottle=f.p.main;food.setFoodSeasonings(bottle,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);f.data.setItemProperty(bottle,N+'uses',13);f.p.main=bottle;
+  interact();assert.equal(f.p.main.typeId,N+'empty_seasoning_bottle');assert.equal(f.p.main.amount,1);assert.equal(state.readGrillState(grill).seasoned,true);
+  f.p.selectedSlotIndex=4;f.p.isSneaking=true;interact();f.p.isSneaking=false;
+  assert.deepEqual([0,1,2].map(slot=>contents.getItem(slot)),[undefined,undefined,undefined]);
+  assert.equal(state.readGrillState(grill).phase,0);
+  const cookedSlots=recipes.map(([,name])=>f.p.inventory.items().findIndex(stack=>ids.canonicalFoodId(stack?.typeId)===N+'grilled_'+name+'_skewer'));
+  assert.ok(cookedSlots.every(slot=>slot>=0));
+  for(const [index,slot] of cookedSlots.entries()){
+   f.p.selectedSlotIndex=slot;f.flush();const stack=f.p.main,duration=recipes[index][3];
+   assert.equal(stack.amount,1);assert.equal(food.readFoodSeasonings(stack).length,3);
+   f.p.components['minecraft:player.hunger'].currentValue=4;
+   const beforeEffects=f.effects.length;
+   assert.equal(f.admit().cancel,false);f.emit('world.afterEvents.itemStartUse',{source:f.p,itemStack:stack,useDuration:duration});
+   f.tick(23);f.emit('world.afterEvents.itemStopUse',{source:f.p,itemStack:stack,useDuration:duration-23});f.flush();
+   assert.equal(f.p.main.amount,1);assert.equal(f.p.components['minecraft:player.hunger'].currentValue,4);assert.equal(f.effects.length,beforeEffects);
+   assert.equal(f.admit().cancel,false);f.emit('world.afterEvents.itemStartUse',{source:f.p,itemStack:stack,useDuration:duration});
+   f.tick(25);f.emit('world.afterEvents.itemStopUse',{source:f.p,itemStack:stack,useDuration:duration-25});f.flush();
+   assert.equal(f.p.main,undefined,'eligible release consumes exactly the held serving');
+   assert.ok(f.p.components['minecraft:player.hunger'].currentValue>4);
+   const settled=f.saved(),effects=f.effects.length;
+   f.emit('world.afterEvents.itemCompleteUse',{source:f.p,itemStack:stack,useDuration:0});
+   assert.deepEqual(f.saved(),settled);assert.equal(f.effects.length,effects);
+  }
+  assert.deepEqual([0,1,2].map(slot=>f.p.inventory.getItem(slot).amount),[3,2,1]);
+  assert.equal(f.p.inventory.getItem(8).amount,1);assert.equal(f.p.inventory.getItem(9).typeId,N+'empty_seasoning_bottle');
+ }finally{Math.random=originalRandom;f.dispose()}
+});
 for(const mode of ['malformed raw JSON','invalid cooked cache','missing world record'])test('native secret item use/start/complete refuses '+mode+' without spending or rewriting the item',async()=>{
  const f=await nativeSecretFixture();
  try{
