@@ -135,7 +135,7 @@ import {retargetSpecialSeasoningStack,specialSeasoningVariant} from './a2766_spe
 const GRILL_LEGS_ID='kaleidoscope_grilling:grill_legs';
 // Java MultiBiteSkewerItem: readiness remains 25 ticks; release alone gets one tick of grace.
 const MINIMUM_EAT_TICKS=25,RELEASE_CHECKPOINT_GRACE_TICKS=1;
-const ACTIVE_EATS=new Map(),CUISINE_EATS=new Map(),PLATE_EATS=new Map(),PENDING_USES=new Map(),SETTLED=new Map(),VIGOR_LAST=new Map(),SNEAK_LAST=new Map(),THREAD_LAST=new Map();
+const ACTIVE_EATS=new Map(),CUISINE_EATS=new Map(),PLATE_EATS=new Map(),PENDING_USES=new Map(),SETTLED=new Map(),VIGOR_LAST=new Map(),SNEAK_LAST=new Map(),THREAD_LAST=new Map(),PENDING_HAND_ACTIONS=new Map();
 const CUISINE_FOOD_SET=new Set([...WOK_FOOD_IDS,...STOCKPOT_FOOD_IDS]);
 const FX_KEY='kaleidoscope_grilling:a21_fx';
 const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:campfire','minecraft:soul_campfire','minecraft:magma']);
@@ -391,11 +391,18 @@ function disassembleOff(player){
  useSound(player,'skewer_disassemble',.8);
  return true;
 }
+function scheduleHandAction(player,callback){
+ // Idle presentation must not replace a hand captured by this deferred action.
+ const id=player.id,pending=PENDING_HAND_ACTIONS.get(id)??new Set(),token={};
+ pending.add(token);PENDING_HAND_ACTIONS.set(id,pending);
+ const release=()=>{pending.delete(token);if(!pending.size&&PENDING_HAND_ACTIONS.get(id)===pending)PENDING_HAND_ACTIONS.delete(id)};
+ try{system.run(()=>{try{callback()}finally{release()}})}catch(error){release();throw error}
+}
 function scheduleSkewerAction(player,action){
  const id=player.id,old=THREAD_LAST.get(id);if(old?.tick===system.currentTick)return true;
  const intent=captureTwoHandIntent(player);if(!intent)return false;
  const operation={tick:system.currentTick,action,intent};THREAD_LAST.set(id,operation);
- system.run(()=>{
+ scheduleHandAction(player,()=>{
   if(THREAD_LAST.get(id)!==operation||!twoHandIntentStillCurrent(player,intent))return;
   try{if(action==='disassemble')disassembleOff(player);else threadCurrent(player)}
   catch(error){console.warn('[Grilling skewer action] '+error);try{interactionFailure(player,'§c操作未完成；請確認原料與副手狀態')}catch{}}
@@ -1220,7 +1227,7 @@ world.beforeEvents.itemUse.subscribe(e=>{
   // A setting/item change can race the per-tick preparation. Refuse the wrong
   // native duration, then prepare the still-captured hand before the next use.
   e.cancel=true;const player=e.source,intent=captureInteractionIntent(player,e.itemStack);
-  system.run(()=>{if(interactionIntentStillCurrent(player,intent))prepareEatingItems(player,ACTIVE_EATS.has(player.id),grillingConfig().enableEatingAnimations)});return;
+  system.run(()=>{if(interactionIntentStillCurrent(player,intent))prepareEatingItems(player,ACTIVE_EATS.has(player.id)||PENDING_HAND_ACTIONS.has(player.id),grillingConfig().enableEatingAnimations)});return;
  }
  if(!grillingConfig().fullHungerEating){const h=e.source.getComponent('minecraft:player.hunger');if(h&&h.currentValue>=h.effectiveMax)e.cancel=true;}
 });
@@ -1248,7 +1255,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
  }
  if(!customTarget)return;
  e.cancel=true;const p=e.player,loc={...e.block.location},dim=e.block.dimension,intent=customTarget?captureInteractionIntent(p,e.itemStack):null,bottleCapture=isSeasoningBlock(e.block.typeId)?bottleActionSnapshot(e.block):undefined;
- system.run(()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
+ scheduleHandAction(p,()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
 });
 world.afterEvents.playerPlaceBlock.subscribe(e=>{if(e.block.typeId===GRILL_ID)resetBlock(e.block,false)});
 world.beforeEvents.explosion.subscribe(scheduleNativeBottleExplosion);
@@ -1297,9 +1304,9 @@ system.runInterval(()=>{
   syncSlimeHeld(p,slimeFrame);
   syncOilBrushVisual(p,{idle:false});
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}
-  const active=ACTIVE_EATS.get(p.id);
-  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}
-  try{prepareEatingItems(p,!!active,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}
+  const active=ACTIVE_EATS.get(p.id),handActionPending=PENDING_HAND_ACTIONS.has(p.id);
+  try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id)||handActionPending)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}
+  try{prepareEatingItems(p,!!active||handActionPending,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}
   if(active&&eatingStillCurrent(active.use,heldByHand(p,active.hand),p.selectedSlotIndex,now())){
    // Do not assume a remote custom-item countdown matches the owner's clock.
    // Replicate source session time; native food debit/reward stays event-owned.
@@ -1328,7 +1335,7 @@ system.runInterval(()=>{
 },1);
 
 world.afterEvents.playerLeave.subscribe(({playerId})=>{
- for(const cache of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,SETTLED,VIGOR_LAST,SNEAK_LAST,THREAD_LAST])cache.delete(playerId);
+ for(const cache of [ACTIVE_EATS,CUISINE_EATS,PLATE_EATS,SETTLED,VIGOR_LAST,SNEAK_LAST,THREAD_LAST,PENDING_HAND_ACTIONS])cache.delete(playerId);
  forgetNumbVisual(playerId);forgetDragonHealth(playerId);
 });
 

@@ -4,9 +4,17 @@
 
 P2 只整理來源與工具，不產生新 runtime 候選。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
-維護來源以 [baseline.json](../baseline.json) 為準：**2.8.157、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+維護來源以 [baseline.json](../baseline.json) 為準：**2.8.181、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
 
 G157 承接 2026-10-26 已凍結的 Cookery 1.6.4 相容維護；2026-10-27 發布相同自有 runtime，未合併 G156／PR #255 的資產清理。本次發布不宣告 P3 或真人驗收完成。
+
+### G181 核心流程修復候選
+
+依擁有者本輪核心流程修復指示，G181 從 G157 `2e3ef63839e38f84b4a0109957077ac00a140697` 的 runtime 延伸，承接 main 的 G157 發布文件。G158–178 與 PR #255 的 G180 已有保留身份，因此使用新的 paired BP/RP 2.8.181；不覆寫任何舊 history，也不合入 #255 的資產刪除。BP/RP UUID、Cookery 1.6.4 及 Script API 相依不變。
+
+來源修復與 API fixture 測試不等於可部署候選。G181 維持 draft／未發布，`.github/release-request.json` 仍保留 G157 的歷史身份與 `publication_request=false`；不得以 G157 的首啟／重啟結果替代 G181。#255 日後吸收本修復時也必須分配另一個未占用版本，不能改寫 G180。
+
+同一份 G181 完整家族候選仍須依序驗證：一／二／三料正常取得與穿串、立即拆串、點火與三槽入爐、刷油扣三份、四次翻面、撒料扣三份、取出與主副手食用；涵蓋 23／24／25 tick 取消、重複完成、換槽／換手、最後一份與油壺／調料容器、正常停服重啟及保存抽查。Java 對照、音效、第一／第三人稱及 Creative 畫面另保留實際客戶端證據。完成前 `client=false`、`production_ready=false`。
 
 ## 目前公開下載與安裝邊界
 

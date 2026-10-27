@@ -1,8 +1,10 @@
 # Java 與 Bedrock 功能對照
 
-這份表記錄玩家能力、目前來源及尚缺的證據。維護來源為 `baseline.json` 的 **2.8.155／Cookery 1.6.2**；公開保留下載 **A2.8.149／Cookery 1.6.0** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
+這份表記錄玩家能力、目前來源及尚缺的證據。修復候選為 `baseline.json` 的 **2.8.181／Cookery 1.6.4**；目前公開下載 **A2.8.157／Cookery 1.6.4** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
 
 Java 對照固定為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`，以計畫所列 NeoForge 1.21.1 路徑為主要邏輯來源。原始素材保留於 `projects/grilling/source_snapshots/`；[data/java](../data/java/) 與[萃取方法](../tools/java_extract/README.md)提供可重現資料。數值與來源差異以這些資料和原碼為準，不從舊 Bedrock 行為反推 Java。
+
+G181 的核心互動修復仍基於 G157 runtime，未合入 #255／G180 的資產清理。它防止自家 idle 外觀替換讓已擷取的穿／拆串、烤架及調料瓶互動失效，沒有改寫原作配方或放寬物品快照檢查。既有 [skewer_item_snapshot](../tests/legacy/test_skewer_item_snapshot.mjs) 已以註冊回呼串起魚串一料、煎蛋串二料、肉丸串三料，三槽烤架、用盡油／調料容器、取出、23 tick 取消與 25 tick 食用及重複完成；宿主油壺與已備好調料瓶是受控輸入。這是 API 模型證據，正常取材、原生完整流程、Java 聲畫及同候選保存仍待實測。
 
 ## 如何讀狀態
 
