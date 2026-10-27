@@ -1,6 +1,6 @@
 # 已知問題與驗收缺口
 
-修復候選為 2.8.181；公開下載 A2.8.157 是另一個內容身份，兩者均要求精確 Cookery 1.6.4 配套。以下區分「已有失敗觀察」、「來源缺陷已修但待復驗」與「能力／驗收尚缺」。舊候選的失敗不自動證明目前仍有同一 bug；來源改動、測試通過或 PR 關閉亦不證明玩家問題已消失。功能對照與五項保留需求見 [PARITY](PARITY.md)。
+修復候選為 2.8.182；公開下載 A2.8.157 是另一個內容身份，兩者均要求精確 Cookery 1.6.4 配套。以下區分「已有失敗觀察」、「來源缺陷已修但待復驗」與「能力／驗收尚缺」。舊候選的失敗不自動證明目前仍有同一 bug；來源改動、測試通過或 PR 關閉亦不證明玩家問題已消失。功能對照與五項保留需求見 [PARITY](PARITY.md)。
 
 ## 公開下載的物品安全限制
 
@@ -15,6 +15,8 @@
 | ID | 已知事實與來源修補範圍 | 必須保留的重現／驗收 |
 | --- | --- | --- |
 | HAND-ACTION-PREPARATION | G157 與 G180 的 API 模型可重現新製 Secret 在延後拆串前被 idle 換成 THREE_ALT，原有嚴格 intent 因而拒絕；關閉動畫的 native_plain 與立即入爐也會遇到同根因。G181 以暫時 hand reservation 修復自家外觀替換競爭，未放寬 ownership | 原生新製 Secret 立即拆／入爐；動畫開／關、主副手、被其他玩家或 addon 換 metadata、取消、滿包與重試。來源測試不能證明 native 排程或客戶端已通過 |
+| GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |
+| SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；任意 stack GUI 合成仍是另一項未實作能力 |
 | SKEWER-CONTENTS | 玩家曾回報配方不合、穿料後只見竹籤與吃空氣；G151／152 有取得契約、短配方、內容、圖像及共同資料守衛修補 | 正常取得→1／2／3 料穿製→烤製→盤／手持→食用／保存；空／不完整串不能被重複穿外層，合法零營養仍遵循原作。任意 stack icon 另驗 |
 | CLIENT-HUD | 曾無森羅 UI、外露 `KT_HUD!` 資料、位置錯及秒級延遲；G138／140–142 有入口、錨點、時計及圖像裁剪來源修補 | 觸控／Desktop、全食品、兩手、連吃、取消、END 隱藏與真實延遲；送出 packet、BDS 載入與舊窄片不代替結果 |
 | EATING-OWNER | G143 修 owning-player property 環境、副手進度、末段隱藏、RawMessage 等價比較及失敗掃描節流 | 近鏡放大、末段平片、換槽／重登、瓶子與食物 preparation 並存仍需當前驗收；不猜改 Java 曲線掩蓋失敗 |
@@ -34,6 +36,8 @@
 | JAVA-POT-LIFECYCLE | G122 有指定 exact／flex 配方、備料／翻炒／結果階段、保存與品質；有限 Java 品質向量不是完整 PotBlockEntity trace | 真鍋加油→備料→三翻→盛裝、熱源／卸載／重啟、冷卻、兩手連吃、滿包／拆鍋／保存故障及真營養；其他作者配方與未知私有資料不猜轉換 |
 | CUISINE-CONSERVATION | G120／122 修取消後清資料、出料讀回、批次 credit 及手部／站點實際寫入所有權 | 取消／拆鍋／取出／重登／不同 operationId 不得重複交付；確認站點回前像後才補償本次仍擁有的成本；不明保存保持隔離 |
 | EATING-ACCEPTANCE | 是驗收缺口及舊候選有限失敗，並非本輪新重現 bug；G81 僅閉合有完整 counter 的 stop→leave 分支 | 早停、24／25／26 tick、完整 90 tick FOUR、換手／換槽／連吃、stop→leave／重登；普通副手 air-use 單獨驗；核份數、營養、效果、逐口與音效 |
+
+G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個整檔與混合檔 16 個定義；八食材新增資產均有 consumer。G156 的有限前後畫面證據保留原候選身份，不能代替 G182 全部既有物品／放置表面的前後對照、完整相關家族與同世界重啟驗收。
 
 ## 其他必須保留的界線
 

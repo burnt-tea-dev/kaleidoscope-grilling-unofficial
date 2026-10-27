@@ -8,7 +8,7 @@
 | --- | --- |
 | canonical BP | `projects/grilling/gameplay_core/behavior_pack/` |
 | canonical RP | `projects/grilling/gameplay_core/resource_pack/` |
-| 身份與相依 | [baseline.json](../baseline.json)：修復候選 2.8.181、BP/RP UUID、Cookery 1.6.4、來源樹身份 |
+| 身份與相依 | [baseline.json](../baseline.json)：修復候選 2.8.182、BP/RP UUID、Cookery 1.6.4、來源樹身份 |
 | bridge 工程 | [config.json](../config.json) 指向同一 BP/RP；匯出檢查不等於發布或 client 驗收 |
 | Java 來源 | `projects/grilling/source_snapshots/` 與 `source_manifest.json` 保留逐檔來源；主要 pin 為 `9a1acdab…`，另有明列 fork 來源，不把所有素材偽稱同一來源 |
 | Java 資料表 | [data/java](../data/java/)；[tools/java_extract](../tools/java_extract/README.md) 可由釘選上游重新萃取，P2 不改 runtime 去讀它們 |
