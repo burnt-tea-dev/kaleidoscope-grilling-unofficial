@@ -2,6 +2,12 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.185 共用互動與排程（未發布）
+
+- 本包十一個方塊互動處理改由一個主責路由派送；接受後停止其他玩法寫入，視覺／庫存觀察另行執行。Cookery 宿主 API 保留獨立腳本環境。
+- 十六個 interval 收斂為一個排程入口，同 tick 共用玩家查詢；原有工作週期及方塊命名 tick 保留。合併油壺相容與環境效果，移除未使用的 HUD transport。
+- 保留所有物品、方塊、實體、保存鍵與 UUID；原生及真人結果另驗。
+
 ## 2.8.184 Bedrock 26.60 grill sound option correction (unreleased)
 
 - Correct the native `WorldSoundOptions.loopCount` option to `-1`. G183 used `loop`, so a one-shot handle could remain retained after the clip ended and prevent playback from restarting. Keep one native handle per grill and the existing independent stop/unload lifecycle.

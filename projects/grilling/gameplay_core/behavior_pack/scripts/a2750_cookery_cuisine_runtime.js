@@ -1,3 +1,4 @@
+import {onBlockInteraction} from './core/events.js';
 import {grillingConfig} from './server_config_runtime.js';
 import {beginSeasoningMotion} from './seasoning_motion_runtime.js';
 import {replaceSeasoningUsesLore} from './bottle_lore_core.js';
@@ -217,7 +218,7 @@ system.afterEvents.scriptEventReceive.subscribe(event=>{
   system.run(()=>{if(!applyAuthoritativeCookeryOutput(request))console.warn('[Grilling Cookery output] authoritative target was not decorated')});
  }catch(error){console.warn('[Grilling Cookery output] '+error)}
 });
-world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
+onBlockInteraction('a2750_cookery_cuisine_runtime',event=>{
  try{
   const kind=stationKind(event.block?.typeId);if(!kind)return;
   const player=event.player,intent=captureInteractionIntent(player,event.itemStack),hand=intent.hand,used=getHand(player,hand);
@@ -231,7 +232,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
   const beforeHasOil=kind==='pot'?hostHasOil(event.block):false,candidateOil=kind==='pot'?typedHeldOil(used):'';
   system.run(()=>finishHostInteraction(player,dimension,location,kind,beforeInventory,beforeHasOil,candidateOil,stateBefore));
  }catch{}
-});
+},{"priority":80});
 world.beforeEvents.playerBreakBlock.subscribe(event=>{
  try{
   if(event.cancel!==false||!stationKind(event.block?.typeId))return;

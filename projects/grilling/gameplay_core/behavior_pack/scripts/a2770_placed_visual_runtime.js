@@ -1,3 +1,4 @@
+import {every,onlinePlayers} from './core/scheduler.js';
 import {grillingConfig} from './server_config_runtime.js';
 import {world,system} from '@minecraft/server';
 import {visitUniqueTracked} from './a288_visual_budget_core.js';
@@ -79,7 +80,7 @@ export function refreshPlacedBottleAfterPickup(block){
 }
 function pump(){
  const players=[];
- for(const player of world.getAllPlayers())try{players.push({dimensionId:player.dimension.id,...player.location})}catch(error){warn(error)}
+ for(const player of onlinePlayers())try{players.push({dimensionId:player.dimension.id,...player.location})}catch(error){warn(error)}
  // Reserve half the work for old targets so busy interactions cannot starve cleanup.
  const seen=new Set();let used=0;
  for(const [key,value] of dirtyPlacedVisuals){
@@ -97,7 +98,7 @@ function indexSavedTargets(){
  system.runJob((function*(){
   try{
    const dimensions=new Set(['minecraft:overworld','minecraft:nether','minecraft:the_end']);
-   for(const p of world.getAllPlayers())dimensions.add(p.dimension.id);
+   for(const p of onlinePlayers())dimensions.add(p.dimension.id);
    const ids=[...dimensions];
    for(const key of world.getDynamicPropertyIds()){
     const value=decodeKey(key,ids);if(value)remember(value);
@@ -116,7 +117,7 @@ system.run(()=>{
   for(const type of [SEASON_ENTITY,OIL_ENTITY])for(const entity of d.getEntities({type}))entity.remove();
  }catch(error){warn(error)}
  indexSavedTargets();
- system.runInterval(pump,5);
+ every('a2770_placed_visual_runtime:1',pump,5);
  // Discover imports/command-created saved containers without scanning world blocks.
- system.runInterval(indexSavedTargets,400);
+ every('a2770_placed_visual_runtime:2',indexSavedTargets,400);
 });

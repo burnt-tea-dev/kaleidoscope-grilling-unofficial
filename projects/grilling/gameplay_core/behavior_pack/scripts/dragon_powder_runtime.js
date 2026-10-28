@@ -1,3 +1,4 @@
+import {onBlockInteraction} from './core/events.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {isKitchenKnifeStack} from './a2710_chicken_acquisition_core.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from './a2762_interaction_intent_adapter.js';
@@ -35,7 +36,7 @@ export function shaveDragonPowder(player,hand,random=Math.random){
  if(damage.broken)try{player.playSound('random.break')}catch{}
  return true;
 }
-world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
+onBlockInteraction('dragon_powder_runtime',event=>{
  if(event.cancel||event.isFirstEvent===false||event.block?.typeId!=='minecraft:dragon_egg'||!isKitchenKnifeStack(event.itemStack))return;
  const player=event.player,intent=captureInteractionIntent(player,event.itemStack),dimension=player.dimension.id;
  // Java does not cancel RightClickBlock: preserve vanilla dragon-egg teleport behavior.
@@ -43,4 +44,4 @@ world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
   if(player.dimension.id!==dimension||!interactionIntentStillCurrent(player,intent))return;
   shaveDragonPowder(player,intent.hand);
  }catch(error){console.warn('[Grilling dragon powder] '+error)}});
-});
+},{"priority":30,"observe":true,"blocks":["minecraft:dragon_egg"]});

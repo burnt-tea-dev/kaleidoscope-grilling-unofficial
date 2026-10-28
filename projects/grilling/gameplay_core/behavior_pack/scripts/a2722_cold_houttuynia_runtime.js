@@ -1,3 +1,4 @@
+import {onBlockInteraction} from './core/events.js';
 import {interactionFeedback,interactionFailure} from './a283_interaction_feedback.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {
@@ -55,7 +56,7 @@ export function tryCraftColdHouttuynia(player){
  return true;
 }
 
-world.beforeEvents.playerInteractWithBlock.subscribe(ev=>{
+onBlockInteraction('a2722_cold_houttuynia_runtime',ev=>{
  if(ev.cancel||ev.block?.typeId!==CRAFTING_TABLE_ID||!ev.player?.isSneaking)return;
  if(ev.itemStack?.typeId!==HOUTTUYNIA_ID)return;
  const player=ev.player,intent=captureInteractionIntent(player,ev.itemStack);
@@ -67,5 +68,5 @@ world.beforeEvents.playerInteractWithBlock.subscribe(ev=>{
   if(!interactionIntentStillCurrent(player,intent)||interactionStackSignature(off(player))!==offSignature){message(player,'§7操作已取消：折耳根或油壺已變更');return}
   tryCraftColdHouttuynia(player);
  }catch{}});
-});
+},{"priority":90,"blocks":["minecraft:crafting_table"]});
 

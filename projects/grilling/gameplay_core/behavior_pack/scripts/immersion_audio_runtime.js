@@ -1,3 +1,4 @@
+import {every} from './core/scheduler.js';
 import {flatulenceSoundOrigin as seasoningFinishSoundOrigin} from './flatulence_sound_runtime.js';
 export const SEASONING_FINISH_SOUND_ID='kg_java21.seasoning_finished';
 import {interactionParticleBurst} from './immersion_particles_runtime.js';
@@ -13,7 +14,7 @@ export function updateGrillAudio(block,lit,count){
 }
 export function removeGrillAudio(block){grillAudio.remove(stationKey(block))}
 // Block ticks cease when a chunk unloads. Drop and stop stale native handles.
-system.runInterval(()=>grillAudio.sweep(system.currentTick),4);
+every('immersion_audio_runtime:1',()=>grillAudio.sweep(system.currentTick),4);
 export function blockSound(block,id,volume=1,pitch=1){
  try{return block.dimension.playSound('kg_imm.'+id,center(block),{volume,pitch})}catch{}
 }

@@ -64,3 +64,25 @@ test('owned particle definitions emit exactly once at zero offset without implic
   assert.ok(!JSON.stringify(c).includes('variable.direction'));
  }
 });
+
+// The production router and scheduler run through the same native API boundary
+// as gameplay scenarios; callbacks below stand for competing addon actions.
+import {createFixture as createCoreFixture} from '../helpers/minecraft-fixture.mjs';
+test('one block gesture has one writer and post-action observers',async()=>{
+ const f=createCoreFixture(),{onBlockInteraction}=await f.load('core/events.js'),calls=[];
+ onBlockInteraction('later',()=>calls.push('second writer'),{priority:20});
+ onBlockInteraction('observer',event=>calls.push('observed '+event.cancel),{observe:true});
+ onBlockInteraction('station',event=>{calls.push('accepted');event.cancel=true},{priority:10,blocks:['kaleidoscope_grilling:grill']});
+ const block=f.block('kaleidoscope_grilling:grill',{x:0,y:64,z:0});
+ f.emit('world.beforeEvents.playerInteractWithBlock',{block,cancel:false});
+ assert.deepEqual(calls,['accepted','observed true']);
+ calls.length=0;f.emit('world.beforeEvents.playerInteractWithBlock',{block,cancel:true});
+ assert.deepEqual(calls,['observed true'],'a different addon keeps its accepted gesture');
+});
+test('shared scheduling preserves deadlines, cancellation and failure isolation',async()=>{
+ const f=createCoreFixture(),{every}=await f.load('core/scheduler.js'),calls=[];
+ every('two',()=>{calls.push('two:'+f.system.currentTick);if(f.system.currentTick===4)throw Error('failed task')},2);
+ every('three',()=>calls.push('three:'+f.system.currentTick),3);
+ const cancel=every('cancelled',()=>calls.push('unexpected'),1);cancel();f.tick(6);
+ assert.deepEqual(calls,['two:2','three:3','two:4','two:6','three:6']);
+});

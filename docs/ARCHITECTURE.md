@@ -1,6 +1,6 @@
 # 目前架構
 
-本文描述重建 P2 的實際來源；P3 的目標佈局另見 [REBUILD-PLAN §3](REBUILD-PLAN.md#3-目標架構終態)。文件收斂沒有建立新 runtime，也沒有把目前模組搬到 `packs/` 或新的 `core/`。
+本文描述目前實際來源；P3 的完整目標佈局另見 [REBUILD-PLAN §3](REBUILD-PLAN.md#3-目標架構終態)。文件收斂沒有建立新 runtime，也沒有把目前模組搬到 `packs/` 或新的 `core/`。
 
 ## 來源與輸出
 
@@ -8,7 +8,7 @@
 | --- | --- |
 | canonical BP | `projects/grilling/gameplay_core/behavior_pack/` |
 | canonical RP | `projects/grilling/gameplay_core/resource_pack/` |
-| 身份與相依 | [baseline.json](../baseline.json)：修復候選 2.8.182、BP/RP UUID、Cookery 1.6.4、來源樹身份 |
+| 身份與相依 | [baseline.json](../baseline.json)：目前 BP/RP UUID、版本、Cookery 相依與來源樹身份 |
 | bridge 工程 | [config.json](../config.json) 指向同一 BP/RP；匯出檢查不等於發布或 client 驗收 |
 | Java 來源 | `projects/grilling/source_snapshots/` 與 `source_manifest.json` 保留逐檔來源；主要 pin 為 `9a1acdab…`，另有明列 fork 來源，不把所有素材偽稱同一來源 |
 | Java 資料表 | [data/java](../data/java/)；[tools/java_extract](../tools/java_extract/README.md) 可由釘選上游重新萃取，P2 不改 runtime 去讀它們 |
@@ -19,7 +19,7 @@
 
 ## Runtime 的現況
 
-BP 的 `scripts/main.js` 仍同時承擔組裝與大量玩法工作；旁邊保留多個版本前綴模組。P3 尚未把它們收斂為每個 Java 功能域的 `logic.js`／`runtime.js`、唯一排程器或統一交易模組。現有全域事件與多個計時入口的競爭，是重構要解決的問題，不能在架構圖上先畫成已解決。
+BP 的 `scripts/main.js` 仍同時承擔組裝與大量玩法工作；旁邊保留多個版本前綴模組。P3 尚未把它們收斂為每個 Java 功能域的 `logic.js`／`runtime.js`、統一交易模組。共用事件與排程已接回目前域；其餘模組搬遷、食用重寫及完整域收尾仍在進行。
 
 | 功能域 | 可定位的現有入口／核心 |
 | --- | --- |
@@ -31,6 +31,14 @@ BP 的 `scripts/main.js` 仍同時承擔組裝與大量玩法工作；旁邊保�
 | 外部與指南 | `integration_api_runtime.js`、`integration_registry_core.js`、各 Cookery adapter、`guide/`；契約見 [整合 API](BEDROCK-INTEGRATION-API.md) 與 [指南規範](GUIDE-STANDARD.md) |
 
 上表只定位來源，不表示每條能力都已完成原生或真人驗收。完整玩家結果和跨域缺口在 [PARITY](PARITY.md)／[KNOWN-ISSUES](KNOWN-ISSUES.md)。
+
+## 共用事件與排程
+
+`core/events.js` 是本包的唯一全域方塊互動入口。依明列的優先序及方塊範圍派送；第一個接受手勢的玩法設定 cancel 後，後續玩法不再寫入。庫存與視覺觀察在玩法派送後執行。原生格子、物品及方塊 custom component 的既有交易路徑保留。
+
+`core/scheduler.js` 是本包唯一的 interval。各域註冊自己的週期與工作；一項失敗不阻塞其他工作。同一 tick 共用玩家查詢，不跨 tick 保存過期玩家清單。方塊原生命名 tick 保留由引擎排程。
+
+`host_api/oil_api_host.js` 是供 Cookery 使用的公開宿主來源，執行於另一個包的腳本環境，因此保留自己的互動入口。全樹計數含它，不能把兩個包硬接成一個全域事件環境。
 
 ## 保存與交易邊界
 

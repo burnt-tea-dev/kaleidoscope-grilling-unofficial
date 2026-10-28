@@ -1,3 +1,5 @@
+import {onBlockInteraction} from './core/events.js';
+import {every,onlinePlayers} from './core/scheduler.js';
 import {premiumOilParticles} from './oil_ambient_core.js';
 import {emitParticles} from './immersion_particles_runtime.js';
 import {TimedWorkQueue} from './timed_work_queue.js';
@@ -179,7 +181,7 @@ function takeSource(player,block,type,hand,toCookery=false){
  // Keep the durable row until the flow worker acknowledges cleanup of every cell.
  if(row){const next={...row,nextTick:system.currentTick};persistRow(next)}return true;
 }
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('a23_oil_world',e=>{
  if(e.cancel)return;
  // Java container integrations own these targets; do not also place a world-fluid source beside them.
  if(e.block.typeId==='kaleidoscope_grilling:big_vat'||e.block.typeId==='kaleidoscope_cookery:oil_pot')return;
@@ -194,7 +196,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
   const p=e.player,loc=faceTarget(e),dim=e.block.dimension,intent=captureInteractionIntent(p,item),hand=intent.hand;
   system.run(()=>{if(interactionIntentStillCurrent(p,intent))placeFromBucket(p,dim,loc,bucketType,hand)});return;
  }
-});
+},{"priority":40});
 world.beforeEvents.playerBreakBlock.subscribe(e=>{
  if(!isOil(e.block.typeId))return;e.cancel=true;const dim=e.block.dimension,loc={...e.block.location};
  system.run(()=>{const b=dim.getBlock(loc);if(b&&isOil(b.typeId))try{b.setType('minecraft:air')}catch{}});
@@ -214,10 +216,10 @@ function oilAmbient(row,now,players){
  emitParticles(dim,loc,premiumOilParticles());
 }
 function persistNextCycle(row){if(persistRow(row))return;dropClaims(row);addClaims(row);dueQueue.schedule(row.k,row.nextTick);if(system.currentTick-lastPersistWarning>=1200){lastPersistWarning=system.currentTick;console.warn('[Grilling oil registry] state write unacknowledged; retaining retry schedule')}}
-system.runInterval(()=>{
+every('a23_oil_world:1',()=>{
  const rows=readReg(),now=system.currentTick;
  const due=dueQueue.take(now,FLOW_SOURCE_BUDGET);
- const players=due.length?world.getAllPlayers():[];
+ const players=due.length?onlinePlayers():[];
  for(const key of due){
   const row=sourceIndex.get(key);if(!row)continue;
   const def=OIL_TYPES[row.type];if(!def){removeRow(row);continue}

@@ -1,3 +1,5 @@
+import {onBlockInteraction} from './core/events.js';
+import {every} from './core/scheduler.js';
 import {grillingConfig} from './server_config_runtime.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {useSound} from './immersion_audio_runtime.js';
@@ -533,7 +535,7 @@ world.beforeEvents.itemUse.subscribe(e=>{
  }catch{}
 });
 
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('a25_plate_recipe_runtime',e=>{
  try{
   const block=e.block,p=e.player,intent=captureInteractionIntent(p,e.itemStack),hand=intent.hand,item=heldByHand(p,hand),first=isInitialBlockPress(e.isFirstEvent);
   const defer=fn=>system.run(()=>{if(!interactionIntentStillCurrent(p,intent)){message(p,'§7操作已取消：互動後手持物品已改變');return}fn()});
@@ -558,7 +560,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
    const loc={...block.location},dim=block.dimension,face=e.blockFace;e.cancel=true;if(!first)return;defer(()=>placeRecipeBlock(dim.getBlock(loc),face,p,heldByHand(p,hand),hand));return;
   }
  }catch{}
-});
+},{"priority":10});
 
 world.beforeEvents.playerBreakBlock.subscribe(e=>{
  try{
@@ -624,7 +626,7 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
 });
 // The block tick handles loaded recipes. This sparse receipt scan also finishes
 // a credited cleanup whose source block had already become air before restart.
-system.runInterval(recoverRecordedRecipeDeliveries,200);
+every('a25_plate_recipe_runtime:1',recoverRecordedRecipeDeliveries,200);
 
 export function a25ReadPlateBlock(block){return readPlateBlock(block)}
 export function a25ReadRecipeDisplayStack(block){

@@ -1,9 +1,13 @@
+import {onBlockInteraction} from './core/events.js';
+import {every,onlinePlayers} from './core/scheduler.js';
+import {premiumOilPotInRange,premiumOilPotParticles} from './oil_ambient_core.js';
+import {emitParticles} from './immersion_particles_runtime.js';
 import {world,system} from '@minecraft/server';
 import {HOST_BLOCK_ID,typedOilBlockKey} from './a2736_typed_oil_pot_block_core.js';
 import {COOKERY_FILLED_ID,GRILLING_TYPE_KEY} from './a2734_cookery_oil_pot_core.js';
 import {readPublicOil} from './host_api/oil_api_core.js';
 import {ensureOilHandPublished} from './oil_api_client.js';
-import {readPlacedOilPotState} from './a2739_cookery_oil_pot_block_adapter.js';
+import {currentPlacedOilPotCandidates,readPlacedOilPotState} from './a2739_cookery_oil_pot_block_adapter.js';
 
 const notices=new Map();
 function notify(player){
@@ -29,7 +33,7 @@ function typedHand(stack){
  try{const type=stack.getDynamicProperty(GRILLING_TYPE_KEY);return type!==undefined&&type!==null&&type!=='';}
  catch{return true;}
 }
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('a2736_typed_oil_pot_block_runtime',e=>{
  // Publish legacy Grilling metadata before permitting a native Cookery placement.
  // Current public API items pass through to the author-owned placement transaction.
  const localOilUse=['kaleidoscope_grilling:grill','kaleidoscope_grilling:oil_press','kaleidoscope_grilling:big_vat'].includes(e.block?.typeId);
@@ -39,7 +43,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
  if(typedHand(e.itemStack)&&!localOilUse){
   e.cancel=true;system.run(()=>ensureOilHandPublished(e.player,'main',undefined));if(e.isFirstEvent!==false)notify(e.player);
  }
-});
+},{"priority":60});
 world.beforeEvents.playerBreakBlock.subscribe(e=>{
  if(legacyTypedPot(e.block)){e.cancel=true;notify(e.player);}
 });
@@ -49,3 +53,21 @@ world.beforeEvents.explosion.subscribe(e=>{
 });
 // No cleanup of old properties, block removal, item spawning, or host-state write.
 // Command edits and other addons that ignore cancellation cannot be prevented.
+
+
+// Java samples this independently on each nearby client every eight ticks.
+// Use Player.spawnParticle through the existing Molang velocity adapter, so
+// overlapping observers neither multiply each other's bursts nor share a draw.
+// Discovery comes from the placed renderer/public Oil API, never private data.
+every('a2736_typed_oil_pot_block_runtime:1',()=>{
+ const players=onlinePlayers();
+ for(const station of currentPlacedOilPotCandidates())try{
+  const nearby=players.filter(player=>premiumOilPotInRange(station,player));
+  if(!nearby.length)continue;
+  const block=world.getDimension(station.dimensionId).getBlock(station);
+  if(block?.typeId!==HOST_BLOCK_ID)continue;
+  const state=readPlacedOilPotState(block);
+  if(state?.type!=='premium_chili'||!(state.count>0))continue;
+  for(const player of nearby)emitParticles(player,station,premiumOilPotParticles());
+ }catch{} // An unloaded target is not authority to modify a block or its oil.
+},8);

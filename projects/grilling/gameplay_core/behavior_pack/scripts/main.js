@@ -1,3 +1,5 @@
+import {onBlockInteraction} from './core/events.js';
+import {every,onlinePlayers} from './core/scheduler.js';
 import {beginOilBrushVisual,cancelOilBrushVisual,syncOilBrushVisual,oilBrushStopExpression} from './oil_brush_visual_runtime.js';
 import {admitEatingProjection,selectEatingProjection} from './eating_projection_routes.js';
 import {mergeEffectApplication} from './effect_lifecycle_core.js';
@@ -70,7 +72,7 @@ import {initialState,normalizeState,tickState,light,brush,flip,season,canInsert,
 import {grillStateKey as stateKey,readGrillState as readState,occupiedGrillSlots as occupied} from './a2740_grill_state_adapter.js';
 import {mergeIntoContainer,compactSkewerContainer,compactMatchingHotFood,isFoodStack} from './a23_hot_runtime.js';
 import './a23_oil_world.js';
-import './oil_pot_ambient_runtime.js';
+
 import {UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SECRET_CREATOR_KEY,FLUID_CAPACITY,appendOutcome,expectedSize,secretFood,isDisassemblableRaw,canAppendConfigured,isConfiguredIngredient} from './a24_skewering_core.js';
 import {PLATE_ID,plateHighestNutritionIndex} from './a25_plate_recipe_core.js';
 import {a25PlateRows,a25PlateItem,a25RestoreStack} from './a25_plate_recipe_runtime.js';
@@ -1240,7 +1242,7 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
  blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_legs_tick',{onTick(e){try{const above=e.block.above();if(above&&above.typeId!==GRILL_ID)e.block.setType('minecraft:air')}catch{}}});
  blockComponentRegistry.registerCustomComponent('senluo:grilling_bottle_place',{beforeOnPlayerPlace:scheduleNativeBottlePlacement,onTick(e){try{tickNativeBottleSupport(e.block)}catch(error){console.warn('[Grilling bottle support recovery] '+error)}}});
 });
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('main',e=>{
  if(e.cancel)return;
  if(tryScheduleOffhandBottleInteraction(e))return;
  if(tryScheduleBeefBoardOverride(e))return;
@@ -1256,7 +1258,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
  if(!customTarget)return;
  e.cancel=true;const p=e.player,loc={...e.block.location},dim=e.block.dimension,intent=customTarget?captureInteractionIntent(p,e.itemStack):null,bottleCapture=isSeasoningBlock(e.block.typeId)?bottleActionSnapshot(e.block):undefined;
  scheduleHandAction(p,()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
-});
+},{"priority":100});
 world.afterEvents.playerPlaceBlock.subscribe(e=>{if(e.block.typeId===GRILL_ID)resetBlock(e.block,false)});
 world.beforeEvents.explosion.subscribe(scheduleNativeBottleExplosion);
 world.beforeEvents.explosion.subscribe(scheduleGrillExplosion);
@@ -1298,9 +1300,9 @@ function tickGrill(block){
  }
 }
 function tundraFactor(id){if(id==='minecraft:blue_ice')return 1.1055;if(['minecraft:ice','minecraft:packed_ice','minecraft:frosted_ice'].includes(id))return 1.11;return 1.3}
-system.runInterval(()=>{
+every('main:1',()=>{
  const slimeFrame=readSlimeWorldFrame(world);
- for(const p of world.getAllPlayers()){try{
+ for(const p of onlinePlayers()){try{
   syncSlimeHeld(p,slimeFrame);
   syncOilBrushVisual(p,{idle:false});
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}

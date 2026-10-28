@@ -1,3 +1,4 @@
+import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {
  WEDDING_CANDY_ID,WEDDING_CANDY_STATE_KEY,
@@ -41,7 +42,7 @@ export function tickWeddingCandyPlayer(player,calendar=shanghaiCalendar()){
  return true;
 }
 
-system.runInterval(()=>{
+every('a2747_wedding_candy_runtime:1',()=>{
  const calendar=shanghaiCalendar();if(!isWeddingCandyEventDate(calendar))return;
- for(const player of world.getAllPlayers())try{tickWeddingCandyPlayer(player,calendar)}catch{}
+ for(const player of onlinePlayers())try{tickWeddingCandyPlayer(player,calendar)}catch{}
 },20);

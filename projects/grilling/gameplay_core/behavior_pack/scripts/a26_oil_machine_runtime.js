@@ -1,3 +1,5 @@
+import {onBlockInteraction} from './core/events.js';
+import {every} from './core/scheduler.js';
 import {interactionParticleBurst} from './immersion_particles_runtime.js';
 import {queueStationContentsVisual} from './station_contents_visual_queue.js';
 import {oilImpactPitch} from './immersion_particles_core.js';
@@ -504,7 +506,7 @@ function interactVat(block,p,item,hand=null){
 
 }
 
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('a26_oil_machine_runtime',e=>{
  try{
   if(e.cancel)return;
   const b=e.block,p=e.player,intent=captureInteractionIntent(p,e.itemStack),hand=intent.hand,item=held(p,hand),first=isInitialBlockPress(e.isFirstEvent);
@@ -531,7 +533,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
    }
   }
  }catch{}
-});
+},{"priority":50});
 world.afterEvents.playerPlaceBlock.subscribe(({block})=>{
  if(block.typeId!==OIL_PRESS_ID&&block.typeId!==BIG_VAT_ID)return;
  try{
@@ -590,7 +592,7 @@ function repairPressSchedules(){
 }
 system.run(repairPressSchedules);
 // Retain the existing recovery source, but stop scanning it every single tick.
-system.runInterval(repairPressSchedules,20);
+every('a26_oil_machine_runtime:1',repairPressSchedules,20);
 
 export function a26ReadPress(block){return readPress(block)}
 export function a26ProbePressContainer(block){return scanVat(block)}

@@ -1,3 +1,4 @@
+import {every,onlinePlayers} from './core/scheduler.js';
 import {PepperContactWork} from './pepper_contact_work.js';
 import {world,system,ItemStack,BlockPermutation} from '@minecraft/server';
 import {getMainHand,getOffHand,setHand,isCreative} from './a2735_player_io.js';
@@ -334,7 +335,7 @@ world.afterEvents.entityRemove.subscribe(({removedEntityId})=>pepperContacts.for
 world.afterEvents.playerSpawn.subscribe(({player})=>pepperContacts.track(player));
 world.afterEvents.playerDimensionChange.subscribe(({player})=>pepperContacts.track(player));
 world.afterEvents.playerLeave.subscribe(({playerId})=>pepperContacts.forget(playerId));
-system.runInterval(()=>{
+every('a2748_pepper_tree_runtime:1',()=>{
  // Native census returns an array synchronously, once per recovered source
  // dimension. Its API cost is separate; handle insertion is capped at16/tick.
  const next=contactCensus.entries().next();
@@ -342,7 +343,7 @@ system.runInterval(()=>{
   if(pepperContacts.hasLeaves(d)){
    pepperContacts.queueRecovery(d,dimension.getEntities());
    // Player recovery is explicit, rather than depending on query inclusion.
-   pepperContacts.queueRecovery(d+'|players',world.getAllPlayers());
+   pepperContacts.queueRecovery(d+'|players',onlinePlayers());
   }
   else recoveredContactDimensions.delete(d);
  }catch(error){recoveredContactDimensions.delete(d);contactError(error);}}

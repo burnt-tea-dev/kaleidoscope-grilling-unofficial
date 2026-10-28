@@ -1,3 +1,5 @@
+import {onBlockInteraction} from './core/events.js';
+import {every,onlinePlayers} from './core/scheduler.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {SLIME_ID,readSlimeWorldFrame} from './slime_frame_core.js';
 import {advancedRackToolVisuals} from './advanced_rack_visual_core.js';
@@ -138,7 +140,7 @@ function pump(){
  // Startup leftovers have their own quota until confirmed removed. Retry one
  // per tick without querying chunks or consuming the station's stored items.
  for(const [id,row] of orphaned){const removed=discard(row,id);orphaned.delete(id);if(!removed)orphaned.set(id,row);break;}
- const viewers=world.getAllPlayers().map(p=>({dimensionId:p.dimension.id,...p.location}));if(system.currentTick-lastAudience>=10){lastAudience=system.currentTick;work.observe(viewers)};
+ const viewers=onlinePlayers().map(p=>({dimensionId:p.dimension.id,...p.location}));if(system.currentTick-lastAudience>=10){lastAudience=system.currentTick;work.observe(viewers)};
  for(const k of work.take(budget)){
   const row=targets.get(k);if(!row)continue;
   try{if(!work.visible.has(k)){clear(row);if(row.parts.size)work.cleanup.add(k);continue;}const b=world.getDimension(row.dimensionId).getBlock(row.location);if(b)syncStationContentsVisual(b,viewers);else clear(row);}catch(e){clear(row);warn(e)}
@@ -147,8 +149,8 @@ function pump(){
 for(const name of ['playerPlaceBlock','playerInteractWithBlock','playerBreakBlock'])world.afterEvents[name].subscribe(e=>markStationContentsDirty(e.block));
 // Grill/rack use their established deferred refresh. Plate/recipe transactions
 // publish explicit post-commit coordinates through the queue above.
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{if(['kaleidoscope_grilling:grill','kaleidoscope_grilling:advanced_rack_block'].includes(e.block.typeId)){const d=e.block.dimension,l={...e.block.location};system.run(()=>{try{markStationContentsDirty(d.getBlock(l))}catch{}})}});
+onBlockInteraction('station_contents_visual_runtime',e=>{if(['kaleidoscope_grilling:grill','kaleidoscope_grilling:advanced_rack_block'].includes(e.block.typeId)){const d=e.block.dimension,l={...e.block.location};system.run(()=>{try{markStationContentsDirty(d.getBlock(l))}catch{}})}},{"priority":20,"observe":true,"blocks":["kaleidoscope_grilling:grill","kaleidoscope_grilling:advanced_rack_block"]});
 system.run(()=>{for(const dim of ['overworld','nether','the_end'])try{for(const type of [TYPE,RACK_TOOL_VISUAL_TYPE,PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,CUSTOM_RECIPE_ICON_VISUAL_TYPE,VAT_PREMIUM_VISUAL_TYPE])for(const e of world.getDimension(dim).getEntities({type})){
  const id=e.id,row={parts:new Map([[id,{entity:e,type}]])};helpers++;if(!discard(row,id))orphaned.set(id,row);
-}}catch(e){warn(e)};index();system.runInterval(pump,1);system.runInterval(index,400);});
+}}catch(e){warn(e)};index();every('station_contents_visual_runtime:1',pump,1);every('station_contents_visual_runtime:2',index,400);});
 export const contentsVisualHelperCount=()=>helpers;

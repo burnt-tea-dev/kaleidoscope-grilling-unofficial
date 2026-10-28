@@ -1,9 +1,10 @@
+import {every} from './core/scheduler.js';
 import {system} from '@minecraft/server';
 import {createFeedbackCooldown,goldenSkewerParticles,invincibleAmbientParticle} from './immersion_particles_core.js';
 import {emitParticles,interactionParticleBurst} from './immersion_particles_runtime.js';
 import {recordSoundDelivery} from './immersion_feedback_diagnostics.js';
 const shieldCooldown=createFeedbackCooldown(6);
-system.runInterval(()=>shieldCooldown.sweep(system.currentTick),10);
+every('immersion_effect_feedback:1',()=>shieldCooldown.sweep(system.currentTick),10);
 function feedbackSound(dimension,location,id,volume,pitch){try{dimension.playSound(id,location,{volume,pitch});recordSoundDelivery()}catch(error){recordSoundDelivery(error)}}
 function context(entity){try{return {dimension:entity.dimension,location:entity.location}}catch{return undefined}}
 export function invincibleDamageFeedback(entity){

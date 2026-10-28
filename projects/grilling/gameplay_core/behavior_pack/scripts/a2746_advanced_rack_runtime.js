@@ -1,3 +1,4 @@
+import {onBlockInteraction} from './core/events.js';
 import {markStationContentsDirty} from './station_contents_visual_runtime.js';
 import {planRackInsert,commitRackTransfer,depositInventorySlot} from './rack_transactions.js';
 import {slotWrite,remainderOf,planInventoryInsert} from './rack_transfer_plan.js';
@@ -266,7 +267,7 @@ function nearestRack(player){
 function rackQa(player,stage,details={}){
  try{if(player.hasTag('kg_rack_qa'))console.warn('[Grilling rack QA] '+JSON.stringify({stage,...details}));}catch{}
 }
-world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
+onBlockInteraction('a2746_advanced_rack_runtime',event=>{
  const p=event.player;
  if(event.isFirstEvent!==false){
   const hit=event.faceLocation;
@@ -305,7 +306,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe(event=>{
   return;
  }
  try{scheduleRackPlacement(event)}catch{}
-});
+},{"priority":70,"blocks":["kaleidoscope_grilling:advanced_rack_block"]});
 
 world.beforeEvents.playerBreakBlock.subscribe(event=>{
  if(event.cancel||event.block.typeId!==ADVANCED_RACK_BLOCK_ID)return;
