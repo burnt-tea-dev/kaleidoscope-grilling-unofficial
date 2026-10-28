@@ -38,7 +38,7 @@ function readItems(dir) {
   }
 }
 readItems(itemRoot);
-const blockDomains = new Map();
+const blockDomains = new Map(), blockDefinitions = new Map();
 const traitDomains = {
   'minecraft:cardinal_direction': ['north', 'south', 'east', 'west'],
   'minecraft:facing_direction': ['down', 'up', 'north', 'south', 'west', 'east'],
@@ -50,7 +50,8 @@ function readBlocks(dir) {
     const path = new URL(row.name + (row.isDirectory() ? '/' : ''), dir);
     if (row.isDirectory()) readBlocks(path);
     else if (row.name.endsWith('.json')) {
-      const description = JSON.parse(readFileSync(path, 'utf8'))['minecraft:block']?.description;
+      const definition = JSON.parse(readFileSync(path, 'utf8'))['minecraft:block'];
+      const description = definition?.description;
       if (!description) continue;
       const domains = {...description.states};
       for (const trait of Object.values(description.traits ?? {})) {
@@ -60,6 +61,7 @@ function readBlocks(dir) {
         }
       }
       blockDomains.set(description.identifier, domains);
+      blockDefinitions.set(description.identifier, definition);
     }
   }
 }
@@ -81,7 +83,7 @@ function validateStates(typeId, states) {
 export function createFixture(options = {}) {
   const id = String(nextFixture++);
   let nextEntity = 1, nextJob = 1;
-  const jobs = new Map(), dimensions = new Map(), entities = new Map();
+  const jobs = new Map(), dimensions = new Map(), entities = new Map(), namedTicks = new Map();
   const f = {
     id, logs: [], drops: [], sounds: [], particles: [], messages: [], effects: [],
     scriptEvents: [], commandCalls: [], writes: [], subscribers: new Map(),
@@ -344,14 +346,23 @@ export function createFixture(options = {}) {
   }
   function block(typeId, location = {x: 0, y: 0, z: 0}, opts = {}) {
     const dimension = typeof opts.dimension === 'string' ? getDimension(opts.dimension) : opts.dimension ?? f.dimension;
+    const scheduled = new Map();
     const b = {dimension, location: copy(location), ...location, permutation: BlockPermutation.resolve(typeId, opts.states), isValid: true,
       get typeId() {return b.permutation.type.id;},
       get type() {return b.permutation.type;},
       get isAir() {return b.typeId === 'minecraft:air';},
       get isLiquid() {return ['minecraft:water', 'minecraft:lava'].includes(b.typeId);},
-            setPermutation(permutation) {return operation(b, 'setPermutation', [permutation], () => {b.permutation = permutation;});},
-      setType(type) {return operation(b, 'setType', [type], () => {b.permutation = BlockPermutation.resolve(typeof type === 'string' ? type : type.id);});},
+            setPermutation(permutation) {return operation(b, 'setPermutation', [permutation], () => {if(b.typeId!==permutation.type.id)scheduled.clear();b.permutation = permutation;});},
+      setType(type) {return operation(b, 'setType', [type], () => {const next=typeof type === 'string' ? type : type.id;if(b.typeId!==next)scheduled.clear();b.permutation = BlockPermutation.resolve(next);});},
       getComponent(name) {return ['minecraft:inventory', 'inventory'].includes(name) && b.inventory ? {container: b.inventory} : undefined;},
+      hasScheduledNamedTick(name) {return scheduled.has(name);},
+      scheduleNamedTick(name, delay) {
+        if(typeof name!=='string'||!name.length||name.length>31||!Number.isInteger(delay)||delay<1)throw Error('Invalid named tick');
+        if(!scheduled.has(name)&&scheduled.size>=4)throw Error('Named tick capacity');
+        // This fixture has one script owner. Foreign events are tested directly.
+        if(!scheduled.has(name))scheduled.set(name, delay);
+      },
+      removeScheduledNamedTicks(name) {if(name===undefined)scheduled.clear();else scheduled.delete(name);},
       getTags() {return opts.tags ?? [];}, hasTag(tag) {return b.getTags().includes(tag);},
       offset(delta) {return dimension.getBlock({x: b.x + delta.x, y: b.y + delta.y, z: b.z + delta.z});},
       above(n = 1) {return b.offset({x: 0, y: n, z: 0});}, below(n = 1) {return b.offset({x: 0, y: -n, z: 0});},
@@ -362,7 +373,7 @@ export function createFixture(options = {}) {
     };
     const size = opts.inventorySize ?? (typeId === 'kaleidoscope_grilling:advanced_rack_block' ? 9 : undefined);
     if (size) b.inventory = container(size);
-    dimension.blocks.set(positionKey(location), b); return b;
+    dimension.blocks.set(positionKey(location), b); namedTicks.set(b,scheduled); return b;
   }
   function player(opts = {}) {
     const dimension = typeof opts.dimension === 'string' ? getDimension(opts.dimension) : opts.dimension ?? f.dimension;
@@ -457,6 +468,24 @@ export function createFixture(options = {}) {
     let ran = 0;
     for (let step = 0; step < count; step++) {
       system.currentTick++;
+      // Only a loaded, still-owned block advances. Native named ticks are not
+      // wall-clock timers; unloaded blocks retain their remaining loaded ticks.
+      for(const [block,scheduled] of namedTicks){
+        if(block.dimension.blocks.get(positionKey(block.location))!==block){namedTicks.delete(block);continue;}
+        let current;try{current=block.dimension.getBlock(block.location)}catch{continue;}
+        if(current!==block)continue;
+        const expired=[];
+        for(const [name,remaining] of scheduled){
+          if(remaining<=1){scheduled.delete(name);expired.push(name)}else scheduled.set(name,remaining-1);
+        }
+        for(const name of expired){
+          const components=blockDefinitions.get(block.typeId)?.components??{};
+          for(const component of Object.keys(components)){
+            const callback=f.blockComponents.get(component)?.onNamedTick;
+            if(callback){callback({block,dimension:block.dimension,name,isMine:()=>true});ran++;}
+          }
+        }
+      }
       const due = [...jobs].filter(([, job]) => job.tick <= system.currentTick).sort(([a], [b]) => a - b);
       for (const [id, job] of due) {
         if (!jobs.has(id)) continue;
@@ -469,7 +498,7 @@ export function createFixture(options = {}) {
   f.flush = (ticks = 1) => f.tick(ticks);
   f.pendingJobs = () => [...jobs].map(([id, job]) => ({id, tick: job.tick, interval: job.interval}));
   f.snapshotProperties = () => Object.fromEntries([...world.dynamicProperties].map(([key, value]) => [key, copy(value)]));
-  f.dispose = () => {jobs.clear();registry.delete(id);};
+  f.dispose = () => {jobs.clear();namedTicks.clear();registry.delete(id);};
   registry.set(id, f);
   return f;
 }

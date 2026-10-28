@@ -88,6 +88,8 @@ async function fixture({count=16,creative=false,full=false,off=false,press:press
  const api=await h.load(worldOil?'a23_oil_world.js':'a26_oil_machine_runtime.js');
  const {nativeItemSignature}=await h.load('owned_item_transaction_core.js');
  h.startup();
+ // First-load recovery arms native ticks; it does not advance saved work.
+ h.tick(1);
  const f={h,api,signature:nativeItemSignature,world:h.world,dimension:h.dimension,dp,vat:vatBlock,press,block,seedVat,seedPress,...owner,
   item:(...args)=>h.item(...args),hand:off?'off':'main',
   setFault:fn=>{fault=fn},unload:value=>{unloaded=value},
@@ -171,11 +173,11 @@ test('pot save failure restores both the native pot and vat',async()=>{
  const f=await fixture(),pot=await publicPot(f);f.setHand(pot);failOnce(f,key=>key.startsWith(VAT));use(f);
  assert.equal(f.signature(f.held()),f.signature(pot));assert.equal(f.readVat().buckets,4);
 });
-for(const kind of ['reset','residue'])test(`press ${kind} failure restores the batch and oil before one successful tick retry`,async()=>{
+for(const kind of ['reset','residue'])test(`press ${kind} failure restores the batch and oil before the bounded recovery retries once`,async()=>{
  const f=await fixture({vat:{},press:{cakes:4,progress:16}});
  failOnce(f,key=>kind==='reset'?key.startsWith(PRESS)&&!key.startsWith(REGISTRY):key==='spawn');f.tick(1);
  assert.equal(f.readVat().buckets,0);assert.equal(f.readPress().cakes,4);assert.equal(f.drops.length,0);
- f.tick(1);assert.equal(f.readVat().buckets,4);assert.equal(f.readPress().cakes,0);
+ f.tick(20);assert.equal(f.readVat().buckets,4);assert.equal(f.readPress().cakes,0);
  assert.deepEqual(dropped(f).map(s=>[s.typeId,s.amount]),[[core.OIL_RESIDUE_ID,4]]);
  f.tick(2);assert.equal(f.drops.length,1);assert.equal(f.readVat().buckets,4);
 });
@@ -196,6 +198,8 @@ test('saved pending press resumes once in a fresh runtime and world instance',as
  const vat=reloaded.block(core.BIG_VAT_ID,f.vat.location,{states:f.vat.permutation.getAllStates()});
  const press=reloaded.block(core.OIL_PRESS_ID,f.press.location,{states:f.press.permutation.getAllStates()});
  const api=await reloaded.load('a26_oil_machine_runtime.js');reloaded.startup();reloaded.tick(1);
+ assert.equal(api.a26ReadPress(press).completionDelay,1,'recovery only arms the saved work');
+ reloaded.tick(1);
  assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(api.a26ReadPress(press).cakes,0);
  assert.deepEqual(reloaded.drops.map(e=>[e.itemStack.typeId,e.itemStack.amount]),[[core.OIL_RESIDUE_ID,4]]);
  assert.equal(createOilPressRegistry(reloaded.world,REGISTRY).rows().length,0);
@@ -422,3 +426,44 @@ test('world-fluid placement cannot overwrite another oil or an existing source',
  }
 });
 }
+
+import {createOilPressScheduler,OIL_PRESS_TICK_NAME} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil_press_registry.js';
+function pressFixture(step){
+ let tick=0,scheduled=false,fail=false,schedules=0,cancels=0;
+ const errors=[];
+ const block={dimension:{id:'overworld'},x:0,y:64,z:0,
+  hasScheduledNamedTick(name){assert.equal(name,OIL_PRESS_TICK_NAME);if(fail)throw Error('unloaded');return scheduled},
+  scheduleNamedTick(name,delay){assert.equal(name,OIL_PRESS_TICK_NAME);assert.equal(delay,1);scheduled=true;schedules++},
+  removeScheduledNamedTicks(name){assert.equal(name,OIL_PRESS_TICK_NAME);scheduled=false;cancels++}};
+ const scheduler=createOilPressScheduler({now:()=>tick,step,report:e=>errors.push(e)});
+ const event={block,name:OIL_PRESS_TICK_NAME,isMine:()=>true};
+ return {block,scheduler,event,errors,fire(){scheduled=false;tick++;return scheduler.onNamedTick(event)},
+  set fail(value){fail=value},get schedules(){return schedules},get cancels(){return cancels},get scheduled(){return scheduled}};
+}
+
+test('native scheduling is idempotent and unrelated named ticks do not run work',()=>{
+ let calls=0;const f=pressFixture(()=>{calls++;return true});
+ assert(f.scheduler.ensure(f.block));assert(f.scheduler.ensure(f.block));
+ assert.equal(f.schedules,1);assert.equal(f.scheduler.onNamedTick({block:f.block,name:'other_work',isMine:()=>true}),false);assert.equal(calls,0);
+});
+test('a duplicate callback cannot decrement twice in one game tick',()=>{
+ let remaining=3;const f=pressFixture(()=>--remaining>0);f.scheduler.ensure(f.block);
+ f.fire();f.scheduler.onNamedTick(f.event);assert.equal(remaining,2);assert.equal(f.schedules,2);
+ f.fire();f.fire();assert.equal(remaining,0);assert.equal(f.scheduled,false);
+});
+test('a transient unloaded block can be scheduled again without consuming work',()=>{
+ let calls=0;const f=pressFixture(()=>{calls++;return false});f.fail=true;
+ assert.equal(f.scheduler.ensure(f.block),false);assert.equal(calls,0);
+ f.fail=false;assert(f.scheduler.ensure(f.block));f.fire();assert.equal(calls,1);assert.equal(f.errors.length,1);
+});
+test('step failure is contained and a later recovery attempt can rearm',()=>{
+ let broken=true,calls=0;const f=pressFixture(()=>{calls++;if(broken)throw Error('retained data');return false});
+ f.scheduler.ensure(f.block);assert.equal(f.fire(),false);assert.equal(f.errors.length,1);
+ broken=false;f.scheduler.ensure(f.block);f.fire();assert.equal(calls,2);assert.equal(f.scheduled,false);
+});
+
+test('an identically named tick from another script owner cannot run or cancel work',()=>{
+ let calls=0;const f=pressFixture(()=>{calls++;return false});f.scheduler.ensure(f.block);
+ assert.equal(f.scheduler.onNamedTick({...f.event,isMine:()=>false}),false);
+ assert.equal(calls,0);assert.equal(f.scheduled,true);assert.equal(f.cancels,0);
+});

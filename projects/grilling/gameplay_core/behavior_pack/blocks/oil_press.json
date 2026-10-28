@@ -1,5 +1,5 @@
 {
-  "format_version": "1.26.50",
+  "format_version": "1.26.60",
   "minecraft:block": {
     "description": {
       "identifier": "kaleidoscope_grilling:oil_press",
@@ -43,18 +43,20 @@
           "face_dimming": true
         }
       },
-      "minecraft:collision_box": {
-        "origin": [
-          -8,
-          0,
-          -8
-        ],
-        "size": [
-          16,
-          16,
-          16
-        ]
-      },
+      "minecraft:collision_box": [
+        {
+          "origin": [
+            -8,
+            0,
+            -8
+          ],
+          "size": [
+            16,
+            16,
+            16
+          ]
+        }
+      ],
       "minecraft:selection_box": {
         "origin": [
           -8,
@@ -83,7 +85,8 @@
             "face_dimming": true
           }
         }
-      }
+      },
+      "kaleidoscope_grilling:oil_press_schedule": {}
     },
     "permutations": [
       {

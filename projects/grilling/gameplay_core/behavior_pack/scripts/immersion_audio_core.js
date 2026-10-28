@@ -7,7 +7,7 @@ export function stopSoundHandle(handle){
 }
 /** Java has a moving local shake instance and a separate, uncancelled world
  * one-shot for observers. The local Bedrock request deliberately has no fixed
- * location; stable 2.9.0 offers no SoundInstance position/seek operation. */
+ * location. Observers retain the independent Java world one-shot. */
 export function playSeasoningShakeAudio(player,observers,origin){
  let local;
  try{local=player.playSound('kg_imm.shake_seasoning',{volume:.8,pitch:1})}catch{}
@@ -18,7 +18,7 @@ export function playSeasoningShakeAudio(player,observers,origin){
  // Only the local sound is cancelled on release; observers hear the one-shot.
  return local;
 }
-export function createGrillAudioController({play,stop=stopSoundHandle,repeatTicks=GRILL_LOOP_TICKS,staleTicks=GRILL_AUDIO_STALE_TICKS}){
+export function createGrillAudioController({play,stop=stopSoundHandle,repeatTicks=GRILL_LOOP_TICKS,staleTicks=GRILL_AUDIO_STALE_TICKS,nativeLoop=false}){
  const active=new Map();
  return {
   update(key,station,isActive,tick){
@@ -26,10 +26,17 @@ export function createGrillAudioController({play,stop=stopSoundHandle,repeatTick
    if(!isActive){if(row){stop(row.handle);active.delete(key)}return false}
    if(!row){row={handle:undefined,next:tick,seen:tick};active.set(key,row)}
    row.seen=tick;
+   // Infinite native loops must keep a strong reference to their own handle.
+   // Do not periodically restart them using a duration converted to game ticks.
+   if(nativeLoop&&row.handle)return false;
    if(tick<row.next)return false;
    // Retire only this station's sound, never all sounds of the same type.
    stop(row.handle);row.handle=undefined;row.next=tick+20;
-   try{row.handle=play(station);row.next=tick+repeatTicks;return true}
+   try{
+    row.handle=play(station);
+    if(nativeLoop&&!row.handle)throw Error('Native loop did not return a sound handle');
+    row.next=tick+repeatTicks;return true;
+   }
    catch{return false} // Bounded retry; audio cannot abort a gameplay transaction.
   },
   sweep(tick){

@@ -19,7 +19,7 @@ import {captureWritableHand} from './a2735_player_io.js';
 import {commitSteps} from './a277_grill_transaction_core.js';
 import {nativeItemSignature,ownedItemStep} from './owned_item_transaction_core.js';
 import {suppressNumbVisual} from './numb_visual_runtime.js';
-import {createOilPressRegistry} from './oil_press_registry.js';
+import {createOilPressRegistry,createOilPressScheduler} from './oil_press_registry.js';
 import {ensureOilHandPublished} from './oil_api_client.js';
 import {hasPlantFertilizer,usePlantFertilizer,samePlantPermutation} from './plant_fertilizer.js';
 
@@ -29,6 +29,8 @@ const VAT_PREFIX='kaleidoscope_grilling:a26_vat_';
 const VAT_INSTANCE_PREFIX='kaleidoscope_grilling:a26_vat_instance_';
 const PRESS_REG='kaleidoscope_grilling:a26_press_registry';
 const pressRegistry=createOilPressRegistry(world,PRESS_REG);
+const pressScheduler=createOilPressScheduler({now:()=>system.currentTick,step:tickPress,
+ report:error=>console.warn('[Grilling oil press schedule] '+error)});
 const VAT_ITEM_TYPE='kaleidoscope_grilling:vat_type';
 const VAT_ITEM_BUCKETS='kaleidoscope_grilling:vat_buckets';
 const OIL_BUCKETS=Object.freeze({
@@ -53,8 +55,9 @@ function key(prefix,block){return prefix+block.dimension.id.replace(/[^a-z0-9]/g
 function registryRow(block){return {d:block.dimension.id,x:block.x,y:block.y,z:block.z}}
 function registerPress(block){
  pressRegistry.add(registryRow(block));
+ pressScheduler.ensure(block);
 }
-function removePressReg(block){pressRegistry.remove(registryRow(block))}
+function removePressReg(block){pressRegistry.remove(registryRow(block));pressScheduler.cancel(block)}
 function decHand(p,hand,count=1){
  if(creative(p))return true;const s=held(p,hand);if(!s||s.amount<count)return false;
  if(s.amount===count)setHand(p,hand,undefined);else{s.amount-=count;setHand(p,hand,s)}return true;
@@ -548,25 +551,46 @@ world.beforeEvents.playerBreakBlock.subscribe(e=>{
  }catch{}
 });
 
-system.runInterval(()=>{
- let rows;try{rows=pressRegistry.rows()}catch(error){console.warn('[Grilling oil registry] '+error);return;}
+// The native callback retains the old one-loaded-tick transition, including
+// the same transaction/finish path. It does not infer offline progress from
+// world time, and it does not change any persisted key or ItemStack format.
+function tickPress(block){
+ if(block.typeId!==OIL_PRESS_ID){pressRegistry.remove(registryRow(block));return false}
+ const faultId=key(FAULT_PREFIX,block);
+ if(TRANSACTION_FAULTS.has(faultId)||world.getDynamicProperty(faultId)!==undefined){removePressReg(block);return false}
+ const state=capturedPressState(pressTargetSnapshot(block));
+ if(state.completionDelay>0){
+  const next={...state,completionDelay:state.completionDelay-1};writePress(block,next,false);
+  if(next.completionDelay===0&&next.progress>=PRESS_REQUIRED_PROGRESS)finishPress(block);
+ }else if(state.progress>=PRESS_REQUIRED_PROGRESS&&!state.waiting)finishPress(block);
+ else{removePressReg(block);return false}
+ const next=capturedPressState(pressTargetSnapshot(block));
+ const pending=next.completionDelay>0||(next.progress>=PRESS_REQUIRED_PROGRESS&&!next.waiting);
+ if(!pending)removePressReg(block);
+ return pending;
+}
+system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
+ blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:oil_press_schedule',{
+  onNamedTick:event=>pressScheduler.onNamedTick(event)
+ });
+});
+function repairPressSchedules(){
+ let rows;try{rows=pressRegistry.rows()}catch(error){console.warn('[Grilling oil registry] '+error);return}
  for(const row of rows){
-  let dim,b;try{dim=world.getDimension(row.d);b=dim.getBlock({x:row.x,y:row.y,z:row.z})}catch{continue}
-  // Missing block/chunk is unknown, not proof that the machine was removed.
-  if(!b)continue;
+  let block;try{block=world.getDimension(row.d).getBlock({x:row.x,y:row.y,z:row.z})}catch{continue}
+  // An unloaded chunk is not a removed machine. Keep its recovery entry.
+  if(!block)continue;
   try{
-   if(b.typeId!==OIL_PRESS_ID){pressRegistry.remove(row);continue;}
-   const faultId=key(FAULT_PREFIX,b);
-   if(TRANSACTION_FAULTS.has(faultId)||world.getDynamicProperty(faultId)!==undefined){pressRegistry.remove(row);continue;}
-   const s=readPress(b);
-   if(s.completionDelay>0){
-    const next={...s,completionDelay:s.completionDelay-1};writePress(b,next,false);
-    if(next.completionDelay===0&&next.progress>=PRESS_REQUIRED_PROGRESS)finishPress(b);
-   }else if(s.progress>=PRESS_REQUIRED_PROGRESS&&!s.waiting)finishPress(b);
-   else pressRegistry.remove(row);
-  }catch(error){console.warn('[Grilling oil press] '+error);}
+   if(block.typeId!==OIL_PRESS_ID){pressRegistry.remove(row);continue}
+   const faultId=key(FAULT_PREFIX,block);
+   if(TRANSACTION_FAULTS.has(faultId)||world.getDynamicProperty(faultId)!==undefined){removePressReg(block);continue}
+   pressScheduler.ensure(block); // schedules only; never advances processing
+  }catch(error){console.warn('[Grilling oil press recovery] '+error)}
  }
-},1);
+}
+system.run(repairPressSchedules);
+// Retain the existing recovery source, but stop scanning it every single tick.
+system.runInterval(repairPressSchedules,20);
 
 export function a26ReadPress(block){return readPress(block)}
 export function a26ProbePressContainer(block){return scanVat(block)}

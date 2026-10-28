@@ -77,7 +77,13 @@ def check(root=ROOT):
     assert REQUIRED <= config.keys(), f'missing project fields: {REQUIRED - config.keys()}'
     assert config['type'] == 'minecraftBedrock'
     assert config['worlds'] == [], 'release project must not include private worlds'
-    assert config['experimentalGameplay'] == {}, 'stable family does not use experimental toggles'
+    # Bridge uses its own editor keys. World flags are separately declared in
+    # the canonical baseline and must be adopted by the family deployment.
+    beta = any(dep.get('module_name') == '@minecraft/server' and '-beta' in dep.get('version', '')
+               for dep in baseline['packs']['BP']['dependencies'])
+    expected_experiments = {'enableGameTestFramework': True} if beta else {}
+    assert config['experimentalGameplay'] == expected_experiments, 'bridge experiment/API mismatch'
+    assert baseline.get('required_experiments', {}) == ({'gametest': True} if beta else {}), 'world experiment/API mismatch'
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
@@ -85,6 +91,8 @@ def check(root=ROOT):
     assert plugins[0][1]['packName'] == expected_name, 'bridge build name drifted from canonical version'
     nested = load(root / 'projects/grilling/gameplay_core/config.json')
     assert nested['compiler']['plugins'] == plugins, 'nested bridge compiler differs from canonical export'
+    assert nested['experimentalGameplay'] == config['experimentalGameplay'], 'nested bridge experiment mismatch'
+    assert nested['targetVersion'] == config['targetVersion'], 'nested bridge target mismatch'
     report = {'project': config['name'], 'target_version': config['targetVersion'], 'packs': {}}
     for kind, pack in [('behaviorPack', 'BP'), ('resourcePack', 'RP')]:
         relative = Path(config['packs'][kind])
