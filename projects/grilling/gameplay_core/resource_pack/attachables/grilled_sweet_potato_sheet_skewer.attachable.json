@@ -16,9 +16,9 @@
       "geometry": {
         "stage0": "geometry.kg_a287.kg_a22.grilled_sweet_potato_sheet_skewer.stage0",
         "stage1": "geometry.kg_a287.kg_a22.grilled_sweet_potato_sheet_skewer.stage1",
-        "stage2": "geometry.kg_a287.kg_a22.grilled_sweet_potato_sheet_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.grilled_sweet_potato_sheet_skewer.stage2",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_sweet_potato_sheet_skewer.stage2"
+        "stage2": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4"
       },
       "scripts": {
         "pre_animation": [

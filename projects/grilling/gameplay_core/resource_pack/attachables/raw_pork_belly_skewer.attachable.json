@@ -14,11 +14,11 @@
         "stage4": "textures/a22_bites/raw_pork_belly_skewer_stage4"
       },
       "geometry": {
-        "stage0": "geometry.kg_a287.kg_a22.raw_pork_belly_skewer.stage0",
-        "stage1": "geometry.kg_a287.kg_a22.raw_pork_belly_skewer.stage1",
-        "stage2": "geometry.kg_a287.kg_a22.raw_pork_belly_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.raw_pork_belly_skewer.stage3",
-        "stage4": "geometry.kg_a287.kg_a22.raw_pork_belly_skewer.stage4"
+        "stage0": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage0",
+        "stage1": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage1",
+        "stage2": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage2",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage3",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4"
       },
       "scripts": {
         "pre_animation": [

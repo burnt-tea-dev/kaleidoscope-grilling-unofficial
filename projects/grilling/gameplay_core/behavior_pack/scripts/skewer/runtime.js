@@ -183,7 +183,7 @@ function threadCurrent(player){
  const offStep={apply(){offRecovered=false;offWrite.apply()},rollback(){offWrite.rollback();offRecovered=true}};
  const steps=[...(free?[]:[mainWrite]),offStep,...delivery.steps];
  if(!transactionStatus(commitPlayerItemTransaction(world,player,steps,{tick:system.currentTick,label:'threading'}),'threading')){interactionFailure(player,'§c穿串未完成；已回復可確認的原料，未確認交易請查看紀錄');return false}
- useSound(player,'action_success',.7,1);
+ useSound(player,'thread_success',.7,1);
  awardLookingThePart(player,outcome);
  return true;
 }

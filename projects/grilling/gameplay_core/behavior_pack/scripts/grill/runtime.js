@@ -17,7 +17,7 @@ import {captureWritableHand,getHand as heldByHand,isCreative as creative,playerI
 import {planInventoryInsert,slotWrite} from "../rack_transfer_plan.js";
 import {acknowledgedDrop,commitStationTransfer} from "../grill_transfer.js";
 import {interactionFailure,javaInteractionFeedback} from "../core/interaction_feedback.js";
-import {blockSound,removeGrillAudio,updateGrillAudio} from "../immersion_audio_runtime.js";
+import {blockSound,grillFireSound,removeGrillAudio,updateGrillAudio} from "../immersion_audio_runtime.js";
 import {captureSkewerMetadata,metadataSignature} from "../skewer_item_snapshot.js";
 import {COOKERY_FILLED_ID as COOKERY_FILLED,planCookeryOilPotConsumption} from "../oil/cookery_oil_pot_adapter.js";
 import {isSpecialSeasoningId} from "../seasoning/special_seasoning_visual_core.js";
@@ -266,12 +266,12 @@ function handleGrill(block,player,hand='main'){
    if(!tool.ok){interactionFailure(player,'§c點火失敗：打火石狀態無法提交');return}
    if(!commitGrillAndHand(block,state,nextState,player,hand,tool.before,tool.next,tool.mutate)){interactionFailure(player,'§c點火交易失敗，已嘗試回滾');return}
    if(tool.broken)try{player.playSound('random.break',{volume:.8,pitch:1})}catch{}
-   try{block.dimension.playSound('fire.ignite',block.location)}catch{}
+   grillFireSound(block,true);
   }
   return
  }
  if(isExtinguishTool(id)&&state.lit){
-  state=light(state,false);writeState(block,state);try{block.dimension.playSound('random.fizz',block.location)}catch{}return
+  state=light(state,false);writeState(block,state);grillFireSound(block,false);return
  }
  if(id===COOKERY_FILLED){
   if(!ensureOilHandPublished(player,hand,()=>handleGrill(block,player,hand)))return;

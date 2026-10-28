@@ -18,7 +18,7 @@
         "stage1": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage1",
         "stage2": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage2",
         "stage3": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage3",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_pork_belly_skewer.stage4"
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4"
       },
       "scripts": {
         "pre_animation": [

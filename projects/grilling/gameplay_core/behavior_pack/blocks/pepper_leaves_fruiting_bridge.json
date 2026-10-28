@@ -6,7 +6,7 @@
     },
     "components": {
       "minecraft:display_name": "kaleidoscope_grilling.display.block.pepper_leaves",
-      "minecraft:geometry": "geometry.kg_a1.pepper_leaves_fruiting",
+      "minecraft:geometry": "geometry.kg_a1.pepper_leaves",
       "minecraft:material_instances": {
         "*": {
           "texture": "kg_a2748_pepper_leaves_fruiting",

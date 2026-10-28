@@ -77,7 +77,7 @@
       {
         "condition": "q.block_state('kaleidoscope_grilling:has_pepper') == true",
         "components": {
-          "minecraft:geometry": "geometry.kg_a1.pepper_leaves_fruiting",
+          "minecraft:geometry": "geometry.kg_a1.pepper_leaves",
           "minecraft:material_instances": {
             "*": {
               "texture": "kg_a2748_pepper_leaves_fruiting",

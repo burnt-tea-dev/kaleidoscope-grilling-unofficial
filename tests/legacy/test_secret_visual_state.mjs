@@ -182,3 +182,26 @@ test('new raw ingredient helpers resolve through actual secret and failure contr
   }
  }
 });
+
+// Restricted arithmetic evaluator: this verifies lifecycle dependencies, not a Molang VM.
+test('cold secret attachable initialization does not read pre-animation marker state',()=>{
+ for(const name of ['secret_skewer','secret_skewer_java_three_alt']){
+  const scripts=json(`resource_pack/attachables/${name}.attachable.json`)['minecraft:attachable'].description.scripts;
+  for(const hand of ['main_hand','off_hand'])for(const staleMarker of [undefined,230]){
+   const state={kg_secret_marker:staleMarker};
+   const v=new Proxy(state,{get(target,key){
+    if(key==='kg_secret_marker')throw new Error('initialize read pre-animation-only marker');
+    return target[key];
+   }});
+   for(const statement of scripts.initialize)expression(statement,v,0,hand);
+   assert.equal(v.kg_secret_piece_index,0,`${name}/${hand}: no helper before first frame`);
+   assert.equal(v.kg_secret_owner_occupied,0);
+   assert.equal(v.kg_secret_piece_visible,0);
+   // Use a distinct pre-animation store: initialize need not expose the same store.
+   const frame={kg_secret_ingredient_0:1,kg_secret_ingredient_1:1,kg_secret_ingredient_2:1};
+   for(const statement of scripts.pre_animation.filter(s=>['v.kg_secret_marker =','v.kg_secret_piece_index =','v.kg_secret_owner_occupied ='].some(p=>s.startsWith(p))))expression(statement,frame,230,hand);
+   assert.equal(frame.kg_secret_piece_index,221);
+   assert.equal(Boolean(frame.kg_secret_owner_occupied),true);
+  }
+ }
+});

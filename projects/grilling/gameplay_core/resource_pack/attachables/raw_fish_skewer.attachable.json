@@ -15,12 +15,12 @@
         "java_piece": "textures/java_eating_piece/raw_fish_skewer"
       },
       "geometry": {
-        "stage0": "geometry.kg_a287.kg_a22.raw_fish_skewer.stage0",
-        "stage1": "geometry.kg_a287.kg_a22.raw_fish_skewer.stage1",
-        "stage2": "geometry.kg_a287.kg_a22.raw_fish_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.raw_fish_skewer.stage2",
-        "stage4": "geometry.kg_a287.kg_a22.raw_fish_skewer.stage2",
-        "java_piece": "geometry.kg_java_dual.piece.raw_fish_skewer"
+        "stage0": "geometry.kg_a287.kg_a22.grilled_fish_skewer.stage0",
+        "stage1": "geometry.kg_a287.kg_a22.grilled_fish_skewer.stage1",
+        "stage2": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "java_piece": "geometry.kg_java_dual.piece.grilled_fish_skewer"
       },
       "scripts": {
         "pre_animation": [

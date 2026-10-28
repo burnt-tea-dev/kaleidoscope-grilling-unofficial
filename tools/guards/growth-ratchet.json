@@ -21,9 +21,9 @@
   "vanilla_entity_overrides": 1,
   "item_definitions": 249,
   "shadow_route_items": 64,
-  "rp_geometry_files": 256,
+  "rp_geometry_files": 143,
   "version_prefixed_model_dirs": 2,
-  "largest_geometry_kib": 7291,
-  "rp_total_mib": 51
+  "largest_geometry_kib": 511,
+  "rp_total_mib": 37
  }
 }

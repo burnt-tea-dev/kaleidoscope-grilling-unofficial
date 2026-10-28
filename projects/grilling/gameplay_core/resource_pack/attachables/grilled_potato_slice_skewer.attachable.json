@@ -18,8 +18,8 @@
         "stage0": "geometry.kg_a287.kg_a22.grilled_potato_slice_skewer.stage0",
         "stage1": "geometry.kg_a287.kg_a22.grilled_potato_slice_skewer.stage1",
         "stage2": "geometry.kg_a287.kg_a22.grilled_potato_slice_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.grilled_potato_slice_skewer.stage3",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_potato_slice_skewer.stage3",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
         "java_piece": "geometry.kg_java_dual.piece.grilled_potato_slice_skewer"
       },
       "scripts": {
