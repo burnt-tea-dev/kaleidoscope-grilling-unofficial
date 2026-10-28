@@ -1,8 +1,10 @@
+import {onBlockInteraction} from './core/events.js';
+import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system,EquipmentSlot} from '@minecraft/server';
 import {TimedWorkQueue} from './timed_work_queue.js';
-import {playerInventory,getOffHand} from './a2735_player_io.js';
+import {playerInventory,getOffHand} from './core/player_io.js';
 import {peekStationContainer} from './family_station_storage.js';
-import {hotUntil,refreshHotLore} from './a2750_food_state_adapter.js';
+import {hotUntil,refreshHotLore} from './food/food_state_adapter.js';
 const queue=new TimedWorkQueue(),jobs=new Map(),opened=new Map(),scans=new Map();
 let lastWarning=-1200;
 function warn(error){if(system.currentTick-lastWarning>=1200){lastWarning=system.currentTick;console.warn('[Grilling heat tooltip] '+error)}}
@@ -29,11 +31,11 @@ function scanBlock(row){
 }
 export function trackHotContainer(block){if(block)requestScan({dimensionId:block.dimension.id,location:{...block.location}})}
 function requestScan(row){const key=row.dimensionId+'|'+JSON.stringify(row.location);scans.set(key,row)}
-world.beforeEvents.playerInteractWithBlock.subscribe(e=>{
+onBlockInteraction('hot_lore_runtime',e=>{
  const row={dimensionId:e.block.dimension.id,location:{...e.block.location}};opened.set(e.player.id,row);
  // Read actual post-commit contents. Never cancel or rewrite the vanilla container opening.
  system.run(()=>requestScan(row));
-});
+},{"priority":0,"observe":true});
 world.afterEvents.playerInventoryItemChange.subscribe(e=>{
  playerSlot(e.player,e.slot);
  const row=opened.get(e.player.id),p=e.player;
@@ -41,8 +43,8 @@ world.afterEvents.playerInventoryItemChange.subscribe(e=>{
 });
 world.afterEvents.playerSpawn.subscribe(e=>system.run(()=>scanPlayer(e.player)));
 world.afterEvents.playerLeave.subscribe(e=>{opened.delete(e.playerId);for(const [k,j] of jobs)if(j.owner===e.playerId){jobs.delete(k);queue.cancel(k)}});
-system.run(()=>{for(const player of world.getAllPlayers())scanPlayer(player)});
-system.runInterval(()=>{
+system.run(()=>{for(const player of onlinePlayers())scanPlayer(player)});
+every('hot_lore_runtime:1',()=>{
  // Only hot slots have repeating jobs. Cold inventories are not rescanned each tick.
  for(const key of queue.take(system.currentTick,64)){
   const job=jobs.get(key);if(!job)continue;
@@ -54,6 +56,6 @@ system.runInterval(()=>{
   }catch(error){jobs.delete(key);warn(error)}
  }
  let budget=2;for(const [key,row] of scans){scans.delete(key);try{scanBlock(row)}catch(error){warn(error)}if(--budget===0)break;}
- if(system.currentTick%20===0)for(const player of world.getAllPlayers())playerOffhand(player);
+ if(system.currentTick%20===0)for(const player of onlinePlayers())playerOffhand(player);
 },1);
 export const pendingHeatTooltipJobs=()=>queue.size;

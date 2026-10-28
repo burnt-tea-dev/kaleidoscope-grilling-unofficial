@@ -7,7 +7,7 @@
     "components": {
       "minecraft:display_name": "kaleidoscope_grilling.display.block.seasoning_bottle",
       "minecraft:geometry": {
-        "identifier": "geometry.kg_a2733.seasoning_bottles_1"
+        "identifier": "geometry.kg_a2733.seasoning_bottle_legacy"
       },
       "minecraft:material_instances": {
         "*": {

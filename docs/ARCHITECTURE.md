@@ -1,6 +1,6 @@
 # 目前架構
 
-本文描述重建 P2 的實際來源；P3 的目標佈局另見 [REBUILD-PLAN §3](REBUILD-PLAN.md#3-目標架構終態)。文件收斂沒有建立新 runtime，也沒有把目前模組搬到 `packs/` 或新的 `core/`。
+本文描述目前實際來源；P3 的完整目標佈局另見 [REBUILD-PLAN §3](REBUILD-PLAN.md#3-目標架構終態)。來源仍在原 canonical BP/RP；功能域集中在 scripts 下，沒有建立第二份 pack。
 
 ## 來源與輸出
 
@@ -8,7 +8,7 @@
 | --- | --- |
 | canonical BP | `projects/grilling/gameplay_core/behavior_pack/` |
 | canonical RP | `projects/grilling/gameplay_core/resource_pack/` |
-| 身份與相依 | [baseline.json](../baseline.json)：修復候選 2.8.182、BP/RP UUID、Cookery 1.6.4、來源樹身份 |
+| 身份與相依 | [baseline.json](../baseline.json)：目前 BP/RP UUID、版本、Cookery 相依與來源樹身份 |
 | bridge 工程 | [config.json](../config.json) 指向同一 BP/RP；匯出檢查不等於發布或 client 驗收 |
 | Java 來源 | `projects/grilling/source_snapshots/` 與 `source_manifest.json` 保留逐檔來源；主要 pin 為 `9a1acdab…`，另有明列 fork 來源，不把所有素材偽稱同一來源 |
 | Java 資料表 | [data/java](../data/java/)；[tools/java_extract](../tools/java_extract/README.md) 可由釘選上游重新萃取，P2 不改 runtime 去讀它們 |
@@ -19,18 +19,26 @@
 
 ## Runtime 的現況
 
-BP 的 `scripts/main.js` 仍同時承擔組裝與大量玩法工作；旁邊保留多個版本前綴模組。P3 尚未把它們收斂為每個 Java 功能域的 `logic.js`／`runtime.js`、唯一排程器或統一交易模組。現有全域事件與多個計時入口的競爭，是重構要解決的問題，不能在架構圖上先畫成已解決。
+`scripts/main.js` 只組裝功能域。烤架、穿串、食用、效果、玩家事件及調料各有自己的 runtime；食用、動作與效果的暫存表由該域私有保存，透過具名函式協調。版本編號模組已按功能搬回域中；沒有用新包裝轉呼叫舊 main。七條從未載入的食材處理路徑，以及已被公開油 API 取代的舊 fallback 已退役。
 
-| 功能域 | 可定位的現有入口／核心 |
+| 功能域 | 目前入口與核心 |
 | --- | --- |
-| 穿串、烤架、食用 | `main.js`、`a24_skewering_core.js`、`a275_grill_input_core.js`、`a276_grill_intent_core.js`、`a277_grill_transaction_core.js`、`secret_eating_core.js` |
-| 餐盤與串譜 | `a25_plate_recipe_core.js`／`runtime.js`、`plate_transaction_core.js`、`plate_recipe_visual_core.js` |
-| 調料、油與料理 | `seasoning_registry_core.js`、`seasoning_motion_runtime.js`、`a26_oil_machine_core.js`／`runtime.js`、`a2750_cookery_cuisine_core.js`／`runtime.js` |
-| 料理架、植物、效果 | `a2746_advanced_rack_core.js`／`runtime.js`、`plant_fertilizer.js`、`plant_fertilizer_transaction_core.js`、`effect_lifecycle_core.js` |
-| 動態手持與進食呈現 | `player_presentation_core.js`、`held_visual_dispatch_runtime.js`、`held_visual_transport.js`、各 held/visual runtime，加上 RP attachables／controllers／animations |
-| 外部與指南 | `integration_api_runtime.js`、`integration_registry_core.js`、各 Cookery adapter、`guide/`；契約見 [整合 API](BEDROCK-INTEGRATION-API.md) 與 [指南規範](GUIDE-STANDARD.md) |
+| 烤架與穿串 | `grill/runtime.js`、`grill/grill_transaction_core.js`、`skewer/runtime.js`、`skewer/skewering_core.js` |
+| 食用、效果、玩家 | `food/runtime.js`、`effect/runtime.js`、`player/runtime.js`；各域保存自己的暫存狀態 |
+| 調料、油、料理 | `seasoning/runtime.js`、`oil/oil_machine_runtime.js`、`food/cookery_cuisine_runtime.js` |
+| 餐盤、架、作物 | `plate/`、`rack/`、`world/`、`recipe/` |
+| 共用與外部 | `core/events.js`、`core/scheduler.js`、既有 transaction 模組、`host_api/`、`guide/` |
 
+食用外觀仍使用既有相容物品與 player properties；這輪沒有冒稱食用或全部交易已完成原生重建。
 上表只定位來源，不表示每條能力都已完成原生或真人驗收。完整玩家結果和跨域缺口在 [PARITY](PARITY.md)／[KNOWN-ISSUES](KNOWN-ISSUES.md)。
+
+## 共用事件與排程
+
+`core/events.js` 是本包的唯一全域方塊互動入口。依明列的優先序及方塊範圍派送；第一個接受手勢的玩法設定 cancel 後，後續玩法不再寫入。庫存與視覺觀察在玩法派送後執行。原生格子、物品及方塊 custom component 的既有交易路徑保留。
+
+`core/scheduler.js` 是本包唯一的 interval。各域註冊自己的週期與工作；一項失敗不阻塞其他工作。同一 tick 共用玩家查詢，不跨 tick 保存過期玩家清單。方塊原生命名 tick 保留由引擎排程。
+
+`host_api/oil_api_host.js` 是供 Cookery 使用的公開宿主來源，執行於另一個包的腳本環境，因此保留自己的互動入口。全樹計數含它，不能把兩個包硬接成一個全域事件環境。
 
 ## 保存與交易邊界
 

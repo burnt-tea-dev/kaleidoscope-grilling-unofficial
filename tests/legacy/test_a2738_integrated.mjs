@@ -1,18 +1,18 @@
 import assert from 'node:assert/strict';
-import * as shared from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2738_oil_contract_core.js';
+import * as shared from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_contract_core.js';
 import {
  FAT_CAPACITY,FLUID_CAPACITY,OIL_BUCKET_POINTS
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 import {
  HOST_FAT_CAPACITY,GRILLING_FLUID_CAPACITY,GRILLING_OIL_BUCKET_POINTS,
  normalizeOilType,oilCapacity,oilTypeForBucketId
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2734_cookery_oil_pot_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/cookery_oil_pot_core.js';
 import {
  OIL_BUCKET_POINTS as BLOCK_BUCKET_POINTS
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2736_typed_oil_pot_block_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/typed_oil_pot_block_core.js';
 import {
  ITEM_FILL_POINTS,oilTypeForBucketId as ITEM_LOOKUP
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2737_offhand_oil_fill_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/offhand_oil_fill_core.js';
 
 assert.equal(FAT_CAPACITY,shared.HOST_FAT_CAPACITY);
 assert.equal(FLUID_CAPACITY,shared.GRILLING_FLUID_CAPACITY);

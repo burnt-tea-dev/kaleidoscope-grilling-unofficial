@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  WEDDING_CANDY_ID,WEDDING_CANDY_EFFECT,WEDDING_CANDY_EFFECT_TICKS,WEDDING_CANDY_XP,WEDDING_CANDY_FOOD,
  shanghaiCalendar,isWeddingCandyEventDate,weddingCandyRequiredSeconds,weddingCandyRewardAmount,nextWeddingCandyProgress
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2747_wedding_candy_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/wedding_candy_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

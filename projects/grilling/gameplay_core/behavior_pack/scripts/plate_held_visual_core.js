@@ -6,7 +6,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
 import {secretVisualRows} from './secret_visual_state.js';
 import {SECRET_VISUAL_MAX,SECRET_MODEL_VARIANTS_KEY} from './secret_visual_state_core.js';
-import {SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY} from './a24_skewering_core.js';
+import {SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY} from './skewer/skewering_core.js';
 import {HELD_VISUAL_PLATE} from './held_visual_transport.js';
 
 const SECRET='kaleidoscope_grilling:secret_skewer';

@@ -16,9 +16,9 @@
       },
       "geometry": {
         "s0": "geometry.kg_station.rack_tool.s0",
-        "s1": "geometry.kg_station.rack_tool.s1",
-        "s2": "geometry.kg_station.rack_tool.s2",
-        "s3": "geometry.kg_station.rack_tool.s3",
+        "s1": "geometry.kg_station.rack_tool.s0",
+        "s2": "geometry.kg_station.rack_tool.s0",
+        "s3": "geometry.kg_station.rack_tool.s0",
         "s4": "geometry.kg_station.rack_tool.s4",
         "s5": "geometry.kg_station.rack_tool.s5"
       },

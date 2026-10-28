@@ -4,7 +4,7 @@ import * as layout from '../../projects/grilling/gameplay_core/behavior_pack/scr
 import {planInventoryInsert, slotWrite} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack_transfer_plan.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2746_advanced_rack_core.js';
+import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack/advanced_rack_core.js';
 
 test('Java public rack tags are independent per slot, including dual-tag items',()=>{
  const seasoningTag='kaleidoscope_grilling:advanced_rack_seasonings',toolTag='kaleidoscope_grilling:advanced_rack_tools';
@@ -30,11 +30,11 @@ const RACK_COMMAND = 'kaleidoscope_grilling:rack';
 async function fixture() {
  const f = createFixture();
  f.tx = await f.load('rack_transactions.js');
- f.state = await f.load('a2746_rack_state_adapter.js');
- f.automation = await f.load('a2746_rack_automation_api.js');
- f.codec = await f.load('a2746_rack_item_codec.js');
+ f.state = await f.load('rack/rack_state_adapter.js');
+ f.automation = await f.load('rack/rack_automation_api.js');
+ f.codec = await f.load('rack/rack_item_codec.js');
  f.storage = await f.load('family_station_storage.js');
- await f.load('a2746_advanced_rack_runtime.js');
+ await f.load('rack/advanced_rack_runtime.js');
  f.holder = f.player({location: {x: 0, y: 64, z: 0}});
  f.inv = f.holder.inventory;
  f.racks = [];
@@ -695,8 +695,8 @@ test('each owned block has its own state schema; external schemas are explicit b
 
 test('fixture imports share one native graph while separate fixtures isolate state and subscribers', async () => {
   const a = createFixture(), b = createFixture();
-  const [first, other] = await Promise.all([a.load('a25_plate_recipe_runtime.js'), b.load('a25_plate_recipe_runtime.js')]);
-  assert.equal(await a.load('a25_plate_recipe_runtime.js'), first);
+  const [first, other] = await Promise.all([a.load('plate/plate_recipe_runtime.js'), b.load('plate/plate_recipe_runtime.js')]);
+  assert.equal(await a.load('plate/plate_recipe_runtime.js'), first);
   assert.notEqual(first, other);
   assert.equal(a.subscribers.get('world.beforeEvents.playerInteractWithBlock').length, 1);
   assert.equal(b.subscribers.get('world.beforeEvents.playerInteractWithBlock').length, 1);
@@ -730,7 +730,7 @@ test('native inventory copies preserve item metadata and faults distinguish reje
 
 test('registered startup callbacks and scheduler run in deterministic tick order', async () => {
   const f = createFixture();
-  await f.load('a2746_advanced_rack_runtime.js');
+  await f.load('rack/advanced_rack_runtime.js');
   f.startup();
   assert.equal(typeof f.commands.get(N + 'rack').callback, 'function');
   const called = [];

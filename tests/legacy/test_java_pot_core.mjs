@@ -1,7 +1,7 @@
 /** Pure Java recipe/state regressions. No Bedrock, player or inventory adapter. */
 import assert from 'node:assert/strict';
 import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js';
-import * as foods from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js';
+import * as foods from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js';
 const exact=foods.wokRecipes(),flex=foods.flexWokRecipes(),pork=exact.find(recipe=>recipe.result===foods.HOUTTUYNIA_PORK_ID);
 const data=items=>({oil:true,oilTicks:1200,items:[...items],started:false,grillingOutputEpoch:7,grillingPot:core.newJavaPot(7)});
 const step=(state,ticks)=>{for(let i=0;i<ticks;i++)state=core.advanceJavaPot(state).data;return state;};

@@ -2,6 +2,24 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.187 共用模型與聲音修正（未發布）
+
+- 合併完全相同的模型定義，保留骨架、位置、UV 與顯示範圍；貼圖和材質仍由原消費者指定。模型檔分銀行且每檔不超過 512 KiB；實際客戶端效能另驗。
+- 吸收 #291 的秘製串首次顯示修正與 #290 的 Java 點火／熄火音高、穿串分類和聲源位置修正，沿用其真實回歸場景與生成器。
+- 來源工具 `tools/compact_geometry.py` 更新 canonical 資產；相同輸入重跑不產生差異。沒有新增 item ID、player property 或貼圖。
+
+## 2.8.186 功能域收斂（未發布）
+
+- main 僅保留組裝；烤架、穿串、食用、效果、玩家與調料各自保存和處理自己的狀態。保留既有時序、交易及完整物品資料。
+- 版本編號模組搬回功能域，移除七條未載入的處理路徑和舊油壺 fallback；Cookery 公開宿主的來源／輸出路徑同步更新。
+- 保留物品、方塊、實體、保存鍵及 UUID。測試與 CI 不代表客戶端畫面驗收。
+
+## 2.8.185 共用互動與排程（未發布）
+
+- 本包十一個方塊互動處理改由一個主責路由派送；接受後停止其他玩法寫入，視覺／庫存觀察另行執行。Cookery 宿主 API 保留獨立腳本環境。
+- 十六個 interval 收斂為一個排程入口，同 tick 共用玩家查詢；原有工作週期及方塊命名 tick 保留。合併油壺相容與環境效果，移除未使用的 HUD transport。
+- 保留所有物品、方塊、實體、保存鍵與 UUID；原生及真人結果另驗。
+
 ## 2.8.184 Bedrock 26.60 grill sound option correction (unreleased)
 
 - Correct the native `WorldSoundOptions.loopCount` option to `-1`. G183 used `loop`, so a one-shot handle could remain retained after the clip ended and prevent playback from restarting. Keep one native handle per grill and the existing independent stop/unload lifecycle.

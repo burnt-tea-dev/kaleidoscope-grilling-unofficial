@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {itemTranslationKey,skewerRecipeHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2745_skewer_recipe_hud_core.js';
+import {itemTranslationKey,skewerRecipeHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/skewer_recipe_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

@@ -3,7 +3,7 @@ import {
  PLATE_CAPACITY,PLATE_ID,PLATE_BLOCK_ID,BOOK_ID,RECIPE_BLOCK_ID,
  normalizePlateRows,plateAdd,plateRemoveLast,plateHighestNutritionIndex,plateEatHighest,
  isRecordableRecipe,makeBookRecord,bookIngredientSlots,planInventoryConsumption
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate/plate_recipe_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

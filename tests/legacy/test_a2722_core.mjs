@@ -3,7 +3,7 @@ import {
  COLD_ID,HOUTTUYNIA_ID,CRAFTING_TABLE_ID,COOKERY_EMPTY_ID,COOKERY_FILLED_ID,
  REQUIRED_OIL_TYPE,REQUIRED_HOUTTUYNIA,REQUIRED_OIL,FIRE_RESISTANCE_TICKS,
  NUTRITION,SATURATION_MODIFIER,planColdHouttuynia,nextOilPotId
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2722_cold_houttuynia_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/cold_houttuynia_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 const base={blockId:CRAFTING_TABLE_ID,sneaking:true,mainId:HOUTTUYNIA_ID,mainCount:3,offId:COOKERY_FILLED_ID,oilType:REQUIRED_OIL_TYPE,oilCount:2};

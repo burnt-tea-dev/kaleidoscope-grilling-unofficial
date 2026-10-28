@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  COOKERY_OUTPUT_READY_EVENT,normalizeCookeryOutputRequest,authoritativeTargetMatches
 } from '../../projects/grilling/gameplay_core/behavior_pack/scripts/cookery_output_contract_core.js';
-import {metadataPlan} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2750_cookery_cuisine_core.js';
+import {metadataPlan} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/cookery_cuisine_core.js';
 
 assert.equal(COOKERY_OUTPUT_READY_EVENT,'kaleidoscope_grilling:cookery_output_ready');
 const player=normalizeCookeryOutputRequest({

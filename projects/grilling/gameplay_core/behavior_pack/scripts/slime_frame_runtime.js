@@ -1,5 +1,5 @@
 import {syncPlateSlimeHeld} from './plate_held_visual_runtime.js';
-import {getMainHand,getOffHand} from './a2735_player_io.js';
+import {getMainHand,getOffHand} from './core/player_io.js';
 import {SLIME_ID,slimeFramePacket} from './slime_frame_core.js';
 import {writeHeldVisual,invalidateHeldVisual} from './held_visual_transport.js';
 import {reportHeldVisualError} from './held_visual_dispatch_runtime.js';

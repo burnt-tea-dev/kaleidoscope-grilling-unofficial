@@ -271,9 +271,9 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/beef_chunks.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a279_beef_board_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/beef_board_core.js",
         "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "implemented_with_host_extension",
       "icon": "textures/ui/kg_grilling/catalog/beef_chunks",
@@ -349,8 +349,8 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/braised_chicken_wings.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
         "docs/PARITY.md#guide-cuisine-quality"
@@ -411,7 +411,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/canola_oil_bucket.json",
         "projects/grilling/guide/content.a2.json#guide_world_oil",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/canola_oil_bucket",
@@ -463,7 +463,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/canola_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
@@ -513,7 +513,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/canola_seeds.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/farmland_crop_host_runtime.js",
         "projects/grilling/guide/content.a2.json#guide_canola"
       ],
       "acquisition": "verified",
@@ -557,7 +557,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/carrot_dice.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/carrot_dice",
@@ -591,9 +591,9 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/chicken_skin.json",
         "projects/grilling/guide/content.a2.json#guide_chicken_processing",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "implemented_with_host_extension",
       "icon": "textures/ui/kg_grilling/catalog/chicken_skin",
@@ -630,7 +630,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/chicken_wing.json",
         "projects/grilling/guide/content.a2.json#guide_chicken_processing",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/chicken_wing",
@@ -681,7 +681,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/cold_houttuynia.json",
         "projects/grilling/guide/content.a2.json#guide_cold_houttuynia",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2722_cold_houttuynia_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/cold_houttuynia_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -838,7 +838,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/green_chili_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
@@ -923,8 +923,8 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/green_pepper_squid_tentacles.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
         "docs/PARITY.md#guide-cuisine-quality"
@@ -976,7 +976,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/houttuynia_crop_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -1049,7 +1049,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia_powder.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_houttuynia",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "docs/PARITY.md#guide-processing",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
@@ -1140,8 +1140,8 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/houttuynia_stir_fried_pork.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/pot_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/cuisine_quality_core.js",
         "docs/PARITY.md#guide-cuisine-quality",
@@ -1201,7 +1201,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/minced_houttuynia.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -1343,11 +1343,11 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/oil_residue.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/plant_fertilizer.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_runtime.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_runtime.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/farmland_crop_host_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/houttuynia_crop_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_tree_runtime.js",
         "docs/PARITY.md#guide-fertilizer-basics",
         "docs/PARITY.md#guide-fertilizer-stem-rooted-dirt",
         "docs/PARITY.md#guide-fertilizer-nether-vines",
@@ -1386,7 +1386,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/onion.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/farmland_crop_host_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/onion",
@@ -1441,7 +1441,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/onion_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
@@ -1514,8 +1514,8 @@
         "projects/grilling/guide/content.a2.json#guide_ordinary_challenge",
         "projects/grilling/guide/content.a2.json#guide_recipe_ordinary",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/ordinary_skewer",
@@ -1572,7 +1572,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/pepper_honey.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/pepper_honey.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/pepper_honey.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/pepper_honey",
@@ -1630,7 +1630,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/potato_beef_stew.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/potato_beef_stew",
@@ -1681,7 +1681,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/potato_slice.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/potato_slice",
@@ -1790,7 +1790,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/raw_mantou_slice.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/raw_mantou_slice",
@@ -1836,8 +1836,8 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/raw_sweet_potato_sheet.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a271_sweet_potato_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/sweet_potato_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/raw_sweet_potato_sheet",
@@ -1892,7 +1892,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/red_chili_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "docs/PARITY.md#guide-processing"
       ],
       "acquisition": "verified",
@@ -1952,8 +1952,8 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/red_sweet_potato_porridge.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/red_sweet_potato_porridge",
@@ -2035,8 +2035,8 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/roasted_chicken_wing.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_chicken_wing.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/roasted_chicken_wing",
@@ -2122,7 +2122,7 @@
         "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_sweet_potato.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_sweet_potato.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/roasted_sweet_potato.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/roasted_sweet_potato",
@@ -2237,7 +2237,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/secret_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_secret_skewer",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/secret_skewer",
@@ -2284,7 +2284,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sichuan_pepper.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_pepper",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_tree_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/feature_rules/pepper_tree_worldgen_rule.json",
         "projects/grilling/gameplay_core/behavior_pack/features/pepper_tree_worldgen.json"
       ],
@@ -2334,7 +2334,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/skewer_plate.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/plate/plate_recipe_runtime.js",
         "projects/grilling/guide/content.a2.json#guide_plate",
         "projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_runtime.js"
       ],
@@ -2394,7 +2394,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/skewer_recipe_book.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/plate/plate_recipe_runtime.js",
         "projects/grilling/guide/content.a2.json#guide_recipe_book",
         "projects/grilling/gameplay_core/behavior_pack/recipes/skewer_recipe_book_blank.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/clear_skewer_recipe_book.json"
@@ -2524,13 +2524,13 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sour_spicy_noodles.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/integration_api_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/chests/nether_bridge.json",
         "projects/grilling/gameplay_core/behavior_pack/loot_tables/kaleidoscope_grilling/fortress_houttuynia_bonus.json"
@@ -2819,7 +2819,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/squid_tentacle.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2712_remaining_knife_drops_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/remaining_knife_drops_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/squid_tentacle",
@@ -2916,7 +2916,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sweet_potato.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/farmland_crop_host_runtime.js",
         "projects/grilling/guide/content.a2.json#guide_sweet_potato"
       ],
       "acquisition": "verified",
@@ -2977,7 +2977,7 @@
       ],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/sweet_potato_powder.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "projects/grilling/guide/content.a2.json#guide_sweet_potato",
         "docs/PARITY.md#guide-processing"
       ],
@@ -3052,7 +3052,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/totem_powder.json",
         "projects/grilling/guide/content.a2.json#guide_seasoning_totem",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/heavy_metal_damage_runtime.js",
         "docs/PARITY.md#guide-processing"
       ],
@@ -3112,7 +3112,7 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/unfinished_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/recipes/skewer_starter.json"
       ],
       "acquisition": "verified",
@@ -3150,8 +3150,8 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/items/wedding_candy.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2747_wedding_candy_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/wedding_candy_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/catalog/wedding_candy",
@@ -3283,8 +3283,8 @@
         "projects/grilling/gameplay_core/behavior_pack/blocks/oil_press.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/oil_press.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/oil_press_fences/oil_press_bamboo_nether_brick.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/oil_press",
@@ -3333,8 +3333,8 @@
       "source_refs": [
         "projects/grilling/gameplay_core/behavior_pack/blocks/big_vat.json",
         "projects/grilling/gameplay_core/behavior_pack/recipes/big_vat.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_runtime.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_runtime.js"
       ],
       "acquisition": "verified",
       "icon": "textures/ui/kg_grilling/big_vat",
@@ -3390,8 +3390,8 @@
         "projects/grilling/gameplay_core/behavior_pack/blocks/pepper_sapling.json",
         "projects/grilling/gameplay_core/behavior_pack/items/pepper_sapling.json",
         "projects/grilling/gameplay_core/behavior_pack/items/pepper_leaves.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_core.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_tree_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_tree_runtime.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/plant_fertilizer.js",
         "projects/grilling/gameplay_core/behavior_pack/recipes/oak_planks_from_pepper_log.json",
         "projects/grilling/gameplay_core/behavior_pack/feature_rules/pepper_tree_worldgen_rule.json",
@@ -3437,7 +3437,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/guide/content.a2.json#guide_seasoning_redstone",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_contract_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/seasoning/seasoning_contract_core.js"
       ],
       "acquisition": "host_owned",
       "icon": "textures/items/redstone_dust"
@@ -3475,7 +3475,7 @@
       "recipes": [],
       "source_refs": [
         "projects/grilling/guide/content.a2.json#guide_seasoning_gunpowder",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_contract_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/seasoning/seasoning_contract_core.js"
       ],
       "acquisition": "host_owned",
       "icon": "textures/items/gunpowder"
@@ -3654,13 +3654,13 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_beef_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_beef",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_beef_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
         "projects/grilling/gameplay_core/behavior_pack/scripts/core_logic.js",
         "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "implemented_with_host_extension",
       "icon": "textures/ui/kg_grilling/catalog/grilled_beef_skewer",
@@ -3760,7 +3760,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_pork_belly_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_pork_belly",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_pork_belly_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -3866,13 +3866,13 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_chicken_skin_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_chicken_skin",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_chicken_skin_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
         "projects/grilling/gameplay_core/behavior_pack/scripts/core_logic.js",
         "projects/grilling/gameplay_core/behavior_pack/host-extensions/board-api.json",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ],
       "acquisition": "implemented_with_host_extension",
       "icon": "textures/ui/kg_grilling/catalog/grilled_chicken_skin_skewer",
@@ -3972,7 +3972,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_mid_wing_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_mid_wing",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_mid_wing_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4076,7 +4076,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_squid_tentacle_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_squid_tentacle",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_squid_tentacle_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4208,7 +4208,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_fish_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_fish",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_fish_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4312,7 +4312,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_sweet_potato_sheet_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_sweet_potato_sheet",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_sweet_potato_sheet_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4416,7 +4416,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_potato_slice_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_potato_slice",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_potato_slice_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4521,7 +4521,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_caterpillar_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_caterpillar",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_caterpillar_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4661,7 +4661,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_mushroom_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_mushroom",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_mushroom_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4765,7 +4765,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_bun_slice_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_bun_slice",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_bun_slice_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4872,7 +4872,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_ender_pearl_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_ender_pearl",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_ender_pearl_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -4976,7 +4976,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_meatball_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_meatball",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_meatball_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5083,7 +5083,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_slime_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_slime",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_slime_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5187,7 +5187,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_meat_and_bone_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_meat_and_bone",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_meat_and_bone_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5290,7 +5290,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_fried_egg_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_fried_egg",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_fried_egg_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5393,7 +5393,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_gluten_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_gluten",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_gluten_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5497,7 +5497,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_lamb_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_lamb",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_lamb_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5601,7 +5601,7 @@
         "projects/grilling/gameplay_core/behavior_pack/items/raw_golden_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_recipe_golden",
         "projects/grilling/guide/content.a2.json#guide_threading",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js",
         "projects/grilling/gameplay_core/behavior_pack/items/grilled_golden_skewer.json",
         "projects/grilling/guide/content.a2.json#guide_quick_start",
         "projects/grilling/guide/content.a2.json#guide_hot_food",
@@ -5671,8 +5671,8 @@
       ],
       "recipes": [],
       "source_refs": [
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2737_offhand_oil_fill_runtime.js",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/offhand_oil_fill_runtime.js",
+        "projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/oil_api_core.js",
         "projects/grilling/gameplay_core/behavior_pack/scripts/host_api/oil_api_host.js"
       ],
@@ -5724,7 +5724,7 @@
       "recipes": [],
       "source_refs": [
         "docs/PARITY.md#guide-processing",
-        "projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js"
+        "projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js"
       ]
     }
   ],

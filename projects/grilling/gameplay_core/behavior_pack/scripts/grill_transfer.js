@@ -1,5 +1,5 @@
 /** Synchronous rollback, not crash atomicity. Unknown drop outcomes quarantine. */
-import {commitSteps} from './a277_grill_transaction_core.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
 import {quarantineStation} from './family_station_storage.js';
 export function acknowledgedDrop(dimension,stack,location){
  let entity,attempted=false;const snapshot=stack.clone(),position={...location};

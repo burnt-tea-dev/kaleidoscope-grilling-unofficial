@@ -1,4 +1,4 @@
-import {SEASONING_CAPACITY,SEASONING_KINDS,isEmptySeasoningId,isPendingSeasoningId,normalizeSeasoningList} from './a2743_seasoning_contract_core.js';
+import {SEASONING_CAPACITY,SEASONING_KINDS,isEmptySeasoningId,isPendingSeasoningId,normalizeSeasoningList} from './seasoning/seasoning_contract_core.js';
 
 // Shared palette order for the held renderer and its generated color atlas.
 export const BOTTLE_HELD_INGREDIENT_IDS=Object.freeze(Object.keys(SEASONING_KINDS).sort());

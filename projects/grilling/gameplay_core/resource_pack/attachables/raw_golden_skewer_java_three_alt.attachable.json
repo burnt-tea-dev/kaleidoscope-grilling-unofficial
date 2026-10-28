@@ -14,11 +14,11 @@
         "stage4": "textures/a22_bites/raw_golden_skewer_stage3"
       },
       "geometry": {
-        "stage0": "geometry.kg_a287.kg_a22.raw_golden_skewer.stage0",
-        "stage1": "geometry.kg_a287.kg_a22.raw_golden_skewer.stage1",
-        "stage2": "geometry.kg_a287.kg_a22.raw_golden_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.raw_golden_skewer.stage3",
-        "stage4": "geometry.kg_a287.kg_a22.raw_golden_skewer.stage3"
+        "stage0": "geometry.kg_a287.kg_a22.grilled_golden_skewer.stage0",
+        "stage1": "geometry.kg_a287.kg_a22.grilled_golden_skewer.stage1",
+        "stage2": "geometry.kg_a287.kg_a22.grilled_golden_skewer.stage2",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_golden_skewer.stage3",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_golden_skewer.stage3"
       },
       "scripts": {
         "pre_animation": [

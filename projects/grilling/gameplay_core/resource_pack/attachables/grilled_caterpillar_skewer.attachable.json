@@ -18,9 +18,9 @@
       "geometry": {
         "stage0": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage0",
         "stage1": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage1",
-        "stage2": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
-        "stage3": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
-        "stage4": "geometry.kg_a287.kg_a22.grilled_caterpillar_skewer.stage2",
+        "stage2": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage3": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
+        "stage4": "geometry.kg_a287.kg_a22.grilled_beef_skewer.stage4",
         "probe_piece": "geometry.kg_probe_caterpillar.piece",
         "java_piece": "geometry.kg_java_dual.piece.grilled_caterpillar_skewer"
       },

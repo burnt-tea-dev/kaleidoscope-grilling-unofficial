@@ -1,4 +1,4 @@
-import {ADVANCED_RACK_BLOCK_ID} from './a2746_advanced_rack_core.js';
+import {ADVANCED_RACK_BLOCK_ID} from './rack/advanced_rack_core.js';
 
 // Original AdvancedRackBlock directional shapes, not the rendered mesh bounds.
 // The base north shape occupies the rear five pixels; block rotations carry

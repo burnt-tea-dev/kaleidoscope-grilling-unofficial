@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  KC_API,KC_READY_EVENT,KC_REGISTER_EVENT,SOURCE,
  ONION_ID,ONION_POWDER_ID,onionMillstoneRecipe,registrationsForReady
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2718_onion_processing_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/onion_processing_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('Cookery API constants stay exact',()=>{

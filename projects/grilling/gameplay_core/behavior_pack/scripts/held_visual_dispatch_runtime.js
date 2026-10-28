@@ -1,5 +1,6 @@
+import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system} from '@minecraft/server';
-import {getMainHand,getOffHand} from './a2735_player_io.js';
+import {getMainHand,getOffHand} from './core/player_io.js';
 import {heldVisualKind,writeHeldVisual,forgetHeldVisual,HELD_VISUAL_EMPTY} from './held_visual_transport.js';
 
 // All held-content providers share one player scan and one deduplicated event
@@ -54,8 +55,8 @@ world.afterEvents.playerLeave.subscribe(e=>{
  for(const provider of providers.values())provider.leave?.(e.playerId);
  for(const key of errors.keys())if(key.endsWith(':'+e.playerId))errors.delete(key);
 });
-system.runInterval(()=>{
+every('held_visual_dispatch_runtime:1',()=>{
  const refreshed=queued.size?flushQueued():new Set();
- for(const player of world.getAllPlayers())if(!refreshed.has(player.id))refresh(player);
+ for(const player of onlinePlayers())if(!refreshed.has(player.id))refresh(player);
  cycle++;
 },5);

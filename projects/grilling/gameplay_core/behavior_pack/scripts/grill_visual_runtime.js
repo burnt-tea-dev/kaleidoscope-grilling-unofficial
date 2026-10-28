@@ -1,16 +1,17 @@
+import {every,onlinePlayers} from './core/scheduler.js';
 import {grillingConfig} from './server_config_runtime.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {secretVisualState} from './secret_visual_state.js';
 import {grillVisualStage} from './grill_visual_core.js';
 import {world,system} from '@minecraft/server';
 import {peekStationContainer} from './family_station_storage.js';
-import {readGrillState} from './a2740_grill_state_adapter.js';
+import {readGrillState} from './grill/grill_state_adapter.js';
 import {GRILL_FOOD_ENTITY,grillVisualKey,nearGrill,grillSlotPlan,createGrillDisplayController} from './grill_visual_core.js';
 const NS='kaleidoscope_grilling:';
 let observers=[],lastSample=-1,lastWarning=-1200,secretReader;
 export function configureSecretGrillReader(read){secretReader=read;}
 function audience(){
- if(system.currentTick!==lastSample){lastSample=system.currentTick;observers=[];for(const p of world.getAllPlayers())try{observers.push({dimensionId:p.dimension.id,...p.location})}catch{}}
+ if(system.currentTick!==lastSample){lastSample=system.currentTick;observers=[];for(const p of onlinePlayers())try{observers.push({dimensionId:p.dimension.id,...p.location})}catch{}}
  return observers;
 }
 const displays=createGrillDisplayController({
@@ -53,5 +54,5 @@ export const grillDisplayHelperCount=()=>displays.size;
 system.run(()=>{
  // Remove only this transient render type; never touch native backing inventories.
  for(const id of ['overworld','nether','the_end'])try{for(const e of world.getDimension(id).getEntities({type:GRILL_FOOD_ENTITY}))e.remove();}catch{}
- system.runInterval(()=>displays.sweep(system.currentTick),5);
+ every('grill_visual_runtime:1',()=>displays.sweep(system.currentTick),5);
 });

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import {VAT_CAPACITY_BUCKETS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js';
-import {bigVatContentKey,bigVatHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2742_big_vat_hud_core.js';
-import {grillHudStatusKey,grillHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2740_grill_hud_core.js';
+import {VAT_CAPACITY_BUCKETS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
+import {bigVatContentKey,bigVatHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/big_vat_hud_core.js';
+import {grillHudStatusKey,grillHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/grill_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

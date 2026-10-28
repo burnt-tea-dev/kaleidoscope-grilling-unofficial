@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {recipeTable,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js';
-import {TAVERN_VINEGAR_IDS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2752_stockpot_food_core.js';
+import {recipeTable,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js';
+import {TAVERN_VINEGAR_IDS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/stockpot_food_core.js';
 
 const rows=recipeTable();
 const stock=rows.filter(x=>['stockpot_exact','stockpot_flex'].includes(x.capability));

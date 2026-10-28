@@ -412,7 +412,16 @@
       "original": "development/gameplay_core/test_a2730_core.mjs",
       "decision": "move_canonical",
       "target": "tests/legacy/test_a2730_core.mjs",
-      "change": "Retarget import to same canonical export; gameplay assertions retained."
+      "change": "Retarget import to same canonical export; gameplay assertions retained.",
+      "later_retirement": {
+        "date": "2026-10-28",
+        "version": [
+          2,
+          8,
+          186
+        ],
+        "reason": "Unused legacy full-pot fallback and its private adapter retired; current explicit snapshot/public API behavior remains covered by oil tests."
+      }
     },
     {
       "original": "development/gameplay_core/test_a2731_core.mjs",

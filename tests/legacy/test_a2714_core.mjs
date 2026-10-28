@@ -4,7 +4,7 @@ import {
  FARMLAND_MIN_SURVIVAL_LIGHT,MIN_GROWTH_LIGHT,RED_PLACEMENT_CHANCE,MATURE_BONUS_PROBABILITY,
  placementRedVariant,canCropSurvive,selectionHeight,bonemealAgeIncrease,wartAgeToCropAge,
  javaCropGrowthSpeed,javaCropGrowthChance,shouldAdvanceAge,matureBonusCount
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2714_houttuynia_crop_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/houttuynia_crop_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('ids and states stay exact',()=>{

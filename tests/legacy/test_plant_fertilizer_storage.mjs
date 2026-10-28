@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {isDeepStrictEqual} from 'node:util';
-import {commitSteps} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a277_grill_transaction_core.js';
+import {commitSteps} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/grill/grill_transaction_core.js';
 import {createOwnedPlantWrite,plantFertilizerSteps} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plant_fertilizer_transaction_core.js';
 
 const original={id:'kaleidoscope_grilling:oil_residue',amount:3,opaque:{owner:'original',data:[7,11]}};

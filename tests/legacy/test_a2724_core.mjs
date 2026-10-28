@@ -3,7 +3,7 @@ import {
  KC_API,KC_READY_EVENT,KC_REGISTER_EVENT,SOURCE,
  RED_CHILI_ID,RED_CHILI_POWDER_ID,CANOLA_OIL_BUCKET_ID,SECRET_CHILI_OIL_BUCKET_ID,
  redChiliMillstoneRecipe,registrationsForReady,secretChiliOilRecipe
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2724_red_chili_processing_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/red_chili_processing_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('Cookery extension constants stay exact',()=>{

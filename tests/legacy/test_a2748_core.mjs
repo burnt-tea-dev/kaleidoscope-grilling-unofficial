@@ -6,7 +6,7 @@ import {
  shouldFruitPepperLeaf,treeLeafStartsFruiting,harvestedPepperCount,
  saplingBonemealSucceeds,saplingRandomTickSucceeds,nextSaplingAction,pepperTreeHeight,
  pepperLogAxis,pepperLeafBreakPlan,pepperTreePlan
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2748_pepper_tree_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_tree_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 
@@ -114,7 +114,7 @@ async function scenario(name,fn){
  // native gamerule value locally; do not replace harvest or event handlers.
  f.world.gameRules={doTileDrops:true};
  try{
-  await f.load('a2748_pepper_tree_runtime.js');f.startup();
+  await f.load('world/pepper_tree_runtime.js');f.startup();
   assert.ok(Object.hasOwn(leafDefinition.components,leafComponent));
   t(name,()=>fn(f));
  }finally{f.dispose()}

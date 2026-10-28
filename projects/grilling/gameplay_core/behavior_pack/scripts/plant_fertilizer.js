@@ -1,6 +1,6 @@
 import {world,EquipmentSlot,GameMode,BlockPermutation,ItemStack} from '@minecraft/server';
-import {commitSteps} from './a277_grill_transaction_core.js';
-import {bonemealAgeIncrease,javaCropGrowthSpeed,javaCropGrowthChance} from './a2714_houttuynia_crop_core.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
+import {bonemealAgeIncrease,javaCropGrowthSpeed,javaCropGrowthChance} from './world/houttuynia_crop_core.js';
 import {createOwnedPlantWrite,plantFertilizerSteps} from './plant_fertilizer_transaction_core.js';
 
 const BONE_MEAL='minecraft:bone_meal',OIL_RESIDUE='kaleidoscope_grilling:oil_residue';

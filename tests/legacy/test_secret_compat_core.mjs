@@ -3,7 +3,7 @@ import {
  DEFAULT_SECRET_SMOKING_ITEMS,registerSecretSmoking,resolveSecretSmokedId,
  registerSecretIngredientBehavior,registerSecretCompatBundle,secretCompatSnapshot,resetSecretCompatRegistry
 } from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_compat_core.js';
-import {ingredientBehavior} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
+import {ingredientBehavior} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect/ingredient_effects.js';
 
 resetSecretCompatRegistry();
 assert.equal(resolveSecretSmokedId('minecraft:beef'),'minecraft:cooked_beef');

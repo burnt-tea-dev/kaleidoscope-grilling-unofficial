@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {PRESS_MAX_CAKES,PRESS_REQUIRED_PROGRESS,VAT_CAPACITY_BUCKETS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js';
-import {oilPressHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2741_oil_press_hud_core.js';
+import {PRESS_MAX_CAKES,PRESS_REQUIRED_PROGRESS,VAT_CAPACITY_BUCKETS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
+import {oilPressHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/oil_press_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

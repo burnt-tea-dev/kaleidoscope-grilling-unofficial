@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  SUGARED_TOMATO_ID,PEPPER_HONEY_ID,PEPPER_HONEY_NUMB_TICKS,
  A2749_FOODS,pepperHoneyEffectRow,a2749FoodSpec
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2749_sugared_tomato_pepper_honey_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/sugared_tomato_pepper_honey_core.js';
 
 assert.equal(SUGARED_TOMATO_ID,'kaleidoscope_grilling:sugared_tomato');
 assert.equal(PEPPER_HONEY_ID,'kaleidoscope_grilling:pepper_honey');

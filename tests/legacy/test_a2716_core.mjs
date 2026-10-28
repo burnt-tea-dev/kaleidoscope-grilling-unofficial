@@ -3,7 +3,7 @@ import {
  KC_API,KC_READY_EVENT,KC_REGISTER_EVENT,SOURCE,
  CANOLA_SEEDS_ID,CANOLA_POWDER_ID,
  canolaMillstoneRecipe,registrationsForReady
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2716_canola_processing_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/canola_processing_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('Cookery API constants stay exact',()=>{

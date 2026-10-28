@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {KC_API,KC_READY_EVENT,KC_PING_EVENT,KC_REGISTER_EVENT,SOURCE,CARROT_DICE_ID,POTATO_SLICE_ID,CUTS,choppingRecipes,registrationsForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a278_basic_chopping_core.js';
+import {KC_API,KC_READY_EVENT,KC_PING_EVENT,KC_REGISTER_EVENT,SOURCE,CARROT_DICE_ID,POTATO_SLICE_ID,CUTS,choppingRecipes,registrationsForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/basic_chopping_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 const rows=choppingRecipes();

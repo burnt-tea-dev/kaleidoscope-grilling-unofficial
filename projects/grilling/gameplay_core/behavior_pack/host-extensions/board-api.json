@@ -358,7 +358,7 @@
     "scripts/host_api/cuisine_api_host.js": "scripts/api/cuisine_api_host.js",
     "scripts/host_api/guide_labels_core.js": "scripts/api/guide_labels_core.js",
     "scripts/host_api/ingredient_api_host.js": "scripts/api/ingredient_api_host.js",
-    "scripts/a2750_wok_food_core.js": "scripts/a2750_wok_food_core.js",
+    "scripts/food/wok_food_core.js": "scripts/food/wok_food_core.js",
     "scripts/host_api/pot_api_core.js": "scripts/api/pot_api_core.js",
     "scripts/host_api/pot_api_host.js": "scripts/api/pot_api_host.js",
     "scripts/host_api/cuisine_quality_core.js": "scripts/api/cuisine_quality_core.js",

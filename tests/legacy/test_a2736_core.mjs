@@ -3,7 +3,7 @@ import {
  HOST_BLOCK_ID,HOST_FAT_ITEM_ID,HOST_BLOCK_COUNT_PREFIX,TYPE_KEY_PREFIX,OIL_BUCKET_POINTS,
  hostBlockCountKey,typedOilBlockKey,placementCandidateLocations,normalizePlacedOilCount,
  planPlacedTypedOilAddition,blocksNativeCookeryInteraction
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2736_typed_oil_pot_block_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/typed_oil_pot_block_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 
