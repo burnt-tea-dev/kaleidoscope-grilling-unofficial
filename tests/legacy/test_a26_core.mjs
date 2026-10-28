@@ -4,7 +4,7 @@ import {
  PRESS_IMPACT_TICK,PRESS_COMPLETION_DELAY,PRESS_OUTPUT_BUCKETS,VAT_CAPACITY_BUCKETS,
  toolProgress,pressVisualStage,pressAddCake,impactPress,finishPressTransfer,
  normalizeVat,vatVisualLevel,vatInsert,vatExtract,potFillPlan,nearbyOffsets
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 
 t('Java press constants',()=>{assert.equal(PRESS_MAX_CAKES,4);assert.equal(PRESS_REQUIRED_PROGRESS,16);assert.equal(PRESS_ANVIL_PROGRESS,4);assert.equal(PRESS_STONE_PROGRESS,1);assert.equal(PRESS_COOLDOWN_TICKS,10);assert.equal(PRESS_IMPACT_TICK,6);assert.equal(PRESS_COMPLETION_DELAY,10);assert.equal(PRESS_OUTPUT_BUCKETS,4)});

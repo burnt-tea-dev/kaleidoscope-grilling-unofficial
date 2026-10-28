@@ -29,7 +29,7 @@ test('silently rejected field fails readback',()=>{const s=new Stack('minecraft:
 test('unknown snapshot version refuses lossy fallback',()=>assert.throws(()=>restore({version:2,id:'minecraft:apple'}),/unsupported/));
 test('separate damage and raw-lore contents have different ingredient identity',()=>{const a=new Stack('minecraft:diamond_sword'),b=new Stack('minecraft:diamond_sword');b.damage=1;assert.notEqual(metadataSignature(captureSkewerMetadata(a)),metadataSignature(captureSkewerMetadata(b)));b.damage=0;b.lore=[{translate:'test:key'}];assert.notEqual(metadataSignature(captureSkewerMetadata(a)),metadataSignature(captureSkewerMetadata(b)));});
 const {ingredientContentSignature}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js');
-const {secretFood}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js');
+const {secretFood}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js');
 test('mixed legacy and native snapshots retain duplicate ingredient penalty',()=>{const legacy={id:'minecraft:apple',name:'named',lore:['text'],props:{'x:a':1},nutrition:4,saturation:.3};const s=new Stack(legacy.id);s.nameTag=legacy.name;s.setLore(legacy.lore);setItemProperty(s,'x:a',1);const current={...legacy,native:captureSkewerMetadata(s)};assert.equal(ingredientContentSignature(legacy),ingredientContentSignature(current));assert.equal(secretFood([legacy,current],true).duplicate,true);current.native.rawLore=[{translate:'different'}];assert.equal(secretFood([legacy,current],true).duplicate,false);});
 test('five ordinary cooked-secret plate snapshots fit native string storage',()=>{
  const rows=['minecraft:apple','minecraft:carrot','minecraft:beef'].map(id=>({id,nutrition:4,saturation:.3,convertTo:'',edible:true,tags:[],native:captureSkewerMetadata(new Stack(id))}));
@@ -247,7 +247,7 @@ test('failed Secret disassembly releases presentation preparation and permits re
 for(const animations of [true,false])test('newly threaded Secret enters a lit grill immediately with animations='+animations,async()=>{
  const f=await newlyThreadedSecretFixture(animations),originalRandom=Math.random;
  try{
-  const state=await f.load('a2740_grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
   const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
   const input=f.p.off;f.p.off=undefined;f.p.isSneaking=false;
   function interact(){return f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});}
@@ -266,8 +266,8 @@ test('one, two and three ingredient skewers traverse player callbacks through gr
  try{
   Math.random=()=>.25;
   const config=await f.load('server_config_runtime.js');config.setGrillingConfig('enableEatingAnimations',true);
-  const state=await f.load('a2740_grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
-  const oil=await f.load('a2734_cookery_oil_pot_adapter.js'),food=await f.load('a2750_food_state_adapter.js');
+  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const oil=await f.load('oil/cookery_oil_pot_adapter.js'),food=await f.load('food/food_state_adapter.js');
   const ids=await f.load('eating_profile_ids.js');
   // Java recipe/profile data: fish ONE, fried egg TWO, meatball THREE_RANDOM.
   const recipes=[['minecraft:cod','fish',1,90],['kaleidoscope_cookery:fried_egg','fried_egg',2,90],['kaleidoscope_cookery:raw_meatball','meatball',3,100]];
@@ -366,7 +366,7 @@ for(const mode of ['missing world record','corrupt world record'])test('native c
 });
 async function fourthFlipFixture(options={}){
  const f=await nativeSecretFixture(options);
- const state=await f.load('a2740_grill_state_adapter.js'),storage=await f.load('family_station_storage.js'),core=await f.load('core_logic.js');
+ const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js'),core=await f.load('core_logic.js');
  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
  const inventory=storage.stationContainer(grill);
  f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({...core.initialState(),lit:true,phase:1,flips:3,heatTicks:1200}));

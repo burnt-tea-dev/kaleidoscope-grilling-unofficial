@@ -2,8 +2,8 @@ import {system,world} from '@minecraft/server';
 import {copyEatingVariant} from './eating_item_runtime.js';
 import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 import {getItemProperty} from './itemData.js';
-import {playerInventory,getOffHand,setOffHand} from './a2735_player_io.js';
-import {SEASONING_LIST_KEY,isEmptySeasoningId,isPendingSeasoningId,normalizeSeasoningList,seasoningFillVisualId} from './a2743_seasoning_contract_core.js';
+import {playerInventory,getOffHand,setOffHand} from './core/player_io.js';
+import {SEASONING_LIST_KEY,isEmptySeasoningId,isPendingSeasoningId,normalizeSeasoningList,seasoningFillVisualId} from './seasoning/seasoning_contract_core.js';
 
 export function bottleFillIngredients(stack){
  const raw=getItemProperty(stack,SEASONING_LIST_KEY);

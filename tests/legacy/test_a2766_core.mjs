@@ -6,7 +6,7 @@ import {
  parseSpecialSeasoningVisualId,
  specialSeasoningRemainingBucket,
  specialSeasoningVisualId
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2766_special_seasoning_visual_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/seasoning/special_seasoning_visual_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

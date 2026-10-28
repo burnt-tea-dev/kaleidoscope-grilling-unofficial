@@ -38,7 +38,7 @@ function sdk(node,style){
 }
 async function bottleFixture(style,maxAmount=1){
  const f=createFixture();await f.load('main.js');
- const data=await f.load('itemData.js'),storage=await f.load('family_station_storage.js'),placed=await f.load('a2743_seasoning_block_adapter.js');
+ const data=await f.load('itemData.js'),storage=await f.load('family_station_storage.js'),placed=await f.load('seasoning/seasoning_block_adapter.js');
  const snapshots=await f.load('skewer_item_snapshot.js');
  const nativeSetLore=f.ItemStack.prototype.setLore;let fault,attempts=0;
  f.ItemStack.prototype.setLore=function(lines=[]){
@@ -99,7 +99,7 @@ for(const fault of ['throw','reject','dropCustom','wrongCount','dropToken'])test
 // The retained food-tooltip rules share this lore behavior suite.
 test('food maxim lore preserves every translated and custom item message',async t=>{
  const f=createFixture();t.after(()=>f.dispose());
- const {MAXIM_ITEMS,foodMaximKey,isHeatLore,planMaximLore}=await f.load('a2769_food_tooltip_core.js');
+ const {MAXIM_ITEMS,foodMaximKey,isHeatLore,planMaximLore}=await f.load('hud/food_tooltip_core.js');
 const id='kaleidoscope_grilling:potato_beef_stew';
 const custom={rawtext:[{text:'Custom '},{translate:'other:description',with:['x']}]};
 await t.test('all eight translated foods have one canonical maxim',()=>{

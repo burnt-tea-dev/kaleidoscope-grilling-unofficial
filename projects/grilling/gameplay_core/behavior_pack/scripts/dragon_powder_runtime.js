@@ -1,9 +1,9 @@
 import {onBlockInteraction} from './core/events.js';
 import {world,system,ItemStack} from '@minecraft/server';
-import {isKitchenKnifeStack} from './a2710_chicken_acquisition_core.js';
-import {captureInteractionIntent,interactionIntentStillCurrent} from './a2762_interaction_intent_adapter.js';
-import {captureWritableHand,playerInventory,isCreative} from './a2735_player_io.js';
-import {commitSteps} from './a277_grill_transaction_core.js';
+import {isKitchenKnifeStack} from './world/chicken_acquisition_core.js';
+import {captureInteractionIntent,interactionIntentStillCurrent} from './core/interaction_intent_adapter.js';
+import {captureWritableHand,playerInventory,isCreative} from './core/player_io.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
 import {dragonPowderCount,knifeDamagePlan} from './dragon_powder_core.js';
 const POWDER='kaleidoscope_grilling:dragon_egg_powder';
 function enchantment(stack,id){return Number(stack.getComponent('minecraft:enchantable')?.getEnchantment(id)?.level??0)}

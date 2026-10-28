@@ -4,7 +4,7 @@ import {
  FARMLAND_MIN_SURVIVAL_LIGHT,MIN_GROWTH_LIGHT,ACQUISITION_CHANCE,MATURE_BONUS_PROBABILITY,STRAW_HATS,
  onionSurvive,onionAcquisitionCount,shouldDropOnionAcquisition,matureOnionCount,
  selectionHeight,bonemealAgeIncrease,javaCropGrowthSpeed,javaCropGrowthChance,shouldAdvanceAge
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2717_onion_crop_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/onion_crop_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('ids and ages stay exact',()=>{

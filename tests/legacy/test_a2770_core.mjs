@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {bottlePlan,oilPlan,positions,decodeKey,rotationForStates,isSeasoningBlock,FALLBACK_COLORS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2770_placed_visual_core.js';
+import {bottlePlan,oilPlan,positions,decodeKey,rotationForStates,isSeasoningBlock,FALLBACK_COLORS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/presentation/placed_visual_core.js';
 let n=0;const test=(name,fn)=>{fn();n++;console.log('PASS',name)};
 test('all 128 special use/variant combinations match Java bins',()=>{
  for(let uses=0;uses<16;uses++)for(let variant=0;variant<8;variant++){

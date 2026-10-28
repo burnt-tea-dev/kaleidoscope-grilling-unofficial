@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {VANILLA_SHOVELS,COOKERY_EXTINGUISH_TOOLS,isExtinguishTool,isInitialBlockPress,nextDurability} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a275_grill_input_core.js';
+import {VANILLA_SHOVELS,COOKERY_EXTINGUISH_TOOLS,isExtinguishTool,isInitialBlockPress,nextDurability} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/grill/grill_input_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('all six vanilla shovels extinguish',()=>{assert.equal(VANILLA_SHOVELS.length,6);for(const id of VANILLA_SHOVELS)assert.equal(isExtinguishTool(id),true)});
@@ -30,7 +30,7 @@ for (const {direction, yaw, tail, left} of cases) {
     const f = createFixture();
     const runtime = await f.load('grill_visual_runtime.js');
     const storage = await f.load('family_station_storage.js');
-    const adapter = await f.load('a2740_grill_state_adapter.js');
+    const adapter = await f.load('grill/grill_state_adapter.js');
     const {initialState} = await f.load('core_logic.js');
     const block = f.block('kaleidoscope_grilling:grill', {x: 10, y: 80, z: 7}, {
       states: {'minecraft:cardinal_direction': direction},

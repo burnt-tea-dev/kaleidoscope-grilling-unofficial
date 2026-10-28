@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import {commitEating,captureEatingIdentity,eatingStillCurrent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_eating_transaction.js';
-import {ingredientBehavior,rolledIngredientEffects} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
-import {overlappedBlockPositions} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_contact_core.js';
-import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
-import {rackSlotAtHit} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_rack_quick_pick.js';
+import {commitEating,captureEatingIdentity,eatingStillCurrent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/eating_transaction.js';
+import {ingredientBehavior,rolledIngredientEffects} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect/ingredient_effects.js';
+import {overlappedBlockPositions} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect/contact_core.js';
+import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
+import {rackSlotAtHit} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack/rack_quick_pick.js';
 
 // Fault-injected storage transaction: reward must never survive a failed debit/write.
 for(const failure of ['debit','reward',null]){

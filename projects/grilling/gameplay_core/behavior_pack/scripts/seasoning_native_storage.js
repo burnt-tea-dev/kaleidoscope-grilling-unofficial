@@ -2,10 +2,10 @@
  * The old four-field rows remain a checked projection for HUD/visual readers.
  */
 import {stationContainer,inspectStationStorage,quarantineStation} from './family_station_storage.js';
-import {readPlacedSeasoningStack} from './a2743_seasoning_block_adapter.js';
-import {SEASONING_MAX_BOTTLES,isEmptySeasoningId,isPendingSeasoningId} from './a2743_seasoning_contract_core.js';
-import {isSpecialSeasoningId} from './a2766_special_seasoning_visual_core.js';
-import {commitSteps} from './a277_grill_transaction_core.js';
+import {readPlacedSeasoningStack} from './seasoning/seasoning_block_adapter.js';
+import {SEASONING_MAX_BOTTLES,isEmptySeasoningId,isPendingSeasoningId} from './seasoning/seasoning_contract_core.js';
+import {isSpecialSeasoningId} from './seasoning/special_seasoning_visual_core.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
 import {slotWrite} from './rack_transfer_plan.js';
 export const isNativeBottleItem=stack=>!!stack&&(isEmptySeasoningId(stack.typeId)||isPendingSeasoningId(stack.typeId)||isSpecialSeasoningId(stack.typeId));
 

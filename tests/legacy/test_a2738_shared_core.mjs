@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  HOST_FAT_CAPACITY,GRILLING_FLUID_CAPACITY,GRILLING_OIL_BUCKET_POINTS,
  GRILLING_OIL_TYPES,normalizeOilType,oilCapacity,oilTypeForBucketId
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2738_oil_contract_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_contract_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

@@ -3,7 +3,7 @@ import {
  COOKERY_EMPTY_ID,COOKERY_FILLED_ID,HOST_COUNT_KEY,GRILLING_TYPE_KEY,
  HOST_FAT_CAPACITY,GRILLING_FLUID_CAPACITY,
  normalizeOilCount,oilCapacity,planOilConsumption,planTypedOilAddition
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2734_cookery_oil_pot_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/cookery_oil_pot_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

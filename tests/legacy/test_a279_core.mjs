@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  BOARD_ID,BEEF_ID,COOKERY_OFFAL_ID,BEEF_CHUNKS_ID,CUTS,OUTPUT_COUNT,
  stationKey,canonicalBeefState,classifyBoardState,overrideBuiltInBeefState,interactionDecision
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a279_beef_board_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/beef_board_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('station key matches Cookery exact persistence key',()=>assert.equal(stationKey('minecraft:overworld',1,64,-3),'kc_station:minecraft:overworld:1,64,-3'));

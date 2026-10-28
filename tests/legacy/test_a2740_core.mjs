@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {initialState,FINISHED_TICKS,BURNT_TICKS,REQUIRED_FLIPS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core_logic.js';
-import {GRILL_HUD_TIMER_STEP,grillHudStatusKey,grillHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2740_grill_hud_core.js';
+import {GRILL_HUD_TIMER_STEP,grillHudStatusKey,grillHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/grill_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

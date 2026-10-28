@@ -3,7 +3,7 @@ import {
  RACK_COMPARTMENTS,RACK_SEASONING_SLOTS,RACK_TOOL_SLOTS,RACK_RANGE,
  rackSlotKind,rackItemKind,rackCanonicalFilter,rackFilterMatches,rackCanPlace,
  normalizeRackFilters,rackDisplayLevel,rackPlacementCandidates,bindingInRange
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2746_advanced_rack_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/rack/advanced_rack_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

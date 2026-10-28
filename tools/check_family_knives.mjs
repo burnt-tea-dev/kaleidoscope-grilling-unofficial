@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {isKitchenKnife,KITCHEN_KNIVES,KITCHEN_KNIFE_TAG} from '../projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_core.js';
+import {isKitchenKnife,KITCHEN_KNIVES,KITCHEN_KNIFE_TAG} from '../projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_core.js';
 for(const id of KITCHEN_KNIVES)assert.equal(isKitchenKnife(id,[]),true);
 assert.equal(isKitchenKnife('kaleidoscope_end:dragon_tooth_knife',[KITCHEN_KNIFE_TAG]),true);
 assert.equal(isKitchenKnife('kaleidoscope_nether:primitive_machete',[KITCHEN_KNIFE_TAG]),true);

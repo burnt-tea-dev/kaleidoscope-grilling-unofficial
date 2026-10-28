@@ -1,8 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createBoardRegistry,executeBoardOperation,recoverBoardOperation,sampleBoardOutputs,normalizeBoardV2Recipe} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/host_api/board_api_core.js';
-import {BOARD_V2_RECIPES,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js';
-import {appendOutcome,isConfiguredIngredient} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+import {BOARD_V2_RECIPES,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js';
+import {appendOutcome,isConfiguredIngredient} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 const copy=x=>JSON.parse(JSON.stringify(x));
 const recipes=BOARD_V2_RECIPES.map(normalizeBoardV2Recipe);

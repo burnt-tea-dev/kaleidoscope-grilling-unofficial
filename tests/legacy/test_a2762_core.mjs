@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {
  primitiveStackProps,stackIntentSignature,fullStackIntentSignature,stackIntentDescriptor,
  captureInteractionIntentFromStacks,interactionIntentMatchesStacks
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2762_interaction_intent_core.js';
-import {makeTwoHandIntent,sameTwoHandIntent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a288_intent_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/interaction_intent_core.js';
+import {makeTwoHandIntent,sameTwoHandIntent} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/intent_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

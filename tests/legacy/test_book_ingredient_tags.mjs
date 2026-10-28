@@ -1,8 +1,8 @@
 /** Pure recipe planning tests; no native client acceptance claim. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookIngredientSlots,planInventoryConsumption,selectorMatches} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_core.js';
-import {recipeTable,SECRET_ID} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+import {bookIngredientSlots,planInventoryConsumption,selectorMatches} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate/plate_recipe_core.js';
+import {recipeTable,SECRET_ID} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 const N='kaleidoscope_grilling:';
 for(const recipe of recipeTable()){
  test('canonical book '+recipe.id,()=>{

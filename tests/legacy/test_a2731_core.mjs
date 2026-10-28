@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {farmlandCropTable,farmlandCropByKey} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2731_farmland_crop_host_core.js';
+import {farmlandCropTable,farmlandCropByKey} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/farmland_crop_host_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

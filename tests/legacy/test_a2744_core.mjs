@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {PLATE_CAPACITY} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a25_plate_recipe_core.js';
-import {skewerPlateHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2744_skewer_plate_hud_core.js';
+import {PLATE_CAPACITY} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate/plate_recipe_core.js';
+import {skewerPlateHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/skewer_plate_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {foodFacts,ingredientFoodFacts} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food_snapshot_core.js';
-import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
-import {ingredientBehavior} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a285_ingredient_effects.js';
+import {secretFood} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
+import {ingredientBehavior} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/effect/ingredient_effects.js';
 import {VANILLA_FOOD_NUTRITION as facts} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/vanilla_food_nutrition.js';
 for(const [id,expected] of Object.entries(facts))test('vanilla food without native component '+id,()=>assert.deepEqual(foodFacts({typeId:id,getComponent:()=>undefined}),{...expected,edible:true}));
 test('real data-driven component overrides fallback',()=>assert.deepEqual(foodFacts({typeId:'minecraft:apple',getComponent:()=>({nutrition:0,saturationModifier:0,usingConvertsTo:'test:container'})}),{nutrition:0,saturation:0,convertTo:'test:container',edible:true}));

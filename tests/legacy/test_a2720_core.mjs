@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  ROASTED_ID,INPUT_ID,WARMTH_EFFECT,WARMTH_TICKS,NUTRITION,SATURATION_MODIFIER,STATION_TAGS,
  roastedRecipe,nextWarmthUntil
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2720_roasted_sweet_potato_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/roasted_sweet_potato_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('ids and food values stay exact',()=>{

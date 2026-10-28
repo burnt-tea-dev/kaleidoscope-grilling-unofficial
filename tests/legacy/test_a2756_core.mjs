@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  EVENT_ADVANCEMENTS,REQUIRED_SEASONINGS,
  threadingCompletedForAdvancement,seasoningAdvancementIds,hotFoodAdvancementEligible
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2756_advancement_event_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_event_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

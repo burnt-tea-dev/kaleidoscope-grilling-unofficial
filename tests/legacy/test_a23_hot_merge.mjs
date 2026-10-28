@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {NORMAL_HEAT_WINDOW,weightedHeat,normalHeatCompatible,compactGroups} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a23_hot_merge.js';
+import {NORMAL_HEAT_WINDOW,weightedHeat,normalHeatCompatible,compactGroups} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/hot_merge.js';
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('weighted heat matches Java count average',()=>assert.equal(weightedHeat(1200,2,600,1),1000));
 t('normal hot window is five minutes',()=>{assert.equal(NORMAL_HEAT_WINDOW,6000);assert.equal(normalHeatCompatible({hot:true,remaining:10000},{hot:true,remaining:4000}),true);assert.equal(normalHeatCompatible({hot:true,remaining:10001},{hot:true,remaining:4000}),false)});

@@ -5,7 +5,7 @@ import {secretVisualState} from './secret_visual_state.js';
 import {grillVisualStage} from './grill_visual_core.js';
 import {world,system} from '@minecraft/server';
 import {peekStationContainer} from './family_station_storage.js';
-import {readGrillState} from './a2740_grill_state_adapter.js';
+import {readGrillState} from './grill/grill_state_adapter.js';
 import {GRILL_FOOD_ENTITY,grillVisualKey,nearGrill,grillSlotPlan,createGrillDisplayController} from './grill_visual_core.js';
 const NS='kaleidoscope_grilling:';
 let observers=[],lastSample=-1,lastWarning=-1200,secretReader;

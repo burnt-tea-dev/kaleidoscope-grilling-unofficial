@@ -1,7 +1,7 @@
 import {world,system} from '@minecraft/server';
 import {readPublicOil,isOilPayloadLine,normalizePublicOil} from './host_api/oil_api_core.js';
-import {readCookeryOilPot,buildCookeryOilPot,COOKERY_FILLED_ID} from './a2734_cookery_oil_pot_adapter.js';
-import {getHand,setHand,playerInventory} from './a2735_player_io.js';
+import {readCookeryOilPot,buildCookeryOilPot,COOKERY_FILLED_ID} from './oil/cookery_oil_pot_adapter.js';
+import {getHand,setHand,playerInventory} from './core/player_io.js';
 import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 const pending=new Map(),lifecycles=new Map(),gestures=new Map();let sequence=0;
 // The host only adds its portable oil line when publishing a legacy pot.

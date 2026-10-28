@@ -1,9 +1,9 @@
-import {isPendingSeasoningId} from './a2743_seasoning_contract_core.js';
+import {isPendingSeasoningId} from './seasoning/seasoning_contract_core.js';
 // Motion-only port of PR125; contents remain owned by bottle_held_visual_runtime.
 import {system,world} from '@minecraft/server';
-import {getMainHand,getOffHand} from './a2735_player_io.js';
-import {eatingIdentity} from './a285_eating_transaction.js';
-import {isSpecialSeasoningId} from './a2766_special_seasoning_visual_core.js';
+import {getMainHand,getOffHand} from './core/player_io.js';
+import {eatingIdentity} from './core/eating_transaction.js';
+import {isSpecialSeasoningId} from './seasoning/special_seasoning_visual_core.js';
 const NS='kaleidoscope_grilling:',motions=new Map(),pendingHands=new Map();
 function held(player,hand){return hand==='off'?getOffHand(player):getMainHand(player)}
 export function beginSeasoningMotion(player,hand){

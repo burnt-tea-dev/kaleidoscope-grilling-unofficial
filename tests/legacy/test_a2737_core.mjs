@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {
  ITEM_FILL_POINTS,oilTypeForBucketId,isCookeryOilPotItemId,planOffhandOilFill
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2737_offhand_oil_fill_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/offhand_oil_fill_core.js';
 
 const OIL_TYPES={
  canola:{bucket:'kaleidoscope_grilling:canola_oil_bucket'},

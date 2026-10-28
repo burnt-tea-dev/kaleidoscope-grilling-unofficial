@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {recipeTable as hosted,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2727_cookery_host_recipes_core.js';
-import {recipeTable as skewers} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+import {recipeTable as hosted,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js';
+import {recipeTable as skewers} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 import {COOKED_EFFECTS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/data.js';
 import {initialState,light,brush,flip,season,tickState,canInsert,breakDisposition} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core_logic.js';
 const javaData=new URL('../../data/java/',import.meta.url);
@@ -63,7 +63,7 @@ const burnt=tickState(s,3,400);assert.deepEqual(burnt.events,[{kind:'burn_to_cha
 assert.deepEqual(burnt.state,{...initialState(),lit:true});assert.equal(canInsert(burnt.state,0),true);
 assert.equal(tickState(light(s,false),3,400).state.phase,3,'unlit pauses burnout');
 console.log(`PASS Java 1.1.1 survival parity: ${checked} released recipe/effect rows plus grill cycle and persistent fire`);
-const {appendOutcome,completedRecipe,canAppendConfigured}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js');
+const {appendOutcome,completedRecipe,canAppendConfigured}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js');
 const wing={id:'example:wing',tags:['kaleidoscope_grilling:ingredients/chicken_wings']};
 assert.equal(canAppendConfigured([],wing),true);
 assert.equal(appendOutcome([wing,{id:'kaleidoscope_cookery:red_chili'}],wing).id,'kaleidoscope_grilling:raw_mid_wing_skewer');

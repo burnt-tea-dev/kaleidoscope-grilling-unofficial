@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  COW_ID,SQUID_ID,RAW_COW_OFFAL_ID,SQUID_TENTACLE_ID,SQUID_DROP_CHANCE,
  cowOffalDropCount,squidTentacleDropCount,squidTentacleShouldDrop
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2712_remaining_knife_drops_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/remaining_knife_drops_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('entity and item ids stay exact',()=>{

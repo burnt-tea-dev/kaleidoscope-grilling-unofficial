@@ -4,7 +4,7 @@ import {
   UNFINISHED_ID,SECRET_ID,FAT_CAPACITY,FLUID_CAPACITY,OIL_BUCKET_POINTS,
   recipeTable,completedRecipe,canAppendConfigured,expectedSize,appendOutcome,secretFood,oilPotCapacity,clampOilCount,canFillTypedOil,
   isDisassemblableRaw
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a24_skewering_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 
 // The expected slots come from the pinned Java data, independently of the
 // Bedrock table. Native storage/client rendering are covered separately.

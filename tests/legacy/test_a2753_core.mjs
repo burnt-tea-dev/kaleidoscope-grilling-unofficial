@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {
  ADVANCEMENT_PREFIX,MOUNTAIN_FRAGRANCE,advancementPropertyKey,advancementAwardPlan
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2753_advancement_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

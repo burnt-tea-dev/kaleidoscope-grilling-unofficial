@@ -3,7 +3,7 @@ import {
  PEPPER_LEAVES_ID,PEPPER_WORLDGEN_FRUITING_BRIDGE_ID,
  PEPPER_WORLDGEN_NORMAL_WEIGHT,PEPPER_WORLDGEN_FRUITING_WEIGHT,
  worldgenFruitingProbability,worldgenLeafWeights
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2759_pepper_worldgen_fruiting_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/pepper_worldgen_fruiting_core.js';
 
 assert.equal(PEPPER_WORLDGEN_NORMAL_WEIGHT,3);
 assert.equal(PEPPER_WORLDGEN_FRUITING_WEIGHT,1);

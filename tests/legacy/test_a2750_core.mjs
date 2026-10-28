@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import {
  HOUTTUYNIA_PORK_ID,GREEN_PEPPER_SQUID_ID,BRAISED_WINGS_ID,WOK_FOOD_IDS,WOK_FOODS,wokRecipes
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2750_wok_food_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js';
 import {
  COOKERY_POT_ID,COOKERY_STOCKPOT_ID,potHotTicks,metadataPlan,planSeasoningUse,
  oilTypeFromHeld,inventoryGains,stateBeforeSeasoning,planPotOilTransition
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2750_cookery_cuisine_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/cookery_cuisine_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

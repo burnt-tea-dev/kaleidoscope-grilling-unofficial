@@ -5,7 +5,7 @@ import {SLIME_ID,readSlimeWorldFrame} from './slime_frame_core.js';
 import {advancedRackToolVisuals} from './advanced_rack_visual_core.js';
 import {RACK_TOOL_VISUAL_TYPE,rackToolVisualModel} from './rack_tool_visual_data.js';
 import {rackDisplayPose,RACK_TOOL_VISUAL_Y,RACK_TOOL_VISUAL_Z} from './advanced_rack_layout.js';
-import {syncRackDisplay} from './a2746_rack_state_adapter.js';
+import {syncRackDisplay} from './rack/rack_state_adapter.js';
 import {PLATE_FOOD_VISUAL_TYPE,RECIPE_ICON_VISUAL_TYPE,CUSTOM_RECIPE_ICON_VISUAL_TYPE,VAT_PREMIUM_VISUAL_TYPE,plateMeshPlan,recipeIconModel,secretGuiIconPlan,recipeAnimationFrame,vatPremiumPlan,vatAnimationFrame,plateSlotPose,recipeIconPose,recipeMeshPose} from './plate_recipe_visual_core.js';
 import {takeStationContentsVisualDirty} from './station_contents_visual_queue.js';
 import {stationProjection,registerStationProjection} from './station_projection_core.js';
@@ -17,7 +17,7 @@ import {grillingConfig} from './server_config_runtime.js';
 /** Transient native equipped-item renderers. Helpers never own or deliver station contents. */
 import {world,system} from '@minecraft/server';
 import {STORAGE_PREFIX,peekStationContainer} from './family_station_storage.js';
-import {a25ReadPlateBlock,a25RestoreStack,a25ReadRecipeDisplayStack} from './a25_plate_recipe_runtime.js';
+import {a25ReadPlateBlock,a25RestoreStack,a25ReadRecipeDisplayStack} from './plate/plate_recipe_runtime.js';
 const TYPE='kaleidoscope_grilling:equipment_visual',work=new VisualTargetQueue(),targets=work.targets,orphaned=new Map();
 let reader,helpers=0,lastWarning=-1200,indexing=false,lastCapacityWarning=-1200,lastAudience=-10;
 export function configureSecretVisuals(read){reader=read;}

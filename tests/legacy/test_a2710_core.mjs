@@ -3,7 +3,7 @@ import {
  BOARD_ID,CHICKEN_ID,CHICKEN_SKIN_ID,CHICKEN_WING_ID,RAW_SMALL_MEATS_ID,CUTS,KITCHEN_KNIVES,
  isKitchenKnife,stationKey,chickenSkinCompletionCandidate,chickenBoardCompletionCommitted,
  chickenSkinDropCount,chickenWingDropCount
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2710_chicken_acquisition_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/world/chicken_acquisition_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 const done={input:CHICKEN_ID,cuts:4,max:4,result:{id:RAW_SMALL_MEATS_ID,count:2},extension:false};

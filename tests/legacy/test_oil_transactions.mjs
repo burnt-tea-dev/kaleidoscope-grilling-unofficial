@@ -1,7 +1,7 @@
 import {createFixture} from '../helpers/minecraft-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a26_oil_machine_core.js';
+import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
 import {createOilPressRegistry} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil_press_registry.js';
 const N='kaleidoscope_grilling:';
 
@@ -85,7 +85,7 @@ async function fixture({count=16,creative=false,full=false,off=false,press:press
  const vatBlock=block(core.BIG_VAT_ID,1);seedVat(vatBlock,vat);
  const press=pressState===undefined?undefined:block(core.OIL_PRESS_ID,0);
  if(press)seedPress(press,pressState);
- const api=await h.load(worldOil?'a23_oil_world.js':'a26_oil_machine_runtime.js');
+ const api=await h.load(worldOil?'oil/oil_world.js':'oil/oil_machine_runtime.js');
  const {nativeItemSignature}=await h.load('owned_item_transaction_core.js');
  h.startup();
  // First-load recovery arms native ticks; it does not advance saved work.
@@ -160,7 +160,7 @@ test('filled-bucket credit failure restores its original native item metadata',a
 });
 test('public Cookery pot fills from the real adapter without discarding custom metadata',async()=>{
  const f=await fixture(),pot=await publicPot(f);pot.nameTag='kitchen';pot.setCanPlaceOn(['minecraft:stone']);f.setHand(pot);use(f);
- const {readCookeryOilPot}=await f.h.load('a2734_cookery_oil_pot_adapter.js');
+ const {readCookeryOilPot}=await f.h.load('oil/cookery_oil_pot_adapter.js');
  assert.equal(readCookeryOilPot(f.held()).count,40);assert.equal(f.readVat().buckets,0);
  assert.equal(f.held().nameTag,'kitchen');assert.deepEqual(f.held().getCanPlaceOn(),['minecraft:stone']);
  assert.ok(f.held().getLore().includes('custom oil pot'));
@@ -197,7 +197,7 @@ test('saved pending press resumes once in a fresh runtime and world instance',as
  const reloaded=createFixture({dynamicProperties:snapshot(f)});
  const vat=reloaded.block(core.BIG_VAT_ID,f.vat.location,{states:f.vat.permutation.getAllStates()});
  const press=reloaded.block(core.OIL_PRESS_ID,f.press.location,{states:f.press.permutation.getAllStates()});
- const api=await reloaded.load('a26_oil_machine_runtime.js');reloaded.startup();reloaded.tick(1);
+ const api=await reloaded.load('oil/oil_machine_runtime.js');reloaded.startup();reloaded.tick(1);
  assert.equal(api.a26ReadPress(press).completionDelay,1,'recovery only arms the saved work');
  reloaded.tick(1);
  assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(api.a26ReadPress(press).cakes,0);
@@ -211,7 +211,7 @@ test('durable quarantine still blocks a vat after its runtime cache is replaced'
  const reloaded=createFixture({dynamicProperties:snapshot(f)});
  const vat=reloaded.block(core.BIG_VAT_ID,f.vat.location,{states:f.vat.permutation.getAllStates()});
  const player=reloaded.player({main:reloaded.item('minecraft:bucket',16),inventorySize:2});
- const api=await reloaded.load('a26_oil_machine_runtime.js');reloaded.startup();
+ const api=await reloaded.load('oil/oil_machine_runtime.js');reloaded.startup();
  const before=Object.fromEntries(reloaded.world.dynamicProperties),event={block:vat,player,itemStack:player.inventory.getItem(0),cancel:false,isFirstEvent:true};
  reloaded.emit('world.beforeEvents.playerInteractWithBlock',event);assert.equal(event.cancel,true);reloaded.flush();
  assert.deepEqual(Object.fromEntries(reloaded.world.dynamicProperties),before);assert.equal(api.a26ReadVat(vat).buckets,4);

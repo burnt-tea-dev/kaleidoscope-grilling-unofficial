@@ -168,7 +168,7 @@ def check_facts(s):
             f=load(GAME/'items'/(iid.split(':')[-1]+'.json'))['minecraft:item']['components']['minecraft:food']
             expected={'nutrition':f['nutrition'],'saturation':round(2*f['nutrition']*f['saturation_modifier'],4)}
             require(stats==expected and f['nutrition']>0,'Raw/cooked nutrition drift '+iid)
-    fixed=pure('a24_skewering_core.js','recipeTable')
+    fixed=pure('skewer/skewering_core.js','recipeTable')
     for rr in fixed:
         e=owner[rr['id']]
         expected=[{'method':'Hand Threading','ingredients':['minecraft:stick',*combo],'count':1,'time':0,'result':rr['id']} for combo in itertools.product(*rr['slots'])]
@@ -178,8 +178,8 @@ def check_facts(s):
             require(any(r['method']=='Grill' and r['ingredients']==[rr['id']] and r['result']==rr['cooked'] for r in e['recipes']),'Cooked recipe missing')
         require(all(any('→' in x or '->' in x or 'order' in x.lower() for x in e['body'][l]) for l in LOCALES),'Recipe order missing '+rr['id'])
     host_count=0
-    flex_pot=pure('a2750_wok_food_core.js','flexWokRecipes') if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,122) else []
-    for reg in pure('a2727_cookery_host_recipes_core.js','recipeTable'):
+    flex_pot=pure('food/wok_food_core.js','flexWokRecipes') if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,122) else []
+    for reg in pure('recipe/cookery_host_recipes_core.js','recipeTable'):
         r=reg['payload']['recipe'];kind=reg['payload']['kind']
         if kind=='chopping_board_v2':
             require(s.get('host_extension',{}).get('capability')=='chopping_board_v2','Host API dependency missing')
@@ -226,9 +226,9 @@ def check_facts(s):
         host_count+=1
     constants={
         'core_logic.js':{'FINISHED_TICKS':800,'BURNT_TICKS':400,'FLIP_COOLDOWN':20,'REQUIRED_FLIPS':4},
-        'a26_oil_machine_core.js':{'PRESS_MAX_CAKES':4,'PRESS_REQUIRED_PROGRESS':16,'PRESS_ANVIL_PROGRESS':4,'PRESS_STONE_PROGRESS':1,'PRESS_OUTPUT_BUCKETS':4,'VAT_CAPACITY_BUCKETS':8,'OIL_POT_CAPACITY':64,'OIL_BUCKET_POINTS':8},
-        'a2743_seasoning_contract_core.js':{'SEASONING_CAPACITY':8,'SEASONING_MAX_BOTTLES':4,'SEASONING_MAX_USES':16},
-        'a2746_advanced_rack_core.js':{'RACK_COMPARTMENTS':9,'RACK_RANGE':8}}
+        'oil/oil_machine_core.js':{'PRESS_MAX_CAKES':4,'PRESS_REQUIRED_PROGRESS':16,'PRESS_ANVIL_PROGRESS':4,'PRESS_STONE_PROGRESS':1,'PRESS_OUTPUT_BUCKETS':4,'VAT_CAPACITY_BUCKETS':8,'OIL_POT_CAPACITY':64,'OIL_BUCKET_POINTS':8},
+        'seasoning/seasoning_contract_core.js':{'SEASONING_CAPACITY':8,'SEASONING_MAX_BOTTLES':4,'SEASONING_MAX_USES':16},
+        'rack/advanced_rack_core.js':{'RACK_COMPARTMENTS':9,'RACK_RANGE':8}}
     for file,expected in constants.items():
         text=(GAME/'scripts'/file).read_text(encoding='utf-8')
         for name,n in expected.items():

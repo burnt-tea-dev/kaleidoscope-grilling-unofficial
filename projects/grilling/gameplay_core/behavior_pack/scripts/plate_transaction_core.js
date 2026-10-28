@@ -1,4 +1,4 @@
-import {commitSteps} from './a277_grill_transaction_core.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
 
 /** Do not silently turn damaged/unsupported saved contents into an empty plate. */
 export function decodePlateStorage(raw){

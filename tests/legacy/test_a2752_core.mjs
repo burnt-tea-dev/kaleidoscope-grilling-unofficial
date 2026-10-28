@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  POTATO_BEEF_STEW_ID,RED_SWEET_POTATO_PORRIDGE_ID,SOUR_SPICY_NOODLES_ID,
  TAVERN_VINEGAR_IDS,STOCKPOT_FOOD_IDS,STOCKPOT_FOODS,stockpotRecipes,stockpotEffectRows
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2752_stockpot_food_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/stockpot_food_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

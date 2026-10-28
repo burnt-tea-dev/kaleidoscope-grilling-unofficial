@@ -1,6 +1,6 @@
 /** Copied only into the hash-verified Cookery 1.6 host. No new event loop. */
 import {world,ItemStack,GameMode} from '@minecraft/server';
-import {wokRecipes,flexWokRecipes} from '../a2750_wok_food_core.js';
+import {wokRecipes,flexWokRecipes} from '../food/wok_food_core.js';
 import {evaluateCuisineQuality} from './cuisine_quality_core.js';
 import {commitSharedStationOil} from './oil_api_host.js';
 import {nextCuisineBatch,consumeCuisineCarrier,giveCuisineOutput,deliverCuisineOutput,recoverCuisineOutput,prepareCuisineBurn,assertCuisineBatchUncredited} from './cuisine_api_host.js';

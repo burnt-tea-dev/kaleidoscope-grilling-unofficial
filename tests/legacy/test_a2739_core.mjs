@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  CROSSHAIR_HUD_POLL_TICKS,CROSSHAIR_HUD_MAX_DISTANCE,
  shouldPublishHud,normalizeHudResult,oilPotHudView
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2739_crosshair_hud_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/crosshair_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

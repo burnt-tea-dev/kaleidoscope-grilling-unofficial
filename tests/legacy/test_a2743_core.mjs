@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {
  SEASONING_CAPACITY,SEASONING_MAX_BOTTLES,SEASONING_MAX_USES,SEASONING_VARIANT_MAX,
  BASE_SEASONINGS,hasSeasoningBase,normalizeBottleData,remainingSeasoningUses,seasoningEffectRows
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_contract_core.js';
-import {seasoningHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2743_seasoning_hud_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/seasoning/seasoning_contract_core.js';
+import {seasoningHudView} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/hud/seasoning_hud_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

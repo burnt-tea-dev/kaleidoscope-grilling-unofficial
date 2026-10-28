@@ -3,7 +3,7 @@ import {
  KC_API,KC_READY_EVENT,KC_REGISTER_EVENT,SOURCE,
  HOUTTUYNIA_ID,MINCED_HOUTTUYNIA_ID,CUTS,OUTPUT_COUNT,
  houttuyniaChoppingRecipe,registrationsForReady
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2713_houttuynia_processing_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/houttuynia_processing_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('Cookery public API constants stay exact',()=>{

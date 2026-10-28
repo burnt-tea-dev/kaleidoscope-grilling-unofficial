@@ -3,7 +3,7 @@ import {
  KC_API,KC_READY_EVENT,KC_REGISTER_EVENT,SOURCE,
  MANTOU_ID,RAW_MANTOU_SLICE_ID,CUTS,OUTPUT_COUNT,
  mantouChoppingRecipe,registrationsForReady
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2711_mantou_chopping_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/mantou_chopping_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 t('Cookery public API constants stay exact',()=>{

@@ -1,8 +1,8 @@
 import {ItemStack,EnchantmentType} from '@minecraft/server';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 import {canonicalFoodId,eatingItemId,RANDOM_EATING_IDS,isAlternateEatingId,SKEWER_EATING_IDS} from './eating_profile_ids.js';
-import {getHand,setHand} from './a2735_player_io.js';
-import {eatingIdentity} from './a285_eating_transaction.js';
+import {getHand,setHand} from './core/player_io.js';
+import {eatingIdentity} from './core/eating_transaction.js';
 const prepared=new Map();
 export function forgetEatingItem(playerId){prepared.delete(playerId);}
 export function selectedEatingProfile(requested,id){return RANDOM_EATING_IDS.has(canonicalFoodId(id))?(isAlternateEatingId(id)?'THREE_ALT':'THREE'):requested;}

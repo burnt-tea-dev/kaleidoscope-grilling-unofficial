@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {chooseInteractionHand,makeIntent,intentMatches} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a276_grill_intent_core.js';
+import {chooseInteractionHand,makeIntent,intentMatches} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/grill/grill_intent_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 const E={empty:true,id:null,sig:null};

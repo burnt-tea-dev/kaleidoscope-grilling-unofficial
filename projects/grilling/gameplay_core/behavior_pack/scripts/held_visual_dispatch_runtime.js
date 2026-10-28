@@ -1,6 +1,6 @@
 import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system} from '@minecraft/server';
-import {getMainHand,getOffHand} from './a2735_player_io.js';
+import {getMainHand,getOffHand} from './core/player_io.js';
 import {heldVisualKind,writeHeldVisual,forgetHeldVisual,HELD_VISUAL_EMPTY} from './held_visual_transport.js';
 
 // All held-content providers share one player scan and one deduplicated event

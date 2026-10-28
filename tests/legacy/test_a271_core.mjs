@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {POWDER_ID,SHEET_ID,KNEAD_TICKS,KNEAD_SECONDS,CHOPPING_BOARD_CUTS,normalizedStackAmount,kneadResult} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a271_sweet_potato_core.js';
+import {POWDER_ID,SHEET_ID,KNEAD_TICKS,KNEAD_SECONDS,CHOPPING_BOARD_CUTS,normalizedStackAmount,kneadResult} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/sweet_potato_core.js';
 
 assert.equal(KNEAD_TICKS,30);
 assert.equal(KNEAD_SECONDS,1.5);

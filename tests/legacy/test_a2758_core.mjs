@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {
  CHALLENGE_ADVANCEMENTS,seasoningFinishedAdvancementIds,mentalPreparationFailedEligible,
  heavyMetalBlockedEligible,ordinaryChallengeOutcome,advancementFrameTranslationKeys
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2758_advancement_challenge_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_challenge_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

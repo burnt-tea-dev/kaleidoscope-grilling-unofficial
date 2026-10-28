@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {
  FX_KEY,standaloneFoodEffectTable,effectsForStandaloneFood,nextPersistentUntil
-} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/a2732_standalone_food_effect_core.js';
+} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/standalone_food_effect_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 

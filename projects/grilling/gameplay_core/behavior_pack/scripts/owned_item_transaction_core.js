@@ -1,5 +1,5 @@
 import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
-import {commitSteps} from './a277_grill_transaction_core.js';
+import {commitSteps} from './grill/grill_transaction_core.js';
 import {planInventoryInsert} from './rack_transfer_plan.js';
 
 // Call only in an unrestricted phase: includes native restrictions/enchantments.
