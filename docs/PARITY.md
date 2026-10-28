@@ -87,3 +87,36 @@ G182 承接 G181，整合 #257 的烤架朝向、#256 的八食材秘製串外�
 本表合併舊對照的 21 個詳細項、進度獎勵邊界、BUGS 的 19 個問題區段及上述五項需求。原候選與細節保留於[收斂前 PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)、[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)及各自連結；完整重建前樹見 [archive tag](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。收斂前 commit 與較早 archive tag 是不同時間點，不把後來的證據改寫成 tag 已有。
 
 後續每次更新必須把來源 commit／候選、實際場景、測試位置及未覆蓋範圍寫在同一列。刪除過時測試可保留其歷史證據連結，但不能把它計作現行自動化覆蓋。文件清理不關閉尚未驗收的玩家需求。
+
+### Unreleased sound-contract correction (T3.3)
+
+Source-only draft, **not a new G184 package**. No version/hash freeze, export,
+release or client deployment is authorized by this change. The canonical baseline
+must remain failing until the release owner assigns a new reviewed identity;
+existing frozen G184 remains unchanged. `client=false`, `production_ready=false`.
+
+- At official pin `9a1acdab27698457bec16c9362678e574895a28c`, NeoForge
+  [GrillAutomationApi.java](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/GrillAutomationApi.java#L196-L227)
+  supplies ignition volume 1 and pitch `r*.4+.8`, extinguish volume .5 and pitch
+  `2.6+(r1-r2)*.8`. The adapter now sends those formulas at block center.
+  Distribution is preserved, not Java PRNG sequence or float-bit identity.
+- `SkeweringHandler.java:53–60,114–121` uses PLAYERS at player BlockPos for
+  disassembly (.8/1) and threading (.7/1). A distinct `kg_imm.thread_success`
+  alias reuses the existing sample and .85 sample gain; grill insertion keeps
+  the existing BLOCKS `kg_imm.action_success`. Disassembly uses player category.
+  Player one-shots use floor(location)+.5, including negative coordinates.
+- Grill one-shots use y+.5; the native grill loop remains y+.35, .65/1,
+  loopCount -1. Non-grill callers of blockSound keep their existing origin.
+- Category spelling `player` / `block` is confirmed by the
+  [official Mojang sound schema](https://github.com/Mojang/bedrock-schemas/blob/main/schemas/rp/sounds/index.schema.json).
+  [WorldSoundOptions](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldsoundoptions?view=minecraft-bedrock-stable)
+  defines numeric pitch/volume; engine clamping, actual loudness, attenuation,
+  category-slider behavior and native sample equivalence remain unverified.
+
+Regression events exercise actual main.js subscriptions, successful and failed
+ignition, redundant ignition/extinguish silence, thread/disassembly exclusivity,
+block insertion category, negative player position and pitch extrema. No new
+OGG, texture, model, use timing, cancellation or debit policy is introduced.
+The optional Cookery cuisine-seasoning audience/category mismatch remains
+separate and unfixed; native eating/burp duplication and listening acceptance
+also remain open. Test doubles do not establish that a player heard the sound.

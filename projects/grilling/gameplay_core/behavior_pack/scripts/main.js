@@ -38,7 +38,7 @@ import {configureSecretVisuals} from './station_contents_visual_runtime.js';
 import {foodFacts} from './food_snapshot_core.js';
 import {secretEatingRows} from './secret_eating_core.js';
 import {canUseCuisineFood,captureCuisineUse,cuisineUseEventMatches,completedCuisineUse} from './cuisine_eating_core.js';
-import {updateGrillAudio,removeGrillAudio,blockSound,useSound,seasoningShakeSound,stopSoundHandle,seasoningFinished} from './immersion_audio_runtime.js';
+import {updateGrillAudio,removeGrillAudio,blockSound,grillFireSound,useSound,seasoningShakeSound,stopSoundHandle,seasoningFinished} from './immersion_audio_runtime.js';
 import {updateNumbVisual,forgetNumbVisual,suppressNumbVisual} from './numb_visual_runtime.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 import {readNativeBottles,isNativeBottleItem} from './seasoning_native_storage.js';
@@ -376,7 +376,7 @@ function threadCurrent(player){
  const offStep={apply(){offRecovered=false;offWrite.apply()},rollback(){offWrite.rollback();offRecovered=true}};
  const steps=[...(free?[]:[mainWrite]),offStep,...delivery.steps];
  if(!transactionStatus(commitPlayerItemTransaction(world,player,steps,{tick:system.currentTick,label:'threading'}),'threading')){interactionFailure(player,'§c穿串未完成；已回復可確認的原料，未確認交易請查看紀錄');return false}
- useSound(player,'action_success',.7,1);
+ useSound(player,'thread_success',.7,1);
  awardLookingThePart(player,outcome);
  return true;
 }
@@ -616,12 +616,12 @@ function handleGrill(block,player,hand='main'){
    if(!tool.ok){interactionFailure(player,'§c點火失敗：打火石狀態無法提交');return}
    if(!commitGrillAndHand(block,state,nextState,player,hand,tool.before,tool.next,tool.mutate)){interactionFailure(player,'§c點火交易失敗，已嘗試回滾');return}
    if(tool.broken)try{player.playSound('random.break',{volume:.8,pitch:1})}catch{}
-   try{block.dimension.playSound('fire.ignite',block.location)}catch{}
+   grillFireSound(block,true);
   }
   return
  }
  if(isExtinguishTool(id)&&state.lit){
-  state=light(state,false);writeState(block,state);try{block.dimension.playSound('random.fizz',block.location)}catch{}return
+  state=light(state,false);writeState(block,state);grillFireSound(block,false);return
  }
  if(id===COOKERY_FILLED){
   if(!ensureOilHandPublished(player,hand,()=>handleGrill(block,player,hand)))return;

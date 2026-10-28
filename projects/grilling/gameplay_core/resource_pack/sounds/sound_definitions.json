@@ -10,6 +10,15 @@
         }
       ]
     },
+    "kg_imm.thread_success": {
+      "category": "player",
+      "sounds": [
+        {
+          "name": "sounds/kg_imm/action_success",
+          "volume": 0.85
+        }
+      ]
+    },
     "kg_imm.grill_flip": {
       "category": "block",
       "sounds": [
@@ -43,7 +52,7 @@
       ]
     },
     "kg_imm.skewer_disassemble": {
-      "category": "block",
+      "category": "player",
       "sounds": [
         {
           "name": "sounds/kg_imm/pickup_item",

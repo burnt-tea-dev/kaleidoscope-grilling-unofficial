@@ -48,3 +48,5 @@
 ## 歷史
 
 較早版本的逐項修補、候選與有限證據保留於[收斂前 CHANGELOG](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/CHANGELOG.md)及 [archive/pre-rebuild-20261018](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。歷史版本名稱與收據維持原身份；舊命令不作為目前的建置／發布指令。
+
+- Unreleased T3.3 source draft: correct Java grill fire sound parameters and grill one-shot origins; isolate threading/disassembly player-category sounds. No G184 replacement or release identity; listening acceptance pending.

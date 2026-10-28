@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {createFixture} from '../helpers/minecraft-fixture.mjs';
 import {createGrillAudioController,GRILL_LOOP_TICKS,playSeasoningShakeAudio,stopSoundHandle} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/immersion_audio_core.js';
@@ -93,5 +94,77 @@ test('runtime requests a continuous native grill sound and stops each station in
   assert.equal(instances[0].playing,false);assert.equal(instances[0].stops,1);
   assert.equal(instances[1].playing,true);assert.equal(instances[1].stops,0);
   removeGrillAudio(second);assert.equal(instances[1].stops,1);
+ }finally{f.dispose()}
+});
+
+const N='kaleidoscope_grilling:';
+async function interactionFixture(){
+ const f=createFixture();await f.load('main.js');f.startup();f.flush();
+ f.p=f.player({location:{x:-.2,y:80.9,z:2.1}});
+ f.grill=f.block(N+'grill',{x:-2,y:80,z:0});
+ f.block('minecraft:stone',{x:-2,y:79,z:0});
+ f.use=()=>{f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});f.flush()};
+ return f;
+}
+test('accepted ignition and extinguish use Java volume and two independent extinguish pitch draws; redundant actions are silent',async()=>{
+ const f=await interactionFixture(),random=Math.random;
+ try{
+  Math.random=()=>.25;f.p.main=f.item('minecraft:flint_and_steel');f.use();
+  const ignition=f.sounds.filter(s=>s.sound==='fire.ignite');assert.equal(ignition.length,1);
+  assert.deepEqual(ignition[0].options,{volume:1,pitch:.9});assert.deepEqual(ignition[0].location,{x:-1.5,y:80.5,z:.5});
+  f.use();assert.equal(f.sounds.filter(s=>s.sound==='fire.ignite').length,1);
+  let draws=0;Math.random=()=>[.75,.25][draws++%2];
+  f.p.main=f.item('minecraft:iron_shovel');f.use();
+  const fizz=f.sounds.filter(s=>s.sound==='random.fizz');assert.equal(fizz.length,1);
+  assert.deepEqual(fizz[0].options,{volume:.5,pitch:3});assert.deepEqual(fizz[0].location,ignition[0].location);
+  f.use();assert.equal(f.sounds.filter(s=>s.sound==='random.fizz').length,1);
+ }finally{Math.random=random;f.dispose()}
+});
+test('thread, disassemble and grill insert emit exactly one action-specific category after successful mutation',async()=>{
+ const f=await interactionFixture();
+ try{
+  const definitions=JSON.parse(await readFile(new URL('../../projects/grilling/gameplay_core/resource_pack/sounds/sound_definitions.json',import.meta.url),'utf8')).sound_definitions;
+  f.p.main=f.item('minecraft:cod',2);f.p.off=f.item('minecraft:stick');
+  f.emit('world.beforeEvents.itemUse',{source:f.p,itemStack:f.p.main,cancel:false});f.flush();
+  let actions=f.sounds.filter(s=>s.sound.startsWith('kg_imm.'));
+  assert.equal(actions.length,1);assert.equal(definitions[actions[0].sound].category,'player');
+  assert.deepEqual(actions[0].options,{volume:.7,pitch:1});assert.deepEqual(actions[0].location,{x:-.5,y:80.5,z:2.5});
+  assert.equal(f.p.main.amount,1);assert.equal(f.p.off.typeId,N+'raw_fish_skewer');
+  f.p.main=undefined;f.p.isSneaking=true;f.use();
+  actions=f.sounds.filter(s=>s.sound.startsWith('kg_imm.'));assert.equal(actions.length,2);
+  assert.equal(definitions[actions[1].sound].category,'player');assert.deepEqual(actions[1].options,{volume:.8,pitch:1});
+  assert.deepEqual(actions[1].location,actions[0].location);f.use();assert.equal(f.sounds.filter(s=>s.sound.startsWith('kg_imm.')).length,2);
+  f.p.isSneaking=false;f.p.main=f.item('minecraft:flint_and_steel');f.use();
+  f.p.main=f.item(N+'raw_fish_skewer');f.use();
+  const insert=f.sounds.filter(s=>s.sound==='kg_imm.action_success');assert.equal(insert.length,1);
+  assert.equal(definitions[insert[0].sound].category,'block');assert.deepEqual(insert[0].options,{volume:.65,pitch:1});
+  assert.deepEqual(insert[0].location,{x:-1.5,y:80.5,z:.5});
+ }finally{f.dispose()}
+});
+test('fire pitch extrema follow uniform ignition and triangular extinguish formulas without changing loop origin',async()=>{
+ const f=createFixture();
+ try{
+  const {grillFireSound,updateGrillAudio}=await f.load('immersion_audio_runtime.js');
+  const block=f.block(N+'grill',{x:1,y:64,z:3});
+  for(const r of [0,.25,.5,.75,1-2**-24]){
+   let draws=0;grillFireSound(block,true,()=>{draws++;return r});assert.equal(draws,1);
+   const sound=f.sounds.at(-1);assert.equal(sound.options.volume,1);assert.equal(sound.options.pitch,.8+r*.4);
+   assert(sound.options.pitch>=.8&&sound.options.pitch<1.2);
+  }
+  for(const a of [0,.5,1-2**-24])for(const b of [0,.5,1-2**-24]){
+   let draws=0;grillFireSound(block,false,()=>[a,b][draws++]);assert.equal(draws,2);
+   const sound=f.sounds.at(-1);assert.equal(sound.options.volume,.5);assert.equal(sound.options.pitch,2.6+(a-b)*.8);
+   assert(sound.options.pitch>1.8&&sound.options.pitch<3.4);
+  }
+  updateGrillAudio(block,true,1);assert.deepEqual(f.sounds.at(-1).location,{x:1.5,y:64.35,z:3.5});
+ }finally{f.dispose()}
+});
+test('failed ignition hand commit produces no ignition sound',async()=>{
+ const f=await interactionFixture();
+ try{
+  f.p.main=f.item('minecraft:flint_and_steel');
+  f.p.inventory.setItem=()=>{throw Error('injected denied tool write')};
+  f.use();assert.equal(f.sounds.filter(s=>s.sound==='fire.ignite').length,0);
+  const state=await f.load('a2740_grill_state_adapter.js');assert.equal(state.readGrillState(f.grill).lit,false);
  }finally{f.dispose()}
 });
