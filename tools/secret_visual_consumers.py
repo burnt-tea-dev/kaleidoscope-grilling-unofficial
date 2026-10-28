@@ -62,7 +62,11 @@ def update_consumers(root, check=False):
                     continue
                 for old, new in {**replacements, 217: FOOD_COUNT}.items():
                     s = re.sub(r'\b' + str(old) + r'\b', str(new), s)
-                if s.startswith('v.kg_secret_piece_index =') and 'v.kg_secret_marker' not in s:
+                # initialize runs before the marker is sampled in pre_animation.
+                # Keep its neutral helper state independent of that frame-local input.
+                if key == 'initialize' and s.startswith('v.kg_secret_piece_index ='):
+                    s = 'v.kg_secret_piece_index = 0;'
+                elif key == 'pre_animation' and s.startswith('v.kg_secret_piece_index =') and 'v.kg_secret_marker' not in s:
                     s = 'v.kg_secret_piece_index = math.floor(v.kg_secret_marker >= 227 && v.kg_secret_marker <= 234 ? v.kg_secret_marker - 9 : (v.kg_secret_marker >= 221 && v.kg_secret_marker <= 224 ? v.kg_secret_marker - 7 : (v.kg_secret_marker >= 0 && v.kg_secret_marker <= 213 ? v.kg_secret_marker : 0)));'
                 if s.startswith('v.kg_secret_owner_occupied =') and ' && (((' in s:
                     prefix = s.split(' && (((', 1)[0]
