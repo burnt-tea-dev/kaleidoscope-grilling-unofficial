@@ -1,6 +1,6 @@
 # 已知問題與驗收缺口
 
-修復候選為 2.8.182；公開下載 A2.8.157 是另一個內容身份，兩者均要求精確 Cookery 1.6.4 配套。以下區分「已有失敗觀察」、「來源缺陷已修但待復驗」與「能力／驗收尚缺」。舊候選的失敗不自動證明目前仍有同一 bug；來源改動、測試通過或 PR 關閉亦不證明玩家問題已消失。功能對照與五項保留需求見 [PARITY](PARITY.md)。
+目前來源身份與相依以 [baseline.json](../baseline.json) 為準；公開下載與原來配對另見 [RELEASING](RELEASING.md)，不能把不同候選的證據混用。以下區分「已有失敗觀察」、「來源缺陷已修但待復驗」與「能力／驗收尚缺」。舊候選的失敗不自動證明目前仍有同一 bug；來源改動、測試通過或 PR 關閉亦不證明玩家問題已消失。功能對照與五項保留需求見 [PARITY](PARITY.md)。
 
 ## 公開下載的物品安全限制
 
@@ -47,6 +47,12 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 - **視覺全量**：全物品第一人稱／側面貼圖、瓶／盤／串完整操作仍未閉合。舊 G17 editor captures、代表瓶預覽、隔離兩食品片及零玩家 BDS 都只保留原範圍。
 - **效能**：曾有 slowdown／記憶體警告及有限 profiling，沒有約定的完整通過預算。圖像裁剪、logging 成功或來源計數下降不是 FPS、延遲或 Watchdog 改善的實測。
 - **擁有者決策**：D3 HUD、D5 背包圖示、D6 player 覆寫及其他 D1–D10 仍由 [REBUILD-PLAN](REBUILD-PLAN.md#10-待擁有者決定事項) 管理。T2.6 不代替決策或變更 runtime。
+
+## 2026-10-28 草稿收斂
+
+- [#255](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/255)、#256、#257 的相容、食材與朝向修正已由 G181／G182 承接；[#290](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/290) 的聲音與 [#291](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/291) 的首次 Secret 顯示來源已併入 G187。關閉舊草稿不代表真人驗收通過。
+- [#264–#273 診斷鏈入口](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/273) 保留各次 ONE 動畫、粒子、完成時序與 local-stop 的原始結果；未將這些互相疊加的候選放進 G187。ONE 與其他食用動畫的原生／真人缺口仍按上表及 PARITY 跟進。原分支與提交不刪除。
+- [#260 fault probe](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/260) 的失敗保留：需測試夾具在同步 setItem 的 after-body 強行重入，尚無 BDS 支援該重入的證據。已交付的獨立抽查工具在 #263；該綠燈不修復 #260 的失敗。今後若有可重現的原生事件來源，再依該具體行為處理，不把它當作目前所有 runtime 發布的凍結條件。
 
 ## 需求與證據保留
 
