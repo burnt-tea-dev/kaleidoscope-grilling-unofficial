@@ -2,6 +2,12 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.183 Bedrock 26.60 native scheduling and audio candidate (unreleased)
+
+- Preserve the merged G182 visual repairs and asset cleanup. Replace oil-press per-tick registry polling with owned named ticks and 20-tick recovery; preserve saved-state keys, loaded-tick progress and item transactions. Startup recovery only arms the next native tick.
+- Native grill audio loop keeps one handle per station and retains extinguish, removal and unloaded-station cleanup. Observer seasoning one-shots are unchanged.
+- Requires Bedrock 26.60 and server 2.12.0-beta / Beta APIs (`gametest=true`). Bridge flags configure the editor only. Source/CI is not client or LIVE acceptance.
+
 ## 2.8.182 資產／食材／朝向整合候選（未發布）
 
 - 承接 G181 核心互動修復，依 Java 1.1.1 修正烤架食材柄在四個 cardinal 的出生與更新朝向；南北不再反向，槽位、翻面、ID 與保存資料不變。

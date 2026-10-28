@@ -50,3 +50,21 @@ test('shake release stops the local clip without cancelling the observer world o
  assert.deepEqual(calls[1].options,{location:origin,volume:.8,pitch:1});
  stopSoundHandle(handle);assert.deepEqual(stops,['owner']);
 });
+
+test('native loop retains one handle rather than restarting on the old duration',()=>{
+ let starts=0,stops=0;const handle={stop(){stops++}};
+ const c=createGrillAudioController({nativeLoop:true,play:()=>{starts++;return handle}});
+ for(let t=0;t<2000;t++)c.update('a',{},true,t);
+ assert.equal(starts,1);assert.equal(stops,0);c.update('a',{},false,2000);assert.equal(stops,1);assert.equal(c.size,0);
+});
+test('removing or unloading one grill does not stop a different station',()=>{
+ const stopped=[];const c=createGrillAudioController({nativeLoop:true,play:s=>({stop:()=>stopped.push(s.id)})});
+ c.update('a',{id:'a'},true,0);c.update('b',{id:'b'},true,0);c.remove('a');
+ assert.deepEqual(stopped,['a']);c.update('b',{id:'b'},true,20);c.sweep(20);assert.equal(c.size,1);
+ c.sweep(29);assert.deepEqual(stopped,['a','b']);assert.equal(c.size,0);
+});
+test('missing native handles retry at the existing bounded cadence',()=>{
+ let attempts=0;const c=createGrillAudioController({nativeLoop:true,play:()=>{attempts++;return undefined}});
+ assert.equal(c.update('a',{},true,0),false);for(let t=1;t<20;t++)c.update('a',{},true,t);
+ assert.equal(attempts,1);c.update('a',{},true,20);assert.equal(attempts,2);
+});

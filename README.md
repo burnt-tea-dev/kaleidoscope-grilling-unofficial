@@ -32,3 +32,5 @@
 主要 Java 來源為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab…`，資料表與萃取方法見 [data/java](data/java/)／[tools/java_extract](tools/java_extract/README.md)。原碼、素材及工具授權各自保留於 [ATTRIBUTION](projects/grilling/ATTRIBUTION.md) 與各來源聲明；不公開作者完整 Cookery 包、私有整合、世界或憑證。
 
 [CHANGELOG](CHANGELOG.md)保留簡短版本摘要；舊細節見 [重建前 archive tag](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。唯一寫入目標為 `burnt-tea-dev/kaleidoscope-grilling-unofficial`（ID `1377218440`），依 [.repo-target.json](.repo-target.json) 核對。
+
+26.60 開發候選：**2.8.183／Cookery 1.6.4**，接續已合併 G182；榨油機命名 tick 與烤架原生循環音效。需要 Beta APIs（世界 `gametest=true`），不代表已發布、已部署或真人驗收。

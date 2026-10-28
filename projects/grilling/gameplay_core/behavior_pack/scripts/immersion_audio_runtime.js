@@ -6,8 +6,8 @@ import {createGrillAudioController,playSeasoningShakeAudio,stopSoundHandle} from
 
 const stationKey=block=>[block.dimension.id,block.x,block.y,block.z].join('|');
 const center=block=>({x:block.x+.5,y:block.y+.35,z:block.z+.5});
-const grillAudio=createGrillAudioController({play:({dimension,location})=>
- dimension.playSound('kg_imm.grill_loop',location,{volume:.65,pitch:1})});
+const grillAudio=createGrillAudioController({nativeLoop:true,play:({dimension,location})=>
+ dimension.playSound('kg_imm.grill_loop',location,{volume:.65,pitch:1,loop:-1})});
 export function updateGrillAudio(block,lit,count){
  grillAudio.update(stationKey(block),{dimension:block.dimension,location:center(block)},!!lit&&count>0,system.currentTick);
 }
