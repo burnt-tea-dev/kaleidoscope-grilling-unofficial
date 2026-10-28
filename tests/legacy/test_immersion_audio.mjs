@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createFixture} from '../helpers/minecraft-fixture.mjs';
 import {createGrillAudioController,GRILL_LOOP_TICKS,playSeasoningShakeAudio,stopSoundHandle} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/immersion_audio_core.js';
 // Native sound-operation doubles; no Minecraft or simulated player is constructed.
 function fixture(){
@@ -67,4 +68,30 @@ test('missing native handles retry at the existing bounded cadence',()=>{
  let attempts=0;const c=createGrillAudioController({nativeLoop:true,play:()=>{attempts++;return undefined}});
  assert.equal(c.update('a',{},true,0),false);for(let t=1;t<20;t++)c.update('a',{},true,t);
  assert.equal(attempts,1);c.update('a',{},true,20);assert.equal(attempts,2);
+});
+
+test('runtime requests a continuous native grill sound and stops each station independently',async()=>{
+ const f=createFixture(),instances=[];
+ try{
+  // Model the documented native boundary: omitted loopCount is a one-shot.
+  // Keep the real runtime adapter so a misspelled option cannot pass through
+  // a controller-only fake which returns an indefinitely valid handle.
+  f.dimension.playSound=(sound,location,options={})=>{
+   const row={sound,location,playing:true,stops:0};instances.push(row);
+   if(options.loopCount!==-1)f.system.runTimeout(()=>{row.playing=false},GRILL_LOOP_TICKS);
+   return {stop(){row.playing=false;row.stops++}};
+  };
+  const {updateGrillAudio,removeGrillAudio}=await f.load('immersion_audio_runtime.js');
+  const first=f.block('kaleidoscope_grilling:grill',{x:0,y:64,z:0});
+  const second=f.block('kaleidoscope_grilling:grill',{x:4,y:64,z:0});
+  for(let tick=0;tick<GRILL_LOOP_TICKS*2;tick++){
+   updateGrillAudio(first,true,1);updateGrillAudio(second,true,1);f.tick();
+  }
+  assert.equal(instances.length,2,'each occupied grill starts only one sound');
+  assert(instances.every(row=>row.sound==='kg_imm.grill_loop'&&row.playing),'both native loops continue past the clip duration');
+  updateGrillAudio(first,false,1);
+  assert.equal(instances[0].playing,false);assert.equal(instances[0].stops,1);
+  assert.equal(instances[1].playing,true);assert.equal(instances[1].stops,0);
+  removeGrillAudio(second);assert.equal(instances[1].stops,1);
+ }finally{f.dispose()}
 });
