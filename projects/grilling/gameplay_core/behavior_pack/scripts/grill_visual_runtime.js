@@ -17,11 +17,11 @@ const displays=createGrillDisplayController({
  maxHelpers:()=>grillingConfig().fixedGrillHelpers,
  onCapacity(){if(system.currentTick-lastWarning>=1200){lastWarning=system.currentTick;console.warn('[Grilling grill display] render budget exceeded; storage unaffected; configure fixedGrillHelpers after workload validation')}},
  // Birth and subsequent teleport must share yaw; clients may interpolate a late correction.
- spawn:(block,location,rotation)=>block.dimension.spawnEntity(GRILL_FOOD_ENTITY,location,{initialRotation:-rotation}),
+ spawn:(block,location,rotation)=>block.dimension.spawnEntity(GRILL_FOOD_ENTITY,location,{initialRotation:rotation-180}),
  remove:entity=>{if(entity.isValid){entity.setProperty(NS+'ready',false);entity.remove();}},
  apply(entity,block,pose,plan,key){
   entity.setProperty(NS+'ready',false);
-  entity.teleport(pose.location,{dimension:block.dimension,rotation:{x:0,y:-pose.rotation}});
+  entity.teleport(pose.location,{dimension:block.dimension,rotation:{x:0,y:pose.rotation-180}});
   entity.setProperty(NS+'model',plan.model);entity.setProperty(NS+'flips',plan.flips);
   for(let i=0;i<3;i++)entity.setProperty(NS+'secret_'+i,plan.secret?.[i]??0);
   // Java's individual 0.28–0.38 block hop; repeatable per slot/flip on reload.

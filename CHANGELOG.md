@@ -2,6 +2,12 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.182 資產／食材／朝向整合候選（未發布）
+
+- 承接 G181 核心互動修復，依 Java 1.1.1 修正烤架食材柄在四個 cardinal 的出生與更新朝向；南北不再反向，槽位、翻面、ID 與保存資料不變。
+- 秘製串追加牛肉塊、雞皮、魷魚鬚、生地瓜片、魚腥草碎、馬鈴薯片、胡蘿蔔丁與生饅頭片的既有食材索引 218–225、七階段色板及 helper 外觀；保留舊索引、其他 hand-bank owner 與 32 個既有 player properties。
+- 移除 667 個整檔未引用 geometry、179 張未引用貼圖及混合檔中的 16 個未引用定義；保留所有仍有引用的定義與新增食材資產。完整畫面前後對照、原生操作、聲音、保存與真人驗收仍待同候選驗證；`client=false`、`production_ready=false`、`publication_request=false`。
+
 ## 2.8.181 核心互動修復候選（未發布）
 
 - 從 G157 gameplay/runtime 延伸；新身份保留既有 G158–178 與 PR #255／G180 候選，不納入 #255 的資產刪除。

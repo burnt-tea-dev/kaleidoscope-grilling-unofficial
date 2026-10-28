@@ -11,8 +11,8 @@ import {HELD_VISUAL_PLATE} from './held_visual_transport.js';
 
 const SECRET='kaleidoscope_grilling:secret_skewer';
 const COOKED_TO_RAW=Object.freeze(Object.fromEntries(Object.entries(RAW_TO_COOKED).map(([raw,cooked])=>[cooked,raw])));
-export const PLATE_HELD_WORD_A_MAX=521433;
-export const PLATE_HELD_WORD_B_MAX=683220;
+export const PLATE_HELD_WORD_A_MAX=521441;
+export const PLATE_HELD_WORD_B_MAX=684244;
 export const PLATE_HELD_ORDINARY=39;
 
 // A secret row is split across two bounded integers. All Molang divisions are
