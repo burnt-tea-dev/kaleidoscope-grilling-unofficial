@@ -9,7 +9,7 @@
 | 用途 | 版本與相依 |
 | --- | --- |
 | 目前公開下載 | [A2.8.157](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.157)，只含自有 Grilling BP/RP；需要 Cookery **1.6.4** 配套，見 [RELEASING 的安裝邊界](docs/RELEASING.md#目前公開下載與安裝邊界) |
-| 維護修復候選 | [baseline.json](baseline.json) 的 **2.8.182／Cookery 1.6.4**；承接 G181 並整合四向烤架顯示、八食材秘製串外觀與未引用 RP 資產清理，尚未發布或完成 native／真人驗收 |
+| 維護修復候選 | [baseline.json](baseline.json) 的 **2.8.184／Cookery 1.6.4**；承接 G182 視覺修復與 G183 命名 tick，修正烤架原生循環音效的 `loopCount` 參數，尚未發布或完成 native／真人驗收 |
 | 歷史公開下載 | [A2.8.149](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.149)，仍需要作者 Cookery **1.6.0** 的 BP/RP |
 
 公開 G138 TEST／G149 stable 的 API 故障模型曾重現物品遺失、覆寫與重複產物；這不是原生發生率證明，後續來源修補也沒有改變既有下載 bytes。測試前保留世界備份。精確檔案、雜湊、相依與安裝限制見 [RELEASING](docs/RELEASING.md)；勿把不同 Cookery 版本互換。
@@ -33,4 +33,4 @@
 
 [CHANGELOG](CHANGELOG.md)保留簡短版本摘要；舊細節見 [重建前 archive tag](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。唯一寫入目標為 `burnt-tea-dev/kaleidoscope-grilling-unofficial`（ID `1377218440`），依 [.repo-target.json](.repo-target.json) 核對。
 
-26.60 開發候選：**2.8.183／Cookery 1.6.4**，接續已合併 G182；榨油機命名 tick 與烤架原生循環音效。需要 Beta APIs（世界 `gametest=true`），不代表已發布、已部署或真人驗收。
+26.60 開發候選：**2.8.184／Cookery 1.6.4**，接續已合併 G183；保留榨油機命名 tick，修正烤架原生循環音效參數。需要 Beta APIs（世界 `gametest=true`），不代表已發布、已部署或真人驗收。

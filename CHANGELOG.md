@@ -2,6 +2,11 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.184 Bedrock 26.60 grill sound option correction (unreleased)
+
+- Correct the native `WorldSoundOptions.loopCount` option to `-1`. G183 used `loop`, so a one-shot handle could remain retained after the clip ended and prevent playback from restarting. Keep one native handle per grill and the existing independent stop/unload lifecycle.
+- Add a real runtime-adapter scenario that advances beyond two clip durations and stops each grill independently. This is API-boundary behavior coverage, not native audio or client acceptance. The [26.60 release notes](https://feedback.minecraft.net/hc/en-us/articles/49852828563853-Minecraft-Bedrock-Edition-26-60-Changelog) document `loopCount`.
+
 ## 2.8.183 Bedrock 26.60 native scheduling and audio candidate (unreleased)
 
 - Preserve the merged G182 visual repairs and asset cleanup. Replace oil-press per-tick registry polling with owned named ticks and 20-tick recovery; preserve saved-state keys, loaded-tick progress and item transactions. Startup recovery only arms the next native tick.
