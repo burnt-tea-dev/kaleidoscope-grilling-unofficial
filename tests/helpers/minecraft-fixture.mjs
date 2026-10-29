@@ -372,7 +372,6 @@ export function createFixture(options = {}) {
         // This fixture has one script owner. Foreign events are tested directly.
         if(!scheduled.has(name))scheduled.set(name, delay);
       },
-      removeScheduledNamedTicks(name) {if(name===undefined)scheduled.clear();else scheduled.delete(name);},
       getTags() {return opts.tags ?? [];}, hasTag(tag) {return b.getTags().includes(tag);},
       offset(delta) {return dimension.getBlock({x: b.x + delta.x, y: b.y + delta.y, z: b.z + delta.z});},
       above(n = 1) {return b.offset({x: 0, y: n, z: 0});}, below(n = 1) {return b.offset({x: 0, y: -n, z: 0});},
@@ -507,7 +506,7 @@ export function createFixture(options = {}) {
           const components=blockDefinitions.get(block.typeId)?.components??{};
           for(const component of Object.keys(components)){
             const callback=f.blockComponents.get(component)?.onNamedTick;
-            if(callback){callback({block,dimension:block.dimension,name,isMine:()=>true});ran++;}
+            if(callback){callback({block,dimension:block.dimension,isName:expected=>expected===name});ran++;}
           }
         }
       }

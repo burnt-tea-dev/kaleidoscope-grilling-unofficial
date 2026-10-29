@@ -331,10 +331,13 @@ test('breaking machines preserves press cakes, packed vat contents and creative 
   assert.equal(recoveries(v).length,0);
  }
 });
-test('timer-only progress after a captured break does not prevent removal of the same batch',async()=>{
- const f=await fixture({press:{cakes:4,progress:16,completionDelay:8}});f.break(f.press);
+test('timer-only progress after a captured break permits removal without later oil output',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:8}});f.break(f.press);
  f.seedPress(f.press,{cakes:4,progress:16,completionDelay:7});f.flush();
  assert.equal(f.press.typeId,'minecraft:air');assert.equal(dropped(f)[1].amount,4);assert.equal(f.registry().length,0);
+ const saved=snapshot(f),drops=dropped(f).map(s=>[s.typeId,s.amount]);
+ f.tick(20);assert.deepEqual(snapshot(f),saved);assert.equal(f.readVat().buckets,0);
+ assert.deepEqual(dropped(f).map(s=>[s.typeId,s.amount]),drops);assert.equal(f.registry().length,0);
 });
 test('rejected block removal restores the source and durable press registration without drops',async()=>{
  const f=await fixture({press:{cakes:4,progress:16,completionDelay:8}}),before=snapshot(f);
@@ -429,41 +432,53 @@ test('world-fluid placement cannot overwrite another oil or an existing source',
 
 import {createOilPressScheduler,OIL_PRESS_TICK_NAME} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil_press_registry.js';
 function pressFixture(step){
- let tick=0,scheduled=false,fail=false,schedules=0,cancels=0;
+ let tick=0,scheduled=false,fail=false,schedules=0;
  const errors=[];
  const block={dimension:{id:'overworld'},x:0,y:64,z:0,
   hasScheduledNamedTick(name){assert.equal(name,OIL_PRESS_TICK_NAME);if(fail)throw Error('unloaded');return scheduled},
-  scheduleNamedTick(name,delay){assert.equal(name,OIL_PRESS_TICK_NAME);assert.equal(delay,1);scheduled=true;schedules++},
-  removeScheduledNamedTicks(name){assert.equal(name,OIL_PRESS_TICK_NAME);scheduled=false;cancels++}};
+  scheduleNamedTick(name,delay){assert.equal(name,OIL_PRESS_TICK_NAME);assert.equal(delay,1);scheduled=true;schedules++}};
  const scheduler=createOilPressScheduler({now:()=>tick,step,report:e=>errors.push(e)});
- const event={block,name:OIL_PRESS_TICK_NAME,isMine:()=>true};
- return {block,scheduler,event,errors,fire(){scheduled=false;tick++;return scheduler.onNamedTick(event)},
-  set fail(value){fail=value},get schedules(){return schedules},get cancels(){return cancels},get scheduled(){return scheduled}};
+ const eventFor=(name=OIL_PRESS_TICK_NAME,owner='grilling')=>({block,isName:expected=>owner==='grilling'&&name===expected});
+ const event=eventFor();
+ return {block,scheduler,event,eventFor,errors,fire(){assert.equal(scheduled,true);scheduled=false;tick++;return scheduler.onNamedTick(event)},
+  set fail(value){fail=value},get schedules(){return schedules},get scheduled(){return scheduled}};
 }
 
 test('native scheduling is idempotent and unrelated named ticks do not run work',()=>{
  let calls=0;const f=pressFixture(()=>{calls++;return true});
  assert(f.scheduler.ensure(f.block));assert(f.scheduler.ensure(f.block));
- assert.equal(f.schedules,1);assert.equal(f.scheduler.onNamedTick({block:f.block,name:'other_work',isMine:()=>true}),false);assert.equal(calls,0);
+ assert.equal(f.schedules,1);assert.equal(f.scheduler.onNamedTick(f.eventFor('other_work')),false);
+ assert.equal(calls,0);assert.equal(f.scheduled,true);assert.deepEqual(f.errors,[]);
 });
 test('a duplicate callback cannot decrement twice in one game tick',()=>{
  let remaining=3;const f=pressFixture(()=>--remaining>0);f.scheduler.ensure(f.block);
- f.fire();f.scheduler.onNamedTick(f.event);assert.equal(remaining,2);assert.equal(f.schedules,2);
+ assert.equal(f.fire(),true);assert.equal(f.scheduler.onNamedTick(f.event),false);
+ assert.equal(remaining,2);assert.equal(f.schedules,2);
  f.fire();f.fire();assert.equal(remaining,0);assert.equal(f.scheduled,false);
+ assert.equal(f.schedules,3);assert.deepEqual(f.errors,[]);
+});
+test('completion consumes the native tick without rearming or reporting a cancellation error',()=>{
+ let calls=0;const f=pressFixture(()=>{calls++;return false});f.scheduler.ensure(f.block);
+ assert.equal(f.fire(),true);assert.equal(calls,1);assert.equal(f.scheduled,false);
+ assert.equal(f.schedules,1);assert.deepEqual(f.errors,[]);
 });
 test('a transient unloaded block can be scheduled again without consuming work',()=>{
  let calls=0;const f=pressFixture(()=>{calls++;return false});f.fail=true;
- assert.equal(f.scheduler.ensure(f.block),false);assert.equal(calls,0);
- f.fail=false;assert(f.scheduler.ensure(f.block));f.fire();assert.equal(calls,1);assert.equal(f.errors.length,1);
+ assert.equal(f.scheduler.ensure(f.block),false);assert.equal(calls,0);assert.equal(f.schedules,0);
+ assert.match(f.errors[0].message,/unloaded/);
+ f.fail=false;assert(f.scheduler.ensure(f.block));assert.equal(f.fire(),true);
+ assert.equal(calls,1);assert.equal(f.scheduled,false);assert.equal(f.schedules,1);assert.equal(f.errors.length,1);
 });
 test('step failure is contained and a later recovery attempt can rearm',()=>{
  let broken=true,calls=0;const f=pressFixture(()=>{calls++;if(broken)throw Error('retained data');return false});
  f.scheduler.ensure(f.block);assert.equal(f.fire(),false);assert.equal(f.errors.length,1);
- broken=false;f.scheduler.ensure(f.block);f.fire();assert.equal(calls,2);assert.equal(f.scheduled,false);
+ assert.match(f.errors[0].message,/retained data/);assert.equal(f.scheduled,false);assert.equal(f.schedules,1);
+ broken=false;assert(f.scheduler.ensure(f.block));assert.equal(f.fire(),true);
+ assert.equal(calls,2);assert.equal(f.scheduled,false);assert.equal(f.schedules,2);assert.equal(f.errors.length,1);
 });
 
-test('an identically named tick from another script owner cannot run or cancel work',()=>{
- let calls=0;const f=pressFixture(()=>{calls++;return false});f.scheduler.ensure(f.block);
- assert.equal(f.scheduler.onNamedTick({...f.event,isMine:()=>false}),false);
- assert.equal(calls,0);assert.equal(f.scheduled,true);assert.equal(f.cancels,0);
+test('an identically named tick from another script owner cannot run or rearm work',()=>{
+ let calls=0;const f=pressFixture(()=>{calls++;return true});f.scheduler.ensure(f.block);
+ assert.equal(f.scheduler.onNamedTick(f.eventFor(OIL_PRESS_TICK_NAME,'other-script')),false);
+ assert.equal(calls,0);assert.equal(f.scheduled,true);assert.equal(f.schedules,1);assert.deepEqual(f.errors,[]);
 });
