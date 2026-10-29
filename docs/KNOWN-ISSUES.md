@@ -32,7 +32,7 @@
 | PLATE-PLACED-DISPLAY | G118 有目前內容、FIXED transform、1–5 份與四朝向的專用來源 | 固定／秘製串放盤、即看、取一份及區塊重載；核內容、材質、光照與無殘影。舊 tiny-edge-pixel／朝向故障保留其候選身份 |
 | PLATE-HELD-CONTENTS／DECODE | G119 有 envelope reader、每手單 writer、兩 word 與獨立 count；放置和手持旋轉分開 | 1–5 份、主副手混持盤／瓶／串、切槽、重登及旁觀者；舊 stored1／4→0／3 與 float32 模型不認證新 transport |
 | HEAVY-METAL-COMMIT | G119 單次效果→HP→聲音；G120 在取消前持久 claim，不因重建 map 再救同一效果 | 原生傷害、其他 addon、圖騰、部分 absorption、重登／存檔與聲畫；API 讀回不等於磁碟 flush 或 crash 原子性 |
-| OIL-RESIDUE-PLANTS | 已明列 25 類植物適配與兩次作用一次扣料；未知方塊／掉落恢復結果不退成本 | 甜菜中間年齡、竹子 stage、海帶流體回滾、其他 feature／外部植物仍缺；正常施肥／採果、上下半、光照／鄰位與重載待驗 |
+| OIL-RESIDUE-PLANTS | 已明列 29 類植物適配與兩次作用一次扣料；甜菜四階段對應、竹子 1–2 節與葉片下移、海帶長入水方塊並保留含水層已依 Java 來源實作；未知方塊／掉落／含水層恢復結果不退成本 | 竹子無 Java stage 狀態（僅以 16 高上限停止）、海帶含水層原生 `setWaterlogged` 讀回、其他 feature／外部植物仍缺；正常施肥／採果、上下半、光照／鄰位與重載待 staging 驗 |
 | JAVA-POT-LIFECYCLE | G122 有指定 exact／flex 配方、備料／翻炒／結果階段、保存與品質；有限 Java 品質向量不是完整 PotBlockEntity trace | 真鍋加油→備料→三翻→盛裝、熱源／卸載／重啟、冷卻、兩手連吃、滿包／拆鍋／保存故障及真營養；其他作者配方與未知私有資料不猜轉換 |
 | CUISINE-CONSERVATION | G120／122 修取消後清資料、出料讀回、批次 credit 及手部／站點實際寫入所有權 | 取消／拆鍋／取出／重登／不同 operationId 不得重複交付；確認站點回前像後才補償本次仍擁有的成本；不明保存保持隔離 |
 | EATING-ACCEPTANCE | 是驗收缺口及舊候選有限失敗，並非本輪新重現 bug；G81 僅閉合有完整 counter 的 stop→leave 分支 | 早停、24／25／26 tick、完整 90 tick FOUR、換手／換槽／連吃、stop→leave／重登；普通副手 air-use 單獨驗；核份數、營養、效果、逐口與音效 |
