@@ -199,7 +199,7 @@ export function createFixture(options = {}) {
       return snapshot(this) === snapshot(other);
     }
   }
-  function container(size = 36) {
+  function container(size = 36, owner) {
     const slots = Array(size).fill(undefined);
     const c = {
       size, isValid: true,
@@ -207,7 +207,12 @@ export function createFixture(options = {}) {
       getItem(slot) {fault(c, 'getItem', 'before', [slot]); return slots[slot]?.clone();},
       setItem(slot, stack) {return operation(c, 'setItem', [slot, stack], () => {
         if (!Number.isInteger(slot) || slot < 0 || slot >= size) throw new Error('Invalid inventory slot');
+        const beforeItemStack = slots[slot]?.clone();
         slots[slot] = stack?.clone();
+        if (owner) {
+          const itemStack = slots[slot]?.clone();
+          system.run(() => { if (owner.isValid) f.emit('world.afterEvents.playerInventoryItemChange', {player: owner, slot, beforeItemStack, itemStack}); });
+        }
       });},
       getSlot(slot) {return {getItem: () => c.getItem(slot), setItem: stack => c.setItem(slot, stack), get hasItem() {return !!slots[slot];}};},
       addItem(stack) {
@@ -386,7 +391,17 @@ export function createFixture(options = {}) {
     if (opts.id) {entities.delete(p.id);p.id = opts.id;entities.set(p.id, p);}
     p.name = opts.name ?? p.id; p.selectedSlotIndex = opts.selectedSlotIndex ?? 0;
     p.isSneaking = opts.isSneaking ?? false; p.gameMode = opts.gameMode ?? GameMode.Survival;
-    p.inventory = container(opts.inventorySize ?? 36);
+    p.inventory = container(opts.inventorySize ?? 36, p);
+    let selectedSlot = p.selectedSlotIndex;
+    Object.defineProperty(p, 'selectedSlotIndex', {
+      get() { return selectedSlot; },
+      set(value) {
+        const previousSlotSelected = selectedSlot; selectedSlot = value;
+        if (value !== previousSlotSelected) system.run(() => {
+          if (p.isValid) f.emit('world.afterEvents.playerHotbarSelectedSlotChange', {player: p, previousSlotSelected, newSlotSelected: value, itemStack: p.inventory.getItem(value)});
+        });
+      },
+    });
     const equipment = new Map();
     p.equipment = {
       getEquipment(slot) {return (slot === EquipmentSlot.Mainhand ? p.inventory.getItem(p.selectedSlotIndex) : equipment.get(slot)?.clone());},

@@ -1,0 +1,18 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Grilling native eating-debit capability probe",
+    "description": "Isolated test only; never install with a formal world",
+    "uuid": "1f016bdc-c93e-4adb-a428-2d5d29e87d34",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 26, 60]
+  },
+  "modules": [
+    {"type": "data", "uuid": "830a2580-ac29-4ee2-a907-c5eff7d30c08", "version": [1, 0, 0]},
+    {"type": "script", "language": "javascript", "entry": "scripts/probe.js", "uuid": "93d78553-f432-40a0-91a7-383c3c818285", "version": [1, 0, 0]}
+  ],
+  "dependencies": [
+    {"module_name": "@minecraft/server", "version": "2.12.0-beta"},
+    {"module_name": "@minecraft/server-gametest", "version": "1.0.0-beta"}
+  ]
+}

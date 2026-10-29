@@ -1,0 +1,15 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Grilling eating-preparation event probe",
+    "description": "Isolated inventory, hotbar and offhand event capability test",
+    "uuid": "c5366461-4447-446d-b0b5-bc03dfe8fa35",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 26, 60]
+  },
+  "modules": [{"type": "script", "language": "javascript", "entry": "scripts/probe.js", "uuid": "35ba1548-824f-4d88-bb99-1da146123d38", "version": [1, 0, 0]}],
+  "dependencies": [
+    {"module_name": "@minecraft/server", "version": "2.12.0-beta"},
+    {"module_name": "@minecraft/server-gametest", "version": "1.0.0-beta"}
+  ]
+}

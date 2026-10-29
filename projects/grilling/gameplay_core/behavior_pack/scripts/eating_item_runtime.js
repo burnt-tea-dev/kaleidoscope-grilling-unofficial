@@ -1,10 +1,24 @@
-import {ItemStack,EnchantmentType} from '@minecraft/server';
+import {ItemStack,EnchantmentType,world} from '@minecraft/server';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
 import {canonicalFoodId,eatingItemId,RANDOM_EATING_IDS,isAlternateEatingId,SKEWER_EATING_IDS} from './eating_profile_ids.js';
 import {getHand,setHand} from './core/player_io.js';
 import {eatingIdentity} from './core/eating_transaction.js';
 const prepared=new Map();
-export function forgetEatingItem(playerId){prepared.delete(playerId);}
+const preparation=new Map();
+function markChanged(player){const state=preparation.get(player.id);if(state)state.dirty=true;else preparation.set(player.id,{dirty:true});}
+world.afterEvents.playerInventoryItemChange.subscribe(({player})=>markChanged(player));
+world.afterEvents.playerHotbarSelectedSlotChange.subscribe(({player})=>markChanged(player));
+export function forgetEatingItem(playerId){prepared.delete(playerId);preparation.delete(playerId);}
+export function prepareChangedEatingItems(player,using,animations=true){
+ let state=preparation.get(player.id);
+ if(!state){state={dirty:true};preparation.set(player.id,state);}
+ if(state.animations!==animations){state.animations=animations;state.dirty=true;}
+ if(using||!state.dirty)return;
+ // Clear before writing: native inventory events from this preparation or a
+ // foreign writer must remain pending, rather than being erased afterwards.
+ state.dirty=false;
+ try{prepareEatingItems(player,false,animations);}catch(error){state.dirty=true;throw error;}
+}
 export function selectedEatingProfile(requested,id){return RANDOM_EATING_IDS.has(canonicalFoodId(id))?(isAlternateEatingId(id)?'THREE_ALT':'THREE'):requested;}
 export function copyEatingVariant(stack,id){
  const snapshot=captureSkewerMetadata(stack);snapshot.id=id;

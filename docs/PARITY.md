@@ -1,6 +1,6 @@
 # Java 與 Bedrock 功能對照
 
-這份表記錄玩家能力、目前來源及尚缺的證據。修復候選為 `baseline.json` 的 **2.8.182／Cookery 1.6.4**；目前公開下載 **A2.8.157／Cookery 1.6.4** 另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
+這份表記錄玩家能力、目前來源及尚缺的證據。來源版本與相依以 [baseline.json](../baseline.json) 為準；公開下載另見 [發布與安裝](RELEASING.md)。兩者不能共用相依或驗收身份。
 
 Java 對照固定為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`，以計畫所列 NeoForge 1.21.1 路徑為主要邏輯來源。原始素材保留於 `projects/grilling/source_snapshots/`；[data/java](../data/java/) 與[萃取方法](../tools/java_extract/README.md)提供可重現資料。數值與來源差異以這些資料和原碼為準，不從舊 Bedrock 行為反推 Java。
 
@@ -9,6 +9,8 @@ G181 的核心互動修復仍基於 G157 runtime，未合入 #255／G180 的資�
 G182 承接 G181，整合 #257 的烤架朝向、#256 的八食材秘製串外觀與 #255 的 RP 資產清理，舊 PR 不因此關閉或視為已驗收。新增食材沿用既有 item IDs 與保存格式，只追加視覺索引 218–225；資產掃描器對目前樹回報零個整檔／混合定義／貼圖候選。這些是可重現來源與靜態結果，完整家族、實際畫面、聲音、原生操作與保存驗收仍待同候選執行。
 
 ## 如何讀狀態
+
+T3.4的[原生能力實測](../tests/native/eating-debit-spike/observed.json)已在BDS1.26.60.6證明：100tick測試餐的兩份stack由腳本在25／90tick先扣一份後，引擎仍會complete再扣一份；原生控制只扣一份。此未採用設計不能用來移除正式時長variant。當前來源改為初次觀察、主背包／hotbar事件及設定變更才準備手持，不再在未變的idle手持上反覆讀metadata。副手API直寫沒有這兩種事件，保留既有wrong-duration使用前guard；未新增「未快取就拒絕」的准入條件。此為替代路線的局部收斂，T3.4完整重寫／影子退役、Java隨機profile持久化及真人輸入／聲畫仍未完成。
 
 `來源已實作`、`CI 通過`、`staging 驗證`、`已部署 luosen`、`真人驗收`是不同證據。表內來源狀態只描述列明能力，不表示整個功能已還原。歷史 BDS、錄影或 API 模型只保留原候選、場景與限制；沒有當前候選的結果就寫待驗。`client=false`、`production_ready=false` 維持不變。
 

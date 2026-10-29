@@ -334,3 +334,64 @@ test('logging out after the Java checkpoint settles a meal even without a stop e
   const heldCount=a.p.main.amount;
   await t.test('desired: logout settles the one active serving',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},()=>assert.equal(heldCount,0));
 });
+
+// Preparation scenarios share this domain's real-runtime boundary.
+{
+const NS='kaleidoscope_grilling:';
+const beef=NS+'grilled_beef_skewer';
+const lamb=NS+'grilled_lamb_skewer';
+
+test('unchanged idle hands are not inspected again after preparation',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());
+ const prep=await f.load('eating_item_runtime.js');
+ const p=f.player({main:f.item(beef,2)});
+ prep.prepareChangedEatingItems(p,false,false);
+ assert.equal(p.main.typeId,beef+'_native_plain');
+ f.tick(2); // Drain the real API boundary's queued initial/write notifications.
+ prep.prepareChangedEatingItems(p,false,false);
+ let reads=0;
+ const read=p.equipment.getEquipment.bind(p.equipment);
+ p.equipment.getEquipment=slot=>{reads++;return read(slot);};
+ for(let i=0;i<200;i++)prep.prepareChangedEatingItems(p,false,false);
+ assert.equal(reads,0);
+});
+
+test('inventory, hotbar and config changes prepare the new hand once and retain metadata',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());
+ const prep=await f.load('eating_item_runtime.js');
+ const p=f.player({main:f.item(beef)});
+ prep.prepareChangedEatingItems(p,false,true);
+ p.inventory.setItem(1,f.item(beef,3,{nameTag:'Foreign serving',lore:['retain this']}));
+ p.selectedSlotIndex=1;f.tick(2);
+ prep.prepareChangedEatingItems(p,false,false);
+ assert.equal(p.main.typeId,beef+'_native_plain');
+ assert.equal(p.main.amount,3);assert.equal(p.main.nameTag,'Foreign serving');assert.deepEqual(p.main.getLore(),['retain this']);
+ prep.prepareChangedEatingItems(p,false,true);
+ assert.equal(p.main.typeId,beef);assert.equal(p.main.amount,3);
+});
+
+test('an inventory change waits while a hand action owns the captured stack',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());
+ const prep=await f.load('eating_item_runtime.js');
+ const p=f.player({main:f.item(beef,2)});
+ for(let i=0;i<4;i++){prep.prepareChangedEatingItems(p,true,false);f.tick();}
+ assert.equal(p.main.typeId,beef);
+ prep.prepareChangedEatingItems(p,false,false);
+ assert.equal(p.main.typeId,beef+'_native_plain');assert.equal(p.main.amount,2);
+});
+
+test('a direct offhand write is guarded at use, without relying on a missing native event',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');
+ const config=await f.load('server_config_runtime.js');config.setGrillingConfig('fullHungerEating',true);config.setGrillingConfig('enableEatingAnimations',false);
+ const p=f.player();f.tick(3);
+ p.off=f.item(lamb,2,{nameTag:'Direct offhand',lore:['foreign lore']});
+ const before={source:p,itemStack:p.off.clone(),cancel:false};
+ f.emit('world.beforeEvents.itemUse',before);
+ assert.equal(before.cancel,true);
+ f.tick(2);
+ assert.equal(p.off.typeId,lamb+'_native_plain');
+ assert.equal(p.off.amount,2);assert.equal(p.off.nameTag,'Direct offhand');assert.deepEqual(p.off.getLore(),['foreign lore']);
+ const next={source:p,itemStack:p.off.clone(),cancel:false};f.emit('world.beforeEvents.itemUse',next);
+ assert.equal(next.cancel,false);
+});
+}
