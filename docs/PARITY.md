@@ -10,7 +10,9 @@ G182 承接 G181，整合 #257 的烤架朝向、#256 的八食材秘製串外�
 
 ## 如何讀狀態
 
-T3.4的[原生能力實測](../tests/native/eating-debit-spike/observed.json)已在BDS1.26.60.6證明：100tick測試餐的兩份stack由腳本在25／90tick先扣一份後，引擎仍會complete再扣一份；原生控制只扣一份。此未採用設計不能用來移除正式時長variant。當前來源改為初次觀察、主背包／hotbar事件及設定變更才準備手持，不再在未變的idle手持上反覆讀metadata。副手API直寫沒有這兩種事件，保留既有wrong-duration使用前guard；未新增「未快取就拒絕」的准入條件。此為替代路線的局部收斂，T3.4完整重寫／影子退役、Java隨機profile持久化及真人輸入／聲畫仍未完成。
+T3.4的[原生能力實測](../tests/native/eating-debit-spike/observed.json)已在BDS1.26.60.6證明：100tick測試餐的兩份stack由腳本在25／90tick先扣一份後，引擎仍會complete再扣一份；原生控制只扣一份。此未採用設計不能用來移除正式時長variant。當前來源改為初次觀察、主背包／hotbar事件及設定變更才準備手持，不再在未變的idle手持上反覆讀metadata。副手API直寫沒有這兩種事件，保留既有wrong-duration使用前guard；未新增「未快取就拒絕」的准入條件。此為替代路線的局部收斂，T3.4完整重寫／影子退役、Java每次使用的隨機profile準備時機及真人輸入／聲畫仍未完成。
+
+T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingStillCurrent` 核對手／槽／數量與metadata；暫時不一致後恢復同一份食物時，重建profile／手／原生時長及投影，保留原有已過時間與bite cursor、不重播聲音。既有food_finish真runtime測試覆蓋兩手、換槽／異物／改名及恢復後一次完成。Java `SkewerEatingProfile` 是每次use的暫存選擇，不是永久物品標記；本次不新增存檔key。direct leave無stop的TODO仍失敗，未在read-only before-leave寫物品，也未用offline Player補結算。原生／真人驗收仍待。
 
 `來源已實作`、`CI 通過`、`staging 驗證`、`已部署 luosen`、`真人驗收`是不同證據。表內來源狀態只描述列明能力，不表示整個功能已還原。歷史 BDS、錄影或 API 模型只保留原候選、場景與限制；沒有當前候選的結果就寫待驗。`client=false`、`production_ready=false` 維持不變。
 

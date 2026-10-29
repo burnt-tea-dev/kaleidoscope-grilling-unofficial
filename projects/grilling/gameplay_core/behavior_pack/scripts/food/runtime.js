@@ -172,6 +172,32 @@ function completePending(player,stack){
  if(commitEating({debit:()=>writeUseHand(player,a.use,out),reward:()=>{},restoreFood:()=>writeUseHand(player,a.use,a.stack),restoreNutrition:()=>{}})){seasoningFinished(player);awardSeasoningFinishedChallenges(player,list)}
 }
 
+function showEatingPresentation(e,a){
+ const {id,profile,hand}=a;
+ if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);
+ try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
+ // Separate Java NONE-context first-person path. Do not replace the RP player
+ // definition or reset body/head channels. The JSON branch gates upright use.
+ if(eatingNativeTicks(a.nativeDuration)>0&&admitEatingProjection(e,profile,hand,heldByHand)){
+  try{
+   e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
+   e.source.playAnimation(selectEatingProjection(e,profile,hand,heldByHand),{
+    // Do not stop on a client-synced property before its update packet arrives.
+    // The animation blend gate still masks inactive projection immediately.
+    controller:'kg_java_eating_first_person',blendOutTime:0,
+    stopExpression:"!q.is_using_item || !q.is_item_name_any('"+(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')+"','"+e.itemStack.typeId+"')"});
+  }catch(error){console.warn('[Grilling Java first-person projection] '+error);try{e.source.setProperty(EAT_PROJECTION_PROPERTY,false)}catch{}}
+ }
+ // Native use_item_progress can remain zero for custom food in third person.
+ // Supply only its arm rotation there; retain native movement and the authored
+ // attachable curves. No camera-space limb translations or whole-player reset.
+ if(id.endsWith("_skewer")){
+  const slot=hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand';
+  try{e.source.playAnimation('animation.kg_eating.player.native_'+(hand==='off'?'left':'right'),{blendOutTime:.08,stopExpression:"!q.is_using_item || !q.is_item_name_any('"+slot+"','"+e.itemStack.typeId+"')"})}catch(error){console.warn('[Grilling eating arm pose] '+error)}
+ }
+ startEatingSound(e.source,a);
+}
+
 world.afterEvents.itemStartUse.subscribe(e=>{
  try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
  const id=canonicalFoodId(e.itemStack?.typeId);
@@ -199,28 +225,7 @@ world.afterEvents.itemStartUse.subscribe(e=>{
  const a={plain:isPlainEatingId(e.itemStack.typeId),id,start:system.currentTick,nativeDuration:Math.max(0,Number(e.useDuration)||0),requested,profile,hand,use:captureEatingIdentity(e.itemStack,hand,e.source.selectedSlotIndex),meta,biteTimes:BITE_TIMES[profile]??BITE_TIMES.THREE,nextBite:0,nativeBefore:meta.hot?nativeSnapshot(e.source):{},fxBefore:meta.hot?fxSnapshot(e.source):{},saturationBefore:meta.hot?sat?.currentValue:undefined};
  stopSoundHandle(ACTIVE_EATS.get(e.source.id)?.audio);ACTIVE_EATS.set(e.source.id,a);
  if(a.plain)return; // JSON owns 25-tick vanilla use; no custom motion, sound or HUD.
- if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);
- try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
- // Separate Java NONE-context first-person path. Do not replace the RP player
- // definition or reset body/head channels. The JSON branch gates upright use.
- if(eatingNativeTicks(a.nativeDuration)>0&&admitEatingProjection(e,profile,hand,heldByHand)){
-  try{
-   e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
-   e.source.playAnimation(selectEatingProjection(e,profile,hand,heldByHand),{
-    // Do not stop on a client-synced property before its update packet arrives.
-    // The animation blend gate still masks inactive projection immediately.
-    controller:'kg_java_eating_first_person',blendOutTime:0,
-    stopExpression:"!q.is_using_item || !q.is_item_name_any('"+(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')+"','"+e.itemStack.typeId+"')"});
-  }catch(error){console.warn('[Grilling Java first-person projection] '+error);try{e.source.setProperty(EAT_PROJECTION_PROPERTY,false)}catch{}}
- }
- // Native use_item_progress can remain zero for custom food in third person.
- // Supply only its arm rotation there; retain native movement and the authored
- // attachable curves. No camera-space limb translations or whole-player reset.
- if(id.endsWith("_skewer")){
-  const slot=hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand';
-  try{e.source.playAnimation('animation.kg_eating.player.native_'+(hand==='off'?'left':'right'),{blendOutTime:.08,stopExpression:"!q.is_using_item || !q.is_item_name_any('"+slot+"','"+e.itemStack.typeId+"')"})}catch(error){console.warn('[Grilling eating arm pose] '+error)}
- }
- startEatingSound(e.source,a);
+ showEatingPresentation(e,a);
 });
 
 world.afterEvents.itemCompleteUse.subscribe(e=>{
@@ -235,7 +240,8 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
   if(!FOOD_DATA[id]&&id!==SECRET_ID)return;
  const a=ACTIVE_EATS.get(e.source.id);
  if(!a||a.id!==id||!eatingEventMatches(a.use,e.itemStack,now())||!nativeEatingCompleted(a.start,system.currentTick,a.nativeDuration,e.useDuration))return;
- if(id===SECRET_ID&&(!canUseSecretSkewer(e.itemStack)||!completedEatingStillCurrent(a.use,e.itemStack,heldByHand(e.source,a.hand),e.source.selectedSlotIndex,now(),!creative(e.source))))return;
+ if(!completedEatingStillCurrent(a.use,e.itemStack,heldByHand(e.source,a.hand),e.source.selectedSlotIndex,now(),!creative(e.source)))return;
+ if(id===SECRET_ID&&!canUseSecretSkewer(e.itemStack))return;
  a.meta=finishedFoodMeta(a.meta,now());
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
@@ -314,11 +320,16 @@ syncSlimeHeld(p,slimeFrame);
   try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id)||handActionPending)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}
   try{prepareChangedEatingItems(p,!!active||handActionPending,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}
   if(active&&eatingStillCurrent(active.use,heldByHand(p,active.hand),p.selectedSlotIndex,now())){
+   if(active.presentationHidden){
+    if(!active.plain)showEatingPresentation({source:p,itemStack:heldByHand(p,active.hand)},active);
+    active.presentationHidden=false;
+   }
    // Do not assume a remote custom-item countdown matches the owner's clock.
    // Replicate source session time; native food debit/reward stays event-owned.
    p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,eatingElapsedTicks(active.start,system.currentTick,active.nativeDuration));
    if(!active.plain&&!active.audioStarted&&(active.audioAttempts??0)<3&&system.currentTick%5===0)startEatingSound(p,active);!active.plain&&advanceBites(p,active);if(!active.plain&&grillingConfig().graphicalEatingHud)showJavaEatingHud(p,active,system.currentTick);else hideJavaEatingHud(p);
   }else if(active){
+   active.presentationHidden=true;
    hideJavaEatingHud(p);
    // A replaced/switching serving must not leave a projected arm on another item.
    p.setProperty(EAT_PROFILE_PROPERTY,0);p.setProperty(EAT_HAND_PROPERTY,0);p.setProperty(EAT_PROJECTION_PROPERTY,false);p.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);
