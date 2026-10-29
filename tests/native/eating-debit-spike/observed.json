@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "engine": "1.26.60.6",
+  "modules": {
+    "server": "2.12.0-beta",
+    "server-gametest": "1.0.0-beta"
+  },
+  "early_debit": {
+    "source_files": {
+      "items/meal.json": "acc7a2f7950f0e6e13811f9cd1c42694992e50a11baf6f30a405e0f9947135fa",
+      "manifest.json": "14a6690e2f2607bf419115869d330eb7c619409d6b3add52f4f0df92f222c865",
+      "scripts/probe.js": "6c9771a77ee19564d27f0bf4ad9804ee093a7cc84c42e8d0ebd17b57569edea9"
+    },
+    "result": {
+      "kind": "result",
+      "ok": true,
+      "nativeControl": true,
+      "eventControl": true,
+      "debitSafe": false,
+      "rows": [
+        {
+          "name": "native_control",
+          "initial": 2,
+          "debit": null,
+          "useAccepted": true,
+          "final": 1,
+          "completions": 1
+        },
+        {
+          "name": "debit_90_stack_2",
+          "initial": 2,
+          "debit": 90,
+          "useAccepted": true,
+          "beforeDebit": 2,
+          "final": 0,
+          "completions": 1
+        },
+        {
+          "name": "debit_25_stack_2",
+          "initial": 2,
+          "debit": 25,
+          "useAccepted": true,
+          "beforeDebit": 2,
+          "final": 0,
+          "completions": 1
+        },
+        {
+          "name": "debit_90_stack_1",
+          "initial": 1,
+          "debit": 90,
+          "useAccepted": true,
+          "beforeDebit": 1,
+          "final": 0,
+          "completions": 0
+        }
+      ],
+      "scope": "Engine capability only; simulated-player item events need a positive control",
+      "client": false
+    },
+    "log_sha256": "491883c93cc9b4f9640511992e37f0888aa965e56d1420531be2388780dc3f04"
+  },
+  "preparation_events": {
+    "source_files": {
+      "manifest.json": "ac3e1562aca4282c560f7bf25a268a27bbb274dc87ab68d88841e44a2f839a14",
+      "scripts/probe.js": "8b91b9d80e2db3e1a03e3131ac0e72d18a2d860b0355e5b0fca040c72f72961b"
+    },
+    "observations": [
+      {
+        "phase": "main_inventory",
+        "state": 2,
+        "events": [
+          "playerInventoryItemChange"
+        ]
+      },
+      {
+        "phase": "hotbar_selection",
+        "state": 1,
+        "events": [
+          "playerHotbarSelectedSlotChange"
+        ]
+      },
+      {
+        "phase": "main_metadata",
+        "state": "Native metadata control",
+        "events": [
+          "playerInventoryItemChange"
+        ]
+      },
+      {
+        "phase": "offhand_equipment",
+        "state": "minecraft:shield",
+        "events": []
+      },
+      {
+        "phase": "offhand_metadata",
+        "state": "Offhand metadata control",
+        "events": []
+      }
+    ],
+    "log_sha256": "92522c2ef2fa7a73c2efa58d9853f6572690b1e53fa97e529a25e88f1c807e6a"
+  },
+  "adopted_behavior": "Keep native duration variants and native completion debit; prepare on first observation, inventory/hotbar notifications or animation-setting changes. Keep existing wrong-duration before-use guard for eventless direct offhand writes.",
+  "not_completed": [
+    "T3.4 full shadow-route retirement",
+    "real client input/animation/audio",
+    "full Java random-profile persistence parity"
+  ],
+  "client": false,
+  "production_ready": false
+}

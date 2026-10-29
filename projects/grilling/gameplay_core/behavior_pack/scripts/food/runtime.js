@@ -29,7 +29,7 @@ import {seasoningLore} from "../localized_lore_core.js";
 import {syncSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {canUseCuisineFood,captureCuisineUse,completedCuisineUse,cuisineUseEventMatches} from "../cuisine_eating_core.js";
 import {forgetJavaEatingHud,hideJavaEatingHud,showJavaEatingHud} from "../java_eating_hud_runtime.js";
-import {forgetEatingItem,prepareEatingItems,selectedEatingProfile} from "../eating_item_runtime.js";
+import {forgetEatingItem,prepareChangedEatingItems,prepareEatingItems,selectedEatingProfile} from "../eating_item_runtime.js";
 import {syncSecretHeld} from "../secret_held_runtime.js";
 import {admitEatingProjection,selectEatingProjection} from "../eating_projection_routes.js";
 import {clearEffects} from "../effect_state_runtime.js";
@@ -296,8 +296,9 @@ world.beforeEvents.itemUse.subscribe(e=>{
  if(e.source.isSneaking){e.cancel=true;return;}
  const animations=grillingConfig().enableEatingAnimations;
  if(SKEWER_EATING_IDS.has(canonicalFoodId(e.itemStack.typeId))&&isPlainEatingId(e.itemStack.typeId)===animations){
-  // A setting/item change can race the per-tick preparation. Refuse the wrong
-  // native duration, then prepare the still-captured hand before the next use.
+  // Offhand-only API writes emit no inventory event on the selected engine.
+  // Refuse an unprepared duration at the input boundary; retain the captured
+  // hand/metadata check before preparing it outside restricted execution.
   e.cancel=true;const player=e.source,intent=captureInteractionIntent(player,e.itemStack);
   system.run(()=>{if(interactionIntentStillCurrent(player,intent))prepareEatingItems(player,ACTIVE_EATS.has(player.id)||hasPendingHandAction(player.id),grillingConfig().enableEatingAnimations)});return;
  }
@@ -311,7 +312,7 @@ syncSlimeHeld(p,slimeFrame);
   try{syncSeasoningMotion(p,PENDING_USES.get(p.id))}catch(error){if(system.currentTick%20===0)console.warn('[Grilling seasoning motion] '+error)}
   const active=ACTIVE_EATS.get(p.id),handActionPending=hasPendingHandAction(p.id);
   try{prepareBottleFillItems(p,!!active||PENDING_USES.has(p.id)||handActionPending)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native bottle item] '+error)}
-  try{prepareEatingItems(p,!!active||handActionPending,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}
+  try{prepareChangedEatingItems(p,!!active||handActionPending,grillingConfig().enableEatingAnimations)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling native eating item] '+error)}
   if(active&&eatingStillCurrent(active.use,heldByHand(p,active.hand),p.selectedSlotIndex,now())){
    // Do not assume a remote custom-item countdown matches the owner's clock.
    // Replicate source session time; native food debit/reward stays event-owned.

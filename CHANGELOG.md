@@ -2,6 +2,12 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.190 原生時長準備改為變動觸發（未發布）
+
+- 不再對未變的idle手持每tick展開metadata；初次觀察、inventory／hotbar原生事件及動畫設定改變才準備原生時長variant，正在食用或有手部交易時保留等待。
+- 保留合法食物的原有准入、數量、metadata與原生完成扣份；沒有採用已被原生控制證明會重複扣份的「提早扣1份即結束」設計。副手直寫缺少原生inventory事件，沿用wrong-duration使用前guard。
+- 新情境執行真正runtime，涵蓋idle無重複查詢、換槽／設定、交易等待和副手路徑。Native探針是隔離能力證據，完整T3.4及真人聲畫仍待驗。
+
 ## 2.8.189 油渣施肥補完：甜菜、竹子、海帶（未發布）
 
 2.8.188 是同一 PR 的前一候選（海帶原頭部記為 0），未合併；本版依擁有者決定改為保留原年齡。
