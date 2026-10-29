@@ -1,7 +1,8 @@
+import {onScriptEvent} from './core/events.js';
 import {system} from '@minecraft/server';
 import {SKEWER_COMPAT_REGISTER_EVENT,registerSkewerCompatBundle} from './skewer_compat_core.js';
 
-system.afterEvents.scriptEventReceive.subscribe(event=>{
+onScriptEvent('skewer_compat_runtime.js:0',event=>{
  if(event.sourceType!=='Server'||typeof event.message!=='string'||event.message.length>8192)return;
  if(event.id!==SKEWER_COMPAT_REGISTER_EVENT)return;
  try{

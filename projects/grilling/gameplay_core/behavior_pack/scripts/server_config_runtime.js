@@ -1,3 +1,4 @@
+import {onScriptEvent} from './core/events.js';
 import {world,system,CommandPermissionLevel,CustomCommandParamType,CustomCommandStatus} from '@minecraft/server';
 import {normalizeConfig,configValue} from './server_config_core.js';
 const KEY='kaleidoscope_grilling:server_config_v1';let cache;
@@ -14,5 +15,5 @@ system.beforeEvents.startup.subscribe(({customCommandRegistry})=>{
 // Host modules have their own world-property scope. Persist their setting through
 // the versioned bridge, including a ready handshake after either pack starts.
 function publishCuisineConfig(){system.sendScriptEvent('kaleidoscope_cookery:cuisine_config',JSON.stringify({api:1,enabled:grillingConfig().enableCookeryFoodHeatAndSeasoning}));}
-system.afterEvents.scriptEventReceive.subscribe(event=>{if(event.id==='kaleidoscope_grilling:cuisine_config_request')publishCuisineConfig();});
+onScriptEvent('server_config_runtime.js:0',event=>{if(event.id==='kaleidoscope_grilling:cuisine_config_request')publishCuisineConfig();});
 system.run(publishCuisineConfig);

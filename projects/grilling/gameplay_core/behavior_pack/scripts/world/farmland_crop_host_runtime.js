@@ -1,3 +1,4 @@
+import {onAfterBlockBreak} from '../core/events.js';
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {farmlandCropTable} from './farmland_crop_host_core.js';
 import {registerPlantFertilizer,interactWithPlantFertilizer} from '../plant_fertilizer.js';
@@ -115,7 +116,7 @@ system.beforeEvents.startup.subscribe(init=>{
 });
 
 // Preserve A2.7.19's single Java CropDropHandler order and RNG draw ordering.
-world.afterEvents.playerBreakBlock.subscribe(event=>{
+onAfterBlockBreak('world/farmland_crop_host_runtime.js:0',event=>{
  try{
   if(event.brokenBlockPermutation?.type?.id!=='minecraft:short_grass')return;
   const player=event.player;if(!player||creative(player))return;

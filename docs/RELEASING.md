@@ -4,7 +4,7 @@
 
 P2 只整理來源與工具，不產生新 runtime 候選。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
-維護來源以 [baseline.json](../baseline.json) 為準：**2.8.182、Cookery 1.6.4**，最低 engine 宣告 1.26.50，`@minecraft/server` 2.9.0、`@minecraft/server-ui` 2.2.0。canonical BP/RP 在 `projects/grilling/gameplay_core/`。這是來源與 manifest 宣告，不是普通安裝、玩法或 client 成功證明。
+維護來源的版本、UUID、Cookery 相依、最低 engine 與 Script API 以 [baseline.json](../baseline.json) 及兩份 manifest 為唯一來源；這是來源宣告，實際安裝查完整家族收據，真人結果另驗。canonical BP/RP 位置也從 baseline.runtime 查詢。以下 G157／G181／G182 段落是各候選原始邊界，不能作為今天的來源或部署狀態。
 
 G157 承接 2026-10-26 已凍結的 Cookery 1.6.4 相容維護；2026-10-27 發布相同自有 runtime，未合併 G156／PR #255 的資產清理。本次發布不宣告 P3 或真人驗收完成。
 
@@ -112,6 +112,6 @@ P3 起的部署節奏依 D2；現有授權的範圍由 [AGENTS §4](../AGENTS.md
 
 使用家族既有 `family_bundle`／`family_guard`／BSM 准入工具安裝整組，不手動覆蓋一份包。部署前再次完整停服備份，部署後讀回實際 pack 順序／UUID／版本／雜湊、content log 與核心流程，將有限結果記在家族單一部署紀錄。公開部分先去除任何機密與玩家資料。
 
-保留可在 15 分鐘內恢復的上一份完整備份與 pack 組合；回滾順序為正常停服→還原備份與上一組 packs→開服→讀回。最近三份備份與 LKG-0 的保留規則依計畫，不以本次整理刪除。
+保留可在 15 分鐘內恢復的上一份完整備份與 pack 組合；回滾順序為正常停服→還原備份與上一組 packs→開服→讀回。目前依受管家族流程保留最新一份完整可用回退；原 LKG 與歷史證據仍保留其原始範圍，不把它們當成需要每輪新增的備份。
 
 item／block／entity／state／key／UUID 的退役另走 [SAVE-COMPAT](SAVE-COMPAT.md) 全部條件，不因有備份或具部署權限而免除遷移證據。作者完整包、私有整合遊戲邏輯、世界資料與憑證均不進公開 repo。

@@ -1,3 +1,4 @@
+import {scriptEvents} from './event_router.js';
 /** Author-owned output transactions; native food state travels with the actual output. */
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {writePublicFood,readPublicFood,readPublicFoodLore,normalizePublicFood,bucketHotUntil} from './food_api_core.js';
@@ -370,7 +371,7 @@ export function recoverCuisineOutput(b,data,host){
  // write keeps the prepared fence and must not make the host credit again.
  intent.phase='committed';try{writeReceipt(recovery.property,intent)}catch(error){console.warn('[Cookery cuisine API] acknowledged recovery fence retained '+error)}return true;
 }
-system.afterEvents.scriptEventReceive.subscribe(e=>{
+scriptEvents(system)('cuisine_api_host',e=>{
  if(e.id!=='kaleidoscope_cookery:cuisine_metadata')return;try{
   const r=JSON.parse(e.message),s=r.station;if(r.api!==1||!s||typeof s.dimensionId!=='string'||![s.x,s.y,s.z].every(Number.isInteger))return;
   const valid=normalizePublicFood({v:1,hotUntil:0,seasoning:r.state?.seasoning});if(!valid)return;
@@ -379,7 +380,7 @@ system.afterEvents.scriptEventReceive.subscribe(e=>{
  }catch(error){console.warn('[Cookery cuisine API] metadata retained '+error)}
 });
 
-system.afterEvents.scriptEventReceive.subscribe(e=>{
+scriptEvents(system)('cuisine_api_host',e=>{
  if(e.id!=='kaleidoscope_cookery:cuisine_config')return;
  try{const request=JSON.parse(e.message);if(request.api!==1||typeof request.enabled!=='boolean')throw Error('invalid cuisine configuration');
   world.setDynamicProperty(CONFIG_KEY,request.enabled);

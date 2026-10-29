@@ -38,7 +38,9 @@
 
 `core/scheduler.js` 是本包唯一的 interval。各域註冊自己的週期與工作；一項失敗不阻塞其他工作。同一 tick 共用玩家查詢，不跨 tick 保存過期玩家清單。方塊原生命名 tick 保留由引擎排程。
 
-`host_api/oil_api_host.js` 是供 Cookery 使用的公開宿主來源，執行於另一個包的腳本環境，因此保留自己的互動入口。全樹計數含它，不能把兩個包硬接成一個全域事件環境。
+`host_api/event_router.js` 是共用、可複製的純 SDK helper；`core/events.js` 把本包的 world／system 接到它。互動、破壞前、破壞後、爆炸與腳本訊息各自只有一個原生訂閱；破壞前的取消與破壞後的真實結果是不同階段，沒有用推測事件取代它們。個別 client 關閉只移除自己的路由，最後一個關閉才解除原生訂閱。
+
+Cookery 的公開宿主使用同一份 helper，卻仍在自己的腳本環境各自註冊；它不與 Grilling 共用世界或暫存資料。三個未載入的舊作物 runtime 已退役，現行作物與草帽掉落由 `world/farmland_crop_host_runtime.js` 單獨提供。
 
 ## 保存與交易邊界
 

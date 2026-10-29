@@ -1,3 +1,4 @@
+import {onScriptEvent} from '../core/events.js';
 import {system} from '@minecraft/server';
 import {KC_READY_EVENT,KC_PING_EVENT,KC_REGISTER_EVENT,SOURCE,recipesForReady} from './cookery_processing_core.js';
 
@@ -7,7 +8,7 @@ function registerReady(info){
  }
 }
 
-system.afterEvents.scriptEventReceive.subscribe(ev=>{
+onScriptEvent('recipe/cookery_processing_runtime.js:0',ev=>{
  if(ev.id!==KC_READY_EVENT)return;
  try{registerReady(JSON.parse(String(ev.message??'')))}catch{}
 });

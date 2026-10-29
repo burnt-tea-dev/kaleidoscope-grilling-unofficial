@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak,onAfterBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
 import {grillingConfig} from '../server_config_runtime.js';
@@ -562,14 +563,14 @@ onBlockInteraction('a25_plate_recipe_runtime',e=>{
  }catch{}
 },{"priority":10});
 
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('plate/plate_recipe_runtime.js:0',e=>{
  try{
   if(e.cancel)return;
   if(e.block.typeId===PLATE_BLOCK_ID){e.cancel=true;const p=e.player,loc={...e.block.location},dim=e.block.dimension;system.run(()=>breakPlate(dim.getBlock(loc),p));return}
   if(e.block.typeId===RECIPE_BLOCK_ID){e.cancel=true;const p=e.player,snapshot=recipeActionSnapshot(e.block);system.run(()=>{try{breakRecipe(sameRecipeForAction(snapshot),p)}catch(error){console.warn('[Grilling recipe break] retained '+error)}});return}
  }catch{}
 });
-world.beforeEvents.explosion.subscribe(e=>{
+onExplosion('plate/plate_recipe_runtime.js:0',e=>{
  try{if(e.cancel!==false)return}catch{return}
  const keep=[],plates=[],recipes=[];let protectedTarget=false;
  for(const block of e.getImpactedBlocks()){
@@ -609,7 +610,7 @@ function detachRecipeNeighbors(dimension,location){
   if(block?.typeId===RECIPE_BLOCK_ID)detachUnsupportedRecipe(block);
  }
 }
-world.afterEvents.playerBreakBlock.subscribe(e=>{
+onAfterBlockBreak('plate/plate_recipe_runtime.js:0',e=>{
  try{
   const dim=e.block.dimension,loc={...e.block.location};system.run(()=>{
    const above=dim.getBlock({x:loc.x,y:loc.y+1,z:loc.z});if(above?.typeId===PLATE_BLOCK_ID&&!hasSolidTop(dim.getBlock(loc)))breakPlate(above);

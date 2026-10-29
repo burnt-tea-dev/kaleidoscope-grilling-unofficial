@@ -1,3 +1,4 @@
+import {onScriptEvent} from './core/events.js';
 import {system} from '@minecraft/server';
 import {
  registerSecretSmoking,registerSecretIngredientBehavior,registerSecretCompatBundle
@@ -13,7 +14,7 @@ function payload(message){
  if(!value||typeof value!=='object'||Array.isArray(value))throw new Error('payload must be a JSON object');
  return value;
 }
-system.afterEvents.scriptEventReceive.subscribe(event=>{
+onScriptEvent('secret_compat_runtime.js:0',event=>{
  if(event.sourceType!=='Server'||typeof event.message!=='string'||event.message.length>8192)return;
  try{
   if(event.id===SECRET_SMOKING_REGISTER_EVENT){

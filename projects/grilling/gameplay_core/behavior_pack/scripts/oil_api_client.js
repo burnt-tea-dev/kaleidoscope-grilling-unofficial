@@ -1,3 +1,4 @@
+import {onScriptEvent} from './core/events.js';
 import {world,system} from '@minecraft/server';
 import {readPublicOil,isOilPayloadLine,normalizePublicOil} from './host_api/oil_api_core.js';
 import {readCookeryOilPot,buildCookeryOilPot,COOKERY_FILLED_ID} from './oil/cookery_oil_pot_adapter.js';
@@ -59,7 +60,7 @@ export function ensureOilHandPublished(player,hand,continueUse){
  system.sendScriptEvent('senluo:oil_snapshot_request',JSON.stringify({api:1,id,playerId:player.id,hand,expectedId:stack.typeId,expectedLore:JSON.stringify(stack.getRawLore())}));
  system.runTimeout(()=>{const r=pending.get(id);if(!r)return;pending.delete(id);try{console.warn('[Grilling Oil API] host snapshot unavailable')}catch{}},60);return false;
 }
-system.afterEvents.scriptEventReceive.subscribe(ev=>{
+onScriptEvent('oil_api_client.js:0',ev=>{
  if(ev.id!=='senluo:oil_snapshot_response')return;
  try{const reply=JSON.parse(ev.message),r=pending.get(reply.id);if(!r||reply.api!==1)return;pending.delete(reply.id);
   if(!reply.ok){console.warn('[Grilling Oil API] host snapshot rejected');return}

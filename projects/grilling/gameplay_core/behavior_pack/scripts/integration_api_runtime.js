@@ -1,3 +1,4 @@
+import {onScriptEvent} from './core/events.js';
 /** Server-script API. No polling inference, item delivery, player impersonation or vanilla worldgen scan. */
 import {world,system,BlockPermutation} from '@minecraft/server';
 import {prepareProducedFood,publicStackFingerprint,samePublicStack,stableJson,utf8Bytes,ITEM_ID} from './integration_stack_core.js';
@@ -92,7 +93,7 @@ export function handleIntegrationRequest(request){
  }
 }
 system.run(()=>{try{const saved=read(REGISTRY_KEY);if(saved)restoreIntegrationRegistry(saved);ready=true;}catch(error){storageFault='integration registry unreadable';console.warn('[Grilling integration API] '+error)}});
-system.afterEvents.scriptEventReceive.subscribe(event=>{
+onScriptEvent('integration_api_runtime.js:0',event=>{
  if(event.id!==INTEGRATION_REQUEST||event.sourceType!=='Server')return;
  let request;try{if(typeof event.message!=='string'||utf8Bytes(event.message)>8192)throw Error('request capacity');request=JSON.parse(event.message);}catch{return;}
  let response;try{response={api:1,requestId:request.requestId,ok:true,result:handleIntegrationRequest(request)}}catch(error){response={api:1,requestId:typeof request?.requestId==='string'?request.requestId.slice(0,64):'',ok:false,error:String(error).slice(0,256)}}

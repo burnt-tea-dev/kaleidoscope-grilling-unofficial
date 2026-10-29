@@ -24,7 +24,7 @@
 
 ## 實際出料與逐堆變體
 
-可直接採用自主編寫的 `scripts/integration_client.js`、`integration_stack_core.js`、`host_api/food_api_core.js` 及釘選公開原版資料 `vanilla_food_nutrition.js`，按原相對目錄放入作者自己的模組。原版食品不公開 scripting food component，SDK 以既有 Mojang 定義辨識；data-driven 食品仍以原生 component 為準，不把非食品 tag 猜成可食用。client 支援關聯回覆、逾時、關閉及同 producer 串行操作；不要重放作者食用回呼或偽造 `itemCompleteUse`。
+可直接採用自主編寫的 `scripts/integration_client.js`、`integration_stack_core.js`、`host_api/food_api_core.js`、`host_api/event_router.js` 及釘選公開原版資料 `vanilla_food_nutrition.js`，按原相對目錄放入作者自己的模組。原版食品不公開 scripting food component，SDK 以既有 Mojang 定義辨識；data-driven 食品仍以原生 component 為準，不把非食品 tag 猜成可食用。client 支援關聯回覆、逾時、關閉及同 producer 串行操作；不要重放作者食用回呼或偽造 `itemCompleteUse`。
 
 ```js
 import {world} from '@minecraft/server';

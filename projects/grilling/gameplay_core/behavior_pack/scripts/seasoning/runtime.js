@@ -1,3 +1,4 @@
+import {onExplosion} from '../core/events.js';
 import {isNativeBottleItem,readNativeBottles} from "../seasoning_native_storage.js";
 import {isSpecialSeasoningId,specialSeasoningVisualId} from "./special_seasoning_visual_core.js";
 import {PENDING_SEASONING_ID as PENDING_SEASONING,SEASONING_CAPACITY,SEASONING_MAX_BOTTLES,SEASONING_MAX_USES,SEASONING_PLACE_BLOCK_ID as SEASONING_BLOCK,SEASONING_VARIANT_KEY as SEASON_VARIANT_KEY,hasSeasoningBase,isPendingSeasoningId,isSeasoningBlockId as isSeasoningBlock,isSeasoningIngredient,seasoningFillVisualId} from "./seasoning_contract_core.js";
@@ -284,5 +285,5 @@ function scheduleNativeBottleExplosion(e){
  });
 }
 
-world.beforeEvents.explosion.subscribe(scheduleNativeBottleExplosion);
+onExplosion('seasoning/runtime.js:0',scheduleNativeBottleExplosion);
 export {bottleActionSnapshot,bottleActionStillCurrent,handleSeasoningBlock,scheduleNativeBottleBreak,scheduleNativeBottlePlacement,tickNativeBottleSupport,tryScheduleOffhandBottleInteraction};
