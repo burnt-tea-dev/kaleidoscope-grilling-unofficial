@@ -106,5 +106,247 @@
     "full Java random-profile persistence parity"
   ],
   "client": false,
-  "production_ready": false
+  "production_ready": false,
+  "logout_events": {
+    "engine": "1.26.60.6",
+    "log_sha256": "2e938cb0191d721ce3e64c384a053dd9662238bae13132a48c4bab9435a81b61",
+    "probe_result": {
+      "kind": "result",
+      "ok": true,
+      "completeControl": true,
+      "stopControl": true,
+      "leaveControl": true,
+      "rows": [
+        {
+          "name": "complete_control",
+          "action": "complete",
+          "accepted": true,
+          "events": [
+            {
+              "case": "complete_control",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "complete_control",
+              "event": "itemCompleteUse",
+              "elapsed": 100,
+              "remaining": 0,
+              "amount": 0
+            },
+            {
+              "case": "complete_control",
+              "event": "itemStopUse",
+              "elapsed": 100,
+              "remaining": 0,
+              "amount": 0
+            }
+          ],
+          "stopBeforeLeave": false
+        },
+        {
+          "name": "stop_control_25",
+          "action": "stop",
+          "at": 25,
+          "accepted": true,
+          "events": [
+            {
+              "case": "stop_control_25",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "stop_control_25",
+              "event": "itemStopUse",
+              "elapsed": 25,
+              "remaining": 75,
+              "amount": 1
+            }
+          ],
+          "stopBeforeLeave": false
+        },
+        {
+          "name": "disconnect_25",
+          "action": "disconnect",
+          "at": 25,
+          "accepted": true,
+          "events": [
+            {
+              "case": "disconnect_25",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_25",
+              "event": "beforeLeave",
+              "elapsed": 25,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_25",
+              "event": "beforeLeaveWrite",
+              "elapsed": 25,
+              "allowed": false,
+              "error": "ReferenceError: Native function [Container::setItem] cannot be used in restricted execution."
+            },
+            {
+              "case": "disconnect_25",
+              "event": "deferredLeave",
+              "elapsed": 26,
+              "readError": "InvalidEntityError: Failed to call function 'getComponent' due to Entity being invalid (has the Entity been removed?)."
+            },
+            {
+              "case": "disconnect_25",
+              "event": "afterLeave",
+              "elapsed": 26
+            }
+          ],
+          "stopBeforeLeave": false
+        },
+        {
+          "name": "disconnect_90",
+          "action": "disconnect",
+          "at": 90,
+          "accepted": true,
+          "events": [
+            {
+              "case": "disconnect_90",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_90",
+              "event": "beforeLeave",
+              "elapsed": 90,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_90",
+              "event": "beforeLeaveWrite",
+              "elapsed": 90,
+              "allowed": false,
+              "error": "ReferenceError: Native function [Container::setItem] cannot be used in restricted execution."
+            },
+            {
+              "case": "disconnect_90",
+              "event": "deferredLeave",
+              "elapsed": 91,
+              "readError": "InvalidEntityError: Failed to call function 'getComponent' due to Entity being invalid (has the Entity been removed?)."
+            },
+            {
+              "case": "disconnect_90",
+              "event": "afterLeave",
+              "elapsed": 91
+            }
+          ],
+          "stopBeforeLeave": false
+        },
+        {
+          "name": "disconnect_23",
+          "action": "disconnect",
+          "at": 23,
+          "accepted": true,
+          "events": [
+            {
+              "case": "disconnect_23",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_23",
+              "event": "beforeLeave",
+              "elapsed": 23,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_23",
+              "event": "beforeLeaveWrite",
+              "elapsed": 23,
+              "allowed": false,
+              "error": "ReferenceError: Native function [Container::setItem] cannot be used in restricted execution."
+            },
+            {
+              "case": "disconnect_23",
+              "event": "deferredLeave",
+              "elapsed": 24,
+              "readError": "InvalidEntityError: Failed to call function 'getComponent' due to Entity being invalid (has the Entity been removed?)."
+            },
+            {
+              "case": "disconnect_23",
+              "event": "afterLeave",
+              "elapsed": 24
+            }
+          ],
+          "stopBeforeLeave": false
+        },
+        {
+          "name": "disconnect_26",
+          "action": "disconnect",
+          "at": 26,
+          "accepted": true,
+          "events": [
+            {
+              "case": "disconnect_26",
+              "event": "itemStartUse",
+              "elapsed": 0,
+              "remaining": 100,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_26",
+              "event": "beforeLeave",
+              "elapsed": 26,
+              "amount": 1
+            },
+            {
+              "case": "disconnect_26",
+              "event": "beforeLeaveWrite",
+              "elapsed": 26,
+              "allowed": false,
+              "error": "ReferenceError: Native function [Container::setItem] cannot be used in restricted execution."
+            },
+            {
+              "case": "disconnect_26",
+              "event": "deferredLeave",
+              "elapsed": 27,
+              "readError": "InvalidEntityError: Failed to call function 'getComponent' due to Entity being invalid (has the Entity been removed?)."
+            },
+            {
+              "case": "disconnect_26",
+              "event": "afterLeave",
+              "elapsed": 27
+            }
+          ],
+          "stopBeforeLeave": false
+        }
+      ],
+      "scope": "Simulated-player disconnect events only; no Grilling settlement or client parity claim",
+      "client": false
+    },
+    "template_experiments": {
+      "experiments_ever_used": 1,
+      "gametest": 1,
+      "saved_with_toggled_experiments": 1,
+      "upcoming_creator_features": 1
+    },
+    "memory_limit_bytes": 1073741824,
+    "source_files": {
+      "items/meal.json": "acc7a2f7950f0e6e13811f9cd1c42694992e50a11baf6f30a405e0f9947135fa",
+      "manifest.json": "14a6690e2f2607bf419115869d330eb7c619409d6b3add52f4f0df92f222c865",
+      "scripts/logout_probe.js": "d03fbeecf9ab8d16555f6beb9d6c061eafd92bd3f391776c84cbf0af9a32c7a8"
+    },
+    "installed_manifest_sha256": "fd265c46454a0dafb671a3ce053c20d0430b4a69d3fab000a86f3f9a012b4c5e",
+    "selected_entry": "scripts/logout_probe.js",
+    "observed_at": "2026-10-29T10:00:48.937351+00:00"
+  }
 }
