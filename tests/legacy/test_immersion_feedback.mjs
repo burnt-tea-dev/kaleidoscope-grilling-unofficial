@@ -79,6 +79,46 @@ test('one block gesture has one writer and post-action observers',async()=>{
  calls.length=0;f.emit('world.beforeEvents.playerInteractWithBlock',{block,cancel:true});
  assert.deepEqual(calls,['observed true'],'a different addon keeps its accepted gesture');
 });
+test('script routes share one native subscription and close without skipping another owner',async()=>{
+ const f=createCoreFixture(),{scriptEvents}=await f.load('host_api/event_router.js'),onEvent=scriptEvents(f.system),calls=[];
+ let closeFirst;
+ closeFirst=onEvent('first',()=>{calls.push('first');closeFirst();});
+ const closeSecond=onEvent('second',()=>calls.push('second'));
+ assert.equal(f.subscribers.get('system.afterEvents.scriptEventReceive').length,1);
+ f.emit('system.afterEvents.scriptEventReceive',{id:'example:reply'});
+ assert.deepEqual(calls,['first','second']);
+ f.emit('system.afterEvents.scriptEventReceive',{id:'example:reply'});
+ assert.deepEqual(calls,['first','second','second']);
+ closeSecond();closeSecond();
+ assert.equal(f.subscribers.get('system.afterEvents.scriptEventReceive').length,0);
+ const closeNew=onEvent('new',()=>calls.push('new'));
+ f.emit('system.afterEvents.scriptEventReceive',{id:'example:reply'});
+ assert.equal(calls.at(-1),'new');closeNew();f.dispose();
+});
+test('shared routing keeps separate SDK contexts isolated and continues after an owner throws',async()=>{
+ const a=createCoreFixture(),b=createCoreFixture(),{scriptEvents}=await a.load('host_api/event_router.js'),calls=[];
+ scriptEvents(a.system)('failed',()=>{throw Error('owner failure');});
+ scriptEvents(a.system)('healthy',()=>calls.push('a'));
+ scriptEvents(b.system)('other-world',()=>calls.push('b'));
+ a.emit('system.afterEvents.scriptEventReceive',{id:'example:reply'});assert.deepEqual(calls,['a']);
+ b.emit('system.afterEvents.scriptEventReceive',{id:'example:reply'});assert.deepEqual(calls,['a','b']);
+ assert.equal(a.subscribers.get('system.afterEvents.scriptEventReceive').length,1);
+ assert.equal(b.subscribers.get('system.afterEvents.scriptEventReceive').length,1);
+ a.dispose();b.dispose();
+});
+test('break phases stay distinct and a later explosion cancellation reaches deferred work',async()=>{
+ const f=createCoreFixture(),router=await f.load('core/events.js'),calls=[];
+ router.onBeforeBlockBreak('before',event=>{calls.push('before');event.cancel=true;});
+ router.onBeforeBlockBreak('observer',event=>calls.push('cancelled:'+event.cancel));
+ router.onAfterBlockBreak('after',()=>calls.push('after'));
+ f.emit('world.beforeEvents.playerBreakBlock',{cancel:false});
+ assert.deepEqual(calls,['before','cancelled:true']);
+ f.emit('world.afterEvents.playerBreakBlock',{});assert.equal(calls.at(-1),'after');
+ router.onExplosion('deferred',event=>f.system.run(()=>{if(event.cancel===false)calls.push('destroy');}));
+ f.world.beforeEvents.explosion.subscribe(event=>{event.cancel=true;});
+ f.emit('world.beforeEvents.explosion',{cancel:false});f.flush();
+ assert.ok(!calls.includes('destroy'));f.dispose();
+});
 test('shared scheduling preserves deadlines, cancellation and failure isolation',async()=>{
  const f=createCoreFixture(),{every}=await f.load('core/scheduler.js'),calls=[];
  every('two',()=>{calls.push('two:'+f.system.currentTick);if(f.system.currentTick===4)throw Error('failed task')},2);

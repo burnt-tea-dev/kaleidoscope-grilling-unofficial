@@ -1,3 +1,4 @@
+import {scriptEvents} from './event_router.js';
 /** Author-owned food behavior data for deliberate Secret Skewer consumption. */
 import {system,ItemStack} from '@minecraft/server';
 let FOOD_EFFECTS={},EXTRA_RETURNS={};
@@ -16,4 +17,4 @@ export function publishAuthorIngredientBehaviors(){
  return published;
 }
 system.runTimeout(publishAuthorIngredientBehaviors,20);
-system.afterEvents.scriptEventReceive.subscribe(e=>{if(e.id==='kaleidoscope_grilling:request_secret_compat'&&e.sourceType==='Server')publishAuthorIngredientBehaviors();});
+scriptEvents(system)('ingredient_api_host',e=>{if(e.id==='kaleidoscope_grilling:request_secret_compat'&&e.sourceType==='Server')publishAuthorIngredientBehaviors();});

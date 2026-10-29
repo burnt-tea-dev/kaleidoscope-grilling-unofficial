@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak,onExplosion,onScriptEvent} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {beginSeasoningMotion} from '../seasoning_motion_runtime.js';
@@ -29,7 +30,7 @@ import {
 
 const message=interactionFeedback;
 let authoritativeCuisineHost=false;
-system.afterEvents.scriptEventReceive.subscribe(event=>{
+onScriptEvent('food/cookery_cuisine_runtime.js:0',event=>{
  if(event.id!=='kaleidoscope_cookery:api_ready')return;
  try{const info=JSON.parse(event.message);if(info.api===1&&Array.isArray(info.capabilities))authoritativeCuisineHost=info.capabilities.includes('grilling_pot_exact_flex_v1');}catch{}
 });
@@ -210,7 +211,7 @@ export function applyAuthoritativeCookeryOutput(request){
   return true;
  }catch{return false}
 }
-system.afterEvents.scriptEventReceive.subscribe(event=>{
+onScriptEvent('food/cookery_cuisine_runtime.js:1',event=>{
  if(event.id!==COOKERY_OUTPUT_READY_EVENT)return;
  try{
   const request=normalizeCookeryOutputRequest(JSON.parse(String(event.message??'{}')));
@@ -233,13 +234,13 @@ onBlockInteraction('a2750_cookery_cuisine_runtime',event=>{
   system.run(()=>finishHostInteraction(player,dimension,location,kind,beforeInventory,beforeHasOil,candidateOil,stateBefore));
  }catch{}
 },{"priority":80});
-world.beforeEvents.playerBreakBlock.subscribe(event=>{
+onBeforeBlockBreak('food/cookery_cuisine_runtime.js:0',event=>{
  try{
   if(event.cancel!==false||!stationKind(event.block?.typeId))return;
   const row=cuisineRemovalSnapshot(event.block);system.run(()=>clearRemovedCuisine(event,[row]));
  }catch{}
 });
-world.beforeEvents.explosion.subscribe(event=>{
+onExplosion('food/cookery_cuisine_runtime.js:0',event=>{
  try{
   if(event.cancel!==false)return;
   const rows=[];

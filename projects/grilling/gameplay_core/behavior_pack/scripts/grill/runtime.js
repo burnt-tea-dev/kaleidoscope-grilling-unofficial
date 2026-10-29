@@ -1,3 +1,4 @@
+import {onExplosion} from '../core/events.js';
 import {breakDisposition,brush,canExtract,canInsert,flip,initialState,light,normalizeState,outputKind,season,tickState} from "../core_logic.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState as readState} from "./grill_state_adapter.js";
@@ -323,7 +324,7 @@ function handleGrill(block,player,hand='main'){
 
 world.afterEvents.playerPlaceBlock.subscribe(e=>{if(e.block.typeId===GRILL_ID)resetBlock(e.block,false)});
 
-world.beforeEvents.explosion.subscribe(scheduleGrillExplosion);
+onExplosion('grill/runtime.js:0',scheduleGrillExplosion);
 
 function burnGrillContents(block,beforeState,nextState){
  const c=inv(block);if(!c)throw new Error('Grilling inventory unavailable');

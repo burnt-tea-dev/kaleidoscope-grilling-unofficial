@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {markStationContentsDirty} from '../station_contents_visual_runtime.js';
 import {planRackInsert,commitRackTransfer,depositInventorySlot} from '../rack_transactions.js';
@@ -308,12 +309,12 @@ onBlockInteraction('a2746_advanced_rack_runtime',event=>{
  try{scheduleRackPlacement(event)}catch{}
 },{"priority":70,"blocks":["kaleidoscope_grilling:advanced_rack_block"]});
 
-world.beforeEvents.playerBreakBlock.subscribe(event=>{
+onBeforeBlockBreak('rack/advanced_rack_runtime.js:0',event=>{
  if(event.cancel||event.block.typeId!==ADVANCED_RACK_BLOCK_ID)return;
  event.cancel=true;const row=rackBreakSnapshot(event.block),drop=!creative(event.player);
  system.run(()=>{try{const block=sameRackForBreak(row);if(block)manuallyBreakRack(block,drop)}catch(error){console.warn('[Grilling rack break identity] '+error)}});
 });
-world.beforeEvents.explosion.subscribe(event=>{
+onExplosion('rack/advanced_rack_runtime.js:0',event=>{
  try{if(event.cancel!==false)return}catch{return}
  const keep=[],racks=[];let protectedRack=false;
  for(const block of event.getImpactedBlocks()){

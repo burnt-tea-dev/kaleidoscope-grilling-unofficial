@@ -1,3 +1,4 @@
+import {scriptEvents} from '../host_api/event_router.js';
 /** Cookery Guidebook API v1 publisher. Does not import or overwrite Cookery files.
  * Built into Grilling: no separate pack, world writes, itemUse hooks, or extra guidebook.
  */
@@ -68,7 +69,7 @@ export function installPublisher(system, payload, warn = console.warn) {
     try { if (Number(JSON.parse(String(ev.message ?? '')).api) === 1) transmit(); }
     catch { /* Ignore unrelated/malformed ready events. */ }
   };
-  system.afterEvents.scriptEventReceive.subscribe(receive);
+  const unsubscribe=scriptEvents(system)('guide-publisher',receive);
   const ping = () => {
     try { system.sendScriptEvent(EVENTS.ping, JSON.stringify({api: 1, source: SOURCE})); }
     catch (error) { warn(`[Grilling guide] Ping failed: ${String(error)}`); }
@@ -79,7 +80,7 @@ export function installPublisher(system, payload, warn = console.warn) {
       acknowledgementAvailable: false}),
     dispose: () => {
       if (disposed) return; disposed = true; active = false;
-      system.afterEvents.scriptEventReceive.unsubscribe(receive);
+      unsubscribe();
       for (const h of scheduled) system.clearRun(h);
       scheduled.clear(); if (runningHandle != null) system.clearRun(runningHandle);
     }

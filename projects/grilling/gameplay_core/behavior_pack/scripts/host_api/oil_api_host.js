@@ -1,3 +1,4 @@
+import {scriptEvents,blockEvents} from './event_router.js';
 /** Reviewed Cookery-owned adapter. Portable items; authoritative placed-state receipts. */
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {EMPTY_POT,FILLED_POT,readPublicOil,writePublicOil,createPublicOilPot,normalizePublicOil,planPublicOilAddition,planPublicOilConsumption,OIL_API_VERSION} from './oil_api_core.js';
@@ -278,7 +279,7 @@ function publishInventory(player){
 }
 world.afterEvents.playerSpawn.subscribe(ev=>system.runTimeout(()=>{try{publishInventory(ev.player)}catch(e){console.warn('[Cookery Oil API] legacy item retained '+e)}},20));
 system.runTimeout(()=>{for(const p of world.getAllPlayers())try{publishInventory(p)}catch{}},40);
-system.afterEvents.scriptEventReceive.subscribe(ev=>{
+scriptEvents(system)('oil_api_host',ev=>{
  if(ev.id!=='senluo:oil_snapshot_request'&&ev.id!=='senluo:oil_block_query')return;
  try{
   const r=JSON.parse(ev.message);if(r.api!==1)return;
@@ -290,15 +291,15 @@ system.afterEvents.scriptEventReceive.subscribe(ev=>{
   system.sendScriptEvent('senluo:oil_snapshot_response',JSON.stringify({api:1,id:r.id,ok,publishedOil}));
  }catch(e){console.warn('[Cookery Oil API] snapshot retained '+e)}
 });
-world.beforeEvents.playerInteractWithBlock.subscribe(ev=>{
+blockEvents(world).interact('oil_api_host',ev=>{
  if(ev.cancel||ev.block?.typeId!==EMPTY_POT)return;
  const type=BUCKETS[ev.itemStack?.typeId];if(!type)return;
  ev.cancel=true;if(ev.isFirstEvent===false)return;
  const p=ev.player,d=ev.block.dimension,loc={...ev.block.location},held=ev.itemStack.clone();
  system.run(()=>{try{const b=d.getBlock(loc),slot=hand(p);if(b?.typeId!==EMPTY_POT||!slot?.hasItem()||!itemSame(slot.getItem(),held))return;const r=fillSharedPlacedOil(b,slot,type,{creative:p.getGameMode()===GameMode.Creative});if(!r.ok)notice(p,r.reason);else d.playSound(type==='premium_chili'?'bucket.empty_lava':'bucket.empty_water',loc)}catch(e){notice(p,'unavailable');console.warn('[Cookery Oil API] fill retained '+e)}});
 });
-world.beforeEvents.playerBreakBlock.subscribe(ev=>{if(ev.block.typeId!==EMPTY_POT)return;try{readSharedPlacedOil(ev.block)}catch{ev.cancel=true;system.run(()=>notice(ev.player,'unavailable'))}});
-world.beforeEvents.explosion.subscribe(ev=>{ev.setImpactedBlocks(ev.getImpactedBlocks().filter(b=>{if(b.typeId!==EMPTY_POT)return true;try{return !!readSharedPlacedOil(b)}catch{return false}}))});
+blockEvents(world).beforeBreak('oil_api_host',ev=>{if(ev.block.typeId!==EMPTY_POT)return;try{readSharedPlacedOil(ev.block)}catch{ev.cancel=true;system.run(()=>notice(ev.player,'unavailable'))}});
+blockEvents(world).explosion('oil_api_host',ev=>{ev.setImpactedBlocks(ev.getImpactedBlocks().filter(b=>{if(b.typeId!==EMPTY_POT)return true;try{return !!readSharedPlacedOil(b)}catch{return false}}))});
 
 export function retrySharedOilRecovery(b){
  const receiptKey=key(RECEIPT_PREFIX,b),raw=world.getDynamicProperty(receiptKey);if(!raw)return {ok:false,reason:'missing'};

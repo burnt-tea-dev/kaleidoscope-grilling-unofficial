@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
 import {interactionParticleBurst} from '../immersion_particles_runtime.js';
@@ -541,7 +542,7 @@ world.afterEvents.playerPlaceBlock.subscribe(({block})=>{
   if(block.typeId===OIL_PRESS_ID)writePress(block,normalizePress({}));else writeVat(block,normalizeVat({}));
  }catch(error){markOilPlacementFault(block,error)}
 });
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('oil/oil_machine_runtime.js:0',e=>{
  try{
   if(e.cancel||![OIL_PRESS_ID,BIG_VAT_ID].includes(e.block.typeId))return;
   e.cancel=true;const snapshot=oilBreakSnapshot(e.block),p=e.player,free=creative(p);

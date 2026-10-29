@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {PepperContactWork} from '../pepper_contact_work.js';
 import {world,system,ItemStack,BlockPermutation} from '@minecraft/server';
@@ -312,7 +313,7 @@ system.beforeEvents.startup.subscribe(init=>{
  });
 });
 
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('world/pepper_tree_runtime.js:0',e=>{
  try{
   if(e.cancel||e.block.typeId!==PEPPER_LEAVES_ID)return;
   const loc={...e.block.location},dim=e.block.dimension,p=e.player,tool=e.itemStack?.clone(),before=e.block.permutation;

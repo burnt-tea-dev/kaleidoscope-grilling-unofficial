@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {premiumOilPotInRange,premiumOilPotParticles} from '../oil_ambient_core.js';
@@ -44,10 +45,10 @@ onBlockInteraction('a2736_typed_oil_pot_block_runtime',e=>{
   e.cancel=true;system.run(()=>ensureOilHandPublished(e.player,'main',undefined));if(e.isFirstEvent!==false)notify(e.player);
  }
 },{"priority":60});
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('oil/typed_oil_pot_block_runtime.js:0',e=>{
  if(legacyTypedPot(e.block)){e.cancel=true;notify(e.player);}
 });
-world.beforeEvents.explosion.subscribe(e=>{
+onExplosion('oil/typed_oil_pot_block_runtime.js:0',e=>{
  const impacted=e.getImpactedBlocks(),keep=impacted.filter(block=>!legacyTypedPot(block));
  if(keep.length!==impacted.length)e.setImpactedBlocks(keep);
 });

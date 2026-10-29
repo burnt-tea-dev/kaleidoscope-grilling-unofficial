@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "id": "kaleidoscope_grilling:family-api-0.2.13",
+  "id": "kaleidoscope_grilling:family-api-0.2.14",
   "version": [
     0,
     2,
-    13
+    14
   ],
   "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
   "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
@@ -362,7 +362,8 @@
     "scripts/host_api/pot_api_core.js": "scripts/api/pot_api_core.js",
     "scripts/host_api/pot_api_host.js": "scripts/api/pot_api_host.js",
     "scripts/host_api/cuisine_quality_core.js": "scripts/api/cuisine_quality_core.js",
-    "scripts/host_api/millstone_api_core.js": "scripts/api/millstone_api_core.js"
+    "scripts/host_api/millstone_api_core.js": "scripts/api/millstone_api_core.js",
+    "scripts/host_api/event_router.js": "scripts/api/event_router.js"
   },
   "expires": "2026-11-02",
   "removal_condition": "Remove each reviewed hook when the pinned author release provides the tested portable oil item/placed-state, output receipts, board contracts and shared Tavern guide projection. Cookery 1.6.4 owns canonical guide locale validation, registration cache batching and explicit carrier defaults; retain these author fixes. Re-review every author update; preserve author identities and migrate saved ownership. Unknown legacy placed quantities remain fail-closed. Remove the millstone admission hooks when all three author hand, worker-inventory and dropped-item gates use the same extension-aware lookup as tryLoad; retain author100-tick timing, capacity, worker and output behavior.",

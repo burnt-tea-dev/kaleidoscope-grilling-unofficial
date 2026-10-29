@@ -1,3 +1,4 @@
+import {onAfterBlockBreak} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {world,system} from '@minecraft/server';
@@ -109,7 +110,7 @@ function indexSavedTargets(){
 }
 world.afterEvents.playerPlaceBlock.subscribe(e=>{if(isSeasoningBlock(e.block.typeId)||e.block.typeId===HOST_BLOCK_ID)markPlacedVisualDirty(e.block)});
 world.afterEvents.playerInteractWithBlock.subscribe(e=>{if(isSeasoningBlock(e.block.typeId)||e.block.typeId===HOST_BLOCK_ID)markPlacedVisualDirty(e.block)});
-world.afterEvents.playerBreakBlock.subscribe(e=>markPlacedVisualDirty(e.block));
+onAfterBlockBreak('presentation/placed_visual_runtime.js:0',e=>markPlacedVisualDirty(e.block));
 system.run(()=>{
  // Script reload can leave live transient entities, though chunk/world saves cannot.
  for(const name of ['overworld','nether','the_end'])try{

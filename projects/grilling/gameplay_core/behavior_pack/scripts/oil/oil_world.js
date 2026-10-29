@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {premiumOilParticles} from '../oil_ambient_core.js';
@@ -197,7 +198,7 @@ onBlockInteraction('a23_oil_world',e=>{
   system.run(()=>{if(interactionIntentStillCurrent(p,intent))placeFromBucket(p,dim,loc,bucketType,hand)});return;
  }
 },{"priority":40});
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('oil/oil_world.js:0',e=>{
  if(!isOil(e.block.typeId))return;e.cancel=true;const dim=e.block.dimension,loc={...e.block.location};
  system.run(()=>{const b=dim.getBlock(loc);if(b&&isOil(b.typeId))try{b.setType('minecraft:air')}catch{}});
 });

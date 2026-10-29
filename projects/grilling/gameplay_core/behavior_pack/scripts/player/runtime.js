@@ -1,3 +1,4 @@
+import {onBeforeBlockBreak} from '../core/events.js';
 import {GRILL_ID} from "../eating_data_lookup.js";
 import {isSeasoningBlockId as isSeasoningBlock} from "../seasoning/seasoning_contract_core.js";
 import {captureInteractionIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
@@ -69,7 +70,7 @@ onBlockInteraction('main',e=>{
  scheduleHandAction(p,()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
 },{"priority":100});
 
-world.beforeEvents.playerBreakBlock.subscribe(e=>{
+onBeforeBlockBreak('player/runtime.js:0',e=>{
  if(e.cancel)return;
  if(e.block.typeId===GRILL_ID){scheduleGrillPlayerBreak(e);return}
  scheduleNativeBottleBreak(e);

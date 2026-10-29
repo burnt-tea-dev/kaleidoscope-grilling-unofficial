@@ -1,3 +1,4 @@
+import {onScriptEvent} from '../core/events.js';
 /** Read-only mirror of explicit Cookery Oil API receipts, never private host state. */
 import {world,system} from '@minecraft/server';
 import {normalizePublicOil} from '../host_api/oil_api_core.js';
@@ -11,7 +12,7 @@ export function readPlacedOilPotState(b){
  if(system.currentTick-last>=10){queries.set(id,system.currentTick);const legacy=world.getDynamicProperty(typedOilBlockKey(b.dimension.id,b.x,b.y,b.z));system.sendScriptEvent('senluo:oil_block_query',JSON.stringify({api:1,station:{dimensionId:b.dimension.id,x:b.x,y:b.y,z:b.z},legacyType:typeof legacy==='string'?legacy:undefined}));}
  const cached=snapshots.get(id),row=cached&&system.currentTick-cached.tick<=40?cached.state:undefined;return row?{type:row.type,count:row.count,capacity:row.type?64:256,revision:row.revision,source:'host_api'}:undefined;
 }
-system.afterEvents.scriptEventReceive.subscribe(e=>{if(e.id!=='senluo:oil_block_snapshot')return;try{
+onScriptEvent('oil/cookery_oil_pot_block_adapter.js:0',e=>{if(e.id!=='senluo:oil_block_snapshot')return;try{
  const r=JSON.parse(e.message),s=r.station;if(r.api!==1||!s||![s.x,s.y,s.z].every(Number.isInteger)||typeof s.dimensionId!=='string')return;
  const id=s.dimensionId+':'+s.x+','+s.y+','+s.z,state=r.state===undefined?undefined:normalizePublicOil(r.state);if(r.state!==undefined&&!state)return;
  if(state){const previous=snapshots.get(id);if(previous&&state.revision<previous.state.revision)return;snapshots.set(id,{state,station:{dimensionId:s.dimensionId,x:s.x,y:s.y,z:s.z},tick:system.currentTick});}else snapshots.delete(id);

@@ -1,3 +1,4 @@
+import {scriptEvents} from './event_router.js';
 export const GUIDE_CAPABILITIES=Object.freeze(['guidebook_localized_labels_v1','guidebook_tavern_shared_projection_v1']);
 /** Small public guide capability: keep the author's renderer and navigation. */
 const methods={
@@ -52,7 +53,7 @@ export function createTavernGuideBridge({system,world,onReturn,warn=console.warn
    }
   }catch{/* Invalid or unrelated event; preserve the existing session. */}
  };
- system.afterEvents.scriptEventReceive.subscribe(receive);
+ scriptEvents(system)('guide_labels_core',receive);
  world.afterEvents.playerLeave.subscribe(event=>{const session=sessions.get(event.playerId);if(session)clear(session,true);});
  return Object.freeze({
   open(player,chapter,locale){
