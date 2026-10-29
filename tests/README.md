@@ -1,6 +1,6 @@
 # Transitional behavior tests
 
-Run `python3 tools/run_legacy_tests.py`. Each retained file runs in an isolated Node
+Run `python3 tools/run_tests.py`. Each retained file runs in an isolated Node
 test process; all 93 existing entrypoints are discovered with no skip list.
 These tests characterize canonical source behavior during P2. They do not prove
 BDS compatibility, visual parity, staging success, or player acceptance.
@@ -168,3 +168,8 @@ captured hand snapshot; input .25 succeeds. This is a fake-boundary runtime
 report, pending independent review and native reproduction. Its 105 recipe
 scenarios are not duplicated here. Shared exposure to hand-route identity
 changes does not establish a common cause with the final-model flash.
+
+The single entrypoint discovers `tests/unit`, `tests/scenario` and the remaining
+`tests/legacy` cases. Domain migration moves the existing tests instead of
+keeping a second copy. `tests/scenario/test_skewer_item_snapshot.mjs` exercises
+the actual skewer/grill callbacks through the shared Minecraft fixture.

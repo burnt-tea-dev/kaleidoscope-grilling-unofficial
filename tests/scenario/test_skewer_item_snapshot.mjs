@@ -159,6 +159,59 @@ for(const corrupt of ['{bad','null','[]','42','"wrong type"'])test('corrupt stac
 // Real main.js subscribers own admission and fourth-flip cache writes. Only
 // the Minecraft API boundary is replaced; no private function is extracted.
 const N='kaleidoscope_grilling:',cookedIngredientsKey=N+'secret_cooked_ingredients';
+async function placedGrillFixture(){
+ const f=await nativeSecretFixture();
+ const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+ const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+ f.emit('world.afterEvents.playerPlaceBlock',{block:grill,player:f.p});f.flush();
+ function interact(){
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
+  assert.equal(event.cancel,true);f.flush();
+ }
+ f.p.main=f.item('minecraft:flint_and_steel');interact();
+ assert.equal(state.readGrillState(grill).lit,true);
+ return Object.assign(f,{grill,grillState:()=>state.readGrillState(grill),contents:storage.stationContainer(grill),interact});
+}
+test('placed grill cooks and returns exactly three beef skewers through player callbacks',async()=>{
+ const f=await placedGrillFixture();
+ try{
+  f.p.main=f.item(N+'raw_beef_skewer',3);
+  for(let count=2;count>=0;count--){f.interact();assert.equal(f.p.main?.amount??0,count);}
+  assert.deepEqual([0,1,2].map(slot=>f.contents.getItem(slot)?.typeId),Array(3).fill(N+'raw_beef_skewer'));
+  const oil=await f.load('oil/cookery_oil_pot_adapter.js');
+  // The public host oil payload and prepared bottle are explicit external inputs.
+  f.p.main=oil.buildCookeryOilPot('canola',3);f.interact();
+  assert.equal(oil.readCookeryOilPot(f.p.main).empty,true);
+  f.p.main=undefined;
+  for(let flip=1;flip<=4;flip++){
+   f.interact();assert.equal(f.grillState().flips,flip);
+   for(let tick=0;tick<20;tick++){f.tick();f.component(N+'grill_tick','onTick',{block:f.grill});}
+  }
+  assert.equal(f.grillState().phase,2);
+  const food=await f.load('food/food_state_adapter.js'),bottle=f.item(N+'special_seasoning');
+  food.setFoodSeasonings(bottle,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);
+  f.data.setItemProperty(bottle,N+'uses',13);f.p.main=bottle;f.interact();
+  assert.equal(f.p.main.typeId,N+'empty_seasoning_bottle');assert.equal(f.grillState().seasoned,true);
+  f.p.main=undefined;f.p.isSneaking=true;f.interact();
+  assert.deepEqual([0,1,2].map(slot=>f.contents.getItem(slot)),[undefined,undefined,undefined]);
+  const ids=await f.load('eating_profile_ids.js');
+  const cooked=f.p.inventory.items().filter(item=>ids.canonicalFoodId(item?.typeId)===N+'grilled_beef_skewer');
+  assert.equal(cooked.reduce((total,item)=>total+item.amount,0),3);
+  assert.ok(cooked.every(item=>food.readFoodSeasonings(item).length===3));
+  assert.equal(f.drops.length,0);assert.equal(f.grillState().phase,0);
+ }finally{f.dispose();}
+});
+for(const phase of ['before','after'])test('grill insertion '+phase+'-write failure preserves the hand and all three empty slots',async()=>{
+ const f=await placedGrillFixture();
+ try{
+  f.p.main=f.item(N+'raw_beef_skewer',3);
+  f.faults.failNext(f.contents,'setItem',{phase,predicate:(_slot,item)=>item?.typeId===N+'raw_beef_skewer'});
+  f.interact();
+  assert.equal(f.p.main.typeId,N+'raw_beef_skewer');assert.equal(f.p.main.amount,3);
+  assert.deepEqual([0,1,2].map(slot=>f.contents.getItem(slot)),[undefined,undefined,undefined]);
+  assert.equal(f.drops.length,0);
+ }finally{f.dispose();}
+});
 async function nativeSecretFixture(options={}){
  const f=createFixture(options);await f.load('main.js');f.startup();f.flush();
  const data=await f.load('itemData.js'),snapshot=await f.load('skewer_item_snapshot.js');

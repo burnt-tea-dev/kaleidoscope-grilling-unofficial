@@ -7,7 +7,7 @@ acceptance testing.
 ```js
 import {createFixture} from '../helpers/minecraft-fixture.mjs';
 const f = createFixture();
-await f.load('a25_plate_recipe_runtime.js');
+await f.load('main.js');
 f.startup();
 const plate = f.block('kaleidoscope_grilling:skewer_plate_block', {x: 0, y: 64, z: 0});
 const player = f.player({location: {x: 0, y: 64, z: 1}});

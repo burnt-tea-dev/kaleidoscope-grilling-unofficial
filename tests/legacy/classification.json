@@ -1609,8 +1609,8 @@
     {
       "original": "development/gameplay_core/test_skewer_item_snapshot.mjs",
       "decision": "retain_pure_part",
-      "target": "tests/legacy/test_skewer_item_snapshot.mjs",
-      "change": "Retain directly imported full metadata roundtrip, malformed snapshot/readback failures, duplicate-ingredient identity and storage-size boundary; source-sliced smoking/use/threading/cache flows deferred to T3.2/T3.3 skewer/T3.4.",
+      "target": "tests/scenario/test_skewer_item_snapshot.mjs",
+      "change": "Retain directly imported full metadata roundtrip, malformed snapshot/readback failures, duplicate-ingredient identity and storage-size boundary; source-sliced smoking/use/threading/cache flows deferred to T3.2/T3.3 skewer/T3.4. T3.1: move the retained metadata and actual-runtime callback scenarios to tests/scenario; the existing Minecraft fixture remains the single API boundary.",
       "follow_up": [
         "eating"
       ]

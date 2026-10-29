@@ -25,7 +25,7 @@ client acceptance and the broader P3/P4 work remain unclaimed.
 這些結果不代表 Minecraft 事件、原生容器、staging 或真人畫面已驗收。
 
 ```sh
-python3 tools/run_legacy_tests.py
+python3 tools/run_tests.py
 ```
 
 runner 執行這個目錄內全部 `test_*.mjs` 與 `*.test.mjs`，不設失敗例外清單，

@@ -352,6 +352,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 > 原則：**先寫能在 fake world 跑的行為測試，固定現在「正確的」行為，再把程式搬到新結構**。遇到現行行為與 Java 不一致時，**先照 Java 修正測試期望值**並在 PARITY.md 記一筆，不要為了保持舊 bug 寫測試。
 
 **T3.1 建立 fake world harness**（`tests/scenario/harness.js`）
+
+目前沿用已建立的 `tests/helpers/minecraft-fixture.mjs` 作唯一 API 邊界；不為目標路徑另造轉呼叫檔。`tests/scenario/test_skewer_item_snapshot.mjs` 執行真正 main 與註冊回呼，涵蓋放置、三槽烤製、取回與故障注入。統一入口 `tools/run_tests.py` 同時收集 unit／scenario／尚未遷移的 legacy；API 模型通過不代替 BDS／真人驗收。
 - 提供：`World`（方塊、permutation、dynamic properties、實體與容器、時間）、`Player`（背包、主副手、飢餓／飽和、效果、property）、`ItemStack`（typeId、amount、dynamic properties、lore、可堆疊判定）、事件觸發（interact、break、explode、itemStartUse/StopUse/CompleteUse、tick）、故障注入（第 N 次寫入拋錯）。
 - 以 `@minecraft/server` 的型別為準，只實作用到的子集；**不 mock 任何 runtime 模組**，透過 import map 把 `@minecraft/server` 換成 harness。
 - 驗收：用 harness 跑通「放烤架→點火→放 3 串生牛肉串→時間推進→取出熟串」的完整流程測試。
