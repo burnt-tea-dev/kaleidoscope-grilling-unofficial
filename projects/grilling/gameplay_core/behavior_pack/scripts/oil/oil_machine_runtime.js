@@ -60,7 +60,7 @@ function registerPress(block){
  pressRegistry.add(registryRow(block));
  pressScheduler.ensure(block);
 }
-function removePressReg(block){pressRegistry.remove(registryRow(block));pressScheduler.cancel(block)}
+function removePressReg(block){pressRegistry.remove(registryRow(block))}
 function decHand(p,hand,count=1){
  if(creative(p))return true;const s=held(p,hand);if(!s||s.amount<count)return false;
  if(s.amount===count)setHand(p,hand,undefined);else{s.amount-=count;setHand(p,hand,s)}return true;

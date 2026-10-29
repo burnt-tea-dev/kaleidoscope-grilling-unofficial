@@ -50,13 +50,9 @@ export function createOilPressScheduler({now,step,report=()=>{}}){
    return true;
   }catch(value){error(value);return false}
  }
- function cancel(block){
-  try{block.removeScheduledNamedTicks(OIL_PRESS_TICK_NAME);return true}
-  catch(value){error(value);return false}
- }
  function onNamedTick(event){
   try{
-   if(!event.isMine()||event.name!==OIL_PRESS_TICK_NAME)return false;
+   if(!event.isName(OIL_PRESS_TICK_NAME))return false;
    const tick=now();
    if(tick!==observedTick){seen.clear();observedTick=tick}
    const id=locationKey(event.block);
@@ -64,7 +60,8 @@ export function createOilPressScheduler({now,step,report=()=>{}}){
    // twice within one game tick. This cache only retains the current tick.
    if(seen.has(id))return false;
    seen.add(id);
-   if(step(event.block))ensure(event.block);else cancel(event.block);
+   // Native delivery consumes the queued tick; only pending work needs rearming.
+   if(step(event.block))ensure(event.block);
    return true;
   }catch(value){
    // Do not discard the persistent pending-work registry on a transient error.
@@ -72,5 +69,5 @@ export function createOilPressScheduler({now,step,report=()=>{}}){
    error(value);return false;
   }
  }
- return {ensure,cancel,onNamedTick};
+ return {ensure,onNamedTick};
 }
