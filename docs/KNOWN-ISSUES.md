@@ -36,7 +36,7 @@
 | OIL-RESIDUE-PLANTS | 已明列 29 類植物適配與兩次作用一次扣料；甜菜四階段對應、竹子 1–2 節與葉片下移、海帶長入水方塊並保留含水層已依 Java 來源實作；未知方塊／掉落／含水層恢復結果不退成本 | 竹子無 Java stage 狀態（僅以 16 高上限停止）、海帶含水層原生 `setWaterlogged` 讀回、其他 feature／外部植物仍缺；正常施肥／採果、上下半、光照／鄰位與重載待 staging 驗 |
 | JAVA-POT-LIFECYCLE | G122 有指定 exact／flex 配方、備料／翻炒／結果階段、保存與品質；有限 Java 品質向量不是完整 PotBlockEntity trace | 真鍋加油→備料→三翻→盛裝、熱源／卸載／重啟、冷卻、兩手連吃、滿包／拆鍋／保存故障及真營養；其他作者配方與未知私有資料不猜轉換 |
 | CUISINE-CONSERVATION | G120／122 修取消後清資料、出料讀回、批次 credit 及手部／站點實際寫入所有權 | 取消／拆鍋／取出／重登／不同 operationId 不得重複交付；確認站點回前像後才補償本次仍擁有的成本；不明保存保持隔離 |
-| EATING-ACCEPTANCE | 完成事件已補兩手／槽／metadata核對，短暫手部視圖恢復已補呈現恢復；API情境通過。G81 僅閉合有完整 counter 的 stop→leave 分支；直接leave無stop由擁有者2026-10-29接受為平台差異：保留未完成食物，不扣份，也不增加營養或效果、重登不補結算，不增永久待辦。BDS1.26.60.6已確認23／25／26／90tick離線無stop；兩手離線／重登API情境通過，真人待驗 | 早停、24／25／26 tick、完整 90 tick FOUR、換手／換槽／連吃、stop→leave／重登；普通副手 air-use 單獨驗；核份數、營養、效果、逐口與音效 |
+| EATING-ACCEPTANCE | 完成事件已補兩手／槽／metadata核對，短暫手部視圖恢復已補呈現恢復；API情境通過。G81 僅閉合有完整 counter 的 stop→leave 分支；直接leave無stop依[擁有者已接受的平台差異](REBUILD-PLAN.md#t3-4-direct-logout-policy)處理。BDS1.26.60.6已確認23／25／26／90tick離線無stop；兩手離線／重登API情境通過，真人待驗 | 早停、24／25／26 tick、完整 90 tick FOUR、換手／換槽／連吃、stop→leave／重登；普通副手 air-use 單獨驗；核份數、營養、效果、逐口與音效 |
 
 G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個整檔與混合檔 16 個定義；八食材新增資產均有 consumer。G156 的有限前後畫面證據保留原候選身份，不能代替 G182 全部既有物品／放置表面的前後對照、完整相關家族與同世界重啟驗收。
 
