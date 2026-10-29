@@ -381,6 +381,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 影子 ID 在這個 PR **還不退役**（存檔裡可能有），只是**不再產生**；新增 runtime 遷移：玩家上線、開啟容器、手持時把影子 ID 換回基礎 ID（保留 metadata）。退役在 P4。
 - 驗收：scenario 測試覆蓋主手／副手進食、中途切換、斷線、連吃；staging 實測三種串；`shadow_route_items` 下降 0（仍保留定義）但 runtime 不再引用它們產生新物品（新增一個 validate 規則：除遷移模組外，腳本不得出現影子 ID 字串）。
 
+- **2026-10-29擁有者離線決定**：直接離線無stop時保留未完成食物，不扣份，也不增加營養或效果，不在下次登入補結算，不新增永久待辦資料。這是接受的Java平台差異；主動停止與正常完成仍依原結算規則。依據為[原生事件及寫入能力實測](../tests/native/eating-debit-spike/observed.json)的logout_events，不把真人斷線驗收補成通過。
+
 **T3.5 player.json 決策落實**（依 D6）
 - 預設方案：移除對 `minecraft:player` 的覆寫，改為 property 需求最小化（目標 ≤ 8 個），並與 Tavern／World Liquor 協調出**家族唯一**的 player.json 由家族共用包提供；若家族無法共用，保留現狀但在 KNOWN-ISSUES 寫明不可與其他覆寫 player 的包共存。
 - 驗收：`vanilla_entity_overrides` 依決策為 0 或維持 1 並記錄；staging 與其他家族包同時啟用時進食與手持畫面正常。
