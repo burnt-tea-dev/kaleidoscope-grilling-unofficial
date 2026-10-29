@@ -2,6 +2,7 @@
 from pathlib import Path
 import copy
 import json
+import shutil
 import validate as assets
 import sys
 import subprocess
@@ -58,6 +59,24 @@ class BridgeProjectTests(unittest.TestCase):
             (folder / 'scripts/core.js').unlink()
             with self.assertRaisesRegex(AssertionError, 'missing or unsafe relative import'):
                 guard.check_pack_structure(folder, manifest, 'BP', baseline['version'])
+
+    def test_cookery_host_extension_export_copies_have_closed_owned_imports(self):
+        bp = guard.ROOT / 'projects/grilling/gameplay_core/behavior_pack'
+        spec = json.loads((bp / 'host-extensions/board-api.json').read_text())
+        baseline = guard.load(guard.ROOT / 'baseline.json')
+        manifest = guard.load(bp / 'manifest.json')
+        with tempfile.TemporaryDirectory() as temporary:
+            exported = Path(temporary)
+            for source, output in spec['copies'].items():
+                destination = exported / output
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(bp / source, destination)
+            (exported / 'scripts/main.js').write_text('// Test host entry; the regular checker scans all copied modules.\n')
+            guard.check_pack_structure(exported, manifest, 'BP', baseline['version'])
+            # Recreate the actual G195 export failure with the real modules.
+            (exported / 'scripts/core/persist.js').unlink()
+            with self.assertRaisesRegex(AssertionError, 'missing or unsafe relative import'):
+                guard.check_pack_structure(exported, manifest, 'BP', baseline['version'])
 
     def test_pack_rejects_platform_specific_entry_paths(self):
         baseline = guard.load(guard.ROOT / 'baseline.json')
