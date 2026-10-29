@@ -323,22 +323,28 @@ test('restored hand views recover the active eating presentation without restart
   }
 });
 
-test('logging out after the Java checkpoint settles a meal even without a stop event',async t=>{
-  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
-  // Java use() splits a stack first: one active serving, with the cleared-profile
-  // remainder returned to inventory. Model that shape, not two held servings.
-  // This driver still does not execute Java use() or Java logout itself.
-  const a=lab.actor(routes.find(x=>x.id===beef),'main',1);
-  a.p.inventory.setItem(7,a.stack.clone());
-  const before=lab.inventory(a.p);a.begin();a.advance(java.minimum_eat_ticks);
-  lab.f.emit('world.beforeEvents.playerLeave',{player:a.p});
-  lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
-  assert.deepEqual(lab.inventory(a.p),before);assert.equal(a.p.inventory.getItem(7).amount,1);
-  assert.equal(a.p.main.amount,1);
-  assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
-  assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,0);
-  const heldCount=a.p.main.amount;
-  await t.test('desired: logout settles the one active serving',{todo:'T3.4: Java onPlayerLoggedOut settles; Bedrock leave only clears the active session'},()=>assert.equal(heldCount,0));
+test('direct logout keeps unfinished food and does not settle it after rejoin',async t=>{
+  // Owner decision 2026-10-29: BDS direct leave has no writable stop callback.
+  // Keep the serving; Java's logout settlement is an accepted platform gap.
+  const route=routes.find(x=>x.profile==='THREE'&&x.kind==='base');
+  for(const hand of ['main','off'])for(const elapsed of [23,25,26,90]){
+    const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+    const a=lab.actor(route,hand,1);a.p.inventory.setItem(7,a.stack.clone());
+    const before=lab.inventory(a.p);a.begin();a.advance(elapsed);
+    lab.f.emit('world.beforeEvents.playerLeave',{player:a.p});
+    a.p.isValid=false;
+    lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
+    lab.f.tick(2);
+    a.p.isValid=true;
+    lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:true});
+    lab.f.tick(2);
+    assert.deepEqual(lab.inventory(a.p),before,hand+'/'+elapsed);
+    assert.equal(a.p[hand].amount,1);assert.equal(a.p.inventory.getItem(7).amount,1);
+    assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+    assert.equal(a.p.components['minecraft:player.saturation'].currentValue,0);
+    assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,0);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+  }
 });
 
 // Preparation scenarios share this domain's real-runtime boundary.
