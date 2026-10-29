@@ -5,6 +5,8 @@ import {
 } from './cookery_host_recipes_core.js';
 import {TAVERN_VINEGAR_IDS} from '../food/stockpot_food_core.js';
 
+const registeredPayloads=new Set();
+
 function optionalRecipeItems(){
  const out=[];
  for(const id of TAVERN_VINEGAR_IDS)try{if(ItemTypes.get(id))out.push(id)}catch{}
@@ -12,7 +14,10 @@ function optionalRecipeItems(){
 }
 function registerReady(info){
  for(const payload of recipesForReady(info,{availableItems:optionalRecipeItems()})){
-  system.sendScriptEvent(KC_REGISTER_EVENT,JSON.stringify(payload));
+  const message=JSON.stringify(payload);
+  if(registeredPayloads.has(message))continue;
+  system.sendScriptEvent(KC_REGISTER_EVENT,message);
+  registeredPayloads.add(message);
  }
 }
 

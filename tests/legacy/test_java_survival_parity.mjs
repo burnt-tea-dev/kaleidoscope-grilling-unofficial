@@ -35,7 +35,11 @@ assert.equal(recipesForReady({api:2,capabilities:['millstone']}).length,0);
 assert.equal(new Set(hosted().map(r=>r.payload.recipe.id)).size,hosted().length);
 for(const name of ['grill','premium_chili_oil','oil_cake','big_vat','pepper_honey','secret_chili_oil','oak_planks_from_pepper_log']){
  const j=load(name+'.json'),b=actualRecipe(name);
- assert.equal(b.result.item,j.result.id);assert.equal(b.result.count,j.result.count??1);
+ if(name==='premium_chili_oil'){
+  assert.deepEqual(b.result,[{item:j.result.id,count:1},{item:'minecraft:bucket',count:1}], 'craft output includes Java lava-bucket remainder');
+ }else{
+  assert.equal(b.result.item,j.result.id);assert.equal(b.result.count,j.result.count??1);
+ }
  if(j.pattern)assert.deepEqual(b.pattern,j.pattern);checked++;
 }
 const grill=actualRecipe('grill');assert.deepEqual(grill.key,{I:{item:'minecraft:iron_ingot'},B:{item:'minecraft:brick'},C:{tag:'minecraft:coals'}});
