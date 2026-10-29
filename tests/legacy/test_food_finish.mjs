@@ -286,35 +286,41 @@ test('beef terminal timeline distinguishes callback reset from an earlier invent
   if(process.env.EATING_TIMELINE_DIR)writeFileSync(join(process.env.EATING_TIMELINE_DIR,'beef-terminal.json'),JSON.stringify(lab.rows,null,2));
 });
 
-// Run setup, runtime and shape assertions in ordinary blocking parents. Only a
-// pure assertion of the desired replacement behavior belongs inside each TODO.
-// Unexpected exceptions or a different corruption must fail the parent normally.
-test('a stale fixed-skewer completion cannot reward a newly selected item',async t=>{
-  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
-  const a=lab.actor(routes.find(x=>x.id===beef));a.begin();a.advance(88);
-  a.p.selectedSlotIndex=1;a.p.main=lab.f.item('minecraft:stone');a.advance(1);
-  const before=lab.inventory(a.p);
-  a.event('itemCompleteUse',0);
-  const actualEffects=lab.f.effects.filter(e=>e.source===a.p);
-  assert.deepEqual(actualEffects.map(e=>[e.effect,e.duration]),[['strength',200]],'known failure shape, not any new effect or exception');
-  assert.deepEqual(lab.inventory(a.p),before);
-  assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
-  assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
-  a.event('itemCompleteUse',0);assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,1);
-  await t.test('desired: the stale completion awards no effect',{todo:'T3.4: fixed completion lacks the current-hand check used for secret skewers'},()=>assert.equal(actualEffects.length,0));
+// Exercise callbacks from main.js; a foreign hand view cannot own completion.
+test('stale fixed-skewer completions cannot reward replacement hands or slots',async t=>{
+  for(const hand of ['main','off'])for(const replacement of ['foreign','metadata',...(hand==='main'?['slot']:[])]){
+    const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+    const a=lab.actor(routes.find(x=>x.id===beef),hand);a.begin();a.advance(88);
+    if(replacement==='slot')a.p.selectedSlotIndex=1;
+    const next=replacement==='metadata'?a.stack.clone():lab.f.item('minecraft:stone');
+    if(replacement==='metadata')next.nameTag='A different serving';
+    a.p[hand]=next;a.advance(1);
+    const before=lab.inventory(a.p);
+    a.event('itemCompleteUse',0);a.event('itemCompleteUse',0);
+    assert.deepEqual(lab.f.effects.filter(e=>e.source===a.p),[],hand+'/'+replacement);
+    assert.deepEqual(lab.inventory(a.p),before);
+    assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
+    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+  }
 });
 
-test('a brief inventory-view mismatch does not strand an active meal at profile zero',async t=>{
-  const lab=await createEatingLab();t.after(()=>lab.f.dispose());
-  const a=lab.actor(routes.find(x=>x.id===beef)),before=lab.inventory(a.p);a.begin();a.advance(70);
-  a.nativeDebit();a.advance(1);
-  assert.equal(a.p.main.amount,1);
-  for(const key of ['eat_profile','eat_hand','eat_native_ticks','eat_elapsed_ticks'])assert.equal(a.p.getProperty('kaleidoscope_grilling:'+key),0);
-  a.p.main=a.stack;a.advance(1);
-  const observed=a.sample('restored-view',true);
-  assert.equal(observed.profile,0);assert.equal(observed.handCode,0);assert.equal(observed.nativeTicks,0);assert.equal(observed.clock,72);
-  assert.deepEqual(lab.inventory(a.p),before);assert.equal(observed.hunger,2);assert.equal(observed.saturation,0);assert.equal(observed.effects,0);
-  await t.test('desired: restored use has its FOUR profile',{todo:'T3.4: current-identity mismatch clears presentation without ending or restoring the session'},()=>assert.equal(observed.profile,5));
+test('restored hand views recover the active eating presentation without restarting progress',async t=>{
+  for(const hand of ['main','off']){
+    const lab=await createEatingLab();t.after(()=>lab.f.dispose());
+    const a=lab.actor(routes.find(x=>x.id===beef),hand),before=lab.inventory(a.p);a.begin();a.advance(70);
+    const projection=a.p.getProperty('kaleidoscope_grilling:eat_projection'),sounds=lab.f.sounds.length;
+    a.nativeDebit();a.advance(1);
+    assert.equal(a.p[hand].amount,1);
+    for(const key of ['eat_profile','eat_hand','eat_native_ticks','eat_elapsed_ticks'])assert.equal(a.p.getProperty('kaleidoscope_grilling:'+key),0);
+    a.p[hand]=a.stack;a.advance(1);
+    const observed=a.sample('restored-view',true);
+    assert.equal(observed.profile,5);assert.equal(observed.handCode,hand==='main'?1:2);assert.equal(observed.nativeTicks,90);assert.equal(observed.clock,72);
+    assert.equal(observed.projection,projection);assert.equal(lab.f.sounds.length,sounds,'do not replay the eating sound');
+    assert.deepEqual(lab.inventory(a.p),before);assert.equal(observed.hunger,2);assert.equal(observed.saturation,0);assert.equal(observed.effects,0);
+    a.advance(18);a.nativeDebit();a.event('itemCompleteUse',0);a.event('itemCompleteUse',0);
+    assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,1,'the recovered meal completes once');
+    assert.equal(a.p[hand].amount,1);
+  }
 });
 
 test('logging out after the Java checkpoint settles a meal even without a stop event',async t=>{
