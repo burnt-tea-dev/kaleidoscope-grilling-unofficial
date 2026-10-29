@@ -1,7 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createFixture} from '../helpers/minecraft-fixture.mjs';
 import {createBoardRegistry,executeBoardOperation,recoverBoardOperation,sampleBoardOutputs,normalizeBoardV2Recipe} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/host_api/board_api_core.js';
-import {BOARD_V2_RECIPES,recipesForReady} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js';
+import {BOARD_V2_RECIPES,recipesForReady,KC_READY_EVENT,KC_REGISTER_EVENT} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/recipe/cookery_host_recipes_core.js';
+import {TAVERN_VINEGAR_IDS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/stockpot_food_core.js';
 import {appendOutcome,isConfiguredIngredient} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer/skewering_core.js';
 import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
 const copy=x=>JSON.parse(JSON.stringify(x));
@@ -33,6 +35,48 @@ function fixture(recipe=recipes[0]){
  return {io,faults,get state(){return copy(state)},get receipt(){return receipt},get held(){return held},get deliveries(){return deliveries},knife(){held=stack('qa:knife')},run(random=()=>0){executeBoardOperation(io,recipe,{random})},prepare(){this.run();this.knife();for(let i=0;i<4;i++)this.run()}};
 }
 test('capability-gated recipes retain immutable author baselines',()=>{const r=createBoardRegistry();for(let i=0;i<2;i++){assert.equal(r.register(BOARD_V2_RECIPES[i]).ok,true);assert.deepEqual(r.select(recipes[i].input,recipes[i].builtin),recipes[i]);assert.equal(r.select(recipes[i].input,{...recipes[i].builtin,cuts:3}),undefined)}assert.equal(recipesForReady({api:1,capabilities:['chopping_board']}).filter(x=>x.kind==='chopping_board_v2').length,0);assert.equal(recipesForReady({api:1,capabilities:['chopping_board_v2']}).length,2)});
+const readyMessage=info=>({id:KC_READY_EVENT,message:JSON.stringify(info)});
+const registered=f=>f.scriptEvents.filter(row=>row.id===KC_REGISTER_EVENT).map(row=>row.message);
+const setupHostRuntime=async f=>{await f.load('recipe/cookery_host_recipes_runtime.js');f.flush();f.scriptEvents.length=0;};
+test('Cookery-ready broadcasts send each accepted recipe once, with only new capability and item rows added',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await setupHostRuntime(f);
+ let vinegarAvailable=false;
+ f.server.ItemTypes.get=id=>vinegarAvailable||!TAVERN_VINEGAR_IDS.includes(id)?{id}:undefined;
+ const base={api:1,capabilities:['stockpot_exact','stockpot_flex']};
+ f.emit('system.afterEvents.scriptEventReceive',readyMessage(base));
+ const initial=registered(f),expectedInitial=recipesForReady(base);
+ assert.deepEqual(initial,expectedInitial.map(JSON.stringify));
+ for(let i=0;i<14;i++)f.emit('system.afterEvents.scriptEventReceive',readyMessage(base));
+ assert.deepEqual(registered(f),initial,'repeated identical ready broadcasts do no recipe work');
+
+ const expanded={...base,capabilities:[...base.capabilities,'chopping_board_v2']};
+ f.emit('system.afterEvents.scriptEventReceive',readyMessage(expanded));
+ const afterCapability=registered(f),initialSet=new Set(initial);
+ const newCapabilities=recipesForReady(expanded).map(JSON.stringify).filter(message=>!initialSet.has(message));
+ assert.deepEqual(afterCapability,[...initial,...newCapabilities]);
+ vinegarAvailable=true;
+ f.emit('system.afterEvents.scriptEventReceive',readyMessage(expanded));
+ const final=registered(f),sentSet=new Set(afterCapability);
+ const newItems=recipesForReady(expanded,{availableItems:TAVERN_VINEGAR_IDS}).map(JSON.stringify).filter(message=>!sentSet.has(message));
+ assert.deepEqual(final,[...afterCapability,...newItems],'newly available vinegar recipes are sent later');
+ assert.equal(new Set(final).size,final.length,'no serialized recipe is sent twice');
+});
+test('failed recipe sends retry only the unsent suffix on the next ready event',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await setupHostRuntime(f);
+ const original=f.system.sendScriptEvent.bind(f.system);let recipeSends=0,failOnce=true;
+ f.system.sendScriptEvent=(id,message)=>{
+  if(id===KC_REGISTER_EVENT&&++recipeSends===3&&failOnce){failOnce=false;throw Error('temporary Script Event rejection');}
+  return original(id,message);
+ };
+ const info={api:1,capabilities:['chopping_board_v2','millstone']};
+ f.emit('system.afterEvents.scriptEventReceive',readyMessage(info));
+ const expected=recipesForReady(info,{availableItems:TAVERN_VINEGAR_IDS}).map(JSON.stringify);
+ const first=registered(f);assert.deepEqual(first,expected.slice(0,2),'only sends before the rejected message are accepted');
+ f.emit('system.afterEvents.scriptEventReceive',readyMessage(info));
+ const final=registered(f);
+ assert.deepEqual(final,expected,'the rejected message and remaining rows retry, prior accepted rows do not');
+ assert.equal(new Set(final).size,final.length);
+});
 test('conflicting registrants fail closed independently of arrival order',()=>{for(const reversed of [false,true]){const r=createBoardRegistry(),a=copy(BOARD_V2_RECIPES[0]),b=copy(a);b.recipe.count=3;for(const p of reversed?[b,a]:[a,b])r.register(p);assert.equal(r.select(a.recipe.input,a.recipe.builtin),undefined);assert.equal(r.register(a).ok,false)}});
 test('malformed recipe rejected',()=>{for(const field of ['input','builtin','mode','bonusOutputs']){const p=copy(BOARD_V2_RECIPES[1]);p.recipe[field]=null;assert.equal(normalizeBoardV2Recipe(p),undefined)}});
 for(const [i,r] of recipes.entries())test('four native-style cuts and fifth release: '+r.input,()=>{const f=fixture(r);f.prepare();assert.equal(f.state.cuts,4);assert.equal(f.deliveries.length,0);assert.equal(f.held.damage,4);f.run(()=>.9999);assert.deepEqual(f.deliveries,sampleBoardOutputs(r,()=>.9999));assert.equal(f.held.damage,4);assert.deepEqual(f.state,{});assert.equal(f.receipt.phase,'committed');f.run();assert.equal(f.deliveries.length,i===0?1:3)});
