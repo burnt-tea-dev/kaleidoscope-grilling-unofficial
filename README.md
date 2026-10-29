@@ -1,26 +1,50 @@
-# 煙火：非官方 Bedrock 移植
+# 森羅物語：煙火 — 非官方 Bedrock 移植
 
-重建進行中。已實作部分 Java 1.1.1 玩法與畫面；完整原生操作、效能與真人驗收仍有缺口，見 [PARITY](docs/PARITY.md) 和 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
+Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串、刷油與調味，到烤製、擺盤和享用料理。
 
-## 安裝與版本
+[下載 / Downloads](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases) · [更新紀錄](CHANGELOG.md)
 
-公開下載使用 [Releases](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases)，依 [安裝與相依](docs/RELEASING.md) 選對 Cookery 配套。Git 主線是開發來源，不能當成已公開發布或已安裝的版本。
+## 功能
 
-目前來源身份、BP/RP 與精確相依只維護在 [baseline.json](baseline.json)。26.60 命名排程／音效來源需要對應引擎與 Beta APIs；世界要求見同一檔案的 `required_experiments`。來源、CI、staging、部署及真人結果各自記錄；`client=false`、`production_ready=false` 維持至有實際驗收。
+- 組合食材製作烤串，管理火候、翻面、油與調料。
+- 製作食用油，種植相關作物並利用加工副產物。
+- 使用餐盤、料理架等器具取放料理。
+- 透過 Cookery 指南中的煙火入口查閱分類與配方。
+
+**重建仍在進行，尚非完整 Java 1.1.1 還原。** 部分原生操作、食用呈現及效能仍待修復或真人驗證；具體差異見[功能對照](docs/PARITY.md)與[已知問題](docs/KNOWN-ISSUES.md)。
+
+## 安裝
+
+1. 備份世界，從 **Releases** 下載 `.mcaddon`；GitHub 原始碼 ZIP 不是安裝包。
+2. 依該版說明取得指定版本的 **Cookery BP／RP 與相容宿主整合**，再啟用煙火的 BP／RP。
+3. 使用所選版本要求的 Minecraft 版本與實驗設定。開發主線已使用 Beta APIs，不能套用舊版安裝條件。
+
+**煙火目前不是單獨匯入即可完整使用的 addon。** 普通 `.mcaddon` 匯入不會替 Cookery 安裝所需宿主 API；僅放入原作者 Cookery 包仍不等於完成整合。下載只含煙火自有內容，不含 Cookery 或私有家族整合。詳見[安裝與發布](docs/RELEASING.md)。
+
+## 語言
+
+物品名稱等資源文字使用 Minecraft 的語言檔；遊戲內指南由 Cookery 宿主提供。資源文字與指南的語言支援分開核對，不能把存在語言檔視為所有介面都已翻譯。
 
 ## 開發
 
-- 入口：[AGENTS](AGENTS.md) → [重建計劃](docs/REBUILD-PLAN.md)。
-- 代碼與保存：[架構](docs/ARCHITECTURE.md)、[存檔相容](docs/SAVE-COMPAT.md)。
-- 指南與跨包：[GUIDE-STANDARD](docs/GUIDE-STANDARD.md)、[整合 API](docs/BEDROCK-INTEGRATION-API.md)。
-- 原始配方、時長與效果：[data/java](data/java/)；來源萃取：[tools/java_extract](tools/java_extract/README.md)。
+需要 Python 3 與 Node.js；CI 使用 Python 3.12／Node.js 22。正式來源在 [`projects/grilling/gameplay_core`](projects/grilling/gameplay_core/)，Java 配方、時長和效果資料在 [`data/java`](data/java/)。
 
-方塊互動由共同路由選一個玩法主責，視覺與庫存觀察另外處理。定時工作共用排程器；Cookery 的公開宿主 API 在它自己的包內執行。不要重新增加平行點擊監聽、逐版補丁模組或獨立輪詢。
+先讀 [AGENTS.md](AGENTS.md) 與[重建計畫](docs/REBUILD-PLAN.md)，再執行相關功能測試及基本檢查：
 
-檢查使用 [既有 CI](.github/workflows/ci.yml)；工具／文件不改輸出時不升包、不重啟。測試只在測試服或隔離世界執行，保留玩家物品、保存鍵和包身份。
+```sh
+python3 tools/baseline_gate.py check
+python3 tools/guards/save_compat.py check
+python3 tools/guards/growth_ratchet.py check
+```
 
-## 來源與授權
+[`baseline.json`](baseline.json) 記錄來源版本、精確相依及實驗要求。保留既有物品與存檔身份；不要用增加物品變體、平行互動監聽或逐版補丁代替共用功能修復。
 
-主要 Java 來源為 `breezeth-CN/KaleidoscopeGrilling@9a1acdab…`。原碼、素材及工具的個別授權見 [ATTRIBUTION](projects/grilling/ATTRIBUTION.md)。公開庫不包含作者完整 Cookery 包、私有整合、世界或憑證。
+## 問題回報
 
-歷史變更見 [CHANGELOG](CHANGELOG.md) 和 [重建前 archive tag](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/archive/pre-rebuild-20261018)。
+請提供煙火／Cookery／Minecraft 版本、宿主整合方式、實驗設定、重現步驟和預期結果。食用、手持或動畫問題請附短片；勿公開世界、憑證或第三方完整包。
+
+## 鳴謝與授權
+
+原作：**breezeth** 的 [KaleidoscopeGrilling](https://github.com/breezeth-CN/KaleidoscopeGrilling)，並包含 Kaleidoscope Cookery 團隊素材。本專案並非原作者或 Minecraft 官方發布。
+
+原始程式碼採 [BSD-3-Clause](data/java/LICENSE-CODE)，原始及衍生美術採 [CC BY-NC-SA 4.0](data/java/LICENSE-ASSETS)；工具另依各自授權。完整出處見 [ATTRIBUTION](projects/grilling/ATTRIBUTION.md)。
