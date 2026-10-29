@@ -183,19 +183,20 @@ function kelpColumn(f,ages,waterAbove=2,x=0){
 }
 const kelpRow=(f,y,x=0)=>[at(f,y,x).typeId,at(f,y,x).permutation.getState('kelp_age'),at(f,y,x).isWaterlogged];
 
-test('kelp grows one head per pass into water, keeps the liquid layer and ages the former head to zero',async()=>{
+test('kelp grows one head per pass into water, keeps the liquid layer and leaves former heads at their stored age',async()=>{
  const {f,api}=await fertilizerWorld();
  const [base]=kelpColumn(f,[3,5]);
  const r=use(f,api,base);
  assert.equal(r.ok,true);assert.equal(r.left,2);
- assert.deepEqual([0,1,2,3].map(y=>kelpRow(f,y)),[['minecraft:kelp',3,true],['minecraft:kelp',0,true],['minecraft:kelp',0,true],['minecraft:kelp',7,true]]);
+ assert.deepEqual([0,1,2,3].map(y=>kelpRow(f,y)),[['minecraft:kelp',3,true],['minecraft:kelp',5,true],['minecraft:kelp',6,true],['minecraft:kelp',7,true]]);
+ assert.equal(f.writes.some(w=>w.method==='setPermutation'&&w.target===at(f,1)),false,'the former head is never rewritten');
  assert.equal(at(f,4).typeId,'minecraft:stone');
  // Stone above the new head: no water to grow into, nothing consumed.
  const blocked=use(f,api,base);
  assert.equal(blocked.ok,false);assert.equal(blocked.left,3);
  const [capped]=kelpColumn(f,[25],1,5);
  assert.equal(use(f,api,capped).ok,true);
- assert.deepEqual([kelpRow(f,0,5),kelpRow(f,1,5)],[['minecraft:kelp',0,true],['minecraft:kelp',25,true]]);
+ assert.deepEqual([kelpRow(f,0,5),kelpRow(f,1,5)],[['minecraft:kelp',25,true],['minecraft:kelp',25,true]]);
 });
 
 test('a rejected later kelp write restores the replaced water and its liquid layer exactly and refunds the cost',async()=>{
@@ -216,9 +217,8 @@ test('an unacknowledged kelp liquid layer keeps the paid cost and quarantines th
  f.faults.failNext(at(f,2),'setWaterlogged');
  const r=use(f,api,base);
  assert.equal(r.ok,false);assert.equal(r.left,2);
- // The second pass had already planned age zero for this block; the native
- // liquid layer never acknowledged, so nothing is guessed back to water.
- assert.deepEqual(kelpRow(f,2),['minecraft:kelp',0,false]);
+ // The native liquid layer never acknowledged, so nothing is guessed back to water.
+ assert.deepEqual(kelpRow(f,2),['minecraft:kelp',6,false]);
  assert.deepEqual(kelpRow(f,1),['minecraft:kelp',5,true]);
  assert.equal(api.plantMutationAllowed(base),false);
 });

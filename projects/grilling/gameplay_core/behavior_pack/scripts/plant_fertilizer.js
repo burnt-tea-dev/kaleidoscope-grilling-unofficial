@@ -474,14 +474,14 @@ for(const [id,ageState,dy] of [
 
 // Java KelpBlock is the same GrowingPlantHeadBlock contract growing upward
 // into any water block (source or flowing), exactly one block per use, with
-// the head's age carried up and capped at 25. The body below the new head is
-// ageless in Java; Bedrock keeps the representative age zero used for vines.
+// the head's age carried up and capped at 25. Java's body block is ageless;
+// Bedrock renders a covered kelp as body by itself, so the former head keeps
+// its stored age untouched (owner decision 2026-10-29) and is never written.
 const KELP='minecraft:kelp',KELP_WATER=new Set(['minecraft:water','minecraft:flowing_water']);
 registerPlantFertilizer(KELP,(block,journal)=>{
  const {tip,next}=growingPlantHead(block,journal,KELP,'kelp_age',1);
  if(!KELP_WATER.has(next.permutation.type.id))return false;
  const grown=BlockPermutation.resolve(KELP,{kelp_age:Math.min(tip.permutation.getState('kelp_age')+1,25)});
- journal.set(tip.block,tip.permutation.withState('kelp_age',0));
  // The replaced water must stay in the liquid layer under the new head, and
  // a rollback has to read the original water back exactly.
  journal.set(next.block,grown,{waterlogged:true});
