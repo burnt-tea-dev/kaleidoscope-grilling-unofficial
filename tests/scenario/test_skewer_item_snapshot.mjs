@@ -172,6 +172,15 @@ async function placedGrillFixture(){
  assert.equal(state.readGrillState(grill).lit,true);
  return Object.assign(f,{grill,grillState:()=>state.readGrillState(grill),contents:storage.stationContainer(grill),interact});
 }
+async function nativeGrillInteractionFixture(statePatch={}){
+ const f=createFixture();await f.load('main.js');f.startup();f.flush();
+ const player=f.p=f.player(),grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+ const state=await f.load('grill/grill_state_adapter.js'),logic=await f.load('core_logic.js');
+ f.dp.set(state.grillStateKey(grill),JSON.stringify({...logic.initialState(),phase:1,heatTicks:1200,...statePatch}));
+ return Object.assign(f,{grill,grillState:()=>state.readGrillState(grill),nativeInteract(overrides={}){
+  return f.component(N+'grill_tick','onPlayerInteract',{block:grill,player,...overrides});
+ }});
+}
 test('placed grill cooks and returns exactly three beef skewers through player callbacks',async()=>{
  const f=await placedGrillFixture();
  try{
@@ -199,6 +208,53 @@ test('placed grill cooks and returns exactly three beef skewers through player c
   assert.equal(cooked.reduce((total,item)=>total+item.amount,0),3);
   assert.ok(cooked.every(item=>food.readFoodSeasonings(item).length===3));
   assert.equal(f.drops.length,0);assert.equal(f.grillState().phase,0);
+ }finally{f.dispose();}
+});
+test('normal grill before event plus native component flips exactly once and cancels vanilla use',async()=>{
+ const f=await nativeGrillInteractionFixture();
+ try{
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:undefined,blockFace:'Up',isFirstEvent:true,cancel:false});
+  assert.equal(event.cancel,true);f.nativeInteract();f.flush();
+  assert.equal(f.grillState().flips,1);
+ }finally{f.dispose();}
+});
+test('native grill component does not bypass the ordinary long-press filter',async()=>{
+ const f=await nativeGrillInteractionFixture();
+ try{
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:undefined,blockFace:'Up',isFirstEvent:false,cancel:false});
+  assert.equal(event.cancel,true);f.nativeInteract();f.flush();
+  assert.equal(f.grillState().flips,0);
+ }finally{f.dispose();}
+});
+test('native-only grill interaction uses the real component for two readable empty hands',async()=>{
+ const f=await nativeGrillInteractionFixture();
+ try{
+  f.nativeInteract();
+  assert.equal(f.grillState().flips,1);assert.equal(f.grillState().flipCooldown,20);
+ }finally{f.dispose();}
+});
+test('native grill component leaves an offhand item untouched and does not guess its hand',async()=>{
+ const f=await nativeGrillInteractionFixture();
+ try{
+  f.p.off=f.item('minecraft:stick',2);f.nativeInteract();
+  assert.equal(f.grillState().flips,0);assert.equal(f.p.off.typeId,'minecraft:stick');assert.equal(f.p.off.amount,2);
+ }finally{f.dispose();}
+});
+test('native grill component fails closed when hand readability is unavailable',async()=>{
+ const f=await nativeGrillInteractionFixture();
+ try{
+  f.p.equipment.getEquipment=()=>{throw Error('equippable unreadable')};f.nativeInteract();
+  assert.equal(f.grillState().flips,0);
+ }finally{f.dispose();}
+});
+test('native grill component cannot bypass a selected-slot change after normal before admission',async()=>{
+ const f=await nativeGrillInteractionFixture({phase:0});
+ try{
+  f.p.main=f.item('minecraft:flint_and_steel');const original=f.p.main;
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:original,blockFace:'Up',isFirstEvent:true,cancel:false});
+  assert.equal(event.cancel,true);f.p.selectedSlotIndex=1;f.nativeInteract();f.flush();
+  assert.equal(f.grillState().lit,false);assert.equal(f.grillState().flips,0);
+  assert.equal(f.p.inventory.getItem(0).typeId,'minecraft:flint_and_steel');assert.equal(f.p.main,undefined);
  }finally{f.dispose();}
 });
 for(const phase of ['before','after'])test('grill insertion '+phase+'-write failure preserves the hand and all three empty slots',async()=>{

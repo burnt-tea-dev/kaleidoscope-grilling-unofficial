@@ -15,7 +15,7 @@ import {EAT_ELAPSED_TICKS_PROPERTY,EAT_HAND_PROPERTY,EAT_NATIVE_TICKS_PROPERTY,E
 import {forgetHeavyMetalRescue} from "../heavy_metal_damage_runtime.js";
 import {clearEffects} from "../effect_state_runtime.js";
 import {forgetNumbVisual} from "../numb_visual_runtime.js";
-import {getMainHand as heldMain} from "../core/player_io.js";
+import {captureWritableHand,getMainHand as heldMain} from "../core/player_io.js";
 import {tickGrillDisplay} from "../grill_visual_runtime.js";
 import {onBlockInteraction} from "../core/events.js";
 import {tryScheduleBeefBoardOverride} from "../recipe/beef_board_runtime.js";
@@ -25,6 +25,27 @@ import {interactionFailure} from "../core/interaction_feedback.js";
 import {every,onlinePlayers} from "../core/scheduler.js";
 import {readSlimeWorldFrame} from "../slime_frame_runtime.js";
 const STORAGE_SORT_BLOCKS=new Set(['minecraft:chest','minecraft:trapped_chest','minecraft:barrel']);
+const recentGrillBeforeInteractions=new Map();
+
+function grillBlockKey(block){
+ const {x,y,z}=block.location;
+ return `${block.dimension.id}:${x},${y},${z}`;
+}
+
+function handleNativeGrillInteraction({block,player}){
+ if(!block?.isValid||block.typeId!==GRILL_ID||!player?.isValid)return;
+ const previous=recentGrillBeforeInteractions.get(player.id);
+ if(previous?.tick===system.currentTick&&previous.block===grillBlockKey(block))return;
+ let main,off;
+ try{
+  main=captureWritableHand(player,'main').before;
+  off=captureWritableHand(player,'off').before;
+ }catch{return}
+ // The component callback has no event item or hand. Only a readable pair of
+ // empty hands gives it an unambiguous main-hand intent.
+ if(main!==undefined||off!==undefined)return;
+ handleGrill(block,player,'main');
+}
 
 function handleCustomBlockInteraction(block,player,intent){
  if(!block||(block.typeId!==GRILL_ID&&!isSeasoningBlock(block.typeId)))return;
@@ -36,6 +57,7 @@ function handleCustomBlockInteraction(block,player,intent){
 // Native use poses cancel with the use action; no global zero-pose reset may override
 // the next held item. Release server bookkeeping as well when a player disconnects.
 world.afterEvents.playerLeave.subscribe(({playerId})=>{
+ recentGrillBeforeInteractions.delete(playerId);
  forgetPlayerFood(playerId);forgetPlayerEffects(playerId);forgetPlayerSkewer(playerId);
 });
 
@@ -47,12 +69,13 @@ world.beforeEvents.playerInteractWithEntity.subscribe(e=>{
 
 // Stable Script API placement capture, including all materialized seasoning IDs.
 system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
- blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_tick',{onTick(e){tickGrill(e.block);tickGrillDisplay(e.block)}});
+ blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_tick',{onTick(e){tickGrill(e.block);tickGrillDisplay(e.block)},onPlayerInteract:handleNativeGrillInteraction});
  blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_legs_tick',{onTick(e){try{const above=e.block.above();if(above&&above.typeId!==GRILL_ID)e.block.setType('minecraft:air')}catch{}}});
  blockComponentRegistry.registerCustomComponent('senluo:grilling_bottle_place',{beforeOnPlayerPlace:scheduleNativeBottlePlacement,onTick(e){try{tickNativeBottleSupport(e.block)}catch(error){console.warn('[Grilling bottle support recovery] '+error)}}});
 });
 
 onBlockInteraction('main',e=>{
+ if(e.block?.typeId===GRILL_ID&&e.player?.id)recentGrillBeforeInteractions.set(e.player.id,{block:grillBlockKey(e.block),tick:system.currentTick});
  if(e.cancel)return;
  if(tryScheduleOffhandBottleInteraction(e))return;
  if(tryScheduleBeefBoardOverride(e))return;
