@@ -1,6 +1,7 @@
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 // Pinned SkeweringHandler: stored 4..9 values carry shape and GUI-variant bits.
 // Low-byte food indices preserve old client properties during migration.
-export const SECRET_MODEL_VARIANTS_KEY='kaleidoscope_grilling:model_variants';
+export const SECRET_MODEL_VARIANTS_KEY=PersistedKey.MODEL_VARIANTS;
 export const SECRET_FOOD_COUNT=225;
 export const SECRET_VISUAL_MAX=5345; // 225 foods + 256*(2 shapes + 3*6 stage styles)
 // Preserve old helpers 0..213 and 221..224. Markers 214..220 and

@@ -9,8 +9,9 @@ import {
 } from './wedding_candy_core.js';
 import {pepperHoneyEffectRow} from './sugared_tomato_pepper_honey_core.js';
 import {stockpotEffectRows} from './stockpot_food_core.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 
-export const FX_KEY='kaleidoscope_grilling:a21_fx';
+export const FX_KEY=PersistedKey.A21_FX;
 
 const ROWS=Object.freeze([
  Object.freeze({

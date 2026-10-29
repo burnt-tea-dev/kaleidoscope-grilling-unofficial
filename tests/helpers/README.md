@@ -28,7 +28,7 @@ URLs propagates through the entire graph, so private caches and registrations
 belong to that fixture.
 
 Use `await f.load(name)` for runtime exports and for helpers with module state
-(such as `itemData.js`, `skewer_item_snapshot.js`, and transaction signatures).
+(such as `core/persist.js`, `skewer_item_snapshot.js`, and transaction signatures).
 All loads on one fixture share its graph. State-free modules may be imported
 statically. For retained tests with static Minecraft imports, preload a default
 fixture:
@@ -78,7 +78,7 @@ using Bedrock item-component objects. The fixture does not load or modify the
 host pack.
 
 Stackable items reject native dynamic-property writes. Use the real, same-graph
-`itemData.js` exports for Grilling's portable metadata (world records plus lore
+`core/persist.js` exports for Grilling's portable metadata (world records plus lore
 tokens); tests must not bypass that adapter.
 
 `f.player({main, off, inventorySize, selectedSlotIndex, location, gameMode,

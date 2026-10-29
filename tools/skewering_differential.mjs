@@ -105,7 +105,7 @@ const tags=json('data/java/tags.json').resources;
 const recipes=resources['common/src/main/resources/data/kaleidoscope_grilling/grilling/skewers.json'].data.skewers.filter(r=>r.ingredients.length);
 const {createFixture}=await import(new URL('tests/helpers/minecraft-fixture.mjs',url));
 const f=createFixture();await f.load('main.js');f.startup();f.flush();
-const data=await f.load('itemData.js'),snapshot=await f.load('skewer_item_snapshot.js');
+const data=await f.load('core/persist.js'),snapshot=await f.load('skewer_item_snapshot.js');
 const core=await f.load('skewer/skewering_core.js'),ids=await f.load('eating_profile_ids.js');
 const failures=await f.load('failure_skewer_visual_core.js'),grill=await f.load('core_logic.js');
 const {SECRET_MODEL_VARIANTS_KEY}=await f.load('secret_visual_state_core.js');
@@ -287,7 +287,7 @@ run('failure-source','real grill state chooses dark on timeout and mysterious on
  assert.equal(grill.outputKind(timed),'dark');assert.equal(grill.breakDisposition(timed),'dark');
  return {earlyBreak:'mysterious',timeoutExtract:'dark',timeoutBreak:'dark'};
 });
-const stateAdapter=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+const stateAdapter=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
 let stationNumber=0;
 for(const source of [N+'raw_beef_skewer',N+'secret_skewer'])for(const action of ['dark-extract','dark-break','mysterious-break'])run('failure-station',`${source} ${action}`,()=>{
  clear();const block=f.block(N+'grill',{x:10+(stationNumber++)*3,y:80,z:0});

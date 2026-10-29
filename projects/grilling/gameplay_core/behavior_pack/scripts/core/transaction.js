@@ -1,6 +1,8 @@
-import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
-import {commitSteps} from './grill/grill_transaction_core.js';
-import {planInventoryInsert} from './rack_transfer_plan.js';
+import {getWorldProperty,setWorldProperty} from './persist.js';
+import {captureSkewerMetadata,metadataSignature} from '../skewer_item_snapshot.js';
+import {commitSteps} from '../grill/grill_transaction_core.js';
+import {planInventoryInsert} from '../rack_transfer_plan.js';
+import {PERSISTED_KEY as PersistedKey} from './persist_keys.js';
 
 // Call only in an unrestricted phase: includes native restrictions/enchantments.
 export function nativeItemSignature(stack){
@@ -66,23 +68,23 @@ export function planOwnedInventoryDelivery(container,outputs,{startingItems,dime
  return {steps,canRestoreInputs:()=>pending.size===0};
 }
 
-const playerTransactions=new WeakMap(),PLAYER_ITEM_RECEIPT='kaleidoscope_grilling:player_item_receipt_';
+const playerTransactions=new WeakMap(),PLAYER_ITEM_RECEIPT=PersistedKey.PLAYER_ITEM_RECEIPT_PREFIX;
 export function commitPlayerItemTransaction(world,player,steps,{tick=0,label='items'}={}){
  let cache=playerTransactions.get(world);if(!cache){cache={faults:new Set(),sequence:0};playerTransactions.set(world,cache)}
  const key=PLAYER_ITEM_RECEIPT+encodeURIComponent(player.id);
- if(cache.faults.has(key)||world.getDynamicProperty(key)!==undefined)throw Error('Grilling: player item transaction requires recovery');
+ if(cache.faults.has(key)||getWorldProperty(world,key)!==undefined)throw Error('Grilling: player item transaction requires recovery');
  const receipt=JSON.stringify({v:1,player:player.id,label,attempt:tick+':'+(++cache.sequence)});
  cache.faults.add(key);
  function release(){
-  const current=world.getDynamicProperty(key);
+  const current=getWorldProperty(world,key);
   if(current!==undefined&&current!==receipt)throw Error('Grilling: item receipt owner changed');
-  if(current===receipt)world.setDynamicProperty(key,undefined);
-  if(world.getDynamicProperty(key)!==undefined)throw Error('Grilling: item receipt cleanup unconfirmed');
+  if(current===receipt)setWorldProperty(world,key,undefined);
+  if(getWorldProperty(world,key)!==undefined)throw Error('Grilling: item receipt cleanup unconfirmed');
   cache.faults.delete(key);
  }
  try{
-  world.setDynamicProperty(key,receipt);
-  if(world.getDynamicProperty(key)!==receipt)throw Error('Grilling: item receipt not saved');
+  setWorldProperty(world,key,receipt);
+  if(getWorldProperty(world,key)!==receipt)throw Error('Grilling: item receipt not saved');
  }catch(error){try{release()}catch{};throw error}
  const result=commitSteps(steps);
  // A prepared receipt blocks retries after a crash or uncertain rollback. It

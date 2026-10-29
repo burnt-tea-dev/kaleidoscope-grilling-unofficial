@@ -1,11 +1,13 @@
+import {getWorldProperty,setWorldProperty} from './persist.js';
 /** Persistent native ItemStacks for Grilling-owned stations and placed seasoning bottles.
  * The ledger belongs to this BP. It never reads Cookery's private properties.
  * Helpers are inventories, NOT disposable visual entities. Never regenerate a
  * missing/corrupt linked inventory as an empty one, or garbage-collect its items.
  */
 import {world,system} from '@minecraft/server';
-export const STORAGE_PREFIX='kaleidoscope_grilling:storage_v1/';
-export const STORAGE_OWNER='kaleidoscope_grilling:storage_owner_v1';
+import {PERSISTED_KEY as PersistedKey} from './persist_keys.js';
+export const STORAGE_PREFIX=PersistedKey.STORAGE_PREFIX;
+export const STORAGE_OWNER=PersistedKey.STORAGE_OWNER;
 export const STORAGE_TYPES=Object.freeze({
  'kaleidoscope_grilling:grill':Object.freeze({slots:3,entity:'kaleidoscope_grilling:inventory_grill_v1'}),
  'kaleidoscope_grilling:advanced_rack_block':Object.freeze({slots:9,entity:'kaleidoscope_grilling:inventory_rack_v1'}),
@@ -23,7 +25,7 @@ export function storageKey(block){
 }
 const anchor=block=>({x:block.location.x+.5,y:block.location.y+.25,z:block.location.z+.5});
 function readRecord(block){
- const key=storageKey(block),raw=world.getDynamicProperty(key);
+ const key=storageKey(block),raw=getWorldProperty(world,key);
  if(raw===undefined)return undefined;
  if(typeof raw!=='string')fail('invalid ledger type');
  let r;try{r=JSON.parse(raw)}catch{fail('invalid ledger JSON')}
@@ -55,15 +57,15 @@ function resolve(block,r,rebind=true){
   entity=found[0];
   // Native IDs normally persist. Rebind only to the exact persisted owner token.
   container(entity,r,block);const next={...r,entity:entity.id};
-  if(rebind)world.setDynamicProperty(r.key,JSON.stringify(next));r=next;
+  if(rebind)setWorldProperty(world,r.key,JSON.stringify(next));r=next;
  }
  return {entity,c:container(entity,r,block)};
 }
 function commitNewRecord(block,entity,mark){
  const r={...mark,entity:entity.id};
  const c=container(entity,r,block);
- world.setDynamicProperty(r.key,JSON.stringify(r));
- if(world.getDynamicProperty(r.key)!==JSON.stringify(r))fail('ledger commit not confirmed');
+ setWorldProperty(world,r.key,JSON.stringify(r));
+ if(getWorldProperty(world,r.key)!==JSON.stringify(r))fail('ledger commit not confirmed');
  return c;
 }
 export function stationContainer(block){
@@ -94,7 +96,7 @@ export function stationContainer(block){
  }catch(error){
   // This fresh helper has never been returned to a caller. Do not delete any
   // pre-existing helper, and do not remove a record whose commit succeeded.
-  if(world.getDynamicProperty(mark.key)===undefined){try{entity.remove()}catch{}}
+  if(getWorldProperty(world,mark.key)===undefined){try{entity.remove()}catch{}}
   throw error;
  }
 }
@@ -112,8 +114,8 @@ function finishEmptyRetirement(block,r){
   for(let i=0;i<c.size;i++)if(c.getItem(i))fail('refusing to retire nonempty inventory');
   entity.remove();
  }
- world.setDynamicProperty(r.key,undefined);
- if(world.getDynamicProperty(r.key)!==undefined)fail('retired ledger not cleared');
+ setWorldProperty(world,r.key,undefined);
+ if(getWorldProperty(world,r.key)!==undefined)fail('retired ledger not cleared');
  return true;
 }
 /** Call AFTER the station was removed and AFTER its item transaction succeeded. */
@@ -127,8 +129,8 @@ export function retireEmptyStationContainer(block){
  // Persist the empty proof BEFORE removal. A later failure can retry without
  // treating a missing nonempty helper as empty or reconstructing lost items.
  const retired={...r,retiredEmpty:true};
- world.setDynamicProperty(r.key,JSON.stringify(retired));
- if(world.getDynamicProperty(r.key)!==JSON.stringify(retired))fail('retirement intent not persisted');
+ setWorldProperty(world,r.key,JSON.stringify(retired));
+ if(getWorldProperty(world,r.key)!==JSON.stringify(retired))fail('retirement intent not persisted');
  return finishEmptyRetirement(block,retired);
 }
 /** Inspection creates no helpers and transfers no items. */
@@ -163,6 +165,6 @@ export function inspectStationStorage(block){
 export function quarantineStation(block,reason){
  const r=readRecord(block);if(!r)fail('cannot quarantine absent ledger');
  const next={...r,quarantine:String(reason).slice(0,240)};
- world.setDynamicProperty(r.key,JSON.stringify(next));
- if(world.getDynamicProperty(r.key)!==JSON.stringify(next))fail('quarantine not persisted');
+ setWorldProperty(world,r.key,JSON.stringify(next));
+ if(getWorldProperty(world,r.key)!==JSON.stringify(next))fail('quarantine not persisted');
 }

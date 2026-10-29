@@ -1,3 +1,4 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {DEFAULT_SEASONING_EFFECTS,seasoningKind,hasSeasoningMapping} from '../seasoning_registry_core.js';
 export const SEASONING_CAPACITY=8;
 export const SEASONING_MAX_BOTTLES=4;
@@ -28,9 +29,9 @@ export const SEASONING_BLOCK_IDS=Object.freeze([
  'kaleidoscope_grilling:seasoning_bottle_4'
 ]);
 
-export const SEASONING_LIST_KEY='kaleidoscope_grilling:seasonings';
-export const SEASONING_USES_KEY='kaleidoscope_grilling:uses';
-export const SEASONING_VARIANT_KEY='kaleidoscope_grilling:variant';
+export const SEASONING_LIST_KEY=PersistedKey.SEASONINGS;
+export const SEASONING_USES_KEY=PersistedKey.SEASONING_USES;
+export const SEASONING_VARIANT_KEY=PersistedKey.SEASONING_VARIANT;
 
 export const BASE_SEASONINGS=Object.freeze([
  'kaleidoscope_grilling:green_chili_powder',

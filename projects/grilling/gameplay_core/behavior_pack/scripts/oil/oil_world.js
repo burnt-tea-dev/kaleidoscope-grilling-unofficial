@@ -1,3 +1,5 @@
+import {getWorldProperty,setWorldProperty,getWorldPropertyIds} from '../core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {onBeforeBlockBreak} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
@@ -40,12 +42,12 @@ function loadReg(){
  if(registryCache)return registryCache;
  const byKey=new Map(),legacy=[];
  try{
-  for(const id of world.getDynamicPropertyIds?.()??[]){
+  for(const id of getWorldPropertyIds(world)??[]){
    if(!id.startsWith(OIL_REG_PREFIX))continue;
-   const raw=world.getDynamicProperty(id);if(typeof raw!=='string')continue;
+   const raw=getWorldProperty(world,id);if(typeof raw!=='string')continue;
    try{const row=normalizeOilSourceRow(JSON.parse(raw),VALID_OIL_TYPES);if(row)byKey.set(row.k,row)}catch{}
   }
-  const old=world.getDynamicProperty(LEGACY_OIL_REG);
+  const old=getWorldProperty(world,LEGACY_OIL_REG);
   if(typeof old==='string')for(const value of JSON.parse(old)){
    const row=normalizeOilSourceRow(value,VALID_OIL_TYPES);if(row&&!byKey.has(row.k)){byKey.set(row.k,row);legacy.push(row)}
   }
@@ -54,8 +56,8 @@ function loadReg(){
  for(const [slot,row] of registryCache.entries()){sourceSlots.set(row.k,slot);row.nextTick=0;sourceIndex.set(row.k,row);addClaims(row);dueQueue.schedule(row.k,system.currentTick)}
  // Migrate A2.3's aggregate property only after all rows have been recovered.
  if(legacy.length)try{
-  for(const row of legacy)world.setDynamicProperty(oilSourcePropertyId(row),JSON.stringify(row));
-  world.setDynamicProperty(LEGACY_OIL_REG,undefined);
+  for(const row of legacy)setWorldProperty(world,oilSourcePropertyId(row),JSON.stringify(row));
+  setWorldProperty(world,LEGACY_OIL_REG,undefined);
  }catch{}
  return registryCache;
 }
@@ -64,7 +66,7 @@ function persistRow(row){
  const normalized=normalizeOilSourceRow(row,VALID_OIL_TYPES);if(!normalized)return false;
  // nextTick belongs to this server session, not the saved-world clock.
  const key=oilSourcePropertyId(normalized),raw=JSON.stringify({...normalized,nextTick:0});
- try{if(world.getDynamicProperty(key)!==raw)world.setDynamicProperty(key,raw);if(world.getDynamicProperty(key)!==raw)return false;}catch{return false}
+ try{if(getWorldProperty(world,key)!==raw)setWorldProperty(world,key,raw);if(getWorldProperty(world,key)!==raw)return false;}catch{return false}
  const rows=loadReg(),old=sourceIndex.get(normalized.k),i=sourceSlots.get(normalized.k)??-1;
  if(old)dropClaims(old);
  if(i>=0)rows[i]=normalized;else{sourceSlots.set(normalized.k,rows.length);rows.push(normalized);}
@@ -73,8 +75,8 @@ function persistRow(row){
 }
 function removeRow(row){
  ambientDeadlines.delete(row.k);
- world.setDynamicProperty(oilSourcePropertyId(row),undefined);
- if(world.getDynamicProperty(oilSourcePropertyId(row))!==undefined)throw Error('oil registry removal');
+ setWorldProperty(world,oilSourcePropertyId(row),undefined);
+ if(getWorldProperty(world,oilSourcePropertyId(row))!==undefined)throw Error('oil registry removal');
  const rows=loadReg(),old=sourceIndex.get(row.k),i=sourceSlots.get(row.k)??-1;if(i>=0){const last=rows.pop();if(i<rows.length){rows[i]=last;sourceSlots.set(last.k,i)}}sourceSlots.delete(row.k);
  if(old)dropClaims(old);sourceIndex.delete(row.k);dueQueue.cancel(row.k);
 }
@@ -146,18 +148,18 @@ function compute(row,rows){
 function faceTarget(e){const o=OFFSETS[e.blockFace]??[0,1,0],p=e.block.location;return {x:p.x+o[0],y:p.y+o[1],z:p.z+o[2]}}
 function oilTransfer(steps,block){
  const result=commitSteps(steps);
- if(!result.ok){console.warn('[Grilling oil transfer] '+String(result.error)+'; rollback='+result.rollbackErrors);if(result.rollbackErrors)try{world.setDynamicProperty('kaleidoscope_grilling:oil_transfer_fault:'+posKey(block.dimension.id,block.x,block.y,block.z),String(result.error))}catch{}}
+ if(!result.ok){console.warn('[Grilling oil transfer] '+String(result.error)+'; rollback='+result.rollbackErrors);if(result.rollbackErrors)try{setWorldProperty(world,PersistedKey.OIL_TRANSFER_FAULT_PREFIX+posKey(block.dimension.id,block.x,block.y,block.z),String(result.error))}catch{}}
  return result.ok;
 }
-function transferAvailable(block){try{return world.getDynamicProperty('kaleidoscope_grilling:oil_transfer_fault:'+posKey(block.dimension.id,block.x,block.y,block.z))===undefined}catch{return false}}
+function transferAvailable(block){try{return getWorldProperty(world,PersistedKey.OIL_TRANSFER_FAULT_PREFIX+posKey(block.dimension.id,block.x,block.y,block.z))===undefined}catch{return false}}
 function placeFromBucket(player,dim,loc,type,hand){
  const b=dim.getBlock(loc);if(!b||!(b.typeId==='minecraft:air'||(b.typeId===OIL_TYPES[type]?.block&&level(b)>0))||!transferAvailable(b))return false;
  const slot=captureWritableHand(player,hand);if(slot.before?.typeId!==OIL_TYPES[type]?.bucket)return false;
  const before=b.permutation,steps=[];
  if(!creative(player))steps.push({apply(){slot.write(new ItemStack('minecraft:bucket',1))},rollback(){slot.write(slot.before)}});
  steps.push({apply(){if(!setOil(b,type,0))throw Error('oil placement rejected')},rollback(){b.setPermutation(before)}});
- const row=sourceRow(dim,loc,type),registryId=oilSourcePropertyId(row),registryBefore=world.getDynamicProperty(registryId),cached=readReg().map(r=>({...r,cells:[...(r.cells??[])]}));
- steps.push({apply(){if(!registerSource(dim,loc,type))throw Error('oil source registry rejected')},rollback(){world.setDynamicProperty(registryId,registryBefore);if(world.getDynamicProperty(registryId)!==registryBefore)throw Error('oil registry rollback');restoreRegistryCache(cached);}});
+ const row=sourceRow(dim,loc,type),registryId=oilSourcePropertyId(row),registryBefore=getWorldProperty(world,registryId),cached=readReg().map(r=>({...r,cells:[...(r.cells??[])]}));
+ steps.push({apply(){if(!registerSource(dim,loc,type))throw Error('oil source registry rejected')},rollback(){setWorldProperty(world,registryId,registryBefore);if(getWorldProperty(world,registryId)!==registryBefore)throw Error('oil registry rollback');restoreRegistryCache(cached);}});
  if(!oilTransfer(steps,b))return false;try{dim.playSound(type==='premium_chili'?'bucket.empty_lava':'bucket.empty_water',loc)}catch{};return true;
 }
 function takeSource(player,block,type,hand,toCookery=false){

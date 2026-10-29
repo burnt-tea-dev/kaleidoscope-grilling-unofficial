@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../core/persist.js';
 import {ItemStack} from '@minecraft/server';
 import {readPublicOil,createPublicOilPot} from '../host_api/oil_api_core.js';
 import {

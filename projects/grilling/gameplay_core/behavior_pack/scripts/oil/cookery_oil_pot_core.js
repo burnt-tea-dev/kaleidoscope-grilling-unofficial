@@ -1,3 +1,4 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {
  HOST_FAT_CAPACITY,GRILLING_FLUID_CAPACITY,GRILLING_OIL_BUCKET_POINTS,
  GRILLING_OIL_TYPES,normalizeOilType,oilCapacity,oilTypeForBucketId
@@ -10,8 +11,8 @@ export {
 
 export const COOKERY_EMPTY_ID='kaleidoscope_cookery:oil_pot';
 export const COOKERY_FILLED_ID='kaleidoscope_cookery:oil_pot_filled';
-export const HOST_COUNT_KEY='kc_oil_count';
-export const GRILLING_TYPE_KEY='kaleidoscope_grilling:oil_type';
+export const HOST_COUNT_KEY=PersistedKey.COOKERY_OIL_COUNT;
+export const GRILLING_TYPE_KEY=PersistedKey.OIL_TYPE;
 
 export function normalizeOilCount({
  filled=false,type='',raw=undefined,hasRaw=false,legacyPlacementFallback=false

@@ -27,7 +27,7 @@
 | 食用、效果、玩家 | `food/runtime.js`、`effect/runtime.js`、`player/runtime.js`；各域保存自己的暫存狀態 |
 | 調料、油、料理 | `seasoning/runtime.js`、`oil/oil_machine_runtime.js`、`food/cookery_cuisine_runtime.js` |
 | 餐盤、架、作物 | `plate/`、`rack/`、`world/`、`recipe/` |
-| 共用與外部 | `core/events.js`、`core/scheduler.js`、既有 transaction 模組、`host_api/`、`guide/` |
+| 共用與外部 | `core/persist_keys.js`（保存鍵唯一登錄）、`core/persist.js`（world dynamic property 存取與 item metadata）、`core/events.js`、`core/scheduler.js`、`core/transaction.js`（玩家物品交易）、`core/storage.js`（工作站持久容器）、域內 transaction 模組、`host_api/`、`guide/` |
 
 食用外觀仍使用既有相容物品與 player properties；這輪沒有冒稱食用或全部交易已完成原生重建。
 上表只定位來源，不表示每條能力都已完成原生或真人驗收。完整玩家結果和跨域缺口在 [PARITY](PARITY.md)／[KNOWN-ISSUES](KNOWN-ISSUES.md)。

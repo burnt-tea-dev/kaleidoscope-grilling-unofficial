@@ -1,15 +1,17 @@
+import {getWorldProperty} from '../core/persist.js';
 import {world} from '@minecraft/server';
-import {stationContainer} from '../family_station_storage.js';
+import {stationContainer} from '../core/storage.js';
 import {initialState,normalizeState} from '../core_logic.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 
 function enc(n){return n<0?'m'+Math.abs(n):'p'+n}
 
 export function grillStateKey(block){
- return 'kaleidoscope_grilling:g_'+block.dimension.id.replace(/[^a-z0-9]/gi,'_')+'_'+enc(block.x)+'_'+enc(block.y)+'_'+enc(block.z);
+ return PersistedKey.GRILL_STATE_PREFIX+block.dimension.id.replace(/[^a-z0-9]/gi,'_')+'_'+enc(block.x)+'_'+enc(block.y)+'_'+enc(block.z);
 }
 
 export function readGrillState(block){
- const raw=world.getDynamicProperty(grillStateKey(block));
+ const raw=getWorldProperty(world,grillStateKey(block));
  if(raw===undefined)return initialState();
  if(typeof raw!=='string')throw new Error('invalid persisted grill state');
  return normalizeState(JSON.parse(raw));

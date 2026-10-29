@@ -1,5 +1,6 @@
 export const LEGACY_OIL_REG='kaleidoscope_grilling:a23_oil_sources';
-export const OIL_REG_PREFIX='kaleidoscope_grilling:a23_oil_source_';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
+export const OIL_REG_PREFIX=PersistedKey.A23_OIL_SOURCE_PREFIX;
 export const FLOW_CELL_BUDGET=512;
 export const FLOW_SOURCE_BUDGET=8;
 

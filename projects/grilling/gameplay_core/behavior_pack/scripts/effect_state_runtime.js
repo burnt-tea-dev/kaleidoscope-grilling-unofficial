@@ -1,6 +1,7 @@
 import {world,system} from '@minecraft/server';
 import {nativeDragonHealth} from './dragon_native_health.js';
 import {FX_KEY,activeEffects,effectPayload,milkEffects} from './effect_lifecycle_core.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 const snapshots=new WeakMap(),identities=new Map(),dodgeStates=new Map();let identityTick=-1;
 const copyEffects=fx=>activeEffects(fx,effectTime());
 function identity(entity){if(identityTick!==system.currentTick){identities.clear();identityTick=system.currentTick}try{if(typeof entity.id==='string')return entity.id}catch{}return undefined;}
@@ -43,7 +44,7 @@ export function writeEffects(entity,value,{refreshProjectileDodge=false,expected
 export function clearEffects(entity,{milk=false}={}){
  if(readEffects(entity).dragon_blood)nativeDragonHealth(entity,undefined);
  writeEffects(entity,milk?milkEffects(readEffects(entity),effectTime()):{},{refreshProjectileDodge:true});
- entity.setDynamicProperty('kaleidoscope_grilling:dragon_pool',undefined);
+  entity.setDynamicProperty(PersistedKey.DRAGON_POOL,undefined);
  discard(entity);
 }
 

@@ -35,7 +35,7 @@ def literal(token):
         return None
     return value[1:-1]
 
-def persisted_literals(text):
+def persisted_literals(text, include_bare_registry_keys=False):
     ts = tokens(text)
     values = {}
     expressions = {}
@@ -67,7 +67,7 @@ def persisted_literals(text):
     # contract; any namespace is supported, including senluo metadata.
     for name, strings in values.items():
         if re.search(r'KEY|PREFIX|PROPERTY|OWNER|NAMESPACE', name):
-            found.update(s for s in strings if re.match(r'^[\w.-]+:', s))
+            found.update(s for s in strings if re.match(r'^[\w.-]+:', s) or include_bare_registry_keys)
     # Recognize direct calls and the public item metadata helpers. Resolve
     # locally aliased variables regardless of their name.
     signatures = {'getDynamicProperty': 0, 'setDynamicProperty': 0,

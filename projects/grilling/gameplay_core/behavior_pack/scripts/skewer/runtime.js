@@ -1,4 +1,4 @@
-import {getItemLore,getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../itemData.js";
+import {getItemLore,getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {foodFacts} from "../food_snapshot_core.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {SECRET_COOKED_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_CREATOR_KEY,SECRET_ID,SKEWER_INGREDIENTS_KEY,UNFINISHED_ID,appendOutcome,canAppendConfigured,expectedSize,isConfiguredIngredient,isDisassemblableRaw,secretFood} from "./skewering_core.js";
@@ -14,7 +14,7 @@ import {canUseSecretSkewer} from "../food/runtime.js";
 import {skewerIngredientDecision} from "../skewer_compat_core.js";
 import {SECRET_MODEL_VARIANTS_KEY,appendedModelVariants} from "../secret_visual_state_core.js";
 import {give,prepareOutputDelivery,reducedStack,transactionStatus} from "../core/actions.js";
-import {commitPlayerItemTransaction,nativeItemSignature,ownedItemStep} from "../owned_item_transaction_core.js";
+import {commitPlayerItemTransaction,nativeItemSignature,ownedItemStep} from "../core/transaction.js";
 import {interactionFailure} from "../core/interaction_feedback.js";
 import {useSound} from "../immersion_audio_runtime.js";
 import {awardLookingThePart} from "../advancement/advancement_event_runtime.js";

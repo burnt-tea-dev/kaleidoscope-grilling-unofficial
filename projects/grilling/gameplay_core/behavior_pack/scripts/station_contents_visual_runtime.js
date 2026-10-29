@@ -1,3 +1,4 @@
+import {getWorldPropertyIds} from './core/persist.js';
 import {onBlockInteraction} from './core/events.js';
 import {every,onlinePlayers} from './core/scheduler.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
@@ -14,9 +15,10 @@ import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js
 export {registerStationProjection};
 import {VisualTargetQueue} from './visual_target_queue.js';
 import {grillingConfig} from './server_config_runtime.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 /** Transient native equipped-item renderers. Helpers never own or deliver station contents. */
 import {world,system} from '@minecraft/server';
-import {STORAGE_PREFIX,peekStationContainer} from './family_station_storage.js';
+import {STORAGE_PREFIX,peekStationContainer} from './core/storage.js';
 import {a25ReadPlateBlock,a25RestoreStack,a25ReadRecipeDisplayStack} from './plate/plate_recipe_runtime.js';
 const TYPE='kaleidoscope_grilling:equipment_visual',work=new VisualTargetQueue(),targets=work.targets,orphaned=new Map();
 let reader,helpers=0,lastWarning=-1200,indexing=false,lastCapacityWarning=-1200,lastAudience=-10;
@@ -78,10 +80,10 @@ function render(row,b,k,stack,at,mode){
    else if(customIcon){
     old.entity.setProperty('kaleidoscope_grilling:gui_count',customIcon.count);
     old.entity.setProperty('kaleidoscope_grilling:gui_bits',customIcon.bits);
-    for(let i=0;i<3;i++)old.entity.setProperty('kaleidoscope_grilling:gui_color_'+i,customIcon.colors[i]);
+    for(let i=0;i<3;i++)old.entity.setProperty(PersistedKey.GUI_COLOR_PREFIX+i,customIcon.colors[i]);
    }else old.entity.setProperty('kaleidoscope_grilling:model',rackModel??iconModel??mesh.model);
    if(iconModel!==undefined)old.entity.setProperty('kaleidoscope_grilling:frame',frame);
-   if(mesh){old.entity.setProperty('kaleidoscope_grilling:display_mode',mode===3?1:0);for(let i=0;i<3;i++)old.entity.setProperty('kaleidoscope_grilling:secret_'+i,mesh.secret[i]);}
+   if(mesh){old.entity.setProperty('kaleidoscope_grilling:display_mode',mode===3?1:0);for(let i=0;i<3;i++)old.entity.setProperty(PersistedKey.SECRET_PREFIX+i,mesh.secret[i]);}
    old.entity.setProperty('kaleidoscope_grilling:ready',true);
   }
   old.signature=signature;
@@ -123,7 +125,7 @@ export function syncStationContentsVisual(block,observers){
  }else{clear(row);if(!row.parts.size)work.remove(key(block));return;}
  for(const k of [...row.parts.keys()])if(!seen.has(k))discard(row,k);
 }
-function index(){if(indexing)return;indexing=true;system.runJob((function*(){try{for(const name of world.getDynamicPropertyIds()){
+function index(){if(indexing)return;indexing=true;system.runJob((function*(){try{for(const name of getWorldPropertyIds(world)){
  let dimensionId,x,y,z;
  if(name.startsWith(STORAGE_PREFIX)){const p=name.slice(STORAGE_PREFIX.length).split('/');if(p.length===4)[dimensionId,x,y,z]=p;}
  else{const p=/^kaleidoscope_grilling:(?:a25_(?:plate|recipe)|a26_vat)_(minecraft_(?:overworld|nether|the_end))_([pm]\d+)_([pm]\d+)_([pm]\d+)$/.exec(name);if(p){dimensionId=p[1].replace('minecraft_', 'minecraft:');[x,y,z]=p.slice(2).map(n=>Number(n.slice(1))*(n[0]==='m'?-1:1));}}

@@ -1,10 +1,11 @@
 // Pinned Java FailedSkewerData + SkeweringHandler,9a1acdab. Presentation reads never mutate stacks.
 import {canonicalFoodId} from './eating_profile_ids.js';
-import {getItemProperty} from './itemDataCore.js';
+import {getItemProperty} from './core/persist.js';
 import {captureSkewerMetadata,restoreSkewerMetadata} from './skewer_item_snapshot.js';
 import {modelVariant,SECRET_MODEL_VARIANTS_KEY} from './secret_visual_state_core.js';
 import {secretVisualIndex} from './integration_registry_core.js';
-export const FAILED_SOURCE_KEY='kaleidoscope_grilling:failed_skewer_source';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
+export const FAILED_SOURCE_KEY=PersistedKey.FAILED_SKEWER_SOURCE;
 export const FAILURE_VISUAL_MARKER=220;
 export const FAILURE_IDS=Object.freeze(['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grilling:dark_grilling']);
 export const FAILURE_RAW_SOURCES=Object.freeze(["kaleidoscope_grilling:raw_beef_skewer","kaleidoscope_grilling:raw_pork_belly_skewer","kaleidoscope_grilling:raw_chicken_skin_skewer","kaleidoscope_grilling:raw_mid_wing_skewer","kaleidoscope_grilling:raw_squid_tentacle_skewer","kaleidoscope_grilling:raw_fish_skewer","kaleidoscope_grilling:raw_sweet_potato_sheet_skewer","kaleidoscope_grilling:raw_potato_slice_skewer","kaleidoscope_grilling:raw_caterpillar_skewer","kaleidoscope_grilling:raw_mushroom_skewer","kaleidoscope_grilling:raw_bun_slice_skewer","kaleidoscope_grilling:raw_ender_pearl_skewer","kaleidoscope_grilling:raw_meatball_skewer","kaleidoscope_grilling:raw_slime_skewer","kaleidoscope_grilling:raw_meat_and_bone_skewer","kaleidoscope_grilling:raw_fried_egg_skewer","kaleidoscope_grilling:raw_gluten_skewer","kaleidoscope_grilling:raw_lamb_skewer","kaleidoscope_grilling:raw_golden_skewer"]);

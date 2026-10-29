@@ -358,8 +358,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 以 `@minecraft/server` 的型別為準，只實作用到的子集；**不 mock 任何 runtime 模組**，透過 import map 把 `@minecraft/server` 換成 harness。
 - 驗收：用 harness 跑通「放烤架→點火→放 3 串生牛肉串→時間推進→取出熟串」的完整流程測試。
 
-**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 `tools/guards/save-compat.lock.json` 的 `persisted_key_literals` 全部逐字集中，含各 namespace 的 key 與前綴；清單與數量以執行任務時的鎖為準，舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`、`storage.js`（搬入 `family_station_storage.js` 的邏輯，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
-- 驗收：save_compat 鎖不變；新 core 單元測試覆蓋：寫入失敗回滾、容器滿時剩餘掉落、metadata 完整保留。
+**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 `tools/guards/save-compat.lock.json` 的 `persisted_key_literals` 全部逐字集中，含各 namespace 的 key 與前綴；清單與數量以執行任務時的鎖為準，舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`（已將 `owned_item_transaction_core.js` 的共用交易實作遷入；呼叫端直接使用此核心 owner）、`storage.js`（已將原 `family_station_storage.js` 實作遷入；呼叫端直接使用此核心 owner，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
+- 驗收：`save_compat` 保留既有 key；若發現已在用但漏鎖的字面值，只補錄該既有 key，不改 key 或存檔格式。既有 core owner 測試覆蓋：寫入失敗回滾、容器滿時剩餘掉落、metadata 完整保留。
 
 **T3.3 逐域搬遷**（每個域一個 PR，順序：`grill` → `skewer` → `plate` → `recipe` → `seasoning` → `oil` → `rack` → `food`/`effect` → `crops` → `world` → `advancement` → `compat` → `guide`）
 

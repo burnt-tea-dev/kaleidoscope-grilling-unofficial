@@ -8,7 +8,7 @@ const scripts = process.env.KG_CODEC_SCRIPTS
   : new URL('../../projects/grilling/gameplay_core/behavior_pack/scripts/', import.meta.url);
 const {captureSkewerMetadata, restoreSkewerMetadata, metadataSignature, ingredientContentSignature} =
   await import(new URL('skewer_item_snapshot.js', scripts));
-const {configureItemDataWorld} = await import(new URL('itemDataCore.js', scripts));
+const {configureItemDataWorld} = await import(new URL('core/persist.js', scripts));
 const {bottleLoreSignature, isOwnedBottleLore} = await import(new URL('bottle_lore_core.js', scripts));
 const copy = value => JSON.parse(JSON.stringify(value));
 const INGREDIENTS = 'kaleidoscope_grilling:seasonings';

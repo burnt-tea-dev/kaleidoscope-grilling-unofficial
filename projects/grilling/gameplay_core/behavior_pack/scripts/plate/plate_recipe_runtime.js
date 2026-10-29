@@ -1,3 +1,5 @@
+import {getWorldProperty,getWorldPropertyIds,setWorldProperty} from '../core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {onBeforeBlockBreak,onAfterBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
@@ -7,8 +9,8 @@ import {useSound} from '../immersion_audio_runtime.js';
 import {itemTranslationKey} from '../hud/skewer_recipe_hud_core.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../skewer_item_snapshot.js';
 import {decodePlateStorage,verifiedPlateStep,commitPlateSteps,plateFacingFromYaw} from '../plate_transaction_core.js';
-import {nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction} from '../owned_item_transaction_core.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../itemData.js';
+import {nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction} from '../core/transaction.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
 import {hasSolidTop,hasFullCubeCollision,hasSturdySide} from '../blockSupport.js';
 import {withoutAutomaticCreatorLore} from '../skewer/hot_runtime.js';
 import {creatorLore} from '../localized_lore_core.js';
@@ -34,8 +36,8 @@ const COOKERY_RECIPE_ITEMS=new Set([
  'kaleidoscope_cookery:recipe_item'
 ]);
 const COOKERY_TABLE='kaleidoscope_cookery:table';
-const PLATE_PREFIX='kaleidoscope_grilling:a25_plate_';
-const RECIPE_PREFIX='kaleidoscope_grilling:a25_recipe_';
+const PLATE_PREFIX=PersistedKey.A25_PLATE_PREFIX;
+const RECIPE_PREFIX=PersistedKey.A25_RECIPE_PREFIX;
 const FIXED_IDS=new Set();
 for(const r of recipeTable()){FIXED_IDS.add(r.id);if(r.cooked)FIXED_IDS.add(r.cooked)}
 for(const id of ['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grilling:dark_grilling'])FIXED_IDS.add(id);
@@ -139,19 +141,19 @@ function plateItem(rows,template){
 const plateFaults=new Set();
 function plateFaultKey(block){return posKey(PLATE_PREFIX,block)+'_transaction_fault'}
 function assertPlateAvailable(block){
- const receipt=world.getDynamicProperty(posKey(PLATE_PREFIX,block)+'_delivery');
+ const receipt=getWorldProperty(world,posKey(PLATE_PREFIX,block)+'_delivery');
  if(receipt&&JSON.parse(String(receipt)).phase!=='delivered')throw Error('Grilling: plate delivery requires recovery');
  const key=plateFaultKey(block);
- if(plateFaults.has(key)||world.getDynamicProperty(key)!==undefined)throw Error('Grilling: plate transaction quarantined');
+ if(plateFaults.has(key)||getWorldProperty(world,key)!==undefined)throw Error('Grilling: plate transaction quarantined');
 }
 function quarantinePlate(block,reason){
  const key=plateFaultKey(block);plateFaults.add(key);
- world.setDynamicProperty(key,String(reason));
- if(world.getDynamicProperty(key)!==String(reason))throw Error('Grilling: plate quarantine did not persist');
+ setWorldProperty(world,key,String(reason));
+ if(getWorldProperty(world,key)!==String(reason))throw Error('Grilling: plate quarantine did not persist');
 }
 function readPlateBlock(block){
  assertPlateAvailable(block);
- return normalizePlateRows(decodePlateStorage(world.getDynamicProperty(posKey(PLATE_PREFIX,block))));
+ return normalizePlateRows(decodePlateStorage(getWorldProperty(world,posKey(PLATE_PREFIX,block))));
 }
 function blockPermutationStep(block,before,after){
  const dimension=block.dimension,location={...block.location};
@@ -161,9 +163,9 @@ function blockPermutationStep(block,before,after){
 }
 function plateStorageStep(block,rows){
  assertPlateAvailable(block);
- const key=posKey(PLATE_PREFIX,block),before=world.getDynamicProperty(key);
+ const key=posKey(PLATE_PREFIX,block),before=getWorldProperty(world,key);
  decodePlateStorage(before);decodePlateStorage(JSON.stringify(rows));
- const step=verifiedPlateStep({read:()=>world.getDynamicProperty(key),write:value=>world.setDynamicProperty(key,value),before,after:JSON.stringify(normalizePlateRows(rows))});
+ const step=verifiedPlateStep({read:()=>getWorldProperty(world,key),write:value=>setWorldProperty(world,key,value),before,after:JSON.stringify(normalizePlateRows(rows))});
  const dimension=block.dimension,location={...block.location};let count;
  return {
   apply(){
@@ -192,10 +194,10 @@ function syncPlateCount(block,count){
  if(block.permutation.getState('kaleidoscope_grilling:plate_count')!==expected)throw Error('Grilling: plate count rejected');
 }
 function writePlateBlock(block,rows){
- const clean=normalizePlateRows(rows),value=JSON.stringify(clean);world.setDynamicProperty(posKey(PLATE_PREFIX,block),value);
- if(world.getDynamicProperty(posKey(PLATE_PREFIX,block))!==value)throw Error('Grilling: plate block write rejected');syncPlateCount(block,clean.length);
+ const clean=normalizePlateRows(rows),value=JSON.stringify(clean);setWorldProperty(world,posKey(PLATE_PREFIX,block),value);
+ if(getWorldProperty(world,posKey(PLATE_PREFIX,block))!==value)throw Error('Grilling: plate block write rejected');syncPlateCount(block,clean.length);
 }
-function clearPlateBlock(block){world.setDynamicProperty(posKey(PLATE_PREFIX,block))}
+function clearPlateBlock(block){setWorldProperty(world,posKey(PLATE_PREFIX,block))}
 function readBookRecord(book){
  try{
   const raw=getItemProperty(book,BOOK_RECORD_KEY);if(typeof raw!=='string')return null;
@@ -216,12 +218,12 @@ const recipeFaults=new Set();let recipePlacementSequence=0;
 function recipeFaultKey(block){return posKey(RECIPE_PREFIX,block)+'_transaction_fault'}
 function assertRecipeAvailable(block){
  const key=recipeFaultKey(block);
- if(recipeFaults.has(key)||world.getDynamicProperty(key)!==undefined)throw Error('Grilling: recipe transaction quarantined');
- if(world.getDynamicProperty(posKey(RECIPE_PREFIX,block)+'_delivery')!==undefined)throw Error('Grilling: recipe delivery requires recovery');
+ if(recipeFaults.has(key)||getWorldProperty(world,key)!==undefined)throw Error('Grilling: recipe transaction quarantined');
+ if(getWorldProperty(world,posKey(RECIPE_PREFIX,block)+'_delivery')!==undefined)throw Error('Grilling: recipe delivery requires recovery');
 }
 function quarantineRecipe(block,reason){
- const key=recipeFaultKey(block);recipeFaults.add(key);world.setDynamicProperty(key,String(reason));
- if(world.getDynamicProperty(key)!==String(reason))throw Error('Grilling: recipe quarantine did not persist');
+ const key=recipeFaultKey(block);recipeFaults.add(key);setWorldProperty(world,key,String(reason));
+ if(getWorldProperty(world,key)!==String(reason))throw Error('Grilling: recipe quarantine did not persist');
 }
 function recipeTransaction(block,steps){
  const result=commitPlateSteps(steps,reason=>quarantineRecipe(block,reason));
@@ -231,21 +233,21 @@ function recipeTransaction(block,steps){
 }
 function readRecipeBlock(block){
  assertRecipeAvailable(block);
- const raw=world.getDynamicProperty(posKey(RECIPE_PREFIX,block));if(raw===undefined)return null;
+ const raw=getWorldProperty(world,posKey(RECIPE_PREFIX,block));if(raw===undefined)return null;
  if(typeof raw!=='string')throw Error('Grilling: unreadable recipe storage');
  const row=JSON.parse(raw);
  if(!row||row.id!==BOOK_ID||(row.native&&(row.native.version!==1||row.native.id!==BOOK_ID)))throw Error('Grilling: invalid recipe storage');
  return row;
 }
 function recipePropertyStep(key,before,after){
- return verifiedPlateStep({read:()=>world.getDynamicProperty(key),write:value=>world.setDynamicProperty(key,value),before,after});
+ return verifiedPlateStep({read:()=>getWorldProperty(world,key),write:value=>setWorldProperty(world,key,value),before,after});
 }
 function recipeActionSnapshot(block){
- return {dimension:block.dimension,location:{...block.location},states:metadataSignature(block.permutation.getAllStates()),saved:world.getDynamicProperty(posKey(RECIPE_PREFIX,block))};
+ return {dimension:block.dimension,location:{...block.location},states:metadataSignature(block.permutation.getAllStates()),saved:getWorldProperty(world,posKey(RECIPE_PREFIX,block))};
 }
 function sameRecipeForAction(row){
  const block=row.dimension.getBlock(row.location);
- return block?.typeId===RECIPE_BLOCK_ID&&metadataSignature(block.permutation.getAllStates())===row.states&&world.getDynamicProperty(posKey(RECIPE_PREFIX,block))===row.saved?block:undefined;
+ return block?.typeId===RECIPE_BLOCK_ID&&metadataSignature(block.permutation.getAllStates())===row.states&&getWorldProperty(world,posKey(RECIPE_PREFIX,block))===row.saved?block:undefined;
 }
 function recipeRemovalStep(block){
  return blockPermutationStep(block,block.permutation,BlockPermutation.resolve('minecraft:air'));
@@ -262,7 +264,7 @@ function settleRecipeBlock(block,{player,pickup=false}={}){
  const row=readRecipeBlock(block),book=restoreStack(row),snapshot=recipeActionSnapshot(block),dimension=block.dimension;
  if(row&&(!book||!readBookRecord(book)))throw Error('Grilling: recorded recipe cannot be restored');
  const drop=book&&(pickup||!creative(player))?book:undefined;
- const key=posKey(RECIPE_PREFIX,block),receiptKey=key+'_delivery',beforeReceipt=world.getDynamicProperty(receiptKey);
+ const key=posKey(RECIPE_PREFIX,block),receiptKey=key+'_delivery',beforeReceipt=getWorldProperty(world,receiptKey);
  const receipt={v:1,phase:'prepared',dimension:dimension.id,location:snapshot.location,states:snapshot.states,saved:snapshot.saved};
  const prepared=JSON.stringify(receipt),credited=JSON.stringify({...receipt,phase:'credited'});
  let escrow,spawnAttempted=false;
@@ -294,19 +296,19 @@ function settleRecipeBlock(block,{player,pickup=false}={}){
 // replayed safely, so retain its source snapshot for explicit recovery.
 function recoverRecipeDelivery(block){
  if(!block)return false;
- const key=posKey(RECIPE_PREFIX,block),receiptKey=key+'_delivery',raw=world.getDynamicProperty(receiptKey);if(raw===undefined)return false;
- if(recipeFaults.has(recipeFaultKey(block))||world.getDynamicProperty(recipeFaultKey(block))!==undefined)return false;
+ const key=posKey(RECIPE_PREFIX,block),receiptKey=key+'_delivery',raw=getWorldProperty(world,receiptKey);if(raw===undefined)return false;
+ if(recipeFaults.has(recipeFaultKey(block))||getWorldProperty(world,recipeFaultKey(block))!==undefined)return false;
  const receipt=JSON.parse(String(raw));
  if(receipt?.v!==1||receipt.phase!=='credited'||receipt.dimension!==block.dimension.id||metadataSignature(receipt.location)!==metadataSignature(block.location))return false;
- const saved=world.getDynamicProperty(key);
+ const saved=getWorldProperty(world,key);
  if((saved!==undefined&&saved!==receipt.saved)||(block.typeId===RECIPE_BLOCK_ID&&metadataSignature(block.permutation.getAllStates())!==receipt.states)){
   quarantineRecipe(block,'credited recipe cleanup target changed; no second delivery');return false;
  }
  return recipeTransaction(block,[recipePropertyStep(key,saved,undefined),...(block.typeId===RECIPE_BLOCK_ID?[recipeRemovalStep(block)]:[]),recipePropertyStep(receiptKey,raw,undefined)]);
 }
 function recoverRecordedRecipeDeliveries(){
- for(const key of world.getDynamicPropertyIds())if(key.startsWith(RECIPE_PREFIX)&&key.endsWith('_delivery'))try{
-  const receipt=JSON.parse(String(world.getDynamicProperty(key)));
+ for(const key of getWorldPropertyIds(world))if(key.startsWith(RECIPE_PREFIX)&&key.endsWith('_delivery'))try{
+  const receipt=JSON.parse(String(getWorldProperty(world,key)));
   if(receipt?.phase!=='credited'||typeof receipt.dimension!=='string'||!['x','y','z'].every(axis=>Number.isSafeInteger(receipt.location?.[axis])))continue;
   const block=world.getDimension(receipt.dimension).getBlock(receipt.location);
   if(block&&posKey(RECIPE_PREFIX,block)+'_delivery'===key)recoverRecipeDelivery(block);
@@ -334,7 +336,7 @@ function placePlateOn(support,face,player,source,hand='main'){
  if(!rows.length)return false;
  if(!plateItem(rows))throw Error('Grilling: plate contents cannot be packed');
  assertPlateAvailable(target);
- if(world.getDynamicProperty(posKey(PLATE_PREFIX,target))!==undefined)throw Error('Grilling: orphaned plate contents require recovery');
+ if(getWorldProperty(world,posKey(PLATE_PREFIX,target))!==undefined)throw Error('Grilling: orphaned plate contents require recovery');
  const captured=captureWritableHand(player,hand),before=target.permutation,facing=plateFacingFromYaw(player.getRotation().y);
  if(interactionStackSignature(captured.before)!==interactionStackSignature(source))return false;
  const next=captured.before?.clone();if(!next)return false;
@@ -368,8 +370,8 @@ function breakPlate(block,player){
  const rows=readPlateBlock(block),loc={x:block.x+.5,y:block.y+.35,z:block.z+.5},dim=block.dimension,before=block.permutation;
  const drop=!creative(player)&&rows.length?plateItem(rows):undefined;
  if(!creative(player)&&rows.length&&!drop)throw Error('Grilling: plate drop could not be packed');
- const receiptKey=posKey(PLATE_PREFIX,block)+'_delivery',receiptBefore=world.getDynamicProperty(receiptKey),receipt={phase:'prepared',saved:world.getDynamicProperty(posKey(PLATE_PREFIX,block)),drop:!!drop};
- const journal=verifiedPlateStep({read:()=>world.getDynamicProperty(receiptKey),write:v=>world.setDynamicProperty(receiptKey,v),before:receiptBefore,after:JSON.stringify(receipt)});
+ const receiptKey=posKey(PLATE_PREFIX,block)+'_delivery',receiptBefore=getWorldProperty(world,receiptKey),receipt={phase:'prepared',saved:getWorldProperty(world,posKey(PLATE_PREFIX,block)),drop:!!drop};
+ const journal=verifiedPlateStep({read:()=>getWorldProperty(world,receiptKey),write:v=>setWorldProperty(world,receiptKey,v),before:receiptBefore,after:JSON.stringify(receipt)});
  const signature=s=>s?metadataSignature({amount:s.amount,...captureSkewerMetadata(s)}):'';
  let escrow,spawnAttempted=false;
  const delivery={
@@ -395,10 +397,10 @@ function breakPlate(block,player){
    if(escrow.isValid!==false)throw Error('Grilling: plate drop cleanup unconfirmed');
   }
  };
- const key=posKey(PLATE_PREFIX,block),raw=world.getDynamicProperty(key);
- const clear=verifiedPlateStep({read:()=>world.getDynamicProperty(key),write:value=>world.setDynamicProperty(key,value),before:raw,after:undefined});
+ const key=posKey(PLATE_PREFIX,block),raw=getWorldProperty(world,key);
+ const clear=verifiedPlateStep({read:()=>getWorldProperty(world,key),write:value=>setWorldProperty(world,key,value),before:raw,after:undefined});
  const remove=blockPermutationStep(block,before,BlockPermutation.resolve('minecraft:air'));
- const commitReceipt=verifiedPlateStep({read:()=>world.getDynamicProperty(receiptKey),write:value=>world.setDynamicProperty(receiptKey,value),before:JSON.stringify(receipt),after:JSON.stringify({...receipt,phase:'delivered'})});
+ const commitReceipt=verifiedPlateStep({read:()=>getWorldProperty(world,receiptKey),write:value=>setWorldProperty(world,receiptKey,value),before:JSON.stringify(receipt),after:JSON.stringify({...receipt,phase:'delivered'})});
  return plateTransaction(block,[journal,delivery,clear,remove,commitReceipt]);
 }
 function recordBookFromSkewer(player,book,skewer,hand='main'){
@@ -498,7 +500,7 @@ function placeRecipeBlock(support,face,player,book,hand='main'){
  if(hasSturdySide(support,f)!==true)return false;
  const target=blockAtOffset(support,faceOffset(face));if(!isAirReplaceable(target))return false;
  assertRecipeAvailable(target);const key=posKey(RECIPE_PREFIX,target);
- if(world.getDynamicProperty(key)!==undefined)throw Error('Grilling: orphaned recipe contents require recovery');
+ if(getWorldProperty(world,key)!==undefined)throw Error('Grilling: orphaned recipe contents require recovery');
  const captured=captureWritableHand(player,hand);if(interactionStackSignature(captured.before)!==interactionStackSignature(book))return false;
  const next=captured.before?.clone();if(!next)return false;
  const remainder=next.amount===1?undefined:next;if(remainder)remainder.amount--;
@@ -597,7 +599,7 @@ function recipeSupport(block){
 function detachUnsupportedRecipe(block){
  if(!block||block.typeId!==RECIPE_BLOCK_ID)return;
  recoverRecipeDelivery(block);if(block.typeId!==RECIPE_BLOCK_ID)return;
- if(recipeFaults.has(recipeFaultKey(block))||world.getDynamicProperty(recipeFaultKey(block))!==undefined||world.getDynamicProperty(posKey(RECIPE_PREFIX,block)+'_delivery')!==undefined)return;
+ if(recipeFaults.has(recipeFaultKey(block))||getWorldProperty(world,recipeFaultKey(block))!==undefined||getWorldProperty(world,posKey(RECIPE_PREFIX,block)+'_delivery')!==undefined)return;
  const support=recipeSupport(block),facing=block.permutation.getState('minecraft:cardinal_direction');
  // An unloaded/unreadable support is not evidence of removal. Native block
  // ticks resume when the chunk loads, including non-player neighbor changes.

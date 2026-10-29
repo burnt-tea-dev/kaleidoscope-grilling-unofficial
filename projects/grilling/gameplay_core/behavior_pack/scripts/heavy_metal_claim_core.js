@@ -1,7 +1,8 @@
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 /** Owned, versioned reservation for one named Heavy Metal effect. This is a
  * persistence barrier, not a promise that Minecraft has flushed a world save.
  */
-export const HEAVY_METAL_CLAIM_KEY='kaleidoscope_grilling:heavy_metal_claim';
+export const HEAVY_METAL_CLAIM_KEY=PersistedKey.HEAVY_METAL_CLAIM;
 const validEffect=effect=>!!effect&&Number.isFinite(effect.until)&&Number.isInteger(effect.amp)&&effect.amp>=0;
 export function parseHeavyMetalClaim(raw){
  if(raw===undefined)return undefined;

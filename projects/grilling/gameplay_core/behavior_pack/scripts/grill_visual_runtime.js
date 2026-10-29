@@ -4,7 +4,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {secretVisualState} from './secret_visual_state.js';
 import {grillVisualStage} from './grill_visual_core.js';
 import {world,system} from '@minecraft/server';
-import {peekStationContainer} from './family_station_storage.js';
+import {peekStationContainer} from './core/storage.js';
 import {readGrillState} from './grill/grill_state_adapter.js';
 import {GRILL_FOOD_ENTITY,grillVisualKey,nearGrill,grillSlotPlan,createGrillDisplayController} from './grill_visual_core.js';
 const NS='kaleidoscope_grilling:';

@@ -1,11 +1,12 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 export const COLD_ID='kaleidoscope_grilling:cold_houttuynia';
 export const HOUTTUYNIA_ID='kaleidoscope_grilling:houttuynia';
 export const CRAFTING_TABLE_ID='minecraft:crafting_table';
 export const COOKERY_EMPTY_ID='kaleidoscope_cookery:oil_pot';
 export const COOKERY_FILLED_ID='kaleidoscope_cookery:oil_pot_filled';
 export const REQUIRED_OIL_TYPE='premium_chili';
-export const OIL_TYPE_KEY='kaleidoscope_grilling:oil_type';
-export const OIL_COUNT_KEY='kc_oil_count';
+export const OIL_TYPE_KEY=PersistedKey.OIL_TYPE;
+export const OIL_COUNT_KEY=PersistedKey.COOKERY_OIL_COUNT;
 export const REQUIRED_HOUTTUYNIA=3;
 export const REQUIRED_OIL=2;
 export const OIL_CAPACITY=64;

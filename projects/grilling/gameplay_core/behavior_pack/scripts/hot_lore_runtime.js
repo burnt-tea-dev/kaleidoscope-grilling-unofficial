@@ -3,7 +3,7 @@ import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system,EquipmentSlot} from '@minecraft/server';
 import {TimedWorkQueue} from './timed_work_queue.js';
 import {playerInventory,getOffHand} from './core/player_io.js';
-import {peekStationContainer} from './family_station_storage.js';
+import {peekStationContainer} from './core/storage.js';
 import {hotUntil,refreshHotLore} from './food/food_state_adapter.js';
 const queue=new TimedWorkQueue(),jobs=new Map(),opened=new Map(),scans=new Map();
 let lastWarning=-1200;

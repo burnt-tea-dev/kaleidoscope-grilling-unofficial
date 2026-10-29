@@ -29,7 +29,7 @@ export const routes = Object.entries({...java.profile_by_item, [N+'secret_skewer
 export async function createEatingLab() {
   const f = createFixture({currentTick:1000});
   await f.load('main.js');
-  const data = await f.load('itemData.js');
+  const data = await f.load('core/persist.js');
   const config = await f.load('server_config_runtime.js');
   const snapshot = await f.load('skewer_item_snapshot.js');
   const effects = await f.load('effect_state_runtime.js');

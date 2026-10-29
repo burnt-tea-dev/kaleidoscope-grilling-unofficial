@@ -1,3 +1,4 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalFoodId} from '../eating_profile_ids.js';
 import {ingredientFoodFacts} from '../food_snapshot_core.js';
 import {ingredientContentSignature} from '../skewer_item_snapshot.js';
@@ -5,10 +6,10 @@ import {FIXED_INGREDIENT_TAGS} from '../java_ingredient_tags.js';
 import {HOST_FAT_CAPACITY as FAT_CAPACITY,GRILLING_FLUID_CAPACITY as FLUID_CAPACITY,GRILLING_OIL_BUCKET_POINTS as OIL_BUCKET_POINTS} from '../oil/oil_contract_core.js';
 export const UNFINISHED_ID='kaleidoscope_grilling:unfinished_skewer';
 export const SECRET_ID='kaleidoscope_grilling:secret_skewer';
-export const SKEWER_INGREDIENTS_KEY='kaleidoscope_grilling:skewer_ingredients';
-export const SECRET_COOKED_KEY='kaleidoscope_grilling:secret_cooked';
-export const SECRET_COOKED_INGREDIENTS_KEY='kaleidoscope_grilling:secret_cooked_ingredients';
-export const SECRET_CREATOR_KEY='kaleidoscope_grilling:secret_creator';
+export const SKEWER_INGREDIENTS_KEY=PersistedKey.SKEWER_INGREDIENTS;
+export const SECRET_COOKED_KEY=PersistedKey.SECRET_COOKED;
+export const SECRET_COOKED_INGREDIENTS_KEY=PersistedKey.SECRET_COOKED_INGREDIENTS;
+export const SECRET_CREATOR_KEY=PersistedKey.SECRET_CREATOR;
 export {FAT_CAPACITY,FLUID_CAPACITY,OIL_BUCKET_POINTS};
 
 const RECIPES=Object.freeze([

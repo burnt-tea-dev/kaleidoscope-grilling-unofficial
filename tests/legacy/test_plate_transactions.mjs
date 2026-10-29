@@ -93,7 +93,7 @@ function afterOnce(object,method,predicate=()=>true,mutation=()=>{}){
 }
 async function fixture(saved){
  const f=createFixture();if(saved)for(const [k,v] of saved)f.world.setDynamicProperty(k,v);
- const api=await f.load('plate/plate_recipe_runtime.js');modules.set(f.ItemStack,{snapshot:await f.load('skewer_item_snapshot.js'),data:await f.load('itemData.js')});f.startup();f.flush();
+ const api=await f.load('plate/plate_recipe_runtime.js');modules.set(f.ItemStack,{snapshot:await f.load('skewer_item_snapshot.js'),data:await f.load('core/persist.js')});f.startup();f.flush();
  const b=f.block(PLATE,at,{states:{[N+'plate_count']:0,'minecraft:cardinal_direction':'north'}});
  const p=f.player({id:'plate-test-player',location:at});p.id='plate-test-player';p.isSneaking=true;p.getRotation=()=>({y:90});
  const inv=p.getComponent('minecraft:inventory').container,equip=p.getComponent('minecraft:equippable');

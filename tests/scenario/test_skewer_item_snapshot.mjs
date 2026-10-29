@@ -1,7 +1,7 @@
 /** Stable ItemStack API doubles, not simulated Minecraft players. */
 import test from 'node:test';import assert from 'node:assert/strict';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/skewer_item_snapshot.js';
-import {configureItemDataWorld,setItemProperty,getItemProperty,setItemLore,getItemRawLore} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/itemDataCore.js';
+import {configureItemDataWorld,setItemProperty,getItemProperty,setItemLore,getItemRawLore} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist.js';
 const records=new Map();configureItemDataWorld({getDynamicProperty:k=>records.get(k),setDynamicProperty:(k,v)=>records.set(k,v)});
 class Stack{
  constructor(typeId,amount=1){Object.assign(this,{typeId,amount,maxAmount:typeId.includes('sword')?1:64,lore:[],props:{},keepOnDeath:false,lockMode:'none',destroy:[],place:[],enchantments:[],damage:0});}
@@ -161,7 +161,7 @@ for(const corrupt of ['{bad','null','[]','42','"wrong type"'])test('corrupt stac
 const N='kaleidoscope_grilling:',cookedIngredientsKey=N+'secret_cooked_ingredients';
 async function placedGrillFixture(){
  const f=await nativeSecretFixture();
- const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+ const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
  f.emit('world.afterEvents.playerPlaceBlock',{block:grill,player:f.p});f.flush();
  function interact(){
@@ -214,7 +214,7 @@ for(const phase of ['before','after'])test('grill insertion '+phase+'-write fail
 });
 async function nativeSecretFixture(options={}){
  const f=createFixture(options);await f.load('main.js');f.startup();f.flush();
- const data=await f.load('itemData.js'),snapshot=await f.load('skewer_item_snapshot.js');
+ const data=await f.load('core/persist.js'),snapshot=await f.load('skewer_item_snapshot.js');
  const config=await f.load('server_config_runtime.js');
  config.setGrillingConfig('enableEatingAnimations',false);config.setGrillingConfig('graphicalEatingHud',false);
  const p=f.player({location:{x:0,y:80,z:2}});
@@ -300,7 +300,7 @@ test('failed Secret disassembly releases presentation preparation and permits re
 for(const animations of [true,false])test('newly threaded Secret enters a lit grill immediately with animations='+animations,async()=>{
  const f=await newlyThreadedSecretFixture(animations),originalRandom=Math.random;
  try{
-  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
   const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
   const input=f.p.off;f.p.off=undefined;f.p.isSneaking=false;
   function interact(){return f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});}
@@ -319,7 +319,7 @@ test('one, two and three ingredient skewers traverse player callbacks through gr
  try{
   Math.random=()=>.25;
   const config=await f.load('server_config_runtime.js');config.setGrillingConfig('enableEatingAnimations',true);
-  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js');
+  const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
   const oil=await f.load('oil/cookery_oil_pot_adapter.js'),food=await f.load('food/food_state_adapter.js');
   const ids=await f.load('eating_profile_ids.js');
   // Java recipe/profile data: fish ONE, fried egg TWO, meatball THREE_RANDOM.
@@ -419,7 +419,7 @@ for(const mode of ['missing world record','corrupt world record'])test('native c
 });
 async function fourthFlipFixture(options={}){
  const f=await nativeSecretFixture(options);
- const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('family_station_storage.js'),core=await f.load('core_logic.js');
+ const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js'),core=await f.load('core_logic.js');
  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
  const inventory=storage.stationContainer(grill);
  f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({...core.initialState(),lit:true,phase:1,flips:3,heatTicks:1200}));

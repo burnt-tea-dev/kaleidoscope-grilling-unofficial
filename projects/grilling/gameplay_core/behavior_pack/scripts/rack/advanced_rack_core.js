@@ -1,8 +1,9 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalSeasoningBottleId} from '../seasoning/seasoning_contract_core.js';
 import {isSpecialSeasoningId} from '../seasoning/special_seasoning_visual_core.js';
 export const ADVANCED_RACK_ITEM_ID='kaleidoscope_grilling:advanced_rack';
 export const ADVANCED_RACK_BLOCK_ID='kaleidoscope_grilling:advanced_rack_block';
-export const RACK_PAYLOAD_KEY='kaleidoscope_grilling:rack_payload';
+export const RACK_PAYLOAD_KEY=PersistedKey.RACK_PAYLOAD;
 export const RACK_COMPARTMENTS=9;
 export const RACK_SEASONING_SLOTS=5;
 export const RACK_TOOL_SLOTS=4;

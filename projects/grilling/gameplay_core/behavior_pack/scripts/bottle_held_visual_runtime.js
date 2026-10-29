@@ -1,5 +1,5 @@
 import {getMainHand,getOffHand} from './core/player_io.js';
-import {getItemProperty} from './itemData.js';
+import {getItemProperty} from './core/persist.js';
 import {SEASONING_LIST_KEY,normalizeSeasoningList} from './seasoning/seasoning_contract_core.js';
 import {bottleHeldVisualPlan,isBottleHeldVisualItem} from './bottle_held_visual_core.js';
 import {heldVisualKind,writeHeldVisual,invalidateHeldVisual,HELD_VISUAL_BOTTLE,HELD_VISUAL_EMPTY} from './held_visual_transport.js';

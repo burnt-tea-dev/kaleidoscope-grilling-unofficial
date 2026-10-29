@@ -1,7 +1,8 @@
-import {getItemProperty} from './itemDataCore.js';
+import {getItemProperty} from './core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 import {secretVisualIndex} from './integration_registry_core.js';
 import {SECRET_MODEL_VARIANTS_KEY,readModelVariants,encodeSecretVisual,encodePartialVisual} from './secret_visual_state_core.js';
-const COOKED='kaleidoscope_grilling:secret_cooked',CACHED='kaleidoscope_grilling:secret_cooked_ingredients';
+const COOKED=PersistedKey.SECRET_COOKED,CACHED=PersistedKey.SECRET_COOKED_INGREDIENTS;
 export function secretVisualState(stack,reader,stage){
  const cooked=getItemProperty(stack,COOKED)===true;
  const visualStage=stage===undefined?(cooked?4:0):stage;

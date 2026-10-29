@@ -33,7 +33,7 @@ async function fixture() {
  f.state = await f.load('rack/rack_state_adapter.js');
  f.automation = await f.load('rack/rack_automation_api.js');
  f.codec = await f.load('rack/rack_item_codec.js');
- f.storage = await f.load('family_station_storage.js');
+ f.storage = await f.load('core/storage.js');
  await f.load('rack/advanced_rack_runtime.js');
  f.holder = f.player({location: {x: 0, y: 64, z: 0}});
  f.inv = f.holder.inventory;
@@ -700,7 +700,7 @@ test('fixture imports share one native graph while separate fixtures isolate sta
   assert.notEqual(first, other);
   assert.equal(a.subscribers.get('world.beforeEvents.playerInteractWithBlock').length, 1);
   assert.equal(b.subscribers.get('world.beforeEvents.playerInteractWithBlock').length, 1);
-  const left = await a.load('itemData.js'), right = await b.load('itemData.js');
+  const left = await a.load('core/persist.js'), right = await b.load('core/persist.js');
   const stack = a.item(N + 'grilled_beef_skewer');
   left.setItemProperty(stack, 'test:identity', 'left world');
   assert.equal(left.getItemProperty(stack.clone(), 'test:identity'), 'left world');
@@ -744,11 +744,11 @@ test('registered startup callbacks and scheduler run in deterministic tick order
 });
 
 test('reloading persisted properties creates a fresh graph without losing portable item metadata', async () => {
-  const before = createFixture(), itemData = await before.load('itemData.js');
+  const before = createFixture(), itemData = await before.load('core/persist.js');
   const stack = before.item(N + 'grilled_beef_skewer');
   itemData.setItemProperty(stack, 'test:persisted', true);
   const after = createFixture({dynamicProperties: before.snapshotProperties()});
-  const reloaded = await after.load('itemData.js');
+  const reloaded = await after.load('core/persist.js');
   assert.notEqual(reloaded, itemData);
   assert.equal(reloaded.getItemProperty(stack, 'test:persisted'), true);
 });

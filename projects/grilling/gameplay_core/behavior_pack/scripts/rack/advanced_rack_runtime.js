@@ -1,9 +1,11 @@
+import {getWorldProperty} from '../core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {onBeforeBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {markStationContentsDirty} from '../station_contents_visual_runtime.js';
 import {planRackInsert,commitRackTransfer,depositInventorySlot} from '../rack_transactions.js';
 import {slotWrite,remainderOf,planInventoryInsert} from '../rack_transfer_plan.js';
-import {retireEmptyStationContainer,quarantineStation,storageKey} from '../family_station_storage.js';
+import {retireEmptyStationContainer,quarantineStation,storageKey} from '../core/storage.js';
 import {rackSlotAtHit} from './rack_quick_pick.js';
 import {captureRackHit} from '../rack_aim_hit.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from '../core/interaction_intent_adapter.js';
@@ -27,7 +29,7 @@ import {
 import {readRackPayloadItem,writeRackPayloadItem,encodeRackPayload} from './rack_item_codec.js';
 import {awardNeatAndOrderly} from '../advancement/advancement_event_runtime.js';
 
-const BIND_PREFIX='kaleidoscope_grilling:rack_binding_';
+const BIND_PREFIX=PersistedKey.RACK_BINDING_PREFIX;
 
 function loc(block){return {x:block.x,y:block.y,z:block.z}}
 function tags(stack){try{return stack?.getTags?.()??[]}catch{return []}}
@@ -37,12 +39,12 @@ function resolveRack(dimension,location){
 }
 function rackBreakSnapshot(block){
  return {dimension:block.dimension,location:loc(block),states:JSON.stringify(block.permutation.getAllStates()),
-  owner:world.getDynamicProperty(storageKey(block)),filters:world.getDynamicProperty(rackFiltersKey(block))};
+  owner:getWorldProperty(world,storageKey(block)),filters:getWorldProperty(world,rackFiltersKey(block))};
 }
 function sameRackForBreak(row){
  const block=resolveRack(row.dimension,row.location);
  return block&&JSON.stringify(block.permutation.getAllStates())===row.states&&
-  world.getDynamicProperty(storageKey(block))===row.owner&&world.getDynamicProperty(rackFiltersKey(block))===row.filters?block:undefined;
+  getWorldProperty(world,storageKey(block))===row.owner&&getWorldProperty(world,rackFiltersKey(block))===row.filters?block:undefined;
 }
 function rackInUseRange(player,block){
  if(!player||!block||player.dimension.id!==block.dimension.id)return false;

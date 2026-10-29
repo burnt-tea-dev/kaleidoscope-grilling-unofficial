@@ -2,6 +2,7 @@ import {SLIME_ID,SLIME_FRAME_MARKER_MIN,SLIME_FRAME_MARKER_MAX} from './slime_fr
 import {isFailureSkewer,FAILURE_VISUAL_MARKER} from './failure_skewer_visual_core.js';
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {isBottleHeldVisualItem} from './bottle_held_visual_core.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 
 // The player already uses all 32 entity properties. A hand can hold only one
 // of these items, so its existing twelve presentation channels have one owner.
@@ -13,9 +14,9 @@ export const HELD_VISUAL_WORD_MAX=684244;
 export const HELD_VISUAL_EMPTY=Object.freeze(Array(12).fill(0));
 const cache=new Map();
 const names=Object.freeze(Object.fromEntries(['main','off'].map(hand=>[hand,Object.freeze([
- ...Array.from({length:8},(_,i)=>'kaleidoscope_grilling:bottle_'+hand+'_'+i),
- ...Array.from({length:3},(_,i)=>'kaleidoscope_grilling:secret_'+hand+'_'+i),
- 'kaleidoscope_grilling:secret_'+hand+'_piece'
+ ...Array.from({length:8},(_,i)=>PersistedKey.BOTTLE_PREFIX+hand+'_'+i),
+ ...Array.from({length:3},(_,i)=>PersistedKey.SECRET_PREFIX+hand+'_'+i),
+ PersistedKey.SECRET_PREFIX+hand+'_piece'
 ])])));
 
 export function heldVisualKind(typeId){

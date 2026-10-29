@@ -1,8 +1,9 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 export const WEDDING_CANDY_ID='kaleidoscope_grilling:wedding_candy';
 export const WEDDING_CANDY_EFFECT='invincible';
 export const WEDDING_CANDY_EFFECT_TICKS=15*20;
 export const WEDDING_CANDY_XP=50;
-export const WEDDING_CANDY_STATE_KEY='kaleidoscope_grilling:wedding_candy_state';
+export const WEDDING_CANDY_STATE_KEY=PersistedKey.WEDDING_CANDY_STATE;
 export const WEDDING_CANDY_FOOD=Object.freeze({nutrition:20,saturation:0.5,canAlwaysEat:true});
 export const WEDDING_CANDY_EVENT=Object.freeze({
  timezone:'Asia/Shanghai',offsetMinutes:8*60,year:2026,month:9,firstDay:1,lastDay:12
