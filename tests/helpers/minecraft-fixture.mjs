@@ -348,7 +348,12 @@ export function createFixture(options = {}) {
     const dimension = typeof opts.dimension === 'string' ? getDimension(opts.dimension) : opts.dimension ?? f.dimension;
     const scheduled = new Map();
     const b = {dimension, location: copy(location), ...location, permutation: BlockPermutation.resolve(typeId, opts.states), isValid: true,
+      waterlogged: opts.waterlogged ?? false,
       get typeId() {return b.permutation.type.id;},
+      // The liquid layer is separate from the permutation, as on BDS. A plant
+      // written over water only keeps that water when explicitly waterlogged.
+      get isWaterlogged() {return b.waterlogged;},
+      setWaterlogged(flag) {return operation(b, 'setWaterlogged', [flag], () => {b.waterlogged = flag === true;});},
       get type() {return b.permutation.type;},
       get isAir() {return b.typeId === 'minecraft:air';},
       get isLiquid() {return ['minecraft:water', 'minecraft:lava'].includes(b.typeId);},
@@ -390,6 +395,11 @@ export function createFixture(options = {}) {
         else if (stack) equipment.set(slot, stack.clone()); else equipment.delete(slot);
         return true;
       });},
+      // ContainerSlot.hasItem() is a method on BDS, unlike this fixture's older getSlot getter.
+      getEquipmentSlot(slot) {
+        const read = () => p.equipment.getEquipment(slot);
+        return {getItem: read, setItem: stack => p.equipment.setEquipment(slot, stack), hasItem: () => !!read()};
+      },
     };
     p.components['minecraft:inventory'] = {container: p.inventory};
     p.components['minecraft:equippable'] = p.equipment;

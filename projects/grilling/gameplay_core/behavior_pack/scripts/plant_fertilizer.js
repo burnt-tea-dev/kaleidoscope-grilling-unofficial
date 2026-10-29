@@ -55,16 +55,21 @@ function growthJournal(){
   if(!observed.has(key))observed.set(key,{block,before:block.permutation});
   return observed.get(key);
  }
- return {
+ const journal={
   read(block){const entry=observe(block);return entry.after??entry.before;},
-  set(block,after,{afterNeighbors=false}={}){
-   Object.assign(observe(block),{after,afterNeighbors});
+  set(block,after,{afterNeighbors=false,waterlogged}={}){
+   const entry=observe(block);
+   Object.assign(entry,{after,afterNeighbors});
+   // A planned liquid layer is only comparable against the natively read one
+   // and survives a later pass that only changes the permutation again.
+   if(waterlogged!==undefined){journal.waterlogged(block);entry.afterWaterlogged=waterlogged;}
   },
-  dry(block){
+  waterlogged(block){
    const entry=observe(block);
    entry.waterlogged??=readPlantWaterlogged(block);
-   return entry.waterlogged===false;
+   return entry.waterlogged;
   },
+  dry(block){return journal.waterlogged(block)===false;},
   light(block){
    const entry=observe(block);
    entry.light??=readPlantLight(block);
@@ -111,15 +116,22 @@ function growthJournal(){
   steps(){return [...observed.values()].filter(entry=>entry.after)
    // The fruit must exist before its stem is attached. Keep all existing
    // handlers' ordering; only explicitly dependent writes move to the end.
-   .sort((a,b)=>Number(a.afterNeighbors)-Number(b.afterNeighbors)).map(({block,before,after,waterlogged})=>createOwnedPlantWrite({
+   .sort((a,b)=>Number(a.afterNeighbors)-Number(b.afterNeighbors)).map(({block,before,after,waterlogged,afterWaterlogged})=>createOwnedPlantWrite({
    read:()=>({permutation:block.permutation,waterlogged:waterlogged===undefined?undefined:readPlantWaterlogged(block)}),
-   write:snapshot=>block.setPermutation(snapshot.permutation),same:samePlantSnapshot,
-   before:{permutation:before,waterlogged},after:{permutation:after,waterlogged},
+   write(snapshot){
+    block.setPermutation(snapshot.permutation);
+    // Kelp grows into the water block itself. Bedrock only keeps that water
+    // in the liquid layer when the plant is explicitly waterlogged, and the
+    // restored water must read back exactly as it did before the attempt.
+    if(snapshot.waterlogged!==undefined&&readPlantWaterlogged(block)!==snapshot.waterlogged)block.setWaterlogged(snapshot.waterlogged);
+   },same:samePlantSnapshot,
+   before:{permutation:before,waterlogged},after:{permutation:after,waterlogged:afterWaterlogged??waterlogged},
    // A previous plant write can trigger the exact planned neighbour update.
    // Other native permutations are unknown, not permission to overwrite them.
    acceptPlannedAfter:true
   })).concat(deliveries);}
  };
+ return journal;
 }
 export function registerPlantFertilizer(id,handler){
  if(handlers.has(id))throw Error('Duplicate plant fertilizer handler: '+id);
@@ -190,12 +202,29 @@ export function interactWithPlantFertilizer(event){
 
 // @minecraft/server 2.9.0 has placeFeature, but no generic native bone-meal
 // invocation or feature-write journal. Explicit handlers below reproduce each
-// reviewed Java BonemealableBlock contract. Other plants remain unsupported.
-// Source and state mapping: docs/evidence/vanilla-plant-fertilizer.md.
+// reviewed Java BonemealableBlock contract. Feature-growing plants (saplings,
+// fungi, flowering azalea, moss, grass block spreading) remain unsupported.
 for(const id of ['minecraft:wheat','minecraft:carrots','minecraft:potatoes'])registerPlantFertilizer(id,(block,journal,random)=>{
  const permutation=journal.read(block),age=permutation.getState('growth');
  if(typeof age!=='number'||age>=7)return false;
  journal.set(block,permutation.withState('growth',Math.min(7,age+bonemealAgeIncrease(random()))));
+ return true;
+});
+
+// Java BeetrootBlock divides the CropBlock roll (2..5) by three, so one use
+// advances zero or one of its four ages and still consumes the item. Bedrock
+// stores eight growth values and renders 0-1, 2-3, 4-6 and 7 as those four
+// ages; an unchanged age keeps whatever intermediate value it already had.
+const BEETROOT_AGE_GROWTH=Object.freeze([0,2,4,7]);
+function beetrootJavaAge(growth){
+ if(!Number.isInteger(growth)||growth<0||growth>7)return undefined;
+ return growth>=7?3:growth>=4?2:growth>=2?1:0;
+}
+registerPlantFertilizer('minecraft:beetroot',(block,journal,random)=>{
+ const permutation=journal.read(block),age=beetrootJavaAge(permutation.getState('growth'));
+ if(age===undefined||age>=3)return false;
+ const next=Math.min(3,age+Math.floor(bonemealAgeIncrease(random())/3));
+ if(next!==age)journal.set(block,permutation.withState('growth',BEETROOT_AGE_GROWTH[next]));
  return true;
 });
 
@@ -344,12 +373,72 @@ for(const [id,fruit] of [['minecraft:melon_stem','minecraft:melon_block'],['mine
  return true;
 });
 
+// Java BambooStalkBlock: a column of fewer than 16 stalks is a valid target;
+// each use grows one or two blocks from the top while the space above is
+// air. Java also stores STAGE=1 to stop a finished column and refuses bone
+// meal on it. Bedrock has no such state (age_bit is its own two-step growth
+// flag), so only the height limit refuses an attempt here. Leaves, thickness
+// and the leaf hand-down to the two blocks below follow growBamboo exactly.
+const BAMBOO='minecraft:bamboo',BAMBOO_MAX_HEIGHT=16;
+function bambooColumn(block,journal){
+ let above=0,top={block,permutation:journal.read(block)};
+ while(above<BAMBOO_MAX_HEIGHT){
+  const next=plantNeighbor(top.block,journal,1);
+  if(next.permutation.type.id!==BAMBOO)break;
+  top=next;above++;
+ }
+ let below=0,cursor=block;
+ while(below<BAMBOO_MAX_HEIGHT){
+  const next=plantNeighbor(cursor,journal,-1);
+  if(next.permutation.type.id!==BAMBOO)break;
+  cursor=next.block;below++;
+ }
+ return {top,height:above+below+1};
+}
+function growBamboo(top,journal){
+ const below=plantNeighbor(top.block,journal,-1),below2=plantNeighbor(top.block,journal,-2);
+ const below2Bamboo=below2.permutation.type.id===BAMBOO;
+ let leaves='small_leaves';
+ if(below.permutation.type.id===BAMBOO&&below.permutation.getState('bamboo_leaf_size')!=='no_leaves'){
+  leaves='large_leaves';
+  if(below2Bamboo){
+   journal.set(below.block,below.permutation.withState('bamboo_leaf_size','small_leaves'));
+   journal.set(below2.block,below2.permutation.withState('bamboo_leaf_size','no_leaves'));
+  }
+ }
+ const thick=top.permutation.getState('bamboo_stalk_thickness')==='thick'||below2Bamboo;
+ const grown=BlockPermutation.resolve(BAMBOO,{age_bit:false,bamboo_leaf_size:leaves,bamboo_stalk_thickness:thick?'thick':'thin'});
+ const above=plantNeighbor(top.block,journal,1);
+ journal.set(above.block,grown);
+ return {block:above.block,permutation:grown};
+}
+registerPlantFertilizer(BAMBOO,(block,journal,random)=>{
+ let {top,height}=bambooColumn(block,journal);
+ if(height>=BAMBOO_MAX_HEIGHT)return false;
+ // isValidBonemealTarget never looks above the column. A blocked top still
+ // consumes the item; performBonemeal then simply grows nothing.
+ const blocks=1+Math.floor(random()*2);
+ for(let i=0;i<blocks;i++){
+  if(height>=BAMBOO_MAX_HEIGHT||plantNeighbor(top.block,journal,1).permutation.type.id!=='minecraft:air')return true;
+  top=growBamboo(top,journal);height++;
+ }
+ return true;
+});
+// Java BambooSaplingBlock keeps the shoot and places one thin, small-leaved
+// stalk above it; the second oil-residue pass then finds the space occupied.
+registerPlantFertilizer('minecraft:bamboo_sapling',(block,journal)=>{
+ const above=plantNeighbor(block,journal,1);
+ if(above.permutation.type.id!=='minecraft:air')return false;
+ journal.set(above.block,BlockPermutation.resolve(BAMBOO,{age_bit:false,bamboo_leaf_size:'small_leaves',bamboo_stalk_thickness:'thin'}));
+ return true;
+});
+
 function netherVineGrowthLength(random){
  let chance=1,length=0;
  while(random()<chance){chance*=.826;length++;}
  return length;
 }
-function netherVineTip(block,journal,id,ageState,dy){
+function growingPlantHead(block,journal,id,ageState,dy){
  let tip={block,permutation:journal.read(block)};
  for(;;){
   const age=tip.permutation.getState(ageState);
@@ -366,7 +455,7 @@ for(const [id,ageState,dy] of [
  // Java body use locates its connected head. Bedrock stores both as one ID,
  // so the terminal same-ID block is the head. Start each oil-residue pass at
  // the original clicked block, reading the previous pass's virtual growth.
- let {tip,next}=netherVineTip(block,journal,id,ageState,dy);
+ let {tip,next}=growingPlantHead(block,journal,id,ageState,dy);
  if(next.permutation.type.id!=='minecraft:air')return false;
  const length=netherVineGrowthLength(random);
  let age=Math.min(tip.permutation.getState(ageState)+1,25);
@@ -380,5 +469,21 @@ for(const [id,ageState,dy] of [
   tip={block:next.block,permutation:grown};age=Math.min(age+1,25);
   if(i+1<length)next=plantNeighbor(tip.block,journal,dy);
  }
+ return true;
+});
+
+// Java KelpBlock is the same GrowingPlantHeadBlock contract growing upward
+// into any water block (source or flowing), exactly one block per use, with
+// the head's age carried up and capped at 25. Java's body block is ageless;
+// Bedrock renders a covered kelp as body by itself, so the former head keeps
+// its stored age untouched (owner decision 2026-10-29) and is never written.
+const KELP='minecraft:kelp',KELP_WATER=new Set(['minecraft:water','minecraft:flowing_water']);
+registerPlantFertilizer(KELP,(block,journal)=>{
+ const {tip,next}=growingPlantHead(block,journal,KELP,'kelp_age',1);
+ if(!KELP_WATER.has(next.permutation.type.id))return false;
+ const grown=BlockPermutation.resolve(KELP,{kelp_age:Math.min(tip.permutation.getState('kelp_age')+1,25)});
+ // The replaced water must stay in the liquid layer under the new head, and
+ // a rollback has to read the original water back exactly.
+ journal.set(next.block,grown,{waterlogged:true});
  return true;
 });

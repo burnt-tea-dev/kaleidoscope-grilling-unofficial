@@ -2,6 +2,15 @@
 
 來源、發布與真人驗收是不同狀態。版本身份以 [baseline.json](baseline.json) 為準；公開下載與安裝限制見 [RELEASING](docs/RELEASING.md)，現行缺口見 [KNOWN-ISSUES](docs/KNOWN-ISSUES.md)。
 
+## 2.8.189 油渣施肥補完：甜菜、竹子、海帶（未發布）
+
+2.8.188 是同一 PR 的前一候選（海帶原頭部記為 0），未合併；本版依擁有者決定改為保留原年齡。
+
+- 油渣對甜菜依 Java `BeetrootBlock`（CropBlock 2–5 點數除以 3）每次推進 0 或 1 階，以 Bedrock growth 0–1／2–3／4–6／7 對應四個 Java 年齡；未推進仍扣料，成熟不扣。
+- 竹子依 `BambooStalkBlock`／`BambooSaplingBlock`：16 節以下的竹柱從頂端長 1–2 節，葉片與粗細照 `growBamboo` 下移；頂端被擋仍扣料不生長。Bedrock 沒有 Java stage 狀態，只以高度上限停止。
+- 海帶依 `KelpBlock`：每次向上長入一格水（源或流動），年齡上限 25，原頭部保留原年齡、不改寫；新頭部明確寫入含水層，回滾必須讀回原水方塊與含水層，否則保留成本並隔離。
+- 測試夾具新增 `isWaterlogged`／`setWaterlogged` 與 `getEquipmentSlot`；保留測試檔數不變。沒有新增 item、block、state 或 persisted key。
+
 ## 2.8.187 共用模型與聲音修正（未發布）
 
 - 合併完全相同的模型定義，保留骨架、位置、UV 與顯示範圍；貼圖和材質仍由原消費者指定。模型檔分銀行且每檔不超過 512 KiB；實際客戶端效能另驗。
