@@ -1,11 +1,13 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 import {onExplosion} from '../core/events.js';
 import {breakDisposition,brush,canExtract,canInsert,flip,initialState,light,normalizeState,outputKind,season,tickState} from "../core_logic.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState as readState} from "./grill_state_adapter.js";
-import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey} from "../family_station_storage.js";
+import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey} from "../core/storage.js";
 import {hasSolidTop} from "../blockSupport.js";
 import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY} from "../seasoning/seasoning_contract_core.js";
-import {getItemProperty,setItemLore,setItemProperty} from "../itemData.js";
+import {getItemProperty,setItemLore,setItemProperty} from "../core/persist.js";
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {SECRET_COOKED_KEY,SECRET_ID} from "../skewer/skewering_core.js";
 import {copyOne,message,planDamagedHand,reducedStack,transactionStatus} from "../core/actions.js";
@@ -40,7 +42,7 @@ const OIL_TYPES=Object.freeze({canola:{heatTicks:1200},secret_chili:{heatTicks:1
 function writeTickState(block,before,next){
  const state=normalizeState(next),beforeState=normalizeState(before);
  const same=beforeState.phase===state.phase&&beforeState.phaseTicks===state.phaseTicks&&beforeState.flips===state.flips&&beforeState.flipCooldown===state.flipCooldown&&beforeState.seasoned===state.seasoned&&beforeState.failed===state.failed&&beforeState.heatTicks===state.heatTicks&&beforeState.lit===state.lit&&beforeState.seasonings.length===state.seasonings.length&&beforeState.seasonings.every((x,i)=>x===state.seasonings[i]);
- if(!same)world.setDynamicProperty(stateKey(block),JSON.stringify(state));
+ if(!same)setWorldProperty(world,stateKey(block),JSON.stringify(state));
  // Java updateShape changes LEGGED when support below changes. Keep that visual/support sync live even on an otherwise idle grill.
  syncGrillPermutation(block,state);
  return state;
@@ -78,9 +80,9 @@ function syncGrillPermutation(block,state){
  }catch{}
 }
 
-function writeState(block,s){const state=normalizeState(s);world.setDynamicProperty(stateKey(block),JSON.stringify(state));syncGrillPermutation(block,state)}
+function writeState(block,s){const state=normalizeState(s);setWorldProperty(world,stateKey(block),JSON.stringify(state));syncGrillPermutation(block,state)}
 
-function clearState(block){world.setDynamicProperty(stateKey(block))}
+function clearState(block){setWorldProperty(world,stateKey(block))}
 
 function clearContainer(block){const c=inv(block);if(c)for(let i=0;i<3;i++)c.setItem(i,undefined)}
 
@@ -100,7 +102,7 @@ function cookedStack(raw,state){
   stack=new ItemStack(out,1);copyCustomData(raw,stack);
  }
  setHot(stack,state.heatTicks);setSeasonings(stack,state.seasonings??[]);
- try{setItemProperty(stack,'kaleidoscope_grilling:seasoned',state.seasoned)}catch{}
+ try{setItemProperty(stack,PersistedKey.SEASONED,state.seasoned)}catch{}
  return refreshHotLore(stack);
 }
 
@@ -174,7 +176,7 @@ function grillBreakSnapshot(block){
  // metadata getters are not. Compare those frozen native clones after defer.
  const contents=container?Array.from({length:container.size},(_,i)=>container.getItem(i)?.clone()??null):undefined;
  return {dimension:block.dimension,location:{...block.location},states:metadataSignature(block.permutation.getAllStates()),
-  owner:world.getDynamicProperty(stationStorageKey(block)),operation:metadataSignature(operation),
+  owner:getWorldProperty(world,stationStorageKey(block)),operation:metadataSignature(operation),
   contents};
 }
 

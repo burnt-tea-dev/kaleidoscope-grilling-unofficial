@@ -1,3 +1,4 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalFoodId} from '../eating_profile_ids.js';
 import {FIXED_INGREDIENT_TAGS} from '../java_ingredient_tags.js';
 import {SECRET_ID,recipeTable,secretFood,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY} from '../skewer/skewering_core.js';
@@ -6,8 +7,8 @@ export const PLATE_ID='kaleidoscope_grilling:skewer_plate';
 export const PLATE_BLOCK_ID='kaleidoscope_grilling:skewer_plate_block';
 export const BOOK_ID='kaleidoscope_grilling:skewer_recipe_book';
 export const RECIPE_BLOCK_ID='kaleidoscope_grilling:skewer_recipe';
-export const PLATE_SKEWERS_KEY='kaleidoscope_grilling:plate_skewers';
-export const BOOK_RECORD_KEY='kaleidoscope_grilling:recipe_record';
+export const PLATE_SKEWERS_KEY=PersistedKey.PLATE_SKEWERS;
+export const BOOK_RECORD_KEY=PersistedKey.RECIPE_RECORD;
 export const PLATE_CAPACITY=5;
 
 const RECIPES=Object.freeze(recipeTable());

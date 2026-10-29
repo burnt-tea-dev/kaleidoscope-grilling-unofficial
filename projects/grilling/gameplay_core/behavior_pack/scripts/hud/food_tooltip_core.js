@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../core/persist.js';
 import {canonicalCuisineFoodId} from '../host_api/cuisine_quality_core.js';
 export {isHeatLore} from '../localized_lore_core.js';
 // Java FoodTooltip.appendMaxim: DARK_GRAY + ITALIC; existing RP translation keys.

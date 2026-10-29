@@ -1,11 +1,12 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {
  HOST_FAT_CAPACITY,GRILLING_FLUID_CAPACITY,GRILLING_OIL_BUCKET_POINTS,normalizeOilType,planTypedOilAddition
 } from './cookery_oil_pot_core.js';
 
 export const HOST_BLOCK_ID='kaleidoscope_cookery:oil_pot';
 export const HOST_FAT_ITEM_ID='kaleidoscope_cookery:oil';
-export const HOST_BLOCK_COUNT_PREFIX='kc_oilpot:';
-export const TYPE_KEY_PREFIX='kaleidoscope_grilling:a2736_oilpot_type_';
+export const HOST_BLOCK_COUNT_PREFIX=PersistedKey.COOKERY_OIL_BLOCK_PREFIX;
+export const TYPE_KEY_PREFIX=PersistedKey.A2736_OILPOT_TYPE_PREFIX;
 export const OIL_BUCKET_POINTS=GRILLING_OIL_BUCKET_POINTS;
 
 const FACE_OFFSET=Object.freeze({

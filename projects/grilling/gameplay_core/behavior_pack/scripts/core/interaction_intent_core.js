@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemDataCore.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from './persist.js';
 import {chooseInteractionHand,makeIntent,intentMatches} from '../grill/grill_intent_core.js';
 
 export function primitiveStackProps(stack){

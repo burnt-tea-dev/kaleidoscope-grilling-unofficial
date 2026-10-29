@@ -2,7 +2,7 @@ import {system,world} from "@minecraft/server";
 import {interactionFeedback} from "./interaction_feedback.js";
 import {getHand as heldByHand,isCreative as creative,playerInventory as mainContainer,setHand} from "./player_io.js";
 import {nextDurability} from "../grill/grill_input_core.js";
-import {planOwnedInventoryDelivery} from "../owned_item_transaction_core.js";
+import {planOwnedInventoryDelivery} from "./transaction.js";
 import {mergeIntoContainer} from "../skewer/hot_runtime.js";
 function now(){try{return world.getAbsoluteTime()}catch{return system.currentTick}}
 

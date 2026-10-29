@@ -468,6 +468,9 @@ export function createFixture(options = {}) {
   f.load = async name => {
     const url = new URL(name, scripts);
     if (!url.href.startsWith(scripts.href)) throw new Error('Fixture can only import canonical runtime modules');
+    const persistenceUrl = new URL('core/persist.js', scripts);
+    persistenceUrl.searchParams.set('fixture', id);
+    await execute(async () => (await import(persistenceUrl.href)).configureItemDataWorld(world));
     url.searchParams.set('fixture', id);
     return execute(() => import(url.href));
   };

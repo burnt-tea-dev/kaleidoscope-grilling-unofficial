@@ -93,7 +93,13 @@ def collect() -> dict:
     persisted = set()
     for p in sorted((bp / "scripts").rglob("*.js")):
         text = p.read_text(encoding="utf-8", errors="replace")
-        persisted.update(persisted_literals(text))
+        # The canonical key registry may include external API keys such as
+        # Cookery's unnamespaced `kc_oil_count`; ordinary identifier catalogs
+        # still require a namespace before a literal counts as persisted.
+        persisted.update(persisted_literals(
+            text,
+            include_bare_registry_keys=p.name == "persist_keys.js" and p.parent.name == "core",
+        ))
     packs = {}
     for label, root in (("BP", bp), ("RP", rp)):
         man = load_json(root / "manifest.json")

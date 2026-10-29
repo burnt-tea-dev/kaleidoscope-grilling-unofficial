@@ -131,6 +131,12 @@ class LexicalGuards(unittest.TestCase):
         self.assertNotIn('ignored:comment', found)
         self.assertNotIn('ignored:unused', found)
 
+    def test_registry_can_lock_external_bare_persistence_keys(self):
+        from js_tokens import persisted_literals
+        source = "export const COOKERY_OIL_COUNT_KEY='kc_oil_count';"
+        self.assertNotIn('kc_oil_count', persisted_literals(source))
+        self.assertIn('kc_oil_count', persisted_literals(source, include_bare_registry_keys=True))
+
     def test_whitespace_listeners_count_without_comments_or_string_payloads(self):
         from js_tokens import code
         import re

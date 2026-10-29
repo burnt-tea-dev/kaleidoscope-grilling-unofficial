@@ -1,5 +1,5 @@
 // Low-level, offline persisted-data interpretation. No world/LevelDB API imports.
-// Sources: family_station_storage.js, itemDataCore.js, a25_plate_recipe_runtime.js,
+// Sources: core/storage.js, core/persist.js, a25_plate_recipe_runtime.js,
 // a2746_rack_item_codec.js and the public station-key producers at G155.
 const KG = 'kaleidoscope_grilling:'
 const ITEM_META = 'senluo:grilling_item_'

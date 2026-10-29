@@ -1,9 +1,10 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 import {onBeforeBlockBreak,onExplosion,onScriptEvent} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {beginSeasoningMotion} from '../seasoning_motion_runtime.js';
 import {replaceSeasoningUsesLore} from '../bottle_lore_core.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from '../core/interaction_feedback.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {EMPTY_SEASONING_ID} from '../eating_data_lookup.js';
@@ -37,7 +38,7 @@ onScriptEvent('food/cookery_cuisine_runtime.js:0',event=>{
 function isFirst(event){return event.isFirstEvent!==false}
 function readCuisineState(block){
  try{
-  const raw=world.getDynamicProperty(cuisineStateKey(block));
+  const raw=getWorldProperty(world,cuisineStateKey(block));
   return normalizeCuisineState(typeof raw==='string'?JSON.parse(raw):{});
  }catch{return normalizeCuisineState({})}
 }
@@ -45,16 +46,16 @@ function writeCuisineState(block,state){
  try{
   const normalized=normalizeCuisineState(state);
   const empty=!normalized.seasoning.length&&!normalized.oilType&&!normalized.lastOutputTick;
-  world.setDynamicProperty(cuisineStateKey(block),empty?undefined:JSON.stringify(normalized));
+  setWorldProperty(world,cuisineStateKey(block),empty?undefined:JSON.stringify(normalized));
   system.sendScriptEvent('kaleidoscope_cookery:cuisine_metadata',JSON.stringify({api:1,station:{dimensionId:block.dimension.id,x:block.x,y:block.y,z:block.z},state:normalized}));return true;
  }catch{return false}
 }
 function clearCuisineAt(dimensionId,location){
- try{world.setDynamicProperty(cuisineStateKeyAt(dimensionId,location.x,location.y,location.z),undefined);system.sendScriptEvent('kaleidoscope_cookery:cuisine_metadata',JSON.stringify({api:1,station:{dimensionId,...location},state:{seasoning:[],oilType:''}}));return true}catch{return false}
+ try{setWorldProperty(world,cuisineStateKeyAt(dimensionId,location.x,location.y,location.z),undefined);system.sendScriptEvent('kaleidoscope_cookery:cuisine_metadata',JSON.stringify({api:1,station:{dimensionId,...location},state:{seasoning:[],oilType:''}}));return true}catch{return false}
 }
 function cuisineRemovalSnapshot(block){
  const dimension=block.dimension,location={...block.location},stateKey=cuisineStateKey(block);
- return {dimension,location,typeId:block.typeId,stateKey,raw:world.getDynamicProperty(stateKey)};
+ return {dimension,location,typeId:block.typeId,stateKey,raw:getWorldProperty(world,stateKey)};
 }
 function clearRemovedCuisine(event,rows){
  // Another before-event subscriber may cancel after our capture. An expired
@@ -64,9 +65,9 @@ function clearRemovedCuisine(event,rows){
   const live=row.dimension.getBlock(row.location);
   // An unloaded location, the original station or a replacement station does
   // not authorize deletion. Keep the exact captured metadata if it changed.
-  if(!live||live.typeId===row.typeId||stationKind(live.typeId)||world.getDynamicProperty(row.stateKey)!==row.raw)continue;
-  let failure;try{world.setDynamicProperty(row.stateKey,undefined)}catch(error){failure=error}
-  if(world.getDynamicProperty(row.stateKey)!==undefined)throw failure??Error('cuisine removal readback');
+  if(!live||live.typeId===row.typeId||stationKind(live.typeId)||getWorldProperty(world,row.stateKey)!==row.raw)continue;
+  let failure;try{setWorldProperty(world,row.stateKey,undefined)}catch(error){failure=error}
+  if(getWorldProperty(world,row.stateKey)!==undefined)throw failure??Error('cuisine removal readback');
   system.sendScriptEvent('kaleidoscope_cookery:cuisine_metadata',JSON.stringify({api:1,station:{dimensionId:row.dimension.id,...row.location},state:{seasoning:[],oilType:''}}));
  }catch(error){console.warn('[Grilling cuisine removal] retained '+error)}
 }
@@ -141,13 +142,13 @@ function applySeasoning(player,block){
    setItemLore(next,replaceSeasoningUsesLore(getItemRawLore(next),SEASONING_MAX_USES-plan.nextUses));
   }catch{interactionFailure(player,'§c調料資料準備失敗，操作已取消');return true}
  }
- const key=cuisineStateKey(block),beforeRaw=world.getDynamicProperty(key);
+ const key=cuisineStateKey(block),beforeRaw=getWorldProperty(world,key);
  const state=stateBeforeSeasoning(stationKind(block.typeId),readCuisineState(block),hostHasOil(block));
  const result=commitTwoParty(
   ()=>{if(plan.mutate)inventory.setItem(slot,next)},
   ()=>{if(!writeCuisineState(block,{...state,seasoning:plan.ingredients}))throw new Error('cuisine_state_write')},
   ()=>{if(plan.mutate)inventory.setItem(slot,held)},
-  ()=>world.setDynamicProperty(key,beforeRaw)
+  ()=>setWorldProperty(world,key,beforeRaw)
  );
  if(!result.ok){
   if(result.rollbackErrors)console.warn('[Grilling] seasoning rollback failed: '+result.rollbackErrors);

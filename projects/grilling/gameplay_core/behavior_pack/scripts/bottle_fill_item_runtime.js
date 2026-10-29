@@ -1,7 +1,7 @@
 import {system,world} from '@minecraft/server';
 import {copyEatingVariant} from './eating_item_runtime.js';
 import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js';
-import {getItemProperty} from './itemData.js';
+import {getItemProperty} from './core/persist.js';
 import {playerInventory,getOffHand,setOffHand} from './core/player_io.js';
 import {SEASONING_LIST_KEY,isEmptySeasoningId,isPendingSeasoningId,normalizeSeasoningList,seasoningFillVisualId} from './seasoning/seasoning_contract_core.js';
 

@@ -1,14 +1,16 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 /** Copied only into the hash-verified Cookery 1.6 host. No new event loop. */
 import {world,ItemStack,GameMode} from '@minecraft/server';
 import {wokRecipes,flexWokRecipes} from '../food/wok_food_core.js';
 import {evaluateCuisineQuality} from './cuisine_quality_core.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {commitSharedStationOil} from './oil_api_host.js';
 import {nextCuisineBatch,consumeCuisineCarrier,giveCuisineOutput,deliverCuisineOutput,recoverCuisineOutput,prepareCuisineBurn,assertCuisineBatchUncredited} from './cuisine_api_host.js';
 import {newJavaPot,readJavaPot,reviseJavaPot,paddedPotInputs,potIngredientSlots,selectJavaPotRecipe,startJavaPot,stirJavaPot,advanceJavaPot} from './pot_api_core.js';
 
 export const JAVA_POT_CAPABILITIES=Object.freeze(['grilling_pot_exact_flex_v1']);
 const EXACT=wokRecipes(),FLEX=flexWokRecipes(),OWN_INGREDIENTS=new Set(EXACT.flatMap(recipe=>recipe.ingredients));
-const journalKey=b=>'senluo:java_pot_operation:'+b.dimension.id+':'+b.x+','+b.y+','+b.z;
+const journalKey=b=>PersistedKey.JAVA_POT_OPERATION_PREFIX+b.dimension.id+':'+b.x+','+b.y+','+b.z;
 const rawOf=data=>Object.keys(data).length?JSON.stringify(data):undefined;
 const copy=value=>JSON.parse(JSON.stringify(value));
 const item=slot=>slot?.hasItem()?slot.getItem():undefined;
@@ -24,7 +26,7 @@ function readStation(b,host){
  return {raw,data};
 }
 function readJournal(b){
- const raw=world.getDynamicProperty(journalKey(b));if(raw===undefined)return undefined;
+ const raw=getWorldProperty(world,journalKey(b));if(raw===undefined)return undefined;
  if(typeof raw!=='string')throw Error('pot operation journal unreadable');
  const r=JSON.parse(raw);
  if(!r||r.version!==1||typeof r.kind!=='string'||!['prepared','debited','committed','rolled_back','quarantined'].includes(r.phase)
@@ -36,8 +38,8 @@ function requireSettled(b){
 }
 function writeJournal(b,r){
  const raw=JSON.stringify(r);if(raw.length>30000)throw Error('pot operation journal too large');
- let failure;try{world.setDynamicProperty(journalKey(b),raw)}catch(error){failure=error}
- if(world.getDynamicProperty(journalKey(b))!==raw)throw failure??Error('pot operation journal readback');
+ let failure;try{setWorldProperty(world,journalKey(b),raw)}catch(error){failure=error}
+ if(getWorldProperty(world,journalKey(b))!==raw)throw failure??Error('pot operation journal readback');
 }
 function terminal(b,r,phase){r.phase=phase;try{writeJournal(b,r)}catch(error){retain(b,error);}}
 function begin(b,snapshot,next,kind,extra={}){

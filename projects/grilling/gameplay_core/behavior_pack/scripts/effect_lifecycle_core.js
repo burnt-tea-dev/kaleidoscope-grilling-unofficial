@@ -1,6 +1,7 @@
 import {utf8Bytes} from './integration_stack_core.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 /** Java 1.1.1 effects: milk preserves only uncurable heavy-metal poisoning; death clears all. */
-export const FX_KEY='kaleidoscope_grilling:a21_fx';
+export const FX_KEY=PersistedKey.A21_FX;
 // Supported ingredient registration clamps amplifiers to 0..255. A Java hidden
 // chain strictly descends in amplifier, so 256 nodes covers every supported
 // chain without allowing malformed/cyclic saved data to grow or loop forever.

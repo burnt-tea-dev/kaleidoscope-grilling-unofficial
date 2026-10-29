@@ -24,7 +24,7 @@ import {captureInteractionIntent,interactionIntentStillCurrent,primitiveStackPro
 import {SEASONING_MAX_USES,SEASONING_VARIANT_KEY as SEASON_VARIANT_KEY,SEASONING_VARIANT_MAX,isPendingSeasoningId} from "../seasoning/seasoning_contract_core.js";
 import {specialSeasoningVisualId} from "../seasoning/special_seasoning_visual_core.js";
 import {getUses,setUses} from "../grill/runtime.js";
-import {setItemLore,setItemProperty} from "../itemData.js";
+import {setItemLore,setItemProperty} from "../core/persist.js";
 import {seasoningLore} from "../localized_lore_core.js";
 import {syncSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {canUseCuisineFood,captureCuisineUse,completedCuisineUse,cuisineUseEventMatches} from "../cuisine_eating_core.js";

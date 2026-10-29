@@ -1,9 +1,11 @@
+import {getWorldProperty,setWorldProperty} from './core/persist.js';
 import {onScriptEvent} from './core/events.js';
 import {world,system,CommandPermissionLevel,CustomCommandParamType,CustomCommandStatus} from '@minecraft/server';
 import {normalizeConfig,configValue} from './server_config_core.js';
-const KEY='kaleidoscope_grilling:server_config_v1';let cache;
-export function grillingConfig(){if(!cache){let v;try{v=JSON.parse(world.getDynamicProperty(KEY)??'{}')}catch{}cache=normalizeConfig(v)}return cache;}
-export function setGrillingConfig(key,value){const next={...grillingConfig(),[key]:configValue(key,value)};world.setDynamicProperty(KEY,JSON.stringify(next));cache=next;publishCuisineConfig();return next;}
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
+const KEY=PersistedKey.SERVER_CONFIG;let cache;
+export function grillingConfig(){if(!cache){let v;try{v=JSON.parse(getWorldProperty(world,KEY)??'{}')}catch{}cache=normalizeConfig(v)}return cache;}
+export function setGrillingConfig(key,value){const next={...grillingConfig(),[key]:configValue(key,value)};setWorldProperty(world,KEY,JSON.stringify(next));cache=next;publishCuisineConfig();return next;}
 system.beforeEvents.startup.subscribe(({customCommandRegistry})=>{
  customCommandRegistry.registerCommand({name:'kaleidoscope_grilling:config',description:'Set Grilling server option (saturationMultiplier, fullHungerEating, enableEatingAnimations, enableOilBrushVisuals, interceptCookeryTableWhenPlacingPlate, graphicalEatingHud, enableCookeryFoodHeatAndSeasoning, enableSmeltedFoodHeat, smeltedFoodSeconds, contentsHelpers, fixedGrillHelpers, placedHelpers, contentsTargetsPerTick)',permissionLevel:CommandPermissionLevel.GameDirectors,cheatsRequired:false,mandatoryParameters:[{name:'key',type:CustomCommandParamType.String},{name:'value',type:CustomCommandParamType.String}]},(origin,key,value)=>{
   try{configValue(key,value)}catch(error){return {status:CustomCommandStatus.Failure,message:String(error)}}

@@ -29,7 +29,7 @@ for (const {direction, yaw, tail, left} of cases) {
   test(`grill tails face the placer on ${direction}, including birth, flips and respawn`, async () => {
     const f = createFixture();
     const runtime = await f.load('grill_visual_runtime.js');
-    const storage = await f.load('family_station_storage.js');
+    const storage = await f.load('core/storage.js');
     const adapter = await f.load('grill/grill_state_adapter.js');
     const {initialState} = await f.load('core_logic.js');
     const block = f.block('kaleidoscope_grilling:grill', {x: 10, y: 80, z: 7}, {

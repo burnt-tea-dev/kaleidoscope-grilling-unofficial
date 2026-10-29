@@ -1,3 +1,4 @@
+import {getWorldPropertyIds} from '../core/persist.js';
 import {onAfterBlockBreak} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {grillingConfig} from '../server_config_runtime.js';
@@ -101,7 +102,7 @@ function indexSavedTargets(){
    const dimensions=new Set(['minecraft:overworld','minecraft:nether','minecraft:the_end']);
    for(const p of onlinePlayers())dimensions.add(p.dimension.id);
    const ids=[...dimensions];
-   for(const key of world.getDynamicPropertyIds()){
+   for(const key of getWorldPropertyIds(world)){
     const value=decodeKey(key,ids);if(value)remember(value);
     yield;
    }

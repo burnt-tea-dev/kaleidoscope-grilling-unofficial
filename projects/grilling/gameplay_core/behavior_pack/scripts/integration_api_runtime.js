@@ -1,3 +1,4 @@
+import {getWorldProperty,setWorldProperty,parseWorldJson,stringifyWorldJson} from './core/persist.js';
 import {onScriptEvent} from './core/events.js';
 /** Server-script API. No polling inference, item delivery, player impersonation or vanilla worldgen scan. */
 import {world,system,BlockPermutation} from '@minecraft/server';
@@ -7,12 +8,13 @@ import {stationProjection} from './station_projection_core.js';
 import {readPublicFood} from './host_api/food_api_core.js';
 import {normalizeFreshFortress,fortressReplacementAt} from './fortress_generation_core.js';
 import {grillingConfig} from './server_config_runtime.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 export const INTEGRATION_REQUEST='kaleidoscope_grilling:integration_request';
 export const INTEGRATION_RESPONSE='kaleidoscope_grilling:integration_response';
-const REGISTRY_KEY='kaleidoscope_grilling:integration_registry_v1',JOURNAL_PREFIX='kaleidoscope_grilling:integration_operation:',TOUCHED_PREFIX='kaleidoscope_grilling:player_touched_nether:';
+const REGISTRY_KEY=PersistedKey.INTEGRATION_REGISTRY,JOURNAL_PREFIX=PersistedKey.INTEGRATION_OPERATION_PREFIX,TOUCHED_PREFIX=PersistedKey.PLAYER_TOUCHED_NETHER_PREFIX;
 let ready=false,storageFault='',ledgerFault='';
-const write=(key,value)=>{const bytes=JSON.stringify(value);if(utf8Bytes(bytes)>30000)throw Error('API storage capacity');world.setDynamicProperty(key,bytes);if(world.getDynamicProperty(key)!==bytes)throw Error('API storage readback');};
-const read=key=>{const raw=world.getDynamicProperty(key);return raw===undefined?undefined:JSON.parse(String(raw));};
+const write=(key,value)=>{const bytes=stringifyWorldJson(value);if(utf8Bytes(bytes)>30000)throw Error('API storage capacity');setWorldProperty(world,key,bytes);if(getWorldProperty(world,key)!==bytes)throw Error('API storage readback');};
+const read=key=>parseWorldJson(getWorldProperty(world,key));
 const chunkKey=(x,z)=>TOUCHED_PREFIX+Math.floor(x/16)+','+Math.floor(z/16);
 function targetSlot(target){
  if(!target||!Number.isInteger(target.slot)||target.slot<0)throw Error('output slot schema');
@@ -60,7 +62,7 @@ function replaceFortress(request){
  producerFor(request.producerId,'fresh_fortress');
  return commitOperation(request,()=>{
   const batch=normalizeFreshFortress(request.generation,Number(world.getAbsoluteTime())),dimension=world.getDimension(batch.dimensionId);
-  if(world.getDynamicProperty(chunkKey(batch.positions[0].x,batch.positions[0].z))!==undefined)throw Error('generated chunk already touched by a player');
+  if(getWorldProperty(world,chunkKey(batch.positions[0].x,batch.positions[0].z))!==undefined)throw Error('generated chunk already touched by a player');
   const changes=[];for(const position of batch.positions){
    const block=dimension.getBlock(position);if(block?.typeId!=='minecraft:nether_wart'||dimension.getBlock({...position,y:position.y-1})?.typeId!=='minecraft:soul_sand')throw Error('generated wart evidence changed');
    const age=block.permutation.getState('age');if(![0,1,2,3].includes(age))throw Error('native wart age');
@@ -101,5 +103,5 @@ onScriptEvent('integration_api_runtime.js:0',event=>{
 });
 // Whole touched chunks are excluded; no existing farm is inferred from nearby bricks or scans.
 for(const name of ['playerPlaceBlock','playerBreakBlock'])world.afterEvents[name].subscribe(e=>{
- if(e.block?.dimension.id==='minecraft:nether')try{const key=chunkKey(e.block.x,e.block.z);if(world.getDynamicProperty(key)===undefined){world.setDynamicProperty(key,true);if(world.getDynamicProperty(key)!==true)throw Error('touched-chunk readback');}}catch(error){ledgerFault='player touched-chunk ledger unavailable';console.warn('[Grilling integration API] '+error)}
+ if(e.block?.dimension.id==='minecraft:nether')try{const key=chunkKey(e.block.x,e.block.z);if(getWorldProperty(world,key)===undefined){setWorldProperty(world,key,true);if(getWorldProperty(world,key)!==true)throw Error('touched-chunk readback');}}catch(error){ledgerFault='player touched-chunk ledger unavailable';console.warn('[Grilling integration API] '+error)}
 });

@@ -1,12 +1,14 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 import {scriptEvents} from './event_router.js';
 /** Author-owned output transactions; native food state travels with the actual output. */
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {writePublicFood,readPublicFood,readPublicFoodLore,normalizePublicFood,bucketHotUntil} from './food_api_core.js';
 import {canonicalCuisineFoodId,cuisineQualityItemId,cuisineQualityOfItem,cuisineQualityPayloadMatches} from './cuisine_quality_core.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 export const CUISINE_CAPABILITIES=Object.freeze(['cuisine_output_receipt_v2','secret_ingredient_consume_v1','cuisine_configuration_v1']);
-const CONFIG_KEY='senluo:cuisine_heat_and_seasoning_v1';
-const cuisineEnabled=()=>world.getDynamicProperty(CONFIG_KEY)!==false;
-const META_PREFIX='senluo:cuisine_metadata:',RECEIPT_PREFIX='senluo:cuisine_output:',RECOVERY_PREFIX='senluo:cuisine_recovery:',CARRIER_PREFIX='senluo:cuisine_carrier:';
+const CONFIG_KEY=PersistedKey.CUISINE_CONFIG;
+const cuisineEnabled=()=>getWorldProperty(world,CONFIG_KEY)!==false;
+const META_PREFIX=PersistedKey.CUISINE_METADATA_PREFIX,RECEIPT_PREFIX=PersistedKey.CUISINE_OUTPUT_PREFIX,RECOVERY_PREFIX=PersistedKey.CUISINE_RECOVERY_PREFIX,CARRIER_PREFIX=PersistedKey.CUISINE_CARRIER_PREFIX;
 const key=b=>b.dimension.id+':'+b.x+','+b.y+','+b.z;
 const station=b=>({dimensionId:b.dimension.id,x:b.x,y:b.y,z:b.z});
 const same=(a,b)=>a?.typeId===b?.typeId&&a?.amount===b?.amount&&a?.nameTag===b?.nameTag&&JSON.stringify(a?.getRawLore())===JSON.stringify(b?.getRawLore());
@@ -23,14 +25,14 @@ function liveStackRelation(actual,expected){
 // an available native comparison that proves different is never ignored.
 const acknowledgesStack=(actual,expected)=>liveStackRelation(actual,expected)!=='different';
 function writeAcknowledged(property,value){
- let failure;try{world.setDynamicProperty(property,value)}catch(error){failure=error}
- if(world.getDynamicProperty(property)!==value)throw failure??Error('cuisine property readback');
+ let failure;try{setWorldProperty(world,property,value)}catch(error){failure=error}
+ if(getWorldProperty(world,property)!==value)throw failure??Error('cuisine property readback');
 }
 const writeReceipt=(property,receipt)=>writeAcknowledged(property,JSON.stringify(receipt));
 function cuisineEpoch(data){const epoch=data?.grillingOutputEpoch??'legacy';if(epoch!=='legacy'&&(!Number.isSafeInteger(epoch)||epoch<1))throw Error('cuisine batch identity invalid');return epoch;}
 function recoveryKey(b,data){return RECOVERY_PREFIX+key(b)+':pot:'+cuisineEpoch(data);}
 function readRecovery(b,data,id){
- const property=recoveryKey(b,data),raw=world.getDynamicProperty(property);
+ const property=recoveryKey(b,data),raw=getWorldProperty(world,property);
  if(raw!==undefined){
   if(typeof raw!=='string')throw Error('cuisine recovery fence unreadable');
   const intent=JSON.parse(raw);
@@ -42,7 +44,7 @@ function readRecovery(b,data,id){
  // the public 1..64 output contract. This runs only on a production operation.
  const epoch=cuisineEpoch(data);
  for(let count=1;count<=64;count++){
-  const operationId='break:pot:'+epoch+':'+count,legacyRaw=world.getDynamicProperty(RECEIPT_PREFIX+key(b)+':'+operationId);
+  const operationId='break:pot:'+epoch+':'+count,legacyRaw=getWorldProperty(world,RECEIPT_PREFIX+key(b)+':'+operationId);
   if(legacyRaw===undefined)continue;
   const prior=JSON.parse(String(legacyRaw)),valid=requestedOutputId(prior)===id&&canonicalCuisineFoodId(prior.output?.id)===canonicalCuisineFoodId(id)&&Number.isInteger(prior.output?.amount)&&prior.output.amount>=1&&prior.output.amount<=count&&receiptQualityMatches(prior,savedCuisineQuality(data));
   const intent={version:1,kind:'pot',itemId:id,epoch,sourceCount:count,remaining:valid?prior.output.amount:null,operationId,phase:valid&&prior.phase==='committed'?'committed':'quarantined',legacy:true};
@@ -117,7 +119,7 @@ function restoreCarrier(player,outputReceipt){
 export function consumeCuisineCarrier(b,player,data,kind='pot',expectedId){
  const retained=carriers.get(player.id);
  if(retained?.resolvedPhase)carrierPhase(player,retained,retained.resolvedPhase);
- const property=CARRIER_PREFIX+player.id,raw=world.getDynamicProperty(property);
+ const property=CARRIER_PREFIX+player.id,raw=getWorldProperty(world,property);
  if(raw!==undefined){
   const prior=typeof raw==='string'?JSON.parse(raw):undefined;
   if(prior?.version!==1||prior.playerId!==player.id||typeof prior.outputReceipt!=='string'||!prior.outputReceipt.startsWith(RECEIPT_PREFIX)||!prior.before||typeof prior.before.id!=='string'||!Number.isInteger(prior.before.amount)||prior.before.amount<1||!Array.isArray(prior.before.lore)||!['committed','rolled_back'].includes(prior.phase))throw Error('carrier debit outcome retained');
@@ -125,7 +127,7 @@ export function consumeCuisineCarrier(b,player,data,kind='pot',expectedId){
  if(carriers.has(player.id))throw Error('carrier operation retained');
  // An existing output is handled by its receipt. Replaying it must not first
  // debit another container; an unresolved old output is also not a new sale.
- const outputReceipt=RECEIPT_PREFIX+key(b)+':'+portionOperation(data,kind),old=world.getDynamicProperty(outputReceipt);
+ const outputReceipt=RECEIPT_PREFIX+key(b)+':'+portionOperation(data,kind),old=getWorldProperty(world,outputReceipt);
  if(old!==undefined){const prior=JSON.parse(String(old));if(prior?.phase!=='rolled_back'||prior.settlementVersion!==1)return;}
  if(player.getGameMode()===GameMode.Creative)return;
  beginCuisineCarrier(player,outputReceipt);const r=carriers.get(player.id);
@@ -146,14 +148,14 @@ function claimCarrier(player,outputReceipt,unknown=false){
  if(unknown)r.deliveryUnknown=true;else r.resolvedPhase='committed';
  try{carrierPhase(player,r,unknown?'quarantined':'committed')}catch(error){console.warn('[Cookery cuisine API] paid carrier retained '+error)}
 }
-export function nextCuisineBatch(b){const k=RECEIPT_PREFIX+key(b)+'_batch',previous=world.getDynamicProperty(k)??0,n=previous+1;if(!Number.isSafeInteger(previous)||previous<0||!Number.isSafeInteger(n))throw Error('batch sequence');writeAcknowledged(k,n);return n;}
+export function nextCuisineBatch(b){const k=RECEIPT_PREFIX+key(b)+'_batch',previous=getWorldProperty(world,k)??0,n=previous+1;if(!Number.isSafeInteger(previous)||previous<0||!Number.isSafeInteger(n))throw Error('batch sequence');writeAcknowledged(k,n);return n;}
 export function readCuisineMetadata(b,data={},kind='pot'){
  const quality=savedCuisineQuality(data),extra=quality===undefined?{}:{quality};
  // Java creates a fresh dark dish after its takeout mixin touched the old result.
  if(data.grillingPot?.phase==='burnt')return {v:1,hotUntil:0,seasoning:[]};
  if(!cuisineEnabled()){const plain=normalizePublicFood({v:1,hotUntil:0,seasoning:[],...extra});if(!plain)throw Error('cuisine quality invalid');return plain;}
  let state={seasoning:[],oilType:data.grillingOilType??(data.oil?'default':'')};
- const raw=world.getDynamicProperty(META_PREFIX+key(b));if(raw!==undefined)state={...state,...JSON.parse(String(raw))};
+ const raw=getWorldProperty(world,META_PREFIX+key(b));if(raw!==undefined)state={...state,...JSON.parse(String(raw))};
  const oilType=data.grillingOilType||state.oilType;
  const heat=kind==='stockpot'?1200:oilType==='premium_chili'?24000:oilType==='secret_chili'?12000:1200;
  const result=normalizePublicFood({v:1,hotUntil:bucketHotUntil(Number(world.getAbsoluteTime())+heat),seasoning:[...(state.seasoning??[])],...extra});if(!result)throw Error('cuisine metadata invalid');return result;
@@ -187,7 +189,7 @@ export function deliverCuisineOutput(b,data,id,count,kind,{container,playerId,ta
  if(kind==='pot_input'&&(!nativeStack||recoveryIntent))throw Error('plain ingredient output identity');
  if(!plain&&canonicalCuisineFoodId(id)!==id)throw Error('requested cuisine identity must be canonical');
  if(kind==='pot'){
-  if(world.getDynamicProperty(burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt batch retained');
+  if(getWorldProperty(world,burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt batch retained');
   const recovery=readRecovery(b,data,id);
   if(recovery.intent){
    // Destruction closes the entire epoch, not only the last numbered portion.
@@ -196,7 +198,7 @@ export function deliverCuisineOutput(b,data,id,count,kind,{container,playerId,ta
   }else if(recoveryIntent)throw Error('cuisine recovery fence missing');
  }
  const op=operationId??'automatic:'+nextCuisineBatch(b),receiptId=key(b)+':'+op,receiptKey=RECEIPT_PREFIX+receiptId;
- const old=world.getDynamicProperty(receiptKey);
+ const old=getWorldProperty(world,receiptKey);
  if(old!==undefined){
   const prior=JSON.parse(String(old));
   const rebind=kind==='pot'&&canRebindBurntReceipt(b,data,prior,id,count,receiptId);
@@ -274,9 +276,9 @@ const burntReceiptKey=(b,data)=>RECEIPT_PREFIX+key(b)+':'+burntOperation(data);
 function assertUncreditedCuisine(b,data){
  const id=data.result?.id||data.grillingBurnOrigin?.resultId||'minecraft:charcoal';
  if(readRecovery(b,data,id).intent)throw Error('cuisine destruction retained before burn');
- if(world.getDynamicProperty(burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt output retained');
+ if(getWorldProperty(world,burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt output retained');
  if(data.result?.id){
-  const raw=world.getDynamicProperty(RECEIPT_PREFIX+key(b)+':'+portionOperation(data,'pot'));
+  const raw=getWorldProperty(world,RECEIPT_PREFIX+key(b)+':'+portionOperation(data,'pot'));
   if(raw!==undefined){const prior=JSON.parse(String(raw));if(prior?.phase!=='rolled_back'||prior.settlementVersion!==1)throw Error('cuisine takeout retained before burn');}
  }
 }
@@ -319,7 +321,7 @@ function prepareBurntOutput(b,data,host){
   // from ingredients/RNG. Keep that state for review rather than minting it.
   assertUncreditedCuisine(b,data);
   for(let count=1;count<=64;count++){
-   const raw=world.getDynamicProperty(RECEIPT_PREFIX+key(b)+':pot:'+cuisineEpoch(data)+':'+count);
+   const raw=getWorldProperty(world,RECEIPT_PREFIX+key(b)+':pot:'+cuisineEpoch(data)+':'+count);
    if(raw!==undefined){const prior=JSON.parse(String(raw));if(prior?.phase!=='rolled_back'||prior.settlementVersion!==1)throw Error('legacy burnt food outcome retained');}
   }
   const epoch=data.grillingOutputEpoch??nextCuisineBatch(b);
@@ -338,7 +340,7 @@ export function giveBurntCuisineOutput(b,p,data,host){
 export function recoverCuisineOutput(b,data,host){
  if(data.burnt){const count=prepareBurntOutput(b,data,host);deliverCuisineOutput(b,data,'minecraft:charcoal',count,'burnt',{operationId:burntOperation(data)});return true;}
  if(!data.result?.id)return false;
- if(world.getDynamicProperty(burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt batch retained');
+ if(getWorldProperty(world,burntReceiptKey(b,data))!==undefined)throw Error('cuisine burnt batch retained');
  const id=data.result.id,recovery=readRecovery(b,data,id),sourceCount=Number(data.result.count??1);
  let intent=recovery.intent;
  if(intent){
@@ -347,7 +349,7 @@ export function recoverCuisineOutput(b,data,host){
   if(intent.phase!=='prepared'||intent.sourceCount!==sourceCount)throw Error('cuisine takeout outcome unresolved');
  }else{
   if(!Number.isInteger(sourceCount)||sourceCount<1||sourceCount>64)throw Error('cuisine recovery amount invalid');
-  const operation=portionOperation(data,'pot'),raw=world.getDynamicProperty(RECEIPT_PREFIX+key(b)+':'+operation);
+  const operation=portionOperation(data,'pot'),raw=getWorldProperty(world,RECEIPT_PREFIX+key(b)+':'+operation);
   let count=sourceCount,reason='';
   if(raw!==undefined){
    const prior=JSON.parse(String(raw));
@@ -376,15 +378,15 @@ scriptEvents(system)('cuisine_api_host',e=>{
   const r=JSON.parse(e.message),s=r.station;if(r.api!==1||!s||typeof s.dimensionId!=='string'||![s.x,s.y,s.z].every(Number.isInteger))return;
   const valid=normalizePublicFood({v:1,hotUntil:0,seasoning:r.state?.seasoning});if(!valid)return;
   const k=META_PREFIX+s.dimensionId+':'+s.x+','+s.y+','+s.z;
-  world.setDynamicProperty(k,JSON.stringify({seasoning:valid.seasoning,oilType:String(r.state.oilType??'')}));
+  setWorldProperty(world,k,JSON.stringify({seasoning:valid.seasoning,oilType:String(r.state.oilType??'')}));
  }catch(error){console.warn('[Cookery cuisine API] metadata retained '+error)}
 });
 
 scriptEvents(system)('cuisine_api_host',e=>{
  if(e.id!=='kaleidoscope_cookery:cuisine_config')return;
  try{const request=JSON.parse(e.message);if(request.api!==1||typeof request.enabled!=='boolean')throw Error('invalid cuisine configuration');
-  world.setDynamicProperty(CONFIG_KEY,request.enabled);
-  if(world.getDynamicProperty(CONFIG_KEY)!==request.enabled)throw Error('cuisine configuration readback');
+  setWorldProperty(world,CONFIG_KEY,request.enabled);
+  if(getWorldProperty(world,CONFIG_KEY)!==request.enabled)throw Error('cuisine configuration readback');
  }catch(error){console.warn('[Cookery cuisine API] configuration retained '+error)}
 });
 system.run(()=>system.sendScriptEvent('kaleidoscope_grilling:cuisine_config_request','{"api":1}'));

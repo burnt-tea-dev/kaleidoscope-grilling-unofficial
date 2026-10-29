@@ -1,3 +1,5 @@
+import {getWorldProperty,setWorldProperty} from './core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 import {world,EquipmentSlot,GameMode,BlockPermutation,ItemStack} from '@minecraft/server';
 import {commitSteps} from './grill/grill_transaction_core.js';
 import {bonemealAgeIncrease,javaCropGrowthSpeed,javaCropGrowthChance} from './world/houttuynia_crop_core.js';
@@ -10,10 +12,10 @@ function blockKey(block){
  const p=block.location;
  return block.dimension.id+'|'+p.x+'|'+p.y+'|'+p.z;
 }
-function faultKey(block){return 'kaleidoscope_grilling:plant_transaction_fault_'+encodeURIComponent(blockKey(block));}
+function faultKey(block){return PersistedKey.PLANT_TRANSACTION_FAULT_PREFIX+encodeURIComponent(blockKey(block));}
 export function plantMutationAllowed(block){
  const key=faultKey(block);
- return !faulted.has(key)&&world.getDynamicProperty(key)===undefined;
+ return !faulted.has(key)&&getWorldProperty(world,key)===undefined;
 }
 export function commitPlantSteps(block,steps,participants=[block]){
  const involved=new Map([[blockKey(block),block],...participants.map(target=>[blockKey(target),target])]);
@@ -24,7 +26,7 @@ export function commitPlantSteps(block,steps,participants=[block]){
   // must also block its partner, otherwise the other half can repeat it.
   for(const target of involved.values()){
    const key=faultKey(target);faulted.add(key);
-   try{world.setDynamicProperty(key,true)}catch{}
+   try{setWorldProperty(world,key,true)}catch{}
   }
   console.warn('[Grilling plant] transaction requires recovery at '+blockKey(block));
  }

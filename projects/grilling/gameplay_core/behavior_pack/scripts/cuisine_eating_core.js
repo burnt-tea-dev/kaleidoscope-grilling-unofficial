@@ -2,6 +2,7 @@ import {captureSkewerMetadata,metadataSignature} from './skewer_item_snapshot.js
 import {isHeatLore} from './localized_lore_core.js';
 import {readPublicFood,readPublicFoodLore,isFoodPayloadLine,isCuisineQualityLore,FOOD_PAYLOAD_KEY} from './host_api/food_api_core.js';
 import {cuisineQualityPayloadMatches} from './host_api/cuisine_quality_core.js';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 import {nativeEatingCompleted} from './player_presentation_core.js';
 
 // This fence owns ONLY the existing heat/seasoning completion effects. Native
@@ -14,7 +15,7 @@ function snapshot(stack){
  return {native:captureSkewerMetadata(stack),amount:stack.amount};
 }
 function identity(native,time){
- const data=JSON.parse(JSON.stringify(native)),portable=readPublicFoodLore(data.rawLore??[]),hotKey='kaleidoscope_grilling:hot_until';
+ const data=JSON.parse(JSON.stringify(native)),portable=readPublicFoodLore(data.rawLore??[]),hotKey=PersistedKey.HOT_UNTIL;
  if(portable.present&&!portable.valid)throw Error('Cuisine food metadata unreadable');
  let lore=(data.rawLore??[]).filter(row=>!isHeatLore(row)&&!isCuisineQualityLore(row));
  if(portable.valid){

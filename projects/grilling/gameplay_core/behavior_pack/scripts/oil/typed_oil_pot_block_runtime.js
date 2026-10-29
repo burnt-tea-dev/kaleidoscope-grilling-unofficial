@@ -1,3 +1,4 @@
+import {getWorldProperty} from '../core/persist.js';
 import {onBeforeBlockBreak,onExplosion} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
@@ -24,7 +25,7 @@ function legacyTypedPot(block){
  try{
   const p=block.location;
   // This marker belongs to Grilling. It is NOT Cookery's oil quantity.
-  const marker=world.getDynamicProperty(typedOilBlockKey(block.dimension.id,p.x,p.y,p.z));
+  const marker=getWorldProperty(world,typedOilBlockKey(block.dimension.id,p.x,p.y,p.z));
   return marker!==undefined&&marker!==null&&marker!=='';
  }catch{return true;} // unreadable existing state is not an empty container
 }

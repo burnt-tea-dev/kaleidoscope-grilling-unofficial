@@ -1,9 +1,58 @@
 import {createFixture} from '../helpers/minecraft-fixture.mjs';
+import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as core from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
 import {createOilPressRegistry} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil_press_registry.js';
+import {PERSISTED_KEY_LITERALS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist_keys.js';
+import {getWorldProperty,setWorldProperty,getWorldPropertyIds,parseWorldJson,stringifyWorldJson} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist.js';
 const N='kaleidoscope_grilling:';
+
+test('core persistence keeps the save lock exact and world record bytes unchanged',async()=>{
+ const lock=JSON.parse(await readFile(new URL('../../tools/guards/save-compat.lock.json',import.meta.url),'utf8'));
+ assert.deepEqual(PERSISTED_KEY_LITERALS,lock.persisted_key_literals);
+ const f=createFixture();
+ try{
+  const key='test:existing-record',encoded='{"phase":"pending","value":3}';
+  setWorldProperty(f.world,key,encoded);
+  assert.equal(getWorldProperty(f.world,key),encoded);
+  assert.ok(getWorldPropertyIds(f.world).includes(key));
+  assert.deepEqual(parseWorldJson(getWorldProperty(f.world,key)),{phase:'pending',value:3});
+  assert.equal(stringifyWorldJson({phase:'pending',value:3}),encoded);
+  assert.equal(parseWorldJson(undefined),undefined);
+  assert.throws(()=>parseWorldJson('{bad'),SyntaxError);
+ }finally{f.dispose()}
+});
+
+test('shared transaction rolls back an after-write failure and clears its receipt',async()=>{
+ const f=createFixture();
+ try{
+  const transaction=await f.load('core/transaction.js');
+  const player=f.player(),inventory=f.container(1);
+  const before=f.item('minecraft:diamond_sword',1,{nameTag:'owned input',rawLore:[{translate:'test.input'}],keepOnDeath:true,lockMode:'slot',canDestroy:['minecraft:stone'],dynamicProperties:{'test:source':'batch-7'},damage:17,enchantments:[{id:'unbreaking',level:2}]});
+  const after=f.item('minecraft:carrot',1);inventory.setItem(0,before);
+  const step=transaction.ownedItemStep({read:()=>inventory.getItem(0),write:stack=>inventory.setItem(0,stack),before,after});
+  f.faults.failNext(inventory,'setItem',{phase:'after',predicate:slot=>slot===0});
+  const result=transaction.commitPlayerItemTransaction(f.world,player,[step],{tick:12,label:'core-rollback'});
+  assert.equal(result.ok,false);assert.equal(result.rollbackErrors,0);
+  assert.equal(transaction.nativeItemSignature(inventory.getItem(0)),transaction.nativeItemSignature(before));
+  assert.equal(f.world.getDynamicProperty('kaleidoscope_grilling:player_item_receipt_'+encodeURIComponent(player.id)),undefined);
+ }finally{f.dispose()}
+});
+
+test('shared transaction drops a full-inventory remainder with all item metadata',async()=>{
+ const f=createFixture();
+ try{
+  const transaction=await f.load('core/transaction.js');
+  const inventory=f.container(1);inventory.setItem(0,f.item('minecraft:stone',64));
+  const output=f.item('minecraft:diamond_sword',1,{nameTag:'preserved output',rawLore:[{translate:'test.output',with:['fresh']}],keepOnDeath:true,lockMode:'slot',canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],dynamicProperties:{'test:quality':'gold'},damage:23,enchantments:[{id:'unbreaking',level:3}]});
+  const delivery=transaction.planOwnedInventoryDelivery(inventory,[output],{dimension:f.dimension,location:{x:2,y:64,z:2}});
+  const result=transaction.commitPlayerItemTransaction(f.world,f.player(),delivery.steps,{tick:13,label:'full-inventory'});
+  assert.equal(result.ok,true);assert.equal(f.drops.length,1);
+  assert.equal(transaction.nativeItemSignature(f.drops[0].getComponent('minecraft:item').itemStack),transaction.nativeItemSignature(output));
+  assert.equal(inventory.getItem(0).typeId,'minecraft:stone');assert.equal(inventory.getItem(0).amount,64);
+ }finally{f.dispose()}
+});
 
 test('legacy registry migration is resumable when a write fails',()=>{
  const dp=new Map([[N+'a26_press_registry',JSON.stringify([{d:'minecraft:overworld',x:1,y:2,z:3},{d:'minecraft:overworld',x:2,y:2,z:3}])]]);let fail=true;
@@ -86,7 +135,7 @@ async function fixture({count=16,creative=false,full=false,off=false,press:press
  const press=pressState===undefined?undefined:block(core.OIL_PRESS_ID,0);
  if(press)seedPress(press,pressState);
  const api=await h.load(worldOil?'oil/oil_world.js':'oil/oil_machine_runtime.js');
- const {nativeItemSignature}=await h.load('owned_item_transaction_core.js');
+ const {nativeItemSignature}=await h.load('core/transaction.js');
  h.startup();
  // First-load recovery arms native ticks; it does not advance saved work.
  h.tick(1);
@@ -271,7 +320,7 @@ test('two queued players use the latest capacity of the same press instance',asy
 test('cake insertion debits the captured main or offhand and preserves native metadata',async()=>{
  for(const off of [false,true]){
   const f=await fixture({off,press:{}}),cake=f.item(core.OIL_CAKE_ID,2);cake.nameTag='owned cake';cake.setLore(['custom']);cake.setCanPlaceOn(['minecraft:stone']);cake.setCanDestroy(['minecraft:dirt']);cake.keepOnDeath=true;cake.lockMode='slot';
-  const {setItemProperty}=await f.h.load('itemData.js');setItemProperty(cake,'test:owner','kitchen');f.setHand(cake);
+  const {setItemProperty}=await f.h.load('core/persist.js');setItemProperty(cake,'test:owner','kitchen');f.setHand(cake);
   use(f,f.press);const remaining=cake.clone();remaining.amount=1;
   assert.equal(f.signature(f.held()),f.signature(remaining));assert.equal(f.readPress().cakes,1);assert.equal(f.press.permutation.getState(N+'cake_count'),1);
  }
@@ -327,7 +376,7 @@ test('breaking machines preserves press cakes, packed vat contents and creative 
   assert.deepEqual(dropped(f).map(s=>[s.typeId,s.amount]),creative?[]:[[core.OIL_PRESS_ID,1],[core.OIL_CAKE_ID,3]]);assert.equal(recoveries(f).length,0);
   const v=await fixture({creative,vat:{type:'premium_chili',buckets:7}});breakBlock(v,v.vat);
   assert.equal(v.vat.typeId,'minecraft:air');assert.equal(v.readVat().buckets,0);assert.equal(v.drops.length,creative?0:1);
-  if(!creative){const {getItemProperty}=await v.h.load('itemData.js');assert.equal(getItemProperty(dropped(v)[0],N+'vat_type'),'premium_chili');assert.equal(getItemProperty(dropped(v)[0],N+'vat_buckets'),7)}
+  if(!creative){const {getItemProperty}=await v.h.load('core/persist.js');assert.equal(getItemProperty(dropped(v)[0],N+'vat_type'),'premium_chili');assert.equal(getItemProperty(dropped(v)[0],N+'vat_buckets'),7)}
   assert.equal(recoveries(v).length,0);
  }
 });
@@ -385,7 +434,7 @@ test('break rollback never overwrites a foreign replacement block or saved state
 test('unconfirmed drop removal keeps the paid packed vat and never recreates its source',async()=>{
  const f=await fixture();rejectFinalRelease(f,key=>key==='drop_remove_noop');breakBlock(f,f.vat);
  assert.equal(f.vat.typeId,'minecraft:air');assert.equal(f.readVat().buckets,0);assert.equal(f.drops.length,1);
- const {getItemProperty}=await f.h.load('itemData.js');assert.equal(getItemProperty(dropped(f)[0],N+'vat_buckets'),4);
+ const {getItemProperty}=await f.h.load('core/persist.js');assert.equal(getItemProperty(dropped(f)[0],N+'vat_buckets'),4);
  const recovery=JSON.parse(recoveries(f)[0][1]);assert.equal(recovery.phase,'incomplete');assert.equal(recovery.outputs[0].confirmed,true);assert.equal(recovery.outputs[0].recovered,false);assert.equal(recovery.sourceRecovered,false);
 });
 for(const change of ['air','same-type-instance'])test(`deferred vat use refuses ${change} without changing the captured bucket`,async()=>{

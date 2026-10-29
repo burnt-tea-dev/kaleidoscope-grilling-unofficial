@@ -1,4 +1,5 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemDataCore.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from './persist.js';
+import {PERSISTED_KEY as PersistedKey} from './persist_keys.js';
 import {primitiveStackProps} from './interaction_intent_core.js';
 
 // Heat countdown lore changes while eating; authoritative heat/ingredient data must not.
@@ -12,7 +13,7 @@ export function captureEatingIdentity(stack,hand,slot){return {identity:eatingId
 export function eatingEventMatches(use,stack,time){
  if(!use||!stack)return false;const identity=eatingIdentity(stack);if(use.identity===identity)return true;
  if(!Number.isFinite(time))return false;
- try{const before=JSON.parse(use.identity),after=JSON.parse(identity),key='kaleidoscope_grilling:hot_until';if(Number(before.props[key])>0&&Number(before.props[key])<=time&&after.props[key]===undefined){delete before.props[key];return JSON.stringify(before)===JSON.stringify(after)}}catch{}
+ try{const before=JSON.parse(use.identity),after=JSON.parse(identity),key=PersistedKey.HOT_UNTIL;if(Number(before.props[key])>0&&Number(before.props[key])<=time&&after.props[key]===undefined){delete before.props[key];return JSON.stringify(before)===JSON.stringify(after)}}catch{}
  return false;
 }
 export function eatingStillCurrent(use,current,slot,time){return !!use&&!!current&&(use.hand==='off'||use.slot===slot)&&eatingEventMatches(use,current,time);}

@@ -1,4 +1,5 @@
-export const ADVANCEMENT_PREFIX='kaleidoscope_grilling:adv_';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
+export const ADVANCEMENT_PREFIX=PersistedKey.ADVANCEMENT_PREFIX;
 
 export const MOUNTAIN_FRAGRANCE=Object.freeze({
  id:'mountain_fragrance',

@@ -1,4 +1,7 @@
 // Compose feature owners; gameplay stays in their modules.
+import {world} from '@minecraft/server';
+import {configureItemDataWorld} from './core/persist.js';
+configureItemDataWorld(world);
 import './java_eating_projection_items.js';
 import './failure_skewer_projection.js';
 import './raw_one_projection.js';

@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
 import {world,system} from '@minecraft/server';
 import {SEASONING_LIST_KEY,normalizeSeasoningList} from '../seasoning/seasoning_contract_core.js';
 import {readRawFoodLore,isHeatLore,applyFoodMaxim} from '../hud/food_tooltip_core.js';
@@ -7,8 +7,9 @@ import {heatLore} from '../localized_lore_core.js';
 import {metadataSignature} from '../skewer_item_snapshot.js';
 import {readPublicFood,writePublicFood,isFoodPayloadLine,FOOD_PAYLOAD_KEY,bucketHotUntil,publicFoodLoreRows} from '../host_api/food_api_core.js';
 import {cuisineQualityOfItem,cuisineQualityPayloadMatches,validCuisineQuality} from '../host_api/cuisine_quality_core.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 
-export const HOT_UNTIL_KEY='kaleidoscope_grilling:hot_until';
+export const HOT_UNTIL_KEY=PersistedKey.HOT_UNTIL;
 function now(){try{return Number(world.getAbsoluteTime())||system.currentTick}catch{return system.currentTick}}
 export function readFoodQuality(stack){
  const portable=readPublicFood(stack);

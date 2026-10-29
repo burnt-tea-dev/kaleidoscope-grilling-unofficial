@@ -1,10 +1,12 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {onBeforeBlockBreak} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
 import {interactionParticleBurst} from '../immersion_particles_runtime.js';
 import {queueStationContentsVisual} from '../station_contents_visual_queue.js';
 import {oilImpactPitch} from '../immersion_particles_core.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../core/persist.js';
 import {interactionFeedback,javaInteractionFeedback} from '../core/interaction_feedback.js';
 import {world,system,ItemStack,BlockPermutation} from '@minecraft/server';
 import {
@@ -20,22 +22,22 @@ import {isInitialBlockPress} from '../grill/grill_input_core.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from '../core/interaction_intent_adapter.js';
 import {captureWritableHand} from '../core/player_io.js';
 import {commitSteps} from '../grill/grill_transaction_core.js';
-import {nativeItemSignature,ownedItemStep} from '../owned_item_transaction_core.js';
+import {nativeItemSignature,ownedItemStep} from '../core/transaction.js';
 import {suppressNumbVisual} from '../numb_visual_runtime.js';
 import {createOilPressRegistry,createOilPressScheduler} from '../oil_press_registry.js';
 import {ensureOilHandPublished} from '../oil_api_client.js';
 import {hasPlantFertilizer,usePlantFertilizer,samePlantPermutation} from '../plant_fertilizer.js';
 
-const PRESS_PREFIX='kaleidoscope_grilling:a26_press_';
-const PRESS_INSTANCE_PREFIX='kaleidoscope_grilling:a26_press_instance_';
-const VAT_PREFIX='kaleidoscope_grilling:a26_vat_';
-const VAT_INSTANCE_PREFIX='kaleidoscope_grilling:a26_vat_instance_';
-const PRESS_REG='kaleidoscope_grilling:a26_press_registry';
+const PRESS_PREFIX=PersistedKey.A26_PRESS_PREFIX;
+const PRESS_INSTANCE_PREFIX=PersistedKey.A26_PRESS_INSTANCE_PREFIX;
+const VAT_PREFIX=PersistedKey.A26_VAT_PREFIX;
+const VAT_INSTANCE_PREFIX=PersistedKey.A26_VAT_INSTANCE_PREFIX;
+const PRESS_REG=PersistedKey.A26_PRESS_REGISTRY;
 const pressRegistry=createOilPressRegistry(world,PRESS_REG);
 const pressScheduler=createOilPressScheduler({now:()=>system.currentTick,step:tickPress,
  report:error=>console.warn('[Grilling oil press schedule] '+error)});
-const VAT_ITEM_TYPE='kaleidoscope_grilling:vat_type';
-const VAT_ITEM_BUCKETS='kaleidoscope_grilling:vat_buckets';
+const VAT_ITEM_TYPE=PersistedKey.VAT_TYPE;
+const VAT_ITEM_BUCKETS=PersistedKey.VAT_BUCKETS;
 const OIL_BUCKETS=Object.freeze({
  'kaleidoscope_grilling:canola_oil_bucket':'canola',
  'kaleidoscope_grilling:secret_chili_oil_bucket':'secret_chili',
@@ -50,7 +52,7 @@ const TYPE_BUCKETS=Object.freeze({
 });
 const VANILLA_BUCKETS=Object.freeze({'minecraft:water_bucket':'water','minecraft:lava_bucket':'lava'});
 const PRESS_COOLDOWNS=new Map();
-const TRANSACTION_FAULTS=new Set(),FAULT_PREFIX='kaleidoscope_grilling:oil_transaction_fault_';
+const TRANSACTION_FAULTS=new Set(),FAULT_PREFIX=PersistedKey.OIL_TRANSACTION_FAULT_PREFIX;
 let pressPlacementSequence=0,oilBreakSequence=0;
 
 function enc(n){return n<0?'m'+Math.abs(n):'p'+n}
@@ -74,19 +76,19 @@ function targetFor(block,face){const o=faceOffset(face);return o?block.dimension
 function replaceable(b){return !!b&&['minecraft:air','minecraft:short_grass','minecraft:tall_grass','minecraft:snow_layer'].includes(b.typeId)}
 
 function readPress(block){
- try{const raw=world.getDynamicProperty(key(PRESS_PREFIX,block));return normalizePress(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizePress({})}
+ try{const raw=getWorldProperty(world,key(PRESS_PREFIX,block));return normalizePress(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizePress({})}
 }
 function pressPermutationSignature(permutation){return JSON.stringify(Object.entries(permutation.getAllStates()).sort(([a],[b])=>a.localeCompare(b)))}
 function pressTargetSnapshot(block){
  if(!block||block.typeId!==OIL_PRESS_ID)throw Error('Oil press replaced or unavailable');
  return {dimension:block.dimension,location:{...block.location},permutation:block.permutation,
-  states:pressPermutationSignature(block.permutation),raw:world.getDynamicProperty(key(PRESS_PREFIX,block)),
-  instance:world.getDynamicProperty(key(PRESS_INSTANCE_PREFIX,block))};
+  states:pressPermutationSignature(block.permutation),raw:getWorldProperty(world,key(PRESS_PREFIX,block)),
+  instance:getWorldProperty(world,key(PRESS_INSTANCE_PREFIX,block))};
 }
 function samePressTarget(snapshot,checkState=true){
  const block=snapshot.dimension.getBlock(snapshot.location);
- if(!block||block.typeId!==OIL_PRESS_ID||world.getDynamicProperty(key(PRESS_INSTANCE_PREFIX,block))!==snapshot.instance)return;
- if(checkState&&(pressPermutationSignature(block.permutation)!==snapshot.states||world.getDynamicProperty(key(PRESS_PREFIX,block))!==snapshot.raw))return;
+ if(!block||block.typeId!==OIL_PRESS_ID||getWorldProperty(world,key(PRESS_INSTANCE_PREFIX,block))!==snapshot.instance)return;
+ if(checkState&&(pressPermutationSignature(block.permutation)!==snapshot.states||getWorldProperty(world,key(PRESS_PREFIX,block))!==snapshot.raw))return;
  return block;
 }
 function capturedPressState(snapshot){
@@ -107,12 +109,12 @@ function writePress(block,s,ensureRegistered=true){
  if(!block||block.typeId!==OIL_PRESS_ID)throw Error('Oil press replaced or unavailable');const state=normalizePress(s);
  const pending=state.completionDelay>0||state.progress>=PRESS_REQUIRED_PROGRESS;
  if(ensureRegistered&&pending)registerPress(block);
- const saved=JSON.stringify(state);world.setDynamicProperty(key(PRESS_PREFIX,block),saved);
- if(world.getDynamicProperty(key(PRESS_PREFIX,block))!==saved)throw Error('Oil press state write not confirmed');
+ const saved=JSON.stringify(state);setWorldProperty(world,key(PRESS_PREFIX,block),saved);
+ if(getWorldProperty(world,key(PRESS_PREFIX,block))!==saved)throw Error('Oil press state write not confirmed');
  syncPress(block,state);
  if(!pending)removePressReg(block);
 }
-function clearPress(block){world.setDynamicProperty(key(PRESS_PREFIX,block));removePressReg(block)}
+function clearPress(block){setWorldProperty(world,key(PRESS_PREFIX,block));removePressReg(block)}
 
 // Debit only a captured hand; a failed save must remove our cake credit before
 // refunding it. Neither rollback may overwrite an unrelated replacement value.
@@ -128,16 +130,16 @@ function insertPressCake(block,p,hand,snapshot,state,next){
   apply(){
    if(!samePressTarget(snapshot))throw Error('Oil press changed before cake credit');
    attempted=true;recovered=false;writePress(block,next);
-   if(world.getDynamicProperty(stateKey)!==saved||pressPermutationSignature(block.permutation)!==projectedSignature)
+   if(getWorldProperty(world,stateKey)!==saved||pressPermutationSignature(block.permutation)!==projectedSignature)
     throw Error('Oil press cake credit not confirmed');
   },
   rollback(){
    if(!attempted)return;
    const current=samePressTarget(snapshot,false);if(!current)throw Error('Oil press rollback owner changed');
-   const raw=world.getDynamicProperty(stateKey),states=pressPermutationSignature(current.permutation);
+   const raw=getWorldProperty(world,stateKey),states=pressPermutationSignature(current.permutation);
    if((raw!==snapshot.raw&&raw!==saved)||(states!==snapshot.states&&states!==projectedSignature))throw Error('Oil press rollback state changed');
-   if(raw!==snapshot.raw)world.setDynamicProperty(stateKey,snapshot.raw);
-   if(world.getDynamicProperty(stateKey)!==snapshot.raw)throw Error('Oil press rollback save not confirmed');
+   if(raw!==snapshot.raw)setWorldProperty(world,stateKey,snapshot.raw);
+   if(getWorldProperty(world,stateKey)!==snapshot.raw)throw Error('Oil press rollback save not confirmed');
    if(states!==snapshot.states)current.setPermutation(snapshot.permutation);
    if(pressPermutationSignature(current.permutation)!==snapshot.states)throw Error('Oil press rollback projection not confirmed');
    if(state.completionDelay>0||state.progress>=PRESS_REQUIRED_PROGRESS)registerPress(current);else removePressReg(current);
@@ -150,7 +152,7 @@ function insertPressCake(block,p,hand,snapshot,state,next){
 }
 
 function readVat(block){
- try{const raw=world.getDynamicProperty(key(VAT_PREFIX,block));return normalizeVat(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizeVat({})}
+ try{const raw=getWorldProperty(world,key(VAT_PREFIX,block));return normalizeVat(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizeVat({})}
 }
 function syncVat(block,v){
  const state=normalizeVat(v);
@@ -162,9 +164,9 @@ function syncVat(block,v){
 }
 function writeVat(block,v){
  if(!block||block.typeId!==BIG_VAT_ID)throw Error('Oil vat replaced or unavailable');const state=normalizeVat(v);
- world.setDynamicProperty(key(VAT_PREFIX,block),JSON.stringify(state));syncVat(block,state);
+ setWorldProperty(world,key(VAT_PREFIX,block),JSON.stringify(state));syncVat(block,state);
 }
-function clearVat(block){world.setDynamicProperty(key(VAT_PREFIX,block))}
+function clearVat(block){setWorldProperty(world,key(VAT_PREFIX,block))}
 
 function vatPacked(stack){
  let type='',buckets=0;
@@ -187,14 +189,14 @@ function bucketType(id){return OIL_BUCKETS[id]??VANILLA_BUCKETS[id]??null}
 
 function assertOilMachineSafe(block){
  const id=key(FAULT_PREFIX,block);
- if(TRANSACTION_FAULTS.has(id)||world.getDynamicProperty(id)!==undefined)throw Error('Oil machine requires recovery after an incomplete rollback');
+ if(TRANSACTION_FAULTS.has(id)||getWorldProperty(world,id)!==undefined)throw Error('Oil machine requires recovery after an incomplete rollback');
 }
 function oilTransaction(steps,blocks,recovery){
  for(const block of blocks)assertOilMachineSafe(block);
  const result=commitSteps(steps);
  if(result.rollbackErrors)for(const block of blocks){
   const id=key(FAULT_PREFIX,block);TRANSACTION_FAULTS.add(id);
-  try{if(recovery)recovery(block,result);else world.setDynamicProperty(id,'incomplete rollback; inspect before recovery')}catch(error){console.warn('[Grilling oil recovery marker failed] '+error);}
+  try{if(recovery)recovery(block,result);else setWorldProperty(world,id,'incomplete rollback; inspect before recovery')}catch(error){console.warn('[Grilling oil recovery marker failed] '+error);}
  }
  if(!result.ok)throw Error('Oil transaction failed; rollback failures='+result.rollbackErrors);
 }
@@ -342,13 +344,13 @@ function oilBreakSnapshot(block){
  const press=block.typeId===OIL_PRESS_ID,storageKey=key(press?PRESS_PREFIX:VAT_PREFIX,block),instanceKey=key(press?PRESS_INSTANCE_PREFIX:VAT_INSTANCE_PREFIX,block);
  const registryKey=press?PRESS_REG+'_entry_'+encodeURIComponent(block.dimension.id+'|'+block.x+'|'+block.y+'|'+block.z):undefined;
  return {type:block.typeId,dimension:block.dimension,location:{...block.location},permutation:block.permutation,
-  states:pressPermutationSignature(block.permutation),storageKey,instanceKey,raw:world.getDynamicProperty(storageKey),instance:world.getDynamicProperty(instanceKey),
-  registryKey,registryRaw:registryKey?world.getDynamicProperty(registryKey):undefined};
+  states:pressPermutationSignature(block.permutation),storageKey,instanceKey,raw:getWorldProperty(world,storageKey),instance:getWorldProperty(world,instanceKey),
+  registryKey,registryRaw:registryKey?getWorldProperty(world,registryKey):undefined};
 }
 function sameOilBreakTarget(snapshot,allowTimer=false){
  const block=snapshot.dimension.getBlock(snapshot.location);
- if(!block||block.typeId!==snapshot.type||world.getDynamicProperty(snapshot.instanceKey)!==snapshot.instance||pressPermutationSignature(block.permutation)!==snapshot.states)return;
- const raw=world.getDynamicProperty(snapshot.storageKey);
+ if(!block||block.typeId!==snapshot.type||getWorldProperty(world,snapshot.instanceKey)!==snapshot.instance||pressPermutationSignature(block.permutation)!==snapshot.states)return;
+ const raw=getWorldProperty(world,snapshot.storageKey);
  if(raw!==snapshot.raw){
   if(!allowTimer||snapshot.type!==OIL_PRESS_ID)return;
   const before=capturedPressState(snapshot),after=capturedPressState({...snapshot,raw});
@@ -359,9 +361,9 @@ function sameOilBreakTarget(snapshot,allowTimer=false){
  return block;
 }
 function confirmedOilProperty(id,before,after){
- if(world.getDynamicProperty(id)!==before)throw Error('Oil machine property owner changed');
- let error;try{world.setDynamicProperty(id,after)}catch(value){error=value}
- if(world.getDynamicProperty(id)!==after)throw error??Error('Oil machine property write not confirmed');
+ if(getWorldProperty(world,id)!==before)throw Error('Oil machine property owner changed');
+ let error;try{setWorldProperty(world,id,after)}catch(value){error=value}
+ if(getWorldProperty(world,id)!==after)throw error??Error('Oil machine property write not confirmed');
 }
 function capturedVatState(snapshot){
  if(snapshot.raw===undefined)return normalizeVat({});
@@ -392,31 +394,31 @@ function breakOilMachine(block,free){
  const recoveredOutputs=()=>outputs.every(row=>!row.attempted||row.recovered);
  function currentOwner(){
   const current=snapshot.dimension.getBlock(snapshot.location);
-  if(!current||world.getDynamicProperty(snapshot.instanceKey)!==token)throw Error('Oil machine removal owner changed');
+  if(!current||getWorldProperty(world,snapshot.instanceKey)!==token)throw Error('Oil machine removal owner changed');
   const signature=pressPermutationSignature(current.permutation);
   if(!((current.typeId===snapshot.type&&signature===snapshot.states)||(current.typeId==='minecraft:air'&&signature===airStates)))throw Error('Oil machine removal target changed');
-  const raw=world.getDynamicProperty(snapshot.storageKey),registry=snapshot.registryKey?world.getDynamicProperty(snapshot.registryKey):undefined;
+  const raw=getWorldProperty(world,snapshot.storageKey),registry=snapshot.registryKey?getWorldProperty(world,snapshot.registryKey):undefined;
   if((raw!==undefined&&raw!==snapshot.raw)||(registry!==undefined&&registry!==snapshot.registryRaw))throw Error('Oil machine removal data changed');
   return current;
  }
  function requireRemoved(){
   const current=currentOwner();
-  if(current.typeId!=='minecraft:air'||world.getDynamicProperty(snapshot.storageKey)!==undefined||(snapshot.registryKey&&world.getDynamicProperty(snapshot.registryKey)!==undefined))throw Error('Oil machine source removal not confirmed');
+  if(current.typeId!=='minecraft:air'||getWorldProperty(world,snapshot.storageKey)!==undefined||(snapshot.registryKey&&getWorldProperty(world,snapshot.registryKey)!==undefined))throw Error('Oil machine source removal not confirmed');
  }
  function restoreRegistry(){
   if(!snapshot.registryKey)return;
-  const current=world.getDynamicProperty(snapshot.registryKey);
+  const current=getWorldProperty(world,snapshot.registryKey);
   if(current!==snapshot.registryRaw)confirmedOilProperty(snapshot.registryKey,current,snapshot.registryRaw);
   // Repair the registry cache too: a native setter can apply then throw before
   // createOilPressRegistry updates its in-memory entry.
   if(snapshot.registryRaw===undefined)removePressReg(block);else registerPress(block);
-  if(world.getDynamicProperty(snapshot.registryKey)!==snapshot.registryRaw)throw Error('Oil press registry rollback not confirmed');
+  if(getWorldProperty(world,snapshot.registryKey)!==snapshot.registryRaw)throw Error('Oil press registry rollback not confirmed');
  }
  const journal={
   apply(){confirmedOilProperty(faultKey,undefined,prepared)},
   rollback(){
    if(!sourceRecovered||!recoveredOutputs())throw Error('Oil machine recovery remains unresolved');
-   const current=world.getDynamicProperty(faultKey);if(current===undefined)return;
+   const current=getWorldProperty(world,faultKey);if(current===undefined)return;
    confirmedOilProperty(faultKey,prepared,undefined);
   }
  };
@@ -429,7 +431,7 @@ function breakOilMachine(block,free){
    if(currentOwner().typeId!=='minecraft:air')throw error??Error('Oil machine block removal not confirmed');
    confirmedOilProperty(snapshot.storageKey,snapshot.raw,undefined);
    if(snapshot.registryKey){
-    if(world.getDynamicProperty(snapshot.registryKey)!==snapshot.registryRaw)throw Error('Oil press registry changed before removal');
+    if(getWorldProperty(world,snapshot.registryKey)!==snapshot.registryRaw)throw Error('Oil press registry changed before removal');
     removePressReg(block);
    }
    requireRemoved();sourceRemoved=true;
@@ -438,14 +440,14 @@ function breakOilMachine(block,free){
    if(!sourceAttempted)return;
    if(!recoveredOutputs())throw Error('Oil machine drop outcome unknown; source is not refunded');
    // A failed claim may have applied no mutation at all.
-   if(sameOilBreakTarget(snapshot)&&(snapshot.registryKey===undefined||world.getDynamicProperty(snapshot.registryKey)===snapshot.registryRaw)){sourceRecovered=true;return}
-   let current=currentOwner(),raw=world.getDynamicProperty(snapshot.storageKey);
+   if(sameOilBreakTarget(snapshot)&&(snapshot.registryKey===undefined||getWorldProperty(world,snapshot.registryKey)===snapshot.registryRaw)){sourceRecovered=true;return}
+   let current=currentOwner(),raw=getWorldProperty(world,snapshot.storageKey);
    if(raw!==snapshot.raw)confirmedOilProperty(snapshot.storageKey,raw,snapshot.raw);
    restoreRegistry();current=currentOwner();
    let error;try{current.setPermutation(snapshot.permutation)}catch(value){error=value}
    current=currentOwner();if(current.typeId!==snapshot.type||pressPermutationSignature(current.permutation)!==snapshot.states)throw error??Error('Oil machine block rollback not confirmed');
    confirmedOilProperty(snapshot.instanceKey,token,snapshot.instance);
-   if(!sameOilBreakTarget(snapshot)||(snapshot.registryKey&&world.getDynamicProperty(snapshot.registryKey)!==snapshot.registryRaw))throw Error('Oil machine rollback not confirmed');
+   if(!sameOilBreakTarget(snapshot)||(snapshot.registryKey&&getWorldProperty(world,snapshot.registryKey)!==snapshot.registryRaw))throw Error('Oil machine rollback not confirmed');
    sourceRecovered=true;sourceRemoved=false;
   }
  };
@@ -467,10 +469,10 @@ function breakOilMachine(block,free){
  }));
  const release={
   apply(){requireRemoved();confirmedOilProperty(faultKey,prepared,undefined)},
-  rollback(){const current=world.getDynamicProperty(faultKey);if(current===prepared)return;confirmedOilProperty(faultKey,undefined,prepared)}
+  rollback(){const current=getWorldProperty(world,faultKey);if(current===prepared)return;confirmedOilProperty(faultKey,undefined,prepared)}
  };
  oilTransaction([journal,removeSource,...deliveries,release],[block],(_block,result)=>{
-  const current=world.getDynamicProperty(faultKey);
+  const current=getWorldProperty(world,faultKey);
   if(current!==undefined&&current!==prepared)throw Error('Oil machine recovery marker owner changed');
   const detail=JSON.stringify({...receipt,phase:'incomplete',error:String(result.error),sourceRemoved,sourceRecovered,
    outputs:receipt.outputs.map((output,index)=>({...output,attempted:outputs[index].attempted,confirmed:outputs[index].confirmed,recovered:outputs[index].recovered,entityId:outputs[index].entityId??null}))});
@@ -483,11 +485,11 @@ function breakVat(block,p,free=creative(p)){if(block?.typeId!==BIG_VAT_ID)return
 function recordOilMachinePlacement(block){
  const prefix=block.typeId===OIL_PRESS_ID?PRESS_INSTANCE_PREFIX:VAT_INSTANCE_PREFIX;
  const instance=system.currentTick+':'+(++pressPlacementSequence)+':'+Math.random().toString(36).slice(2),instanceKey=key(prefix,block);
- confirmedOilProperty(instanceKey,world.getDynamicProperty(instanceKey),instance);
+ confirmedOilProperty(instanceKey,getWorldProperty(world,instanceKey),instance);
 }
 function markOilPlacementFault(block,error){
  const id=key(FAULT_PREFIX,block);TRANSACTION_FAULTS.add(id);
- try{if(world.getDynamicProperty(id)===undefined)world.setDynamicProperty(id,'placement identity/state requires recovery')}catch{}
+ try{if(getWorldProperty(world,id)===undefined)setWorldProperty(world,id,'placement identity/state requires recovery')}catch{}
  console.warn('[Grilling oil machine placement] '+error);
 }
 function placePackedVat(support,face,p,item,hand=null){
@@ -560,7 +562,7 @@ onBeforeBlockBreak('oil/oil_machine_runtime.js:0',e=>{
 function tickPress(block){
  if(block.typeId!==OIL_PRESS_ID){pressRegistry.remove(registryRow(block));return false}
  const faultId=key(FAULT_PREFIX,block);
- if(TRANSACTION_FAULTS.has(faultId)||world.getDynamicProperty(faultId)!==undefined){removePressReg(block);return false}
+ if(TRANSACTION_FAULTS.has(faultId)||getWorldProperty(world,faultId)!==undefined){removePressReg(block);return false}
  const state=capturedPressState(pressTargetSnapshot(block));
  if(state.completionDelay>0){
   const next={...state,completionDelay:state.completionDelay-1};writePress(block,next,false);
@@ -586,7 +588,7 @@ function repairPressSchedules(){
   try{
    if(block.typeId!==OIL_PRESS_ID){pressRegistry.remove(row);continue}
    const faultId=key(FAULT_PREFIX,block);
-   if(TRANSACTION_FAULTS.has(faultId)||world.getDynamicProperty(faultId)!==undefined){removePressReg(block);continue}
+   if(TRANSACTION_FAULTS.has(faultId)||getWorldProperty(world,faultId)!==undefined){removePressReg(block);continue}
    pressScheduler.ensure(block); // schedules only; never advances processing
   }catch(error){console.warn('[Grilling oil press recovery] '+error)}
  }

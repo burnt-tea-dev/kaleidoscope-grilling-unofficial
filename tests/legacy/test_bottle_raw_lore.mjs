@@ -38,7 +38,7 @@ function sdk(node,style){
 }
 async function bottleFixture(style,maxAmount=1){
  const f=createFixture();await f.load('main.js');
- const data=await f.load('itemData.js'),storage=await f.load('family_station_storage.js'),placed=await f.load('seasoning/seasoning_block_adapter.js');
+ const data=await f.load('core/persist.js'),storage=await f.load('core/storage.js'),placed=await f.load('seasoning/seasoning_block_adapter.js');
  const snapshots=await f.load('skewer_item_snapshot.js');
  const nativeSetLore=f.ItemStack.prototype.setLore;let fault,attempts=0;
  f.ItemStack.prototype.setLore=function(lines=[]){

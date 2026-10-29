@@ -1,13 +1,15 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 import {scriptEvents,blockEvents} from './event_router.js';
 /** Reviewed Cookery-owned adapter. Portable items; authoritative placed-state receipts. */
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {EMPTY_POT,FILLED_POT,readPublicOil,writePublicOil,createPublicOilPot,normalizePublicOil,planPublicOilAddition,planPublicOilConsumption,OIL_API_VERSION} from './oil_api_core.js';
-const ITEM_KEY='kc_oil_count',PLACED_PREFIX='senluo:oil_api_placed:',RECEIPT_PREFIX='senluo:oil_api_recovery:';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
+const ITEM_KEY=PersistedKey.COOKERY_OIL_COUNT,PLACED_PREFIX=PersistedKey.OIL_API_PLACED_PREFIX,RECEIPT_PREFIX=PersistedKey.OIL_API_RECOVERY_PREFIX;
 const BUCKETS=Object.freeze({'kaleidoscope_grilling:canola_oil_bucket':'canola','kaleidoscope_grilling:secret_chili_oil_bucket':'secret_chili','kaleidoscope_grilling:premium_chili_oil_bucket':'premium_chili'});
 const placement=new Map();
 const location=b=>({dimensionId:b.dimension.id,x:b.x,y:b.y,z:b.z});
 const key=(prefix,b)=>prefix+b.dimension.id+':'+b.x+','+b.y+','+b.z;
-const nativeKey=b=>'kc_oilpot:'+b.dimension.id+':'+b.x+','+b.y+','+b.z;
+const nativeKey=b=>PersistedKey.COOKERY_OIL_BLOCK_PREFIX+b.dimension.id+':'+b.x+','+b.y+','+b.z;
 const hand=p=>p?.getComponent('minecraft:equippable')?.getEquipmentSlot(EquipmentSlot.Mainhand);
 function emitBlock(b,state){try{system.sendScriptEvent('senluo:oil_block_snapshot',JSON.stringify({api:1,version:OIL_API_VERSION,station:location(b),state}));}catch(e){console.warn('[Cookery Oil API] snapshot deferred '+e)}}
 function notice(p,reason){try{console.warn('[Cookery Oil API] interaction retained: '+reason)}catch{}}
@@ -36,7 +38,7 @@ export function hostOilCountOverride(stack){
  const p=readPublicOil(stack);return p.source==='public_api'?p.state.count:p.handled&&!p.valid&&p.reason!=='host_snapshot_required'?0:undefined;
 }
 const consumedOil=new Map(),oilOwnerFaults=new Set(),oilStationFaults=new Set(),oilOwnerReceipts=new Map();
-const oilOwnerKey=id=>'senluo:oil_hand_fault:'+(typeof id==='string'&&id?id:'unscoped');
+const oilOwnerKey=id=>PersistedKey.OIL_HAND_FAULT_PREFIX+(typeof id==='string'&&id?id:'unscoped');
 const stable=value=>JSON.stringify(value,(_key,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
 function oilItemSnapshot(stack){
  if(!stack)return null;
@@ -54,15 +56,15 @@ function ownsOilItem(actual,expected){
  try{return expected.isStackableWith(expected.clone())===true&&actual.isStackableWith(expected)===true}catch{return false}
 }
 function writeOilReceipt(k,value){
- let failure;try{world.setDynamicProperty(k,value)}catch(e){failure=e}
+ let failure;try{setWorldProperty(world,k,value)}catch(e){failure=e}
  // A throwing writer may already have committed. Readback, not its return,
  // decides acknowledgement; an unreadable outcome must fail closed.
- if(world.getDynamicProperty(k)!==value)throw failure??Error('oil recovery receipt not acknowledged');
+ if(getWorldProperty(world,k)!==value)throw failure??Error('oil recovery receipt not acknowledged');
 }
-function oilRecoveryPending(k){try{return oilOwnerFaults.has(k)||world.getDynamicProperty(k)!==undefined}catch{return true}}
+function oilRecoveryPending(k){try{return oilOwnerFaults.has(k)||getWorldProperty(world,k)!==undefined}catch{return true}}
 function requireOilOwner(k){
  if(oilOwnerFaults.has(k))throw Error('oil hand requires recovery');
- const raw=world.getDynamicProperty(k);if(raw===undefined)return;
+ const raw=getWorldProperty(world,k);if(raw===undefined)return;
  const receipt=JSON.parse(String(raw));
  if(!['committed','rolled_back'].includes(receipt.phase))throw Error('oil hand requires recovery');
 }
@@ -73,7 +75,7 @@ function beginOilDebit(k,before,next,context){
  oilOwnerFaults.add(k);oilOwnerReceipts.set(k,value);writeOilReceipt(k,value);
 }
 function finishOilDebit(k,phase='rolled_back'){
- const receipt=JSON.parse(oilOwnerReceipts.get(k)??String(world.getDynamicProperty(k)));
+ const receipt=JSON.parse(oilOwnerReceipts.get(k)??String(getWorldProperty(world,k)));
  // Keep one settled receipt per owner. Never delete the durable guard and then
  // discover that its disappearance could not be acknowledged.
  writeOilReceipt(k,JSON.stringify({...receipt,phase}));
@@ -129,8 +131,8 @@ export function consumeSharedOilFromHeldPot(player){
 }
 /** The prepared owner receipt spans both the actual debit and station save. */
 export function commitSharedStationOil(b,slot,data,host,{creative=false,ownerId}={}){
- const faultKey='senluo:oil_station_fault:'+key('',b);
- if(oilStationFaults.has(faultKey)||world.getDynamicProperty(faultKey)!==undefined)throw Error('oil station requires recovery');
+ const faultKey=PersistedKey.OIL_STATION_FAULT_PREFIX+key('',b);
+ if(oilStationFaults.has(faultKey)||getWorldProperty(world,faultKey)!==undefined)throw Error('oil station requires recovery');
  if(typeof host.raw!=='function')throw Error('oil station raw readback unavailable');
  const captured=slot?.hasItem()?slot.getItem()?.clone():undefined,saved=JSON.parse(JSON.stringify(data)),savedRaw=host.raw(b);
  const encoded=value=>Object.keys(value).length?JSON.stringify(value):undefined;
@@ -187,21 +189,21 @@ export function handleSharedStationOil(b,p,data,host){
 export function lastConsumedOil(player){
  const r=consumedOil.get(player?.id);return r&&system.currentTick-r.tick<=2?r:{consumedType:'',heatTicks:1200};
 }
-function requireOilAvailable(b){const raw=world.getDynamicProperty(key(RECEIPT_PREFIX,b));if(raw){const receipt=JSON.parse(String(raw));if(['pending','quarantined'].includes(receipt.phase))throw Error('oil recovery unresolved');}}
+function requireOilAvailable(b){const raw=getWorldProperty(world,key(RECEIPT_PREFIX,b));if(raw){const receipt=JSON.parse(String(raw));if(['pending','quarantined'].includes(receipt.phase))throw Error('oil recovery unresolved');}}
 export function readSharedPlacedOil(b){
  requireOilAvailable(b);
- const raw=world.getDynamicProperty(key(PLACED_PREFIX,b));
+ const raw=getWorldProperty(world,key(PLACED_PREFIX,b));
  if(raw!==undefined){const s=normalizePublicOil(JSON.parse(String(raw)));if(!s)throw Error('placed oil payload invalid');return s;}
- const qty=world.getDynamicProperty(nativeKey(b));
+ const qty=getWorldProperty(world,nativeKey(b));
  let has=false;try{has=b.permutation.getState('kaleidoscope_cookery:has_oil')===true}catch{}
  if(qty===undefined&&has)throw Error('unknown legacy placed oil');
  const s=normalizePublicOil({v:1,type:'',count:qty??0,revision:0});if(!s)throw Error('invalid legacy placed oil');return s;
 }
 export function writeSharedPlacedOil(b,state){
  const s=normalizePublicOil(state);if(!s)throw Error('placed oil schema');
- const clockKey='senluo:oil_api_revision',revision=Math.max(s.revision,Number(world.getDynamicProperty(clockKey)??0)+1);if(!Number.isSafeInteger(revision))throw Error('oil revision');s.revision=revision;world.setDynamicProperty(clockKey,revision);
- const raw=JSON.stringify(s);world.setDynamicProperty(key(PLACED_PREFIX,b),raw);if(world.getDynamicProperty(key(PLACED_PREFIX,b))!==raw)throw Error('placed oil write not acknowledged');
- world.setDynamicProperty(nativeKey(b),s.count||undefined);if(Number(world.getDynamicProperty(nativeKey(b))??0)!==s.count)throw Error('native oil count write not acknowledged');
+ const clockKey=PersistedKey.OIL_API_REVISION,revision=Math.max(s.revision,Number(getWorldProperty(world,clockKey)??0)+1);if(!Number.isSafeInteger(revision))throw Error('oil revision');s.revision=revision;setWorldProperty(world,clockKey,revision);
+ const raw=JSON.stringify(s);setWorldProperty(world,key(PLACED_PREFIX,b),raw);if(getWorldProperty(world,key(PLACED_PREFIX,b))!==raw)throw Error('placed oil write not acknowledged');
+ setWorldProperty(world,nativeKey(b),s.count||undefined);if(Number(getWorldProperty(world,nativeKey(b))??0)!==s.count)throw Error('native oil count write not acknowledged');
  if(b.typeId===EMPTY_POT){b.setPermutation(b.permutation.withState('kaleidoscope_cookery:has_oil',s.count>0));if(b.permutation.getState('kaleidoscope_cookery:has_oil')!==(s.count>0))throw Error('oil visual state rejected');}
  emitBlock(b,s);return s;
 }
@@ -247,7 +249,7 @@ export function handleSharedPlacedOil(block,player,sound=()=>{}){
 function mutateSharedOil(block,slot,state,next,before,after){
  try{slot.setItem(after);if(!itemSame(slot.getItem(),after))throw Error('oil hand write');writeSharedPlacedOil(block,next)}catch(error){
   let rollback;try{slot.setItem(before);if(!itemSame(slot.getItem(),before))throw Error('oil hand rollback');writeSharedPlacedOil(block,state)}catch(e){rollback=e}
-  if(rollback)world.setDynamicProperty(key(RECEIPT_PREFIX,block),JSON.stringify({phase:'quarantined',state,reason:String(rollback)}));throw error;
+  if(rollback)setWorldProperty(world,key(RECEIPT_PREFIX,block),JSON.stringify({phase:'quarantined',state,reason:String(rollback)}));throw error;
  }
 }
 export function fillSharedPlacedOil(block,slot,type,{creative=false}={}){
@@ -260,16 +262,16 @@ export function fillSharedPlacedOil(block,slot,type,{creative=false}={}){
 export function recoverSharedOilPot(ev){
  const b={dimension:ev.dimension,x:ev.block.x,y:ev.block.y,z:ev.block.z},state=readSharedPlacedOil(b);
  const receiptKey=key(RECEIPT_PREFIX,b),creative=ev.player?.getGameMode?.()===GameMode.Creative;
- const existing=world.getDynamicProperty(receiptKey);
+ const existing=getWorldProperty(world,receiptKey);
  if(existing&&['pending','quarantined'].includes(JSON.parse(String(existing)).phase))throw Error('previous oil recovery unresolved');
- const receipt={phase:creative?'delivered':'pending',state,location:location(b),createdTick:system.currentTick};world.setDynamicProperty(receiptKey,JSON.stringify(receipt));
+ const receipt={phase:creative?'delivered':'pending',state,location:location(b),createdTick:system.currentTick};setWorldProperty(world,receiptKey,JSON.stringify(receipt));
  if(!creative){
   const stack=createPublicOilPot(ItemStack,state.type,state.count,undefined,state.revision+1);
   let drop;try{drop=b.dimension.spawnItem(stack,{x:b.x+.5,y:b.y+.5,z:b.z+.5});const actual=drop?.getComponent('minecraft:item')?.itemStack;if(!drop||!itemSame(actual,stack))throw Error('oil drop not acknowledged')}
-  catch(error){if(drop){try{drop.remove();receipt.phase='pending'}catch{receipt.phase='quarantined'}}else receipt.phase='quarantined';receipt.reason=String(error);world.setDynamicProperty(receiptKey,JSON.stringify(receipt));console.warn('[Cookery Oil API] recovery retained '+receiptKey);return true;}
-  receipt.phase='delivered';world.setDynamicProperty(receiptKey,JSON.stringify(receipt));
+  catch(error){if(drop){try{drop.remove();receipt.phase='pending'}catch{receipt.phase='quarantined'}}else receipt.phase='quarantined';receipt.reason=String(error);setWorldProperty(world,receiptKey,JSON.stringify(receipt));console.warn('[Cookery Oil API] recovery retained '+receiptKey);return true;}
+  receipt.phase='delivered';setWorldProperty(world,receiptKey,JSON.stringify(receipt));
  }
- world.setDynamicProperty(key(PLACED_PREFIX,b));world.setDynamicProperty(nativeKey(b));emitBlock(b,undefined);return true;
+ setWorldProperty(world,key(PLACED_PREFIX,b));setWorldProperty(world,nativeKey(b));emitBlock(b,undefined);return true;
 }
 function publishInventory(player){
  const inventory=player.getComponent('minecraft:inventory')?.container;
@@ -302,12 +304,12 @@ blockEvents(world).beforeBreak('oil_api_host',ev=>{if(ev.block.typeId!==EMPTY_PO
 blockEvents(world).explosion('oil_api_host',ev=>{ev.setImpactedBlocks(ev.getImpactedBlocks().filter(b=>{if(b.typeId!==EMPTY_POT)return true;try{return !!readSharedPlacedOil(b)}catch{return false}}))});
 
 export function retrySharedOilRecovery(b){
- const receiptKey=key(RECEIPT_PREFIX,b),raw=world.getDynamicProperty(receiptKey);if(!raw)return {ok:false,reason:'missing'};
+ const receiptKey=key(RECEIPT_PREFIX,b),raw=getWorldProperty(world,receiptKey);if(!raw)return {ok:false,reason:'missing'};
  const receipt=JSON.parse(String(raw));if(receipt.phase!=='pending')return {ok:false,reason:receipt.phase};
  if(b.dimension.getBlock({x:b.x,y:b.y,z:b.z})?.typeId===EMPTY_POT)return {ok:false,reason:'block_present'};
  const state=normalizePublicOil(receipt.state);if(!state)throw Error('oil recovery state invalid');
  const stack=createPublicOilPot(ItemStack,state.type,state.count,undefined,state.revision+1);let drop;
  try{drop=b.dimension.spawnItem(stack,{x:b.x+.5,y:b.y+.5,z:b.z+.5});if(!drop||!itemSame(drop.getComponent('minecraft:item')?.itemStack,stack))throw Error('oil retry unacknowledged');}
- catch(error){if(drop){try{drop.remove()}catch{receipt.phase='quarantined'}}else receipt.phase='quarantined';receipt.reason=String(error);world.setDynamicProperty(receiptKey,JSON.stringify(receipt));return {ok:false,reason:receipt.phase};}
- receipt.phase='delivered';world.setDynamicProperty(receiptKey,JSON.stringify(receipt));world.setDynamicProperty(key(PLACED_PREFIX,b));world.setDynamicProperty(nativeKey(b));emitBlock(b,undefined);return {ok:true};
+ catch(error){if(drop){try{drop.remove()}catch{receipt.phase='quarantined'}}else receipt.phase='quarantined';receipt.reason=String(error);setWorldProperty(world,receiptKey,JSON.stringify(receipt));return {ok:false,reason:receipt.phase};}
+ receipt.phase='delivered';setWorldProperty(world,receiptKey,JSON.stringify(receipt));setWorldProperty(world,key(PLACED_PREFIX,b));setWorldProperty(world,nativeKey(b));emitBlock(b,undefined);return {ok:true};
 }

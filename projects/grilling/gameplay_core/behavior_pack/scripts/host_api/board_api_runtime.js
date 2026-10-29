@@ -1,3 +1,4 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 // Runs only when copied into the reviewed Cookery host extension; not imported by Grilling.
 import {world,system,ItemStack,GameMode,ItemTypes} from '@minecraft/server';
 import {BOARD_API_VERSION,BOARD_CAPABILITIES,normalizeBoardV2Recipe,createBoardRegistry,executeBoardOperation,recoverBoardOperation} from './board_api_core.js';
@@ -32,8 +33,8 @@ export function boardReceiptKey(block){return 'kaleidoscope_cookery:board_v2_'+b
 export function createBoardHostIO(block,player,host){
  const key=boardReceiptKey(block),equipment=player?host.slot(player):undefined;
  const checked=(expected)=>{let error;try{host.save(block,expected)}catch(e){error=e}const raw=host.raw(block),actual=raw===undefined?{}:JSON.parse(raw);if(JSON.stringify(actual)!==JSON.stringify(expected))throw error??Error('board state write not acknowledged');};
- const receipt=()=>{const raw=world.getDynamicProperty(key);return raw===undefined?undefined:JSON.parse(String(raw));};
- const writeReceipt=r=>{const raw=JSON.stringify(r);world.setDynamicProperty(key,raw);if(world.getDynamicProperty(key)!==raw)throw Error('receipt write not acknowledged');};
+ const receipt=()=>{const raw=getWorldProperty(world,key);return raw===undefined?undefined:JSON.parse(String(raw));};
+ const writeReceipt=r=>{const raw=JSON.stringify(r);setWorldProperty(world,key,raw);if(getWorldProperty(world,key)!==raw)throw Error('receipt write not acknowledged');};
  const spawn=s=>{const entity=block.dimension.spawnItem(s,{x:block.x+.5,y:block.y+.45,z:block.z+.5});const actual=entity?.getComponent('minecraft:item')?.itemStack;
   if(!entity||!actual||stackKey(actual)!==stackKey(s)){const error=Error('native drop readback failed');if(entity){error.receipt={undo(){entity.remove();if(entity.isValid)throw Error('drop still present')}};error.uncertain=false}throw error;}
   return {acknowledged:true,undo(){entity.remove();if(entity.isValid)throw Error('drop still present')}};
@@ -42,7 +43,7 @@ export function createBoardHostIO(block,player,host){
   readState:()=>host.load(block),writeState:checked,readReceipt:receipt,writeReceipt,
   readHeld:()=>equipment?.hasItem()?equipment.getItem():undefined,
   writeHeld:s=>{if(!equipment)throw Error('hand unavailable');let error;try{equipment.setItem(s)}catch(e){error=e}const actual=equipment.hasItem()?equipment.getItem():undefined;if(stackKey(actual)!==stackKey(s))throw error??Error('hand write not acknowledged')},
-  newOperationId:()=>{const counterKey=key+'_sequence',n=Number(world.getDynamicProperty(counterKey)??0)+1;if(!Number.isSafeInteger(n))throw Error('operation sequence invalid');world.setDynamicProperty(counterKey,n);if(world.getDynamicProperty(counterKey)!==n)throw Error('operation sequence unavailable');return key+':'+n},snapshot:snapshotBoardIngredient,
+  newOperationId:()=>{const counterKey=key+'_sequence',n=Number(getWorldProperty(world,counterKey)??0)+1;if(!Number.isSafeInteger(n))throw Error('operation sequence invalid');setWorldProperty(world,counterKey,n);if(getWorldProperty(world,counterKey)!==n)throw Error('operation sequence unavailable');return key+':'+n},snapshot:snapshotBoardIngredient,
   isKnife:host.isKnife,damagePlan:(s,r)=>boardKnifeDamagePlan(s,r,io.creative),
   deliver(row,refund){const s=restoreBoardIngredient(row);
    if(refund&&player){const c=player.getComponent('minecraft:inventory')?.container;if(!c)throw Error('refund inventory unavailable');for(let i=0;i<c.size;i++)if(!c.getItem(i)){const rollback={undo(){c.setItem(i,undefined);if(c.getItem(i))throw Error('refund rollback')}};try{c.setItem(i,s);if(stackKey(c.getItem(i))!==stackKey(s))throw Error('refund write not acknowledged')}catch(error){error.receipt=rollback;error.uncertain=false;throw error}return {acknowledged:true,...rollback}}}

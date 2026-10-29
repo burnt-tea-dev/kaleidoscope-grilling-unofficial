@@ -1,5 +1,7 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {world} from '@minecraft/server';
-import {stationContainer} from '../family_station_storage.js';
+import {stationContainer} from '../core/storage.js';
 import {RACK_OCCUPANCY_STATE,RACK_OCCUPANCY_HIGH_STATE,rackSeasoningOccupancy} from '../advanced_rack_layout.js';
 import {
  ADVANCED_RACK_BLOCK_ID,RACK_COMPARTMENTS,normalizeRackFilters,rackDisplayLevel
@@ -10,39 +12,39 @@ const transactionFaults=new Set();
 const faultKey=block=>rackFiltersKey(block)+'_transaction_fault';
 export function quarantineRackTransaction(block,reason){
  const key=faultKey(block);transactionFaults.add(key);
- world.setDynamicProperty(key,String(reason).slice(0,240));
- if(!world.getDynamicProperty(key))throw new Error('Rack transaction fault could not persist');
+ setWorldProperty(world,key,String(reason).slice(0,240));
+ if(!getWorldProperty(world,key))throw new Error('Rack transaction fault could not persist');
 }
 export function rackFiltersKey(block){
- return 'kaleidoscope_grilling:rack_filters_'+block.dimension.id.replace(/[^a-z0-9]/gi,'_')+'_'+enc(block.x)+'_'+enc(block.y)+'_'+enc(block.z);
+ return PersistedKey.RACK_FILTERS_PREFIX+block.dimension.id.replace(/[^a-z0-9]/gi,'_')+'_'+enc(block.x)+'_'+enc(block.y)+'_'+enc(block.z);
 }
 export function rackContainer(block){
  if(!block||block.typeId!==ADVANCED_RACK_BLOCK_ID)return undefined;
- if(transactionFaults.has(faultKey(block))||world.getDynamicProperty(faultKey(block)))throw new Error('Rack transaction quarantined; manual recovery required');
+ if(transactionFaults.has(faultKey(block))||getWorldProperty(world,faultKey(block)))throw new Error('Rack transaction quarantined; manual recovery required');
  return stationContainer(block);
 }
 export function readRackFilters(block){
  try{
-  const raw=world.getDynamicProperty(rackFiltersKey(block));
+  const raw=getWorldProperty(world,rackFiltersKey(block));
   return normalizeRackFilters(typeof raw==='string'?JSON.parse(raw):[]);
  }catch{return normalizeRackFilters([])}
 }
 export function writeRackFilters(block,filters){
- try{const raw=JSON.stringify(normalizeRackFilters(filters));world.setDynamicProperty(rackFiltersKey(block),raw);return world.getDynamicProperty(rackFiltersKey(block))===raw}catch{return false}
+ try{const raw=JSON.stringify(normalizeRackFilters(filters));setWorldProperty(world,rackFiltersKey(block),raw);return getWorldProperty(world,rackFiltersKey(block))===raw}catch{return false}
 }
 export function captureRackFilters(block){
- const key=rackFiltersKey(block),raw=world.getDynamicProperty(key);
+ const key=rackFiltersKey(block),raw=getWorldProperty(world,key);
  if(raw!==undefined&&typeof raw!=='string')throw new Error('Unreadable rack filters');
  const value=raw===undefined?[]:JSON.parse(raw);
  if(!Array.isArray(value)||value.length>RACK_COMPARTMENTS||value.some((row,i)=>row!==null&&row!==undefined&&
   (!row||typeof row!=='object'||row.kind!==(i<5?'seasoning':'tool')||typeof row.typeId!=='string'||!row.typeId.includes(':')||!['exact','oil_pot','seasoning_bottle'].includes(row.category))))throw new Error('Invalid rack filters');
  return {filters:normalizeRackFilters(value),step(next){return {
   apply:()=>writeRackFilters(block,next),
-  rollback:()=>{world.setDynamicProperty(key,raw);return world.getDynamicProperty(key)===raw;}
+  rollback:()=>{setWorldProperty(world,key,raw);return getWorldProperty(world,key)===raw;}
  }}};
 }
 export function clearRackFilters(block){
- try{world.setDynamicProperty(rackFiltersKey(block),undefined);return true}catch{return false}
+ try{setWorldProperty(world,rackFiltersKey(block),undefined);return true}catch{return false}
 }
 export function readRackItems(block){
  const c=rackContainer(block),out=Array(RACK_COMPARTMENTS).fill(undefined);

@@ -2,7 +2,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {canonicalLoreForComparison} from './bottle_lore_core.js';
 // Versioned, fail-closed projection of metadata exposed by the stable ItemStack API.
 // This is not a serializer for inaccessible Java NBT or other packs' private data.
-import {getItemProperty,getItemPropertyIds,setItemProperty,getItemRawLore,setItemLore} from './itemDataCore.js';
+import {getItemProperty,getItemPropertyIds,setItemProperty,getItemRawLore,setItemLore} from './core/persist.js';
 
 function stable(value){
  if(Array.isArray(value))return value.map(stable);

@@ -1,3 +1,4 @@
+import {getWorldProperty,setWorldProperty} from '../core/persist.js';
 import {onExplosion} from '../core/events.js';
 import {isNativeBottleItem,readNativeBottles} from "../seasoning_native_storage.js";
 import {isSpecialSeasoningId,specialSeasoningVisualId} from "./special_seasoning_visual_core.js";
@@ -7,9 +8,9 @@ import {getUses,setUses} from "../grill/runtime.js";
 import {specialSeasoningVariant} from "./special_seasoning_visual_runtime.js";
 import {EMPTY_SEASONING_ID} from "../eating_data_lookup.js";
 import {BlockPermutation,GameMode,ItemStack,system,world} from "@minecraft/server";
-import {getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../itemData.js";
+import {getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {seasoningLore} from "../localized_lore_core.js";
-import {inspectStationStorage,quarantineStation,retireEmptyStationContainer,storageKey as stationStorageKey} from "../family_station_storage.js";
+import {inspectStationStorage,quarantineStation,retireEmptyStationContainer,storageKey as stationStorageKey} from "../core/storage.js";
 import {copyOne,reducedStack,transactionStatus} from "../core/actions.js";
 import {readPlacedSeasoningStack as readBottleStack,seasoningBlockKey,writePlacedSeasoningStack as writeBottleStack} from "./seasoning_block_adapter.js";
 import {markPlacedVisualDirty} from "../presentation/placed_visual_queue.js";
@@ -56,11 +57,11 @@ function bottleRollbackStatus(block,result){
 }
 
 function bottleProjectionStep(block,items){
- const savedKey=seasoningBlockKey(block),savedRaw=world.getDynamicProperty(savedKey),rows=items.map(bottleDataFromItem);
+ const savedKey=seasoningBlockKey(block),savedRaw=getWorldProperty(world,savedKey),rows=items.map(bottleDataFromItem);
  return {apply(){
   if(!writeBottleStack(block,rows))return false;
   return JSON.stringify(readBottleStack(block,true))===JSON.stringify(rows);
- },rollback(){world.setDynamicProperty(savedKey,savedRaw);markPlacedVisualDirty(block);return world.getDynamicProperty(savedKey)===savedRaw;}};
+ },rollback(){setWorldProperty(world,savedKey,savedRaw);markPlacedVisualDirty(block);return getWorldProperty(world,savedKey)===savedRaw;}};
 }
 
 function commitBottleAndHand(block,current,nextItems,storage,nextHand,mutateHand=true){
@@ -137,9 +138,9 @@ function sameBottleTarget(block,snapshot){
 
 function bottleTargetSnapshot(block){return {typeId:block.typeId,states:block.permutation.getAllStates(),permutation:block.permutation}}
 
-function bottleActionSnapshot(block){return {target:bottleTargetSnapshot(block),owner:world.getDynamicProperty(stationStorageKey(block)),projection:world.getDynamicProperty(seasoningBlockKey(block))}}
+function bottleActionSnapshot(block){return {target:bottleTargetSnapshot(block),owner:getWorldProperty(world,stationStorageKey(block)),projection:getWorldProperty(world,seasoningBlockKey(block))}}
 
-function bottleActionStillCurrent(block,captured){return sameBottleTarget(block,captured.target)&&world.getDynamicProperty(stationStorageKey(block))===captured.owner&&world.getDynamicProperty(seasoningBlockKey(block))===captured.projection}
+function bottleActionStillCurrent(block,captured){return sameBottleTarget(block,captured.target)&&getWorldProperty(world,stationStorageKey(block))===captured.owner&&getWorldProperty(world,seasoningBlockKey(block))===captured.projection}
 
 // Supplement only known inert full-cube surfaces; hasSolidTop alone also accepts
 // interactive blocks and unknown addon blocks whose use must remain untouched.
@@ -208,7 +209,7 @@ function queueBottlePlacement(player,targetBlock,intent,proposed){
    const mode=player.getGameMode();if(mode!==GameMode.Survival&&mode!==GameMode.Creative)return;
    if(Math.hypot(player.location.x-location.x-.5,player.location.y-location.y-.5,player.location.z-location.z-.5)>8)return;
    block=dimension.getBlock(location);if(!sameBottleTarget(block,target)||!sameBottleTarget(block.below(),below)||!hasSolidTop(block.below()))return;
-   if(world.getDynamicProperty(seasoningBlockKey(block))!==undefined)throw new Error('Target has unresolved seasoning data');
+   if(getWorldProperty(world,seasoningBlockKey(block))!==undefined)throw new Error('Target has unresolved seasoning data');
    let presence=inspectStationStorage(block);if(presence.retiredEmpty){retireEmptyStationContainer(block);presence=inspectStationStorage(block);}
    if(presence.linked||presence.orphans||block.getComponent('minecraft:inventory')?.container)throw new Error('Target has unresolved native storage');
    freshPreflight=true;
@@ -234,10 +235,10 @@ function scheduleNativeBottleBreak(e){
  if(e.cancel||!isSeasoningBlock(e.block.typeId))return;e.cancel=true;
  try{
   const player=e.player,dimension=e.block.dimension,location={...e.block.location},snapshot=bottleTargetSnapshot(e.block);
-  const owner=world.getDynamicProperty(stationStorageKey(e.block)),projection=world.getDynamicProperty(seasoningBlockKey(e.block));
+  const owner=getWorldProperty(world,stationStorageKey(e.block)),projection=getWorldProperty(world,seasoningBlockKey(e.block));
   system.run(()=>{try{
    const block=dimension.getBlock(location);
-   if(!sameBottleTarget(block,snapshot)||world.getDynamicProperty(stationStorageKey(block))!==owner||world.getDynamicProperty(seasoningBlockKey(block))!==projection)return;
+   if(!sameBottleTarget(block,snapshot)||getWorldProperty(world,stationStorageKey(block))!==owner||getWorldProperty(world,seasoningBlockKey(block))!==projection)return;
    breakNativeBottles(block,true,player);
   }catch(error){console.warn('[Grilling bottle break] '+error)}});
  }catch(error){console.warn('[Grilling bottle break capture] '+error)}

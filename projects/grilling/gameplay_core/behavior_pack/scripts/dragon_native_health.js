@@ -1,6 +1,7 @@
 import {system} from '@minecraft/server';
 import {dragonHealthBonus,dragonHealthGain} from './dragon_health_core.js';
-const KEY='kaleidoscope_grilling:dragon_native_level';
+import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
+const KEY=PersistedKey.DRAGON_NATIVE_LEVEL;
 const pending=new Map();
 /** Native max health; damage/healing remains owned by the engine. */
 export function nativeDragonHealth(entity,amplifier,{heal=false}={}){
@@ -12,12 +13,12 @@ export function nativeDragonHealth(entity,amplifier,{heal=false}={}){
  const gain=dragonHealthGain(old?old-1:undefined,amplifier);
  // The old own ledger identifies a legacy Grilling health_boost. Leave an
  // unrelated or higher-amplifier native effect intact during migration.
- if(!old&&level&&entity.getDynamicProperty('kaleidoscope_grilling:dragon_pool')!==undefined){
+ if(!old&&level&&entity.getDynamicProperty(PersistedKey.DRAGON_POOL)!==undefined){
   const legacy=entity.getEffect('health_boost');
   if(legacy?.amplifier===(level===2?1:0))entity.removeEffect('health_boost');
-  entity.setDynamicProperty('kaleidoscope_grilling:dragon_pool',undefined);
+  entity.setDynamicProperty(PersistedKey.DRAGON_POOL,undefined);
  }
- entity.triggerEvent('kaleidoscope_grilling:dragon_health_'+level);
+ entity.triggerEvent(PersistedKey.DRAGON_HEALTH_PREFIX+level);
  entity.setDynamicProperty(KEY,level||undefined);
  // Component-group health.value is the native default/max attribute. The
  // engine preserves current HP. Heal after that event by the Java difference.

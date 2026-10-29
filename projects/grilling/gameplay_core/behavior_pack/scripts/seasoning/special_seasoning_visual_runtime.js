@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../itemData.js';
+import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,setItemLore} from '../core/persist.js';
 import {ItemStack} from '@minecraft/server';
 import {SEASONING_USES_KEY,SEASONING_VARIANT_KEY} from './seasoning_contract_core.js';
 import {isSpecialSeasoningId,specialSeasoningVisualId,SPECIAL_SEASONING_VARIANT_MAX} from './special_seasoning_visual_core.js';

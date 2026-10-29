@@ -1,3 +1,4 @@
+import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {onBeforeBlockBreak} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {PepperContactWork} from '../pepper_contact_work.js';
@@ -14,7 +15,7 @@ import {
 import {awardMountainFragrance} from '../advancement/advancement_runtime.js';
 import {createOwnedPlantWrite,plantFertilizerSteps} from '../plant_fertilizer_transaction_core.js';
 
-const STING_UNTIL='kaleidoscope_grilling:pepper_sting_until';
+const STING_UNTIL=PersistedKey.PEPPER_STING_UNTIL;
 const REPLACEABLE=new Set(['minecraft:air','minecraft:short_grass','minecraft:tall_grass','minecraft:snow_layer','minecraft:vine']);
 const AXES=new Set(['minecraft:wooden_axe','minecraft:stone_axe','minecraft:iron_axe','minecraft:golden_axe','minecraft:diamond_axe','minecraft:netherite_axe']);
 const DIRS=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];

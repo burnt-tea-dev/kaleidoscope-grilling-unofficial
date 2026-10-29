@@ -1,6 +1,6 @@
 import {readEffects,writeEffects} from "../effect_state_runtime.js";
 import {now} from "../core/actions.js";
-import {mergeEffectApplication} from "../effect_lifecycle_core.js";
+import {FX_KEY,mergeEffectApplication} from "../effect_lifecycle_core.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {COOKED_EFFECTS,GRILL_ID} from "../eating_data_lookup.js";
 import {seasoningEffectCounts} from "../seasoning/seasoning_contract_core.js";
@@ -20,8 +20,6 @@ import {flatulenceSoundOrigin,flatulenceSoundPitch} from "../flatulence_sound_ru
 import {forgetNumbVisual,updateNumbVisual} from "../numb_visual_runtime.js";
 const VIGOR_LAST=new Map();
 const SNEAK_LAST=new Map();
-
-const FX_KEY='kaleidoscope_grilling:a21_fx';
 
 const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:campfire','minecraft:soul_campfire','minecraft:magma']);
 

@@ -7,7 +7,7 @@ import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
 import {secretVisualState} from './secret_visual_state.js';
 import {decodeSecretVisual,SECRET_MODEL_VARIANTS_KEY} from './secret_visual_state_core.js';
 import {SECRET_GUI_COLORS} from './secret_gui_color_data.js';
-import {getItemProperty} from './itemDataCore.js';
+import {getItemProperty} from './core/persist.js';
 
 export const PLATE_FOOD_VISUAL_TYPE='kaleidoscope_grilling:plate_food_visual';
 export const RECIPE_ICON_VISUAL_TYPE='kaleidoscope_grilling:recipe_icon_visual';

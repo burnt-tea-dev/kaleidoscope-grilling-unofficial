@@ -3,7 +3,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {SLIME_ID,readSlimeWorldFrame} from './slime_frame_core.js';
 import {PLATE_SPECIAL_HELD_START} from './plate_special_visual_data.js';
 import {getMainHand,getOffHand} from './core/player_io.js';
-import {getItemProperty} from './itemData.js';
+import {getItemProperty} from './core/persist.js';
 import {PLATE_ID,PLATE_SKEWERS_KEY} from './plate/plate_recipe_core.js';
 import {decodePlateStorage} from './plate_transaction_core.js';
 import {plateHeldVisualPlan} from './plate_held_visual_core.js';

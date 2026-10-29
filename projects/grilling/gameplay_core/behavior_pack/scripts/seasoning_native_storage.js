@@ -1,7 +1,7 @@
 /** Native bottle items are authoritative once a station ledger exists.
  * The old four-field rows remain a checked projection for HUD/visual readers.
  */
-import {stationContainer,inspectStationStorage,quarantineStation} from './family_station_storage.js';
+import {stationContainer,inspectStationStorage,quarantineStation} from './core/storage.js';
 import {readPlacedSeasoningStack} from './seasoning/seasoning_block_adapter.js';
 import {SEASONING_MAX_BOTTLES,isEmptySeasoningId,isPendingSeasoningId} from './seasoning/seasoning_contract_core.js';
 import {isSpecialSeasoningId} from './seasoning/special_seasoning_visual_core.js';

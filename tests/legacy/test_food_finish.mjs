@@ -22,7 +22,7 @@ import {createFixture} from '../helpers/minecraft-fixture.mjs';
 // tick, and settle the hot-food reward only on the matching completion event.
 async function hotFoodFixture(t,id='kaleidoscope_grilling:grilled_bun_slice_skewer'){
  const f=createFixture({currentTick:1000});t.after(()=>f.dispose());await f.load('main.js');
- const data=await f.load('itemData.js'),state=await f.load('effect_state_runtime.js');
+ const data=await f.load('core/persist.js'),state=await f.load('effect_state_runtime.js');
  const stack=f.item(id);data.setItemProperty(stack,'kaleidoscope_grilling:hot_until',5000);
  const player=f.player({main:stack});
  return {f,player,state,start(){f.emit('world.afterEvents.itemStartUse',{source:player,itemStack:stack.clone(),useDuration:90});},
@@ -94,7 +94,7 @@ for(const base of RANDOM_EATING_IDS)test(`actual ID extension wins canonical fal
 // data is inspected after production give()/inventory merging, not intercepted.
 for(const base of ['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grilling:dark_grilling','kaleidoscope_grilling:ordinary_skewer'])for(const actualExtension of [false,true])test(`native secret completion delivers container metadata and preserves consumed ingredient ${base} explicit=${actualExtension}`,async t=>{
  const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');
- const data=await f.load('itemData.js'),compat=await f.load('secret_compat_core.js'),effects=await f.load('effect/ingredient_effects.js');
+ const data=await f.load('core/persist.js'),compat=await f.load('secret_compat_core.js'),effects=await f.load('effect/ingredient_effects.js');
  const {secretEatingRows}=await f.load('secret_eating_core.js'),{readEffects}=await f.load('effect_state_runtime.js');
  const {SECRET_BEHAVIOR_REGISTER_EVENT,SECRET_CONSUMED_EVENT}=await f.load('secret_compat_runtime.js');
  const actual=eatingItemId(base,true),input=row(actual,base),before=structuredClone(input),which=actualExtension?'actual':'canonical';
