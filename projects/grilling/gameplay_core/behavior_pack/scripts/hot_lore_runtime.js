@@ -20,7 +20,11 @@ function playerSlot(player,slot){
 function playerOffhand(player){
  enqueue('o|'+player.id,()=>getOffHand(player),stack=>{const e=player.getComponent('minecraft:equippable');if(!e?.setEquipment(EquipmentSlot.Offhand,stack))throw Error('Offhand unavailable')},player.id);
 }
-function scanPlayer(player){const c=playerInventory(player);if(c)for(let i=0;i<c.size;i++)playerSlot(player,i);playerOffhand(player)}
+function scanPlayer(player){
+ // Spawn scans run next tick; the player or its container may have left by then.
+ try{const c=playerInventory(player);if(c)for(let i=0;i<c.size;i++)playerSlot(player,i);playerOffhand(player)}
+ catch(error){if(error?.name!=='InvalidEntityError')throw error}
+}
 function resolveContainer(row){const b=world.getDimension(row.dimensionId).getBlock(row.location);return b?.getComponent('minecraft:inventory')?.container??(b?.typeId.startsWith('kaleidoscope_grilling:')?peekStationContainer(b):undefined)}
 function scanBlock(row){
  const c=resolveContainer(row);if(!c)return;
