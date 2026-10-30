@@ -7,6 +7,11 @@ import {createOilPressRegistry} from '../../projects/grilling/gameplay_core/beha
 import {PERSISTED_KEY_LITERALS} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist_keys.js';
 import {getWorldProperty,setWorldProperty,getWorldPropertyIds,parseWorldJson,stringifyWorldJson} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist.js';
 const N='kaleidoscope_grilling:';
+async function craftRemainderFixture(){
+ const f=createFixture();await f.load('oil/oil_world.js');
+ const player=f.player();
+ return {f,player,craft(itemStack){f.emit('world.afterEvents.playerCraftRecipe',{player,itemStack})}};
+}
 
 test('core persistence keeps the save lock exact and world record bytes unchanged',async()=>{
  const lock=JSON.parse(await readFile(new URL('../../tools/guards/save-compat.lock.json',import.meta.url),'utf8'));
@@ -530,4 +535,42 @@ test('an identically named tick from another script owner cannot run or rearm wo
  let calls=0;const f=pressFixture(()=>{calls++;return true});f.scheduler.ensure(f.block);
  assert.equal(f.scheduler.onNamedTick(f.eventFor(OIL_PRESS_TICK_NAME,'other-script')),false);
  assert.equal(calls,0);assert.equal(f.scheduled,true);assert.equal(f.schedules,1);assert.deepEqual(f.errors,[]);
+});
+
+test('premium chili oil crafting returns one empty bucket for one native result',async t=>{
+ const {f,player,craft}=await craftRemainderFixture();t.after(()=>f.dispose());
+ craft(f.item(N+'premium_chili_oil_bucket',1));
+ assert.equal(player.inventory.getItem(0).typeId,'minecraft:bucket');
+ assert.equal(player.inventory.getItem(0).amount,1);
+});
+
+test('premium chili oil bulk craft returns one empty bucket per crafted item',async t=>{
+ const {f,player,craft}=await craftRemainderFixture();t.after(()=>f.dispose());
+ craft(f.item(N+'premium_chili_oil_bucket',35));
+ const buckets=Array.from({length:player.inventory.size},(_,slot)=>player.inventory.getItem(slot)).filter(stack=>stack?.typeId==='minecraft:bucket');
+ assert.equal(buckets.reduce((total,stack)=>total+stack.amount,0),35);
+});
+
+test('separate completed crafts each return their own empty bucket once',async t=>{
+ const {f,player,craft}=await craftRemainderFixture();t.after(()=>f.dispose());
+ craft(f.item(N+'premium_chili_oil_bucket',1));craft(f.item(N+'premium_chili_oil_bucket',1));
+ assert.equal(player.inventory.getItem(0).typeId,'minecraft:bucket');
+ assert.equal(player.inventory.getItem(0).amount,2);
+});
+
+test('unrelated or unidentified recipe results never return empty buckets',async t=>{
+ const {f,player,craft}=await craftRemainderFixture();t.after(()=>f.dispose());
+ craft(f.item(N+'secret_chili_oil_bucket',1));craft(undefined);
+ assert.equal(player.inventory.getItem(0),undefined);
+ assert.equal(f.drops.length,0);
+});
+
+test('full inventory drops all crafted bucket remainders near the crafter',async t=>{
+ const {f,player,craft}=await craftRemainderFixture();t.after(()=>f.dispose());
+ for(let slot=0;slot<player.inventory.size;slot++)player.inventory.setItem(slot,f.item('minecraft:stone',64));
+ craft(f.item(N+'premium_chili_oil_bucket',35));
+ assert.equal(f.drops.length,3);
+ assert.ok(f.drops.every(drop=>drop.getComponent('minecraft:item').itemStack.typeId==='minecraft:bucket'));
+ assert.equal(f.drops.reduce((total,drop)=>total+drop.getComponent('minecraft:item').itemStack.amount,0),35);
+ assert.ok(f.drops.every(drop=>JSON.stringify(drop.location)===JSON.stringify(player.location)));
 });

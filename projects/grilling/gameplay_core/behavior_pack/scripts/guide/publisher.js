@@ -10,6 +10,7 @@ export const EVENTS = Object.freeze({
 export const SOURCE = 'kg_grilling';
 export const REVISION = 'kg-guide-a3-28155';
 export const CHUNK_SIZE = 1600;
+const PACKETS_PER_TICK = 2;
 const PREPARE_CHARS_PER_SLICE = 256;
 const PREPARE_STEPS_PER_TICK = 16;
 const PREPARE_BUDGET_MS = 2;
@@ -82,8 +83,8 @@ export function installPublisher(system, payload, warn = console.warn) {
     const step = () => {
       if (disposed) {active = false; return;}
       try {
-        // Bound work per tick. Even the maximum transfer finishes before host's 600-tick TTL.
-        for (let n = 0; n < 8 && cursor < messages.length; n++, cursor++) {
+        // A 512-chunk transfer has 514 packets including begin/end; at two per tick it takes 257 ticks.
+        for (let n = 0; n < PACKETS_PER_TICK && cursor < messages.length; n++, cursor++) {
           const m = messages[cursor]; system.sendScriptEvent(m.id, m.message);
         }
         if (cursor < messages.length) runningHandle = later(step, 1);

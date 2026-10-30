@@ -1,7 +1,6 @@
 import {getWorldProperty,setWorldProperty,getWorldPropertyIds} from '../core/persist.js';
 import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
-import {onBeforeBlockBreak} from '../core/events.js';
-import {onBlockInteraction} from '../core/events.js';
+import {onBeforeBlockBreak,onBlockInteraction,onPlayerCraftRecipe} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {premiumOilParticles} from '../oil_ambient_core.js';
 import {emitParticles} from '../immersion_particles_runtime.js';
@@ -15,6 +14,7 @@ import {captureWritableHand} from '../core/player_io.js';
 import {commitSteps} from '../grill/grill_transaction_core.js';
 import {isInitialBlockPress} from '../grill/grill_input_core.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from '../core/interaction_intent_adapter.js';
+import {give} from '../core/actions.js';
 import {
  LEGACY_OIL_REG,OIL_REG_PREFIX,FLOW_CELL_BUDGET,FLOW_SOURCE_BUDGET,
  oilPosKey as posKey,oilSourcePropertyId,normalizeOilSourceRow
@@ -24,6 +24,16 @@ export const OIL_TYPES=Object.freeze({
  canola:{block:'kaleidoscope_grilling:canola_oil',bucket:'kaleidoscope_grilling:canola_oil_bucket',interval:6},
  secret_chili:{block:'kaleidoscope_grilling:secret_chili_oil',bucket:'kaleidoscope_grilling:secret_chili_oil_bucket',interval:8},
  premium_chili:{block:'kaleidoscope_grilling:premium_chili_oil',bucket:'kaleidoscope_grilling:premium_chili_oil_bucket',interval:10}
+});
+// BDS 1.26.60 rejects different result types in shapeless recipes. Return
+// Java's lava-bucket remainder only after the native recipe really crafts.
+onPlayerCraftRecipe('premium-chili-oil-remainder',event=>{
+ const crafted=event.itemStack;
+ if(crafted?.typeId!=='kaleidoscope_grilling:premium_chili_oil_bucket')return;
+ const player=event.player,amount=Number(crafted.amount);
+ if(!player||!Number.isInteger(amount)||amount<1)return;
+ let remaining=amount;
+ while(remaining>0){const count=Math.min(16,remaining);give(player,new ItemStack('minecraft:bucket',count));remaining-=count;}
 });
 const VALID_OIL_TYPES=Object.freeze(Object.keys(OIL_TYPES));
 const BLOCK_TO_TYPE=Object.freeze(Object.fromEntries(Object.entries(OIL_TYPES).map(([k,v])=>[v.block,k])));

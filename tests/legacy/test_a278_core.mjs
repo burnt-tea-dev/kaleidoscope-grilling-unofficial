@@ -79,3 +79,23 @@ nodeTest('guide publisher send failure retries cached packets without rebuilding
  assert.equal(publisher.getStatus().successfulTransfers,1);assert.equal(publisher.getStatus().preparationBuilds,1);
  reassembleGuide(f.scriptEvents,GUIDE_PAYLOAD);
 });
+nodeTest('guide publisher sends the maximum 514-packet transfer at two packets per tick within the host TTL',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());const {installPublisher}=await f.load('guide/publisher.js');
+ const base={api:1,id:'kg_a1:grilling',data:''},serialized=JSON.stringify(base);
+ const maxPayload={...base,data:'x'.repeat(512*GUIDE_CHUNK_SIZE-serialized.length)};
+ assert.equal(JSON.stringify(maxPayload).length,512*GUIDE_CHUNK_SIZE);
+ const publisher=installPublisher(f.system,maxPayload,()=>{}),byTick=new Map();
+ const original=f.system.sendScriptEvent.bind(f.system);
+ f.system.sendScriptEvent=(id,message)=>{
+  if([GUIDE_EVENTS.begin,GUIDE_EVENTS.chunk,GUIDE_EVENTS.end].includes(id))byTick.set(f.system.currentTick,(byTick.get(f.system.currentTick)??0)+1);
+  original(id,message);
+ };
+ f.emit('system.afterEvents.scriptEventReceive',guideReady());
+ let ticks=0;while(!publisher.getStatus().successfulTransfers&&ticks++<1000)f.tick(1);
+ assert.equal(publisher.getStatus().successfulTransfers,1);
+ const transfer=reassembleGuide(f.scriptEvents,maxPayload),beginTick=[...byTick.keys()][0],endTick=[...byTick.keys()].at(-1);
+ assert.equal(transfer.length,514);
+ assert.ok([...byTick.values()].every(count=>count<=2));
+ assert.equal(Math.ceil(transfer.length/2),257);
+ assert.ok(endTick-beginTick<600,'maximum transfer finishes before the host TTL');
+});
