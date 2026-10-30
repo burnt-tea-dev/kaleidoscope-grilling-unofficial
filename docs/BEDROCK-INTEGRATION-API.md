@@ -2,6 +2,20 @@
 
 本接口補齊跨包出料、公開逐堆變體、展示註冊及新生成來源契約。它不複製 Java 選用模組，也不推斷原作者私人 dynamic properties。既有 Cookery 油壺、砧板、出料收據及 secret-food 事件保持原契約。
 
+## Core SDK 與 Cookery 接入
+
+事件分流 `host_api/event_router.js` 及公開食物格式 `host_api/food_api_core.js`
+由 [Senluo Bedrock Core](https://github.com/burnt-tea-dev/senluo-bedrock-core)
+維護。`core-sdk.lock.json` 固定 commit、版本與逐檔雜湊；在指定的 Core checkout 上執行
+`python tools/sync_core_sdk.py --sdk-root /path/to/core --write` 重新產生消費端，省略
+`--write` 則只核對。不要直接修改生成副本。本次接入保持兩個 runtime 檔案逐位元相同，
+不改既有存檔 owner、key 或事件契約。
+
+Core 的本機工具會從使用者自行下載的乾淨 Cookery 及指定的公開 Grilling 包，
+套用本庫 `host-extensions/board-api.json` 已審過的接入點。砧板、油壺、炒鍋等
+玩法 helpers 仍由本庫擁有。Core 不發送作者完整包；生成的 Cookery 僅供本機使用，
+不等同於安裝作者原包就具有全部整合能力。需要完整的停服備份和存檔驗證。
+
 ## 傳輸與確認
 
 作者伺服器腳本以 `system.sendScriptEvent` 發出 `kaleidoscope_grilling:integration_request`；回覆為 `kaleidoscope_grilling:integration_response`。僅處理 `sourceType === "Server"`；不接受實體來源、NPC 命令或真人冒充伺服器腳本。這是可信伺服器模組的介面，不是模組身份認證機制；有伺服器命令權限的管理員也能呼叫。
