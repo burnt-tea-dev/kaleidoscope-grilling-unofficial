@@ -17,7 +17,14 @@
 
 `source_snapshots/`、`resource_pack/`、`editor/`、`reports/resolved_models/` 內的美術／模型，以及 `reports/previews/`、HTML 內嵌預覽依 CC BY-NC-SA 4.0 分享。不可把新工具的 MIT 授權誤當成上述素材的授權。
 
-新 Python 工具與測試的授權見 `LICENSE-TOOLS`。沒有重新打包、分發或修改 Cookery 基岩版包。
+新 Python 工具與測試的授權見 `LICENSE-TOOLS`。本公開來源不包含 Cookery 作者包
+或完整作者腳本；已審過的接入宣告供使用者在本機處理自行取得的原包，生成內容
+仍須保留作者的授權與來源聲明。
+
+`scripts/host_api/event_router.js` 與 `scripts/host_api/food_api_core.js` 的自有
+共用程式由 [Senluo Bedrock Core](https://github.com/burnt-tea-dev/senluo-bedrock-core)
+維護，沿 `core-sdk.lock.json` 固定來源生成；這兩個檔案適用該庫的 BSD-3-Clause
+授權。這不改變原作素材、其餘腳本或本機生成的 Cookery 作者內容之授權。
 
 ## 技術參照
 

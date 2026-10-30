@@ -420,6 +420,13 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 見 §6。驗收：私有 repo 不含任何遊戲邏輯；公開 runtime 不依賴任何「只有私有整合才提供」的能力而不降級。
 
+**T6.1 公開 Core／SDK 及首批接入**（擁有者 2026-10-30 明確批准）：先公開獨立
+Core SDK 和使用者本機 Cookery 接入工具。Grilling 的事件分流與公開食物格式以
+固定 Core commit／雜湊生成，原位元組不變；玩法仍留本庫。作者原包、完整作者腳本、
+私有整合歷史、世界及主機設定不公開。保持 UUID、ID、persisted key 及原宿主資料
+owner，先做工具／乾淨原包、原生、保存與回退驗證，再發公開 Release；真人畫面另驗。
+這是 §6.2 宿主接入的最新決定，不代表 P3／P6 全部完成或完整 Java 還原。
+
 ### P7：常態維護
 
 - 每個變更：一個 PR、CI < 3 分鐘、CHANGELOG 一行。
@@ -547,11 +554,11 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 類別 | 去處 |
 | --- | --- |
 | A 遊戲邏輯 | 移入對應公開 repo（例如 `grilling/compat/cookery/`），以能力探測啟用；不能公開的（作者授權問題）改為不需要 |
-| B 宿主修補（改 Cookery 檔案） | **全部移除**。需要的能力改為：(1) 向 Cookery 作者提出 API 需求；(2) 在 Grilling 端以介面卡與降級處理實作；(3) 仍做不到的寫進 KNOWN-ISSUES |
+| B 宿主修補（改 Cookery 檔案） | 依 T6.1 的新決定，首批改為公開來源宣告＋Core 本機接入工具，使用者提供乾淨作者包，不發布完整作者腳本。持續向作者提出 API 需求；作者提供等效能力後，逐項移除對應接入點。不能公開的能力依介面卡降級，未驗證處寫進 KNOWN-ISSUES。 |
 | C 部署設定 | 留在私有 repo，只剩設定檔與部署腳本 |
 | D 憑證 | 不放 repo；伺服器上的權限受控檔案 |
 
-驗收：私有 repo 不再含 `.js` 遊戲邏輯或 Cookery 檔案副本；luosen 以「作者原版 Cookery＋三個公開包＋設定」即可運作，缺少的整合能力在遊戲中靜默降級（不報錯、不掉物品）。
+驗收：私有 repo 不再含 `.js` 遊戲邏輯或 Cookery 檔案副本；首批以「使用者本機接入的 Cookery＋公開包＋設定」交付，來源契約與生成工具均公開。作者原版無接入時只使用其實際已有的 API；缺少能力須明確降級，不扣物品。首批接入不等於此終態已全部完成。
 
 ### 6.3 Grilling 端的 Cookery 介面卡規範（`scripts/compat/cookery/`）
 
