@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "id": "kaleidoscope_grilling:family-api-0.2.14",
+  "id": "kaleidoscope_grilling:family-api-0.2.15",
   "version": [
     0,
     2,
-    14
+    15
   ],
   "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
   "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",

@@ -14,6 +14,7 @@
 
 | ID | 已知事實與來源修補範圍 | 必須保留的重現／驗收 |
 | --- | --- | --- |
+| PREMIUM-OIL-CRAFT-REMAINDER | G201 來源改用原生單一 Premium Chili Oil 配方結果；Bedrock `playerCraftRecipe` after-event 對實際製作出的該油桶按數量歸還空桶，背包滿時交給玩家附近的掉落物。原 Java 配方與四種 shapeless 材料保留。因 Bedrock 事件沒有 Java 工作台格子的槽位資料，空桶改入背包／地面，尚未證明真人操作、取消順序或畫面結果；來源測試不是原生合成驗收 | 同候選 BDS 真工作台以任意排列製作 1 份與批次，核材料消耗、油桶數與空桶數；另驗滿包掉落拾取、非目標配方及客戶端事件行為。不可把事件 capability probe 或 API fixture 稱為 Java 全等／真人通過 |
 | OIL-NAMED-TICK | G194 修復 26.60 命名事件 API 錯配：以 ownership-aware `isName` 取代不存在的 `isMine/name`，不呼叫不存在的取消方法；原生回呼消耗一次排程，只有未完成工作才重排。原形狀反例失敗，既有油機測試修後通過 | 同候選真引擎榨油→完成→收料、倒數途中拆除、卸載與重啟、重複事件及保存故障；來源模型不等於完整 BDS／真人驗收 |
 | HAND-ACTION-PREPARATION | G157 與 G180 的 API 模型可重現新製 Secret 在延後拆串前被 idle 換成 THREE_ALT，原有嚴格 intent 因而拒絕；關閉動畫的 native_plain 與立即入爐也會遇到同根因。G181 以暫時 hand reservation 修復自家外觀替換競爭，未放寬 ownership | 原生新製 Secret 立即拆／入爐；動畫開／關、主副手、被其他玩家或 addon 換 metadata、取消、滿包與重試。來源測試不能證明 native 排程或客戶端已通過 |
 | GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |

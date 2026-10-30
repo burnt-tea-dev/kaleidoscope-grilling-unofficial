@@ -21,16 +21,10 @@
         "item": "kaleidoscope_grilling:houttuynia_powder"
       }
     ],
-    "result": [
-      {
-        "item": "kaleidoscope_grilling:premium_chili_oil_bucket",
-        "count": 1
-      },
-      {
-        "item": "minecraft:bucket",
-        "count": 1
-      }
-    ],
+    "result": {
+      "item": "kaleidoscope_grilling:premium_chili_oil_bucket",
+      "count": 1
+    },
     "unlock": [
       {
         "item": "kaleidoscope_grilling:secret_chili_oil_bucket"

@@ -1,5 +1,5 @@
 // Copyable routing for one native world/system. Separate packs keep separate buses.
-const worlds=new WeakMap(),systems=new WeakMap();
+const worlds=new WeakMap(),craftWorlds=new WeakMap(),systems=new WeakMap();
 
 function invoke(route,event){
  try{route.handle(event);}catch(error){console.warn('[Grilling event '+route.id+'] '+error);}
@@ -42,6 +42,12 @@ export function blockEvents(world){
   worlds.set(world,router);
  }
  return router;
+}
+
+export function playerCraftRecipeEvents(world){
+ let register=craftWorlds.get(world);
+ if(!register){register=channel(fn=>world.afterEvents.playerCraftRecipe.subscribe(fn),fn=>world.afterEvents.playerCraftRecipe.unsubscribe(fn));craftWorlds.set(world,register)}
+ return register;
 }
 
 export function scriptEvents(system){
