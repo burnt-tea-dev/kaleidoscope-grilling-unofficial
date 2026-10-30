@@ -32,7 +32,9 @@ function rewrite(player){
 function drain(){
  scheduled=false;let budget=4;
  for(const [id,player] of pending){
-  pending.delete(id);rewrite(player);if(--budget===0)break;
+  pending.delete(id);
+  try{rewrite(player)}catch(error){if(error?.name!=='InvalidEntityError')throw error}
+  if(--budget===0)break;
  }
  if(pending.size&&!scheduled){scheduled=true;system.run(drain)}
 }
