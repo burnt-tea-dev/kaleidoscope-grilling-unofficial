@@ -466,6 +466,27 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 原型先用最難案例：**雙手各拿五串餐盤，秘製食材／shape 各異，包含熟食快照與動畫串；同 ID 不同 metadata 快切，另一名玩家觀察並在中途加入。** 需同時錄到第一人稱、第三人稱與遠端結果。若新通道增加空白、錯食材、殘影、交錯快照、手臂消失或明顯延遲，即未通過；不能用減容量、禁副手或取消效果換取低槽數。
 
+**2026-10-31 C-1 原型進度**：隔離[快照原型](../tests/native/held-snapshot/README.md)與
+`tools/held_snapshot_probe.py` 已提供 **4 格候選／28 格原通道正對照**，正式輸出仍為
+G203 的 27 格，不是已完成 4 格遷移。原型沿用真餐盤 planner、metadata 和模型，
+一次發送雙手 24 字全快照，以獨立且不移骨的動畫 controller 寫入 player variables；
+讀者須符合 frame token 才使用。型別／極值／錯世代／同 ID 換內容／失敗重試及
+生成的 owning-player reader 有來源回歸；[BDS 1.26.60.6 結果](../tests/native/held-snapshot/observed.json)
+僅證明 4 格定義、完整資料與 `playAnimation` 呼叫被接受，**沒有執行真正客戶端的 Molang**。
+`clientEvaluated=false`、`channelViable=null`；可視範圍重入與幀時間仍未證明。
+客戶端需以同設定比較兩包的 FP／TP／第二玩家、晚加入、換維度、重登／重載及快切。
+原型為 hold-only，不驗食用、音效或 TACZ；正式 24 格 bank、玩法與所有存檔身份未動，
+不得因 API 綠燈啟動 T3.5-d 刪欄。整包候選仍交目前 S1 線串行處理。
+
+TACZ 指定作者檔 **7854487** 已重新取得，SHA256 為
+`1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486`，BP／RP 1.0.3，
+維持 24 個 player properties。若四格通道成立，兩包小計為 **28**，仍須檢查當次完整家族。
+BP 玩家共用組件沒有相互衝突的已列數值；`minecraft:exhaustion_values` 的差異是
+TACZ 未列 Grilling 已有的 `lunge=4`，不能以整段取代遺失它。當次現裝 RP player 與
+TACZ 的共名動畫、模型、材質及貼圖 alias 亦無不同值，但 initialize／pre_animation／
+animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端確認。原包與分析留私有，
+沒有安裝、重新發布作者包或宣稱 TACZ 相容。
+
 ##### D. 實作與交付順序
 
 各子任務仍是一個任務一個 PR；有依賴時明列，沿用既有工具與測試，不新增每版驗證器或 STATUS 文件。
@@ -474,7 +495,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 | --- | --- | --- |
 | T3.5-a 盤點與預算 | 32 欄清單、權威資料、reader／writer、容量分析、目標版本 | **本次來源盤點及計畫完成**；完整整合包盤點仍待 T3.5-e，不宣稱實機驗收 |
 | T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 來源已實作 27 格；延遲／故障／雙手回歸及隔離 native writer 通過。完整家族／存檔／目標客戶端仍待；27 不是 TACZ 相容終點 |
-| T3.5-c 低槽通道原型 | 獨立測試包與明確通過／失敗結果，先做 C-1 | 待執行；只測資料到達與畫面等價，不同時重做模型、玩法與容器 |
+| T3.5-c 低槽通道原型 | 獨立測試包與明確通過／失敗結果，先做 C-1 | 四格隔離原型／原通道正對照、來源與 BDS API 驗證已備；真正客戶端 scope／重入／畫面仍待，尚未通過原型出口 |
 | T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 待前置；共用 bank 的所有必要 consumer 退場後才移除宣告。過程中不能按已搬 owner 數量虛報釋放槽位；目標 ≤6、上限 ≤8 仍受整體預算約束 |
 | T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 待前置；盤點當次完整包及 TACZ 精確版本、最終 schema ≤32，驗證整套模型、動作與其他 player components |
 
