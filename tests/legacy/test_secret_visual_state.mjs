@@ -265,6 +265,27 @@ test('failed native submit retains its pending generation and retries before mar
 
 const {execFileSync}=await import('node:child_process');
 const {fileURLToPath}=await import('node:url');
+test('probe player exposes the complete committed snapshot to attachables and retains vanilla routing',()=>{
+ const root=fileURLToPath(new URL('../../',import.meta.url));
+ const source='import sys,json;sys.path.insert(0,"tools");from held_snapshot_probe import configure_player;'+
+  'p={"minecraft:client_entity":{"description":{"identifier":"minecraft:player","animations":{"root":"controller.animation.player.root"},"render_controllers":["controller.render.player.first_person"],"scripts":{"variables":{"variable.foreign_public":"public"},"initialize":["variable.foreign = 7;"],"pre_animation":["variable.foreign = 8;"],"animate":["root"]}}}};'+
+  'print(json.dumps(configure_player(p)))';
+ const output=JSON.parse(execFileSync('python3',['-c',source],{cwd:root,timeout:10000}));
+ const description=output['minecraft:client_entity'].description,scripts=description.scripts;
+ const committed=apply(snapshotExpression(1,Array(12).fill(0),Array(12).fill(0)),1);
+ for(const name of Object.keys(committed)){
+  assert.equal(scripts.variables['variable.'+name],'public',name+' must be visible from its attachable');
+  assert.ok(scripts.initialize.includes('variable.'+name+' = 0;'),name+' starts neutral after client recreation');
+ }
+ const player=actor();createSnapshotPublisher().publish(player,Array(12).fill(0),Array(12).fill(0));
+ assert.equal(description.animations[player.calls[0].animation],player.calls[0].animation);
+ assert.equal(description.animations[player.calls[0].controller],player.calls[0].controller);
+ assert.equal(scripts.variables['variable.foreign_public'],'public');assert.equal(scripts.variables['variable.foreign'],undefined);
+ assert.ok(scripts.initialize.includes('variable.foreign = 7;'));
+ assert.deepEqual(scripts.pre_animation,['variable.foreign = 8;']);assert.deepEqual(scripts.animate,['root']);
+ assert.equal(description.animations.root,'controller.animation.player.root');
+ assert.deepEqual(description.render_controllers,['controller.render.player.first_person']);
+});
 test('generated plate consumer reads owning-player data for each hand and hides stale or absent snapshots',()=>{
  const root=fileURLToPath(new URL('../../',import.meta.url));
  const converted=execFileSync('python3',['-c','import sys;sys.path.insert(0,"tools");from held_snapshot_probe import readers,SOURCE;print(readers((SOURCE/"resource_pack/attachables/skewer_plate.attachable.json").read_text()))'],{cwd:root,timeout:10000});

@@ -478,6 +478,12 @@ G203 的 27 格，不是已完成 4 格遷移。原型沿用真餐盤 planner、
 原型為 hold-only，不驗食用、音效或 TACZ；正式 24 格 bank、玩法與所有存檔身份未動，
 不得因 API 綠燈啟動 T3.5-d 刪欄。整包候選仍交目前 S1 線串行處理。
 
+**C-1 宣告修正**：測試包 1.0.4 漏了 owning-player public 變數宣告，原生 API
+結果不涵蓋此缺口。1.0.5 由外部固定 Mojang 1.26.60.5 player 模板產生測試用
+client entity，保留原版動畫／渲染路由，宣告並初始化 24 字與 frame 的 public
+變數，綁定獨立 carrier aliases；正對照也使用同份 player 定義。正式 BP／RP 不變。
+這是依官方 scope 規則修正來源，不是已觀察到或已修好的實機故障；客戶端出口仍待。
+
 TACZ 指定作者檔 **7854487** 已重新取得，SHA256 為
 `1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486`，BP／RP 1.0.3，
 維持 24 個 player properties。若四格通道成立，兩包小計為 **28**，仍須檢查當次完整家族。
