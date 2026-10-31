@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse, itertools, json, re, struct, subprocess, sys
 from pathlib import Path
-from build_grilling_guide import ROOT,SOURCE,PROJECT,BP,RP,LOCALES,load,validate_source
+from build_grilling_guide import ROOT,SOURCE,PROJECT,BP,RP,LOCALES,load,validate_source,build_payload,encode_messages
 GAME=ROOT/'projects/grilling/gameplay_core/behavior_pack'
 GP=ROOT/'projects/grilling/gameplay_core/resource_pack'
 BP_UUID='c68005c5-23ff-54e8-a3ff-da6349ad43c2'
@@ -12,6 +12,29 @@ GUIDE_BASE='8dc3e9d440577cd70501c377722f8e27b0913d44'
 
 def require(ok,message):
     if not ok:raise AssertionError(message)
+
+def read_generated_payload(s):
+    path=GAME/'scripts/guide/payload.js'
+    text=path.read_text(encoding='utf-8')
+    prefix='export const GUIDE_MESSAGES='
+    require(text.startswith(prefix) and text.endswith(';\n'),'Generated guide packet module format drift')
+    messages=json.loads(text[len(prefix):-2])
+    require(isinstance(messages,list) and len(messages)>=3,'Generated guide packet list is empty')
+    begin=json.loads(messages[0]['message']);end=json.loads(messages[-1]['message'])
+    require(messages[0]['id'].endswith('_begin') and messages[-1]['id'].endswith('_end'),'Guide transfer boundaries drift')
+    require(begin=={'api':1,'source':'kg_grilling','id':'kg_a1:grilling','revision':s['revision'],'chunks':len(messages)-2},'Guide transfer begin envelope drift')
+    require(end=={'api':1,'source':'kg_grilling','id':'kg_a1:grilling','revision':s['revision']},'Guide transfer end envelope drift')
+    raw=[]
+    for index,row in enumerate(messages[1:-1]):
+        require(row['id'].endswith('_chunk'),'Guide transfer packet order drift')
+        fields=row['message'].split('\n',4)
+        require(len(fields)==5 and fields[:4]==['kg_grilling','kg_a1:grilling',s['revision'],str(index)],'Guide transfer chunk envelope drift')
+        raw.append(fields[4])
+    payload=json.loads(''.join(raw))
+    require(payload==build_payload(s),'Encoded guide packets differ from build_payload(catalog)')
+    require(messages==encode_messages(payload),'Generated guide packets differ from actual publisher encoder')
+    require(all(row['message'].isascii() and len(row['message'])<=2048 for row in messages),'Unsafe guide Script Event packet')
+    return payload,messages
 def pure(module,fn):
     code=f"import {{pathToFileURL}} from 'node:url';const m=await import(pathToFileURL(process.argv[1]));console.log(JSON.stringify(m.{fn}()));"
     return json.loads(subprocess.check_output(['node','--input-type=module','-e',code,str(GAME/'scripts'/module)],text=True,encoding='utf-8'))
@@ -116,11 +139,10 @@ def check_millstone_installation_warning(s):
         for loc,warning in expected.items():
             require(e['body'][loc][0]==warning,'Missing applied-host prerequisite: '+e['id']+' '+loc)
 
-def check_roasted_wing_flow(s):
+def check_roasted_wing_flow(s,payload):
     publisher=(GAME/'scripts/guide/publisher.js').read_text()
     match=re.search(r"export const REVISION = '([^']+)';",publisher)
     require(match and match[1]==s['revision'],'Catalog/publisher revision mismatch')
-    payload=json.loads((GAME/'scripts/guide/payload.js').read_text().removeprefix('export const GUIDE_PAYLOAD=').strip().removesuffix(';'))
     require(payload['version']==s['version'],'Catalog/payload version mismatch')
     recipe=load(GAME/'recipes/roasted_chicken_wing.json')['minecraft:recipe_furnace']
     labels={'furnace':'Furnace','smoker':'Smoker','campfire':'Campfire','soul_campfire':'Soul Campfire'}
@@ -130,8 +152,8 @@ def check_roasted_wing_flow(s):
     expected={'zh_CN': ['取得鸡翅：主手持森罗厨房刀击杀鸡；掠夺附魔会增加掉落数量。', '烹调：1 个鸡翅 → 1 个烤鸡翅。放进熔炉或烟熏炉并加入燃料，完成后从输出格取出；也可把鸡翅放在点燃的营火或灵魂营火上，烤熟后拾取掉出的成品。'], 'zh_TW': ['取得雞翅：主手持森羅廚房刀擊殺雞；掠奪附魔會增加掉落數量。', '烹調：1 個雞翅 → 1 個烤雞翅。放進熔爐或煙燻爐並加入燃料，完成後從輸出格取出；也可把雞翅放在點燃的營火或靈魂營火上，烤熟後拾取掉出的成品。'], 'en_US': ['Obtain Chicken Wings by killing a chicken with a Cookery Kitchen Knife in your main hand. Looting can increase the drops.', 'Cook 1 Chicken Wing into 1 Roasted Chicken Wing. Put it in a Furnace or Smoker with fuel, then collect it from the output slot. Alternatively, place it on a lit Campfire or Soul Campfire and pick up the cooked item when it drops.']}
     require(e['body']==expected,'Roasted wing acquisition or cooking instructions changed')
 
-def check_facts(s):
-    check_roasted_wing_flow(s)
+def check_facts(s,payload):
+    check_roasted_wing_flow(s,payload)
     check_millstone_installation_warning(s)
     check_houttuynia_acquisition(s)
     java_recipes=load(ROOT/'data/java/recipes.json')['resources']
@@ -265,8 +287,9 @@ def compiled_compare():
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--compiled',action='store_true');args=ap.parse_args()
     s=load(SOURCE);validate_source(s)
+    payload,messages=read_generated_payload(s)
     subprocess.run([sys.executable,str(ROOT/'tools/build_grilling_guide.py'),'--check'],check=True)
-    facts=check_facts(s)
+    facts=check_facts(s,payload)
     require([c['id'] for c in s['categories'] if not c.get('parent')]==s['host_reference']['root_category_ids'],'Host taxonomy drift')
     if tuple(load(ROOT/'baseline.json')['version'])>=(2,8,72):
         reference='cookery-current-reference.json'
@@ -301,8 +324,7 @@ def main():
     require(not any(d.get('uuid') in {'f8c367c2-84d6-5bf6-b5a8-1bbe6cdb93ab','32baef08-6b04-5115-9d5b-2d4ba2d3a7b4'} for d in bm['dependencies']),'Legacy guide pack dependency')
     pub=(BP/'scripts/guide/publisher.js').read_text();require(f"REVISION = '{s['revision']}'" in pub,'Publisher revision drift')
     for p in (BP/'scripts/guide').glob('*.js'):subprocess.run(['node','--check',str(p)],check=True)
-    code="import {pathToFileURL} from 'node:url';const root=process.argv[1];const p=await import(pathToFileURL(root+'/payload.js'));const m=await import(pathToFileURL(root+'/publisher.js'));const rows=m.encodeMessages(p.GUIDE_PAYLOAD);console.log(JSON.stringify({messages:rows.length,max:Math.max(...rows.map(x=>x.message.length))}));"
-    frames=json.loads(subprocess.check_output(['node','--input-type=module','-e',code,str(BP/'scripts/guide')],text=True,encoding='utf-8'))
-    require(frames['max']<=2048,'Script Event length')
+    frames={'packets':len(messages),'chunks':len(messages)-2,'max_message_characters':max(len(row['message']) for row in messages)}
+    require(frames['max_message_characters']<=2048,'Script Event length')
     print(json.dumps({'built_into_grilling':True,'product_version':version,'guide_data_version':s['version'],'entries':len(s['entries']),'categories':len(s['categories']),'recipe_variants':sum(len(e.get('recipes',[])) for e in s['entries']),**facts,'script_event_serialization':frames,'compiled_files':compiled_compare() if args.compiled else None,'validation_boundary':'Static source/data/serialization/packaging checks only; no player or client UI interaction was simulated.'},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()
