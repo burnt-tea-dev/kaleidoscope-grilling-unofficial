@@ -52,6 +52,7 @@ jobs:
         run: |
           python tools/baseline_gate.py check
           python tools/test_baseline_gate.py
+          python tools/eating_owner_properties.py --check
       - name: Parse every tracked JSON file
         shell: bash
         run: |

@@ -101,11 +101,11 @@ test('actual helper decode and occupied gates retain old rows, accept new foods,
   }
  }
 });
-test('maximum reachable plate words fit unchanged 32-property bank and decode losslessly',()=>{
+test('maximum reachable plate words fit the unchanged hand bank within the 27-property budget and decode losslessly',()=>{
  const values=[];for(let food=1;food<=225;food++)for(let shape=1;shape<=3;shape++)for(let style=0;style<=6;style++)values.push(food+256*(shape-1+3*style));
  const max=Math.max(...values),maxRemainder=Math.max(...values.map(v=>v%64)),maxHigh=Math.max(...values.map(v=>Math.floor(v/64)));
  assert.equal(PLATE_HELD_WORD_A_MAX,max+8192*maxRemainder);assert.equal(PLATE_HELD_WORD_B_MAX,1+maxHigh+128*max);assert.equal(HELD_VISUAL_WORD_MAX,PLATE_HELD_WORD_B_MAX);
- const props=json('behavior_pack/entities/player.json')['minecraft:entity'].description.properties;assert.equal(Object.keys(props).length,32);
+ const props=json('behavior_pack/entities/player.json')['minecraft:entity'].description.properties;assert.ok(Object.keys(props).length<=27);
  for(const middle of values){
   const cells=[max,middle,max],[a,b]=packPlateHeldSecret(cells);
   assert.deepEqual([a%8192,Math.floor(a/8192)+64*((b-1)%128),Math.floor((b-1)/128)],cells);

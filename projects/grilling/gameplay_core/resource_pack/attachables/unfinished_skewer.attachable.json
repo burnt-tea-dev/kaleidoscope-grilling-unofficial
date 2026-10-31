@@ -1621,9 +1621,9 @@
       "scripts": {
         "pre_animation": [
           "v.kg_secret_marker = (c.item_slot == 'off_hand' ? (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_off_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_off_piece') : 0) : (c.owning_entity->q.has_property('kaleidoscope_grilling:secret_main_piece') ? c.owning_entity->q.property('kaleidoscope_grilling:secret_main_piece') : 0));",
-          "v.kg_owner_eat_profile = (c.owning_entity->q.has_property('kaleidoscope_grilling:eat_profile') ? c.owning_entity->q.property('kaleidoscope_grilling:eat_profile') : 0);",
-          "v.kg_owner_eat_hand = (c.owning_entity->q.has_property('kaleidoscope_grilling:eat_hand') ? c.owning_entity->q.property('kaleidoscope_grilling:eat_hand') : 0);",
-          "v.kg_owner_eat_projection = (c.owning_entity->q.has_property('kaleidoscope_grilling:eat_projection') ? c.owning_entity->q.property('kaleidoscope_grilling:eat_projection') : 0);",
+          "v.kg_owner_eat_profile = (c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? (math.mod(math.floor((c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? c.owning_entity->q.property('kaleidoscope_grilling:controls') : 0) / 1), 8)) : 0);",
+          "v.kg_owner_eat_hand = (c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? (math.mod(math.floor((c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? c.owning_entity->q.property('kaleidoscope_grilling:controls') : 0) / 8), 4)) : 0);",
+          "v.kg_owner_eat_projection = (c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? (math.mod(math.floor((c.owning_entity->q.has_property('kaleidoscope_grilling:controls') ? c.owning_entity->q.property('kaleidoscope_grilling:controls') : 0) / 32), 2)) : 0);",
           "v.kg_owner_eat_native_ticks = (c.owning_entity->q.has_property('kaleidoscope_grilling:eat_native_ticks') ? c.owning_entity->q.property('kaleidoscope_grilling:eat_native_ticks') : 0);",
           "v.kg_owner_eat_elapsed_ticks = (c.owning_entity->q.has_property('kaleidoscope_grilling:eat_elapsed_ticks') ? c.owning_entity->q.property('kaleidoscope_grilling:eat_elapsed_ticks') : 0);",
           "v.kg_secret_off_hand = c.item_slot == 'off_hand';",

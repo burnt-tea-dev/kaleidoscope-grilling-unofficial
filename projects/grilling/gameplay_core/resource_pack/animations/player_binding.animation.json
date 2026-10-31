@@ -87435,7 +87435,7 @@
     },
     "animation.kg_imm.player.season.main": {
       "animation_length": 0.5,
-      "blend_weight": "!variable.is_first_person && q.property('kaleidoscope_grilling:season_hand') == 1 && q.property('kaleidoscope_grilling:season_phase') != 0",
+      "blend_weight": "!variable.is_first_person && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 64), 4)) == 1 && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 256), 16)) != 0",
       "bones": {
         "rightarm": {
           "rotation": [
@@ -87448,7 +87448,7 @@
     },
     "animation.kg_imm.player.season.off": {
       "animation_length": 0.5,
-      "blend_weight": "!variable.is_first_person && q.property('kaleidoscope_grilling:season_hand') == 2 && q.property('kaleidoscope_grilling:season_phase') != 0",
+      "blend_weight": "!variable.is_first_person && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 64), 4)) == 2 && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 256), 16)) != 0",
       "bones": {
         "leftarm": {
           "rotation": [

@@ -1,3 +1,4 @@
+import {readPlayerControl} from '../core/player_props.js';
 import {readEffects,writeEffects} from "../effect_state_runtime.js";
 import {now} from "../core/actions.js";
 import {FX_KEY,mergeEffectApplication} from "../effect_lifecycle_core.js";
@@ -171,7 +172,7 @@ const fx=readFx(p);
   if(fx.tundra_strider){try{const b=p.getBlockStandingOn();if(b&&TUNDRA_BLOCKS.has(b.typeId)){const v=p.getVelocity(),factor=tundraFactor(b.typeId);p.applyImpulse({x:v.x*(factor-1),y:0,z:v.z*(factor-1)});if(b.typeId==='minecraft:powder_snow'&&v.y<.02)p.applyImpulse({x:0,y:Math.min(.16,Math.max(.04,-v.y+.04)),z:0})}}catch{}}
   if(system.currentTick%20===0&&fx.warmth){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
   const db=fx.dragon_blood;nativeDragonHealth(p,db?.amp);
-  updateNumbVisual(p,!!fx.numb&&!hasFoodUse(p.id)&&!(p.getProperty('kaleidoscope_grilling:season_phase')>0),system.currentTick);
+  updateNumbVisual(p,!!fx.numb&&!hasFoodUse(p.id)&&!(readPlayerControl(p,'season_phase')>0),system.currentTick);
 }
 function forgetEffectMovement(id){VIGOR_LAST.delete(id);SNEAK_LAST.delete(id);}
 function forgetPlayerEffects(id){

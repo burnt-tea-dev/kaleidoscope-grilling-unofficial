@@ -4,7 +4,7 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {isBottleHeldVisualItem} from './bottle_held_visual_core.js';
 import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 
-// The player already uses all 32 entity properties. A hand can hold only one
+// A hand can hold only one
 // of these items, so its existing twelve presentation channels have one owner.
 // Authoritative ItemStacks/world metadata are never written by this transport.
 export const HELD_VISUAL_INVALID=254;

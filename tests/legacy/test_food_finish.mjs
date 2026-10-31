@@ -1,6 +1,7 @@
+import {CONTROLS_PROPERTY,decodeControls} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/player_props.js';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {finishedFoodMeta} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food_finish_core.js';
-import {eatingProfile} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/player_presentation_core.js';
+import {eatingProfile} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/player_props.js';
 test('hot dishes crossing the completion boundary lose hot seasoning/saturation eligibility',()=>{
  const started={hot:true,hotUntil:100,seasonings:['salt'],origin:'wok'};
  assert.equal(finishedFoodMeta(started,99).hot,true);
@@ -186,7 +187,7 @@ test('each route cancels below the checkpoint, settles at its grace boundary, an
     a.sample('before-stop');a.event('itemStopUse',Math.max(1,route.duration-elapsed));a.advance(1);a.sample('after-stop');
     const settled=route.kind!=='plain'&&elapsed+java.release_checkpoint_grace_ticks>=java.minimum_eat_ticks;
     assert.equal(a.p[hand].amount,settled?1:2,`${route.id} ${hand} release at ${elapsed}`);
-    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,0);
     assert.equal(lab.data.getItemProperty(a.p[hand],'foreign:timeline'),'retained');
     // A completed release cannot settle twice or cancel the following start.
     a.event('itemStopUse',1);a.advance(1);
@@ -212,7 +213,7 @@ test('every route consumes its final serving once with stop before complete and 
     assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),1);
     a.advance(route.duration-2);a.nativeDebit();a.event('itemCompleteUse',0);
     a.event('itemCompleteUse',0);a.event('itemStopUse',0);a.advance(1);
-    assert.equal(a.p[hand],undefined);assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(a.p[hand],undefined);assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,0);
     // Fixed/native food nutrition is intentionally not emulated by this driver.
     if(route.base.endsWith(':secret_skewer'))assert.ok(a.p.components['minecraft:player.hunger'].currentValue>hunger);
     const finalEffects=lab.f.effects.filter(e=>e.source===a.p).length;
@@ -247,7 +248,7 @@ test('every route rejects release debit after slot, hand, or metadata replacemen
     lab.f.emit('world.afterEvents.playerLeave',{playerId:a.p.id});
     a.p.selectedSlotIndex=0;a.p.main=undefined;a.p.off=undefined;a.p[hand]=a.stack;
     lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:true});a.advance(2);
-    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,0);
     assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),0);
     a.begin();a.advance(2);assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),2);
     a.retire();
@@ -270,7 +271,7 @@ test('beef terminal timeline distinguishes callback reset from an earlier invent
     if(mode==='stop-before-complete')a.event('itemStopUse',0);
     if(mode==='new-use-before-deferred-stop'){
       a.event('itemStopUse',0);a.begin();a.advance(1,true);
-      assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),5);
+      assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,5);
       assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),1);
     }else{
       if(mode==='complete-before-debit'){
@@ -300,7 +301,7 @@ test('stale fixed-skewer completions cannot reward replacement hands or slots',a
     assert.deepEqual(lab.f.effects.filter(e=>e.source===a.p),[],hand+'/'+replacement);
     assert.deepEqual(lab.inventory(a.p),before);
     assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
-    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,0);
   }
 });
 
@@ -308,10 +309,11 @@ test('restored hand views recover the active eating presentation without restart
   for(const hand of ['main','off']){
     const lab=await createEatingLab();t.after(()=>lab.f.dispose());
     const a=lab.actor(routes.find(x=>x.id===beef),hand),before=lab.inventory(a.p);a.begin();a.advance(70);
-    const projection=a.p.getProperty('kaleidoscope_grilling:eat_projection'),sounds=lab.f.sounds.length;
+    const projection=decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_projection,sounds=lab.f.sounds.length;
     a.nativeDebit();a.advance(1);
     assert.equal(a.p[hand].amount,1);
-    for(const key of ['eat_profile','eat_hand','eat_native_ticks','eat_elapsed_ticks'])assert.equal(a.p.getProperty('kaleidoscope_grilling:'+key),0);
+    for(const key of ['eat_profile','eat_hand'])assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0)[key],0);
+    for(const key of ['eat_native_ticks','eat_elapsed_ticks'])assert.equal(a.p.getProperty('kaleidoscope_grilling:'+key),0);
     a.p[hand]=a.stack;a.advance(1);
     const observed=a.sample('restored-view',true);
     assert.equal(observed.profile,5);assert.equal(observed.handCode,hand==='main'?1:2);assert.equal(observed.nativeTicks,90);assert.equal(observed.clock,72);
@@ -343,7 +345,7 @@ test('direct logout keeps unfinished food and does not settle it after rejoin',a
     assert.equal(a.p.components['minecraft:player.hunger'].currentValue,2);
     assert.equal(a.p.components['minecraft:player.saturation'].currentValue,0);
     assert.equal(lab.f.effects.filter(e=>e.source===a.p).length,0);
-    assert.equal(a.p.getProperty('kaleidoscope_grilling:eat_profile'),0);
+    assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,0);
   }
 });
 
@@ -407,3 +409,61 @@ test('a direct offhand write is guarded at use, without relying on a missing nat
  assert.equal(next.cancel,false);
 });
 }
+
+// The actual shared writer runs against the same delayed native API boundary
+// used by food/seasoning scenarios. No local read-modify-write codec is mocked.
+import {readFileSync} from 'node:fs';
+import {encodeControls,CONTROL_FIELDS,CONTROLS_MAX,controlMolang} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/player_props.js';
+test('all 3564 controls states round-trip and generated owner Molang reads the matching eating state',()=>{
+ const desc=JSON.parse(readFileSync(new URL('../../projects/grilling/gameplay_core/resource_pack/attachables/grilled_beef_skewer.attachable.json',import.meta.url)))['minecraft:attachable'].description;
+ const readers=desc.scripts.pre_animation.filter(row=>/^v\.kg_owner_eat_(profile|hand|projection) =/.test(row));
+ assert.equal(readers.length,3);
+ const words=new Set();
+ for(let profile=0;profile<=5;profile++)for(let hand=0;hand<=2;hand++)for(const projection of [false,true])
+ for(let season=0;season<=2;season++)for(let phase=0;phase<=10;phase++)for(let pending=0;pending<=2;pending++){
+  const state={eat_profile:profile,eat_hand:hand,eat_projection:projection,season_hand:season,season_phase:phase,pending_hand:pending};
+  const word=encodeControls(state);assert.ok(!words.has(word));words.add(word);assert.deepEqual(decodeControls(word),state);
+  const v={},q={has_property:key=>key===CONTROLS_PROPERTY,property:key=>{assert.equal(key,CONTROLS_PROPERTY);return word;}},math={floor:Math.floor,mod:(a,b)=>a%b};
+  for(const reader of readers)Function('v','q','math',reader.replaceAll('c.owning_entity->q.','q.'))(v,q,math);
+  assert.equal(v.kg_owner_eat_profile,profile);assert.equal(v.kg_owner_eat_hand,hand);assert.equal(v.kg_owner_eat_projection,Number(projection));
+  for(const name of ['season_hand','season_phase','pending_hand'])assert.equal(Function('q','math','return '+controlMolang(name))(q,math),Number(state[name]));
+ }
+ assert.equal(words.size,3564);assert.equal(Math.max(...words),CONTROLS_MAX);
+ const v={},q={has_property:()=>false,property:()=>{throw Error('Missing owner property must not be read');}},math={floor:Math.floor,mod:(a,b)=>a%b};
+ for(const reader of readers)Function('v','q','math',reader.replaceAll('c.owning_entity->q.','q.'))(v,q,math);
+ assert.deepEqual(v,{kg_owner_eat_profile:0,kg_owner_eat_hand:0,kg_owner_eat_projection:0});
+ for(const [name,field] of Object.entries(CONTROL_FIELDS)){
+  for(const invalid of field.boolean?[0,1,'true',null]:[-1,field.max+1,.5,NaN,Infinity,'1',true])assert.throws(()=>encodeControls({[name]:invalid}));
+ }
+});
+for(const phase of ['before','after'])test(`controls retain same-tick updates and retry a ${phase}-write failure`,async t=>{
+ const f=createFixture({deferredProperties:true});t.after(()=>f.dispose());
+ const props=await f.load('core/player_props.js'),p=f.player();
+ props.updatePlayerPresentation(p,{eat_profile:5,eat_hand:2,eat_native_ticks:72000,eat_elapsed_ticks:72000});
+ assert.equal(p.getProperty(CONTROLS_PROPERTY),undefined);
+ f.faults.failNext(p,'setProperty',{phase,predicate:key=>key===CONTROLS_PROPERTY});
+ assert.throws(()=>props.updatePlayerPresentation(p,{season_hand:1,season_phase:1}));
+ props.updatePlayerPresentation(p,{pending_hand:2,eat_projection:true});
+ f.tick();
+ assert.deepEqual(props.decodeControls(p.getProperty(CONTROLS_PROPERTY)),{eat_profile:5,eat_hand:2,eat_projection:true,season_hand:1,season_phase:1,pending_hand:2});
+ assert.equal(p.getProperty('kaleidoscope_grilling:eat_native_ticks'),72000);assert.equal(p.getProperty('kaleidoscope_grilling:eat_elapsed_ticks'),72000);
+ props.clearEatingPresentation(p);props.updatePlayerPresentation(p,{season_phase:2});f.tick();
+ const state=props.decodeControls(p.getProperty(CONTROLS_PROPERTY));assert.equal(state.eat_profile,0);assert.equal(state.season_phase,2);assert.equal(state.pending_hand,2);
+ const before=f.writes.length;props.updatePlayerPresentation(p,{});assert.equal(f.writes.length,before,'unchanged presentation has no native writes');
+ props.resetPlayerPresentation(p);f.tick();assert.equal(p.getProperty(CONTROLS_PROPERTY),0);
+ props.forgetPlayerPresentation(p.id);props.updatePlayerPresentation(p,{pending_hand:1});f.tick();
+ assert.equal(props.decodeControls(p.getProperty(CONTROLS_PROPERTY)).season_phase,0,'reconnect never restores an old motion');
+});
+for(const hand of ['main','off'])test(`delayed properties preserve ${hand}-hand food, sprinkle and reset without stale bits`,async t=>{
+ const lab=await createEatingLab({deferredProperties:true});t.after(()=>lab.f.dispose());
+ const route=routes.find(r=>r.base.endsWith(':grilled_beef_skewer')&&r.kind==='base'),a=lab.actor(route,hand);
+ const seasoning=await lab.f.load('seasoning_motion_runtime.js');
+ a.begin();seasoning.beginSeasoningMotion(a.p,hand);a.advance(2);
+ const state=decodeControls(a.p.getProperty(CONTROLS_PROPERTY));assert.equal(state.eat_profile,5);assert.equal(state.eat_hand,hand==='off'?2:1);assert.ok(state.season_phase>0);
+ a.advance(24);
+ lab.f.faults.failNext(a.p,'setProperty',{predicate:key=>key===CONTROLS_PROPERTY});
+ a.event('itemStopUse',route.duration-26);a.advance(2);
+ assert.equal(decodeControls(a.p.getProperty(CONTROLS_PROPERTY)).eat_profile,0);assert.equal(a.p[hand].amount,1);
+ lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:false});a.advance(2);assert.equal(a.p.getProperty(CONTROLS_PROPERTY),0);
+ assert.equal(lab.data.getItemProperty(a.p[hand],'foreign:timeline'),'retained');
+});

@@ -1,3 +1,4 @@
+from eating_owner_properties import document
 """Bridge a local terminal use-gate fall until its owned server phase clears."""
 OWNED = ('kaleidoscope_grilling:secret_skewer',
          'kaleidoscope_grilling:secret_skewer_java_three_alt')
@@ -79,7 +80,7 @@ def apply(description):
                      for saved, value in zip(state['snapshots'], values)]
         terminal.append(state['elapsed'] + ' = (' + selected + ' && ' + phase + ' && ' + retained_read(PREFIX + 'wait') + ' == 0) ? ' + authoritative_elapsed + ' : ' + retained_read(state['elapsed']) + ';')
     rows[owner:owner] = terminal
-    scripts['pre_animation'] = rows
+    scripts['pre_animation'] = document(rows)
     return description
 
 

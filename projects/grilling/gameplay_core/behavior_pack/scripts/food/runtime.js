@@ -1,3 +1,4 @@
+import {clearEatingPresentation,updatePlayerPresentation,flushPlayerPresentation} from '../core/player_props.js';
 import {WOK_FOOD_IDS} from "./wok_food_core.js";
 import {STOCKPOT_FOOD_IDS} from "./stockpot_food_core.js";
 import {seasoningFinished,seasoningShakeSound,stopSoundHandle} from "../immersion_audio_runtime.js";
@@ -16,7 +17,7 @@ import {captureEatingIdentity,commitEating,completedEatingStillCurrent,eatingEve
 import {SECRET_ID} from "../skewer/skewering_core.js";
 import {addNestedNutrition,addSecretNutrition,dynamicFood,hasPendingHandAction,scheduleSkewerAction,secretEatingData,secretRemainders,skewerAction} from "../skewer/runtime.js";
 import {DARK_ID,FOOD_DATA,MYSTERIOUS_ID,PROFILE_BY_ITEM,RAW_NAUSEA} from "../eating_data_lookup.js";
-import {EAT_ELAPSED_TICKS_PROPERTY,EAT_HAND_PROPERTY,EAT_NATIVE_TICKS_PROPERTY,EAT_PROFILE_PROPERTY,EAT_PROJECTION_PROPERTY,eatingElapsedTicks,eatingNativeTicks,eatingProfile,nativeEatingCompleted} from "../player_presentation_core.js";
+import {eatingElapsedTicks,eatingNativeTicks,eatingProfile,nativeEatingCompleted} from "../core/player_props.js";
 import {completedUseStillCurrent} from "../core/use_transaction.js";
 import {a25PlateItem,a25PlateRows,a25RestoreStack} from "../plate/plate_recipe_runtime.js";
 import {PLATE_ID,plateHighestNutritionIndex} from "../plate/plate_recipe_core.js";
@@ -175,18 +176,18 @@ function completePending(player,stack){
 function showEatingPresentation(e,a){
  const {id,profile,hand}=a;
  if(grillingConfig().graphicalEatingHud)showJavaEatingHud(e.source,a,system.currentTick);
- try{e.source.setProperty(EAT_PROFILE_PROPERTY,eatingProfile(profile).code);e.source.setProperty(EAT_HAND_PROPERTY,hand==='off'?2:1);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,eatingNativeTicks(a.nativeDuration))}catch(error){console.warn('[Grilling eating profile] '+error)}
+ try{updatePlayerPresentation(e.source,{eat_profile:eatingProfile(profile).code,eat_hand:hand==='off'?2:1,eat_native_ticks:eatingNativeTicks(a.nativeDuration)})}catch(error){console.warn('[Grilling eating profile] '+error)}
  // Separate Java NONE-context first-person path. Do not replace the RP player
  // definition or reset body/head channels. The JSON branch gates upright use.
  if(eatingNativeTicks(a.nativeDuration)>0&&admitEatingProjection(e,profile,hand,heldByHand)){
   try{
-   e.source.setProperty(EAT_PROJECTION_PROPERTY,true);
+   updatePlayerPresentation(e.source,{eat_projection:true});
    e.source.playAnimation(selectEatingProjection(e,profile,hand,heldByHand),{
     // Do not stop on a client-synced property before its update packet arrives.
     // The animation blend gate still masks inactive projection immediately.
     controller:'kg_java_eating_first_person',blendOutTime:0,
     stopExpression:"!q.is_using_item || !q.is_item_name_any('"+(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')+"','"+e.itemStack.typeId+"')"});
-  }catch(error){console.warn('[Grilling Java first-person projection] '+error);try{e.source.setProperty(EAT_PROJECTION_PROPERTY,false)}catch{}}
+  }catch(error){console.warn('[Grilling Java first-person projection] '+error);try{updatePlayerPresentation(e.source,{eat_projection:false})}catch{}}
  }
  // Native use_item_progress can remain zero for custom food in third person.
  // Supply only its arm rotation there; retain native movement and the authored
@@ -199,7 +200,7 @@ function showEatingPresentation(e,a){
 }
 
 world.afterEvents.itemStartUse.subscribe(e=>{
- try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
+ try{clearEatingPresentation(e.source)}catch{}
  const id=canonicalFoodId(e.itemStack?.typeId);
  if(isPendingSeasoningId(id)){const hand=captureInteractionIntent(e.source,e.itemStack).hand;
   stopSoundHandle(PENDING_USES.get(e.source.id)?.audio);
@@ -246,7 +247,7 @@ world.afterEvents.itemCompleteUse.subscribe(e=>{
  // Publish completion ownership before presentation reset, even if the held
  // snapshot still contains the just-consumed single serving this callback.
  if(id===SECRET_ID||isFailureSkewer(id))try{syncSecretHeld(e.source,{completedUse:a.use})}catch(error){console.warn('[Grilling held completion] '+error)}
- stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{}
+ stopEatSound(e.source,a.profile);SETTLED.set(e.source.id,system.currentTick);ACTIVE_EATS.delete(e.source.id);hideJavaEatingHud(e.source);forgetEatingItem(e.source.id);try{clearEatingPresentation(e.source)}catch{}
  if(id===SECRET_ID){addSecretNutrition(e.source,e.itemStack,{hot:false})}
  if(RAW_NAUSEA[id])try{e.source.addEffect('nausea',60,{showParticles:true})}catch{};if(id===MYSTERIOUS_ID)try{e.source.addEffect('nausea',100,{showParticles:true})}catch{};if(id===DARK_ID)try{e.source.addEffect('blindness',200,{showParticles:true})}catch{}
  if(id===SECRET_ID)secretRemainders(e.source,e.itemStack);
@@ -268,7 +269,7 @@ world.afterEvents.itemStopUse.subscribe(e=>{
  // Capture elapsed at release, not in the deferred callback: a 23-tick release
  // must not become eligible merely because cleanup runs a tick later.
  // Let native completion win either event order; never delete a newer session.
- const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{e.source.setProperty(EAT_PROFILE_PROPERTY,0);e.source.setProperty(EAT_HAND_PROPERTY,0);e.source.setProperty(EAT_PROJECTION_PROPERTY,false);e.source.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.source.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
+ const settleReleased=()=>{if(ACTIVE_EATS.get(id)!==a)return;ACTIVE_EATS.delete(id);hideJavaEatingHud(e.source);forgetEatingItem(id);try{clearEatingPresentation(e.source)}catch{};if(!a.plain&&e.itemStack&&used+RELEASE_CHECKPOINT_GRACE_TICKS>=MINIMUM_EAT_TICKS&&hungerSettle(e.source,a.id,a))SETTLED.set(id,system.currentTick);if(a.id===SECRET_ID||isFailureSkewer(a.id))try{syncSecretHeld(e.source)}catch(error){console.warn('[Grilling held release] '+error)}};
  // A proven nonterminal stop cannot race native completion. Settle in this
  // writable after-event, like Java releaseUsing, before leave clears the session.
  // Terminal/unknown clocks retain deferred completion ownership; before-leave
@@ -326,14 +327,17 @@ syncSlimeHeld(p,slimeFrame);
    }
    // Do not assume a remote custom-item countdown matches the owner's clock.
    // Replicate source session time; native food debit/reward stays event-owned.
-   p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,eatingElapsedTicks(active.start,system.currentTick,active.nativeDuration));
+   updatePlayerPresentation(p,{eat_elapsed_ticks:eatingElapsedTicks(active.start,system.currentTick,active.nativeDuration)});
    if(!active.plain&&!active.audioStarted&&(active.audioAttempts??0)<3&&system.currentTick%5===0)startEatingSound(p,active);!active.plain&&advanceBites(p,active);if(!active.plain&&grillingConfig().graphicalEatingHud)showJavaEatingHud(p,active,system.currentTick);else hideJavaEatingHud(p);
   }else if(active){
    active.presentationHidden=true;
    hideJavaEatingHud(p);
    // A replaced/switching serving must not leave a projected arm on another item.
-   p.setProperty(EAT_PROFILE_PROPERTY,0);p.setProperty(EAT_HAND_PROPERTY,0);p.setProperty(EAT_PROJECTION_PROPERTY,false);p.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);p.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);
+   clearEatingPresentation(p);
   }else hideJavaEatingHud(p);
+  // A terminal reset may fail after the use session has already ended. Retry
+  // its desired presentation through this existing player tick, even at rest.
+  try{flushPlayerPresentation(p)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling presentation retry] '+error)}
 }
 function hasFoodUse(id){return ACTIVE_EATS.has(id)||PENDING_USES.has(id);}
 function forgetFoodUse(id){
