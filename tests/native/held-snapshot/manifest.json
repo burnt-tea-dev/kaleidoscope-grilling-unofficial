@@ -1,0 +1,58 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Grilling complete held-snapshot probe (isolated only)",
+    "description": "Isolated test only; never install with a formal world",
+    "uuid": "6f195a2e-d508-4383-8bf7-569921b2341b",
+    "version": [
+      1,
+      0,
+      4
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      60
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "2c70e6b4-59b1-4b77-a8b6-b60105211f35",
+      "version": [
+        1,
+        0,
+        4
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "entry": "scripts/probe.js",
+      "uuid": "7e0052d7-6ab7-4318-9f3e-cc60ae87dc29",
+      "version": [
+        1,
+        0,
+        4
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "uuid": "998d610f-3dc5-4c12-bbf9-767c222dfaba",
+      "version": [
+        1,
+        0,
+        4
+      ]
+    }
+  ]
+}

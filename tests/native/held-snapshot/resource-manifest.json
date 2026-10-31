@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Grilling snapshot probe resources (isolated only)",
+    "description": "Client C-1 evidence required; not a production replacement",
+    "uuid": "998d610f-3dc5-4c12-bbf9-767c222dfaba",
+    "version": [
+      1,
+      0,
+      4
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      60
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "24a68cbf-cb37-4db3-a47c-1684692091b2",
+      "version": [
+        1,
+        0,
+        4
+      ]
+    }
+  ]
+}

@@ -205,3 +205,77 @@ test('cold secret attachable initialization does not read pre-animation marker s
   }
  }
 });
+
+// T3.5-c isolated transport scenarios share this visual domain suite.
+{
+const {plateHeldVisualPlan,PLATE_HELD_WORD_A_MAX,PLATE_HELD_WORD_B_MAX}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_core.js');
+const {plateRows}=await import('../native/held-snapshot/scripts/cases.js');
+const {createSnapshotPublisher,snapshotExpression,FRAME_PROPERTY,WORD_MAX,variableName}=await import('../native/held-snapshot/scripts/snapshot.js');
+const math={floor:Math.floor};
+function apply(expression,frame,variables={}){
+ // Execute the real generated assignments/commit against a query boundary.
+ // This models language arithmetic; no client variable scope is simulated.
+ Function('q','v',expression.replace('?{','?(()=>{').replace('};return 0;','})():0;return 0;'))({property:key=>{assert.equal(key,FRAME_PROPERTY);return frame;}},variables);
+ return variables;
+}
+const actor=()=>({id:'source',props:{},calls:[],setProperty(name,value){this.props[name]=value;},playAnimation(animation,options){this.calls.push({animation,...options});}});
+test('a single complete snapshot preserves both five-row plates, cooked snapshots and shapes',()=>{
+ const mainRows=plateRows(0),offRows=plateRows(1),before=JSON.stringify([mainRows,offRows]);
+ const main=plateHeldVisualPlan(mainRows),off=plateHeldVisualPlan(offRows),expression=snapshotExpression(1,main,off);
+ assert.equal(main[10],5);assert.equal(off[10],5);assert.notDeepEqual(main,off);
+ const variables=apply(expression,1);
+ for(const [hand,words] of [['main',main],['off',off]])for(const [i,value] of words.entries())assert.equal(variables[variableName(hand,i).slice(2)],value);
+ assert.equal(variables.kg_snapshot_frame,1);assert.equal(JSON.stringify([mainRows,offRows]),before);
+ for(let index=0;index<5;index++)assert.equal(mainRows[index].native.props['snapshot_probe:foreign'],'preserve');
+});
+test('stale frame never overwrites current data; new full payload replaces every word',()=>{
+ const a=plateHeldVisualPlan(plateRows(0)),b=plateHeldVisualPlan(plateRows(1));
+ const old=snapshotExpression(1,a,b),next=snapshotExpression(2,b,a),v=apply(next,2);
+ const before=structuredClone(v);apply(old,2,v);assert.deepEqual(v,before);
+ apply(snapshotExpression(3,Array(12).fill(0),Array(12).fill(0)),3,v);
+ assert.equal(v.kg_snapshot_frame,3);
+ for(const hand of ['main','off'])for(let i=0;i<12;i++)assert.equal(v[variableName(hand,i).slice(2)],0);
+});
+test('bounded integer interpolation rejects invalid/injected/oversize words before any native call',()=>{
+ const valid=Array(12).fill(0);
+ for(const invalid of [-1,WORD_MAX+1,.5,NaN,Infinity,'0;v.foreign=1'])assert.throws(()=>snapshotExpression(1,[invalid,...valid.slice(1)],valid));
+ assert.throws(()=>snapshotExpression(0,valid,valid));assert.throws(()=>snapshotExpression(1,valid.slice(1),valid));
+ const maximum=Array.from({length:5},()=>[PLATE_HELD_WORD_A_MAX,PLATE_HELD_WORD_B_MAX]).flat().concat([5,255]);
+ const actual=apply(snapshotExpression(1000000,maximum,maximum),1000000);
+ assert.equal(actual.kg_snapshot_m9,PLATE_HELD_WORD_B_MAX);assert.equal(actual.kg_snapshot_o10,5);
+ for(const value of Object.values(actual))assert.equal(Math.fround(value),value);
+});
+test('unchanged display is quiet, same-ID metadata changes send a new complete snapshot, replay targets a viewer',()=>{
+ const publisher=createSnapshotPublisher(),player=actor(),a=plateHeldVisualPlan(plateRows(0)),b=plateHeldVisualPlan(plateRows(1));
+ assert.equal(publisher.publish(player,a,b),true);const first=player.calls[0];
+ assert.equal(publisher.publish(player,a,b),false);assert.equal(player.calls.length,1);
+ assert.equal(publisher.publish(player,b,a),true);assert.equal(player.props[FRAME_PROPERTY],2);
+ assert.notEqual(player.calls[1].stopExpression,first.stopExpression);
+ const viewer={id:'observer'};publisher.replay(player,[viewer]);
+ assert.deepEqual(player.calls.at(-1).players,[viewer]);assert.equal(player.props[FRAME_PROPERTY],2);
+ publisher.forget(player.id);assert.equal(publisher.replay(player,[viewer]),false);
+});
+test('failed native submit retains its pending generation and retries before marking data sent',()=>{
+ const publisher=createSnapshotPublisher(),player=actor(),a=plateHeldVisualPlan(plateRows(0)),b=plateHeldVisualPlan(plateRows(1));
+ const native=player.playAnimation;player.playAnimation=()=>{throw Error('native failure');};
+ assert.throws(()=>publisher.publish(player,a,b));assert.equal(player.props[FRAME_PROPERTY],1);
+ player.playAnimation=native;assert.equal(publisher.publish(player,a,b),true);assert.equal(player.props[FRAME_PROPERTY],1);
+ assert.equal(publisher.publish(player,a,b),false);assert.equal(player.calls.length,1);
+});
+
+const {execFileSync}=await import('node:child_process');
+const {fileURLToPath}=await import('node:url');
+test('generated plate consumer reads owning-player data for each hand and hides stale or absent snapshots',()=>{
+ const root=fileURLToPath(new URL('../../',import.meta.url));
+ const converted=execFileSync('python3',['-c','import sys;sys.path.insert(0,"tools");from held_snapshot_probe import readers,SOURCE;print(readers((SOURCE/"resource_pack/attachables/skewer_plate.attachable.json").read_text()))'],{cwd:root,timeout:10000});
+ const lines=JSON.parse(converted)['minecraft:attachable'].description.scripts.pre_animation.slice(0,5);
+ const main=plateHeldVisualPlan(plateRows(0)),off=plateHeldVisualPlan(plateRows(1)),snapshot=apply(snapshotExpression(7,main,off),7);
+ for(const hand of ['main_hand','off_hand'])for(const has of [false,true])for(const frame of [6,7]){
+  const local={kg_snapshot_frame:999,kg_snapshot_m10:0,kg_snapshot_o10:0};
+  const owner={v:snapshot,q:{has_property:key=>has&&key===FRAME_PROPERTY,property:key=>{assert.equal(key,FRAME_PROPERTY);return frame;},is_item_name_any:()=>true}};
+  for(const line of lines)Function('v','c','owner','math',line.replaceAll('c.owning_entity->q.','owner.q.').replaceAll('c.owning_entity->v.','owner.v.'))(local,{item_slot:hand},owner,math);
+  assert.equal(local.kg_plate_count,has&&frame===7?5:0);
+ }
+});
+
+}
