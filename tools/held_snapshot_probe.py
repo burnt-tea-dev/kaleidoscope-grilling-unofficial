@@ -30,6 +30,9 @@ def protocol():
 PROTOCOL=protocol()
 FRAME=PROTOCOL['frame']
 FIELDS=PROTOCOL['fields']
+# The client rejects an empty bones object. Omit this optional channel entirely
+# so the carrier cannot change the pose supplied by normal player animations.
+CARRIER={'format_version':'1.8.0','animations':{PROTOCOL['animation']:{'loop':True,'animation_length':1}}}
 READ=re.compile(r"((?:c\.owning_entity->)?(?:q|query))\.(property|has_property)\('kaleidoscope_grilling:("+'|'.join(FIELDS)+r")'\)")
 
 
@@ -54,6 +57,9 @@ def configure_player(player):
     names=[name.replace('v.','variable.',1) for name in variables]
     scripts.setdefault('variables',{}).update({name:'public' for name in names})
     scripts.setdefault('initialize',[]).extend(name+' = 0;' for name in names)
+    # The 1.26.60.4 client reads this vanilla state before it has been assigned
+    # in the probe player. Preserve any native value; default only at init.
+    scripts['initialize'].append('variable.melee_spear_equipped = variable.melee_spear_equipped ?? 0.0;')
     description['animations'].update({PROTOCOL['animation']:PROTOCOL['animation'],PROTOCOL['controller']:PROTOCOL['controller']})
     return player
 
@@ -106,8 +112,7 @@ def build(output, player_template, control=False):
     for path in rp.rglob('*.json'):
         text=path.read_text();result=text if control else readers(text)
         if result!=text:path.write_text(result);changed.append(str(path.relative_to(rp)))
-    carrier={'format_version':'1.8.0','animations':{PROTOCOL['animation']:{'loop':True,'animation_length':1,'bones':{}}}}
-    (rp/'animations/snapshot_probe.animation.json').write_text(json.dumps(carrier,indent=2)+'\n')
+    (rp/'animations/snapshot_probe.animation.json').write_text(json.dumps(CARRIER,indent=2)+'\n')
     (rp/'animation_controllers').mkdir(exist_ok=True)
     controller={'format_version':'1.10.0','animation_controllers':{PROTOCOL['controller']:{'initial_state':'default','states':{'default':{}}}}}
     (rp/'animation_controllers/snapshot_probe.controller.json').write_text(json.dumps(controller,indent=2)+'\n')

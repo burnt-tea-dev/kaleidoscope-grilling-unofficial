@@ -285,6 +285,23 @@ test('probe player exposes the complete committed snapshot to attachables and re
  assert.deepEqual(scripts.pre_animation,['variable.foreign = 8;']);assert.deepEqual(scripts.animate,['root']);
  assert.equal(description.animations.root,'controller.animation.player.root');
  assert.deepEqual(description.render_controllers,['controller.render.player.first_person']);
+ const spearInitialization=scripts.initialize.filter(line=>line.startsWith('variable.melee_spear_equipped ='));
+ assert.equal(spearInitialization.length,1);
+ for(const initial of [undefined,0,1]){
+  const native=initial===undefined?{}:{melee_spear_equipped:initial};
+  for(const line of spearInitialization)Function('variable',line)(native);
+  assert.equal(native.melee_spear_equipped,initial??0,'missing vanilla state is neutral; an existing native state survives initialization');
+ }
+});
+test('snapshot carrier has no bone channels or pose reset for the client to apply',()=>{
+ const root=fileURLToPath(new URL('../../',import.meta.url));
+ const source='import sys,json;sys.path.insert(0,"tools");from held_snapshot_probe import CARRIER;print(json.dumps(CARRIER))';
+ const output=JSON.parse(execFileSync('python3',['-c',source],{cwd:root,timeout:10000}));
+ const player=actor();createSnapshotPublisher().publish(player,Array(12).fill(0),Array(12).fill(0));
+ const carrier=output.animations[player.calls[0].animation];
+ assert.equal(carrier.bones,undefined,'an empty bones object is rejected by the native client');
+ assert.notEqual(carrier.override_previous_animation,true);
+ assert.equal(carrier.loop,true);assert.ok(carrier.animation_length>0);
 });
 test('generated plate consumer reads owning-player data for each hand and hides stale or absent snapshots',()=>{
  const root=fileURLToPath(new URL('../../',import.meta.url));
