@@ -1,7 +1,8 @@
 # T3.5-c complete held snapshot probe
 
-This is an isolated C-1 experiment. Production remains the paired G203
-27-property protocol. Do not install either probe with an existing Grilling
+This is an isolated C-1 experiment. Production retains the paired 27-property
+protocol; see [baseline.json](../../../baseline.json) for its formal version.
+Do not install either probe with an existing Grilling
 pack, use a formal save, or copy the test world back to production.
 
 The build copies the current plate model/textures and imports the real plate
@@ -33,13 +34,22 @@ is hold-only: native food consumption is disabled because the full gameplay
 entry is deliberately absent. This experiment cannot pass eating settlement,
 nutrition, sounds, gun behavior or final family acceptance.
 
-Use pack **1.0.5** or later for this experiment. Earlier 1.0.4 omitted the
+Use pack **1.0.6** or later for this experiment. Earlier 1.0.4 omitted the
 owning player's public-variable declarations; its API-only results keep their
 original scope and cannot establish the attachable contract. Both variants now
 preserve the pinned vanilla player routing, bind the carrier aliases and expose
 the complete 24-word snapshot plus its frame as initialized public variables.
 This follows the [official Molang rule](https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide#public-variables);
 it still needs actual client evaluation.
+
+The first real 1.26.60.4 control run rejected 1.0.5's empty `bones` object and
+reported an uninitialized vanilla `melee_spear_equipped` before seeding items.
+Version 1.0.6 omits the optional bones field and supplies a neutral init-only
+fallback that preserves a value already supplied by the engine. It does not
+override spear state each frame or change plate capacity or transforms. The
+original control failure remains evidence; the native API observation below
+still describes 1.0.5. The clipped first-person view, full five-by-three contents,
+candidate rendering and multiplayer/re-entry still require real client tests.
 
 Use the exact target BDS 1.26.60.6 and record the actual client build, platform,
 view distance and frame rate. Enable Beta APIs/GameTest. With cheats enabled:
