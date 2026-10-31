@@ -4,7 +4,7 @@
   "source_files": {
     "entities/player.json": "ecc3ccd41aa93ff8e4e0ccdaf0626adf42d0fa22986fca2ae847ecb049687d91",
     "items/skewer_plate.json": "fc099fa0a6278e6fbd1c01b71cf4bcf931a9f0ed47f0d301ba38069b3156672a",
-    "manifest.json": "a049143fa49aa85808ab401d42c8333705464dcbf643446b349f9d9935337eb5",
+    "manifest.json": "7eb7437c88b4dd8c332f1e81133e8c9bd1a3727d5d0c0da8b0672bba4dd1e7bb",
     "scripts/canonical/bottle_held_visual_core.js": "2e8f87f7e6b60ca53738d7fae3ebe32c5e366a96d632aa6afe55e636a23462df",
     "scripts/canonical/bottle_lore_core.js": "18b7c074924be1c089f6231fe823b3f25612277ef665d92473d15b1fba32a16d",
     "scripts/canonical/core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3",
@@ -66,5 +66,15 @@
   "normal_stop": true,
   "qa_references_restored": true,
   "client_gate_passed": false,
-  "production_migration_permitted": false
+  "production_migration_permitted": false,
+  "probe_version": [
+    1,
+    0,
+    5
+  ],
+  "client_player_definition": {
+    "path": "entity/player.entity.json",
+    "sha256": "98285d097a7467afa4c17e7409faf612e99cf8c84eb488bbefe6c430936ff9c8",
+    "template_sha256": "7e520d872fc72be266223b3db2883c2818742a9a450330753a6de4d2ad813608"
+  }
 }

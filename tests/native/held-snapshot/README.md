@@ -13,11 +13,16 @@ variables. The candidate declares four player properties: controls, both full
 snapshot and masks absent/stale data. This is a proposed transport, not proof
 of atomic rendering or client variable scope.
 
-Build from this repository:
+Build from this repository. Supply the external Mojang player definition from
+the fixed [1.26.60.5 sample commit](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/resource_pack/entity/player.entity.json).
+The builder verifies SHA256
+`7e520d872fc72be266223b3db2883c2818742a9a450330753a6de4d2ad813608` before
+writing output. This input is subject to Mojang's [EULA](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/LICENSE.md),
+is not vendored here, and is not evidence for a different client build.
 
 ```sh
-python3 tools/held_snapshot_probe.py --output /tmp/held-snapshot-candidate
-python3 tools/held_snapshot_probe.py --control --output /tmp/held-snapshot-control
+python3 tools/held_snapshot_probe.py --player-template /path/to/player.entity.json --output /tmp/held-snapshot-candidate
+python3 tools/held_snapshot_probe.py --player-template /path/to/player.entity.json --control --output /tmp/held-snapshot-control
 ```
 
 Each output contains BP, RP, a build inventory and one mcaddon. The control has
@@ -27,6 +32,14 @@ separate disposable test worlds and identical client settings. The test plate
 is hold-only: native food consumption is disabled because the full gameplay
 entry is deliberately absent. This experiment cannot pass eating settlement,
 nutrition, sounds, gun behavior or final family acceptance.
+
+Use pack **1.0.5** or later for this experiment. Earlier 1.0.4 omitted the
+owning player's public-variable declarations; its API-only results keep their
+original scope and cannot establish the attachable contract. Both variants now
+preserve the pinned vanilla player routing, bind the carrier aliases and expose
+the complete 24-word snapshot plus its frame as initialized public variables.
+This follows the [official Molang rule](https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide#public-variables);
+it still needs actual client evaluation.
 
 Use the exact target BDS 1.26.60.6 and record the actual client build, platform,
 view distance and frame rate. Enable Beta APIs/GameTest. With cheats enabled:
