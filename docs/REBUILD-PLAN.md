@@ -389,6 +389,120 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 預設方案：移除對 `minecraft:player` 的覆寫，改為 property 需求最小化（目標 ≤ 8 個），並與 Tavern／World Liquor 協調出**家族唯一**的 player.json 由家族共用包提供；若家族無法共用，保留現狀但在 KNOWN-ISSUES 寫明不可與其他覆寫 player 的包共存。
 - 驗收：`vanilla_entity_overrides` 依決策為 0 或維持 1 並記錄；staging 與其他家族包同時啟用時進食與手持畫面正常。
 
+<a id="t3-5-property-slimming"></a>
+
+#### T3.5 玩家屬性瘦身計畫（2026-10-30）
+
+**本次交付範圍：展開既有 T3.5／D6 的盤點、協議設計、實作順序及驗收。** 這份計畫沒有變更 runtime，沒有將下列目標標成已實作／已相容，也不改寫 T3.4 已記錄的時長 variant 與直接離線不補結算決定。
+
+**基線**：主線 [`61864d017a1e4e9847325cd7313098b4379dc2e9`](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/commit/61864d017a1e4e9847325cd7313098b4379dc2e9)，`baseline.json` 為 **2.8.201／G201**。提問中的 G194 為前次檢查基線；本次重新讀取 G201 的 `behavior_pack/entities/player.json`，仍有 **32 個、全部 client_sync=true**。以下 BP／RP 路徑相對於 `projects/grilling/gameplay_core/`。
+
+**目標與預算**：先完成可保留現有數值範圍的 **32→27**；新顯示通道通過原型後，才以 **煙火 ≤6 個**作設計目標、**≤8 個**作舊計畫上限。6／8 是待驗證的預算，不是已證明可由現有欄位直接壓縮的結果。整合包必須重新盤點全部有效定義：`煙火 + TACZ + 其他需要保留的玩家屬性 ≤32`，建議交付時保留至少 2 個空位。若 TACZ 維持提問所述 24 個，煙火 27 時兩包小計為 **51**，6 時為 **30**，8 時為 **32**；這些都**尚未加上其他包**。新版完整包清單與實際生效的 player 定義須在整合階段讀取，不能沿用舊包數推斷已驗。
+
+##### A. 32 個欄位的責任盤點
+
+以下欄位均使用 `kaleidoscope_grilling:` 前綴。
+
+| 欄位尾名 | 數量 | 目前範圍 | 真正用途／處置 |
+| --- | ---: | --- | --- |
+| `eat_profile`、`eat_hand`、`eat_projection` | 3 | 0–5、0–2、bool | 進食曲線、使用手、FP 投影准入；合併進 controls word |
+| `eat_native_ticks`、`eat_elapsed_ticks` | 2 | 各 0–72000 | 原生總時長與伺服器會話時計；首階段分別保留 |
+| `secret_main_0`、`secret_main_1`、`secret_main_2`、`secret_main_piece` | 4 | 上限依序 521441、684244、5345、255 | 主手共用顯示通道的一部分 |
+| `secret_off_0`、`secret_off_1`、`secret_off_2`、`secret_off_piece` | 4 | 同主手 | 副手共用顯示通道的一部分 |
+| `bottle_main_0`…`bottle_main_7` | 8 | 偶數索引上限 521441，奇數 684244 | 主手共用顯示通道的一部分 |
+| `bottle_off_0`…`bottle_off_7` | 8 | 同主手 | 副手共用顯示通道的一部分 |
+| `season_hand`、`season_phase`、`pending_hand` | 3 | 0–2、0–10、0–2 | 撒料手、撒料階段、搖瓶手；合併進 controls word |
+| **總計** | **32** | | **24 個手持通道＋8 個動作欄位** |
+
+`held_visual_transport.js` 已將每手的 8 個 bottle、3 個 secret 及 1 個 piece 組成 **12 欄共用 bank**，同手各種物品共用一個 writer。現有 owner 包括秘製／未完成串、瓶、餐盤、失敗串、史萊姆、油刷／油壺。**再做一次「同手不會同時持瓶和串」的 union 不會釋放這 24 欄**；主副手則可以同時持不同物品，不能互相覆蓋。
+
+| 顯示 owner | 現有資料來源與容量 | 設計限制 |
+| --- | --- | --- |
+| 瓶 | 8 格調料索引 0–9，保留排列；來源 `seasonings` | 單獨可以壓縮，但同名欄位仍被餐盤借用，不能先刪宣告 |
+| 秘製／未完成串 | 三格或一至兩格食材；`skewer_ingredients`、`secret_cooked`、`secret_cooked_ingredients`、`model_variants` | 每格含 food／shape／style；helper marker 可能取原始末格食材，不能從熟食快照猜回 |
+| 餐盤 | `plate_skewers` 的完整 envelopes；每手最多 5 串、每串秘製內容最多 3 格 | `skewer_plate` 允許副手，現行 runtime 同時同步兩手；不得減為一串、禁副手或省略食材 |
+| 失敗串、史萊姆、油刷／油壺 | 來源／shape、世界動畫幀或短暫刷油會話 | 保留既有 discriminant、不同 owner 切換及清理語義 |
+
+這些顯示欄位是權威資料的投影。`core/persist.js` 的 `getItemProperty()` 同時涵蓋 ItemStack dynamic properties，以及可堆疊物品的 lore token／world metadata；瘦身沿用這個介面，不更換存檔格式或重寫物品。
+
+**容量證據**：`plate_held_visual_core.js::packPlateHeldSecret` 已把三格顯示碼打包成兩字：`A=c0+8192*(c1%64)`、`B=1+floor(c1/64)+128*c2`，上限分別為 521441、684244；`B=0` 另表示固定模型。一盤佔 10 個 payload 欄，再加 count、owner。225 食材 catalog 是 schema 容量，不能聲稱所有項目都能在一般玩法穿串。較保守的唯讀驗算採 vanilla nutrition 與 catalog 交集、排除四種會提前形成魚串的生魚，得到 36 種食物；現有純函式 `appendOutcome()` 的 36³＝46,656 個排列皆可走 `unfinished→unfinished→secret`，模型變種可取三種 shape。在無額外相容 deny 規則、保留這些 descriptor 可區分性的條件下，雙盤 30 格需約 `30*log2(36*3)=202.65 bits`，已超過 8 個非負 24-bit 字的 192 bits，尚未計其他狀態。這是純邏輯與協議容量推導，**不是實機驗收**；它排除的是「單份完整快照直接塞入八字」的承諾，並不排除另有可靠通道或客戶端快照快取。
+
+##### B. 第一階段協議：32→27
+
+以重建架構既定的 `core/player_props.js` 收斂動作狀態唯一寫入者。六個小欄合成一個 controls word，兩個時計保持完整範圍；24 個手持欄首階段維持原協議。
+
+| 小欄 | 位元位置 | 有效範圍 |
+| --- | --- | --- |
+| `eat_profile` | 0–2 | 0–5 |
+| `eat_hand` | 3–4 | 0–2 |
+| `eat_projection` | 5 | 0–1 |
+| `season_hand` | 6–7 | 0–2 |
+| `season_phase` | 8–11 | 0–10 |
+| `pending_hand` | 12–13 | 0–2 |
+
+位元領域上界 16383，現有有效值組合的實際最大為 **10933**。本次設計驗算已枚舉 **3564** 個有效組合，確認無碰撞及往返一致；這只驗證數學配置，尚未修改 runtime 或在 Molang 執行。結果為 **24＋1＋2＝27**，釋放 **5** 個欄位。
+
+實作要求：
+
+1. 各功能修改同一份腳本暫態，由單一 publisher 合成完整 controls word，值未變不寫。官方 `setProperty` 下一 tick 才套用；不能由多個功能各自 `getProperty→改 bits→setProperty`，否則同 tick 更新會互蓋。沿用既有排程器，不增加全域 interval；批次提交位置必須維持原動作時序，不額外延後一 tick。
+2. schema 作為 JS 編碼、Molang 解碼及宣告範圍的共同來源，非法 profile／hand／phase 明確拒絕或安全清零。保留 `q.has_property` 與 owning-entity 檢查；先初始化，再在正確的 `pre_animation` 上下文更新，不從尚未初始化的 attachable 讀值。
+3. 同步更新 `food/runtime.js`、`player/runtime.js` 的開始／完成／停止／換物／重生重設，以及 `seasoning_motion_runtime.js`。後者的 `playAnimation.stopExpression` 和 `effect/runtime.js` 對 `season_phase` 的伺服器讀取也是 consumer，不能只改 JSON。
+4. 保留 `eat_native_ticks`、`eat_elapsed_ticks` 的 0–72000 合約與連吃／terminal 語義。FP 主手倒數不能替代副手和遠端玩家的伺服器時計；不得為了少一欄把合法範圍暗縮為 25／90／100。
+5. 多個 word 的 setProperty 呼叫順序不等於客戶端原子更新。維持舊協議的安全行為並測同 tick 切手／重設；有需要才設計跨 word 的快照版本，不把未驗證的世代位稱作原子性保證。
+
+##### C. 低槽終態：先證明新的顯示通道
+
+**≤6／8 的主要難題是餐盤與手持資料，不是 flags。** 允許使用目標遊戲版本確實提供的測試 API；以已鎖定的客戶端／BDS build、`@minecraft/server` 版本及實驗開關做原型，不把較新 preview 文件當成已部署能力。
+
+研究優先序：
+
+1. **保留原生 attachable，驗證動畫 API 的完整視覺快照通道。** 官方提供 `Entity.playAnimation`、`PlayAnimationOptions.stopExpression`（Molang 字串）及指定觀察者的 `players`。可在獨立測試包驗證：專用且不移動骨骼的動畫，能否將 schema 生成的完整數值快照寫入正確 player Molang variables，再由現有 attachable 讀取。API 存在是事實；把它組成可靠資料通道仍是**設計推論**。必須先證明 variable scope、執行時點、完整快照長度、雙手隔離、FP／TP／遠端讀取、晚加入與重新進可視範圍的補送，以及不干擾其他動畫 controller。僅拼接固定欄名與經驗證的數值，不把任意物品文字寫進 Molang。
+2. **若第一方向失敗，評估獨立顯示實體並同步重算 TACZ 預算。** 現有 `station_contents_visual_runtime.js`／`plate_food_visual` 可以重用食材模型與解碼，但目前按方塊世界座標定位，尚無玩家手骨或 FP 綁定的證據。每 tick teleport 跟著玩家不等於通過第一人稱驗收；必須實測 FOV、bob、快速轉頭、游泳／騎乘、遮擋、遠端玩家和成本。如果只有第三人稱成立，該方案不能替代現有完整手持。
+3. **跨 tick 分段快照只列備選研究。** property 同步不保證客戶端逐次觀察所有中間值，沒有已確認的原生 ACK；快照重播、快取失效、低 FPS 和延遲可能令新物品顯示舊內容。若需要此方案，先證明完整快照才提交、補送有界且無可見回歸，不能直接做成正式協議。
+
+三個方向都不能假設「把資料放 Dynamic Properties，`q.property` 就讀得到」。將 `client_sync` 設 false 也不釋放 schema 槽位。Molang 的數值精度與 entity property 數量是不同限制；官方建議 int 保持約 ±100 萬內，超出要仔細驗證。不得把 32-bit 整數全部當作精確可用的 Molang payload。
+
+原型先用最難案例：**雙手各拿五串餐盤，秘製食材／shape 各異，包含熟食快照與動畫串；同 ID 不同 metadata 快切，另一名玩家觀察並在中途加入。** 需同時錄到第一人稱、第三人稱與遠端結果。若新通道增加空白、錯食材、殘影、交錯快照、手臂消失或明顯延遲，即未通過；不能用減容量、禁副手或取消效果換取低槽數。
+
+##### D. 實作與交付順序
+
+各子任務仍是一個任務一個 PR；有依賴時明列，沿用既有工具與測試，不新增每版驗證器或 STATUS 文件。
+
+| 子任務 | 交付 | 完成條件／目前狀態 |
+| --- | --- | --- |
+| T3.5-a 盤點與預算 | 32 欄清單、權威資料、reader／writer、容量分析、目標版本 | **本次來源盤點及計畫完成**；完整整合包盤點仍待 T3.5-e，不宣稱實機驗收 |
+| T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 待實作；延遲套用／故障／連吃／雙手語義及目標客戶端驗收通過；27 不是 TACZ 相容終點 |
+| T3.5-c 低槽通道原型 | 獨立測試包與明確通過／失敗結果，先做 C-1 | 待執行；只測資料到達與畫面等價，不同時重做模型、玩法與容器 |
+| T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 待前置；共用 bank 的所有必要 consumer 退場後才移除宣告。過程中不能按已搬 owner 數量虛報釋放槽位；目標 ≤6、上限 ≤8 仍受整體預算約束 |
+| T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 待前置；盤點當次完整包及 TACZ 精確版本、最終 schema ≤32，驗證整套模型、動作與其他 player components |
+
+若新通道不通過，保留已驗證的 27 槽改進並記錄阻塞原因；再評估煙火與 TACZ 的共同預算，不能將煙火 ≤8 目標宣告完成或削減餐盤功能。本次沒有修改 TACZ、Tavern、World Liquor 或家族共用包；跨 repo 的 owner 落實依 D6 與相應整合工作進行。
+
+##### E. 驗收、存檔與回滾
+
+**來源及協議驗收**：目前 RP 有直接玩家屬性引用的 JSON 共 **167** 檔（154 attachables、12 animations、1 render controller；不代表全部間接 consumer）。首階段必查 `tools/eating_owner_properties.py`、`tools/secret_terminal_visibility.py`；後續手持通道必查 `tools/secret_visual_consumers.py`、`tools/build_secret_visual_catalog.py` 等實際產生來源。重新產生不能恢復舊欄位。`controller.render.player.first_person` 的手臂路由也在範圍內，屬性減少不會自動合併 TACZ 的渲染覆寫。
+
+- 擴充既有 `tests/helpers/minecraft-fixture.mjs`，提供 property 下一 tick 才套用的模式；現有立即讀回模型不能驗證這個風險。測同 tick 進食／撒料／重設、寫入拋錯與下一 tick 的最終狀態。
+- 沿用 `test_food_finish.mjs`、`test_secret_visual_state.mjs`、`test_plate_transactions.mjs`、`test_plate_food_cache.mjs`：主副手、23／24／25 tick 放開、正常完成與事件順序、連吃、同 ID 換 metadata、斷線不補結算、冷初始化和物品資料完整性。將寫死「必須等於 32」的斷言改為協議容量及預算上限，保留最大 payload 和往返語義檢查。
+- 對 flags 全組合、payload 邊界、食材／shape／style、owner marker 及不同手交錯測試。JavaScript 解碼測試不代替目標客戶端 Molang 執行。
+- 在既有驗證／整合檢查內增加玩家預算檢查：本包計數、最終輸出 schema 計數、相同名稱的型別／範圍／用途衝突；分別報告來源與實際打包結果，不能只對單一來源檔放行。
+
+**原生畫面及整合驗收**：Blockbench 用於骨骼、姿勢、尺寸、可見度和第一／第三人稱預覽；BDS／客戶端驗證同步、Molang、載入覆寫與實際視角。覆蓋雙持、換欄／換 metadata、取消／連吃、搖瓶／撒料、死亡重生、換維度、斷線重連、晚加入觀察者、離開與重返可視範圍。先煙火及必要依賴，再當次完整家族包，再加入鎖定版本 TACZ；持槍、瞄準／裝填／射擊、切回串／瓶／盤、原版物品及沉浸進食都需正確路由。保留現有玩家生命值效果、原版 components、皮膚／手臂及其他包所需欄位，不能只拼 properties。
+
+**存檔與換版**：entity property 即使作視覺快取，值仍會被引擎保存；刪除／改名會丟掉舊值。32 欄已滿時，不能先疊加新欄再雙寫。T3.5-b 使用配對 BP／RP 一次切換，動作預設為中性，手持由既有 metadata 重建，不恢復已離線的進食／撒料會話。`persist_keys.js`／save lock 已登錄的舊字面值不得藉瘦身直接刪掉；保留相容登錄並標示快取用途，任何真正 persisted key／identifier 的移除仍走 SAVE-COMPAT。若盤點發現某欄是無法重建的唯一資料，先做遷移，不能套用快取退役假設。
+
+工具／文件階段不 bump、不部署；實際 BP／RP 變更依既有 baseline／manifest 規則建立新候選，明確配對協議，舊 RP＋新 BP 或相反組合不得進正式部署。部署仍走 §5 的停服備份、staging 舊世界首次載入／重啟／讀回、完整家族打包及 15 分鐘回滾；回滾保留前一版配對包及完整世界備份，不能假設已被新定義丟棄的屬性值能靠換回舊包復原。
+
+**性能與完成定義**：在同機、同世界、同玩家／視距／物品狀態量測 idle／拿取／使用／多人場景的 property 或快照寫入次數、腳本 tick 耗時、客戶端幀時間，以及若有 helper 的實體數與更新量。靜止內容不逐 tick 重送；晚加入補送、快取重建與動畫更新由既有排程器按需執行並有明確上限。不得把「屬性減少百分比」當作 TPS／頻寬改善百分比。來源實作、CI、staging、部署及真人驗收分開回報；在相應畫面證據取得前維持 `client=false`、`production_ready=false`。
+
+官方依據（2026-10-30 查閱；API 能力仍須與目標 build 對照）：
+
+- [Entity Properties：數量、同步、精度、存檔變更](https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoentityproperties?view=minecraft-bedrock-stable)
+- [Entity API：getProperty／setProperty／playAnimation](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable)
+- [PlayAnimationOptions：controller、players、stopExpression](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/playanimationoptions?view=minecraft-bedrock-experimental)
+- [Molang syntax：變數生命期、賦值及跨實體 scope](https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable)
+- [Identifier 覆寫包含 BP／RP entity 與 render controller](https://learn.microsoft.com/en-us/minecraft/creator/documents/overwritingassets?view=minecraft-bedrock-stable)
+
 **T3.6 runtime 結構收尾**：`main.js` ≤ 100 行只做組裝；`packs/BP`、`packs/RP` 搬家（`baseline.json`、`config.json` 路徑同步；`save_compat`／`growth_ratchet` 路徑常數同步）；版本 bump 到 **2.9.0**。
 
 **P3 出口條件**：
