@@ -39,8 +39,9 @@ def generate(archive, declaration=None):
     if digest(raw) != ARCHIVE_SHA256:
         raise ValueError('Cookery 1.6.4 archive differs from the reviewed author release')
     spec = json.loads(SPEC.read_text()) if declaration is None else json.loads(json.dumps(declaration))
-    spec.update(id='kaleidoscope_grilling:family-api-0.2.13', version=[0, 2, 13],
-                host_uuid=HOST_UUID, archive_sha256=ARCHIVE_SHA256,
+    # The canonical declaration owns the current SDK identity. Reproduction
+    # must not silently downgrade a newer reviewed declaration to an old ID.
+    spec.update(host_uuid=HOST_UUID, archive_sha256=ARCHIVE_SHA256,
                 original_files=ORIGINALS)
     # The author now accepts extension recipes by hand. Keep only the worker
     # and dropped-item admission hooks that the clean release still lacks.
