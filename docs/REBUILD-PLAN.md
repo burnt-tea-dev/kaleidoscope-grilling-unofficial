@@ -399,6 +399,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 **目標與預算**：先完成可保留現有數值範圍的 **32→27**；新顯示通道通過原型後，才以 **煙火 ≤6 個**作設計目標、**≤8 個**作舊計畫上限。6／8 是待驗證的預算，不是已證明可由現有欄位直接壓縮的結果。整合包必須重新盤點全部有效定義：`煙火 + TACZ + 其他需要保留的玩家屬性 ≤32`，建議交付時保留至少 2 個空位。若 TACZ 維持提問所述 24 個，煙火 27 時兩包小計為 **51**，6 時為 **30**，8 時為 **32**；這些都**尚未加上其他包**。新版完整包清單與實際生效的 player 定義須在整合階段讀取，不能沿用舊包數推斷已驗。
 
+**2026-10-31 實作進度（T3.5-b）**：`core/player_props.js` 已成為六欄控制與兩時計的共用 writer／schema，來源玩家定義為 27 格；由 `tools/eating_owner_properties.py` 更新 RP 解碼。既有 API fixture 已加入下一 tick 模式，覆蓋同 tick 合併、寫入前後故障、終止後重試、雙手與重生。隔離 BDS 1.26.60.6 已用真正 schema／writer 驗證 27 格載入、同 tick 合併、72000 時計與中性重設，見[原生結果](../tests/native/player-controls/observed.json)。這不是完整家族、存檔遷移、Molang 渲染或真人驗收；T3.5-b 的這些出口仍待完成，T3.5-c/d/e 未完成。LIVE 狀態另依主機當次清單與部署收據，不以本來源版本推定已上線。
+
 ##### A. 32 個欄位的責任盤點
 
 以下欄位均使用 `kaleidoscope_grilling:` 前綴。
@@ -471,7 +473,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 | 子任務 | 交付 | 完成條件／目前狀態 |
 | --- | --- | --- |
 | T3.5-a 盤點與預算 | 32 欄清單、權威資料、reader／writer、容量分析、目標版本 | **本次來源盤點及計畫完成**；完整整合包盤點仍待 T3.5-e，不宣稱實機驗收 |
-| T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 待實作；延遲套用／故障／連吃／雙手語義及目標客戶端驗收通過；27 不是 TACZ 相容終點 |
+| T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 來源已實作 27 格；延遲／故障／雙手回歸及隔離 native writer 通過。完整家族／存檔／目標客戶端仍待；27 不是 TACZ 相容終點 |
 | T3.5-c 低槽通道原型 | 獨立測試包與明確通過／失敗結果，先做 C-1 | 待執行；只測資料到達與畫面等價，不同時重做模型、玩法與容器 |
 | T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 待前置；共用 bank 的所有必要 consumer 退場後才移除宣告。過程中不能按已搬 owner 數量虛報釋放槽位；目標 ≤6、上限 ≤8 仍受整體預算約束 |
 | T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 待前置；盤點當次完整包及 TACZ 精確版本、最終 schema ≤32，驗證整套模型、動作與其他 player components |

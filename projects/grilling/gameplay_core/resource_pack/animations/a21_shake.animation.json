@@ -4,7 +4,7 @@
     "animation.kg_a21.player.shake.main": {
       "animation_length": 4.0,
       "loop": true,
-      "blend_weight": "!variable.is_first_person && q.is_using_item && q.property('kaleidoscope_grilling:pending_hand') == 1",
+      "blend_weight": "!variable.is_first_person && q.is_using_item && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 4096), 4)) == 1",
       "bones": {
         "rightarm": {
           "rotation": [
@@ -18,7 +18,7 @@
     "animation.kg_a21.player.shake.off": {
       "animation_length": 4.0,
       "loop": true,
-      "blend_weight": "!variable.is_first_person && q.is_using_item && q.property('kaleidoscope_grilling:pending_hand') == 2",
+      "blend_weight": "!variable.is_first_person && q.is_using_item && (math.mod(math.floor((q.has_property('kaleidoscope_grilling:controls') ? q.property('kaleidoscope_grilling:controls') : 0) / 4096), 4)) == 2",
       "bones": {
         "leftarm": {
           "rotation": [

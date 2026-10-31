@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFixture} from './minecraft-fixture.mjs';
 import {canonicalFoodId} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/eating_profile_ids.js';
+import {CONTROLS_PROPERTY,decodeControls} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/player_props.js';
 
 // Java 1.1.1 NeoForge MultiBiteSkewerItem: AnimationProfile L36-41,
 // visualBiteStage L98, use L127, release/settlement L250. This reads extracted
@@ -26,8 +27,8 @@ export const routes = Object.entries({...java.profile_by_item, [N+'secret_skewer
   return {...route,duration:nativeDuration};
 });
 
-export async function createEatingLab() {
-  const f = createFixture({currentTick:1000});
+export async function createEatingLab(options = {}) {
+  const f = createFixture({currentTick:1000,...options});
   await f.load('main.js');
   const data = await f.load('core/persist.js');
   const config = await f.load('server_config_runtime.js');
@@ -57,7 +58,7 @@ export async function createEatingLab() {
     a.begin=()=>{a.start=f.system.currentTick;a.stack=p[hand].clone();a.event('itemStartUse',route.duration);};
     a.sample=(phase,ownership=false)=>{
       const row={case:a.case??'normal',base:route.base,id:route.id,kind:route.kind,hand,tick:f.system.currentTick,elapsed:f.system.currentTick-a.start,phase,
-        profile:p.getProperty(N+'eat_profile')??0,handCode:p.getProperty(N+'eat_hand')??0,projection:p.getProperty(N+'eat_projection')??false,
+        profile:decodeControls(p.getProperty(CONTROLS_PROPERTY)??0).eat_profile,handCode:decodeControls(p.getProperty(CONTROLS_PROPERTY)??0).eat_hand,projection:decodeControls(p.getProperty(CONTROLS_PROPERTY)??0).eat_projection,
         clock:p.getProperty(N+'eat_elapsed_ticks')??0,nativeTicks:p.getProperty(N+'eat_native_ticks')??0,
         main:p.main?{id:p.main.typeId,amount:p.main.amount}:null,off:p.off?{id:p.off.typeId,amount:p.off.amount}:null,
         hunger:p.components['minecraft:player.hunger'].currentValue,saturation:p.components['minecraft:player.saturation'].currentValue,

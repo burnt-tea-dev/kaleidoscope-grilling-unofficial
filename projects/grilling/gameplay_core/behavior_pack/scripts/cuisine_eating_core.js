@@ -3,7 +3,7 @@ import {isHeatLore} from './localized_lore_core.js';
 import {readPublicFood,readPublicFoodLore,isFoodPayloadLine,isCuisineQualityLore,FOOD_PAYLOAD_KEY} from './host_api/food_api_core.js';
 import {cuisineQualityPayloadMatches} from './host_api/cuisine_quality_core.js';
 import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
-import {nativeEatingCompleted} from './player_presentation_core.js';
+import {nativeEatingCompleted} from './core/player_props.js';
 
 // This fence owns ONLY the existing heat/seasoning completion effects. Native
 // JSON owns all cuisine nutrition and its food debit, including quality variants.

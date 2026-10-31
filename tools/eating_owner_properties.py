@@ -1,85 +1,87 @@
-"""Guard five owner eating properties once per attachable frame.
+"""Generate the player controls declaration and guarded Molang readers.
 
-Missing owner properties already evaluate to zero in Bedrock, but also produce
-content errors. Keep that fallback and cache each value for the existing item
-clips. Do not change native queries, player clips, curves or item ownership.
+core/player_props.js owns the schema. This updates existing consumers in place;
+packing only exports the resulting canonical BP/RP without runtime transforms.
 """
-from copy import deepcopy
+import argparse
+import json
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-PROPERTIES = ('eat_profile', 'eat_hand', 'eat_projection', 'eat_native_ticks', 'eat_elapsed_ticks')
+BASE = ROOT / 'projects/grilling/gameplay_core'
 PREFIX = 'kaleidoscope_grilling:'
+PROPERTIES = ('eat_profile', 'eat_hand', 'eat_projection', 'eat_native_ticks', 'eat_elapsed_ticks')
 VARIABLE_PREFIX = 'v.kg_owner_'
 OWNER = 'c.owning_entity->q.'
-READ = re.compile(r"c\.owning_entity->q\.property\('kaleidoscope_grilling:(eat_profile|eat_hand|eat_projection|eat_native_ticks|eat_elapsed_ticks)'\)")
-CACHED = re.compile(r'\bv\.kg_owner_(eat_profile|eat_hand|eat_projection|eat_native_ticks|eat_elapsed_ticks)\b')
+
+
+def schema():
+    module = (BASE / 'behavior_pack/scripts/core/player_props.js').as_uri()
+    return json.loads(subprocess.check_output(['node', '--input-type=module', '-e',
+        'import {CONTROL_FIELDS,CONTROLS_PROPERTY,CONTROLS_MAX} from ' + json.dumps(module) +
+        ';process.stdout.write(JSON.stringify({fields:CONTROL_FIELDS,property:CONTROLS_PROPERTY,max:CONTROLS_MAX}));'], text=True))
+
+
+SCHEMA = schema()
+FIELDS = SCHEMA['fields']
+READ = re.compile(r"((?:c\.owning_entity->)?(?:q|query))\.(property|has_property)\('kaleidoscope_grilling:(" + '|'.join(FIELDS) + r")'\)")
+
+
+def property_read(name, owner='q'):
+    key = SCHEMA['property'] if name in FIELDS else PREFIX + name
+    guarded = '(' + owner + ".has_property('" + key + "') ? " + owner + ".property('" + key + "') : 0)"
+    if name not in FIELDS:
+        return guarded
+    f = FIELDS[name]
+    return '(math.mod(math.floor(' + guarded + ' / ' + str(2 ** f['shift']) + '), ' + str(2 ** f['bits']) + '))'
+
 
 def initialization():
-    return [VARIABLE_PREFIX + name + ' = (' + OWNER + "has_property('" + PREFIX + name + "') ? " + OWNER + "property('" + PREFIX + name + "') : 0);" for name in PROPERTIES]
+    return [VARIABLE_PREFIX + name + ' = ' + property_read(name, 'c.owning_entity->q') + ';' for name in PROPERTIES]
 
-def _map(value, function):
-    if isinstance(value, str):
-        return function(value)
-    if isinstance(value, list):
-        return [_map(item, function) for item in value]
-    if isinstance(value, dict):
-        return {key: _map(item, function) for key, item in value.items()}
-    return value
-
-def _contains(value, pattern):
-    if isinstance(value, str):
-        return bool(pattern.search(value))
-    if isinstance(value, (list, dict)):
-        return any(_contains(item, pattern) for item in (value.values() if isinstance(value, dict) else value))
-    return False
-
-def _forward(value):
-    changed = _contains(value, READ)
-    result = _map(value, lambda text: READ.sub(lambda match: VARIABLE_PREFIX + match[1], text))
-    if changed and isinstance(result, dict) and 'minecraft:attachable' in result:
-        scripts = result['minecraft:attachable']['description'].setdefault('scripts', {})
-        scripts['pre_animation'] = initialization() + scripts.get('pre_animation', [])
-    return result
-
-def predecessor_document(value):
-    """Reverse this exact layer; malformed initialization cannot be normalized."""
-    if not _contains(value, CACHED):
-        return value
-    result = deepcopy(value)
-    if isinstance(result, dict) and 'minecraft:attachable' in result:
-        scripts = result['minecraft:attachable']['description'].get('scripts', {})
-        pre = scripts.get('pre_animation', [])
-        if pre[:len(PROPERTIES)] != initialization():
-            raise ValueError('Owner eating property initialization is missing or changed')
-        scripts['pre_animation'] = pre[len(PROPERTIES):]
-    result = _map(result, lambda text: CACHED.sub(lambda match: OWNER + "property('" + PREFIX + match[1] + "')", text))
-    if _forward(result) != value:
-        raise ValueError('Owner eating property cache changes more than the exact guard layer')
-    return result
 
 def document(value):
-    return _forward(predecessor_document(value))
+    if isinstance(value, str):
+        return READ.sub(lambda m: m[1] + ".has_property('" + SCHEMA['property'] + "')" if m[2] == 'has_property' else property_read(m[3], m[1]), value)
+    if isinstance(value, list):
+        return [document(row) for row in value]
+    if isinstance(value, dict):
+        return {key: document(row) for key, row in value.items()}
+    return value
+
 
 def augment(output):
-    return {path: document(value) if isinstance(value, dict) and path.parent.name in {'attachables', 'animations'} else value for path, value in output.items()}
+    return {path: document(value) if path.suffix == '.json' else value for path, value in output.items()}
 
-def reference_bytes(path, current=None):
-    """Expose the unchanged predecessor bytes to an existing historical check.
 
-    Cached files must retain canonical serialization; whitespace/duplicate-key
-    mutations cannot be hidden by a parse-and-reencode normalization.
-    """
-    import json
-    path = Path(path)
-    data = path.read_bytes() if current is None else current
-    if path.suffix != '.json':
-        return data
-    value = json.loads(data)
-    if not _contains(value, CACHED):
-        return data
-    encoded = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
-    if data != encoded:
-        raise ValueError('Owner eating property source serialization changed: ' + str(path))
-    return (json.dumps(predecessor_document(value), ensure_ascii=False, indent=2) + '\n').encode()
+def generate(check=False):
+    changes = []
+    player = BASE / 'behavior_pack/entities/player.json'
+    paths = [player, *sorted((BASE / 'resource_pack').rglob('*.json'))]
+    for path in paths:
+        original = path.read_text()
+        result = document(original) if path != player else json.loads(original)
+        if path == player:
+            props = result['minecraft:entity']['description']['properties']
+            for name in FIELDS:
+                props.pop(PREFIX + name, None)
+            props[SCHEMA['property']] = {'type': 'int', 'range': [0, SCHEMA['max']], 'default': 0, 'client_sync': True}
+            if len(props) > 27:
+                raise ValueError('Player property budget exceeds 27')
+            result = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
+        if result != original:
+            changes.append(str(path.relative_to(ROOT)))
+            if not check:
+                path.write_text(result)
+    if check and changes:
+        raise ValueError('Player controls consumers need regeneration: ' + ', '.join(changes))
+    return changes
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    print('Player controls: ' + str(len(generate(args.check))) + ' files require changes')

@@ -15,6 +15,9 @@ export const A26_VAT_INSTANCE_PREFIX='kaleidoscope_grilling:a26_vat_instance_';
 export const A2736_OILPOT_TYPE_PREFIX='kaleidoscope_grilling:a2736_oilpot_type_';
 export const ADVANCEMENT_PREFIX='kaleidoscope_grilling:adv_';
 export const BOTTLE_PREFIX='kaleidoscope_grilling:bottle_';
+// Presentation cache only. Legacy eating spellings below remain registered
+// for save compatibility; the controls word is rebuilt on player spawn.
+export const CONTROLS_KEY='kaleidoscope_grilling:controls';
 export const CUISINE_PREFIX='kaleidoscope_grilling:cuisine_';
 export const DRAGON_NATIVE_LEVEL_KEY='kaleidoscope_grilling:dragon_native_level';
 export const DRAGON_POOL_KEY='kaleidoscope_grilling:dragon_pool';
@@ -77,6 +80,7 @@ export const LOCKED_DRAGON_HEALTH_EVENT_PREFIX='kaleidoscope_grilling:dragon_hea
 export const LOCKED_SEASONING_BOTTLE_ID_PREFIX='kaleidoscope_grilling:seasoning_bottle_';
 export const LOCKED_SPECIAL_SEASONING_ID_PREFIX='kaleidoscope_grilling:special_seasoning_r';
 export const PERSISTED_KEY=Object.freeze({
+ CONTROLS:CONTROLS_KEY,
  GRILLING_NAMESPACE:GRILLING_NAMESPACE_KEY,
  A21_FX:A21_FX_KEY,
  A23_OIL_SOURCE_PREFIX:A23_OIL_SOURCE_PREFIX,

@@ -7,29 +7,6 @@
       "is_spawnable": false,
       "spawn_category": "creature",
       "properties": {
-        "kaleidoscope_grilling:eat_profile": {
-          "type": "int",
-          "range": [
-            0,
-            5
-          ],
-          "default": 0,
-          "client_sync": true
-        },
-        "kaleidoscope_grilling:eat_hand": {
-          "type": "int",
-          "range": [
-            0,
-            2
-          ],
-          "default": 0,
-          "client_sync": true
-        },
-        "kaleidoscope_grilling:eat_projection": {
-          "type": "bool",
-          "default": false,
-          "client_sync": true
-        },
         "kaleidoscope_grilling:eat_native_ticks": {
           "type": "int",
           "range": [
@@ -264,29 +241,11 @@
           "default": 0,
           "client_sync": true
         },
-        "kaleidoscope_grilling:season_hand": {
+        "kaleidoscope_grilling:controls": {
           "type": "int",
           "range": [
             0,
-            2
-          ],
-          "default": 0,
-          "client_sync": true
-        },
-        "kaleidoscope_grilling:season_phase": {
-          "type": "int",
-          "range": [
-            0,
-            10
-          ],
-          "default": 0,
-          "client_sync": true
-        },
-        "kaleidoscope_grilling:pending_hand": {
-          "type": "int",
-          "range": [
-            0,
-            2
+            10933
           ],
           "default": 0,
           "client_sync": true

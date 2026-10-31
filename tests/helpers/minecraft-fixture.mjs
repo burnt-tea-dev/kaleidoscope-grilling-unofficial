@@ -83,7 +83,7 @@ function validateStates(typeId, states) {
 export function createFixture(options = {}) {
   const id = String(nextFixture++);
   let nextEntity = 1, nextJob = 1;
-  const jobs = new Map(), dimensions = new Map(), entities = new Map(), namedTicks = new Map();
+  const jobs = new Map(), dimensions = new Map(), entities = new Map(), namedTicks = new Map(), pendingProperties = new Map();
   const f = {
     id, logs: [], drops: [], sounds: [], particles: [], messages: [], effects: [],
     scriptEvents: [], commandCalls: [], writes: [], subscribers: new Map(),
@@ -288,7 +288,13 @@ export function createFixture(options = {}) {
         fault(e, 'getComponent', 'after', [name]);return component;
       },
       getTags() {return [...e.tags];}, hasTag(tag) {return e.tags.has(tag);}, addTag(tag) {e.tags.add(tag);return true;}, removeTag(tag) {return e.tags.delete(tag);},
-      setProperty(key, value) {return operation(e, 'setProperty', [key, value], () => {e.properties[key] = copy(value);});},
+      setProperty(key, value) {return operation(e, 'setProperty', [key, value], () => {
+        if (options.deferredProperties) {
+          let values = pendingProperties.get(e);
+          if (!values) {values = new Map(); pendingProperties.set(e, values);}
+          values.set(key, copy(value));
+        } else e.properties[key] = copy(value);
+      });},
       getProperty(key) {return copy(e.properties[key]);},
       remove() {return operation(e, 'remove', [], () => {e.isValid = false;});},
       kill() {return e.remove();},
@@ -495,6 +501,12 @@ export function createFixture(options = {}) {
     let ran = 0;
     for (let step = 0; step < count; step++) {
       system.currentTick++;
+      // Native Entity.setProperty becomes readable on the next tick. Apply
+      // before script callbacks; writes from those callbacks wait another tick.
+      for (const [entity, values] of pendingProperties) if (entity.isValid) {
+        for (const [key, value] of values) entity.properties[key] = value;
+      }
+      pendingProperties.clear();
       // Only a loaded, still-owned block advances. Native named ticks are not
       // wall-clock timers; unloaded blocks retain their remaining loaded ticks.
       for(const [block,scheduled] of namedTicks){

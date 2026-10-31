@@ -1,3 +1,4 @@
+import {resetPlayerPresentation,forgetPlayerPresentation} from '../core/player_props.js';
 import {onBeforeBlockBreak} from '../core/events.js';
 import {GRILL_ID} from "../eating_data_lookup.js";
 import {isSeasoningBlockId as isSeasoningBlock} from "../seasoning/seasoning_contract_core.js";
@@ -11,7 +12,6 @@ import {forgetEffectMovement,forgetPlayerEffects,tickPlayerEffects} from "../eff
 import {forgetPlayerSkewer,scheduleHandAction,scheduleSkewerAction,skewerAction} from "../skewer/runtime.js";
 import {hideJavaEatingHud} from "../java_eating_hud_runtime.js";
 import {forgetProjectileDodge} from "../projectile_dodge_runtime.js";
-import {EAT_ELAPSED_TICKS_PROPERTY,EAT_HAND_PROPERTY,EAT_NATIVE_TICKS_PROPERTY,EAT_PROFILE_PROPERTY,EAT_PROJECTION_PROPERTY} from "../player_presentation_core.js";
 import {forgetHeavyMetalRescue} from "../heavy_metal_damage_runtime.js";
 import {clearEffects} from "../effect_state_runtime.js";
 import {forgetNumbVisual} from "../numb_visual_runtime.js";
@@ -57,11 +57,11 @@ function handleCustomBlockInteraction(block,player,intent){
 // Native use poses cancel with the use action; no global zero-pose reset may override
 // the next held item. Release server bookkeeping as well when a player disconnects.
 world.afterEvents.playerLeave.subscribe(({playerId})=>{
- recentGrillBeforeInteractions.delete(playerId);
+ recentGrillBeforeInteractions.delete(playerId);forgetPlayerPresentation(playerId);
  forgetPlayerFood(playerId);forgetPlayerEffects(playerId);forgetPlayerSkewer(playerId);
 });
 
-world.afterEvents.playerSpawn.subscribe(e=>{hideJavaEatingHud(e.player);forgetProjectileDodge(e.player);try{e.player.setProperty(EAT_PROJECTION_PROPERTY,false);e.player.setProperty(EAT_NATIVE_TICKS_PROPERTY,0);e.player.setProperty(EAT_ELAPSED_TICKS_PROPERTY,0);e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{};if(!e.initialSpawn){forgetHeavyMetalRescue(e.player.id);try{clearEffects(e.player)}catch{};forgetFoodUse(e.player.id);forgetEffectMovement(e.player.id);forgetNumbVisual(e.player.id);try{e.player.setProperty(EAT_PROFILE_PROPERTY,0);e.player.setProperty(EAT_HAND_PROPERTY,0)}catch{}}});
+world.afterEvents.playerSpawn.subscribe(e=>{hideJavaEatingHud(e.player);forgetProjectileDodge(e.player);try{resetPlayerPresentation(e.player)}catch{};if(!e.initialSpawn){forgetHeavyMetalRescue(e.player.id);try{clearEffects(e.player)}catch{};forgetFoodUse(e.player.id);forgetEffectMovement(e.player.id);forgetNumbVisual(e.player.id)}});
 
 world.beforeEvents.playerInteractWithEntity.subscribe(e=>{
  try{const action=skewerAction(e.player,e.itemStack??heldMain(e.player));if(!action)return;e.cancel=true;scheduleSkewerAction(e.player,action)}catch{}

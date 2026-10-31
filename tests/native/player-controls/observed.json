@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "scope": "actual canonical player schema/shared writer on isolated GameTest player; not full gameplay or rendered Molang",
+  "source_files": {
+    "README.md": "7030cd7bc0c12097e0cb53a9d89ac48f1de0ba9b94284f7130575a24af0a1ae6",
+    "entities/player.json": "fd654ac530d5d08df48bdeb004955e5f5f1ff035fa9061d541f29da5edd49b41",
+    "manifest.json": "e5ebb229a02839e01db02708033b75f55bcdaa7c83219417650545d79e006c49",
+    "scripts/core/persist_keys.js": "5b3c35017e73ad199be63a4936db984a3abfb31e6f6a708ff4d17bfb97dc5aaf",
+    "scripts/core/player_props.js": "0583acde81a38604ec195d4fa9e6374353a57cd566e4aeffd79834c7b50c243a",
+    "scripts/probe.js": "c5e68d0eb0044e951ead775bc214431ee77009acd016eed1437438e140a7920d"
+  },
+  "properties": 27,
+  "result": {
+    "kind": "result",
+    "ok": true,
+    "sameTick": true,
+    "clock72000": true,
+    "neutralReset": true,
+    "client": false
+  },
+  "engine": "1.26.60.6",
+  "client": false,
+  "production_ready": false,
+  "errors": 0,
+  "normal_stop": true,
+  "references_restored": true,
+  "live_writes": false
+}
