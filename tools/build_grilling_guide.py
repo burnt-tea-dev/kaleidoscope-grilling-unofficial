@@ -3,7 +3,7 @@
 No historical augmenter, host UI override or gameplay mutation is involved.
 """
 from __future__ import annotations
-import argparse, hashlib, json, re
+import argparse, hashlib, json, re, subprocess
 from collections import Counter
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -90,6 +90,26 @@ def build_payload(s):
         out['entries'].append(row)
     return out
 
+def encode_messages(payload):
+    """Use the runtime publisher's encoder; keep packet rules in one implementation."""
+    code=("import {pathToFileURL} from 'node:url';"
+          "const root=process.argv[1],chunks=[];"
+          "for await (const chunk of process.stdin) chunks.push(chunk);"
+          "const payload=JSON.parse(Buffer.concat(chunks).toString('utf8'));"
+          "const publisher=await import(pathToFileURL(root+'/publisher.js').href);"
+          "process.stdout.write(JSON.stringify(publisher.encodeMessages(payload)));" )
+    raw=json.dumps(payload,ensure_ascii=False,separators=(',',':'))
+    result=subprocess.run(['node','--input-type=module','-e',code,str(BP/'scripts/guide')],
+                          input=raw,text=True,encoding='utf-8',capture_output=True,check=True)
+    messages=json.loads(result.stdout)
+    if not messages or len(messages)<3 or messages[0].get('id')!='kaleidoscope_cookery:guidebook_begin' or messages[-1].get('id')!='kaleidoscope_cookery:guidebook_end':
+        raise ValueError('Publisher returned an invalid guide transfer')
+    if len(messages)>514:raise ValueError('Host transfer capacity exceeded')
+    if any(not isinstance(row,dict) or set(row)!={'id','message'} or not isinstance(row['id'],str) or
+           not isinstance(row['message'],str) or len(row['message'])>2048 or not row['message'].isascii()
+           for row in messages):raise ValueError('Publisher returned an unsafe guide packet')
+    return messages
+
 def lang_text(s,l):
     esc=lambda v:str(v).replace('\n','\\n').replace('\r','')
     rows=[f'guide.kg.{k}={esc(v)}' for k,v in s['ui'][l].items()]
@@ -120,11 +140,9 @@ def write_or_check(p,b,check):
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');a=ap.parse_args()
     s=load(SOURCE);counts=validate_source(s);p=build_payload(s)
-    raw=json.dumps(p,ensure_ascii=True,separators=(',',':'))
-    chunks=(len(raw)+1599)//1600
-    if chunks>512:raise ValueError('Host transfer capacity exceeded')
-    write_or_check(BP/'scripts/guide/payload.js','export const GUIDE_PAYLOAD='+json.dumps(p,ensure_ascii=False,separators=(',',':'))+';\n',a.check)
+    messages=encode_messages(p);chunks=len(messages)-2
+    write_or_check(BP/'scripts/guide/payload.js','export const GUIDE_MESSAGES='+json.dumps(messages,ensure_ascii=False,separators=(',',':'))+';\n',a.check)
     for l in LOCALES:write_or_check(RP/'texts'/f'{l}.lang',merged_lang(RP/'texts'/f'{l}.lang',lang_text(s,l)),a.check)
     for target,row in s['icon_sources'].items():write_or_check(RP/(target+'.png'),(ROOT/row['source']).read_bytes(),a.check)
-    print(json.dumps({'guide_version':s['version'],'entries':len(p['entries']),'root_categories':len([c for c in s['categories'] if not c.get('parent')]),'child_categories':len([c for c in s['categories'] if c.get('parent')]),'category_memberships':dict(counts),'recipes':sum(len(e['recipes']) for e in p['entries']),'item_icons':len(s['icon_sources']),'transfer_chunks':chunks,'acquisition_gaps':len(s['acquisition_gaps']),'mode':'check' if a.check else 'write'},ensure_ascii=False,indent=2))
+    print(json.dumps({'guide_version':s['version'],'entries':len(p['entries']),'root_categories':len([c for c in s['categories'] if not c.get('parent')]),'child_categories':len([c for c in s['categories'] if c.get('parent')]),'category_memberships':dict(counts),'recipes':sum(len(e['recipes']) for e in p['entries']),'item_icons':len(s['icon_sources']),'transfer_chunks':chunks,'transfer_packets':len(messages),'acquisition_gaps':len(s['acquisition_gaps']),'mode':'check' if a.check else 'write'},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

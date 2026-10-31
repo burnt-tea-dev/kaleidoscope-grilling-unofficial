@@ -11,8 +11,8 @@ export const SOURCE = 'kg_grilling';
 export const REVISION = 'kg-guide-a3-28155';
 export const CHUNK_SIZE = 1600;
 const PACKETS_PER_TICK = 2;
+const MAX_PACKETS = 514;
 const PREPARE_CHARS_PER_SLICE = 256;
-const PREPARE_STEPS_PER_TICK = 16;
 const PREPARE_BUDGET_MS = 2;
 
 export function* prepareEncodeMessages(payload) {
@@ -65,20 +65,21 @@ export function encodeMessages(payload) {
   return step.value;
 }
 
-export function installPublisher(system, payload, warn = console.warn) {
+export function installPublisher(system, encodedMessages, warn = console.warn) {
   if (!system?.afterEvents?.scriptEventReceive || typeof system.sendScriptEvent !== 'function')
     throw new TypeError('Stable Script Events are required.');
-  let active = false, disposed = false, hostReady = false, lastSent = -Infinity;
+  if (!Array.isArray(encodedMessages) || encodedMessages.length < 3 || encodedMessages.length > MAX_PACKETS)
+    throw new TypeError('Pre-encoded guide messages are required.');
+  const messages = encodedMessages;
+  let active = false, disposed = false, lastSent = -Infinity;
   let successfulTransfers = 0, sendFailures = 0, runningHandle;
-  let preparationJob = prepareEncodeMessages(payload), preparationBuilds = 1, preparationSlices = 0;
-  let maxPreparationSliceMs = 0, preparationFailures = 0, preparationSteps = 0, messages, messageCount = 0;
   const scheduled = new Set();
   const later = (fn, ticks) => {
     const handle = system.runTimeout(() => { scheduled.delete(handle); if (!disposed) fn(); }, ticks);
     scheduled.add(handle); return handle;
   };
   function transmit() {
-    if (disposed || active || !messages || system.currentTick - lastSent < 120) return false;
+    if (disposed || active || system.currentTick - lastSent < 120) return false;
     active = true; let cursor = 0;
     const step = () => {
       if (disposed) {active = false; return;}
@@ -97,37 +98,9 @@ export function installPublisher(system, payload, warn = console.warn) {
     };
     runningHandle = later(step, 1); return true;
   }
-  function prepareStep() {
-    if (disposed || !preparationJob) return;
-    const started = Date.now();
-    try {
-      for (let n = 0; n < PREPARE_STEPS_PER_TICK; n++) {
-        const result = preparationJob.next();
-        preparationSteps++;
-        if (result.done) {
-          messages = result.value; preparationJob = null; messageCount = messages.length;
-          if (hostReady) transmit();
-          return;
-        }
-        if (Date.now() - started >= PREPARE_BUDGET_MS) break;
-      }
-      runningHandle = later(prepareStep, 1);
-    } catch (error) {
-      preparationJob = null; preparationFailures++;
-      warn(`[Grilling guide] Build failed: ${String(error)}`);
-      if (preparationFailures <= 2) later(() => {
-        preparationBuilds++;
-        preparationJob = prepareEncodeMessages(payload);
-        runningHandle = later(prepareStep, 1);
-      }, 40);
-    } finally {
-      preparationSlices++;
-      maxPreparationSliceMs = Math.max(maxPreparationSliceMs, Date.now() - started);
-    }
-  }
   const receive = ev => {
     if (disposed || ev.id !== EVENTS.ready) return;
-    try { if (Number(JSON.parse(String(ev.message ?? '')).api) === 1) {hostReady = true; transmit();} }
+    try { if (Number(JSON.parse(String(ev.message ?? '')).api) === 1) transmit(); }
     catch { /* Ignore unrelated/malformed ready events. */ }
   };
   const unsubscribe=scriptEvents(system)('guide-publisher',receive);
@@ -135,11 +108,12 @@ export function installPublisher(system, payload, warn = console.warn) {
     try { system.sendScriptEvent(EVENTS.ping, JSON.stringify({api: 1, source: SOURCE})); }
     catch (error) { warn(`[Grilling guide] Ping failed: ${String(error)}`); }
   };
-  runningHandle = later(prepareStep, 1);
   for (const ticks of [1, 40, 200]) later(ping, ticks);
   return Object.freeze({
-    getStatus: () => ({active, disposed, successfulTransfers, sendFailures, preparing:!!preparationJob,
-      preparationBuilds, preparationSlices, preparationSteps, maxPreparationSliceMs, messageCount,
+    // Preparation fields remain zero for older diagnostics; packets are already built at pack generation.
+    getStatus: () => ({active, disposed, successfulTransfers, sendFailures, preparing:false,
+      preparationBuilds: 0, preparationSlices: 0, preparationSteps: 0, maxPreparationSliceMs: 0,
+      messageCount: messages.length,
       acknowledgementAvailable: false}),
     dispose: () => {
       if (disposed) return; disposed = true; active = false;

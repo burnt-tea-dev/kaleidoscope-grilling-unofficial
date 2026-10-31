@@ -15,6 +15,7 @@
 - 繁中、簡中、英文名稱與操作說明必須完整；熱食等 runtime lore 使用 RawMessage 翻譯鍵，保留使用者 lore 與物品資料。
 - 使用公開宿主支援的製程名稱取得宿主本地化；API v1 不支援製程的多語 map。不能用無效欄位假裝已支援。材料名稱由宿主優先顯示的限制須記錄，宿主修復先做乾淨原包重現與維護者回饋。
 - guide catalog、產生的 payload／lang 與包版本保持一致，變更輸出要換版並追加 release-history。
+- `tools/build_grilling_guide.py` 使用 publisher 的同一份 encoder，將 catalog 預編成 `payload.js` 的傳送封包。runtime publisher 只等待宿主 ready 並傳送，不在開服時重算整章；配方、三語、封包順序、重試及資料格式由既有檢查核對。
 
 ## 檢查與驗收
 
