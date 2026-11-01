@@ -38,14 +38,17 @@ READ=re.compile(r"((?:c\.owning_entity->)?(?:q|query))\.(property|has_property)\
 
 def ready(owner):
     ref=owner.rsplit('q',1)[0] if owner.endswith('q') else owner[:-len('query')]
-    return '('+owner+".has_property('"+FRAME+"') && "+owner+".property('"+FRAME+"') > 0 && ("+ref+PROTOCOL['frameVariable']+' ?? 0) == '+owner+".property('"+FRAME+"'))"
+    # configure_player initializes every public snapshot variable. The native
+    # client rejects a redirected variable as the left operand of ??, so read
+    # it directly and retain the frame/property gate for absent or stale data.
+    return '('+owner+".has_property('"+FRAME+"') && "+owner+".property('"+FRAME+"') > 0 && "+ref+PROTOCOL['frameVariable']+' == '+owner+".property('"+FRAME+"'))"
 
 def readers(text):
     def replace(match):
         owner,operation,name=match.groups()
         if operation=='has_property':return ready(owner)
         scope='c.owning_entity->' if owner.startswith('c.') else ''
-        return '('+ready(owner)+' ? ('+scope+FIELDS[name]+' ?? 0) : 0)'
+        return '('+ready(owner)+' ? '+scope+FIELDS[name]+' : 0)'
     return READ.sub(replace,text)
 
 def configure_player(player):

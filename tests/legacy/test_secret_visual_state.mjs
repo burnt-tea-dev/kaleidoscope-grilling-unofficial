@@ -306,6 +306,8 @@ test('snapshot carrier has no bone channels or pose reset for the client to appl
 test('generated plate consumer reads owning-player data for each hand and hides stale or absent snapshots',()=>{
  const root=fileURLToPath(new URL('../../',import.meta.url));
  const converted=execFileSync('python3',['-c','import sys;sys.path.insert(0,"tools");from held_snapshot_probe import readers,SOURCE;print(readers((SOURCE/"resource_pack/attachables/skewer_plate.attachable.json").read_text()))'],{cwd:root,timeout:10000});
+ assert.equal(/c\.owning_entity->v\.kg_snapshot_\w+\s*\?\?/.test(converted.toString()),false,
+  'the native client rejects redirected expressions as null-coalescing left operands');
  const lines=JSON.parse(converted)['minecraft:attachable'].description.scripts.pre_animation.slice(0,5);
  const main=plateHeldVisualPlan(plateRows(0)),off=plateHeldVisualPlan(plateRows(1)),snapshot=apply(snapshotExpression(7,main,off),7);
  for(const hand of ['main_hand','off_hand'])for(const has of [false,true])for(const frame of [6,7]){

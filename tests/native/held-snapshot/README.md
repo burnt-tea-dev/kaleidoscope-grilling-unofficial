@@ -34,7 +34,7 @@ is hold-only: native food consumption is disabled because the full gameplay
 entry is deliberately absent. This experiment cannot pass eating settlement,
 nutrition, sounds, gun behavior or final family acceptance.
 
-Use pack **1.0.6** or later for this experiment. Earlier 1.0.4 omitted the
+Use pack **1.0.7** or later for this experiment. Earlier 1.0.4 omitted the
 owning player's public-variable declarations; its API-only results keep their
 original scope and cannot establish the attachable contract. Both variants now
 preserve the pinned vanilla player routing, bind the carrier aliases and expose
@@ -50,6 +50,15 @@ override spear state each frame or change plate capacity or transforms. The
 original control failure remains evidence; the native API observation below
 still describes 1.0.5. The clipped first-person view, full five-by-three contents,
 candidate rendering and multiplayer/re-entry still require real client tests.
+
+The 1.26.60.4 candidate run then rejected 1.0.6 expressions such as
+`(c.owning_entity->v.kg_snapshot_frame ?? 0)`: the left operand of `??` is a
+redirected expression, not a direct variable. Version 1.0.7 reads the initialized
+public snapshot variables directly, preserving the property/frame gate that
+hides absent or stale data. It does not change snapshot publishing, plate
+transforms, capacity, food metadata or formal runtime. The earlier client
+errors and clipped first-person views retain their failed result. Source tests
+of these generated readers do not replace a native client parser/render test.
 
 Use the exact target BDS 1.26.60.6 and record the actual client build, platform,
 view distance and frame rate. Enable Beta APIs/GameTest. With cheats enabled:
@@ -71,8 +80,13 @@ Compare the control and candidate in first person, third person and a second
 real client's view. Record distinct food/shape/cooked content in both hands,
 rapid repeated swaps, late join, dimension changes, leaving/re-entering actual
 client visibility and script reload/relog. Show a result before and after manual
-replay if automatic visibility fails. Include client content-log errors and
-video/frame captures; a server log or a packet-shaped JS test is insufficient.
+replay if automatic visibility fails. On saved-world re-entry and a complete
+client restart, capture the original held plates before any new seed or replay;
+record the wait and whether all contents restore automatically. Include client
+content-log errors and original frame captures as individual readable images
+plus UTF-8 excerpts under 1 MiB with source line numbers. Keep the complete
+original logs separately and label GUI copies, file logs and launcher stdout
+by their actual source. A server log or a packet-shaped JS test is insufficient.
 
 Only spawn/dimension-entry replay is included in this initial probe. Automatic
 re-entry into render distance and frame-time/network cost remain unresolved.
