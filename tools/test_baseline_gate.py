@@ -146,6 +146,8 @@ class ReleaseClaimTests(unittest.TestCase):
             folder.mkdir(parents=True)
             (folder / 'manifest.json').write_text(json.dumps({'header': {'uuid': side.lower(), 'version': [1, 0, 0]}, 'modules': [{'version': [1, 0, 0]}]}))
             (folder / 'content.json').write_text('{}')
+            for name in (['LICENSE-CODE','LICENSE-ASSETS','THIRD_PARTY_NOTICES.md'] if side == 'BP' else ['LICENSE-ASSETS','THIRD_PARTY_NOTICES.md']):
+                (folder / name).write_text('fixture legal notice\\n')
             self.config['packs'][side] = {'uuid': side.lower(), 'dependencies': []}
         (self.root / '.repo-target.json').write_text(json.dumps({'repository':'fixture-org/owned','repository_id':1,'owner':{'login':'fixture-org','id':2,'type':'Organization'},'private':False,'logical_runtime_repository':'fixture/owned'}))
         self.config['source_trees'] = self.trees(self.root)
