@@ -4,7 +4,7 @@ import {grillingConfig} from './server_config_runtime.js';
 import {getMainHand,getOffHand} from './core/player_io.js';
 import {stackIntentSignature} from './core/interaction_intent_core.js';
 import {isOilBrushVisualItem,oilPotIdlePacket,oilBrushPacket,oilBrushType,OIL_BRUSH_TICKS,OIL_BRUSH_MARKER} from './oil_brush_visual_core.js';
-import {writeHeldVisual,invalidateHeldVisual,heldVisualPropertyNames} from './held_visual_transport.js';
+import {writeHeldVisual,invalidateHeldVisual} from './held_visual_transport.js';
 import {registerHeldVisualProvider,reportHeldVisualError} from './held_visual_dispatch_runtime.js';
 const motions=new Map();
 function held(player,hand){return hand==='off'?getOffHand(player):getMainHand(player)}
@@ -36,10 +36,6 @@ export function syncOilBrushVisual(player,{idle=true}={}){
   catch(error){published=false;try{invalidateHeldVisual(player,hand)}catch{};reportHeldVisualError('oil brush '+hand,player,error)}
  }
  return published;
-}
-export function oilBrushStopExpression(hand){
- const marker=heldVisualPropertyNames(hand)[11];
- return "q.property('"+marker+"') != "+OIL_BRUSH_MARKER+" || !q.is_item_name_any('slot.weapon."+(hand==='off'?'offhand':'mainhand')+"','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')";
 }
 registerHeldVisualProvider('oil brush',syncOilBrushVisual,{leave:id=>motions.delete(id),spawn:id=>motions.delete(id)});
 // Respawn clears both the motion and any pre-death ready marker on the next

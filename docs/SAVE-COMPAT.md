@@ -61,3 +61,9 @@ Bedrock 載入世界時，對「已不存在的定義」不會報錯，而是**�
 區塊 state 的退役 ID 格式：`<block-id>#state:<state-name>`；單一值為 `<block-id>#state:<state-name>=<JSON-value>`。儲存 schema 變更為 `<entity-id>#inventory:<components-or-component_groups/name>`。這些也走相同證據檢查；不能藉保留 entity identifier 來縮減容量或移除 inventory。
 
 盤點工具使用字串感知 JSONC 解析，輸入缺漏／無效會明列問題並以非零狀態結束。合法 vanilla entity overlay 沒有 description 時另列 fragments，不能捏造為已知 entity override。
+
+## 玩家顯示快取換版
+
+T3.5 的正式四格來源只移除可從物品 metadata 重建的 24 個 player entity-property 宣告；舊 `BOTTLE_PREFIX`／`SECRET_PREFIX` 等字面值仍在 `core/persist_keys.js` 與 save lock。它們不是餐盤的唯一內容，不能把這項例外套到物品、方塊、世界鍵或 inventory 容量。新 `held_frame` 也已登錄。
+
+BP／RP 與宿主 player extension 必須同批切換。出生／腳本重新載入從原物品 envelope 重建兩手；控制與食用會話沿用既有中性重設，直接離線不補結算。保存首載／重開仍要核對兩手五串×三格、食材／形狀／熟度、完整第三方 metadata 和未完成食物，並保留原停服副本。操作與整批門檻統一見 [T3.5](REBUILD-PLAN.md#t3-5-property-slimming)，不以來源測試取代存檔演練。

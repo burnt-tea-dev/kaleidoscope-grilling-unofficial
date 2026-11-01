@@ -14,8 +14,8 @@
           ],
           "rotation": [
             "v.is_first_person ? 95 : (-75.63042895726866)",
-            "v.is_first_person ? -45 : ((1 * 0.18 + math.sin(math.mod(math.clamp(((q.has_property('kaleidoscope_grilling:bottle_main_0') ? q.property('kaleidoscope_grilling:bottle_main_0') : 0)) - 1, 0, 59), 20) * 18) * 0.70) * 57.29577951308232)",
-            "v.is_first_person ? 115 : (1 * (0.10 + math.sin(math.mod(math.clamp(((q.has_property('kaleidoscope_grilling:bottle_main_0') ? q.property('kaleidoscope_grilling:bottle_main_0') : 0)) - 1, 0, 59), 20) * 18) * 0.42) * 57.29577951308232)"
+            "v.is_first_person ? -45 : ((1 * 0.18 + math.sin(math.mod(math.clamp((((q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame')) ? (q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_m0 : 0) : 0)) - 1, 0, 59), 20) * 18) * 0.70) * 57.29577951308232)",
+            "v.is_first_person ? 115 : (1 * (0.10 + math.sin(math.mod(math.clamp((((q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame')) ? (q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_m0 : 0) : 0)) - 1, 0, 59), 20) * 18) * 0.42) * 57.29577951308232)"
           ]
         },
         "rightitem": {
@@ -45,8 +45,8 @@
           ],
           "rotation": [
             "v.is_first_person ? 0 : (-75.63042895726866)",
-            "v.is_first_person ? 0 : ((-1 * 0.18 + math.sin(math.mod(math.clamp(((q.has_property('kaleidoscope_grilling:bottle_off_0') ? q.property('kaleidoscope_grilling:bottle_off_0') : 0)) - 1, 0, 59), 20) * 18) * 0.70) * 57.29577951308232)",
-            "v.is_first_person ? 0 : (-1 * (0.10 + math.sin(math.mod(math.clamp(((q.has_property('kaleidoscope_grilling:bottle_off_0') ? q.property('kaleidoscope_grilling:bottle_off_0') : 0)) - 1, 0, 59), 20) * 18) * 0.42) * 57.29577951308232)"
+            "v.is_first_person ? 0 : ((-1 * 0.18 + math.sin(math.mod(math.clamp((((q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame')) ? (q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_o0 : 0) : 0)) - 1, 0, 59), 20) * 18) * 0.70) * 57.29577951308232)",
+            "v.is_first_person ? 0 : (-1 * (0.10 + math.sin(math.mod(math.clamp((((q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame')) ? (q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_o0 : 0) : 0)) - 1, 0, 59), 20) * 18) * 0.42) * 57.29577951308232)"
           ]
         },
         "leftitem": {

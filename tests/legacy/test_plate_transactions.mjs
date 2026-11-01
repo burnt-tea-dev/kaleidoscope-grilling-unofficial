@@ -340,3 +340,31 @@ test('unconfirmed recipe cleanup retains escrow and quarantine through fresh run
  const f=await fixture(),r=f.recipe(),spawn=f.dimension.spawnItem;f.dimension.spawnItem=function(...args){const e=spawn.apply(this,args);e.remove=()=>{throw Error('native cleanup unavailable')};return e};afterOnce(f.world,'setDynamicProperty',k=>k===key('recipe'));f.breaking();assert.equal(f.liveDrops().length,1);assert.equal(f.world.getDynamicProperty(key('recipe')),r.raw);assert.ok(f.world.getDynamicProperty(faultKey('recipe')));const reload=await fixture(f.saved());reload.b.setType(plate.RECIPE_BLOCK_ID);reload.breaking();reload.tick(200);assert.equal(reload.liveDrops().length,0);assert.equal(reload.world.getDynamicProperty(key('recipe')),r.raw);
 });
 }
+
+test('real plate providers rebuild metadata on spawn, refresh unchanged displays and target a new viewer',async()=>{
+ const {createFixture}=await import('../helpers/minecraft-fixture.mjs');
+ const formal=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js');
+ const N='kaleidoscope_grilling:';
+ function formalApply(call,frame){const variables={};Function('q','v',call.stopExpression.replace('?{','?(()=>{').replace('};return','})():0;return'))({property:()=>frame},variables);return variables;}
+ const {plateRows}=await import('../native/held-snapshot/scripts/cases.js');
+ const f=createFixture({deferredProperties:true});
+ await f.load('plate_held_visual_runtime.js');await f.load('bottle_held_visual_runtime.js');
+ const persist=await f.load('core/persist.js'),player=f.player(),rows=[plateRows(0),plateRows(1)];
+ const stacks=rows.map(row=>{const stack=f.item(N+'skewer_plate');persist.setItemProperty(stack,N+'plate_skewers',JSON.stringify(row));return stack});
+ player.inventory.setItem(0,stacks[0]);player.equipment.setEquipment(f.EquipmentSlot.Offhand,stacks[1]);
+ f.emit('world.afterEvents.playerSpawn',{player,initialSpawn:true});f.tick(2);
+ assert.equal(player.animations.length,1);const first=player.animations[0];
+ const variables=formalApply(first,player.getProperty(formal.FRAME_PROPERTY));
+ assert.equal(variables.kg_held_m10,5);assert.equal(variables.kg_held_o10,5);
+ assert.deepEqual(persist.getItemProperty(player.inventory.getItem(0),N+'plate_skewers'),JSON.stringify(rows[0]));
+ const frame=player.getProperty(formal.FRAME_PROPERTY);f.tick(105);
+ assert.equal(player.getProperty(formal.FRAME_PROPERTY),frame);assert.equal(player.animations.length,2);
+ const viewer=f.player();f.emit('world.afterEvents.playerSpawn',{player:viewer,initialSpawn:true});
+ assert.deepEqual(player.animations.at(-1).players,[viewer]);
+ player.equipment.setEquipment(f.EquipmentSlot.Offhand,undefined);f.tick(5);
+ const cleared=formalApply(player.animations.at(-1),player.getProperty(formal.FRAME_PROPERTY));
+ assert.equal(cleared.kg_held_m10,5);assert.equal(cleared.kg_held_o11,0);
+ f.emit('world.afterEvents.playerSpawn',{player,initialSpawn:false});f.tick(2);
+ assert.ok(player.getProperty(formal.FRAME_PROPERTY)>frame);
+ assert.equal(f.logs.filter(row=>row.level==='warn').length,0,JSON.stringify(f.logs));
+});

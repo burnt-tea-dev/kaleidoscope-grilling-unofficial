@@ -1,3 +1,5 @@
+import {execFileSync as runPython} from 'node:child_process';
+import {fileURLToPath as pathOf} from 'node:url';
 /** Source-backed visual state checks; no Minecraft/client-rendering claim. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -5,6 +7,7 @@ import {SECRET_FOOD_COUNT,SECRET_VISUAL_MAX,SECRET_MODEL_VARIANTS_KEY,modelVaria
 import {configureItemDataWorld,getItemProperty,setItemProperty} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/core/persist.js';
 import {secretVisualState} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/secret_visual_state.js';
 import {secretVisualIndex} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/integration_registry_core.js';
+import * as formal from '../../projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js';
 const N='kaleidoscope_grilling:';
 test('all supported foods, shapes and seven stage styles have collision-free legacy-safe properties',()=>{
  assert.equal(SECRET_FOOD_COUNT,225);assert.equal(SECRET_VISUAL_MAX,5345);
@@ -26,6 +29,81 @@ class Stack{
  constructor(){this.typeId=N+'secret_skewer';this.maxAmount=64;this.lore=[];this.raw=[{id:'minecraft:apple'},{id:'minecraft:carrot'},{id:'minecraft:beef'}];this.cached=[...this.raw.slice(0,2),{id:'minecraft:cooked_beef'}]}
  getRawLore(){return structuredClone(this.lore)}setLore(lore){this.lore=structuredClone(lore)}clone(){return Object.assign(new Stack(),structuredClone({...this}))}
 }
+
+// Formal transport exercises the real writer and generated readers. The
+// historical C-1 cases below retain their separate, narrower evidence scope.
+function formalActor(id='formal'){
+ return {id,props:{},calls:[],getProperty(key){return this.props[key]},setProperty(key,value){this.props[key]=value},
+  playAnimation(animation,options){this.calls.push({animation,...options})}};
+}
+function formalApply(call,frame,variables={}){
+ Function('q','v',call.stopExpression.replace('?{','?(()=>{').replace('};return','})():0;return'))({property:key=>{assert.equal(key,formal.FRAME_PROPERTY);return frame}},variables);
+ return variables;
+}
+test('formal staged owners send one complete two-hand snapshot and never write retired bank properties',()=>{
+ const player=formalActor('owners');
+ const cases=[['empty',Array(12).fill(0)],['bottle',[1,...Array(10).fill(0),214]],
+  ['secret',[...Array(8).fill(0),1,2,3,1]],['failure',[1,2,3,...Array(8).fill(0),220]],
+  ['slime',[...Array(11).fill(0),215]],['oilpot',[4,...Array(10).fill(0),226]],
+  ['oilbrush',[60,...Array(10).fill(0),225]],['plate',[...Array(10).fill(684244),5,255]]];
+ for(const [index,[kind,words]] of cases.entries()){
+  writeHeldVisual(player,'main',kind,words);writeHeldVisual(player,'off',kind,words);
+  assert.equal(player.calls.length,index);flushHeldVisual(player,index);
+  assert.deepEqual(Object.keys(player.props),[formal.FRAME_PROPERTY]);
+  const variables=formalApply(player.calls.at(-1),player.props[formal.FRAME_PROPERTY]);
+  for(const hand of ['main','off'])for(let i=0;i<12;i++)assert.equal(variables[formal.variableName(hand,i).slice(2)],words[i]);
+ }
+});
+test('formal publisher retains pending data after native failure, rejects stale requests and refreshes re-created clients',()=>{
+ let tick=0;const publisher=formal.createSnapshotPublisher(()=>tick),player=formalActor(),words=Array(12).fill(0);
+ player.props[formal.FRAME_PROPERTY]=67;const send=player.playAnimation;
+ player.playAnimation=()=>{throw Error('native failure')};
+ assert.throws(()=>publisher.publish(player,words,words));assert.equal(player.props[formal.FRAME_PROPERTY],68);
+ player.playAnimation=send;publisher.publish(player,words,words);assert.equal(player.props[formal.FRAME_PROPERTY],68);
+ const first=player.calls[0];tick=99;assert.equal(publisher.publish(player,words,words),false);
+ publisher.replay(player,[{id:'late'}]);tick=100;assert.equal(publisher.publish(player,words,words),true);
+ assert.equal(player.props[formal.FRAME_PROPERTY],68);assert.deepEqual(formalApply(player.calls.at(-1),68),formalApply(first,68));
+ words[0]=1;publisher.publish(player,words,words);const variables=formalApply(player.calls.at(-1),69),before=structuredClone(variables);
+ formalApply(first,69,variables);assert.deepEqual(variables,before);
+ publisher.forget(player.id);publisher.publish(player,words,words);assert.equal(player.props[formal.FRAME_PROPERTY],70);
+});
+test('formal plate readers show both full five-by-three plates and hide absent or stale client data',async()=>{
+ const {plateRows}=await import('../native/held-snapshot/scripts/cases.js');
+ const {plateHeldVisualPlan}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_core.js');
+ const main=plateHeldVisualPlan(plateRows(0)),off=plateHeldVisualPlan(plateRows(1)),player=formalActor('both-plates');
+ writeHeldVisual(player,'main','plate',main);writeHeldVisual(player,'off','plate',off);flushHeldVisual(player,0);
+ const snapshot=formalApply(player.calls[0],1);
+ const lines=json('resource_pack/attachables/skewer_plate.attachable.json')['minecraft:attachable'].description.scripts.pre_animation.slice(0,5);
+ for(const [hand,expected] of [['main_hand',main],['off_hand',off]])for(const frame of [0,1,2]){
+  const local={},owner={v:snapshot,q:{has_property:()=>frame!==0,property:()=>frame,is_item_name_any:()=>true}};
+  for(const line of lines)Function('v','c','owner','math',line.replaceAll('c.owning_entity->q.','owner.q.').replaceAll('c.owning_entity->v.','owner.v.'))(local,{item_slot:hand},owner,{floor:Math.floor});
+  assert.equal(local.kg_plate_count,frame===1?5:0);
+  if(frame===1)for(let i=0;i<12;i++)assert.equal(snapshot[formal.variableName(hand==='off_hand'?'off':'main',i).slice(2)],expected[i]);
+ }
+});
+test('owned extension retains native player routes and TACZ composition keeps 28 fields plus both controller families',()=>{
+ const script=`import sys,json,copy
+sys.path.insert(0,'tools')
+from held_snapshot_properties import configure_player,BASE
+from compose_held_player import compose,FP
+host={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','animations':{'root':'controller.animation.player.root'},'scripts':{'scale':'0.9375','variables':{'variable.native':'public'},'initialize':['variable.native = 7;'],'pre_animation':['variable.hand_bob = variable.hand_bob + 1;','variable.item_use_normalized = q.main_hand_item_max_duration > 0 ? q.main_hand_item_use_duration / q.main_hand_item_max_duration : 0;','variable.attack_body_rot_y = 5;'],'animate':['root','immersive_eating']},'render_controllers':[{FP:'variable.is_first_person && !q.is_spectator'}]}}}
+original=copy.deepcopy(host);configured=configure_player(host)
+assert host==original and configure_player(configured)==configured
+d=configured['minecraft:client_entity']['description'];assert d['scripts']['pre_animation']==original['minecraft:client_entity']['description']['scripts']['pre_animation']
+assert d['scripts']['initialize'][0]=='variable.native = 7;' and d['scripts']['animate'][:2]==['root','immersive_eating']
+bp=json.loads((BASE/'behavior_pack/entities/player.json').read_text())
+gunbp={'minecraft:entity':{'description':{'identifier':'minecraft:player','properties':{'gun:p'+str(i):{'type':'int','range':[0,9],'default':0} for i in range(24)}},'events':{'gun:reload':{'sequence':[]}}}}
+gunrp={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','animations':{'root':'controller.animation.player.root','gun':'animation.gun'},'scripts':{'scale':'0.9375','initialize':[],'pre_animation':['v.hand_bob = v.hand_bob + 1;','v.item_use_normalized = q.main_hand_item_use_duration / q.main_hand_item_max_duration;','v.holding_all_guns = 1;','v.attack_body_rot_y = 10;'],'animate':['root',{'gun':'v.holding_all_guns'}]},'render_controllers':[{FP:'v.is_first_person && !v.holding_all_guns'},{'controller.render.gun.fp':'v.is_first_person && v.holding_all_guns'},{'controller.render.gun.tp':'v.holding_all_guns'}]}}}
+b,r=compose(bp,host,gunbp,gunrp);d=r['minecraft:client_entity']['description'];lines=d['scripts']['pre_animation'];assert len(b['minecraft:entity']['description']['properties'])==28
+assert 'gun:reload' in b['minecraft:entity']['events'];assert sum('hand_bob =' in s for s in lines)==1
+assert any('max_duration > 0' in s for s in lines);assert 'holding_all_guns ?' in lines[-1]
+assert d['render_controllers'][0][FP].endswith('!variable.holding_all_guns');assert len(d['render_controllers'])==3
+for i in range(5):gunbp['minecraft:entity']['description']['properties']['extra:p'+str(i)]={'type':'int','range':[0,1],'default':0}
+try:compose(bp,host,gunbp,gunrp);raise AssertionError('Over-limit schema accepted')
+except ValueError:pass
+print('source composition, route and boundary behavior passed')`;
+ assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:15000}).toString(),/passed/);
+});
 test('variants persist through real content-addressed metadata cloning and visual reads do not mutate items',()=>{
  const saved=new Map();configureItemDataWorld({getDynamicProperty:k=>saved.get(k),setDynamicProperty:(k,v)=>saved.set(k,v)});
  const stack=new Stack();setItemProperty(stack,SECRET_MODEL_VARIANTS_KEY,'[4,5,9]');setItemProperty(stack,N+'secret_cooked_ingredients',JSON.stringify(stack.cached));
@@ -58,16 +136,18 @@ test('unsupported completed ingredient retains its source shape for supported ne
 /** Execute runtime APIs and parsed resource expressions; not native-render proof. */
 import fs from 'node:fs';
 import {packPlateHeldSecret,PLATE_HELD_WORD_A_MAX,PLATE_HELD_WORD_B_MAX} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate_held_visual_core.js';
-import {writeHeldVisual,heldVisualPropertyNames,HELD_VISUAL_WORD_MAX} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js';
+import {writeHeldVisual,flushHeldVisual,heldVisualPropertyNames,HELD_VISUAL_WORD_MAX} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js';
 const base=new URL('../../projects/grilling/gameplay_core/',import.meta.url);
 const json=p=>JSON.parse(fs.readFileSync(new URL(p,base)));
 // This subset executes the actual arithmetic/conditional resource statements,
 // with native property/item queries supplied at their API boundary.
 function expression(statement,v,marker,hand='main_hand'){
  const q={has_property:()=>true,property:()=>marker,is_item_name_any:()=>true};
+ const owner={q:{...q,property:()=>1},v:{kg_held_frame:1}};
+ for(const h of ['main','off'])for(let i=0;i<12;i++)owner.v[formal.variableName(h,i).slice(2)]=marker;
  const c={item_slot:hand};
  const math={floor:Math.floor,clamp:(x,a,b)=>Math.min(b,Math.max(a,x))};
- return Function('v','c','q','math',statement.replaceAll('c.owning_entity->q.','q.'))(v,c,q,math);
+ return Function('v','c','q','owner','math',statement.replaceAll('c.owning_entity->q.','owner.q.').replaceAll('c.owning_entity->v.','owner.v.'))(v,c,q,owner,math);
 }
 test('225 food encodings preserve every legacy packet and all helper owners are disjoint',()=>{
  assert.equal(SECRET_FOOD_COUNT,225);assert.equal(SECRET_VISUAL_MAX,5345);
@@ -82,9 +162,12 @@ test('225 food encodings preserve every legacy packet and all helper owners are 
   assert.throws(()=>writeHeldVisual({id:`invalid${marker}`,setProperty(){}},'main','secret',[...Array(11).fill(0),marker]));
  }
  for(let food=218;food<=225;food++){
-  const values=new Map(),player={id:`new${food}`,setProperty:(k,v)=>values.set(k,v)};
+  const values=new Map(),calls=[],player={id:`new${food}`,setProperty:(k,v)=>values.set(k,v),playAnimation:(_a,o)=>calls.push(o)};
   assert.equal(writeHeldVisual(player,'main','secret',[...Array(8).fill(0),food,food,food,secretHeldMarker(food)]),true);
-  assert.equal(values.get(heldVisualPropertyNames('main')[11]),food+9);
+  flushHeldVisual(player,0);
+  assert.equal(values.size,1);assert.equal(values.get(formal.FRAME_PROPERTY),1);
+  const variables={};Function('q','v',calls[0].stopExpression.replace('?{','?(()=>{').replace('};return','})():0;return'))({property:()=>1},variables);
+  assert.equal(variables[formal.variableName('main',11).slice(2)],food+9);
   assert.equal(writeHeldVisual(player,'main','failure',[0,0,food,...Array(8).fill(0),220]),true);
  }
 });
@@ -101,18 +184,18 @@ test('actual helper decode and occupied gates retain old rows, accept new foods,
   }
  }
 });
-test('maximum reachable plate words fit the unchanged hand bank within the 27-property budget and decode losslessly',()=>{
+test('maximum reachable plate words fit the four-property snapshot and decode losslessly',()=>{
  const values=[];for(let food=1;food<=225;food++)for(let shape=1;shape<=3;shape++)for(let style=0;style<=6;style++)values.push(food+256*(shape-1+3*style));
  const max=Math.max(...values),maxRemainder=Math.max(...values.map(v=>v%64)),maxHigh=Math.max(...values.map(v=>Math.floor(v/64)));
  assert.equal(PLATE_HELD_WORD_A_MAX,max+8192*maxRemainder);assert.equal(PLATE_HELD_WORD_B_MAX,1+maxHigh+128*max);assert.equal(HELD_VISUAL_WORD_MAX,PLATE_HELD_WORD_B_MAX);
- const props=json('behavior_pack/entities/player.json')['minecraft:entity'].description.properties;assert.ok(Object.keys(props).length<=27);
+ const props=json('behavior_pack/entities/player.json')['minecraft:entity'].description.properties;assert.equal(Object.keys(props).length,4);
  for(const middle of values){
   const cells=[max,middle,max],[a,b]=packPlateHeldSecret(cells);
   assert.deepEqual([a%8192,Math.floor(a/8192)+64*((b-1)%128),Math.floor((b-1)/128)],cells);
   assert.ok(a<=PLATE_HELD_WORD_A_MAX&&b<=PLATE_HELD_WORD_B_MAX);
   for(const hand of ['main','off']){
    const keys=heldVisualPropertyNames(hand),words=[a,b,a,b,a,b,a,b,a,b,5,255];
-   for(let i=0;i<12;i++)assert.ok(words[i]<=props[keys[i]].range[1]);
+   for(let i=0;i<12;i++){assert.equal(props[keys[i]],undefined);assert.ok(words[i]<=formal.WORD_MAX);assert.equal(Math.fround(words[i]),words[i]);}
   }
  }
 });
@@ -356,13 +439,29 @@ test('generated plate consumer reads owning-player data for each hand and hides 
  assert.equal(/c\.owning_entity->v\.kg_snapshot_\w+\s*\?\?/.test(converted.toString()),false,
   'the native client rejects redirected expressions as null-coalescing left operands');
  const lines=JSON.parse(converted)['minecraft:attachable'].description.scripts.pre_animation.slice(0,5);
- const main=plateHeldVisualPlan(plateRows(0)),off=plateHeldVisualPlan(plateRows(1)),snapshot=apply(snapshotExpression(7,main,off),7);
+ const main=plateHeldVisualPlan(plateRows(0)),off=plateHeldVisualPlan(plateRows(1)),snapshot={};
+ Function('q','v',formal.snapshotExpression(7,main,off).replace('?{','?(()=>{').replace('};return','})():0;return'))({property:()=>7},snapshot);
  for(const hand of ['main_hand','off_hand'])for(const has of [false,true])for(const frame of [6,7]){
   const local={kg_snapshot_frame:999,kg_snapshot_m10:0,kg_snapshot_o10:0};
-  const owner={v:snapshot,q:{has_property:key=>has&&key===FRAME_PROPERTY,property:key=>{assert.equal(key,FRAME_PROPERTY);return frame;},is_item_name_any:()=>true}};
+  const owner={v:snapshot,q:{has_property:key=>has&&key===formal.FRAME_PROPERTY,property:key=>{assert.equal(key,formal.FRAME_PROPERTY);return frame;},is_item_name_any:()=>true}};
   for(const line of lines)Function('v','c','owner','math',line.replaceAll('c.owning_entity->q.','owner.q.').replaceAll('c.owning_entity->v.','owner.v.'))(local,{item_slot:hand},owner,math);
   assert.equal(local.kg_plate_count,has&&frame===7?5:0);
  }
 });
 
 }
+
+test('published camera model reproduces the old clipping and fits the complete body in both hand regions',()=>{
+ const script=`import sys,json,itertools,math,copy
+sys.path.insert(0,'tools')
+from plate_camera_pose import project,POSE,HAND_FOV
+poses=json.loads(POSE.read_text())['animations'];points=list(itertools.product([-7,7],[-2,0],[-7,7]));t=math.tan(math.radians(HAND_FOV/2))
+old={'right':[-2.15601965,4.53282703,-1.52083612],'left':[-15.039,1.232,11.6]}
+for hand,sign in [('right',1),('left',-1)]:
+ pose=poses['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose'];before=copy.deepcopy(pose);before['position']=old[hand]
+ previous=project(points,before,hand);assert min(p[1] for p in previous)<-t
+ actual=project(points,pose,hand);assert all(.08*t*4/3<=sign*x<=.9*t*4/3 and -.65*t<=y<=.25*t and z>.4 for x,y,z in actual)
+ assert pose['scale']==[.4,.4,.4]
+print('old bottom clipping and new two-hand geometric fit passed; native client pending')`;
+ assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
+});
