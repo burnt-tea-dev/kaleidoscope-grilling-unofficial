@@ -115,6 +115,20 @@ def check(config,release=False,archive=None,history_base=None):
   for p in rows:
    if config['runtime'][side]+'/'+p not in tracked:fail('untracked runtime file: '+p)
  if release:
+  # Legal notices must travel inside each independently installable pack.
+  # Repository-level attribution alone is not sufficient for BP/RP redistribution.
+  required_notices={
+   'BP':['LICENSE-CODE','LICENSE-ASSETS','THIRD_PARTY_NOTICES.md'],
+   'RP':['LICENSE-ASSETS','THIRD_PARTY_NOTICES.md'],
+  }
+  for side,names in required_notices.items():
+   runtime=ROOT/config['runtime'][side]
+   for name in names:
+    path=runtime/name
+    if path.is_symlink() or not path.is_file():
+     fail(f'{side} release package is missing required legal notice: {name}')
+    if path.stat().st_size==0:
+     fail(f'{side} release package has an empty legal notice: {name}')
   status=subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True)
   if status.strip():fail('commit reviewed changes before release packaging')
  if archive:verify_export(config,archive,files)
