@@ -8,12 +8,12 @@ import {writeHeldVisual} from './canonical/held_visual_transport.js';
 import {PROPERTY_CONTROL} from './mode.js';
 const TAG='[Grilling snapshot probe]';
 const PLATE='kaleidoscope_grilling:skewer_plate',KEY='kaleidoscope_grilling:plate_skewers';
-const snapshots=createSnapshotPublisher(),actors=new Map();
-const publisher={...snapshots,publish(player,main,off){
+const snapshots=createSnapshotPublisher(()=>system.currentTick),actors=new Map();
+const publisher={...snapshots,publish(player,main,off,fpOffset=0){
  if(PROPERTY_CONTROL){
   for(const [hand,values] of [['main',main],['off',off]])writeHeldVisual(player,hand,values[11]===255?'plate':'empty',values);
  }
- return snapshots.publish(player,main,off);
+ return snapshots.publish(player,main,off,fpOffset);
 }};
 const emit=value=>console.warn(TAG+' '+JSON.stringify(value));
 const wait=ticks=>new Promise(resolve=>system.runTimeout(resolve,ticks));
@@ -64,10 +64,21 @@ async function native(){
 system.afterEvents.scriptEventReceive.subscribe(event=>{
  if(event.id==='kg_snapshot_probe:native'){void native();return;}
  const player=event.sourceEntity;if(player?.typeId!=='minecraft:player')return;
+ if(event.id==='kg_snapshot_probe:status'){
+  emit({kind:'status',tick:system.currentTick,propertyFrame:player.getProperty(FRAME_PROPERTY),snapshot:publisher.inspect(player.id),held:{main:words(player,'main'),off:words(player,'off')}});return;
+ }
+ if(event.id==='kg_snapshot_probe:pose'){
+  const actor=actors.get(player.id);if(!actor){emit({kind:'pose_error',error:'No active test plates'});return;}
+  try{
+   const fpOffset=Number(event.message);publisher.publish(player,words(player,'main'),words(player,'off'),fpOffset);
+   actor.fpOffset=fpOffset;emit({kind:'pose',fpOffset});
+  }catch(error){emit({kind:'pose_error',error:String(error)});}
+  return;
+ }
  if(event.id==='kg_snapshot_probe:seed')seed(player,Number(event.message)||0);
  if(event.id==='kg_snapshot_probe:swap')seed(player,(actors.get(player.id)?.variant??0)+2);
  if(event.id==='kg_snapshot_probe:replay')for(const actor of actors.values())publisher.replay(actor.player,[player]);
- if(event.id==='kg_snapshot_probe:clear')publisher.publish(player,Array(12).fill(0),Array(12).fill(0));
+ if(event.id==='kg_snapshot_probe:clear')publisher.publish(player,Array(12).fill(0),Array(12).fill(0),actors.get(player.id)?.fpOffset??0);
 });
 function resume(player){
  if(!player.isValid)return;
@@ -86,6 +97,6 @@ world.afterEvents.playerLeave.subscribe(({playerId})=>{actors.delete(playerId);p
 // dispatcher and a measured visibility/re-entry strategy; this is not that gate.
 system.runInterval(()=>{
  for(const actor of actors.values())try{
-  if(actor.player.isValid)publisher.publish(actor.player,words(actor.player,'main'),words(actor.player,'off'));
+  if(actor.player.isValid)publisher.publish(actor.player,words(actor.player,'main'),words(actor.player,'off'),actor.fpOffset??0);
  }catch(error){emit({kind:'sample_error',error:String(error)});}
 },5);
