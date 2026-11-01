@@ -34,12 +34,10 @@ Exact source revisions, paths, per-file hashes, conversion operations and attrib
 
 For a release-specific check, compare the exact generated BP/RP contents against the provenance manifest and the license map above. If a file's source or redistribution basis is unknown, withhold that file from the release until it is resolved.
 
-## Release package notice gate
+## Release package notices
 
-The canonical BP/RP source trees currently do not carry the applicable license files, even though the repository contains them. A repository-level notice does not travel with an exported pack.
+Every independently installable BP and RP carries `LICENSE-ASSETS`, `ATTRIBUTION.md`, `LICENSE-CORE` and this notice. The BP also carries `LICENSE-CODE`. These are copies of the applicable source notices, with the original copyright retained. Pack-local filenames resolve inside each installed pack; the source/provenance paths in the table above refer to this public repository.
 
-Public release packaging is blocked until the next canonical BP/RP each contains:
-- BP: `LICENSE-CODE` (from `data/java/LICENSE-CODE`), `LICENSE-ASSETS` (from `projects/grilling/LICENSE-ASSETS`) and this `THIRD_PARTY_NOTICES.md`.
-- RP: `LICENSE-ASSETS` (from `projects/grilling/LICENSE-ASSETS`) and this `THIRD_PARTY_NOTICES.md`.
+The Bedrock adaptation changes Java code to Bedrock Script API, converts models and UV coordinates, assembles source textures, and adds platform-specific player presentation. It remains unofficial and unfinished; the changes are not endorsed by the upstream authors. Artwork adaptations retain CC BY-NC-SA 4.0 and the code keeps its applicable BSD terms.
 
-The release-only `tools/baseline_gate.py check --release` enforces these files inside each independently installable pack. Do not bypass it or raise growth ceilings. Add the files to canonical runtime, advance the pack version, run the save-compatibility and growth-ratchet checks, then use `python tools/baseline_gate.py freeze` to update the append-only runtime identity. A successful build or source hash is not client acceptance.
+The release-only `tools/baseline_gate.py check --release` requires the applicable notices inside both canonical runtime packs. Adding notices changes the exported bytes, so the pack has a fresh paired version and append-only identity; existing releases are not overwritten. This packaging correction does not change gameplay code, models, textures, sound or saved identifiers. Engine and human acceptance remain separate.
