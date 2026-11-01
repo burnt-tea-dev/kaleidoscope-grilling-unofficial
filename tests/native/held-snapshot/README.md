@@ -34,7 +34,7 @@ is hold-only: native food consumption is disabled because the full gameplay
 entry is deliberately absent. This experiment cannot pass eating settlement,
 nutrition, sounds, gun behavior or final family acceptance.
 
-Use pack **1.0.7** or later for this experiment. Earlier 1.0.4 omitted the
+Use pack **1.0.8** or later for this experiment. Earlier 1.0.4 omitted the
 owning player's public-variable declarations; its API-only results keep their
 original scope and cannot establish the attachable contract. Both variants now
 preserve the pinned vanilla player routing, bind the carrier aliases and expose
@@ -60,6 +60,24 @@ transforms, capacity, food metadata or formal runtime. The earlier client
 errors and clipped first-person views retain their failed result. Source tests
 of these generated readers do not replace a native client parser/render test.
 
+Client 1.0.7 testing then found both saved-world and complete-client re-entry
+empty until manual replay, while the property control restored visible food.
+The unchanged publisher never sent another request. In 1.0.8, the existing test
+poll refreshes a complete unchanged snapshot at most once per 100 server ticks
+(five seconds at 20 TPS), without advancing the frame or dropping any words.
+Each temporary animation ends once its frame commits. Targeted viewer replay
+does not postpone the next broadcast refresh. This follows the distinction in
+Mojang's [one-off client packet description](https://mojang.github.io/bedrock-protocol-docs/1.26.60-preview.30/packets/animate-entity-packet/);
+it is an implementation to test, not evidence that a client received or rendered
+the request. Re-entry, visible recovery delay and client/network cost still need
+native measurements. The original 1.0.7 failures remain intact.
+
+The control also reported an undefined vanilla `first_person_item_rotation_factor`
+before seeding. The player now defaults it to zero only during initialization,
+preserving any existing native value and all later engine writes. Zero preserves
+the numeric fallback used by the old missing-variable read; it is not a new
+per-frame attack or hand-pose override. The native client must verify the fix.
+
 Use the exact target BDS 1.26.60.6 and record the actual client build, platform,
 view distance and frame rate. Enable Beta APIs/GameTest. With cheats enabled:
 
@@ -68,6 +86,8 @@ view distance and frame rate. Enable Beta APIs/GameTest. With cheats enabled:
 /scriptevent kg_snapshot_probe:swap
 /scriptevent kg_snapshot_probe:replay
 /scriptevent kg_snapshot_probe:clear
+/scriptevent kg_snapshot_probe:status
+/scriptevent kg_snapshot_probe:pose 4
 ```
 
 `seed` places two distinct full plates in the caller's hands. `swap` changes
@@ -75,6 +95,19 @@ contents while keeping the item ID. `replay` explicitly asks for all active test
 actors' snapshots for the caller; record if it is needed. Manual replay must
 never be reported as automatic re-entry success. `clear` clears display data;
 the next test poll rebuilds from unchanged held metadata.
+
+`status` only logs the property frame, cached full hand words, current held words,
+refresh/replay counts and expression character length. Counts are submitted API
+requests, not client acknowledgements or measured wire bytes. Capture status
+before manual replay if automatic recovery fails.
+
+`pose 0`, `pose 4` and `pose 8` select a test-only offset in the two first-person
+plate Y translations. Zero preserves the source pose; third-person transforms,
+geometry, all food cells and persisted item data remain unchanged. Compare one
+offset at a time at fixed FOV/UI/window settings and restore `pose 0`. Seeding or
+re-entering also resets this diagnostic to zero. This is a calibration control,
+not a proven crop fix or permission to modify formal pose assets. It uses one
+extra initialized public Molang variable, not another entity property.
 
 Compare the control and candidate in first person, third person and a second
 real client's view. Record distinct food/shape/cooked content in both hands,
@@ -88,8 +121,8 @@ plus UTF-8 excerpts under 1 MiB with source line numbers. Keep the complete
 original logs separately and label GUI copies, file logs and launcher stdout
 by their actual source. A server log or a packet-shaped JS test is insufficient.
 
-Only spawn/dimension-entry replay is included in this initial probe. Automatic
-re-entry into render distance and frame-time/network cost remain unresolved.
+Spawn/dimension-entry replay and the 100-tick full refresh are included in this
+probe. Automatic re-entry into render distance and frame-time/network cost remain unresolved.
 A successful native/API result keeps `clientEvaluated=false` and
 `channelViable=null` until those scenes are observed. Do not remove production
 properties or start T3.5-d solely because BDS accepts `playAnimation`.

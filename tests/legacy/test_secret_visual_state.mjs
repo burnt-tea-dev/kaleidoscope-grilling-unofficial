@@ -212,10 +212,13 @@ const {plateHeldVisualPlan,PLATE_HELD_WORD_A_MAX,PLATE_HELD_WORD_B_MAX}=await im
 const {plateRows}=await import('../native/held-snapshot/scripts/cases.js');
 const {createSnapshotPublisher,snapshotExpression,FRAME_PROPERTY,WORD_MAX,variableName}=await import('../native/held-snapshot/scripts/snapshot.js');
 const math={floor:Math.floor};
-function apply(expression,frame,variables={}){
+function evaluateSnapshot(expression,frame,variables){
  // Execute the real generated assignments/commit against a query boundary.
  // This models language arithmetic; no client variable scope is simulated.
- Function('q','v',expression.replace('?{','?(()=>{').replace('};return 0;','})():0;return 0;'))({property:key=>{assert.equal(key,FRAME_PROPERTY);return frame;}},variables);
+ return Function('q','v',expression.replace('?{','?(()=>{').replace('};return','})():0;return'))({property:key=>{assert.equal(key,FRAME_PROPERTY);return frame;}},variables);
+}
+function apply(expression,frame,variables={}){
+ evaluateSnapshot(expression,frame,variables);
  return variables;
 }
 const actor=()=>({id:'source',props:{},calls:[],setProperty(name,value){this.props[name]=value;},playAnimation(animation,options){this.calls.push({animation,...options});}});
@@ -262,6 +265,43 @@ test('failed native submit retains its pending generation and retries before mar
  player.playAnimation=native;assert.equal(publisher.publish(player,a,b),true);assert.equal(player.props[FRAME_PROPERTY],1);
  assert.equal(publisher.publish(player,a,b),false);assert.equal(player.calls.length,1);
 });
+test('a complete snapshot waits for its frame and then ends its temporary animation',()=>{
+ const expression=snapshotExpression(7,Array(12).fill(1),Array(12).fill(2)),v={};
+ assert.equal(Number(evaluateSnapshot(expression,6,v)),0);assert.deepEqual(v,{});
+ assert.equal(Number(evaluateSnapshot(expression,7,v)),1);
+ assert.equal(v.kg_snapshot_frame,7);assert.equal(v.kg_snapshot_m0,1);assert.equal(v.kg_snapshot_o11,2);
+});
+test('unchanged snapshots refresh after 100 ticks without advancing the committed frame',()=>{
+ let tick=0;const publisher=createSnapshotPublisher(()=>tick),player=actor();
+ const a=plateHeldVisualPlan(plateRows(0)),b=plateHeldVisualPlan(plateRows(1));
+ publisher.publish(player,a,b);const first=player.calls[0];
+ tick=99;assert.equal(publisher.publish(player,a,b),false);
+ tick=100;assert.equal(publisher.publish(player,a,b),true);
+ assert.equal(player.props[FRAME_PROPERTY],1);assert.equal(player.calls[1].stopExpression,first.stopExpression);
+ assert.deepEqual(apply(player.calls[1].stopExpression,1),apply(first.stopExpression,1));
+ tick=199;assert.equal(publisher.publish(player,a,b),false);
+ tick=200;assert.equal(publisher.publish(player,a,b),true);assert.equal(player.calls.length,3);
+});
+test('targeted replay cannot postpone refresh for other viewers and a failed refresh retries',()=>{
+ let tick=0;const publisher=createSnapshotPublisher(()=>tick),player=actor(),words=Array(12).fill(0);
+ publisher.publish(player,words,words);tick=99;publisher.replay(player,[{id:'late'}]);
+ tick=100;const native=player.playAnimation;player.playAnimation=()=>{throw Error('refresh failed')};
+ assert.throws(()=>publisher.publish(player,words,words));
+ player.playAnimation=native;assert.equal(publisher.publish(player,words,words),true);
+ assert.equal(player.props[FRAME_PROPERTY],1);assert.equal(player.calls.length,3);
+ assert.equal(publisher.publish(player,words,words),false);
+});
+test('test-only pose calibration preserves complete hand words and status cannot mutate the cache',()=>{
+ const publisher=createSnapshotPublisher(),player=actor(),a=plateHeldVisualPlan(plateRows(0)),b=plateHeldVisualPlan(plateRows(1));
+ publisher.publish(player,a,b,4);
+ const view=publisher.inspect(player.id),variables=apply(player.calls[0].stopExpression,1);
+ assert.deepEqual(view.main,a);assert.deepEqual(view.off,b);assert.equal(view.fpOffset,4);
+ assert.equal(variables.kg_snapshot_fp_offset,4);assert.equal(variables.kg_snapshot_m10,5);assert.equal(variables.kg_snapshot_o10,5);
+ view.main[0]=-1;assert.deepEqual(publisher.inspect(player.id).main,a);
+ for(const invalid of [-4,1,NaN,Infinity,'4;v.foreign=1'])assert.throws(()=>publisher.publish(player,a,b,invalid));
+ assert.equal(player.calls.length,1);assert.equal(player.props[FRAME_PROPERTY],1);
+ publisher.publish(player,a,b,0);assert.equal(apply(player.calls[1].stopExpression,2).kg_snapshot_fp_offset,0);
+});
 
 const {execFileSync}=await import('node:child_process');
 const {fileURLToPath}=await import('node:url');
@@ -291,6 +331,13 @@ test('probe player exposes the complete committed snapshot to attachables and re
   const native=initial===undefined?{}:{melee_spear_equipped:initial};
   for(const line of spearInitialization)Function('variable',line)(native);
   assert.equal(native.melee_spear_equipped,initial??0,'missing vanilla state is neutral; an existing native state survives initialization');
+ }
+ const rotationInitialization=scripts.initialize.filter(line=>line.startsWith('variable.first_person_item_rotation_factor ='));
+ assert.equal(rotationInitialization.length,1);
+ for(const initial of [undefined,0,0.5,1]){
+  const native=initial===undefined?{}:{first_person_item_rotation_factor:initial};
+  for(const line of rotationInitialization)Function('variable',line)(native);
+  assert.equal(native.first_person_item_rotation_factor,initial??0);
  }
 });
 test('snapshot carrier has no bone channels or pose reset for the client to apply',()=>{

@@ -24,7 +24,7 @@ def protocol():
     transport=(SOURCE/'behavior_pack/scripts/held_visual_transport.js').as_uri()
     script='import * as s from '+json.dumps(snapshot)+';import {heldVisualPropertyNames} from '+json.dumps(transport)+';'
     script+="const fields=Object.fromEntries(['main','off'].flatMap(hand=>heldVisualPropertyNames(hand).map((name,i)=>[name.split(':')[1],s.variableName(hand,i)])));"
-    script+='process.stdout.write(JSON.stringify({fields,frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));'
+    script+='process.stdout.write(JSON.stringify({fields,frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,offsetVariable:s.FP_OFFSET_VARIABLE,offsets:s.FP_OFFSETS,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));'
     return json.loads(subprocess.check_output(['node','--input-type=module','-e',script],text=True))
 
 PROTOCOL=protocol()
@@ -56,13 +56,17 @@ def configure_player(player):
     scripts=description['scripts']
     # Attachable arrow reads cross the player scope. Those variables must be
     # public on the owning client entity; a JS reader test cannot prove this.
-    variables=[*FIELDS.values(),PROTOCOL['frameVariable']]
+    variables=[*FIELDS.values(),PROTOCOL['offsetVariable'],PROTOCOL['frameVariable']]
     names=[name.replace('v.','variable.',1) for name in variables]
     scripts.setdefault('variables',{}).update({name:'public' for name in names})
     scripts.setdefault('initialize',[]).extend(name+' = 0;' for name in names)
     # The 1.26.60.4 client reads this vanilla state before it has been assigned
     # in the probe player. Preserve any native value; default only at init.
     scripts['initialize'].append('variable.melee_spear_equipped = variable.melee_spear_equipped ?? 0.0;')
+    # The vanilla first-person attack animations read this before the engine
+    # has supplied it in the control's persona render. Zero retains the old
+    # missing-variable numeric fallback; native values and later writes win.
+    scripts['initialize'].append('variable.first_person_item_rotation_factor = variable.first_person_item_rotation_factor ?? 0.0;')
     description['animations'].update({PROTOCOL['animation']:PROTOCOL['animation'],PROTOCOL['controller']:PROTOCOL['controller']})
     return player
 
@@ -115,12 +119,21 @@ def build(output, player_template, control=False):
     for path in rp.rglob('*.json'):
         text=path.read_text();result=text if control else readers(text)
         if result!=text:path.write_text(result);changed.append(str(path.relative_to(rp)))
+    # Test-only calibration: offset zero preserves the source pose. Only the
+    # two FP translations change; TP, layout, geometry and item data stay put.
+    pose_path=rp/'animations/plate_held.animation.json'
+    poses=json.loads(pose_path.read_text())
+    for hand in ('right','left'):
+        position=poses['animations']['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose']['position']
+        position[1]=str(position[1])+' + c.owning_entity->'+PROTOCOL['offsetVariable']
+    pose_path.write_text(json.dumps(poses,indent=2)+'\n')
     (rp/'animations/snapshot_probe.animation.json').write_text(json.dumps(CARRIER,indent=2)+'\n')
     (rp/'animation_controllers').mkdir(exist_ok=True)
     controller={'format_version':'1.10.0','animation_controllers':{PROTOCOL['controller']:{'initial_state':'default','states':{'default':{}}}}}
     (rp/'animation_controllers/snapshot_probe.controller.json').write_text(json.dumps(controller,indent=2)+'\n')
     (rp/'entity/player.entity.json').write_text(json.dumps(configure_player(json.loads(template)),indent=2)+'\n')
     report={'scope':'C-1 isolated display prototype; not release/runtime migration','source_version':json.loads((ROOT/'baseline.json').read_text())['version'],'player_properties':len(props),'hand_words':24,'property_positive_control':control,'changed_resource_consumers':changed,'canonical_modules':sorted(copied),'player_template':{'url':PLAYER_TEMPLATE_URL,'sha256':PLAYER_TEMPLATE_SHA256},'client':False,'production_ready':False}
+    report['fp_offset_diagnostic']={'default':0,'values':PROTOCOL['offsets'],'variable':PROTOCOL['offsetVariable'],'scope':'FP Y translation only; source pose at zero, not a production pose fix'}
     (output/'build.json').write_text(json.dumps(report,indent=2)+'\n')
     archive=output/'held-snapshot-probe.mcaddon'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
