@@ -296,6 +296,7 @@ export function createFixture(options = {}) {
         } else e.properties[key] = copy(value);
       });},
       getProperty(key) {return copy(e.properties[key]);},
+      playAnimation(animation, options) {return operation(e, 'playAnimation', [animation, options], () => {(e.animations ??= []).push({animation, ...options});});},
       remove() {return operation(e, 'remove', [], () => {e.isValid = false;});},
       kill() {return e.remove();},
       teleport(location, opts = {}) {e.location = copy(location);if (opts.dimension) e.dimension = opts.dimension;},

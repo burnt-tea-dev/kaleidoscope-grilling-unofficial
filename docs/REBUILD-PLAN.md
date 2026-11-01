@@ -393,7 +393,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 #### T3.5 玩家屬性瘦身計畫（2026-10-30）
 
-**本次交付範圍：展開既有 T3.5／D6 的盤點、協議設計、實作順序及驗收。** 這份計畫沒有變更 runtime，沒有將下列目標標成已實作／已相容，也不改寫 T3.4 已記錄的時長 variant 與直接離線不補結算決定。
+**原始計畫範圍（2026-10-30）**：展開既有 T3.5／D6 的盤點、協議設計、實作順序及驗收。最初的計畫 PR 未改 runtime；以下 G201 盤點及原型紀錄保留其觀察日期。現行實作見本節的 2026-11-01 更新，不改寫 T3.4 已記錄的時長 variant 與直接離線不補結算決定。
 
 **基線**：主線 [`61864d017a1e4e9847325cd7313098b4379dc2e9`](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/commit/61864d017a1e4e9847325cd7313098b4379dc2e9)，`baseline.json` 為 **2.8.201／G201**。提問中的 G194 為前次檢查基線；本次重新讀取 G201 的 `behavior_pack/entities/player.json`，仍有 **32 個、全部 client_sync=true**。以下 BP／RP 路徑相對於 `projects/grilling/gameplay_core/`。
 
@@ -401,7 +401,32 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 **2026-10-31 實作進度（T3.5-b）**：`core/player_props.js` 已成為六欄控制與兩時計的共用 writer／schema，來源玩家定義為 27 格；由 `tools/eating_owner_properties.py` 更新 RP 解碼。既有 API fixture 已加入下一 tick 模式，覆蓋同 tick 合併、寫入前後故障、終止後重試、雙手與重生。隔離 BDS 1.26.60.6 已用真正 schema／writer 驗證 27 格載入、同 tick 合併、72000 時計與中性重設，見[原生結果](../tests/native/player-controls/observed.json)。這不是完整家族、存檔遷移、Molang 渲染或真人驗收；T3.5-b 的這些出口仍待完成，T3.5-c/d/e 未完成。LIVE 狀態另依主機當次清單與部署收據，不以本來源版本推定已上線。
 
-##### A. 32 個欄位的責任盤點
+##### 2026-11-01 正式來源與工作順序
+
+擁有者本日明確要求先完成整條瘦身來源、共用玩家與 TACZ 修法，最後才交一份整批 dot 清單；這項指示取代原先「原型全部真人出口通過後才可開始 d/e 編碼」的順序。原型失敗、正式版本、完整存檔／家族門檻與真人驗收仍分開，不能用這項順序變更宣告通過或部署。
+
+正式 BP 宣告以 [`entities/player.json`](../projects/grilling/gameplay_core/behavior_pack/entities/player.json) 為準：`controls`、`eat_native_ticks`、`eat_elapsed_ticks`、`held_frame`，合計 **4 格**。兩個時計仍完整保留 0–72000。所有手持 owner 共用 [`held_visual_transport.js`](../projects/grilling/gameplay_core/behavior_pack/scripts/held_visual_transport.js)，仍是雙手各 12 個整數；最大值、每盤五串、每串三食材、形狀、熟食快照及物品 metadata 不變。刪除的是 24 個可重建的 entity-property 宣告，舊 key 登錄與存檔內容沒有刪除。
+
+provider 先準備兩手，既有 dispatcher 或一 tick 食物迴圈一次提交完整快照；不新增全域排程器。完整資料先賦值、frame 最後提交，reader 遮住缺少／錯 frame。原生呼叫失敗可重試；初次 frame 延續已保存 token，生成 client actor、出生與換維度以既有入口重播，另外每 100 server ticks 補送未變快照。補送不是 client ACK，低 TPS 下也不是固定五秒。刷油手臂改為由相同快照的 ready marker 啟用原動畫，避免動畫請求比分批內容先到便被舊 marker 結束；時長／交易／形狀仍由原 owner 管理。
+
+公開包不含完整宿主／TACZ 玩家檔。[`player-presentation.json`](../projects/grilling/gameplay_core/behavior_pack/host-extensions/player-presentation.json) 是自有的 public-variable、初始化、動畫 alias／條件宣告；[`held_snapshot_properties.py`](../tools/held_snapshot_properties.py) 從同一 JS schema 生成 RP reader 及宣告。整合者必須把它套到**當次選定的完整宿主 player**；不可把舊 Mojang sample 當正式替換品。未套用此相容宿主時，四格包不具完整顯示條件。
+
+[`compose_held_player.py`](../tools/compose_held_player.py) 接收雜湊固定的宿主 player，選用 TACZ release 7854487／1.0.3 時核對完整原包 SHA。它保留事件、component groups、24 個 TACZ 屬性、槍械 aliases／FP及TP routes；目前兩包合計 **28 格**。其他包仍必須依當次完整集合另外盤點，不能把 28 當所有組合的保證。重複的原生每幀賦值只執行一次，空手使用進度保留宿主的除零防護，攻擊身體轉動按持槍狀態分流。現有 IE／煙火 first-person controller 仍由整包選定版本提供，且只在非槍械路由生效；不能靠包順序犧牲其中一包。
+
+**已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
+
+第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
+
+**修法依據與適用範圍（本日查閱）**：
+
+- [官方 entity properties](https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoentityproperties?view=minecraft-bedrock-stable)：32 格限制與同步／保存邊界；不靠關掉同步假裝釋放位置。
+- [官方 Molang public variables](https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide#public-variables)、[Bedrock Wiki playanimation 範例](https://wiki.bedrock.dev/commands/playanimation)：以自有 actor 變數與動畫表達式傳顯示快照；不改原版每幀變數，亦不當持久資料或送達證明。
+- [Bedrock Wiki attachables method two](https://wiki.bedrock.dev/items/attachables#method-2-bound-to-a-bone) 與 [Dofes 的原始預覽實作](https://github.com/Dofes/blockbench-bedrock-attachable/blob/0dbcc4919b2152f81606a7a1bb4e11b292e0ceac/plugins/bedrock_attachable/bedrock_attachable.js)：左右手骨骼綁定、第一人稱手臂與相機座標；主手有旋轉，不能用同一個 local Y 增量代表兩手一起向上。
+- [開發者實際遇到舊 player sample 缺欄位的討論](https://www.reddit.com/r/BedrockAddons/comments/1pjkzhx/apparently_having_playerentityjson_client_entity/)：用來說明保留當次完整玩家定義的必要，不能以該討論證明我們的整包已相容。
+
+**尚待完成的出口**：本次正式來源必須完成 canonical PR／CI；整合輸出需配對身份、完整集合 static／BDS、相同停服存檔首載／重開及回退。dot 只收一份[正式整批清單](../tests/native/held-snapshot/README.md#formal-batch)，證據必須綁定同一候選。所有畫面、音效、多人、TACZ 與效能未測項保持 NOT-RUN／INCONCLUSIVE；`client=false`、`production_ready=false`，沒有宣告部署。
+
+##### A. 原 G201 的 32 個欄位責任盤點（歷史基線）
 
 以下欄位均使用 `kaleidoscope_grilling:` 前綴。
 
@@ -467,8 +492,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 原型先用最難案例：**雙手各拿五串餐盤，秘製食材／shape 各異，包含熟食快照與動畫串；同 ID 不同 metadata 快切，另一名玩家觀察並在中途加入。** 需同時錄到第一人稱、第三人稱與遠端結果。若新通道增加空白、錯食材、殘影、交錯快照、手臂消失或明顯延遲，即未通過；不能用減容量、禁副手或取消效果換取低槽數。
 
 **2026-10-31 C-1 原型進度**：隔離[快照原型](../tests/native/held-snapshot/README.md)與
-`tools/held_snapshot_probe.py` 已提供 **4 格候選／28 格原通道正對照**，正式輸出仍為
-G203 的 27 格，不是已完成 4 格遷移。原型沿用真餐盤 planner、metadata 和模型，
+`tools/held_snapshot_probe.py` 已提供 **4 格候選／28 格原通道正對照**，當時正式輸出仍為
+G203 的 27 格；本段為原型建立時的歷史紀錄，現行來源見上方正式更新。原型沿用真餐盤 planner、metadata 和模型，
 一次發送雙手 24 字全快照，以獨立且不移骨的動畫 controller 寫入 player variables；
 讀者須符合 frame token 才使用。型別／極值／錯世代／同 ID 換內容／失敗重試及
 生成的 owning-player reader 有來源回歸；[BDS 1.26.60.6 結果](../tests/native/held-snapshot/observed.json)
@@ -476,7 +501,7 @@ G203 的 27 格，不是已完成 4 格遷移。原型沿用真餐盤 planner、
 `clientEvaluated=false`、`channelViable=null`；可視範圍重入與幀時間仍未證明。
 客戶端需以同設定比較兩包的 FP／TP／第二玩家、晚加入、換維度、重登／重載及快切。
 原型為 hold-only，不驗食用、音效或 TACZ；正式 24 格 bank、玩法與所有存檔身份未動，
-不得因 API 綠燈啟動 T3.5-d 刪欄。整包候選仍交目前 S1 線串行處理。
+當時不得因 API 綠燈啟動 T3.5-d 刪欄；後續編碼順序已由 2026-11-01 擁有者指示變更，驗收與整包 S1 門檻保留。
 
 **C-1 宣告修正**：測試包 1.0.4 漏了 owning-player public 變數宣告，原生 API
 結果不涵蓋此缺口。1.0.5 由外部固定 Mojang 1.26.60.5 player 模板產生測試用
@@ -509,8 +534,8 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 | T3.5-a 盤點與預算 | 32 欄清單、權威資料、reader／writer、容量分析、目標版本 | **本次來源盤點及計畫完成**；完整整合包盤點仍待 T3.5-e，不宣稱實機驗收 |
 | T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 來源已實作 27 格；延遲／故障／雙手回歸及隔離 native writer 通過。完整家族／存檔／目標客戶端仍待；27 不是 TACZ 相容終點 |
 | T3.5-c 低槽通道原型 | 獨立測試包與明確通過／失敗結果，先做 C-1 | 四格隔離原型／原通道正對照、來源與 BDS API 驗證已備；真正客戶端 scope／重入／畫面仍待，尚未通過原型出口 |
-| T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 待前置；共用 bank 的所有必要 consumer 退場後才移除宣告。過程中不能按已搬 owner 數量虛報釋放槽位；目標 ≤6、上限 ≤8 仍受整體預算約束 |
-| T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 待前置；盤點當次完整包及 TACZ 精確版本、最終 schema ≤32，驗證整套模型、動作與其他 player components |
+| T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 2026-11-01 已移往共同快照 writer／reader，來源 4 格；保存鍵保留、由物品 metadata 重建。正式整包／真人仍待，不用來源完成代填驗收 |
+| T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 2026-11-01 已有自有 player extension 與原包雜湊固定的合成器；選定 TACZ 與煙火為 28 格。正式 private overlay、全集合及真人出口仍須完成 |
 
 若新通道不通過，保留已驗證的 27 槽改進並記錄阻塞原因；再評估煙火與 TACZ 的共同預算，不能將煙火 ≤8 目標宣告完成或削減餐盤功能。本次沒有修改 TACZ、Tavern、World Liquor 或家族共用包；跨 repo 的 owner 落實依 D6 與相應整合工作進行。
 

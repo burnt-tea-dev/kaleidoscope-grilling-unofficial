@@ -71,6 +71,9 @@ def configure_player(player):
     return player
 
 def build(output, player_template, control=False):
+    props=json.loads((SOURCE/'behavior_pack/entities/player.json').read_text())['minecraft:entity']['description']['properties']
+    if 'kaleidoscope_grilling:held_frame' in props:
+        raise ValueError('C-1 1.0.8 is archived; reproduce it from commit 5b7736adfb815a5829d2d7cb8ef318bb0c45073d. Export the formal paired runtime for current tests.')
     template=Path(player_template).read_bytes()
     if hashlib.sha256(template).hexdigest()!=PLAYER_TEMPLATE_SHA256:
         raise ValueError('Use the pinned official player template: '+PLAYER_TEMPLATE_URL)

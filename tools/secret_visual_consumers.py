@@ -90,6 +90,8 @@ def update_consumers(root, check=False):
                               lambda m: m[1] + json.dumps(json.loads('[' + m[2] + ']'), separators=(',', ':')),
                               rendered)
         write(p, rendered)
+    from held_snapshot_properties import generate
+    changes.extend(generate(check=check))
     return changes
 
 if __name__ == '__main__':

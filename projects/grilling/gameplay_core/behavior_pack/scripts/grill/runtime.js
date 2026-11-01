@@ -30,7 +30,7 @@ import {isExtinguishTool} from "./grill_input_core.js";
 import {ensureOilHandPublished} from "../oil_api_client.js";
 import {awardGleamingWithOil} from "../advancement/advancement_event_runtime.js";
 import {grillingConfig} from "../server_config_runtime.js";
-import {beginOilBrushVisual,cancelOilBrushVisual,oilBrushStopExpression} from "../oil_brush_visual_runtime.js";
+import {beginOilBrushVisual,cancelOilBrushVisual} from "../oil_brush_visual_runtime.js";
 import {suppressNumbVisual} from "../numb_visual_runtime.js";
 import {beginSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {commitTwoParty} from "./grill_transaction_core.js";
@@ -289,7 +289,7 @@ function handleGrill(block,player,hand='main'){
    // both the substitute and arm on switch/cancel or Java's 20-tick endpoint.
    try{
     if(grillingConfig().enableOilBrushVisuals){
-     if(beginOilBrushVisual(player,hand,oil.type)){player.playAnimation('animation.kg_oil_brush.player.'+hand,{controller:'kg_oil_brush',blendOutTime:0,stopExpression:oilBrushStopExpression(hand)});suppressNumbVisual(player,system.currentTick,20)}
+     if(beginOilBrushVisual(player,hand,oil.type))suppressNumbVisual(player,system.currentTick,20)
     }else{player.playAnimation('animation.kg_imm.player.brush.'+hand,{blendOutTime:.12});suppressNumbVisual(player,system.currentTick,29)}
    }catch{try{cancelOilBrushVisual(player)}catch{}}
   }return;

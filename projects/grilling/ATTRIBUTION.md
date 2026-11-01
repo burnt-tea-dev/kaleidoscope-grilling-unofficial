@@ -116,3 +116,7 @@ Adaptations are Java-to-Bedrock coordinate/UV conversion, source-pixel atlas pac
 The original [Mojang Bedrock samples license](notices/Mojang-bedrock-samples-LICENSE.md), [Cookery palette attribution](notices/Java-Cookery-palette-ATTRIBUTION.md), and [placed-asset attribution](notices/placed-assets-ATTRIBUTION.md) retain their exact original bytes. They continue to apply to the referenced source material and surviving derived assets; retiring authoring tools does not change those rights.
 
 The Mojang fluid reference came from `Mojang/bedrock-samples@46ba6ea985fb5a92d79a9419198f10dda14c199d` for Bedrock `1.26.50.4`. Its source files and the placed-asset provenance remain available in the [archived fixtures](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/tree/d7adcef6fbeb9e5aa58b5a6e078bde79a6532cdd/development/gameplay_core/fixtures). These archives are historical references, not build inputs or evidence of client acceptance.
+
+## Bound-bone camera reference
+
+The held-plate camera fitting tool uses the coordinate model published by Dofes in [blockbench-bedrock-attachable](https://github.com/Dofes/blockbench-bedrock-attachable/blob/0dbcc4919b2152f81606a7a1bb4e11b292e0ceac/plugins/bedrock_attachable/bedrock_attachable.js), Copyright 2026 Dofes, Apache-2.0, alongside the Bedrock Wiki attachables guide. The preview is an analytical aid; rendered acceptance is recorded separately. Original Java plate assets and their existing license are retained.

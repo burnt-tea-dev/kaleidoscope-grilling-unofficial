@@ -1,3 +1,4 @@
+import {flushHeldVisual} from '../held_visual_transport.js';
 import {clearEatingPresentation,updatePlayerPresentation,flushPlayerPresentation} from '../core/player_props.js';
 import {WOK_FOOD_IDS} from "./wok_food_core.js";
 import {STOCKPOT_FOOD_IDS} from "./stockpot_food_core.js";
@@ -335,6 +336,9 @@ syncSlimeHeld(p,slimeFrame);
    // A replaced/switching serving must not leave a projected arm on another item.
    clearEatingPresentation(p);
   }else hideJavaEatingHud(p);
+  // Slime and oil motion keep their existing one-tick cadence. The five-tick
+  // inventory dispatcher and this loop share one publisher and refresh budget.
+  try{flushHeldVisual(p,system.currentTick)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling held snapshot retry] '+error)}
   // A terminal reset may fail after the use session has already ended. Retry
   // its desired presentation through this existing player tick, even at rest.
   try{flushPlayerPresentation(p)}catch(error){if(system.currentTick%20===0)console.warn('[Grilling presentation retry] '+error)}
