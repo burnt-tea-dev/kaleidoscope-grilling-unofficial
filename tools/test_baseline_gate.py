@@ -14,6 +14,9 @@ class BaselineGateTests(unittest.TestCase):
   for side in ['BP','RP']:
    root=self.root/'runtime'/side;root.mkdir(parents=True)
    (root/'manifest.json').write_text(json.dumps({'header':{'uuid':side.lower(),'version':[1,0,0]},'modules':[{'version':[1,0,0]}]}));(root/'content.json').write_text('{}')
+   # Every independently installable pack must carry its own applicable legal notices.
+   for name in (['LICENSE-CODE','LICENSE-ASSETS','THIRD_PARTY_NOTICES.md'] if side=='BP' else ['LICENSE-ASSETS','THIRD_PARTY_NOTICES.md']):
+    (root/name).write_text('fixture legal notice\\n')
   self.target={'repository':'fixture-org/owned','repository_id':1,'owner':{'login':'fixture-org','id':2,'type':'Organization'},'private':False,'logical_runtime_repository':'fixture/owned'}
   (self.root/'.repo-target.json').write_text(json.dumps(self.target))
   self.config['source_trees'],self.files=gate.validate(self.config)
