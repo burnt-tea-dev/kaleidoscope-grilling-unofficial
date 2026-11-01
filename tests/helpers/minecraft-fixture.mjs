@@ -248,6 +248,7 @@ export function createFixture(options = {}) {
   function eventGroup(prefix) {
     return new Proxy({}, {get(target, event) {
       if (typeof event !== 'string') return target[event];
+      if (prefix === 'world.afterEvents' && event === 'scriptEventReceive') throw new Error('scriptEventReceive belongs to system.afterEvents');
       if (!target[event]) {
         const callbacks = [];
         f.subscribers.set(`${prefix}.${event}`, callbacks);
