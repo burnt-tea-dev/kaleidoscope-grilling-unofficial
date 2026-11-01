@@ -18,7 +18,7 @@ Exact source revisions, paths, per-file hashes, conversion operations and attrib
 | Original Java gameplay code and code adaptations | BSD-3-Clause | `data/java/LICENSE-CODE` |
 | Original Grilling artwork and adapted artwork | CC BY-NC-SA 4.0 | `data/java/LICENSE-ASSETS` |
 | Reused Cookery artwork | CC BY-NC-SA 4.0, with its original copyright retained | `data/java/LICENSE-ASSETS` and `projects/grilling/ATTRIBUTION.md` |
-| New offline Python tools and tests | Project-specific tool license | `LICENSE-TOOLS` |
+| New offline Python tools and tests | Project-specific tool license | `projects/grilling/LICENSE-TOOLS` |
 | Shared Core SDK helpers | BSD-3-Clause | https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/LICENSE |
 | Font conversions and embedded font assets | Their own font license; do not treat as Grilling artwork | `runtime/RP/font/NOTICE-Unifont.txt`, `art/fonts/README.md` and the retained Noto notice |
 | Mojang/Microsoft game assets, if referenced | Original publisher terms; not relicensed here | Relevant source/provenance records |
