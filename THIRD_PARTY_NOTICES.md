@@ -33,3 +33,13 @@ Exact source revisions, paths, per-file hashes, conversion operations and attrib
 6. Do not imply endorsement by the original authors, Mojang or Microsoft.
 
 For a release-specific check, compare the exact generated BP/RP contents against the provenance manifest and the license map above. If a file's source or redistribution basis is unknown, withhold that file from the release until it is resolved.
+
+## Release package notice gate
+
+The canonical BP/RP source trees currently do not carry the applicable license files, even though the repository contains them. A repository-level notice does not travel with an exported pack.
+
+Public release packaging is blocked until the next canonical BP/RP each contains:
+- BP: `LICENSE-CODE` (from `data/java/LICENSE-CODE`), `LICENSE-ASSETS` (from `projects/grilling/LICENSE-ASSETS`) and this `THIRD_PARTY_NOTICES.md`.
+- RP: `LICENSE-ASSETS` (from `projects/grilling/LICENSE-ASSETS`) and this `THIRD_PARTY_NOTICES.md`.
+
+The release-only `tools/baseline_gate.py check --release` enforces these files inside each independently installable pack. Do not bypass it or raise growth ceilings. Add the files to canonical runtime, advance the pack version, run the save-compatibility and growth-ratchet checks, then use `python tools/baseline_gate.py freeze` to update the append-only runtime identity. A successful build or source hash is not client acceptance.
