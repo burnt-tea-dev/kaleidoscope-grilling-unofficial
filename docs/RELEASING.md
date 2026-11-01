@@ -1,6 +1,16 @@
 # 安裝、驗證與發布
 
-## 重建期間的規則
+## 現行公開安裝與發布
+
+版本、原包雜湊及安裝命令以 [Core 現行配套](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g206-installation) 與本庫 [Release 請求](../.github/release-request.json) 為準。作者 Cookery／Immersive Eating 由玩家自行取得，在本機套用公開工具；Grilling 下載只含本庫自有 BP／RP。
+
+本輪 G206 已通過 canonical CI、完整家族同存檔首載／重開六條流程、原玩家與世界資料保存、真正故障回退，以及正式部署後 600 秒監看。公開三移植包與共用接入檔逐位元符合本輪整合候選。真人雙手／第一人稱／音效、C04及多人效能仍待驗；client=false、production_ready=false，不宣告 S1 完成。可選 TACZ 的完整私服配套另有精確相依與真人門檻，不在本輪 LIVE 中。
+
+## 2026-10-18 至 2026-10-27 重建歷史
+
+以下保留 G157／G181／G182 當時的規則與未完成狀態，不是現行發布指令。
+
+### 當時 P2 的規則
 
 P2 只整理來源與工具，不產生新 runtime 候選。`publication_request=false` 維持；CI 通過、bridge 匯出成功或 main 合併都不是發布授權。玩法／輸出改變才依計畫 bump 並同步 manifests／baseline；文件與工具沒有改輸出時不 bump、不部署。
 
@@ -22,7 +32,7 @@ G182 從 main 的 G181 延伸，吸收 PR #257 的四向烤架顯示修正、PR 
 
 同一份 G181 完整家族候選仍須依序驗證：一／二／三料正常取得與穿串、立即拆串、點火與三槽入爐、刷油扣三份、四次翻面、撒料扣三份、取出與主副手食用；涵蓋 23／24／25 tick 取消、重複完成、換槽／換手、最後一份與油壺／調料容器、正常停服重啟及保存抽查。Java 對照、音效、第一／第三人稱及 Creative 畫面另保留實際客戶端證據。完成前 `client=false`、`production_ready=false`。
 
-## 目前公開下載與安裝邊界
+## 2026-10-27 G157 發布與安裝邊界
 
 [A2.8.157 公開下載](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.157) 於 2026-10-27 發布；只包含自有 Grilling BP/RP，不含作者 Cookery 包或私人整合。
 
