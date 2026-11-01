@@ -233,7 +233,9 @@ recovery observations. Do not send another height-only probe.
     families and ensure one player's state never changes another player's gun.
 26. Hold a plate or supported tool offhand while holding a gun; test idle, aim,
     reload, switch and each interaction the engine permits. Check the correct
-    hand contents and existing eating effects; unsupported actions need a
+    hand contents and existing eating effects. With an occupied offhand, its
+    native/food route owns the left arm; an empty offhand retains TACZ's
+    two-handed curves. Test both branches and the transition. Unsupported actions need a
     precise platform limit, not silently disappearing effects or reduced capacity.
 27. Save/re-enter and fully restart with gun state plus offhand food/plate.
     Verify the original TACZ properties, events and saved ammo/attachments as
