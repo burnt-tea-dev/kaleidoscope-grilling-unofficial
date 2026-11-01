@@ -465,3 +465,24 @@ for hand,sign in [('right',1),('left',-1)]:
 print('old bottom clipping and new two-hand geometric fit passed; native client pending')`;
  assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
 });
+
+test('TACZ releases only occupied offhand channels and retains original keyframes, interpolation and right arm',()=>{
+ const source={animation_length:1,loop:true,bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
+ const code=`import sys,json
+sys.path.insert(0,'tools')
+from compose_held_player import reserve_offhand,repair_model
+v=json.loads(sys.argv[1]);result=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+try:repair_model(b'{}garbage');raise AssertionError('Unreviewed model accepted')
+except ValueError:pass
+print(json.dumps(result))`;
+ const output=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
+ assert.deepEqual(output.bones.rightArm,source.bones.rightArm);assert.equal(output.animation_length,1);
+ assert.equal(output.bones.leftArm.rotation['0.0'].lerp_mode,'catmullrom');
+ const run=(value,reserved)=>Function('q','return '+value)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
+ for(const reserved of [false,true]){
+  assert.deepEqual(output.bones.leftArm.rotation['0.0'].pre.map(x=>run(x,reserved)),reserved?[0,0,0]:[1,2,3]);
+  assert.deepEqual(output.bones.leftArm.rotation['0.0'].post.map(x=>run(x,reserved)),reserved?[0,0,0]:[4,5,6]);
+  assert.deepEqual(output.bones.leftArm.position.map(x=>run(x,reserved)),reserved?[0,0,0]:[10,11,12]);
+  assert.deepEqual(output.bones.leftArm.scale.map(x=>run(x,reserved)),reserved?[1,1,1]:[.8,1,1.2]);
+ }
+});

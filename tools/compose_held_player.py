@@ -12,12 +12,16 @@ import re
 import zipfile
 
 from held_snapshot_properties import BASE, configure_player
+from guards.jsonc import strip_jsonc
 
 TACZ_SHA256 = '1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486'
 TACZ_BP = 'TACZBehavi/entities/plalyer.json'
 TACZ_RP = 'TACZResour/entity/player.entity.json'
 FP = 'controller.render.player.first_person'
 ASSIGNMENT = re.compile(r'^\s*(?:v|variable)\.([\w]+)\s*=')
+OFFHAND_RESERVED = "q.is_item_equipped('off_hand')"
+BROKEN_MODEL = 'models/entity/7sf3y8pgug/5q9tvlnhgh/lmkxjsnrit/jfgkkrr92y/y7rwInQT2sq3l6gu.json'
+BROKEN_MODEL_SHA256 = '265db68ca89f6da9bb661d8f6d2ba7e515ad0a43fac1c83767b210590d92ddc0'
 
 
 def normalize(statement):
@@ -125,6 +129,70 @@ def compose(behavior, host_player, tacz_behavior=None, tacz_player=None):
     return bp, rp
 
 
+def reserve_offhand(animation):
+    """Release TACZ's additive left-arm channels while that hand is occupied.
+
+    The original curves, timestamps and interpolation remain in the false
+    branch. Neutral additive channels let vanilla/IE/Grilling own the offhand;
+    gun/right-arm channels and all ammo/event logic remain source-owned.
+    """
+    result = copy.deepcopy(animation)
+
+    def channel(value, neutral):
+        if isinstance(value, dict):
+            return {key: item if key == 'lerp_mode' else channel(item, neutral) for key, item in value.items()}
+        if isinstance(value, list):
+            return [channel(item, neutral) for item in value]
+        if type(value) in (int, float) or isinstance(value, str):
+            return '(' + OFFHAND_RESERVED + ' ? ' + str(neutral) + ' : (' + str(value) + '))'
+        raise ValueError('Unexpected TACZ animation channel')
+
+    for bone, pose in result.get('bones', {}).items():
+        if bone.lower() != 'leftarm':
+            continue
+        if result.get('override_previous_animation') or set(pose) - {'position', 'rotation', 'scale'}:
+            raise ValueError('Unreviewed TACZ left-arm composition')
+        for name in pose:
+            pose[name] = channel(pose[name], 1 if name == 'scale' else 0)
+    return result
+
+
+def repair_model(raw):
+    # The reviewed release accidentally appends an exact duplicate of its own
+    # trailing limb fragment after a complete 53-bone model. Accept only that
+    # exact input and duplicate suffix, never discard arbitrary trailing data.
+    if hashlib.sha256(raw).hexdigest() != BROKEN_MODEL_SHA256:
+        raise ValueError('TACZ model preimage differs')
+    text = raw.decode('utf-8-sig').lstrip()
+    value, end = json.JSONDecoder().raw_decode(text)
+    tail = text[end:].strip()
+    if not tail or not text[:end].rstrip().endswith(tail):
+        raise ValueError('Expected exact duplicated model suffix')
+    return value
+
+
+def compose_files(behavior, host_player, tacz_archive=None):
+    """One entry for CLI, local installer and private source generation."""
+    overrides = {}
+    gun_bp = gun_rp = None
+    if tacz_archive is not None:
+        if hashlib.sha256(Path(tacz_archive).read_bytes()).hexdigest() != TACZ_SHA256:
+            raise ValueError('TACZ archive differs from the reviewed release')
+        with zipfile.ZipFile(tacz_archive) as archive:
+            gun_bp = json.loads(archive.read(TACZ_BP))
+            gun_rp = json.loads(archive.read(TACZ_RP))
+            for name in archive.namelist():
+                if not name.startswith('TACZResour/animations/') or not name.endswith('.json'):
+                    continue
+                original = json.loads(strip_jsonc(archive.read(name).decode('utf-8-sig')))
+                changed = {**original, 'animations': {key: reserve_offhand(value) for key, value in original.get('animations', {}).items()}}
+                if changed != original:
+                    overrides['RP/' + name.removeprefix('TACZResour/')] = changed
+            overrides['RP/' + BROKEN_MODEL] = repair_model(archive.read('TACZResour/' + BROKEN_MODEL))
+    bp, rp = compose(behavior, host_player, gun_bp, gun_rp)
+    return {'BP/entities/player.json': bp, 'RP/entity/player.entity.json': rp, **overrides}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--host-player', type=Path, required=True)
@@ -138,16 +206,8 @@ def main():
     if args.output.exists():
         parser.error('Choose a new local output directory')
     behavior = json.loads((BASE / 'behavior_pack/entities/player.json').read_text())
-    gun_bp = gun_rp = None
-    if args.tacz:
-        if hashlib.sha256(args.tacz.read_bytes()).hexdigest() != TACZ_SHA256:
-            parser.error('TACZ archive differs from the reviewed release')
-        with zipfile.ZipFile(args.tacz) as archive:
-            gun_bp = json.loads(archive.read(TACZ_BP))
-            gun_rp = json.loads(archive.read(TACZ_RP))
-    bp, rp = compose(behavior, json.loads(raw), gun_bp, gun_rp)
+    files = compose_files(behavior, json.loads(raw), args.tacz)
     args.output.mkdir(parents=True)
-    files = {'BP/entities/player.json': bp, 'RP/entity/player.entity.json': rp}
     hashes = {}
     for name, value in files.items():
         path = args.output / name; path.parent.mkdir(parents=True, exist_ok=True)
@@ -155,7 +215,8 @@ def main():
         path.write_bytes(data); hashes[name] = hashlib.sha256(data).hexdigest()
     receipt = {'schema': 1, 'host_player_sha256': args.host_sha256,
                'tacz_archive_sha256': TACZ_SHA256 if args.tacz else None,
-               'player_properties': len(bp['minecraft:entity']['description']['properties']),
+               'player_properties': len(files['BP/entities/player.json']['minecraft:entity']['description']['properties']),
+               'tacz_resource_overrides': [name for name in files if name not in ('BP/entities/player.json', 'RP/entity/player.entity.json')],
                'outputs': hashes, 'client': False, 'production_ready': False}
     (args.output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(receipt))

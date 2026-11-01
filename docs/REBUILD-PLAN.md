@@ -413,6 +413,10 @@ provider 先準備兩手，既有 dispatcher 或一 tick 食物迴圈一次提�
 
 [`compose_held_player.py`](../tools/compose_held_player.py) 接收雜湊固定的宿主 player，選用 TACZ release 7854487／1.0.3 時核對完整原包 SHA。它保留事件、component groups、24 個 TACZ 屬性、槍械 aliases／FP及TP routes；目前兩包合計 **28 格**。其他包仍必須依當次完整集合另外盤點，不能把 28 當所有組合的保證。重複的原生每幀賦值只執行一次，空手使用進度保留宿主的除零防護，攻擊身體轉動按持槍狀態分流。現有 IE／煙火 first-person controller 仍由整包選定版本提供，且只在非槍械路由生效；不能靠包順序犧牲其中一包。
 
+TACZ 同持副手還需要骨骼仲裁：原包 452 個槍械動畫修改 `leftArm`。合成器對這些左臂通道加入原生 `q.is_item_equipped('off_hand')` 條件；副手有物品時 rotation／position 取加成中性 0、scale 取 1，空副手使用原數值，保留所有 keyframe／插值、右臂與槍械事件。這讓副手交回原版／IE／煙火路由，持槍兼拿盤時左臂會按副手持物呈現，而非同時握槍；實際槍械與進食畫面仍待整批驗證。依據為[官方逐骨骼動畫／Molang 通道規則](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/visualreference/actor_animation.v1.8.0?view=minecraft-bedrock-stable)，不是已測過此組合的社群結論。原包另有一個完整 53-bone 模型後重複附加自己的尾段，造成 JSON extra-data 錯誤；只在原包與該檔 SHA 同時固定、尾段逐字為原合法模型 suffix 時去除重複，完整模型與所有 bone 保留。
+
+CLI、Core 本機安裝器與私有來源應共同呼叫 `compose_files`；有 TACZ 時除了兩份 player，還需採用其 85 份動畫和一份模型修補，不能只呼叫舊的兩檔 `compose` 就宣告相容。所有作者內容僅在使用者本機生成；來源工具改動未更動已凍結的 G206 自有 BP/RP，TACZ／IE 的實際相容輸出另用新的配對身份。
+
 **已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
 
 第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
