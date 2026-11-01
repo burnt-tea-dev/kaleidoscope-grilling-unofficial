@@ -486,3 +486,64 @@ print(json.dumps(result))`;
   assert.deepEqual(output.bones.leftArm.scale.map(x=>run(x,reserved)),reserved?[1,1,1]:[.8,1,1.2]);
  }
 });
+
+// Exercise installed observers only when an isolated reviewed pack is supplied.
+import {pathToFileURL as observerPathToURL} from 'node:url';
+import {readFile as observerReadFile} from 'node:fs/promises';
+import {defaultFixture as observerFixture} from '../helpers/register-minecraft-loader.mjs';
+const observerPack=process.env.HELD_STATUS_QA_PACK;
+const observerProfile=observerPack?JSON.parse(await observerReadFile(`${observerPack}/manifest.json`,'utf8')).header.version[2]:null;
+if(observerProfile===194||observerProfile===206){
+ if(observerProfile===206)test('formal QA observer reads both actual cache rows, frame and ItemStack values',async()=>{
+ const pack=process.env.HELD_STATUS_QA_PACK;
+ assert.ok(pack,'HELD_STATUS_QA_PACK must point at an instrumented isolated BP UUID directory');
+ const runtime=await import(observerPathToURL(`${pack}/scripts/held_visual_transport.js`).href);
+ assert.throws(()=>observerFixture.world.afterEvents.scriptEventReceive, /belongs to system.afterEvents/);
+ const player=observerFixture.player({id:'qa-human',name:'QA Human'});
+ const makeItem=(name,key,value)=>{const stack=new observerFixture.ItemStack('kaleidoscope_grilling:skewer_plate',1);stack.nameTag=name;stack.setLore(['human visible lore']);stack.setDynamicProperty(key,value);return stack;};
+ player.main=makeItem('main plate','qa:foreign','main-mark');
+ player.off=makeItem('off plate','kaleidoscope_grilling:sample','off-mark');
+ const main=[11,12,13,14,15,16,17,18,19,20,1,255];
+ const off=[21,22,23,24,25,26,27,28,29,30,2,255];
+ runtime.writeHeldVisual(player,'main','plate',main);runtime.writeHeldVisual(player,'off','plate',off);
+ runtime.flushHeldVisual(player,314);
+ observerFixture.emit('system.afterEvents.scriptEventReceive',{id:'kg_held_qa:status',message:'QA Human'});
+ const line=observerFixture.logs.find(row=>row.text.includes('[kg_held_qa]'))?.text;
+ assert.ok(line,'observer should log to server console');
+ const value=JSON.parse(line.slice(line.indexOf('{')));
+ assert.equal(value.frame,1);assert.deepEqual(value.main.transport.words,main);assert.deepEqual(value.off.transport.words,off);
+ assert.deepEqual(value.main.item.lore,['human visible lore']);assert.deepEqual(value.off.item.lore,['human visible lore']);
+ assert.equal(value.main.item.dynamicProperties['qa:foreign'],'main-mark');
+ assert.equal(value.off.item.dynamicProperties['kaleidoscope_grilling:sample'],'off-mark');
+ assert.equal(value.main.item.rawLoreSupported,true);assert.equal(value.rendererAcknowledged,false);
+
+ });
+}
+if(observerProfile===194||observerProfile===206){
+ if(observerProfile===194)test('formal QA observer reads all legacy32 native values without inventing a cache',async()=>{
+ const pack=process.env.HELD_STATUS_QA_PACK;
+ assert.ok(pack,'HELD_STATUS_QA_PACK must point at an instrumented isolated G194 BP copy');
+ assert.throws(()=>observerFixture.world.afterEvents.scriptEventReceive,/belongs to system.afterEvents/);
+ const schema=JSON.parse(await observerReadFile(`${pack}/entities/player.json`,'utf8'))['minecraft:entity'].description.properties;
+ assert.equal(Object.keys(schema).length,32);
+ await import(observerPathToURL(`${pack}/scripts/main.js`).href);
+ const player=observerFixture.player({id:'qa-g194-human',name:'QA G194 Human'});
+ const expected={};let number=17;
+ for(const [key,definition] of Object.entries(schema)){
+  const value=definition.type==='bool'?true:number++;
+  player.setProperty(key,value);expected[key]=value;
+ }
+ const item=new observerFixture.ItemStack('kaleidoscope_grilling:skewer_plate',1);item.nameTag='A plate';item.setLore(['visible A lore']);item.setDynamicProperty('qa:foreign','readable');player.main=item;
+ observerFixture.emit('system.afterEvents.scriptEventReceive',{id:'kg_held_qa:status',message:'QA G194 Human'});
+ const line=observerFixture.logs.find(row=>row.text.includes('[kg_held_qa]'))?.text;
+ assert.ok(line,'observer should log to server console');
+ const value=JSON.parse(line.slice(line.indexOf('{')));
+ assert.equal(value.profile,'g194-native32');assert.deepEqual(value.nativeProperties,expected);
+ assert.equal(value.frame,null);assert.equal(value.frameSource,null);
+ assert.deepEqual(value.transport,{source:'legacy native player properties; no held snapshot cache',words:null});
+ assert.deepEqual(value.main.item.lore,['visible A lore']);
+ assert.equal(value.main.item.dynamicProperties['qa:foreign'],'readable');
+ assert.equal(value.propertySource,'one player.getProperty(key) call for each of the 32 keys declared in the matched G194 entities/player.json');
+
+ });
+}

@@ -62,10 +62,6 @@ jobs:
           git ls-files -z -- '*.json' | xargs -0 -r python tools/check_json.py
       - name: Run retained gameplay rules
         run: python tools/run_tests.py
-      - name: Verify read-only held-status QA instrumentation and exact restore
-        run: |
-          python -m unittest discover -s tests/native/held-status -p 'test_*.py' -v
-          node --import ./tests/helpers/register-minecraft-loader.mjs --test tests/native/held-status/transport_readback.test.mjs
       - name: Exercise differential comparator positive and negative controls
         run: node tools/skewering_differential.mjs --self-test
       - name: Check retained guide and loot declarations

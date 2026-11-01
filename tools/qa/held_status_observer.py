@@ -5,7 +5,6 @@ import argparse, hashlib, json, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BASELINE = ROOT / 'baseline.json'
 RELEASE_HISTORY = ROOT / 'release-history.json'
 SOURCE = ROOT / 'projects/grilling/gameplay_core/behavior_pack'
 RECEIPT_NAME = '.held-status-qa-receipt.json'
@@ -104,28 +103,23 @@ def safe_pack(arg: str, live_roots: list[str]) -> Path:
     return path
 
 def select_profile(pack: Path) -> dict:
-    config=json.loads(BASELINE.read_text())
     history=json.loads(RELEASE_HISTORY.read_text())
-    current_version=config['version'];current_id='.'.join(map(str,current_version))
-    current=config['source_trees']['BP']
-    if history.get(current_id,{}).get('BP')!=current:
-        fail('current G206 baseline does not match release-history.json')
-    if fingerprint(pack)==current:
+    current_version=[2,8,206]
+    current={'sha256': '7645665bac9ae1fa292f3589a6f69591be51dcc4fd0a46a60c5dfd58cc606a74', 'files': 788}
+    if history.get('2.8.206',{}).get('BP')!=current:
+        fail('G206 profile hash does not match release-history.json')
+    actual=fingerprint(pack)
+    if actual==current:
         manifest=pack/'manifest.json'
-        if not manifest.is_file(): fail('G206 manifest missing')
-        data=json.loads(manifest.read_text());expected=config['packs']['BP']
-        if (data.get('header',{}).get('uuid')!=expected['uuid']
-            or data.get('header',{}).get('version')!=current_version
-            or [m.get('version') for m in data.get('modules',[])]!=[current_version for _ in data.get('modules',[])]
-            or data.get('dependencies',[])!=expected['dependencies']):
-            fail('BP manifest identity or dependencies do not match reviewed G206 baseline')
+        if not manifest.is_file() or sha(manifest)!='2b812f54133b307a05bda55597f623862314c9b3c68a703ee25ab11885c92c06':
+            fail('G206 manifest bytes do not match the reviewed release profile')
         return {'id':'g206-cache24','version':current_version,'fingerprint':current,
                 'files':['scripts/held_visual_transport.js'],'source_file':'scripts/held_visual_transport.js',
                 'observer':G206_OBSERVER,'properties':()}
     legacy_version='2.8.194';legacy=G194_PROFILE
     if history.get(legacy_version,{}).get('BP')!=legacy['fingerprint']:
         fail('G194 profile hash does not match release-history.json')
-    if fingerprint(pack)==legacy['fingerprint']:
+    if actual==legacy['fingerprint']:
         manifest=pack/'manifest.json'
         if not manifest.is_file() or sha(manifest)!=legacy['manifest_sha256']:
             fail('G194 manifest bytes do not match the reviewed release profile')

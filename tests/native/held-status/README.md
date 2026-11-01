@@ -7,7 +7,7 @@
 | `g194-native32` | A 正式舊功能組，G194 | 逐欄讀 `entities/player.json` 宣告的 32 個 `player.getProperty` 值；frame/cache 明確為 `null`。 |
 | `g206-cache24` | B/C 正式組，G206 | 在 transport lexical scope 讀雙手 cache，各 12 words 和實際 frame。 |
 
-G194 的 BP 完整指紋 `f2b79963…5e47e0a` / 787 檔與 repo `release-history.json` 的 2.8.194 BP 記錄相同；manifest SHA256 `db5cf2c6…f0bc82c`。G206 的指紋從 repo baseline 與 release-history 同時核對。未知 bytes/profile 會被拒絕，不按版本猜測。
+G194 的 BP 完整指紋 `f2b79963…5e47e0a` / 787 檔與 repo `release-history.json` 的 2.8.194 BP 記錄相同；manifest SHA256 `db5cf2c6…f0bc82c`。G206 使用固定 2.8.206 完整指紋、manifest SHA 和 append-only release-history 核對；不會因主線後續包版本改變而改選另一個 runtime。未知 bytes/profile 會被拒絕，不按版本猜測。
 
 兩種 profile 都在 G BP API 脈絡直接讀原主/副手 ItemStack 的 type、amount、name、lore 和該 G context 可讀的全部 dynamic property。這是目前 G pack API 可讀的直接物品屬性；不表示能跨 UUID 讀取其他 pack 的私有資料。輸出不宣稱 renderer ACK。
 
