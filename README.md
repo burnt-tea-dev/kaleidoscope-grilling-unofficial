@@ -51,4 +51,4 @@ python3 tools/guards/growth_ratchet.py check
 
 原始程式碼採 [BSD-3-Clause](data/java/LICENSE-CODE)，原始及衍生美術採 [CC BY-NC-SA 4.0](projects/grilling/LICENSE-ASSETS)；工具另依各自授權。完整出處見 [ATTRIBUTION](projects/grilling/ATTRIBUTION.md) 與 [第三方授權總表](THIRD_PARTY_NOTICES.md)。
 
-**發布阻擋：** 目前 canonical BP/RP 尚未把授權文件一同封裝。倉庫內有授權文件不等於玩家安裝包已收到它們。`baseline_gate.py check --release` 現在會要求 BP 內含 `LICENSE-CODE`、`LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`，RP 內含 `LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`；完成封裝及下一個版本基線更新前，不得建立或發布新安裝包。詳見 [發布授權閘門](docs/RELEASE-LICENSE-GATE.md)。
+**發布阻擋：** 目前 canonical BP/RP 尚未把授權文件一同封裝。倉庫內有授權文件不等於玩家安裝包已收到它們。`baseline_gate.py check --release` 現在會要求 BP 內含 `LICENSE-CODE`、`LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`，RP 內含 `LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`；完成封裝及下一個版本基線更新前，不得建立或發布新安裝包。詳見 [第三方授權總表](THIRD_PARTY_NOTICES.md)。
