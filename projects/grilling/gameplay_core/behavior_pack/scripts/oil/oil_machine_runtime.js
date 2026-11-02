@@ -166,7 +166,12 @@ function syncVat(block,v){
 }
 function writeVat(block,v){
  if(!block||block.typeId!==BIG_VAT_ID)throw Error('Oil vat replaced or unavailable');const state=normalizeVat(v);
- setWorldProperty(world,key(VAT_PREFIX,block),JSON.stringify(state));syncVat(block,state);
+ const id=key(VAT_PREFIX,block),saved=JSON.stringify(state);
+ setWorldProperty(world,id,saved);
+ // Native writes return void. A silent rejected write must roll back the oil
+ // press/bucket transaction instead of paying residue for undelivered fluid.
+ if(getWorldProperty(world,id)!==saved)throw Error('Oil vat state write not confirmed');
+ syncVat(block,state);
 }
 function clearVat(block){setWorldProperty(world,key(VAT_PREFIX,block))}
 
