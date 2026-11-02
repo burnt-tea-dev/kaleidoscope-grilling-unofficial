@@ -16,6 +16,13 @@ Core 的本機工具會從使用者自行下載的乾淨 Cookery 及指定的公
 玩法 helpers 仍由本庫擁有。Core 不發送作者完整包；生成的 Cookery 僅供本機使用，
 不等同於安裝作者原包就具有全部整合能力。需要完整的停服備份和存檔驗證。
 
+2026-11-03 續審：目前選用的作者輸入仍是 Cookery1.6.4／CF9317031。
+以乾淨原包重跑 `tools/adapt_cookery162_host.py`，完整 archive SHA、10份原始檔、
+插入位置、JSON能力及生成檔雜湊均符合既有接入；作者仍缺少移除條件所列的
+worker／dropped-item磨坊入口及跨包出料、油壺等契約。本次保留所有接入與玩法，
+僅重發成對版本和審查資訊。實際期限由產生器的 `REVIEW_EXPIRES` 維護，
+仍須通過現有到期檢查，不能改日期或跳過檢查來安裝舊候選。畫面與聲音待真人驗收。
+
 ## 傳輸與確認
 
 作者伺服器腳本以 `system.sendScriptEvent` 發出 `kaleidoscope_grilling:integration_request`；回覆為 `kaleidoscope_grilling:integration_response`。僅處理 `sourceType === "Server"`；不接受實體來源、NPC 命令或真人冒充伺服器腳本。這是可信伺服器模組的介面，不是模組身份認證機制；有伺服器命令權限的管理員也能呼叫。

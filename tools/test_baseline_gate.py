@@ -367,6 +367,7 @@ class HeldStatusToolTests(unittest.TestCase):
   for name in ('LICENSE-CODE','LICENSE-ASSETS','LICENSE-CORE','ATTRIBUTION.md','THIRD_PARTY_NOTICES.md'):
    (self.pack/name).unlink(missing_ok=True)
   shutil.copy2(ROOT/'tests/native/held-status/g206-manifest.json',self.pack/'manifest.json')
+  shutil.copy2(ROOT/'tests/native/held-status/g206-board-api.json',self.pack/'host-extensions/board-api.json')
  def run_tool(self,operation,path=None):
   return subprocess.run([sys.executable,str(TOOL),operation,'--pack',str(path or self.pack),'--bds-stopped','--live-root',str(self.live_root)],capture_output=True,text=True)
  def test_install_restore_exact_original_and_refusals(self):
@@ -391,6 +392,13 @@ class HeldStatusToolTests(unittest.TestCase):
   self.assertTrue(report['instrumentation_restored']);self.assertTrue(report['full_baseline_restored'])
   self.assertEqual(digest(original),before)
   self.assertFalse((self.pack.parent/'.held-status-qa-receipt.json').exists())
+ def test_g208_install_restore_retains_complete_reviewed_pair(self):
+  shutil.rmtree(self.pack);shutil.copytree(OBSERVER_BP,self.pack)
+  result=self.run_tool('install');self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(json.loads(result.stdout)['profile'],'g208-cache24')
+  result=self.run_tool('restore');self.assertEqual(result.returncode,0,result.stderr)
+  report=json.loads(result.stdout)
+  self.assertTrue(report['g208_transport_restored']);self.assertTrue(report['full_baseline_restored'])
  def test_changed_instrumented_file_is_preserved_on_restore(self):
   self.assertEqual(self.run_tool('install').returncode,0)
   target=self.pack/'scripts/held_visual_transport.js';target.write_text(target.read_text()+'// operator edit\n')

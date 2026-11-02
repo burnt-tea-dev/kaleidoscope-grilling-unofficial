@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install or remove a read-only held-status observer for reviewed G194 or G206 BP copies."""
+"""Install or remove a read-only observer for reviewed G194, G206 or G208 BP copies."""
 from __future__ import annotations
 import argparse, hashlib, json, shutil
 from pathlib import Path
@@ -99,7 +99,7 @@ def safe_pack(arg: str, live_roots: list[str]) -> Path:
     if not path.is_dir(): fail('target must be an existing isolated BP directory copy')
     try: path.relative_to(SOURCE.resolve())
     except ValueError: pass
-    else: fail('canonical G206 source tree is forbidden')
+    else: fail('canonical source tree is forbidden')
     return path
 
 def select_profile(pack: Path) -> dict:
@@ -116,6 +116,15 @@ def select_profile(pack: Path) -> dict:
         return {'id':'g206-cache24','version':current_version,'fingerprint':current,
                 'files':['scripts/held_visual_transport.js'],'source_file':'scripts/held_visual_transport.js',
                 'observer':G206_OBSERVER,'properties':()}
+    renewed={'sha256':'b96dc3b5dec346a85750fc77c74da079136296de92f2a6c7c876a7a0f4f79ae5','files':793}
+    if history.get('2.8.208',{}).get('BP')!=renewed:
+        fail('G208 profile hash does not match release-history.json')
+    if actual==renewed:
+        if sha(pack/'manifest.json')!='689e127f464b24956814f4bc409b6ef08f3081683a2b75b6f6bbec0d88ba609d':
+            fail('G208 manifest bytes do not match the reviewed release profile')
+        return {'id':'g208-cache24','version':[2,8,208],'fingerprint':renewed,
+                'files':['scripts/held_visual_transport.js'],'source_file':'scripts/held_visual_transport.js',
+                'observer':G206_OBSERVER.replace('g206-cache24','g208-cache24').replace('G206 held','G208 held'),'properties':()}
     legacy_version='2.8.194';legacy=G194_PROFILE
     if history.get(legacy_version,{}).get('BP')!=legacy['fingerprint']:
         fail('G194 profile hash does not match release-history.json')
@@ -131,16 +140,16 @@ def select_profile(pack: Path) -> dict:
         if tuple(schema.keys())!=legacy['properties'] or len(schema)!=32:
             fail('G194 native player property schema differs from the reviewed 32-property profile')
         return legacy
-    fail('unknown BP: complete bytes must match the reviewed G194 or G206 release profile')
+    fail('unknown BP: complete bytes must match the reviewed G194, G206 or G208 release profile')
 
 def install(pack: Path) -> None:
     profile=select_profile(pack)
     receipt=pack.parent/RECEIPT_NAME;backup=pack.parent/BACKUP_NAME
     if receipt.exists() or backup.exists(): fail('existing observer receipt or backup; refusing overwrite')
     source_file=SOURCE/'scripts/held_visual_transport.js'
-    if profile['id']=='g206-cache24':
+    if profile['id'] in ('g206-cache24','g208-cache24'):
         target_file=pack/profile['source_file']
-        if not target_file.is_file() or sha(target_file)!=sha(source_file): fail('held_visual_transport.js differs from canonical G206 source')
+        if not target_file.is_file() or sha(target_file)!=sha(source_file): fail('held_visual_transport.js differs from the reviewed cache transport')
         additions={profile['source_file']:IMPORT+target_file.read_text(encoding='utf-8')+'\n'+profile['observer']}
     else:
         target_file=pack/profile['source_file']
@@ -170,7 +179,7 @@ def restore(pack: Path) -> None:
     info=json.loads(receipt.read_text())
     if info.get('schema')!=2 or Path(info.get('target','')).resolve()!=pack: fail('receipt schema or target mismatch')
     profile_id=info.get('profile')
-    if profile_id not in ('g194-native32','g206-cache24'): fail('receipt profile is not reviewed')
+    if profile_id not in ('g194-native32','g206-cache24','g208-cache24'): fail('receipt profile is not reviewed')
     required_files=['scripts/main.js'] if profile_id=='g194-native32' else ['scripts/held_visual_transport.js']
     files=info.get('files',{})
     if set(files)!=set(required_files): fail('receipt file list does not match reviewed profile')
@@ -183,14 +192,14 @@ def restore(pack: Path) -> None:
     if any(sha(pack/relative)!=files[relative]['original_sha256'] for relative in required_files): fail('restored source-file hash mismatch')
     actual=fingerprint(pack);full=actual==info['baseline']
     receipt.unlink();shutil.rmtree(backup)
-    print(json.dumps({'instrumentation_restored':True,'g206_transport_restored':profile_id=='g206-cache24','restored_files':required_files,'target':str(pack),
+    print(json.dumps({'instrumentation_restored':True,'g206_transport_restored':profile_id=='g206-cache24','g208_transport_restored':profile_id=='g208-cache24','restored_files':required_files,'target':str(pack),
       'full_baseline_restored':full,'baseline_expected':info['baseline'],'baseline_actual':actual,
       'other_files_preserved':not full},indent=2))
 
 def main() -> None:
     parser=argparse.ArgumentParser()
     parser.add_argument('operation',choices=['install','restore'])
-    parser.add_argument('--pack',required=True,help='isolated BP copy matching the full reviewed G194 or G206 release profile')
+    parser.add_argument('--pack',required=True,help='isolated BP copy matching the full reviewed G194, G206 or G208 release profile')
     parser.add_argument('--bds-stopped',action='store_true',help='caller assertion only; verify independently with assert_quiet')
     parser.add_argument('--live-root',action='append',required=True,help='caller-declared live root; repeat for host/container aliases')
     args=parser.parse_args()
