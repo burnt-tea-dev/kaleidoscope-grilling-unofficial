@@ -305,6 +305,76 @@ test('container probing distinguishes absent, incompatible, full and available v
   assert.equal(f.api.a26ProbePressContainer(f.press).status,status);
  }
 });
+
+test('press fills the first Java-position vat despite unordered POI results',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:10}});
+ f.vat.setType('minecraft:air');
+ const later=f.h.block(core.BIG_VAT_ID,{x:-4,y:62,z:4});f.seedVat(later,{});
+ const first=f.h.block(core.BIG_VAT_ID,{x:4,y:62,z:-4});f.seedVat(first,{});
+ // The boundary returns insertion order (later first), not Java order.
+ f.tick(10);
+ assert.equal(f.api.a26ReadVat(first).buckets,4);
+ assert.equal(f.api.a26ReadVat(later).buckets,0);
+ assert.equal(f.readPress().cakes,0);
+ assert.equal(f.h.drops.filter(drop=>drop.typeId==='minecraft:item'&&drop.itemStack?.typeId===core.OIL_RESIDUE_ID).length,1);
+});
+
+test('vat discovery reads only POI candidates and retains the Java search box',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4}});
+ f.vat.setType('minecraft:air');
+ const inside=f.h.block(core.BIG_VAT_ID,{x:4,y:66,z:4});f.seedVat(inside,{});
+ for(const location of [{x:-4,y:67,z:-4},{x:5,y:64,z:0},{x:0,y:64,z:5}]){
+  const b=f.h.block(core.BIG_VAT_ID,location);f.seedVat(b,{});
+ }
+ f.h.block(core.BIG_VAT_ID,{x:-4,y:62,z:-4},{dimension:'nether'});
+ const reads=[],getBlock=f.dimension.getBlock;
+ f.dimension.getBlock=location=>{reads.push({...location});return getBlock(location)};
+ assert.equal(f.api.a26ProbePressContainer(f.press).block,inside);
+ assert.deepEqual(reads,[inside.location]);
+ assert.deepEqual(f.h.poiQueries.at(-1),{dimension:'minecraft:overworld',filter:{name:core.BIG_VAT_ID},center:f.press.location,radius:4});
+ inside.setType('minecraft:air');reads.length=0;
+ assert.equal(f.api.a26ProbePressContainer(f.press).status,'NO_CONTAINER');
+ assert.deepEqual(reads,[]);
+});
+
+test('Java vat order resolves y then x ties and preserves failure precedence',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4}});f.vat.setType('minecraft:air');
+ const positions=[{x:-2,y:65,z:-1},{x:2,y:63,z:-1},{x:-2,y:63,z:-1}];
+ const vats=positions.map(location=>{const b=f.h.block(core.BIG_VAT_ID,location);f.seedVat(b,{});return b});
+ assert.equal(f.api.a26ProbePressContainer(f.press).block,vats[2]);
+ f.seedVat(vats[2],{type:'water',buckets:1});
+ assert.equal(f.api.a26ProbePressContainer(f.press).block,vats[1]);
+ f.seedVat(vats[1],{type:'canola',buckets:8});f.seedVat(vats[0],{type:'canola',buckets:8});
+ assert.deepEqual(f.api.a26ProbePressContainer(f.press),{status:'FULL',block:vats[0]});
+ f.seedVat(vats[1],{type:'water',buckets:1});f.seedVat(vats[0],{type:'lava',buckets:1});
+ assert.deepEqual(f.api.a26ProbePressContainer(f.press),{status:'INCOMPATIBLE',block:vats[2]});
+});
+
+test('stale and unloaded POI candidates do not hide a later valid vat',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4}});
+ const manager=f.dimension.poiManager.blocks;
+ manager.getInSquare=()=>[{position:{x:-2,y:64,z:0}},{position:{x:-1,y:64,z:0}},{position:f.vat.location}];
+ const getBlock=f.dimension.getBlock;
+ f.dimension.getBlock=location=>{if(location.x===-1)throw Error('unloaded');return getBlock(location)};
+ assert.equal(f.api.a26ProbePressContainer(f.press).block,f.vat);
+});
+
+test('unavailable POI keeps the completed batch intact and recovery can retry',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16}});
+ const manager=f.dimension.poiManager;
+ delete f.dimension.poiManager;
+ assert.throws(()=>f.api.a26ProbePressContainer(f.press),/POI.*Beta APIs.*Points of Interest/);
+ f.tick(2);
+ assert.equal(f.readPress().cakes,4);assert.equal(f.readPress().progress,16);
+ assert.equal(f.readPress().waiting,false);assert.equal(f.readVat().buckets,0);
+ assert.equal(f.h.drops.length,0);
+ f.dimension.poiManager=manager;
+ f.h.faults.failNext(manager.blocks,'getInSquare',{error:Error('native query failure')});
+ assert.throws(()=>f.api.a26ProbePressContainer(f.press),/native query failure/);
+ assert.equal(f.readPress().cakes,4);assert.equal(f.readVat().buckets,0);
+ f.tick(21);
+ assert.equal(f.readPress().cakes,0);assert.equal(f.readVat().buckets,4);
+});
 test('deferred cake insertion refuses cancelled, removed and replaced press targets',async()=>{
  for(const change of ['air','same-type-placement','cancelled']){
   const f=await fixture({press:{}});f.setHand(f.item(core.OIL_CAKE_ID,2));

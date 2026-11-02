@@ -20,4 +20,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: python tools/baseline_gate.py check --release --history-base "${{ github.event.pull_request.base.sha || github.event.before }}"
-      - run: python tools/test_baseline_gate.py
+      - name: Test guards with the frozen G206 QA input
+        env:
+          SENLUO_QA_G206_ARCHIVE: ${{ runner.temp }}/grilling-g206.mcaddon
+        run: |
+          curl --fail --location --retry 3 https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/download/A2.8.206/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon --output "$SENLUO_QA_G206_ARCHIVE"
+          python tools/test_baseline_gate.py
