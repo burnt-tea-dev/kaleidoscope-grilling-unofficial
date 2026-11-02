@@ -350,6 +350,30 @@ test('Java vat order resolves y then x ties and preserves failure precedence',as
  assert.deepEqual(f.api.a26ProbePressContainer(f.press),{status:'INCOMPATIBLE',block:vats[2]});
 });
 
+
+test('a corrupted POI vat cannot be overwritten by a completed press before recovery',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:1}});
+ const vatKey=stateKey(VAT,f.vat);
+ const corrupted='{"type":"canola","buckets":"unreadable"}';
+ f.dp.set(vatKey,corrupted);
+ assert.throws(()=>f.api.a26ProbePressContainer(f.press),/Oil vat contents require recovery/);
+ f.tick(2);
+ assert.equal(f.dp.get(vatKey),corrupted,'native saved data must stay byte-identical');
+ assert.equal(f.readPress().cakes,4);
+ assert.equal(f.readPress().progress,16);
+ assert.equal(f.readPress().waiting,false);
+ assert.equal(f.drops.length,0);
+ assert.equal(f.registry().length,1,'retain the durable pending transfer');
+ f.dp.set(vatKey,JSON.stringify(core.normalizeVat({})));
+ f.tick(21);
+ assert.equal(f.readVat().buckets,4);
+ assert.equal(f.readPress().cakes,0);
+ assert.equal(f.drops.length,1);
+ f.tick(22);
+ assert.equal(f.readVat().buckets,4);
+ assert.equal(f.drops.length,1,'retry must settle exactly once');
+});
+
 test('stale and unloaded POI candidates do not hide a later valid vat',async()=>{
  const f=await fixture({vat:{},press:{cakes:4}});
  const manager=f.dimension.poiManager.blocks;
