@@ -27,6 +27,10 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 
 資源文字與指南資料提供 **English、简体中文、繁體中文**。資源文字跟隨 Minecraft 客戶端語言，指南由 Cookery 宿主呈現；部分指南標題及包資訊仍有本地化缺口，尚非全部介面都已翻譯。
 
+## dot 未發布候選驗收
+
+G210 油壓機與 POI 的**固定來源、家族相依、16 項真人／存檔／Cookery 測試、證據格式及未執行結果骨架**見 [dot 驗收交接清單](docs/DOT-OIL-POI-ACCEPTANCE.md)。這是待執行計畫，不是客戶端 PASS 或部署許可；真正整包候選需要匹配的 Cookery 宿主及實際計算的安裝包雜湊。
+
 ## 開發
 
 需要 Python 3 與 Node.js；CI 使用 Python 3.12／Node.js 22。正式來源在 [`projects/grilling/gameplay_core`](projects/grilling/gameplay_core/)，Java 配方、時長和效果資料在 [`data/java`](data/java/)。
