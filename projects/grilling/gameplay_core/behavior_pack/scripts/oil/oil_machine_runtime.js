@@ -152,7 +152,9 @@ function insertPressCake(block,p,hand,snapshot,state,next){
 }
 
 function readVat(block){
- try{const raw=getWorldProperty(world,key(VAT_PREFIX,block));return normalizeVat(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizeVat({})}
+ // A corrupt persisted vat is not empty. Reuse the strict snapshot reader used
+ // by the break transaction: never overwrite unreadable player fluid on POI hit.
+ return capturedVatState({raw:getWorldProperty(world,key(VAT_PREFIX,block))});
 }
 function syncVat(block,v){
  const state=normalizeVat(v);
