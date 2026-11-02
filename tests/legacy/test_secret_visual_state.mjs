@@ -552,3 +552,28 @@ if(observerProfile===194||observerProfile===206){
 
  });
 }
+
+test('oil-brush animation weights use initialized locals when the preview has no actor',()=>{
+ const code=`import sys,json
+sys.path.insert(0,'tools')
+from held_snapshot_properties import configure_player
+player={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','scripts':{}}}}
+print(json.dumps(configure_player(player)))`;
+ const description=JSON.parse(runPython('python3',['-c',code],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}))['minecraft:client_entity'].description;
+ const scripts=description.scripts;
+ const variables={};for(const statement of scripts.initialize)Function('v','variable',statement)(variables,variables);
+ const actor={has_property:()=>true,property:()=>7,is_item_name_any:slot=>slot==='slot.weapon.mainhand'};
+ Object.assign(variables,{kg_held_frame:7,kg_held_m11:225,kg_held_o11:225});
+ const updates=scripts.pre_animation.filter(line=>line.startsWith('v.kg_held_oil_brush_'));
+ assert.equal(updates.length,2);
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ const weights=Object.fromEntries(scripts.animate.flatMap(row=>Object.entries(row)));
+ const noActor=new Proxy({}, {get(){throw Error('actor unavailable in preview')}});
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_main)(variables,noActor)),true);
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_off)(variables,noActor)),false);
+ const fresh={};for(const statement of scripts.initialize)Function('v','variable',statement)(fresh,fresh);
+ for(const expression of Object.values(weights))assert.equal(Boolean(Function('v','q','return '+expression)(fresh,noActor)),false);
+ variables.kg_held_frame=6;
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
+});
