@@ -3,7 +3,7 @@ import {
  PRESS_MAX_CAKES,PRESS_REQUIRED_PROGRESS,PRESS_ANVIL_PROGRESS,PRESS_STONE_PROGRESS,PRESS_COOLDOWN_TICKS,
  PRESS_IMPACT_TICK,PRESS_COMPLETION_DELAY,PRESS_OUTPUT_BUCKETS,VAT_CAPACITY_BUCKETS,
  toolProgress,pressVisualStage,pressAddCake,impactPress,finishPressTransfer,
- normalizeVat,vatVisualLevel,vatInsert,vatExtract,potFillPlan,nearbyOffsets
+ normalizeVat,vatVisualLevel,vatInsert,vatExtract,potFillPlan,nearbyVatPositions
 } from '../../projects/grilling/gameplay_core/behavior_pack/scripts/oil/oil_machine_core.js';
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
 
@@ -21,6 +21,11 @@ t('vat visual renderer has Java four fill heights',()=>{assert.deepEqual([0,1,2,
 t('vat empties and clears fluid type',()=>{const x=vatExtract({type:'lava',buckets:1},'lava',1);assert.deepEqual(x.state,{type:'',buckets:0})});
 t('oil pot drains whole vat buckets in eight-point units',()=>{const p=potFillPlan({type:'canola',buckets:5},'',0);assert.deepEqual(p,{ok:true,type:'canola',buckets:5,points:40,nextCount:40});const q=potFillPlan({type:'canola',buckets:5},'canola',56);assert.equal(q.buckets,1);assert.equal(q.nextCount,64)});
 t('oil pot rejects mixed type and non-oil vat',()=>{assert.equal(potFillPlan({type:'secret_chili',buckets:2},'canola',8).ok,false);assert.equal(potFillPlan({type:'water',buckets:2},'',0).ok,false)});
-t('nearby scan exactly covers Java +/-4 +/-2 +/-4 box',()=>{const a=nearbyOffsets();assert.equal(a.length,9*5*9);assert.ok(a.some(x=>x.x===-4&&x.y===-2&&x.z===-4));assert.ok(a.some(x=>x.x===4&&x.y===2&&x.z===4))});
+t('POI candidates retain Java box corners and x-fastest order',()=>{
+ const center={x:20,y:64,z:-30};
+ const positions=[{x:24,y:66,z:-26},{x:20,y:67,z:-30},{x:25,y:64,z:-30},{x:20,y:64,z:-25},{x:16,y:62,z:-34},{x:24,y:62,z:-34},{x:20.5,y:64,z:-30},null];
+ assert.deepEqual(nearbyVatPositions(center,positions),[positions[4],positions[5],positions[0]]);
+ assert.equal(positions[0].z,-26);
+});
 
 console.log(JSON.stringify({passed:n,failed:0,scope:'A2.6 Oil Press + Big Vat Java parity core'}));

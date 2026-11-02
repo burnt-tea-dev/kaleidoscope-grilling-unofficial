@@ -16,6 +16,18 @@ class BridgeProjectTests(unittest.TestCase):
     def test_current_project(self):
         self.assertEqual(len(guard.check()['packs']), 2)
 
+    def test_poi_runtime_rejects_missing_or_disabled_world_experiments(self):
+        load = guard.load
+        for experiments in ({'gametest': True}, {'gametest': True, 'poi': False}, {'poi': True}):
+            def missing(path):
+                value = load(path)
+                if path == guard.ROOT / 'baseline.json':
+                    value['required_experiments'] = experiments
+                return value
+            with self.subTest(experiments=experiments), patch.object(guard, 'load', missing):
+                with self.assertRaisesRegex(AssertionError, 'world experiment/API mismatch'):
+                    guard.check()
+
     def test_current_project_rejects_invalid_executable_declarations(self):
         load = guard.load
         baseline = load(guard.ROOT / 'baseline.json')
