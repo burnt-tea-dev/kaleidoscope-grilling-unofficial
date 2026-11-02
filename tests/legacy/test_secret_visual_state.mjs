@@ -466,27 +466,32 @@ print('old bottom clipping and new two-hand geometric fit passed; native client 
  assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
 });
 
-test('TACZ releases only occupied offhand channels and retains original keyframes, interpolation and right arm',()=>{
- const source={animation_length:1,loop:true,bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
+test('TACZ keeps cubic keyframes constant and releases the occupied arm through animation weight',()=>{
+ const source={animation_length:1,loop:true,sound_effects:{'0.5':{effect:'reload'}},bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
  const code=`import sys,json
 sys.path.insert(0,'tools')
-from compose_held_player import reserve_offhand,repair_model
-v=json.loads(sys.argv[1]);result=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+from compose_held_player import reserve_offhand,compose_arm_routes,repair_model
+v=json.loads(sys.argv[1]);body,arm=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+player={'minecraft:client_entity':{'description':{'animations':{'reload':'animation.gun.reload'},'scripts':{'animate':[{'reload':'v.reload'},'other']}}}}
+controllers={'gun':{'animation_controllers':{'controller.animation.gun':{'states':{'reload':{'animations':[{'reload':'v.gun'}],'transitions':[{'hold':'q.any_animation_finished'}]}}}}}}
+compose_arm_routes(player,controllers,{'animation.gun.reload':'animation.gun.reload.kg_left_arm'})
 try:repair_model(b'{}garbage');raise AssertionError('Unreviewed model accepted')
 except ValueError:pass
-print(json.dumps(result))`;
- const output=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
- assert.deepEqual(output.bones.rightArm,source.bones.rightArm);assert.equal(output.animation_length,1);
- assert.equal(output.bones.leftArm.rotation['0.0'].lerp_mode,'catmullrom');
- const run=(value,reserved)=>Function('q','return '+value)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
- for(const reserved of [false,true]){
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].pre.map(x=>run(x,reserved)),reserved?[0,0,0]:[1,2,3]);
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].post.map(x=>run(x,reserved)),reserved?[0,0,0]:[4,5,6]);
-  assert.deepEqual(output.bones.leftArm.position.map(x=>run(x,reserved)),reserved?[0,0,0]:[10,11,12]);
-  assert.deepEqual(output.bones.leftArm.scale.map(x=>run(x,reserved)),reserved?[1,1,1]:[.8,1,1.2]);
- }
+print(json.dumps([body,arm,player,controllers]))`;
+ const [body,arm,player,controllers]=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
+ assert.deepEqual(body.bones,{rightArm:source.bones.rightArm});
+ assert.deepEqual(arm.bones,{leftArm:source.bones.leftArm});
+ assert.deepEqual(body.sound_effects,source.sound_effects);assert.equal(arm.sound_effects,undefined);
+ assert.equal(body.animation_length,1);assert.equal(arm.animation_length,1);assert.equal(arm.loop,true);
+ const run=reserved=>Function('q','return '+arm.blend_weight)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
+ assert.equal(run(false),1);assert.equal(run(true),0);
+ const description=player['minecraft:client_entity'].description;
+ assert.equal(description.animations.reload_kg_left_arm,'animation.gun.reload.kg_left_arm');
+ assert.deepEqual(description.scripts.animate,[{reload:'v.reload'},{reload_kg_left_arm:'v.reload'},'other']);
+ const state=controllers.gun.animation_controllers['controller.animation.gun'].states.reload;
+ assert.deepEqual(state.animations,[{reload:'v.gun'},{reload_kg_left_arm:'v.gun'}]);
+ assert.deepEqual(state.transitions,[{hold:'q.any_animation_finished'}]);
 });
-
 // Exercise installed observers only when an isolated reviewed pack is supplied.
 import {pathToFileURL as observerPathToURL} from 'node:url';
 import {readFile as observerReadFile} from 'node:fs/promises';
