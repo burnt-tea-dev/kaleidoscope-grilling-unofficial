@@ -554,7 +554,7 @@ if(observerProfile===194||observerProfile===206){
  });
 }
 
-test('oil-brush animation weights use initialized locals when the preview has no actor',()=>{
+test('oil-brush pre-animation and weights skip actor queries in UI previews',()=>{
  const code=`import sys,json
 sys.path.insert(0,'tools')
 from held_snapshot_properties import configure_player
@@ -563,7 +563,7 @@ print(json.dumps(configure_player(player)))`;
  const description=JSON.parse(runPython('python3',['-c',code],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}))['minecraft:client_entity'].description;
  const scripts=description.scripts;
  const variables={};for(const statement of scripts.initialize)Function('v','variable',statement)(variables,variables);
- const actor={has_property:()=>true,property:()=>7,is_item_name_any:slot=>slot==='slot.weapon.mainhand'};
+ const actor={is_in_ui:0,has_property:()=>true,property:()=>7,is_item_name_any:slot=>slot==='slot.weapon.mainhand'};
  Object.assign(variables,{kg_held_frame:7,kg_held_m11:225,kg_held_o11:225});
  const updates=scripts.pre_animation.filter(line=>line.startsWith('v.kg_held_oil_brush_'));
  assert.equal(updates.length,2);
@@ -572,6 +572,14 @@ print(json.dumps(configure_player(player)))`;
  const noActor=new Proxy({}, {get(){throw Error('actor unavailable in preview')}});
  assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_main)(variables,noActor)),true);
  assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_off)(variables,noActor)),false);
+ // A preview can run the update phase after an actor-backed world frame.
+ // Only the native UI flag is available; every actor lookup must be skipped.
+ const preview=new Proxy({}, {get(_target,key){if(key==='is_in_ui')return 1;throw Error('actor unavailable in preview update')}});
+ for(const statement of updates)Function('v','q',statement)(variables,preview);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
+ assert.equal(Boolean(variables.kg_held_oil_brush_off_active),false);
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),true);
  const fresh={};for(const statement of scripts.initialize)Function('v','variable',statement)(fresh,fresh);
  for(const expression of Object.values(weights))assert.equal(Boolean(Function('v','q','return '+expression)(fresh,noActor)),false);
  variables.kg_held_frame=6;
