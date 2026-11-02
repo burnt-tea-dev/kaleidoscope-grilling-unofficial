@@ -2,6 +2,8 @@
 
 Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串、刷油與調味，到烤製、擺盤和享用料理。
 
+**繁體中文** · [简体中文](README.zh-CN.md) · [English](README.en.md)
+
 [下載 / Downloads](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases) · [更新紀錄](CHANGELOG.md)
 
 ## 功能
