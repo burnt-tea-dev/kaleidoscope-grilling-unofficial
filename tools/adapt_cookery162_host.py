@@ -15,6 +15,7 @@ SPEC = BP / 'host-extensions/board-api.json'
 ARCHIVE_SHA256 = 'aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83'
 HOST_UUID = 'd5c48842-1a22-4965-861e-d8fad49b1e00'
 RESOURCE_UUID = '66b445af-a1d0-4b2f-bd40-a0b13e17a8f0'
+REVIEW_EXPIRES = '2026-11-24'
 PREFIX = 'Kaleidoscope Cookery v1.6.4 [BP]/'
 ORIGINALS = {
     'scripts/api/extensionRegistry.js': '7e626c498f320a24aef19caf8191921bd21ec15e3299ef97ea852303bfadf3bc',
@@ -41,7 +42,7 @@ def generate(archive, declaration=None):
     spec = json.loads(SPEC.read_text()) if declaration is None else json.loads(json.dumps(declaration))
     # The canonical declaration owns the current SDK identity. Reproduction
     # must not silently downgrade a newer reviewed declaration to an old ID.
-    spec.update(host_uuid=HOST_UUID, archive_sha256=ARCHIVE_SHA256,
+    spec.update(host_uuid=HOST_UUID, archive_sha256=ARCHIVE_SHA256, expires=REVIEW_EXPIRES,
                 original_files=ORIGINALS)
     # The author now accepts extension recipes by hand. Keep only the worker
     # and dropped-item admission hooks that the clean release still lacks.
@@ -56,7 +57,7 @@ def generate(archive, declaration=None):
                 and 'd.recipe.result' in op['anchor']):
             op['anchor'] = '    d.result=d.recipe.plainMeat?{outputs:[...d.recipe.outputs],carrier:""}:{id:d.recipe.result,count:d.recipe.count,carrier:d.recipe.carrier};'
     spec['removal_condition'] = spec['removal_condition'].replace('Cookery 1.6.2', 'Cookery 1.6.4')
-    spec['authorization'] = 'Owner 2026-10-26 requests the latest stable Senluo family for a fresh world. Adapt the existing public host API to clean Cookery 1.6.4 without publishing author scripts; keep unrelated reconstruction work separate.'
+    spec['authorization'] = 'Owner standing S1 repair/deployment authorization, continued 2026-11-03: re-review existing public host hooks against the exact clean Cookery1.6.4 archive before adoption. Preserve author ownership and all original preimages; full-family/save/rollback gates and actual client acceptance remain separate.'
     completed = {}
     with zipfile.ZipFile(archive) as z:
         manifest = json.loads(z.read(PREFIX + 'manifest.json'))
