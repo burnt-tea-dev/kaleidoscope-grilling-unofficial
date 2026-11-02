@@ -372,6 +372,21 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 6. 棘輪 tighten：`script_modules`、`version_prefixed_script_modules`、`global_*`、`run_intervals` 應下降。
 7. 打包後在 **staging** 跑該域的人工檢查清單（§9.5），結果貼在 PR。
 
+#### T3.3 油壓機 POI 搜尋修復（2026-11-02）
+
+**待 dot 客戶端與完整配套驗收的執行入口：** [G210 POI／油機 16 項逐案清單與空白報告](../DOT-OIL-POI-ACCEPTANCE.md)。此清單分開註明原生、家族、真人與效能，未執行不能作為 PASS；所有真實世界操作都先走 §5 停服備份／staging 流程。
+
+依擁有者本次「規劃修復並提交修復 PR」要求，在既有 `oil/` owner 內替換找缸路徑。此為有界功能修復，不以此宣告 T3.3 全域搬遷完成。
+
+1. **確認原生契約**：固定 Bedrock 1.26.60.6 與 `@minecraft/server` 2.12.0-beta；自訂定義放於 `poi/blocks/`，`format_version` 為 `1.26.40`。世界需要 `gametest`（Beta APIs）及 `poi`（興趣點）兩項實驗。使用零 tickets 的大缸類型，只查位置，不引入占用／租約或持久 POI 登記。
+2. **替換搜尋並修正 Java 順序**：移除 405 格逐格 `getBlock`，使用 `getInSquare` 一次取候選，再限制 X/Z ±4、Y ±2；依 `BlockPos.betweenClosed` 的 z→y→x 升序選缸，x 變化最快。保留空／異液／滿缸判定、第一個可用缸、首個異液與最後滿缸的錯誤優先規則。
+3. **保留資料與故障語義**：候選逐一核實真方塊，略過已拆除或不可讀的格。原生索引可能回傳已卸載區塊的位置，不能據座標直接認定方塊可讀；26.60 的 `PoiBlockInstance.type` 實測為 undefined，因此不用它判斷類型。整個 POI 查詢失敗時拋出明確配置錯誤，不當成無容器、不消耗完成批次，由原排程恢復重試。油量、油餅、殘渣、交易回滾、保存鍵及 UUID 仍由現有 owner 管理。
+4. **驗證與提交**：擴充既有油機測試，覆蓋多缸優先、盒界、異維度、失效位置與查詢恢復；執行保存／棘輪及完整保留玩法檢查，更新配對來源版本和基線後提交一個 PR。不增加逐版驗證器、平行掃描、全域 listener 或排程。
+
+來源與 API 邊界回歸已實作；隔離 BDS 1.26.60.6／build 52886190 以原樣大缸／油壓機定義、POI 與 production scripts 執行真正 `a26ProbePressContainer`，確認 Java 順序、滿缸／異液優先、範圍、拆除及卸載後重載，查詢前後保存資料不變。另在無 POI 定義且實驗關閉時保存自訂方塊，再加入定義並啟用實驗；重啟只讀，舊區塊載入後自動入索引。這是隔離 API 與查缸整合結果；完整配套同候選出油／存檔重啟、真人操作與效能仍須分別驗收，保持 draft、`client=false`、`production_ready=false`。Java 其他模組的 fluid-handler 第二輪仍是既有平台缺口，本 PR 不宣稱已補齊。
+
+**後續資料安全回歸（2026-11-02，G209／G210）**：先以紅測試重現 G208 把損壞大缸 dynamic property 當空缸的風險（1 例），以及動態屬性 setter 靜默未寫入時油機可能已結算、取桶可能已變更玩家物品的風險（2 例）。修復均整合於既有 `oil/oil_machine_runtime.js`：G209 重用嚴格 `capturedVatState`；G210 在共用 `writeVat` 中讀回核對保存結果，未確認就由原本 `oilTransaction` 回滾及持久排程重試。最新 G210 CI 為 883／883 玩法測試、5／5 Actions 通過；修復前兩組故障測試均已實際失敗過。僅追加 G209、G210 版本與雜湊，保留 G208 舊條目、所有動態屬性鍵及 BP／RP UUID，不新增修復覆蓋包。**前述 BDS 1.26.60.6 探針只屬 G208 來源**，尚未對 G210 重跑完整原生油壓交易、Cookery 配套、存檔升級／回退、真人或效能驗收，保持 Draft 與 `client=false`、`production_ready=false`。
+
 **T3.4 進食系統重寫**（跨 skewer/food/plate，單獨一個 PR，高風險）
 - 刪除 `prepareEatingItems` 換手持物品的機制；進食動畫選擇改為：`itemStartUse` 時寫 player property（profile、hand、random alt），attachable 動畫控制器讀 `q.property`（必要時 `c.owning_entity`）。
 - Java 事實（`MultiBiteSkewerItem`，已核對原碼）：一次連續使用吃完整串；`AnimationProfile` 決定時長與每口的秒數——ONE 90 tick、TWO 90、THREE 100、THREE_ALT 90、FOUR 90；THREE_RANDOM 在每次 `use` 抽選 THREE（100）或 THREE_ALT（90），只把本次選擇寫到 active serving 的 custom data `SkewerEatingProfile`；停止／完成／關閉動畫時清除，堆疊的其餘份數也清除。它不是永久綁定物品的隨機屬性；可見的口數＝已過秒數跨過幾個 bite 秒數；放開時已使用 ≥ 25 tick（`MINIMUM_EAT_TICKS`）即可結算；關閉進食動畫設定時時長為 25 tick。現行 `_java_three_alt`／`_native_plain` 影子 ID 就是為了讓 Bedrock 的原生 `use_duration`（綁在 item ID）跟著這些時長變。

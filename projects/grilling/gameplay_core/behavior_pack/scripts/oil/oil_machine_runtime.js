@@ -14,7 +14,7 @@ import {
  PRESS_OUTPUT_BUCKETS,VAT_CAPACITY_BUCKETS,OIL_POT_CAPACITY,OIL_BUCKET_POINTS,
  OIL_CAKE_ID,OIL_RESIDUE_ID,OIL_PRESS_ID,BIG_VAT_ID,
  toolProgress,pressVisualStage,normalizePress,pressAddCake,impactPress,finishPressTransfer,
- normalizeVat,vatVisualLevel,vatInsert,vatExtract,potFillPlan,nearbyOffsets
+ normalizeVat,vatVisualLevel,vatInsert,vatExtract,potFillPlan,nearbyVatPositions
 } from './oil_machine_core.js';
 import {COOKERY_EMPTY_ID as COOKERY_EMPTY,COOKERY_FILLED_ID as COOKERY_FILLED,readCookeryOilPot,buildCookeryOilPot} from './cookery_oil_pot_adapter.js';
 import {playerInventory as playerContainer,getMainHand as main,getOffHand as off,setMainHand as setMain,setOffHand as setOff,findHand as handFor,getHand as held,setHand,isCreative as creative} from '../core/player_io.js';
@@ -152,7 +152,9 @@ function insertPressCake(block,p,hand,snapshot,state,next){
 }
 
 function readVat(block){
- try{const raw=getWorldProperty(world,key(VAT_PREFIX,block));return normalizeVat(typeof raw==='string'?JSON.parse(raw):{})}catch{return normalizeVat({})}
+ // A corrupt persisted vat is not empty. Reuse the strict snapshot reader used
+ // by the break transaction: never overwrite unreadable player fluid on POI hit.
+ return capturedVatState({raw:getWorldProperty(world,key(VAT_PREFIX,block))});
 }
 function syncVat(block,v){
  const state=normalizeVat(v);
@@ -164,7 +166,12 @@ function syncVat(block,v){
 }
 function writeVat(block,v){
  if(!block||block.typeId!==BIG_VAT_ID)throw Error('Oil vat replaced or unavailable');const state=normalizeVat(v);
- setWorldProperty(world,key(VAT_PREFIX,block),JSON.stringify(state));syncVat(block,state);
+ const id=key(VAT_PREFIX,block),saved=JSON.stringify(state);
+ setWorldProperty(world,id,saved);
+ // Native writes return void. A silent rejected write must roll back the oil
+ // press/bucket transaction instead of paying residue for undelivered fluid.
+ if(getWorldProperty(world,id)!==saved)throw Error('Oil vat state write not confirmed');
+ syncVat(block,state);
 }
 function clearVat(block){setWorldProperty(world,key(VAT_PREFIX,block))}
 
@@ -264,9 +271,19 @@ function fillPotFromVat(block,p,hand,item){
 }
 
 function scanVat(press){
+ let candidates;
+ try{
+  candidates=press.dimension.poiManager.blocks.getInSquare({name:BIG_VAT_ID},press.location,4);
+ }catch(error){
+  // A disabled experiment or failed query is not an empty search. Let the
+  // existing scheduler retry without settling/consuming the completed batch.
+  throw Error('Oil press POI lookup failed (requires Beta APIs and Points of Interest on Minecraft 1.26.60): '+error);
+ }
  let fallback={status:'NO_CONTAINER',block:null};
- for(const o of nearbyOffsets()){
-  let b;try{b=press.dimension.getBlock({x:press.x+o.x,y:press.y+o.y,z:press.z+o.z})}catch{continue}
+ // 26.60's instance.type can be undefined. The name filter finds candidates;
+ // re-reading the actual block also rejects stale or unloaded positions.
+ for(const position of nearbyVatPositions(press.location,candidates.map(p=>p.position))){
+  let b;try{b=press.dimension.getBlock(position)}catch{continue}
   if(!b||b.typeId!==BIG_VAT_ID)continue;const v=readVat(b);
   if(v.buckets>0&&v.type!=='canola'){
    if(fallback.status==='NO_CONTAINER')fallback={status:'INCOMPATIBLE',block:b};continue;

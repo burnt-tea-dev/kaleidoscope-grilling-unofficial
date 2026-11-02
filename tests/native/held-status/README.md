@@ -56,3 +56,5 @@ python3 tools/qa/held_status_observer.py restore \
 
 
 本機若要跑 G194 A 原包整合測試，先設定 `SENLUO_QA_CONTROL_ARCHIVE` 指向控制包 ZIP；未設定時只略過這項本機整合測試。
+
+G206 observer 的回歸測試使用[已發布的固定 G206 包](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/download/A2.8.206/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon)，由 `SENLUO_QA_G206_ARCHIVE` 指定。測試先核 SHA256 `383642abb93340a0aebed477a4fd099836850ee59c1c3737906d1387ed1bc222`，再取原始 BP；CI 會提供此檔。本機未指定時略過這組整合測試，其他 baseline guard 測試照跑。不能再把最新 BP 改回 G206 manifest 當舊版 fixture，也不放寬 observer 對未知包的拒絕。

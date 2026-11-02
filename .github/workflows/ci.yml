@@ -49,7 +49,10 @@ jobs:
           python tools/guards/save_compat.py check
           python tools/guards/growth_ratchet.py check
       - name: Check unchanged canonical baseline and guard regressions
+        env:
+          SENLUO_QA_G206_ARCHIVE: ${{ runner.temp }}/grilling-g206.mcaddon
         run: |
+          curl --fail --location --retry 3 https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/download/A2.8.206/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon --output "$SENLUO_QA_G206_ARCHIVE"
           python tools/baseline_gate.py check
           python tools/test_baseline_gate.py
           python tools/eating_owner_properties.py --check

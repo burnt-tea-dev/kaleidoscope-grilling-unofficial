@@ -363,10 +363,19 @@ class HeldStatusToolTests(unittest.TestCase):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
   self.parent=Path(self.temp.name)/'copy';self.parent.mkdir()
   self.live_root=self.parent/'declared-live';self.live_root.mkdir()
-  self.pack=self.parent/'behavior_packs'/'c68005c5-23ff-54e8-a3ff-da6349ad43c2';self.pack.parent.mkdir();shutil.copytree(OBSERVER_BP,self.pack)
-  for name in ('LICENSE-CODE','LICENSE-ASSETS','LICENSE-CORE','ATTRIBUTION.md','THIRD_PARTY_NOTICES.md'):
-   (self.pack/name).unlink(missing_ok=True)
-  shutil.copy2(ROOT/'tests/native/held-status/g206-manifest.json',self.pack/'manifest.json')
+  self.pack=self.parent/'behavior_packs'/'c68005c5-23ff-54e8-a3ff-da6349ad43c2';self.pack.mkdir(parents=True)
+  if self._testMethodName=='test_g194_zip_profile_install_readback_restore_when_fixture_archive_exists':return
+  # The observer intentionally accepts only its frozen QA profiles. A current
+  # BP with an old manifest is not G206 once gameplay source changes.
+  archive_value=os.environ.get('SENLUO_QA_G206_ARCHIVE')
+  if not archive_value:self.skipTest('set SENLUO_QA_G206_ARCHIVE to the released G206 mcaddon; CI supplies the pinned archive')
+  archive=Path(archive_value)
+  self.assertEqual(digest(archive),'383642abb93340a0aebed477a4fd099836850ee59c1c3737906d1387ed1bc222','G206 QA fixture archive differs from the reviewed release')
+  with zipfile.ZipFile(archive) as bundle:
+   for name in bundle.namelist():
+    if name.startswith('BP/') and not name.endswith('/'):
+     relative=Path(name[3:]);self.assertFalse(relative.is_absolute() or '..' in relative.parts)
+     target=self.pack/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(bundle.read(name))
  def run_tool(self,operation,path=None):
   return subprocess.run([sys.executable,str(TOOL),operation,'--pack',str(path or self.pack),'--bds-stopped','--live-root',str(self.live_root)],capture_output=True,text=True)
  def test_install_restore_exact_original_and_refusals(self):

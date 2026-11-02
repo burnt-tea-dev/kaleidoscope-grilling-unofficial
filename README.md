@@ -17,7 +17,7 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 
 1. 備份世界，從 **Releases** 下載 `.mcaddon`；GitHub 原始碼 ZIP 不是安裝包。
 2. 依該版說明取得指定版本的 **Cookery BP／RP 與相容宿主整合**，再啟用煙火的 BP／RP。
-3. 使用所選版本要求的 Minecraft 版本與實驗設定。開發主線已使用 Beta APIs，不能套用舊版安裝條件。
+3. 使用所選版本要求的 Minecraft 版本與實驗設定。此 POI 開發候選以 Bedrock 26.60／`@minecraft/server` 2.12.0-beta 驗證，須同時啟用 **Beta APIs（測試版 API）**及 **Points of Interest（興趣點）**；不能套用舊版安裝條件。兩項旗標記於 `baseline.json` 的 `required_experiments`。
 
 本輪完整公開配套請依 [Core 現行安裝步驟](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g206-installation) 取得精確版本，並在本機產生 Cookery 與 Immersive Eating 接入包。Core 工具提供共用 API 與玩家顯示接線，作者原包須自行取得；不需要下載私服整合或存檔。
 
@@ -26,6 +26,10 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 ## 語言
 
 資源文字與指南資料提供 **English、简体中文、繁體中文**。資源文字跟隨 Minecraft 客戶端語言，指南由 Cookery 宿主呈現；部分指南標題及包資訊仍有本地化缺口，尚非全部介面都已翻譯。
+
+## dot 未發布候選驗收
+
+G210 油壓機與 POI 的**固定來源、家族相依、16 項真人／存檔／Cookery 測試、證據格式及未執行結果骨架**見 [dot 驗收交接清單](DOT-OIL-POI-ACCEPTANCE.md)。這是待執行計畫，不是客戶端 PASS 或部署許可；真正整包候選需要匹配的 Cookery 宿主及實際計算的安裝包雜湊。
 
 ## 開發
 
