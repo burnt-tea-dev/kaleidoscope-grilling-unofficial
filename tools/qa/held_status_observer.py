@@ -3,10 +3,12 @@
 from __future__ import annotations
 import argparse, hashlib, json, shutil
 from pathlib import Path
+from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[2]
 RELEASE_HISTORY = ROOT / 'release-history.json'
 SOURCE = ROOT / 'projects/grilling/gameplay_core/behavior_pack'
+TOOL_IDENTITY = 'held-status-qa/2'
 RECEIPT_NAME = '.held-status-qa-receipt.json'
 BACKUP_NAME = '.held-status-qa-original'
 IMPORT = "import {EquipmentSlot,world,system} from '@minecraft/server';\n"
@@ -92,7 +94,9 @@ def fingerprint(root: Path) -> dict:
 def safe_pack(arg: str, live_roots: list[str]) -> Path:
     path=Path(arg).resolve()
     for root_arg in live_roots:
+        if not root_arg.strip(): fail('live roots must be nonempty actual directory paths')
         root=Path(root_arg).resolve()
+        if not root.is_dir(): fail('live root must be an existing directory')
         try: path.relative_to(root)
         except ValueError: continue
         fail('target is inside a caller-declared live root')
@@ -133,7 +137,7 @@ def select_profile(pack: Path) -> dict:
         return legacy
     fail('unknown BP: complete bytes must match the reviewed G194 or G206 release profile')
 
-def install(pack: Path) -> None:
+def install(pack: Path, guard: dict) -> None:
     profile=select_profile(pack)
     receipt=pack.parent/RECEIPT_NAME;backup=pack.parent/BACKUP_NAME
     if receipt.exists() or backup.exists(): fail('existing observer receipt or backup; refusing overwrite')
@@ -156,19 +160,25 @@ def install(pack: Path) -> None:
         target=pack/relative;dest=backup/relative;dest.parent.mkdir(parents=True,exist_ok=True)
         originals[relative]=sha(target);shutil.copy2(target,dest)
         target.write_text(content,encoding='utf-8')
-    payload={'schema':2,'profile':profile['id'],'mode':'read-only isolated QA instrumentation','baseline':profile['fingerprint'],
+    payload={'schema':2,'tool_identity':TOOL_IDENTITY,'guard':guard,'profile':profile['id'],'mode':'read-only isolated QA instrumentation','baseline':profile['fingerprint'],
       'files':{relative:{'original_sha256':originals[relative],'instrumented_sha256':sha(pack/relative)} for relative in profile['files']},
-      'bds_stopped':'caller_assertion_only; verify independently with assert_quiet','target':str(pack),
+      'bds_stopped':('caller_assertion_only; verify independently with assert_quiet' if guard['server_kind']=='bds' else None),'target':str(pack),
       'backup':str(backup)}
     receipt.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({'installed':True,'profile':profile['id'],'receipt':str(receipt),'observer':'kg_held_qa:status',
-      'bds_stopped':'caller_assertion_only; verify independently with assert_quiet'},indent=2))
+      'bds_stopped':('caller_assertion_only; verify independently with assert_quiet' if guard['server_kind']=='bds' else None)},indent=2))
 
-def restore(pack: Path) -> None:
+def restore(pack: Path, guard: dict) -> None:
     receipt=pack.parent/RECEIPT_NAME;backup=pack.parent/BACKUP_NAME
     if not receipt.is_file() or not backup.is_dir(): fail('matching receipt and original backup are required')
     info=json.loads(receipt.read_text())
     if info.get('schema')!=2 or Path(info.get('target','')).resolve()!=pack: fail('receipt schema or target mismatch')
+    saved_guard=info.get('guard')
+    if saved_guard is not None:
+        for key in ('server_kind','live_roots','no_live_roots'):
+            if saved_guard.get(key)!=guard[key]: fail('restore protection declaration differs from install')
+    elif guard['server_kind']!='bds' or guard['no_live_roots']:
+        fail('legacy receipt requires the original BDS/live-root procedure')
     profile_id=info.get('profile')
     if profile_id not in ('g194-native32','g206-cache24'): fail('receipt profile is not reviewed')
     required_files=['scripts/main.js'] if profile_id=='g194-native32' else ['scripts/held_visual_transport.js']
@@ -187,16 +197,58 @@ def restore(pack: Path) -> None:
       'full_baseline_restored':full,'baseline_expected':info['baseline'],'baseline_actual':actual,
       'other_files_preserved':not full},indent=2))
 
+def protection_guard(args, pack: Path) -> dict:
+    kind=args.server_kind
+    if kind=='bds':
+        if not args.bds_stopped or args.integrated_stopped:
+            fail('BDS requires --bds-stopped, not --integrated-stopped')
+    elif not args.integrated_stopped or args.bds_stopped:
+        fail('integrated requires --integrated-stopped, not --bds-stopped')
+    guard={'server_kind':kind,'live_roots':sorted(set(str(Path(r).resolve()) for r in (args.live_root or []))),
+           'no_live_roots':args.no_live_roots,'verification':'caller evidence; tool does not inspect processes'}
+    if kind=='integrated' or args.no_live_roots:
+        if not args.stop_evidence: fail('this mode requires fresh --stop-evidence JSON')
+    if args.stop_evidence:
+        source=Path(args.stop_evidence)
+        if source.is_symlink() or not source.is_file(): fail('stop evidence must be a regular non-symlink file')
+        if source.stat().st_size>65536: fail('stop evidence exceeds 64 KiB')
+        try: evidence=json.loads(source.read_text(encoding='utf-8'))
+        except (ValueError,UnicodeError,OSError): fail('invalid stop evidence JSON')
+        if not isinstance(evidence,dict): fail('stop evidence must be an object')
+        if evidence.get('server_kind')!=kind or evidence.get('pack')!=str(pack):
+            fail('stop evidence server kind or exact resolved pack mismatch')
+        required=('world_saved_normally','process_stopped','no_pack_users')
+        if any(evidence.get(k) is not True for k in required):
+            fail('normal save, stopped process and no pack users must all be confirmed')
+        if args.no_live_roots and evidence.get('no_accessible_live_roots') is not True:
+            fail('zero roots requires explicit no_accessible_live_roots evidence declaration')
+        if not isinstance(evidence.get('evidence_reference'),str) or not evidence['evidence_reference'].strip():
+            fail('stop evidence needs an independently collected evidence_reference')
+        try:
+            observed=datetime.fromisoformat(evidence['observed_at'].replace('Z','+00:00'))
+            if observed.tzinfo is None: raise ValueError()
+            age=(datetime.now(timezone.utc)-observed).total_seconds()
+        except (KeyError,TypeError,ValueError,AttributeError): fail('stop evidence needs a timezone-aware observed_at')
+        if not 0<=age<=600: fail('stop evidence must be from the last ten minutes, not the future')
+        guard['stop_evidence']={'sha256':sha(source),'declaration':evidence}
+    return guard
+
+
 def main() -> None:
     parser=argparse.ArgumentParser()
     parser.add_argument('operation',choices=['install','restore'])
     parser.add_argument('--pack',required=True,help='isolated BP copy matching the full reviewed G194 or G206 release profile')
-    parser.add_argument('--bds-stopped',action='store_true',help='caller assertion only; verify independently with assert_quiet')
-    parser.add_argument('--live-root',action='append',required=True,help='caller-declared live root; repeat for host/container aliases')
+    parser.add_argument('--server-kind',choices=['bds','integrated'],default='bds')
+    parser.add_argument('--bds-stopped',action='store_true',help='caller assertion only; independently verify BDS quiescence')
+    parser.add_argument('--integrated-stopped',action='store_true',help='caller assertion: normal SaveQuit and complete client termination; not BDS evidence')
+    roots=parser.add_mutually_exclusive_group(required=True)
+    roots.add_argument('--live-root',action='append',help='actual protected root; repeat for every host/container alias')
+    roots.add_argument('--no-live-roots',action='store_true',help='explicit declaration that no LIVE roots are accessible in this isolated environment')
+    parser.add_argument('--stop-evidence',help='fresh local JSON declaration backed by independently collected quiet evidence; required for integrated or zero-root mode')
     args=parser.parse_args()
-    if not args.bds_stopped: fail('stop the isolated BDS and pass --bds-stopped; verify independently with assert_quiet')
-    pack=safe_pack(args.pack,args.live_root)
-    if args.operation=='install': install(pack)
-    else: restore(pack)
+    pack=safe_pack(args.pack,args.live_root or [])
+    guard=protection_guard(args,pack)
+    if args.operation=='install': install(pack,guard)
+    else: restore(pack,guard)
 
 if __name__=='__main__': main()

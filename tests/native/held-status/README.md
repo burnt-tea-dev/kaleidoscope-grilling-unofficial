@@ -56,3 +56,64 @@ python3 tools/qa/held_status_observer.py restore \
 
 
 本機若要跑 G194 A 原包整合測試，先設定 `SENLUO_QA_CONTROL_ARCHIVE` 指向控制包 ZIP；未設定時只略過這項本機整合測試。
+
+## QA tool identity 2: explicit isolated integrated / zero-root modes
+
+This is a tooling-only change (`held-status-qa/2`), not a G runtime change.
+The historical `Senluo_Held_Status_QA_d865ea4.zip` is immutable and does not
+support these options. A new reviewed tool asset/source identity and updated
+S1 handoff are required before using this version for the fixed A/B/C batch.
+No integrated native acceptance is claimed by Python/JS tests.
+
+The default remains `--server-kind bds --bds-stopped` with every actual
+`--live-root`. Roots must exist, may be repeated for aliases, and must never
+be dummy paths. Explicit `--no-live-roots` is mutually exclusive with roots;
+it declares that none are accessible in this isolated environment, not that
+the tool searched for them. It requires fresh `--stop-evidence`.
+
+For a separate isolated integrated-client world copy, use
+`--server-kind integrated --integrated-stopped`, never `--bds-stopped`.
+This also requires fresh evidence for **normal SaveQuit, complete client
+termination and no process using the pack**. A hidden window, launcher menu,
+watchdog shutdown or abnormal exit alone is insufficient. Independently
+collect the evidence with the authorized host controls first. This tool does
+not inspect processes or stop the game; the operator must keep it stopped
+through installation/restoration and hold the host's existing isolation lock.
+
+`--stop-evidence` names a local non-symlink JSON file (at most 64 KiB):
+
+```json
+{
+  "server_kind": "integrated",
+  "pack": "/actual/isolated/world/behavior_packs/c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+  "observed_at": "2026-11-02T00:00:00Z",
+  "world_saved_normally": true,
+  "process_stopped": true,
+  "no_pack_users": true,
+  "no_accessible_live_roots": true,
+  "evidence_reference": "actual independently collected normal-close and process-quiet evidence"
+}
+```
+
+Replace examples with facts: the exact resolved target, actual mode and a
+UTC/offset timestamp from the preceding ten minutes (future timestamps fail).
+Never copy sample assertions without observing them. The evidence hash and
+caller declaration are retained in the local installation receipt; keep
+machine-specific receipts/evidence private. Restore requires fresh stop
+evidence and the same mode/protected roots/zero-root declaration as install.
+Legacy receipts still use their original BDS/live-root procedure.
+
+Example command shape, **only after the evidence is established**:
+
+```sh
+python3 tools/qa/held_status_observer.py install \
+  --pack /actual/isolated/world/behavior_packs/c68005c5-23ff-54e8-a3ff-da6349ad43c2 \
+  --server-kind integrated --integrated-stopped --no-live-roots \
+  --stop-evidence /actual/private/normal-close-evidence.json
+```
+
+Use `restore` with the same protections and fresh evidence. Integrated status
+must use the native authorized command UI and exact online player name; retain
+the actual client content-log record. Its engine/build is not a BDS result.
+Native command-origin compatibility and log completeness still require actual
+validation. Do not query during the uninterrupted first 20 seconds of recovery.
