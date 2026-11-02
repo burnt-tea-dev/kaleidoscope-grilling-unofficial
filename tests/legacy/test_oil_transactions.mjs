@@ -351,6 +351,45 @@ test('Java vat order resolves y then x ties and preserves failure precedence',as
 });
 
 
+test('silent native vat write rejection cannot consume a completed oil press batch',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:1}});
+ const target=stateKey(VAT,f.vat),nativeWrite=f.world.setDynamicProperty.bind(f.world);
+ let reject=true;
+ f.world.setDynamicProperty=(id,value)=>{
+  if(reject&&id===target&&typeof value==='string'&&JSON.parse(value).buckets===4)return;
+  return nativeWrite(id,value);
+ };
+ f.tick(2);
+ assert.equal(f.readVat().buckets,0,'unconfirmed vat credit is not real output');
+ assert.equal(f.readPress().cakes,4,'unfinished batch still belongs to the press');
+ assert.equal(f.readPress().progress,16);
+ assert.equal(f.registry().length,1,'the durable scheduler must retry the batch');
+ assert.equal(f.drops.length,0,'no residue payout before a confirmed vat credit');
+ reject=false;
+ f.tick(21);
+ assert.equal(f.readVat().buckets,4);
+ assert.equal(f.readPress().cakes,0);
+ assert.equal(f.drops.length,1);
+ f.tick(21);
+ assert.equal(f.readVat().buckets,4);
+ assert.equal(f.drops.length,1,'no duplicate oil/residue after recovery');
+});
+test('silent native vat write rejection restores exactly the original bucket stack',async()=>{
+ const f=await fixture({vat:{type:'canola',buckets:4}});
+ const original=f.signature(f.held()),target=stateKey(VAT,f.vat);
+ const nativeWrite=f.world.setDynamicProperty.bind(f.world);
+ f.world.setDynamicProperty=(id,value)=>{
+  if(id===target&&typeof value==='string'&&JSON.parse(value).buckets===3)return;
+  return nativeWrite(id,value);
+ };
+ use(f);
+ assert.equal(f.readVat().buckets,4);
+ assert.equal(f.signature(f.held()),original);
+ assert.equal(f.holder.inventory.getItem(1),undefined);
+ assert.equal(f.drops.length,0);
+ assert.equal(recoveries(f).length,0);
+});
+
 test('a corrupted POI vat cannot be overwritten by a completed press before recovery',async()=>{
  const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:1}});
  const vatKey=stateKey(VAT,f.vat);
