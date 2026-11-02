@@ -212,6 +212,12 @@ def compose_files(behavior, host_player, tacz_archive=None):
         with zipfile.ZipFile(tacz_archive) as archive:
             gun_bp = json.loads(archive.read(TACZ_BP))
             gun_rp = json.loads(archive.read(TACZ_RP))
+            # These four source controllers refer to undeclared walking
+            # aliases. Use the author's existing common pistol pose (also
+            # selected by M9) before splitting and routing its left arm.
+            gun_rp['minecraft:client_entity']['description']['animations'].update({
+                name + '_fp_walk': 'animation.default.fp.walk'
+                for name in ('g17', 'g18', 'deagle', 'm1911')})
             for name in archive.namelist():
                 if name.startswith('TACZResour/animation_controllers/') and name.endswith('.json'):
                     controllers['RP/' + name.removeprefix('TACZResour/')] = json.loads(strip_jsonc(archive.read(name).decode('utf-8-sig')))
