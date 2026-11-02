@@ -7,7 +7,7 @@
 - 本 PR：[Grilling #329](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/329)，候選功能來源錨點 **ca221c9e855dde443db8842293598603f1951344**；文件提交後 PR head 可能更新，但任何輸出包須另綁實際完整 40 位 commit 和可核對的同版原始碼。
 - Grilling 未發布版本 **2.8.210**；BP／RP 均為 **[2,8,210]**。BP UUID **c68005c5-23ff-54e8-a3ff-da6349ad43c2**，RP UUID **bbbd2d60-52e5-53a6-8b9a-c09b0f516389**。Bedrock 最低 **26.60**；需要 **Beta APIs／Points of Interest (POI)** 同開、@minecraft/server **2.12.0-beta**、@minecraft/server-ui **2.2.0**。
 - BP 依賴相同版本 RP、Cookery **[1,6,4]**；RP 亦依賴 Cookery 配對資源包。僅將 Grilling 自有 BP／RP 匯入不等於完成 Cookery 油壺、砧板、指南或全家族整合。依 [精確家族組裝契約](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md) 使用經審核的實際配套，**舊 G206 組裝結果不能直接當 G210 配套有效**。若無 G210 可執行且已記錄 SHA 的配套，整包相關案例記「阻塞：欠缺配對整合」，不自行套疊私有修補包。
-- 經確認的 G210 原始來源樹指紋（不是安裝包）：**BP dd80e34a139d73045b5a7694a94d61c7c8e3d93f6a7fb00a5fe3301da33a31a9（794 檔）**；**RP 51f3f089afbf328e525bb78467b0c4df63142ed058bcf85d209c07c9c8bcd3e1（2865 檔）**。完整版本與相依只從同一候選 [baseline.json](../baseline.json) 讀取；若新增 runtime 差異，重新固定版本，不冒用 G210 舊 identity。
+- 經確認的 G210 原始來源樹指紋（不是安裝包）：**BP dd80e34a139d73045b5a7694a94d61c7c8e3d93f6a7fb00a5fe3301da33a31a9（794 檔）**；**RP 51f3f089afbf328e525bb78467b0c4df63142ed058bcf85d209c07c9c8bcd3e1（2865 檔）**。完整版本與相依只從同一候選 [baseline.json](baseline.json) 讀取；若新增 runtime 差異，重新固定版本，不冒用 G210 舊 identity。
 - **沒有本輪可驗證的 G210 mcaddon 下載檔與 SHA256。** dot 必須自行從固定來源、合法相依及組裝流程產出候選，對每份真正安裝的 BP/RP／mcaddon 計算 SHA256、大小及相依清單。Source ZIP、舊 G206/G208 安裝包、作者 Cookery 原包、只有配方配置的靜態報告，不能互相代替。無法固定來源或配套時，先停止安裝與客戶端宣告，其他純文件檢查照常進行。
 - 原有來源 CI：[PR #329](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/329)，**883／883 玩法斷言及 5／5 GitHub Actions** 通過；G208 曾有獨立 BDS POI 查缸探針，但 **G210 的完整榨油交易／Cookery 家族／真人客戶端目前沒有同候選原生報告**。
 - 先在獨立 checkout 檢查：python3 tools/baseline_gate.py check --release；python3 tools/guards/save_compat.py check；python3 tools/guards/growth_ratchet.py check；python3 tools/run_tests.py。任何 FAIL 均記入交接，不能藉關閉護欄或覆蓋歷史雜湊令其變綠。
@@ -15,7 +15,7 @@
 ## B. 四類獨立測試世界
 
 1. **G-OIL（專項新世界）**：完整 G210 合法相依、Beta APIs＋POI，先用生存模式實際裝填機器；診斷／創造操作須標示，不能把創造的無消耗規則當生存成功。
-2. **G-SAVE（正常保存）**：同一固定候選及玩家原始操作，記完整負載後**正常停服、同世界重啟**；按 [既有六類樣本讀回方法](../tools/ops/README.md)保留 vat／press 及其他五類工作站前後快照。隱藏存檔欄位沒有獲合法讀取就填「未知」，不猜測 properties 為空。
+2. **G-SAVE（正常保存）**：同一固定候選及玩家原始操作，記完整負載後**正常停服、同世界重啟**；按 [既有六類樣本讀回方法](tools/ops/README.md)保留 vat／press 及其他五類工作站前後快照。隱藏存檔欄位沒有獲合法讀取就填「未知」，不猜測 properties 為空。
 3. **G-FAMILY（完整配套）**：只在有精確來源及完整停止備份的 staging 副本啟用 Tavern、世界名酒、Cookery、Immersive Eating 等已審核相依；先跑油壓／Cookery，再作穿串、烤架、餐盤、進食、聲音與手持的最小回歸。**不將 staging 世界複製回 LIVE**。
 4. **G-CLIENT（真人／多端）**：PC 鍵鼠＋至少一部真實觸控設備；多人 A/B 同時在線時兩端記錄，創造／生存分輪。取同一 Java 版本（[原始碼固定 9a1acdab](https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab27698457bec16c9362678e574895a28c)）及近似 FOV／視角／日光條件，實際播放流程比對，並先用 Blockbench 模型檢查任何手持／盤位錯誤。
 

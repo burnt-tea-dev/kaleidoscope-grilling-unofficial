@@ -374,7 +374,7 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 #### T3.3 油壓機 POI 搜尋修復（2026-11-02）
 
-**待 dot 客戶端與完整配套驗收的執行入口：** [G210 POI／油機 16 項逐案清單與空白報告](DOT-OIL-POI-ACCEPTANCE.md)。此清單分開註明原生、家族、真人與效能，未執行不能作為 PASS；所有真實世界操作都先走 §5 停服備份／staging 流程。
+**待 dot 客戶端與完整配套驗收的執行入口：** [G210 POI／油機 16 項逐案清單與空白報告](../DOT-OIL-POI-ACCEPTANCE.md)。此清單分開註明原生、家族、真人與效能，未執行不能作為 PASS；所有真實世界操作都先走 §5 停服備份／staging 流程。
 
 依擁有者本次「規劃修復並提交修復 PR」要求，在既有 `oil/` owner 內替換找缸路徑。此為有界功能修復，不以此宣告 T3.3 全域搬遷完成。
 

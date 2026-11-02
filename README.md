@@ -29,7 +29,7 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 
 ## dot 未發布候選驗收
 
-G210 油壓機與 POI 的**固定來源、家族相依、16 項真人／存檔／Cookery 測試、證據格式及未執行結果骨架**見 [dot 驗收交接清單](docs/DOT-OIL-POI-ACCEPTANCE.md)。這是待執行計畫，不是客戶端 PASS 或部署許可；真正整包候選需要匹配的 Cookery 宿主及實際計算的安裝包雜湊。
+G210 油壓機與 POI 的**固定來源、家族相依、16 項真人／存檔／Cookery 測試、證據格式及未執行結果骨架**見 [dot 驗收交接清單](DOT-OIL-POI-ACCEPTANCE.md)。這是待執行計畫，不是客戶端 PASS 或部署許可；真正整包候選需要匹配的 Cookery 宿主及實際計算的安裝包雜湊。
 
 ## 開發
 
