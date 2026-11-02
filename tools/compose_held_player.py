@@ -130,31 +130,60 @@ def compose(behavior, host_player, tacz_behavior=None, tacz_player=None):
 
 
 def reserve_offhand(animation):
-    """Release TACZ's additive left-arm channels while that hand is occupied.
+    """Separate the left arm so its weight can change without changing curves.
 
-    The original curves, timestamps and interpolation remain in the false
-    branch. Neutral additive channels let vanilla/IE/Grilling own the offhand;
-    gun/right-arm channels and all ammo/event logic remain source-owned.
+    Native cubic interpolation precomputes constant keyframes. Putting an
+    equipment query in those keyframes makes the client reject the animation.
+    Keep the curves numeric and gate this arm's animation with blend_weight.
     """
     result = copy.deepcopy(animation)
+    arm = {key: copy.deepcopy(value) for key, value in animation.items()
+           if key not in ('bones', 'sound_effects', 'particle_effects', 'timeline')}
+    arm['bones'] = {}
+    for bone, pose in list(result.get('bones', {}).items()):
+        if bone.lower() == 'leftarm':
+            if result.get('override_previous_animation') or set(pose) - {'position', 'rotation', 'scale'}:
+                raise ValueError('Unreviewed TACZ left-arm composition')
+            arm['bones'][bone] = result['bones'].pop(bone)
+    if not arm['bones']:
+        return result, None
+    arm['blend_weight'] = '(' + str(animation.get('blend_weight', 1)) + ') * (!' + OFFHAND_RESERVED + ')'
+    return result, arm
 
-    def channel(value, neutral):
-        if isinstance(value, dict):
-            return {key: item if key == 'lerp_mode' else channel(item, neutral) for key, item in value.items()}
-        if isinstance(value, list):
-            return [channel(item, neutral) for item in value]
-        if type(value) in (int, float) or isinstance(value, str):
-            return '(' + OFFHAND_RESERVED + ' ? ' + str(neutral) + ' : (' + str(value) + '))'
-        raise ValueError('Unexpected TACZ animation channel')
 
-    for bone, pose in result.get('bones', {}).items():
-        if bone.lower() != 'leftarm':
-            continue
-        if result.get('override_previous_animation') or set(pose) - {'position', 'rotation', 'scale'}:
-            raise ValueError('Unreviewed TACZ left-arm composition')
-        for name in pose:
-            pose[name] = channel(pose[name], 1 if name == 'scale' else 0)
+def extend_arm_routes(rows, aliases):
+    """Start both halves in the same controller state with the same weight."""
+    result = []
+    for row in rows:
+        result.append(copy.deepcopy(row))
+        if isinstance(row, str):
+            if row in aliases:
+                result.append(aliases[row])
+        else:
+            companion = {aliases[key]: value for key, value in row.items() if key in aliases}
+            if companion:
+                result.append(companion)
     return result
+
+
+def compose_arm_routes(player, controllers, split):
+    description = player['minecraft:client_entity']['description']
+    aliases = {}
+    for alias, animation in list(description['animations'].items()):
+        if animation not in split:
+            continue
+        companion = alias + '_kg_left_arm'
+        if companion in description['animations']:
+            raise ValueError('Unreviewed TACZ left-arm composition')
+        description['animations'][companion] = split[animation]
+        aliases[alias] = companion
+    scripts = description['scripts']
+    scripts['animate'] = extend_arm_routes(scripts.get('animate', []), aliases)
+    for document in controllers.values():
+        for controller in document.get('animation_controllers', {}).values():
+            for state in controller['states'].values():
+                if 'animations' in state:
+                    state['animations'] = extend_arm_routes(state['animations'], aliases)
 
 
 def repair_model(raw):
@@ -174,6 +203,8 @@ def repair_model(raw):
 def compose_files(behavior, host_player, tacz_archive=None):
     """One entry for CLI, local installer and private source generation."""
     overrides = {}
+    controllers = {}
+    split = {}
     gun_bp = gun_rp = None
     if tacz_archive is not None:
         if hashlib.sha256(Path(tacz_archive).read_bytes()).hexdigest() != TACZ_SHA256:
@@ -182,14 +213,30 @@ def compose_files(behavior, host_player, tacz_archive=None):
             gun_bp = json.loads(archive.read(TACZ_BP))
             gun_rp = json.loads(archive.read(TACZ_RP))
             for name in archive.namelist():
+                if name.startswith('TACZResour/animation_controllers/') and name.endswith('.json'):
+                    controllers['RP/' + name.removeprefix('TACZResour/')] = json.loads(strip_jsonc(archive.read(name).decode('utf-8-sig')))
                 if not name.startswith('TACZResour/animations/') or not name.endswith('.json'):
                     continue
                 original = json.loads(strip_jsonc(archive.read(name).decode('utf-8-sig')))
-                changed = {**original, 'animations': {key: reserve_offhand(value) for key, value in original.get('animations', {}).items()}}
+                changed = copy.deepcopy(original)
+                for key, value in original.get('animations', {}).items():
+                    body, arm = reserve_offhand(value)
+                    if arm is None:
+                        continue
+                    companion = key + '.kg_left_arm'
+                    if companion in original['animations']:
+                        raise ValueError('TACZ companion animation already exists')
+                    changed['animations'][key] = body
+                    changed['animations'][companion] = arm
+                    split[key] = companion
                 if changed != original:
                     overrides['RP/' + name.removeprefix('TACZResour/')] = changed
             overrides['RP/' + BROKEN_MODEL] = repair_model(archive.read('TACZResour/' + BROKEN_MODEL))
     bp, rp = compose(behavior, host_player, gun_bp, gun_rp)
+    if tacz_archive is not None:
+        before = copy.deepcopy(controllers)
+        compose_arm_routes(rp, controllers, split)
+        overrides.update({name: value for name, value in controllers.items() if value != before[name]})
     return {'BP/entities/player.json': bp, 'RP/entity/player.entity.json': rp, **overrides}
 
 

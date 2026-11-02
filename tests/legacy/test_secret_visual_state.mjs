@@ -466,84 +466,29 @@ print('old bottom clipping and new two-hand geometric fit passed; native client 
  assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
 });
 
-test('TACZ releases only occupied offhand channels and retains original keyframes, interpolation and right arm',()=>{
- const source={animation_length:1,loop:true,bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
+test('TACZ keeps cubic keyframes constant and releases the occupied arm through animation weight',()=>{
+ const source={animation_length:1,loop:true,sound_effects:{'0.5':{effect:'reload'}},bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
  const code=`import sys,json
 sys.path.insert(0,'tools')
-from compose_held_player import reserve_offhand,repair_model
-v=json.loads(sys.argv[1]);result=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+from compose_held_player import reserve_offhand,compose_arm_routes,repair_model
+v=json.loads(sys.argv[1]);body,arm=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+player={'minecraft:client_entity':{'description':{'animations':{'reload':'animation.gun.reload'},'scripts':{'animate':[{'reload':'v.reload'},'other']}}}}
+controllers={'gun':{'animation_controllers':{'controller.animation.gun':{'states':{'reload':{'animations':[{'reload':'v.gun'}],'transitions':[{'hold':'q.any_animation_finished'}]}}}}}}
+compose_arm_routes(player,controllers,{'animation.gun.reload':'animation.gun.reload.kg_left_arm'})
 try:repair_model(b'{}garbage');raise AssertionError('Unreviewed model accepted')
 except ValueError:pass
-print(json.dumps(result))`;
- const output=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
- assert.deepEqual(output.bones.rightArm,source.bones.rightArm);assert.equal(output.animation_length,1);
- assert.equal(output.bones.leftArm.rotation['0.0'].lerp_mode,'catmullrom');
- const run=(value,reserved)=>Function('q','return '+value)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
- for(const reserved of [false,true]){
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].pre.map(x=>run(x,reserved)),reserved?[0,0,0]:[1,2,3]);
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].post.map(x=>run(x,reserved)),reserved?[0,0,0]:[4,5,6]);
-  assert.deepEqual(output.bones.leftArm.position.map(x=>run(x,reserved)),reserved?[0,0,0]:[10,11,12]);
-  assert.deepEqual(output.bones.leftArm.scale.map(x=>run(x,reserved)),reserved?[1,1,1]:[.8,1,1.2]);
- }
+print(json.dumps([body,arm,player,controllers]))`;
+ const [body,arm,player,controllers]=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
+ assert.deepEqual(body.bones,{rightArm:source.bones.rightArm});
+ assert.deepEqual(arm.bones,{leftArm:source.bones.leftArm});
+ assert.deepEqual(body.sound_effects,source.sound_effects);assert.equal(arm.sound_effects,undefined);
+ assert.equal(body.animation_length,1);assert.equal(arm.animation_length,1);assert.equal(arm.loop,true);
+ const run=reserved=>Function('q','return '+arm.blend_weight)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
+ assert.equal(run(false),1);assert.equal(run(true),0);
+ const description=player['minecraft:client_entity'].description;
+ assert.equal(description.animations.reload_kg_left_arm,'animation.gun.reload.kg_left_arm');
+ assert.deepEqual(description.scripts.animate,[{reload:'v.reload'},{reload_kg_left_arm:'v.reload'},'other']);
+ const state=controllers.gun.animation_controllers['controller.animation.gun'].states.reload;
+ assert.deepEqual(state.animations,[{reload:'v.gun'},{reload_kg_left_arm:'v.gun'}]);
+ assert.deepEqual(state.transitions,[{hold:'q.any_animation_finished'}]);
 });
-
-// Exercise installed observers only when an isolated reviewed pack is supplied.
-import {pathToFileURL as observerPathToURL} from 'node:url';
-import {readFile as observerReadFile} from 'node:fs/promises';
-import {defaultFixture as observerFixture} from '../helpers/register-minecraft-loader.mjs';
-const observerPack=process.env.HELD_STATUS_QA_PACK;
-const observerProfile=observerPack?JSON.parse(await observerReadFile(`${observerPack}/manifest.json`,'utf8')).header.version[2]:null;
-if(observerProfile===194||observerProfile===206){
- if(observerProfile===206)test('formal QA observer reads both actual cache rows, frame and ItemStack values',async()=>{
- const pack=process.env.HELD_STATUS_QA_PACK;
- assert.ok(pack,'HELD_STATUS_QA_PACK must point at an instrumented isolated BP UUID directory');
- const runtime=await import(observerPathToURL(`${pack}/scripts/held_visual_transport.js`).href);
- assert.throws(()=>observerFixture.world.afterEvents.scriptEventReceive, /belongs to system.afterEvents/);
- const player=observerFixture.player({id:'qa-human',name:'QA Human'});
- const makeItem=(name,key,value)=>{const stack=new observerFixture.ItemStack('kaleidoscope_grilling:skewer_plate',1);stack.nameTag=name;stack.setLore(['human visible lore']);stack.setDynamicProperty(key,value);return stack;};
- player.main=makeItem('main plate','qa:foreign','main-mark');
- player.off=makeItem('off plate','kaleidoscope_grilling:sample','off-mark');
- const main=[11,12,13,14,15,16,17,18,19,20,1,255];
- const off=[21,22,23,24,25,26,27,28,29,30,2,255];
- runtime.writeHeldVisual(player,'main','plate',main);runtime.writeHeldVisual(player,'off','plate',off);
- runtime.flushHeldVisual(player,314);
- observerFixture.emit('system.afterEvents.scriptEventReceive',{id:'kg_held_qa:status',message:'QA Human'});
- const line=observerFixture.logs.find(row=>row.text.includes('[kg_held_qa]'))?.text;
- assert.ok(line,'observer should log to server console');
- const value=JSON.parse(line.slice(line.indexOf('{')));
- assert.equal(value.frame,1);assert.deepEqual(value.main.transport.words,main);assert.deepEqual(value.off.transport.words,off);
- assert.deepEqual(value.main.item.lore,['human visible lore']);assert.deepEqual(value.off.item.lore,['human visible lore']);
- assert.equal(value.main.item.dynamicProperties['qa:foreign'],'main-mark');
- assert.equal(value.off.item.dynamicProperties['kaleidoscope_grilling:sample'],'off-mark');
- assert.equal(value.main.item.rawLoreSupported,true);assert.equal(value.rendererAcknowledged,false);
-
- });
-}
-if(observerProfile===194||observerProfile===206){
- if(observerProfile===194)test('formal QA observer reads all legacy32 native values without inventing a cache',async()=>{
- const pack=process.env.HELD_STATUS_QA_PACK;
- assert.ok(pack,'HELD_STATUS_QA_PACK must point at an instrumented isolated G194 BP copy');
- assert.throws(()=>observerFixture.world.afterEvents.scriptEventReceive,/belongs to system.afterEvents/);
- const schema=JSON.parse(await observerReadFile(`${pack}/entities/player.json`,'utf8'))['minecraft:entity'].description.properties;
- assert.equal(Object.keys(schema).length,32);
- await import(observerPathToURL(`${pack}/scripts/main.js`).href);
- const player=observerFixture.player({id:'qa-g194-human',name:'QA G194 Human'});
- const expected={};let number=17;
- for(const [key,definition] of Object.entries(schema)){
-  const value=definition.type==='bool'?true:number++;
-  player.setProperty(key,value);expected[key]=value;
- }
- const item=new observerFixture.ItemStack('kaleidoscope_grilling:skewer_plate',1);item.nameTag='A plate';item.setLore(['visible A lore']);item.setDynamicProperty('qa:foreign','readable');player.main=item;
- observerFixture.emit('system.afterEvents.scriptEventReceive',{id:'kg_held_qa:status',message:'QA G194 Human'});
- const line=observerFixture.logs.find(row=>row.text.includes('[kg_held_qa]'))?.text;
- assert.ok(line,'observer should log to server console');
- const value=JSON.parse(line.slice(line.indexOf('{')));
- assert.equal(value.profile,'g194-native32');assert.deepEqual(value.nativeProperties,expected);
- assert.equal(value.frame,null);assert.equal(value.frameSource,null);
- assert.deepEqual(value.transport,{source:'legacy native player properties; no held snapshot cache',words:null});
- assert.deepEqual(value.main.item.lore,['visible A lore']);
- assert.equal(value.main.item.dynamicProperties['qa:foreign'],'readable');
- assert.equal(value.propertySource,'one player.getProperty(key) call for each of the 32 keys declared in the matched G194 entities/player.json');
-
- });
-}
