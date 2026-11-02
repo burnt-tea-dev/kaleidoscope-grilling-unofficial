@@ -383,6 +383,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 來源與 API 邊界回歸已實作；隔離 BDS 1.26.60.6／build 52886190 以原樣大缸／油壓機定義、POI 與 production scripts 執行真正 `a26ProbePressContainer`，確認 Java 順序、滿缸／異液優先、範圍、拆除及卸載後重載，查詢前後保存資料不變。另在無 POI 定義且實驗關閉時保存自訂方塊，再加入定義並啟用實驗；重啟只讀，舊區塊載入後自動入索引。這是隔離 API 與查缸整合結果；完整配套同候選出油／存檔重啟、真人操作與效能仍須分別驗收，保持 draft、`client=false`、`production_ready=false`。Java 其他模組的 fluid-handler 第二輪仍是既有平台缺口，本 PR 不宣稱已補齊。
 
+**後續資料安全回歸（2026-11-02，G209／G210）**：先以紅測試重現 G208 把損壞大缸 dynamic property 當空缸的風險（1 例），以及動態屬性 setter 靜默未寫入時油機可能已結算、取桶可能已變更玩家物品的風險（2 例）。修復均整合於既有 `oil/oil_machine_runtime.js`：G209 重用嚴格 `capturedVatState`；G210 在共用 `writeVat` 中讀回核對保存結果，未確認就由原本 `oilTransaction` 回滾及持久排程重試。最新 G210 CI 為 883／883 玩法測試、5／5 Actions 通過；修復前兩組故障測試均已實際失敗過。僅追加 G209、G210 版本與雜湊，保留 G208 舊條目、所有動態屬性鍵及 BP／RP UUID，不新增修復覆蓋包。**前述 BDS 1.26.60.6 探針只屬 G208 來源**，尚未對 G210 重跑完整原生油壓交易、Cookery 配套、存檔升級／回退、真人或效能驗收，保持 Draft 與 `client=false`、`production_ready=false`。
+
 **T3.4 進食系統重寫**（跨 skewer/food/plate，單獨一個 PR，高風險）
 - 刪除 `prepareEatingItems` 換手持物品的機制；進食動畫選擇改為：`itemStartUse` 時寫 player property（profile、hand、random alt），attachable 動畫控制器讀 `q.property`（必要時 `c.owning_entity`）。
 - Java 事實（`MultiBiteSkewerItem`，已核對原碼）：一次連續使用吃完整串；`AnimationProfile` 決定時長與每口的秒數——ONE 90 tick、TWO 90、THREE 100、THREE_ALT 90、FOUR 90；THREE_RANDOM 在每次 `use` 抽選 THREE（100）或 THREE_ALT（90），只把本次選擇寫到 active serving 的 custom data `SkewerEatingProfile`；停止／完成／關閉動畫時清除，堆疊的其餘份數也清除。它不是永久綁定物品的隨機屬性；可見的口數＝已過秒數跨過幾個 bite 秒數；放開時已使用 ≥ 25 tick（`MINIMUM_EAT_TICKS`）即可結算；關閉進食動畫設定時時長為 25 tick。現行 `_java_three_alt`／`_native_plain` 影子 ID 就是為了讓 Bedrock 的原生 `use_duration`（綁在 item ID）跟著這些時長變。
