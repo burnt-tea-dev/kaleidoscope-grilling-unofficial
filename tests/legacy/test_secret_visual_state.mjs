@@ -89,7 +89,8 @@ from compose_held_player import compose,FP
 host={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','animations':{'root':'controller.animation.player.root'},'scripts':{'scale':'0.9375','variables':{'variable.native':'public'},'initialize':['variable.native = 7;'],'pre_animation':['variable.hand_bob = variable.hand_bob + 1;','variable.item_use_normalized = q.main_hand_item_max_duration > 0 ? q.main_hand_item_use_duration / q.main_hand_item_max_duration : 0;','variable.attack_body_rot_y = 5;'],'animate':['root','immersive_eating']},'render_controllers':[{FP:'variable.is_first_person && !q.is_spectator'}]}}}
 original=copy.deepcopy(host);configured=configure_player(host)
 assert host==original and configure_player(configured)==configured
-d=configured['minecraft:client_entity']['description'];assert d['scripts']['pre_animation']==original['minecraft:client_entity']['description']['scripts']['pre_animation']
+d=configured['minecraft:client_entity']['description'];native=original['minecraft:client_entity']['description']['scripts']['pre_animation'];assert d['scripts']['pre_animation'][:len(native)]==native
+assert all(line.startswith('v.kg_held_oil_brush_') for line in d['scripts']['pre_animation'][len(native):])
 assert d['scripts']['initialize'][0]=='variable.native = 7;' and d['scripts']['animate'][:2]==['root','immersive_eating']
 bp=json.loads((BASE/'behavior_pack/entities/player.json').read_text())
 gunbp={'minecraft:entity':{'description':{'identifier':'minecraft:player','properties':{'gun:p'+str(i):{'type':'int','range':[0,9],'default':0} for i in range(24)}},'events':{'gun:reload':{'sequence':[]}}}}
@@ -552,3 +553,28 @@ if(observerProfile===194||observerProfile===206){
 
  });
 }
+
+test('oil-brush animation weights use initialized locals when the preview has no actor',()=>{
+ const code=`import sys,json
+sys.path.insert(0,'tools')
+from held_snapshot_properties import configure_player
+player={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','scripts':{}}}}
+print(json.dumps(configure_player(player)))`;
+ const description=JSON.parse(runPython('python3',['-c',code],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}))['minecraft:client_entity'].description;
+ const scripts=description.scripts;
+ const variables={};for(const statement of scripts.initialize)Function('v','variable',statement)(variables,variables);
+ const actor={has_property:()=>true,property:()=>7,is_item_name_any:slot=>slot==='slot.weapon.mainhand'};
+ Object.assign(variables,{kg_held_frame:7,kg_held_m11:225,kg_held_o11:225});
+ const updates=scripts.pre_animation.filter(line=>line.startsWith('v.kg_held_oil_brush_'));
+ assert.equal(updates.length,2);
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ const weights=Object.fromEntries(scripts.animate.flatMap(row=>Object.entries(row)));
+ const noActor=new Proxy({}, {get(){throw Error('actor unavailable in preview')}});
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_main)(variables,noActor)),true);
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_off)(variables,noActor)),false);
+ const fresh={};for(const statement of scripts.initialize)Function('v','variable',statement)(fresh,fresh);
+ for(const expression of Object.values(weights))assert.equal(Boolean(Function('v','q','return '+expression)(fresh,noActor)),false);
+ variables.kg_held_frame=6;
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
+});

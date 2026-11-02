@@ -77,8 +77,20 @@ def configure_player(player, extension=None):
         if statement not in scripts.setdefault('initialize', []):
             scripts['initialize'].append(statement)
     for entry in extension['scripts']['animate']:
-        if entry not in scripts.setdefault('animate', []):
-            scripts['animate'].append(copy.deepcopy(entry))
+        # The skin/preview renderer can evaluate animation weights without an
+        # actor. Read equipment/property queries in pre_animation, where the
+        # normal entity update runs, then use an initialized local weight.
+        for alias, condition in entry.items():
+            weight = 'v.' + alias + '_active'
+            initial = weight + ' = 0;'
+            update = weight + ' = (' + condition + ');'
+            if initial not in scripts['initialize']:
+                scripts['initialize'].append(initial)
+            if update not in scripts.setdefault('pre_animation', []):
+                scripts['pre_animation'].append(update)
+            cached = {alias: weight}
+            if cached not in scripts.setdefault('animate', []):
+                scripts['animate'].append(cached)
     for alias, animation in extension['animations'].items():
         previous = description.setdefault('animations', {}).get(alias)
         if previous is not None and previous != animation:
