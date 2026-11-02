@@ -410,6 +410,60 @@ class HeldStatusToolTests(unittest.TestCase):
   env=os.environ.copy();env['HELD_STATUS_QA_PACK']=str(self.pack)
   result=subprocess.run(['node','--import',str(ROOT/'tests/helpers/register-minecraft-loader.mjs'),'--test','--test-name-pattern=^formal QA observer',str(ROOT/'tests/legacy/test_secret_visual_state.mjs')],cwd=ROOT,env=env,capture_output=True,text=True)
   self.assertEqual(result.returncode,0,result.stdout+'\n'+result.stderr)
+ def new_mode(self,operation='install',kind='integrated',changes=None,extra=()):
+  from datetime import datetime,timezone
+  evidence={'server_kind':kind,'pack':str(self.pack.resolve()),'world_saved_normally':True,
+   'process_stopped':True,'no_pack_users':True,'no_accessible_live_roots':True,
+   'observed_at':datetime.now(timezone.utc).isoformat(),'evidence_reference':'synthetic test fixture; not native acceptance'}
+  evidence.update(changes or {})
+  path=self.parent/'stop-evidence.json';path.write_text(json.dumps(evidence))
+  return subprocess.run([sys.executable,str(TOOL),operation,'--pack',str(self.pack),
+   '--server-kind',kind,'--integrated-stopped' if kind=='integrated' else '--bds-stopped',
+   '--no-live-roots','--stop-evidence',str(path),*extra],capture_output=True,text=True)
+ def test_integrated_zero_roots_installs_and_restores_without_bds_claim(self):
+  before=digest(self.pack/'scripts/held_visual_transport.js')
+  result=self.new_mode();self.assertEqual(result.returncode,0,result.stderr)
+  self.assertIsNone(json.loads(result.stdout)['bds_stopped'])
+  result=self.new_mode('restore');self.assertEqual(result.returncode,0,result.stderr)
+  self.assertTrue(json.loads(result.stdout)['full_baseline_restored'])
+  self.assertEqual(digest(self.pack/'scripts/held_visual_transport.js'),before)
+ def test_bds_zero_roots_is_explicit_and_works(self):
+  result=self.new_mode(kind='bds');self.assertEqual(result.returncode,0,result.stderr)
+  result=self.new_mode('restore',kind='bds');self.assertEqual(result.returncode,0,result.stderr)
+ def test_bad_new_mode_evidence_refuses_before_mutation(self):
+  original=digest(self.pack/'scripts/held_visual_transport.js')
+  for changes in ({'world_saved_normally':False},{'process_stopped':False},{'no_pack_users':False},
+   {'no_accessible_live_roots':False},{'pack':'/wrong'},{'server_kind':'bds'},
+   {'observed_at':'2000-01-01T00:00:00Z'},{'observed_at':'2999-01-01T00:00:00Z'},
+   {'observed_at':'2026-01-01T00:00:00'},{'evidence_reference':''}):
+   with self.subTest(changes=changes):
+    self.assertNotEqual(self.new_mode(changes=changes).returncode,0)
+    self.assertEqual(digest(self.pack/'scripts/held_visual_transport.js'),original)
+    self.assertFalse((self.pack.parent/'.held-status-qa-original').exists())
+ def test_missing_or_contradictory_cli_declarations_refuse(self):
+  common=[sys.executable,str(TOOL),'install','--pack',str(self.pack)]
+  cases=[['--bds-stopped'],['--no-live-roots','--bds-stopped'],
+   ['--no-live-roots','--live-root',str(self.live_root),'--bds-stopped'],
+   ['--live-root','','--bds-stopped'],['--live-root',str(self.parent/'missing'),'--bds-stopped'],
+   ['--live-root',str(self.live_root),'--server-kind','integrated','--bds-stopped']]
+  for args in cases:
+   with self.subTest(args=args):
+    self.assertNotEqual(subprocess.run(common+args,capture_output=True).returncode,0)
+  self.assertNotEqual(self.new_mode(extra=['--bds-stopped']).returncode,0)
+  self.assertFalse((self.pack.parent/'.held-status-qa-original').exists())
+ def test_restore_rejects_changed_mode_without_losing_original(self):
+  self.assertEqual(self.new_mode().returncode,0)
+  changed=digest(self.pack/'scripts/held_visual_transport.js')
+  self.assertNotEqual(self.new_mode('restore',kind='bds').returncode,0)
+  self.assertEqual(digest(self.pack/'scripts/held_visual_transport.js'),changed)
+  self.assertEqual(self.new_mode('restore').returncode,0)
+ def test_symlink_in_pack_and_real_protected_root_still_refuse(self):
+  (self.pack/'linked').symlink_to(self.parent/'stop-evidence.json')
+  self.assertNotEqual(self.new_mode().returncode,0)
+  (self.pack/'linked').unlink()
+  result=self.new_mode(extra=['--live-root',str(self.pack.parent)])
+  self.assertNotEqual(result.returncode,0)
+  self.assertNotEqual(self.run_tool('install',self.live_root).returncode,0)
  def test_g194_zip_profile_install_readback_restore_when_fixture_archive_exists(self):
   archive_value=os.environ.get('SENLUO_QA_CONTROL_ARCHIVE')
   if not archive_value:self.skipTest('set SENLUO_QA_CONTROL_ARCHIVE for the local A pack integration test')
