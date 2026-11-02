@@ -55,6 +55,7 @@ jobs:
           python tools/eating_owner_properties.py --check
           python tools/held_snapshot_properties.py --check
           python tools/plate_camera_pose.py --diagnose
+          python tools/build_plate_pose.py
       - name: Parse every tracked JSON file
         shell: bash
         run: |

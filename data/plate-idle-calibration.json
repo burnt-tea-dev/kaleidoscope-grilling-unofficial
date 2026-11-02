@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "profile": "native126604-wide-idle-java1201-v1",
+  "candidate_version": [
+    2,
+    8,
+    211
+  ],
+  "paired_private_version": [
+    1,
+    0,
+    114
+  ],
+  "client_acceptance": false,
+  "production_ready": false,
+  "scope": "standing stationary nonVR fully equipped idle, Steve standard wide rig; not eating/VR/all personas or modded Java runtime acceptance",
+  "java": {
+    "source": "breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c",
+    "minecraft": "1.20.1",
+    "client_sha1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838",
+    "mappings_sha1": "6c48521eed01fe2e8ecdadbd5ae348415f3c47da",
+    "forge": "47.4.0",
+    "arm_translation_blocks": [
+      0.56,
+      -0.52,
+      -0.72
+    ],
+    "display_translation_pixels": [
+      0,
+      3.75,
+      0
+    ],
+    "display_scale": 0.4,
+    "display_right_rotation": [
+      0,
+      -135,
+      0
+    ],
+    "local_assembly": "raw=(-Jx,Jy+32,Jz); bound-local=(-Jx,-Jy-8,Jz)"
+  },
+  "host": {
+    "client": "1.26.60.4",
+    "uniform_scale": 0.9375,
+    "eye_pixels": 25.92016,
+    "y_shift": 24.125,
+    "attachable_x_offset": 0.833295592257745,
+    "offset_interval": [
+      0.7923925534142761,
+      0.8723343459689483
+    ],
+    "interval_scope": "all eight training x coordinates within +/-3px, not total or probabilistic uncertainty"
+  },
+  "evidence": {
+    "mapping_sha256": "7562a9e3b47bd729b6bc70354053a099c7f2c7c3b6f3320eaae97a4b0b858e3e",
+    "fresh_spyglass_prereg_sha256": "872d51967dcab1e7baf561e00a2ee294882a0595f4682ae4443019249764237e",
+    "fresh_spyglass_image_sha256": "cd232616ec8f0214a8ca6c4fc9d1e5490bd37ced1a89a5ac4f96977945bf1147",
+    "fresh_spyglass_max_error_px": 1.2950633526378716,
+    "frozen_bound_px": 6,
+    "postcapture_refit": false,
+    "reused_shield_not_blind": true
+  },
+  "limitations": [
+    "No plate bounds or screen coordinates enter the pose derivation.",
+    "Source Java pose may clip full plate contents; usability and fidelity require separate native review.",
+    "Do not reuse this version for different runtime bytes.",
+    "P114 is a P106-body diagnostic pair, not a rollback of current private main."
+  ]
+}
