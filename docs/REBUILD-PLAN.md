@@ -419,7 +419,9 @@ CLI、Core 本機安裝器與私有來源應共同呼叫 `compose_files`；有 T
 
 **已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
 
-第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
+**已撤回作為姿勢校準依據（2026-11-02）**：下述歷史 bbox-fit 只是在社群相機代理中保留畫面區域，不能代表 Java 握姿或實機距離。另已確認 raw Bedrock 與 Blockbench 匯入座標混用的 X 反射錯誤。工具現為唯讀診斷，禁止自動重生姿勢；固定實裝 asset 不在本工具修正中變更。詳見 [座標契約與未通過的 native hold-out](#held-preview-coordinates-diagnostic-contract-v2)。
+
+歷史紀錄（不是目前驗收結論）：第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
 
 **修法依據與適用範圍（本日查閱）**：
 
@@ -934,3 +936,79 @@ EOF
 - **LKG**：last known good，完整可還原的停服備份。
 - **staging**：與 luosen 同組合的測試伺服器，世界來自備份副本。
 - **退役**：依 SAVE-COMPAT 流程移除一個持久化 identifier。
+
+## Held-preview coordinates: diagnostic contract v2
+
+This is a tooling/math correction, **not a new runtime pose**. No generated pack,
+manifest, version, geometry, or animation asset changes. Native shield hold-outs
+have not passed; Java equivalence is not established. Do not use this PR to
+approve, regenerate, publish, or install a pose package.
+
+### Proven coordinate mismatch
+
+The former Python proxy fed raw Bedrock `.geo` coordinates into a matrix that
+expects Blockbench's imported coordinates. Blockbench mirrors geometry X on
+import. Applying the preview's X/Y reflection directly to raw geometry therefore
+reflected X a second time relative to the intended Animate-mode chain.
+
+Source identities reviewed:
+- Actual Blockbench **5.2.2** app bundle SHA-256:
+  `5f71b1b122b15c1ecde787a8afd473b9c4e932db3465bbf906a7699874f1b9f8`.
+  Geometry-import evidence at character offsets 8666400–8667950; animation
+  importer at 8633750–8634530. Existing bundle read only; not executed for audit.
+- Official [geometry importer](https://github.com/JannisX11/blockbench/blob/master/js/formats/bedrock/bedrock.js), reviewed Git blob
+  `f27d89e774003486b1161b0578971f686fece0a8`: bone/cube pivot X is negated;
+  cube minimum X becomes `-(originX + sizeX)`.
+- Official [animation importer](https://github.com/JannisX11/blockbench/blob/master/js/formats/bedrock/bedrock_animation.js), reviewed Git blob
+  `ede0f8c0fecf24628390433b13082c5657b552e4`: position X and rotation X/Y
+  are negated. Branch URLs are navigation links; the blob hashes and actual
+  5.2.2 bundle identify what was reviewed, not a claim that master is immutable.
+- Community holder/camera reference:
+  [Dofes](https://github.com/Dofes/blockbench-bedrock-attachable/blob/0dbcc4919b2152f81606a7a1bb4e11b292e0ceac/plugins/bedrock_attachable/bedrock_attachable.js), commit
+  `0dbcc4919b2152f81606a7a1bb4e11b292e0ceac`, `buildModelMatrix` and
+  `buildHolderBoneMatrices`. These remain a preview model, not engine source.
+
+Let `I=diag(-1,+1,+1)` be geometry import, `F=diag(-1,-1,+1)` the
+preview conversion. With column vectors and `R=Rz Ry Rx`, BB-imported animation
+angles are `(-rx,-ry,rz)` and `F R_BB = R_raw F`. Consequently the composed
+raw-vertex conversion is `F I = diag(+1,-1,+1)`.
+
+For raw vertex `p` and raw bound pivot `b`, the corrected local point is
+`(p.x-b.x, b.y-p.y, p.z-b.z)`. The expression-binding offset in this community
+Animate replay is `(b.x,24-b.y,b.z)`, not `(-b.x,24-b.y,b.z)`.
+Apply this offset **after** the bound root's scale/rotation and **before** the
+holder transform. At zero pose and unit scale the raw pivot cancels entirely.
+Do not mix already-converted vertices with raw pivots or apply conversion twice.
+
+The pure-Python regression independently constructs geometry import, imported
+animation, preview root conversion, and their matrix composition. It covers
+asymmetric vertices, nonzero pivots, both hands, nonuniform scale and rotations.
+It does not assert pixel agreement with Minecraft. The current catalog's rotated
+cubes all explicitly provide pivots; this is not a generic missing-pivot codec.
+
+### CLI and callers
+
+`python tools/plate_camera_pose.py` or `--diagnose` is read-only and explicitly
+reports `native_acceptance=false`, `java_equivalence=false`, and no asset-write
+permission. The default extent diagnostic covers **plate body only**, not food.
+`--full-catalog` requests the slower conservative catalog-box diagnostic; it is
+still not a fitting target or an acceptance gate.
+
+The former `--check` regeneration contract now exits **2 with an explicit error**.
+Library `generate()` and `fitted()` raise errors instead of silently succeeding
+or writing a pose. The sole tracked CLI caller, `.github/workflows/ci.yml`, is
+updated to read-only diagnostics plus mathematical regressions. The legacy
+JavaScript test now checks this diagnostic/no-write contract, not a reserved
+screen-box target. Search included hidden workflow paths.
+
+### Why the old pose conclusion is withdrawn
+
+A bbox search reserves screen space; it cannot establish Java hand/display
+transforms or correct physical held distance. The historical rebuild-plan entry
+is superseded. After correcting the coordinate convention, actual-client shield
+controls still miss selected native corners by about 36 px. Those observations
+are **failed hold-outs**, not regression PASS fixtures. Independent trident-only
+camera estimates also did not transfer within the predeclared 6 px shield bound.
+Do not choose a camera/FOV using those hold-outs or add their residuals to plate
+position. A later pose change needs full source-traceable Java/Bedrock holder
+calibration, independent native acceptance, new paired versions and handoff.
