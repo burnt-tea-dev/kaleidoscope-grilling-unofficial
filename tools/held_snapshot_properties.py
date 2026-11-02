@@ -77,13 +77,13 @@ def configure_player(player, extension=None):
         if statement not in scripts.setdefault('initialize', []):
             scripts['initialize'].append(statement)
     for entry in extension['scripts']['animate']:
-        # The skin/preview renderer can evaluate animation weights without an
-        # actor. Read equipment/property queries in pre_animation, where the
-        # normal entity update runs, then use an initialized local weight.
+        # Skin previews also run pre_animation without a gameplay actor. UI
+        # models keep the native arm pose; only world rendering reads held data.
+        # Initialized local weights also keep the animation phase actor-free.
         for alias, condition in entry.items():
             weight = 'v.' + alias + '_active'
             initial = weight + ' = 0;'
-            update = weight + ' = (' + condition + ');'
+            update = weight + ' = q.is_in_ui ? 0 : (' + condition + ');'
             if initial not in scripts['initialize']:
                 scripts['initialize'].append(initial)
             if update not in scripts.setdefault('pre_animation', []):
