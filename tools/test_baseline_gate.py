@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Adversarial release tests in disposable Git repositories, never a game world."""
-import copy,importlib.util,json,os,subprocess,tempfile,unittest,zipfile,hashlib,shutil,sys,time
+import copy,io,importlib.util,json,os,subprocess,tempfile,unittest,zipfile,hashlib,shutil,sys,time
 from pathlib import Path
 spec=importlib.util.spec_from_file_location('gate',Path(__file__).with_name('baseline_gate.py'))
 gate=importlib.util.module_from_spec(spec);spec.loader.exec_module(gate)
@@ -363,11 +363,13 @@ class HeldStatusToolTests(unittest.TestCase):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
   self.parent=Path(self.temp.name)/'copy';self.parent.mkdir()
   self.live_root=self.parent/'declared-live';self.live_root.mkdir()
-  self.pack=self.parent/'behavior_packs'/'c68005c5-23ff-54e8-a3ff-da6349ad43c2';self.pack.parent.mkdir();shutil.copytree(OBSERVER_BP,self.pack)
-  for name in ('LICENSE-CODE','LICENSE-ASSETS','LICENSE-CORE','ATTRIBUTION.md','THIRD_PARTY_NOTICES.md'):
-   (self.pack/name).unlink(missing_ok=True)
-  shutil.copy2(ROOT/'tests/native/held-status/g206-manifest.json',self.pack/'manifest.json')
-  shutil.copy2(ROOT/'tests/native/held-status/g206-board-api.json',self.pack/'host-extensions/board-api.json')
+  self.pack=self.parent/'behavior_packs'/'c68005c5-23ff-54e8-a3ff-da6349ad43c2';self.pack.mkdir(parents=True)
+  # These tests exercise frozen observer profiles, not today's gameplay pack.
+  # Use actual published source bytes; an old manifest on current BP is not G206.
+  self.copy_frozen_pack('a35a7a7adf0fcef41340fea8119c5166560c2ce8')
+ def copy_frozen_pack(self,commit):
+  data=subprocess.check_output(['git','archive','--format=zip',commit+':'+OBSERVER_BP.relative_to(ROOT).as_posix()],cwd=ROOT)
+  with zipfile.ZipFile(io.BytesIO(data)) as archive:archive.extractall(self.pack)
  def run_tool(self,operation,path=None):
   return subprocess.run([sys.executable,str(TOOL),operation,'--pack',str(path or self.pack),'--bds-stopped','--live-root',str(self.live_root)],capture_output=True,text=True)
  def test_install_restore_exact_original_and_refusals(self):
@@ -393,7 +395,7 @@ class HeldStatusToolTests(unittest.TestCase):
   self.assertEqual(digest(original),before)
   self.assertFalse((self.pack.parent/'.held-status-qa-receipt.json').exists())
  def test_g208_install_restore_retains_complete_reviewed_pair(self):
-  shutil.rmtree(self.pack);shutil.copytree(OBSERVER_BP,self.pack)
+  shutil.rmtree(self.pack);self.pack.mkdir();self.copy_frozen_pack('f25130a3ac143910f89fe6d533a26c79e27accc7')
   result=self.run_tool('install');self.assertEqual(result.returncode,0,result.stderr)
   self.assertEqual(json.loads(result.stdout)['profile'],'g208-cache24')
   result=self.run_tool('restore');self.assertEqual(result.returncode,0,result.stderr)
