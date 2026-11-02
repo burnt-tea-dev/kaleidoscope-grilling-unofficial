@@ -665,6 +665,10 @@ import plate_camera_pose as m
 p=json.loads(b.PROFILE.read_text());doc=json.loads(b.POSE.read_text())
 result=b.derive(doc,p)
 assert result==doc
+changed_profile=copy.deepcopy(p)
+changed_profile['java']['display_right_rotation']=[0,-134,0]
+try: b.derive(doc,changed_profile); raise AssertionError('changed Java display accepted')
+except ValueError: pass
 bad=copy.deepcopy(doc)
 bad['animations']['animation.kg_plate_held.fp_right']['bones']['plate_pose']['rotation'][0]+=1
 try: b.derive(bad,p); raise AssertionError('rotation mismatch accepted')

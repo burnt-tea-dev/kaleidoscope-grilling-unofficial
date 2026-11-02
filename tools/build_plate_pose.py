@@ -29,6 +29,8 @@ def derive(document, profile):
     h, j = profile['host'], profile['java']
     if h['client'] != '1.26.60.4' or j['minecraft'] != '1.20.1':
         raise ValueError('Unreviewed engine identity')
+    if j['display_right_rotation'] != [0, -135, 0]:
+        raise ValueError('Unreviewed Java display rotation; fixed affine contract requires [0,-135,0]')
     if profile['client_acceptance'] or profile['production_ready']:
         raise ValueError('This generator does not certify runtime acceptance')
     if profile['evidence']['postcapture_refit']:
