@@ -22,7 +22,7 @@ import {isInitialBlockPress} from '../grill/grill_input_core.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from '../core/interaction_intent_adapter.js';
 import {captureWritableHand} from '../core/player_io.js';
 import {commitSteps} from '../grill/grill_transaction_core.js';
-import {nativeItemSignature,ownedItemStep} from '../core/transaction.js';
+import {nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery} from '../core/transaction.js';
 import {suppressNumbVisual} from '../numb_visual_runtime.js';
 import {createOilPressRegistry,createOilPressScheduler} from '../oil_press_registry.js';
 import {ensureOilHandPublished} from '../oil_api_client.js';
@@ -207,23 +207,6 @@ function oilTransaction(steps,blocks,recovery){
  }
  if(!result.ok)throw Error('Oil transaction failed; rollback failures='+result.rollbackErrors);
 }
-// One filled bucket: reserve an exact inventory slot, or retain the spawned
-// entity for rollback. Never overwrite the rest of a stack of empty buckets.
-function bucketDelivery(p,hand,output){
- const container=playerContainer(p);if(!container)throw Error('Oil bucket inventory unavailable');
- let slot=-1,before,after,drop;
- for(let i=0;i<container.size;i++){
-  if(hand==='main'&&i===p.selectedSlotIndex)continue;
-  const item=container.getItem(i);
-  if(!item||(item.isStackableWith(output)&&item.amount<item.maxAmount)){
-   slot=i;before=item?.clone();after=item?.clone()??output;
-   if(item)after.amount++;break;
-  }
- }
- return {apply(){if(slot>=0)container.setItem(slot,after);else{drop=p.dimension.spawnItem(output,{...p.location,y:p.location.y+.5});if(!drop)throw Error('Oil bucket drop unavailable')}},
-  rollback(){if(slot>=0)container.setItem(slot,before);else if(drop)drop.remove()}};
-}
-
 function fillVatFromBucket(block,p,hand,item){
  const type=bucketType(item?.typeId);if(!type)return false;
  const v=readVat(block),next=vatInsert(v,type,1);
@@ -244,12 +227,32 @@ function takeVatBucket(block,p,hand){
  if(before?.typeId!=='minecraft:bucket'||before.amount<1)return false;
  const steps=[];
  // NeoForge FluidUtil: creative drains the tank but keeps its input and gives
- // no filled bucket. Survival single replaces; a stack stows/drops the result.
+ // no filled bucket. Survival single replaces; a stack credits one output.
+ // The shared delivery owner must verify the receiving inventory slot or drop
+ // before the vat can debit fluid, and recover that credit before any refund.
  if(!creative(p)){
   const output=new ItemStack(id,1),after=before.amount===1?output:before.clone();
   if(before.amount>1)after.amount--;
-  steps.push({apply(){storage.write(after)},rollback(){storage.write(before)}});
-  if(before.amount>1)steps.push(bucketDelivery(p,hand,output));
+  let delivery;
+  if(before.amount>1){
+   const container=playerContainer(p);if(!container)throw Error('Oil bucket inventory unavailable');
+   const startingItems=Array.from({length:container.size},(_,i)=>container.getItem(i)?.clone());
+   if(hand==='main'){
+    if(nativeItemSignature(startingItems[p.selectedSlotIndex])!==nativeItemSignature(before))
+     throw Error('Oil bucket input changed before planning output');
+    // The selected slot is debited first. Plan credit against its new state,
+    // never against a stale pre-debit inventory or a second input owner.
+    startingItems[p.selectedSlotIndex]=after.clone();
+   }
+   delivery=planOwnedInventoryDelivery(container,[output],{
+    startingItems,dimension:p.dimension,location:p.location
+   });
+  }
+  steps.push(ownedItemStep({
+   read:()=>storage.read(),write:stack=>storage.write(stack),before,after,
+   canRestore:()=>delivery?.canRestoreInputs()??true
+  }));
+  if(delivery)steps.push(...delivery.steps);
  }
  steps.push({apply(){writeVat(block,next.state)},rollback(){writeVat(block,v)}});
  oilTransaction(steps,[block]);return true;
