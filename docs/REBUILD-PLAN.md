@@ -86,7 +86,9 @@
 
 ## 2. 已就位的護欄與禁止模式
 
-### 2.1 護欄（P0 已完成，CI 必跑，`guards.yml`）
+### 2.1 護欄（P0 已完成；現行 PR 只強制存檔相容）
+
+> 現行簡化策略（2026-11-03）：`guards.yml` 在 PR 檢查存檔 ID、儲存元件及 pack 身份，並與 base lock 對照一次；`growth_ratchet` 與其自測、release baseline、bridge export 和過往相容性候選改為手動發布前驗證。此策略取代本節舊的「每個 PR 全量必跑」描述。既有真人世界上線前的備份與存檔不丟失要求不變。
 
 | 護欄 | 檔案 | 擋什麼 |
 | --- | --- | --- |
@@ -585,6 +587,13 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 - 每個 PR：從 Java 原模型在 Blockbench 建 Bedrock 模型（`.bbmodel` 存 `assets-src/blockbench/`）→ 匯出 → 改用原生狀態機制 → 刪除舊烘焙 geometry 與「投影」腳本 → staging 截圖對照 Java 截圖（同角度）。
 - 驗收：`largest_geometry_kib ≤ 512`；`rp_total_mib` 明顯下降；對照截圖附在 PR。
 
+餐盤第一人稱的局部修正沿用 #332／#333 的來源變換：`tools/plate_camera_pose.py`
+只作唯讀座標診斷，停用依包圍盒改寫姿態；`tools/build_plate_pose.py` 依
+`data/plate-idle-calibration.json` 反求 FP 位置與宿主縮放補償，不改旋轉、layout、
+第三人稱或幾何。既有校準只涵蓋 1.26.60.4、P106/G206、標準寬身 Steve 的靜止
+非 VR 狀態，不代表新版宿主、TACZ 動作或 Java 實機通過。來源等價與全盤入鏡
+分開判定，不能再為入鏡推遠餐盤；本地承接保留目前 CI 與來源歷史，未發布。
+
 **T4.3 影子 ID 退役**（走 SAVE-COMPAT 流程，最高風險）
 - 前置：T1.6 普查數據；T3.4 的 runtime 遷移已在 luosen 運行 ≥ 2 週（讓多數玩家物品已被自動換回）。
 - 步驟：重新普查 → 離線改寫工具在 staging 副本執行（§5.6）→ 收據顯示影子 ID 數量歸零 → staging 載入／互動／重啟 → `id-retirements.json` 登錄 → 刪除影子 item JSON 與相關 attachable → 部署 luosen（停服＋備份＋離線改寫＋開服讀回）。
@@ -939,10 +948,12 @@ EOF
 
 ## Held-preview coordinates: diagnostic contract v2
 
-This is a tooling/math correction, **not a new runtime pose**. No generated pack,
-manifest, version, geometry, or animation asset changes. Native shield hold-outs
-have not passed; Java equivalence is not established. Do not use this PR to
-approve, regenerate, publish, or install a pose package.
+This section records the tooling-only #332 correction, **not acceptance of a
+new runtime pose**. That correction changed no generated pack, manifest, version,
+geometry, or animation asset. Its native shield hold-outs did not pass; Java
+equivalence was not established. Do not use this historical tooling evidence to
+approve, regenerate, publish, or install a pose package. The later bounded
+affine candidate is described under T4.2; it does not erase these failed controls.
 
 ### Proven coordinate mismatch
 
@@ -996,10 +1007,12 @@ still not a fitting target or an acceptance gate.
 
 The former `--check` regeneration contract now exits **2 with an explicit error**.
 Library `generate()` and `fitted()` raise errors instead of silently succeeding
-or writing a pose. The sole tracked CLI caller, `.github/workflows/ci.yml`, is
-updated to read-only diagnostics plus mathematical regressions. The legacy
-JavaScript test now checks this diagnostic/no-write contract, not a reserved
-screen-box target. Search included hidden workflow paths.
+or writing a pose. The original #332 revision changed the sole tracked CLI
+caller, `.github/workflows/ci.yml`, to read-only diagnostics plus mathematical
+regressions. Main subsequently removed that automatic diagnostic block in #345;
+this forward merge preserves the current lightweight CI instead of restoring it.
+The existing legacy JavaScript test still checks this diagnostic/no-write
+contract, not a reserved screen-box target. Search included hidden workflow paths.
 
 ### Why the old pose conclusion is withdrawn
 

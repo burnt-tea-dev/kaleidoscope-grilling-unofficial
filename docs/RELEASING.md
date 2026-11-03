@@ -1,10 +1,14 @@
 # 安裝、驗證與發布
 
-## 現行公開安裝與發布
+## 現行公開安裝與發布：G212（2026-11-03 查核）
 
-版本、原包雜湊及安裝命令以 [Core 現行配套](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g206-installation) 與本庫 [Release 請求](../.github/release-request.json) 為準。作者 Cookery／Immersive Eating 由玩家自行取得，在本機套用公開工具；Grilling 下載只含本庫自有 BP／RP。
+目前 main 的自有 BP/RP 來源身份為 [baseline.json](../baseline.json) 的 **2.8.212**；已發布下載為 [A2.8.212](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.212) **預發布**，不能僅以 main/Release 判斷真人可用、存檔准入或 LIVE 已部署。當次已發布資產、雜湊須查對該 Release 實際項目；[Release 請求](../.github/release-request.json) 是提交/審查紀錄，不取代實際公開資產與其雜湊。
 
-本輪 G206 已通過 canonical CI、完整家族同存檔首載／重開六條流程、原玩家與世界資料保存、真正故障回退，以及正式部署後 600 秒監看。公開三移植包與共用接入檔逐位元符合本輪整合候選。真人雙手／第一人稱／音效、C04及多人效能仍待驗；client=false、production_ready=false，不宣告 S1 完成。可選 TACZ 的完整私服配套另有精確相依與真人門檻，不在本輪 LIVE 中。
+公開 **精確 T194／G212／W180** 組裝指引及 Cookery 1.6.4 / 1.6.20012 本機相容輸入見 [Core G212 現行配套](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g212-installation)。作者 Cookery／Immersive Eating 必須自行從合法來源取得並按精確 descriptor 由使用者本機接入；本庫下載只含自有 Grilling BP/RP。這不是三個倉庫各自最新 main 的任意拼接；當次 G212 完整家族的保存、真人客戶端及 LIVE 驗收，未有相同精確身份的證據時一律維持**未知／未驗**，不得沿用 G206 紀錄。
+
+### 2026-11-01 G206 家族歷史驗證（不作 G212 准入）
+
+G206 當次曾通過 canonical CI、完整家族同存檔首載／重開六條流程、原玩家與世界資料保存、真正故障回退，以及其後正式部署 600 秒監看；公開三移植包及共用接入檔當次逐位元符合 G206 整合候選。此為**當時已固定的 G206 精確配對**，不可改標為 G212／T197／W183 的存檔或 LIVE 結果。當次真人雙手／第一人稱／音效、C04 及多人效能仍待驗，不能宣稱 S1 完成；可選 TACZ 的私服配套另有獨立相依與真人門檻。
 
 ## 2026-10-18 至 2026-10-27 重建歷史
 

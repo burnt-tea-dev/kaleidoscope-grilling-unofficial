@@ -1,0 +1,11 @@
+# Isolated native oil POI / transaction probe
+
+Never install this diagnostic on a normal player server. It changes terrain near (8,64,8), seeds diagnostic dynamic properties and spawns one simulated player. No real client or multiplayer result is implied.
+
+Use the current source BP/RP and its exact reviewed Cookery dependencies in a disposable, inaccessible BDS 1.26.60.6 world with server 2.12.0-beta, server-gametest 1.0.0-beta, Beta APIs and Points of Interest enabled. Keep an unchanged source copy and record the diagnostic overlay: copy `probe.js` beside production `scripts/main.js`; add a separate script entry importing both original `main.js` and this probe, and add only the GameTest module dependency. Do not change production functions or pack UUIDs. Record the original source, diagnostic overlay, actual dependency/engine identities and saved experiment readback.
+
+Start and preserve every `[S1_OIL_POI]` row. Require stage 1 completion and zero players after disconnect, then stop normally. Restart the same world and require stage 2 completion, one delivery only and a normal stop. Any failure, extra player, engine/API error or missing row invalidates the corresponding result. The [dated native observation](observed.json) records two successful normal-stop stages against the frozen G212 production bytes, with no engine errors or OOM. It does not supersede family/client gates. Failed setup and simulated-input attempts are retained by the host; they are not classified as product failures. `interactWithBlock` did not emit the needed oil input events; `useItemInSlotOnBlock` did, with clicks outside the native cooldown.
+
+The probe uses native simulated interactions to debit four oil cakes and apply four anvil hits, native scheduled ticks to finish, native POIs to choose the Java-order vat, then tests malformed data and a full-vat waiting batch across restart. Emptying the full vat after restart is explicit diagnostic setup, not a player bucket test.
+
+Source API fault tests separately cover silently rejected writes and rollback. This probe does not prove offhand/bucket metadata, rendered oil, sound, human input, complete family save migration or multiplayer performance.

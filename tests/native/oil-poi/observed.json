@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-11-03 Asia/Hong_Kong",
+  "version": [
+    2,
+    8,
+    212
+  ],
+  "production_source_trees": {
+    "BP": {
+      "sha256": "2d53dba22363219256b16c45947927cb306431272f43b708b418fa273da3e841",
+      "files": 794
+    },
+    "RP": {
+      "sha256": "fee9c0ed2920ec81c7027a962f00ec488972f57008ada1257b151b23d5fbf30e",
+      "files": 2865
+    }
+  },
+  "source_bytes_equal_to_executed_inputs": true,
+  "source_base_commit": "f25130a3ac143910f89fe6d533a26c79e27accc7",
+  "engine_version": "1.26.60.6",
+  "engine_executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "api": "2.12.0-beta",
+  "gametest_api": "1.0.0-beta",
+  "experiments": {
+    "gametest": 1,
+    "poi": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "dependency_scope": "Exact previously reviewed Cookery 1.6.4 pair; not complete family acceptance",
+  "diagnostic_overlay": "Original main.js and all production modules unchanged; separate entry imports main.js and probe.js; test manifest adds GameTest module dependency",
+  "probe_sha256": "34bc09bd1a882ced4327434385297d990452f412a0ce88eccc07473e439db41b",
+  "stages": [
+    {
+      "stage": 1,
+      "passed": true,
+      "normal_stop": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "peak": 519172096,
+      "observations": [
+        {
+          "kind": "native_chest_control",
+          "accepted": true,
+          "events": 0,
+          "player": {
+            "z": 10,
+            "y": 64,
+            "x": 8
+          },
+          "press": {
+            "z": 8,
+            "y": 64,
+            "x": 8
+          }
+        },
+        {
+          "kind": "native_poi_order",
+          "status": "SUCCESS",
+          "selected": {
+            "z": 4,
+            "y": 64,
+            "x": 4
+          },
+          "later": {
+            "z": 8,
+            "y": 64,
+            "x": 9
+          }
+        },
+        {
+          "kind": "native_cakes",
+          "state": {
+            "cakes": 4,
+            "progress": 0,
+            "waiting": false,
+            "completionDelay": 0
+          },
+          "handEmpty": true
+        },
+        {
+          "kind": "native_completion",
+          "press": {
+            "cakes": 0,
+            "progress": 0,
+            "waiting": false,
+            "completionDelay": 0
+          },
+          "firstVat": {
+            "type": "canola",
+            "buckets": 4
+          },
+          "laterVat": {
+            "type": "",
+            "buckets": 0
+          },
+          "residue": 4,
+          "duplicateAfterRetry": false
+        },
+        {
+          "kind": "corrupt_vat",
+          "rejected": true,
+          "originalMalformedPreserved": true,
+          "recovered": {
+            "type": "canola",
+            "buckets": 4
+          }
+        },
+        {
+          "kind": "native_cakes",
+          "state": {
+            "cakes": 4,
+            "progress": 0,
+            "waiting": false,
+            "completionDelay": 0
+          },
+          "handEmpty": true
+        },
+        {
+          "kind": "complete",
+          "stage": 1,
+          "ok": true,
+          "pending": {
+            "press": {
+              "cakes": 4,
+              "progress": 15,
+              "waiting": true,
+              "completionDelay": 0
+            },
+            "vat": {
+              "type": "canola",
+              "buckets": 8
+            },
+            "residue": 0
+          },
+          "client": false,
+          "multiplayer": false
+        },
+        {
+          "kind": "disconnected",
+          "players": 0
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "passed": true,
+      "normal_stop": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "peak": 520880128,
+      "observations": [
+        {
+          "kind": "native_chest_control",
+          "accepted": true,
+          "events": 0,
+          "player": {
+            "z": 10,
+            "y": 64,
+            "x": 8
+          },
+          "press": {
+            "z": 8,
+            "y": 64,
+            "x": 8
+          }
+        },
+        {
+          "kind": "restart_delivery",
+          "before": {
+            "press": {
+              "cakes": 4,
+              "progress": 15,
+              "waiting": true,
+              "completionDelay": 0
+            },
+            "vat": {
+              "type": "canola",
+              "buckets": 8
+            },
+            "raw": "{\"cakes\":4,\"progress\":15,\"waiting\":true,\"completionDelay\":0}"
+          },
+          "after": {
+            "press": {
+              "cakes": 0,
+              "progress": 0,
+              "waiting": false,
+              "completionDelay": 0
+            },
+            "vat": {
+              "type": "canola",
+              "buckets": 4
+            },
+            "residue": 4
+          },
+          "duplicateAfterRetry": false
+        },
+        {
+          "kind": "complete",
+          "stage": 2,
+          "ok": true,
+          "client": false,
+          "multiplayer": false
+        },
+        {
+          "kind": "disconnected",
+          "players": 0
+        }
+      ]
+    }
+  ],
+  "client": false,
+  "multiplayer": false,
+  "production_ready": false,
+  "production_world_modified": false,
+  "limits": [
+    "No rendered item/animation/sound acceptance",
+    "No offhand/bucket metadata acceptance",
+    "No complete family saved-world migration",
+    "No multiplayer performance acceptance",
+    "Emptying the full vat after restart is explicit diagnostic setup"
+  ]
+}

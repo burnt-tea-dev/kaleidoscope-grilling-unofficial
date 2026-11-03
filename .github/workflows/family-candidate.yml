@@ -1,8 +1,7 @@
 name: Family compatibility candidate checks
 on:
-  pull_request:
-    paths: ['compat/family/**', 'tools/**', 'projects/grilling/gameplay_core/**', 'development/gameplay_core/**', 'baseline.json', '.github/workflows/family-candidate.yml']
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:

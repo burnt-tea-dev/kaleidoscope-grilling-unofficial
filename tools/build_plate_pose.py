@@ -71,7 +71,7 @@ def main():
     args = parser.parse_args()
     profile = json.loads(PROFILE.read_text())
     if json.loads((ROOT/'baseline.json').read_text())['version'] != profile['candidate_version']:
-        raise SystemExit('Candidate version differs from reserved profile')
+        raise SystemExit('Candidate version differs from the source profile')
     original = json.loads(POSE.read_text())
     result = derive(original, profile)
     if args.apply:

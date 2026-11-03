@@ -125,3 +125,7 @@ OGG, texture, model, use timing, cancellation or debit policy is introduced.
 The optional Cookery cuisine-seasoning audience/category mismatch remains
 separate and unfixed; native eating/burp duplication and listening acceptance
 also remain open. Test doubles do not establish that a player heard the sound.
+
+## T3.3 oil POI 接續（2026-11-03）
+
+G212 候選從已發布 G208 接入原生查缸、Java z/y/x 順序和嚴格流體讀寫。保留 [原329草稿](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/329) 的舊證據與版本衝突，不沿用其 G208–210 release identities。Beta APIs／POI 兩項旗標為必要條件；全部 block/item/存檔鍵與包 UUID 保留。來源測試與[原生交易／同世界重開](../tests/native/oil-poi/observed.json)已完成：四餅→四桶＋四渣、滿缸等待、損壞資料拒絕及重開後只結算一次。原生測試只帶指定Cookery配套；完整家族存檔／回退與真人畫面、聲音、多人效能仍待完成。

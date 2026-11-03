@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | `g194-native32` | A 正式舊功能組，G194 | 逐欄讀 `entities/player.json` 宣告的 32 個 `player.getProperty` 值；frame/cache 明確為 `null`。 |
 | `g206-cache24` | B/C 正式組，G206 | 在 transport lexical scope 讀雙手 cache，各 12 words 和實際 frame。 |
+| `g208-cache24` | 續審後完整組，G208 | 相同的唯讀 cache／frame 路徑；以 G208 完整 BP 與 manifest 指紋獨立識別。 |
 
 G194 的 BP 完整指紋 `f2b79963…5e47e0a` / 787 檔與 repo `release-history.json` 的 2.8.194 BP 記錄相同；manifest SHA256 `db5cf2c6…f0bc82c`。G206 使用固定 2.8.206 完整指紋、manifest SHA 和 append-only release-history 核對；不會因主線後續包版本改變而改選另一個 runtime。未知 bytes/profile 會被拒絕，不按版本猜測。
 
