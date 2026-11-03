@@ -1,0 +1,47 @@
+# One-off read-only red/green verification; remove before review.
+name: T3.3 temporary seasoning bottle promotion probe
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.repository_id == '1377218440'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compute canonical BP RP fingerprint
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from tools.baseline_gate import fingerprint, ROOT
+          b=json.loads((ROOT/'baseline.json').read_text(encoding='utf-8'))
+          print('T33_BOTTLE_FINGERPRINT='+json.dumps({side:fingerprint(ROOT/path)[0] for side,path in b['runtime'].items()},sort_keys=True))
+          PY
+      - name: Run real-runtime registered bottle tests
+        run: >
+          node --import ./tests/helpers/register-minecraft-loader.mjs --test
+          --test-name-pattern='placing all three base seasonings|failed native setter during EMPTY to PENDING'
+          tests/legacy/test_bottle_raw_lore.mjs
+      - name: Check that the same tests fail against old main
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          cp tests/legacy/test_bottle_raw_lore.mjs "$RUNNER_TEMP/bottle-negative.mjs"
+          git worktree add -q "$RUNNER_TEMP/grilling-base" "$BASE_SHA"
+          cp "$RUNNER_TEMP/bottle-negative.mjs" "$RUNNER_TEMP/grilling-base/tests/legacy/test_bottle_raw_lore.mjs"
+          cd "$RUNNER_TEMP/grilling-base"
+          if node --import ./tests/helpers/register-minecraft-loader.mjs --test --test-name-pattern='placing all three base seasonings|failed native setter during EMPTY to PENDING' tests/legacy/test_bottle_raw_lore.mjs; then
+            echo 'Unexpected main PASS: original defect not reproduced'
+            exit 1
+          fi
+          echo 'EXPECTED_MAIN_BOTTLE_FAILURE=confirmed (Node fixture only)'
