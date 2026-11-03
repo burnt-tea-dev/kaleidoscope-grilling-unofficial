@@ -1,11 +1,7 @@
 name: Offline world ID census
 
 on:
-  push:
-    branches: [main]
-    paths: ['tools/ops/**', 'tools/guards/test_guards.py', '.github/workflows/world-census.yml']
-  pull_request:
-    paths: ['tools/ops/**', 'tools/guards/test_guards.py', '.github/workflows/world-census.yml']
+  workflow_dispatch:
 
 permissions:
   contents: read

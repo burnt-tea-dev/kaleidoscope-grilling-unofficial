@@ -89,7 +89,8 @@ from compose_held_player import compose,FP
 host={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','animations':{'root':'controller.animation.player.root'},'scripts':{'scale':'0.9375','variables':{'variable.native':'public'},'initialize':['variable.native = 7;'],'pre_animation':['variable.hand_bob = variable.hand_bob + 1;','variable.item_use_normalized = q.main_hand_item_max_duration > 0 ? q.main_hand_item_use_duration / q.main_hand_item_max_duration : 0;','variable.attack_body_rot_y = 5;'],'animate':['root','immersive_eating']},'render_controllers':[{FP:'variable.is_first_person && !q.is_spectator'}]}}}
 original=copy.deepcopy(host);configured=configure_player(host)
 assert host==original and configure_player(configured)==configured
-d=configured['minecraft:client_entity']['description'];assert d['scripts']['pre_animation']==original['minecraft:client_entity']['description']['scripts']['pre_animation']
+d=configured['minecraft:client_entity']['description'];native=original['minecraft:client_entity']['description']['scripts']['pre_animation'];assert d['scripts']['pre_animation'][:len(native)]==native
+assert all(line.startswith('v.kg_held_oil_brush_') for line in d['scripts']['pre_animation'][len(native):])
 assert d['scripts']['initialize'][0]=='variable.native = 7;' and d['scripts']['animate'][:2]==['root','immersive_eating']
 bp=json.loads((BASE/'behavior_pack/entities/player.json').read_text())
 gunbp={'minecraft:entity':{'description':{'identifier':'minecraft:player','properties':{'gun:p'+str(i):{'type':'int','range':[0,9],'default':0} for i in range(24)}},'events':{'gun:reload':{'sequence':[]}}}}
@@ -466,27 +467,32 @@ print('old bottom clipping and new two-hand geometric fit passed; native client 
  assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
 });
 
-test('TACZ releases only occupied offhand channels and retains original keyframes, interpolation and right arm',()=>{
- const source={animation_length:1,loop:true,bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
+test('TACZ keeps cubic keyframes constant and releases the occupied arm through animation weight',()=>{
+ const source={animation_length:1,loop:true,sound_effects:{'0.5':{effect:'reload'}},bones:{leftArm:{rotation:{'0.0':{pre:[1,2,3],post:[4,5,6],lerp_mode:'catmullrom'},'1.0':[7,8,9]},position:[10,11,12],scale:[.8,1,1.2]},rightArm:{rotation:[20,30,40]}}};
  const code=`import sys,json
 sys.path.insert(0,'tools')
-from compose_held_player import reserve_offhand,repair_model
-v=json.loads(sys.argv[1]);result=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+from compose_held_player import reserve_offhand,compose_arm_routes,repair_model
+v=json.loads(sys.argv[1]);body,arm=reserve_offhand(v);assert v==json.loads(sys.argv[1])
+player={'minecraft:client_entity':{'description':{'animations':{'reload':'animation.gun.reload'},'scripts':{'animate':[{'reload':'v.reload'},'other']}}}}
+controllers={'gun':{'animation_controllers':{'controller.animation.gun':{'states':{'reload':{'animations':[{'reload':'v.gun'}],'transitions':[{'hold':'q.any_animation_finished'}]}}}}}}
+compose_arm_routes(player,controllers,{'animation.gun.reload':'animation.gun.reload.kg_left_arm'})
 try:repair_model(b'{}garbage');raise AssertionError('Unreviewed model accepted')
 except ValueError:pass
-print(json.dumps(result))`;
- const output=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
- assert.deepEqual(output.bones.rightArm,source.bones.rightArm);assert.equal(output.animation_length,1);
- assert.equal(output.bones.leftArm.rotation['0.0'].lerp_mode,'catmullrom');
- const run=(value,reserved)=>Function('q','return '+value)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
- for(const reserved of [false,true]){
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].pre.map(x=>run(x,reserved)),reserved?[0,0,0]:[1,2,3]);
-  assert.deepEqual(output.bones.leftArm.rotation['0.0'].post.map(x=>run(x,reserved)),reserved?[0,0,0]:[4,5,6]);
-  assert.deepEqual(output.bones.leftArm.position.map(x=>run(x,reserved)),reserved?[0,0,0]:[10,11,12]);
-  assert.deepEqual(output.bones.leftArm.scale.map(x=>run(x,reserved)),reserved?[1,1,1]:[.8,1,1.2]);
- }
+print(json.dumps([body,arm,player,controllers]))`;
+ const [body,arm,player,controllers]=JSON.parse(runPython('python3',['-c',code,JSON.stringify(source)],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}));
+ assert.deepEqual(body.bones,{rightArm:source.bones.rightArm});
+ assert.deepEqual(arm.bones,{leftArm:source.bones.leftArm});
+ assert.deepEqual(body.sound_effects,source.sound_effects);assert.equal(arm.sound_effects,undefined);
+ assert.equal(body.animation_length,1);assert.equal(arm.animation_length,1);assert.equal(arm.loop,true);
+ const run=reserved=>Function('q','return '+arm.blend_weight)({is_item_equipped:slot=>{assert.equal(slot,'off_hand');return reserved}});
+ assert.equal(run(false),1);assert.equal(run(true),0);
+ const description=player['minecraft:client_entity'].description;
+ assert.equal(description.animations.reload_kg_left_arm,'animation.gun.reload.kg_left_arm');
+ assert.deepEqual(description.scripts.animate,[{reload:'v.reload'},{reload_kg_left_arm:'v.reload'},'other']);
+ const state=controllers.gun.animation_controllers['controller.animation.gun'].states.reload;
+ assert.deepEqual(state.animations,[{reload:'v.gun'},{reload_kg_left_arm:'v.gun'}]);
+ assert.deepEqual(state.transitions,[{hold:'q.any_animation_finished'}]);
 });
-
 // Exercise installed observers only when an isolated reviewed pack is supplied.
 import {pathToFileURL as observerPathToURL} from 'node:url';
 import {readFile as observerReadFile} from 'node:fs/promises';
@@ -547,3 +553,36 @@ if(observerProfile===194||observerProfile===206){
 
  });
 }
+
+test('oil-brush pre-animation and weights skip actor queries in UI previews',()=>{
+ const code=`import sys,json
+sys.path.insert(0,'tools')
+from held_snapshot_properties import configure_player
+player={'minecraft:client_entity':{'description':{'identifier':'minecraft:player','scripts':{}}}}
+print(json.dumps(configure_player(player)))`;
+ const description=JSON.parse(runPython('python3',['-c',code],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}))['minecraft:client_entity'].description;
+ const scripts=description.scripts;
+ const variables={};for(const statement of scripts.initialize)Function('v','variable',statement)(variables,variables);
+ const actor={is_in_ui:0,has_property:()=>true,property:()=>7,is_item_name_any:slot=>slot==='slot.weapon.mainhand'};
+ Object.assign(variables,{kg_held_frame:7,kg_held_m11:225,kg_held_o11:225});
+ const updates=scripts.pre_animation.filter(line=>line.startsWith('v.kg_held_oil_brush_'));
+ assert.equal(updates.length,2);
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ const weights=Object.fromEntries(scripts.animate.flatMap(row=>Object.entries(row)));
+ const noActor=new Proxy({}, {get(){throw Error('actor unavailable in preview')}});
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_main)(variables,noActor)),true);
+ assert.equal(Boolean(Function('v','q','return '+weights.kg_held_oil_brush_off)(variables,noActor)),false);
+ // A preview can run the update phase after an actor-backed world frame.
+ // Only the native UI flag is available; every actor lookup must be skipped.
+ const preview=new Proxy({}, {get(_target,key){if(key==='is_in_ui')return 1;throw Error('actor unavailable in preview update')}});
+ for(const statement of updates)Function('v','q',statement)(variables,preview);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
+ assert.equal(Boolean(variables.kg_held_oil_brush_off_active),false);
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),true);
+ const fresh={};for(const statement of scripts.initialize)Function('v','variable',statement)(fresh,fresh);
+ for(const expression of Object.values(weights))assert.equal(Boolean(Function('v','q','return '+expression)(fresh,noActor)),false);
+ variables.kg_held_frame=6;
+ for(const statement of updates)Function('v','q',statement)(variables,actor);
+ assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
+});

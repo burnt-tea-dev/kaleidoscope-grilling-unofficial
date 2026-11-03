@@ -66,6 +66,13 @@ function readBlocks(dir) {
   }
 }
 readBlocks(new URL('../../projects/grilling/gameplay_core/behavior_pack/blocks/', import.meta.url));
+const poiDefinitions = new Map();
+const poiRoot = new URL('../../projects/grilling/gameplay_core/behavior_pack/poi/blocks/', import.meta.url);
+for (const row of readdirSync(poiRoot)) {
+  if (!row.endsWith('.json')) continue;
+  const definition = JSON.parse(readFileSync(new URL(row, poiRoot), 'utf8'))['minecraft:poi_block'];
+  poiDefinitions.set(definition.description.identifier, definition);
+}
 function validateStates(typeId, states) {
   const domains = blockDomains.get(typeId);
   const result = domains ? Object.fromEntries(Object.entries(domains).map(([name, values]) => [name, values[0]])) : {};
@@ -86,7 +93,7 @@ export function createFixture(options = {}) {
   const jobs = new Map(), dimensions = new Map(), entities = new Map(), namedTicks = new Map(), pendingProperties = new Map();
   const f = {
     id, logs: [], drops: [], sounds: [], particles: [], messages: [], effects: [],
-    scriptEvents: [], commandCalls: [], writes: [], subscribers: new Map(),
+    scriptEvents: [], commandCalls: [], poiQueries: [], writes: [], subscribers: new Map(),
     blockComponents: new Map(), itemComponents: new Map(), commands: new Map(),
     players: [],
   };
@@ -331,6 +338,19 @@ export function createFixture(options = {}) {
     const blocks = new Map();
     const dimension = {
       id: dimId, blocks,
+      poiManager: {blocks: {
+        getInSquare(filter, center, radius) {
+          fault(this, 'getInSquare', 'before', [filter, center, radius]);
+          const definition = poiDefinitions.get(filter.name);
+          if (!definition) throw new Error(`Unknown POI ${filter.name}`);
+          f.poiQueries.push({dimension: dimId, filter: copy(filter), center: copy(center), radius});
+          // BDS 1.26.60.6 uses a cube, includes corners and returns positions.
+          // Its instance.type getter is undefined; production must re-read blocks.
+          return [...blocks.values()]
+            .filter(b => definition.blocks.includes(b.typeId) && ['x', 'y', 'z'].every(axis => Math.abs(b[axis] - center[axis]) <= radius))
+            .map(b => ({position: copy(b.location), tickets: definition.tickets ?? 0}));
+        },
+      }},
       getBlock(location) {
         const key = positionKey(location);
         if (!blocks.has(key)) block('minecraft:air', {x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z)}, {dimension});

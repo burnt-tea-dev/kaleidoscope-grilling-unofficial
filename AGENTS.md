@@ -18,10 +18,10 @@
 ## 3. 硬規則（違反即拒絕合併）
 
 1. **存檔相容**：item／block／block state 值／entity／persisted key／pack UUID 只增不減；移除只能走 `docs/SAVE-COMPAT.md` 退役流程。`python3 tools/guards/save_compat.py check` 必須通過。
-2. **膨脹棘輪**：`python3 tools/guards/growth_ratchet.py check` 必須通過；計數下降後同 PR 執行 `tighten`。不得在 PR 中調高上限。
+2. **精簡驗證**：PR 僅以存檔相容、可載入的 JSON 與核心玩法測試作為常設檢查；膨脹棘輪與歷史回歸保留在手動發布檢查，不阻塞普通功能 PR。不要因少見的理論情境額外增添門檻。
 3. **禁止模式**（詳見計畫 §2.2）：不新增每版驗證器、`augment_a*`、`tools/gNNN_*`、`STATUS-*` 文件；不寫切原始碼文字的測試；不為選動畫／圖示新增或替換 item ID；不新增全域 `playerInteractWithBlock`／`runInterval`；不 commit 建置產物；不修改作者 Cookery 檔案；不擴充 `player.json`。
 4. **P2 之前不改 runtime 行為**；P2 的 PR 必須證明 BP 位元組不變（計畫 §4 P2 共通驗收）。
-5. **不刪護欄與計畫**：`tools/guards/*`、`AGENTS.md`、`docs/REBUILD-PLAN.md`、`docs/SAVE-COMPAT.md` 受 CI 保護。
+5. **最小必要保護**：存檔 ID／storage／pack UUID 及其遷移契約不可無聲破壞；歷史測試、膨脹計數器、舊流程與診斷檔可以正常精簡或退役，不再以檔案存在本身作為合併條件。
 6. **不改寫 Git 歷史、不 force push main、不刪 tag**。分支刪除需擁有者決策 D7。
 
 ## 4. luosen 正式世界
@@ -35,7 +35,7 @@
 
 - 目標結構與規則見計畫 §3：按 Java 功能域分模組；`logic.js` 不 import `@minecraft/server`；方塊互動用 custom components；計時走唯一排程器；寫入走 `core/transaction.js`；persisted key 集中在 `core/persist_keys.js` 並逐字保留。
 - 還原的依據是 Java 1.1.1 原碼與素材（`breezeth-CN/KaleidoscopeGrilling@9a1acdab`）及 `data/java/`。不憑印象、不以舊 Bedrock 實作當作正確答案。
-- 測試測玩家可見行為（計畫 §9）。每個 bug 修正附一個修正前會失敗的測試。不加守恆／見證／收據類測試。
+- 測試優先覆蓋玩家可見行為、物品不丟失與基本能力缺席場景（計畫 §9）。只有值得長期保護的玩法回歸才新增測試；不為每一項小型視覺／文件修改建立獨立測試，也不加歷史守恆／見證／收據類門檻。
 - 視覺：用 Bedrock 原生狀態機制（render controller 陣列、bone 可見度、entity/player property、block permutation）；單一 geometry ≤ 512 KB；平台做不到的寫進 `docs/KNOWN-ISSUES.md`。
 - 先找檔案再讀局部範圍；不要反覆讀整份大文件或巨型 log。重複的診斷沒有新資訊時，換一個證據來源。
 

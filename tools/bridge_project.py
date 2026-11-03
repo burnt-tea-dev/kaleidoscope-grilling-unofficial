@@ -83,7 +83,12 @@ def check(root=ROOT):
                for dep in baseline['packs']['BP']['dependencies'])
     expected_experiments = {'enableGameTestFramework': True} if beta else {}
     assert config['experimentalGameplay'] == expected_experiments, 'bridge experiment/API mismatch'
-    assert baseline.get('required_experiments', {}) == ({'gametest': True} if beta else {}), 'world experiment/API mismatch'
+    world_experiments = {'gametest': True} if beta else {}
+    # POI definitions in the 26.60 target need the world flag. Keep it in the
+    # deployment contract; do not invent an unsupported bridge. editor key.
+    if any((root / baseline['runtime']['BP'] / 'poi').rglob('*.json')):
+        world_experiments['poi'] = True
+    assert baseline.get('required_experiments', {}) == world_experiments, 'world experiment/API mismatch'
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
