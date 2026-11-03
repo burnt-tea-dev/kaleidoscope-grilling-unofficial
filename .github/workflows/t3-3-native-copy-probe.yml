@@ -1,0 +1,47 @@
+# Disposable, read-only red/green probe; delete when candidate is frozen.
+name: T3.3 transient native-skewer metadata probe
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.repository_id == '1377218440'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compute exact canonical BP/RP fingerprints
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from tools.baseline_gate import fingerprint, ROOT
+          c=json.loads((ROOT/'baseline.json').read_text(encoding='utf-8'))
+          print('T33_METADATA_FINGERPRINT='+json.dumps({side:fingerprint(ROOT/path)[0] for side,path in c['runtime'].items()},sort_keys=True))
+          PY
+      - name: Run new player-facing scenarios against repaired runtime
+        run: >
+          node --import ./tests/helpers/register-minecraft-loader.mjs --test
+          --test-name-pattern='cooked beef from a normal grill|unwritable cooked fields'
+          tests/scenario/test_skewer_item_snapshot.mjs
+      - name: Confirm original failures on unchanged main
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          cp tests/scenario/test_skewer_item_snapshot.mjs "$RUNNER_TEMP/grilled-negative.mjs"
+          git worktree add -q "$RUNNER_TEMP/grilling-base" "$BASE_SHA"
+          cp "$RUNNER_TEMP/grilled-negative.mjs" "$RUNNER_TEMP/grilling-base/tests/scenario/test_skewer_item_snapshot.mjs"
+          cd "$RUNNER_TEMP/grilling-base"
+          if node --import ./tests/helpers/register-minecraft-loader.mjs --test --test-name-pattern='cooked beef from a normal grill|unwritable cooked fields' tests/scenario/test_skewer_item_snapshot.mjs; then
+            echo 'Unexpected baseline pass: the negative control was not reproduced'
+            exit 1
+          fi
+          echo 'EXPECTED_OLD_MAIN_FAILURE=confirmed (Node API fixture; not BDS/client)'
