@@ -38,7 +38,7 @@ def main():
     scope = parser.add_mutually_exclusive_group()
     scope.add_argument('--smoke', action='store_true', help='Run the focused per-PR gameplay checks')
     scope.add_argument('--full', action='store_true', help='Run all legacy and current gameplay checks (default)')
-    parser.parse_args()
+    args = parser.parse_args()
     if args.smoke:
         tests = [ROOT / name for name in SMOKE_TESTS]
         missing = [str(path) for path in tests if not path.is_file()]
