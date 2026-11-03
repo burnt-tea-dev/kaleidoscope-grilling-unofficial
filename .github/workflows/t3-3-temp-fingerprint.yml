@@ -28,7 +28,7 @@ jobs:
           print('T33_FINGERPRINT='+json.dumps({side:fingerprint(ROOT/path)[0] for side,path in b['runtime'].items()},sort_keys=True))
           PY
       - name: Run revised isolated cuisine contract tests
-        run: node --import tests/helpers/register-minecraft-loader.mjs --test tests/legacy/test_a2750_core.mjs tests/legacy/test_cookery_output_contract_core.mjs
+        run: node --import ./tests/helpers/register-minecraft-loader.mjs --test tests/legacy/test_a2750_core.mjs tests/legacy/test_cookery_output_contract_core.mjs
       - name: Negative control on unchanged base runtime
         shell: bash
         env:
@@ -39,7 +39,7 @@ jobs:
           git worktree add -q "$RUNNER_TEMP/grilling-base" "$BASE_SHA"
           cp "$RUNNER_TEMP/cuisine-regression.mjs" "$RUNNER_TEMP/grilling-base/tests/legacy/test_cookery_output_contract_core.mjs"
           cd "$RUNNER_TEMP/grilling-base"
-          if node --import tests/helpers/register-minecraft-loader.mjs --test tests/legacy/test_cookery_output_contract_core.mjs; then
+          if node --import ./tests/helpers/register-minecraft-loader.mjs --test tests/legacy/test_cookery_output_contract_core.mjs; then
             echo 'ERROR: baseline did not reproduce original wrong-owner item mutation'
             exit 1
           fi
