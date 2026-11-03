@@ -21,7 +21,7 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：从准备食材、穿串�
 2. 根据对应版本说明准备指定版本的 **Cookery 行为包／资源包和兼容宿主整合**，再启用烟火的 BP／RP。
 3. 遵循选定版本的 Minecraft 版本及实验设置。开发主线已使用 Beta APIs，不能照搬旧版本的安装要求。
 
-当前完整公开配套请参照 [Core 现行安装流程](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g206-installation) 获取精确版本，并在本地生成 Cookery 与 Immersive Eating 接入包。Core 提供共享 API 和玩家显示接线；作者原始资源包须自行获取，不需要下载私服整合或存档。
+当前已记录的 G212 **完整家族**组合请参照 [Core G212 安装流程](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g212-installation)，精确对应 T194／G212／W180、Cookery 和该组合使用的 Immersive Eating。**这不是仅玩烟火的必要组合**；[烟火公开最小安装 #342](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/342) 正在独立开发，目标只依赖烟火与真正必需的 Cookery，IE／TACZ／酒馆／世界名酒和私服整合均为可选。未完成实际客户端验收前，不将最小安装候选称为已发布、直接导入即可玩的正式版本。
 
 **烟火目前还不是独立导入即可完整使用的 addon。** 直接导入 `.mcaddon` 不会给 Cookery 安装所需的宿主 API；只放入作者原始 Cookery 包同样不能完成整合。下载仅包含烟火自有内容，不包含 Cookery 或私有家族整合。四格显示还要求宿主采用自有 `player-presentation` 声明；资源包优先级不会自动合并玩家定义。参见[安装与发布](docs/RELEASING.md)和[属性迁移](docs/REBUILD-PLAN.md#t3-5-property-slimming)。
 
