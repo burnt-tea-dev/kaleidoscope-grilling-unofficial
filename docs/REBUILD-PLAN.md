@@ -86,7 +86,9 @@
 
 ## 2. 已就位的護欄與禁止模式
 
-### 2.1 護欄（P0 已完成，CI 必跑，`guards.yml`）
+### 2.1 護欄（P0 已完成；現行 PR 只強制存檔相容）
+
+> 現行簡化策略（2026-11-03）：`guards.yml` 在 PR 檢查存檔 ID、儲存元件及 pack 身份，並與 base lock 對照一次；`growth_ratchet` 與其自測、release baseline、bridge export 和過往相容性候選改為手動發布前驗證。此策略取代本節舊的「每個 PR 全量必跑」描述。既有真人世界上線前的備份與存檔不丟失要求不變。
 
 | 護欄 | 檔案 | 擋什麼 |
 | --- | --- | --- |
@@ -996,10 +998,12 @@ still not a fitting target or an acceptance gate.
 
 The former `--check` regeneration contract now exits **2 with an explicit error**.
 Library `generate()` and `fitted()` raise errors instead of silently succeeding
-or writing a pose. The sole tracked CLI caller, `.github/workflows/ci.yml`, is
-updated to read-only diagnostics plus mathematical regressions. The legacy
-JavaScript test now checks this diagnostic/no-write contract, not a reserved
-screen-box target. Search included hidden workflow paths.
+or writing a pose. The original #332 revision changed the sole tracked CLI
+caller, `.github/workflows/ci.yml`, to read-only diagnostics plus mathematical
+regressions. Main subsequently removed that automatic diagnostic block in #345;
+this forward merge preserves the current lightweight CI instead of restoring it.
+The existing legacy JavaScript test still checks this diagnostic/no-write
+contract, not a reserved screen-box target. Search included hidden workflow paths.
 
 ### Why the old pose conclusion is withdrawn
 

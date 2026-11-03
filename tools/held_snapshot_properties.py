@@ -77,8 +77,20 @@ def configure_player(player, extension=None):
         if statement not in scripts.setdefault('initialize', []):
             scripts['initialize'].append(statement)
     for entry in extension['scripts']['animate']:
-        if entry not in scripts.setdefault('animate', []):
-            scripts['animate'].append(copy.deepcopy(entry))
+        # Skin previews also run pre_animation without a gameplay actor. UI
+        # models keep the native arm pose; only world rendering reads held data.
+        # Initialized local weights also keep the animation phase actor-free.
+        for alias, condition in entry.items():
+            weight = 'v.' + alias + '_active'
+            initial = weight + ' = 0;'
+            update = weight + ' = q.is_in_ui ? 0 : (' + condition + ');'
+            if initial not in scripts['initialize']:
+                scripts['initialize'].append(initial)
+            if update not in scripts.setdefault('pre_animation', []):
+                scripts['pre_animation'].append(update)
+            cached = {alias: weight}
+            if cached not in scripts.setdefault('animate', []):
+                scripts['animate'].append(cached)
     for alias, animation in extension['animations'].items():
         previous = description.setdefault('animations', {}).get(alias)
         if previous is not None and previous != animation:

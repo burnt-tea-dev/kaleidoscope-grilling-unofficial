@@ -95,6 +95,10 @@ export function potFillPlan(vat,currentType,currentCount){
  if(n<=0)return {ok:false,reason:'full',buckets:0,points:0};
  return {ok:true,type:v.type,buckets:n,points:n*OIL_BUCKET_POINTS,nextCount:count+n*OIL_BUCKET_POINTS};
 }
-export function nearbyOffsets(){
- const out=[];for(let x=-4;x<=4;x++)for(let y=-2;y<=2;y++)for(let z=-4;z<=4;z++)out.push({x,y,z});return out;
+export function nearbyVatPositions(center,positions){
+ // Java BlockPos.betweenClosed visits x fastest, then y, then z. Native POI
+ // query order is unspecified; nearest-distance sorting would change the vat.
+ return positions.filter(p=>p&&Number.isInteger(p.x)&&Number.isInteger(p.y)&&Number.isInteger(p.z)
+  &&Math.abs(p.x-center.x)<=4&&Math.abs(p.y-center.y)<=2&&Math.abs(p.z-center.z)<=4)
+  .sort((a,b)=>(a.z-b.z)||(a.y-b.y)||(a.x-b.x));
 }
