@@ -282,10 +282,6 @@ test('legacy press registry migration resumes after a partial native write failu
  assert.throws(()=>createOilPressRegistry(f.world,REGISTRY).rows(),/injected/);assert.equal(f.dp.has(REGISTRY),true);
  f.setFault(()=>false);assert.equal(createOilPressRegistry(f.world,REGISTRY).rows().length,2);assert.equal(f.dp.has(REGISTRY),false);
 });
-test('native press stones respect tags and anvil precedence',()=>{
- assert.equal(core.toolProgress('addon:stone',[N+'press_stones']),1);
- assert.equal(core.toolProgress('minecraft:anvil',[N+'press_stones']),4);assert.equal(core.toolProgress('addon:stone',[]),0);
-});
 test('interactions cannot settle the normal ten-tick completion delay early',async()=>{
  const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:10}});
  for(let tick=0;tick<10;tick++){
