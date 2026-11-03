@@ -4,7 +4,7 @@ import {onBlockInteraction} from '../core/events.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {beginSeasoningMotion} from '../seasoning_motion_runtime.js';
 import {replaceSeasoningUsesLore} from '../bottle_lore_core.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
+import {getItemProperty,setItemProperty,getItemRawLore,setItemLore} from '../core/persist.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from '../core/interaction_feedback.js';
 import {world,system,ItemStack} from '@minecraft/server';
 import {EMPTY_SEASONING_ID} from '../eating_data_lookup.js';
@@ -22,7 +22,7 @@ import {
 import {
  COOKERY_POT_ID,COOKERY_STOCKPOT_ID,COOKERY_FILLED_OIL_POT_ID,
  cuisineStateKey,cuisineStateKeyAt,normalizeCuisineState,stationKind,
- oilTypeFromHeld,planSeasoningUse,inventoryGains,metadataPlan,
+ oilTypeFromHeld,planSeasoningUse,metadataPlan,
  stateBeforeSeasoning,planPotOilTransition
 } from './cookery_cuisine_core.js';
 import {
@@ -30,10 +30,15 @@ import {
 } from '../cookery_output_contract_core.js';
 
 const message=interactionFeedback;
-let authoritativeCuisineHost=false;
+// Cookery owns output creation. A Java-pot recipe capability is not an output receipt.
+// No inventory delta is permission to write another addon's ItemStack.
+let cuisineOutputReady=false;
 onScriptEvent('food/cookery_cuisine_runtime.js:0',event=>{
- if(event.id!=='kaleidoscope_cookery:api_ready')return;
- try{const info=JSON.parse(event.message);if(info.api===1&&Array.isArray(info.capabilities))authoritativeCuisineHost=info.capabilities.includes('grilling_pot_exact_flex_v1');}catch{}
+ if(event.id!=='kaleidoscope_cookery:api_ready'||event.sourceType!=='Server')return;
+ try{
+  const info=JSON.parse(String(event.message??''));
+  cuisineOutputReady=info?.api===1&&Array.isArray(info.capabilities)&&info.capabilities.includes('cuisine_output_receipt_v2');
+ }catch{cuisineOutputReady=false}
 });
 function isFirst(event){return event.isFirstEvent!==false}
 function readCuisineState(block){
@@ -74,44 +79,7 @@ function clearRemovedCuisine(event,rows){
 function hostHasOil(block){
  try{return block?.permutation?.getState('kaleidoscope_cookery:has_oil')===true}catch{return false}
 }
-function primitiveProps(stack){
- const out={};let ids=[];try{ids=getItemPropertyIds(stack)??[]}catch{}
- for(const id of ids)try{
-  const value=getItemProperty(stack,id);
-  if(['string','number','boolean'].includes(typeof value))out[id]=value;
-  else if(value&&typeof value==='object'&&Number.isFinite(value.x)&&Number.isFinite(value.y)&&Number.isFinite(value.z))
-   out[id]={x:value.x,y:value.y,z:value.z};
- }catch{}
- return out;
-}
-function descriptor(stack){
- if(!stack)return null;let lore=[],name='',damage=null;
- try{lore=getItemLore(stack)}catch{}try{name=stack.nameTag??''}catch{}
- try{damage=Number(stack.getComponent('minecraft:durability')?.damage??0)}catch{}
- return {id:stack.typeId,amount:Number(stack.amount)||1,name,lore,props:primitiveProps(stack),damage};
-}
-function snapshotInventory(player){
- const c=playerInventory(player);if(!c)return [];
- const rows=[];for(let i=0;i<c.size;i++)rows.push(descriptor(c.getItem(i)));return rows;
-}
 function foodLike(stack){if(!stack)return false;try{return !!stack.getComponent('minecraft:food')}catch{return false}}
-function giveCustom(player,stack){
- const c=playerInventory(player);
- if(!c){try{player.dimension.spawnItem(stack,player.location)}catch{};return}
- try{const rem=c.addItem(stack);if(rem)player.dimension.spawnItem(rem,player.location)}
- catch{try{player.dimension.spawnItem(stack,player.location)}catch{}}
-}
-function rewriteGain(player,gain,plan){
- const c=playerInventory(player);if(!c)return false;
- const current=c.getItem(gain.slot);
- if(readPublicFood(current).present)return false;
- if(!current||current.typeId!==gain.id||current.amount<gain.count||!foodLike(current))return false;
- const custom=current.clone();custom.amount=gain.count;applyFoodMetadata(custom,plan);
- const remain=current.amount-gain.count;
- if(remain>0){current.amount=remain;c.setItem(gain.slot,current);giveCustom(player,custom)}
- else c.setItem(gain.slot,custom);
- return true;
-}
 function typedHeldOil(stack){
  if(!stack)return '';
  if(stack.typeId===COOKERY_FILLED_OIL_POT_ID){
@@ -127,6 +95,7 @@ function setUses(stack,n){
 }
 function applySeasoning(player,block){
  if(!grillingConfig().enableCookeryFoodHeatAndSeasoning){javaInteractionFeedback(player,'cookery_integration_disabled');return true;}
+ if(!cuisineOutputReady){message(player,'§7Cookery 出料能力未就緒，調料未消耗');return true;}
  const held=getMainHand(player);if(!isSpecialSeasoningId(held?.typeId))return false;
  const ingredients=readFoodSeasonings(held),uses=readUses(held);
  const plan=planSeasoningUse({ingredients,uses,creative:isCreative(player)});
@@ -158,24 +127,12 @@ function applySeasoning(player,block){
  try{player.playSound('kg_imm.season',{volume:.85,pitch:1})}catch{}
  return true;
 }
-function finishHostInteraction(player,dimension,location,kind,beforeInventory,beforeHasOil,candidateOil,stateBefore){
- if(!grillingConfig().enableCookeryFoodHeatAndSeasoning)return;
- const block=dimension.getBlock(location),afterInventory=authoritativeCuisineHost?[]:snapshotInventory(player),gains=inventoryGains(beforeInventory,afterInventory);
- const afterHasOil=kind==='pot'&&block?.typeId===COOKERY_POT_ID?hostHasOil(block):false;
- if(kind==='pot'){
-  const transition=planPotOilTransition(stateBefore,beforeHasOil,afterHasOil,candidateOil);
-  if(transition.changed&&block?.typeId===COOKERY_POT_ID)writeCuisineState(block,transition.state);
- }
- // Modern host output receipts identify actual dishes; raw ingredient removal
- // must not be guessed to be a cooked output from an inventory increase.
- if(authoritativeCuisineHost)return;
- const effective={...stateBefore,oilType:kind==='pot'?(stateBefore.oilType||(beforeHasOil?'default':'')):stateBefore.oilType};
- const plan=metadataPlan(kind,effective);
- let decorated=0;for(const gain of gains)if(rewriteGain(player,gain,plan))decorated++;
- if(decorated>0){
-  if(kind==='pot')clearCuisineAt(dimension.id,location);
-  else if(block?.typeId===COOKERY_STOCKPOT_ID)writeCuisineState(block,{...stateBefore,lastOutputTick:system.currentTick});
- }
+function finishHostInteraction(dimension,location,beforeHasOil,candidateOil,stateBefore){
+ if(!cuisineOutputReady||!grillingConfig().enableCookeryFoodHeatAndSeasoning)return;
+ const block=dimension.getBlock(location);
+ if(block?.typeId!==COOKERY_POT_ID)return;
+ const transition=planPotOilTransition(stateBefore,beforeHasOil,hostHasOil(block),candidateOil);
+ if(transition.changed)writeCuisineState(block,transition.state);
 }
 function outputTarget(request){
  const target=request.target;
@@ -228,11 +185,10 @@ onBlockInteraction('a2750_cookery_cuisine_runtime',event=>{
    event.cancel=true;if(!isFirst(event))return;const dimension=event.block.dimension,location={...event.block.location};
    system.run(()=>{if(!interactionIntentStillCurrent(player,intent)){message(player,'§7操作已取消：手持物品已改變');return}const block=dimension.getBlock(location);if(block&&stationKind(block.typeId)===kind)applySeasoning(player,block)});return;
   }
-  if(!isFirst(event)||!grillingConfig().enableCookeryFoodHeatAndSeasoning)return;
+  if(!isFirst(event)||!cuisineOutputReady||!grillingConfig().enableCookeryFoodHeatAndSeasoning||kind!=='pot')return;
   const dimension=event.block.dimension,location={...event.block.location};
-  const stateBefore=readCuisineState(event.block),beforeInventory=authoritativeCuisineHost?[]:snapshotInventory(player);
-  const beforeHasOil=kind==='pot'?hostHasOil(event.block):false,candidateOil=kind==='pot'?typedHeldOil(used):'';
-  system.run(()=>finishHostInteraction(player,dimension,location,kind,beforeInventory,beforeHasOil,candidateOil,stateBefore));
+  const stateBefore=readCuisineState(event.block),beforeHasOil=hostHasOil(event.block),candidateOil=typedHeldOil(used);
+  system.run(()=>finishHostInteraction(dimension,location,beforeHasOil,candidateOil,stateBefore));
  }catch{}
 },{"priority":80});
 onBeforeBlockBreak('food/cookery_cuisine_runtime.js:0',event=>{
