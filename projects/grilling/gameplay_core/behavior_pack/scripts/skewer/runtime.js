@@ -30,12 +30,12 @@ const THREAD_LAST=new Map();
 const PENDING_HAND_ACTIONS=new Map();
 
 function copyCustomData(from,to){
- try{if(from.nameTag)to.nameTag=from.nameTag}catch{}
- let lore=[];try{lore=getItemRawLore(from)}catch{}
- let ids=[];try{ids=getItemPropertyIds(from)}catch{}
- try{if(lore.length)setItemLore(to,lore);else if(ids.length)setItemLore(to,['§r'])}catch{}
- for(const id of ids)try{setItemProperty(to,id,getItemProperty(from,id))}catch{}
- return to;
+ // Raw contents are the authority. Conversion changes only the item identity:
+ // reuse the existing complete ItemStack serializer and verified readback.
+ // Unsupported native metadata must abort extraction before the grill is debited.
+ const source=captureSkewerMetadata(from);
+ return restoreSkewerMetadata({...source,id:to.typeId},
+  (id,count)=>new ItemStack(id,count),id=>new EnchantmentType(id));
 }
 
 function ingredientSnapshot(stack,full=false){
