@@ -2,6 +2,8 @@
 
 Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串、刷油與調味，到烤製、擺盤和享用料理。
 
+**繁體中文** · [简体中文](README.zh-CN.md) · [English](README.en.md)
+
 [下載 / Downloads](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases) · [更新紀錄](CHANGELOG.md)
 
 ## 功能
@@ -19,7 +21,7 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 2. 依該版說明取得指定版本的 **Cookery BP／RP 與相容宿主整合**，再啟用煙火的 BP／RP。
 3. 使用所選版本要求的 Minecraft 版本與實驗設定。開發主線已使用 Beta APIs，不能套用舊版安裝條件。
 
-目前公開 G212 配套請依 [Core 現行安裝步驟](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g212-installation) 所列的**精確 T194／G212／W180 組合**與受核對的來源，於本機產生 Cookery 與選用的 Immersive Eating 接入包。各庫較新的 main（例如 T197／W183）**不是**這份既定公開配套的替代版本。Core 工具提供共用 API 與玩家顯示接線，作者原包須自行取得；不需要下載私服整合或存檔。
+既有 G212 **完整家族**配套請依 [Core G212 安裝步驟](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g212-installation) 的精確 T194／G212／W180 組合與本機 Cookery 接線；各庫更新的 main 不能任意混搭。**這不是只玩煙火的必要組合**。[公開最小安裝 Issue #342](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/342) 另行追蹤「煙火＋真正必要的 Cookery」，無須 IE／TACZ／酒館／世界名酒或私有包；在真人客戶端驗收前不宣稱候選已可正式公開即裝即玩。
 
 **煙火目前不是單獨匯入即可完整使用的 addon。** 普通 `.mcaddon` 匯入不會替 Cookery 安裝所需宿主 API；僅放入原作者 Cookery 包仍不等於完成整合。下載只含煙火自有內容，不含 Cookery 或私有家族整合。四格顯示來源還要求宿主套用自有 `player-presentation` 宣告；它不會靠資源包順序自動合併玩家。詳見[安裝與發布](docs/RELEASING.md)與[屬性遷移](docs/REBUILD-PLAN.md#t3-5-property-slimming)。
 
