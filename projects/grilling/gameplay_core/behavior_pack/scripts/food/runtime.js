@@ -26,12 +26,13 @@ import {captureInteractionIntent,interactionIntentStillCurrent,primitiveStackPro
 import {SEASONING_MAX_USES,SEASONING_VARIANT_KEY as SEASON_VARIANT_KEY,SEASONING_VARIANT_MAX,isPendingSeasoningId} from "../seasoning/seasoning_contract_core.js";
 import {specialSeasoningVisualId} from "../seasoning/special_seasoning_visual_core.js";
 import {getUses,setUses} from "../grill/runtime.js";
-import {setItemLore,setItemProperty} from "../core/persist.js";
+import {bottleLoreSignature,isOwnedBottleLore,isOwnedSeasoningUsesLore} from '../bottle_lore_core.js';
+import {getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {seasoningLore} from "../localized_lore_core.js";
 import {syncSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {canUseCuisineFood,captureCuisineUse,completedCuisineUse,cuisineUseEventMatches} from "../cuisine_eating_core.js";
 import {forgetJavaEatingHud,hideJavaEatingHud,showJavaEatingHud} from "../java_eating_hud_runtime.js";
-import {forgetEatingItem,prepareChangedEatingItems,prepareEatingItems,selectedEatingProfile} from "../eating_item_runtime.js";
+import {copyEatingVariant,forgetEatingItem,prepareChangedEatingItems,prepareEatingItems,selectedEatingProfile} from "../eating_item_runtime.js";
 import {syncSecretHeld} from "../secret_held_runtime.js";
 import {admitEatingProjection,selectEatingProjection} from "../eating_projection_routes.js";
 import {clearEffects} from "../effect_state_runtime.js";
@@ -168,8 +169,10 @@ function completePending(player,stack){
  // Both current Java branches finish any PENDING identity. Legacy pending
  // bottles may lack a base ingredient; EMPTY promotion owns that requirement.
  const list=readSeasonings(stack);
- const variant=Math.floor(Math.random()*(SEASONING_VARIANT_MAX+1)),out=new ItemStack(specialSeasoningVisualId(0,variant),1);setSeasonings(out,list);setUses(out,0);
- setItemProperty(out,SEASON_VARIANT_KEY,variant);setItemLore(out,seasoningLore(SEASONING_MAX_USES,list.length));
+ const variant=Math.floor(Math.random()*(SEASONING_VARIANT_MAX+1)),out=copyEatingVariant(stack,specialSeasoningVisualId(0,variant));setSeasonings(out,list);setUses(out,0);
+ setItemProperty(out,SEASON_VARIANT_KEY,variant);
+ const lore=[...getItemRawLore(stack).filter(line=>!isOwnedBottleLore(line)&&!isOwnedSeasoningUsesLore(line)),...seasoningLore(SEASONING_MAX_USES,list.length)];
+ setItemLore(out,lore);if(bottleLoreSignature(getItemRawLore(out))!==bottleLoreSignature(lore))throw new Error('Seasoning lore write failed');
  if(JSON.stringify(readSeasonings(out))!==JSON.stringify(list)||getUses(out)!==0)throw new Error('Seasoning data write failed');
  if(commitEating({debit:()=>writeUseHand(player,a.use,out),reward:()=>{},restoreFood:()=>writeUseHand(player,a.use,a.stack),restoreNutrition:()=>{}})){seasoningFinished(player);awardSeasoningFinishedChallenges(player,list)}
 }
