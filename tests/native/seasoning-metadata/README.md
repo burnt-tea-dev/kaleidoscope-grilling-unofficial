@@ -21,3 +21,9 @@ the type change; it is not an arbitrary NBT serializer or access to another
 pack's private data. Failure rollback uses the original native pending stack.
 Client rendering, ordinary player offhand activation and complete-family
 deployment are separate from this test.
+
+The [2026-11-05 observation](observed.json) passed both normal-stop stages with
+one native mainhand use and one same-world chest reload. It records the source
+module hash and separate diagnostic identities, with Beta APIs, POI and upcoming
+creator features enabled. Reuse that result only while the tested production
+code is unchanged; it does not certify an arbitrary later family assembly.
