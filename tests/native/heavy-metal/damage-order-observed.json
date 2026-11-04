@@ -1,0 +1,414 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-05T01:17:36+08:00",
+  "probe_execution_passed": true,
+  "java_parity": false,
+  "scope": "New native absorption/totem order controls; does not repeat the prior expiry/save probe",
+  "source_commit": "c3b4dd7638b5ddc6696fbbdc31eaadb24e35e1f9",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "server_module": "2.12.0-beta",
+  "gametest_module": "1.0.0-beta",
+  "production_handler_sha256": "8c84e073233c6539efac374a4182a61118bd76e351ecf9f655ae7caeb2db97b8",
+  "probe_sha256": "9778d1a2731cabdb02942656fe23bf497c517517e98f345546df0dfaf9a1d3f3",
+  "saved_experiments": {
+    "experiments_ever_used": 1,
+    "gametest": 1,
+    "saved_with_toggled_experiments": 1,
+    "upcoming_creator_features": 1
+  },
+  "java_references": [
+    {
+      "minecraft": "1.20.1",
+      "client": {
+        "url": "https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar",
+        "sha1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838"
+      },
+      "mappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt",
+        "sha1": "6c48521eed01fe2e8ecdadbd5ae348415f3c47da"
+      }
+    },
+    {
+      "minecraft": "1.21.1",
+      "client": {
+        "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+        "sha1": "30c73b1c5da787909b2f73340419fdf13b9def88"
+      },
+      "mappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt",
+        "sha1": "2244b6f072256667bcd9a73df124d6c58de77992"
+      }
+    }
+  ],
+  "observations": [
+    {
+      "kind": "before_hurt",
+      "name": "spent_absorption",
+      "phase": "spend_shield",
+      "damage": 3,
+      "before": {
+        "valid": true,
+        "hp": 7,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 400
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "handled": false,
+      "cancel": false,
+      "after": {
+        "valid": true,
+        "hp": 7,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 400
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "after_hurt",
+      "name": "spent_absorption",
+      "phase": "spend_shield",
+      "damage": 3,
+      "state": {
+        "valid": true,
+        "hp": 10,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 400
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "absorption_api",
+      "components": [
+        "minecraft:breathable",
+        "minecraft:can_climb",
+        "minecraft:health",
+        "minecraft:is_hidden_when_invisible",
+        "minecraft:lava_movement",
+        "minecraft:leashable",
+        "minecraft:movement",
+        "minecraft:movement.basic",
+        "minecraft:navigation.walk",
+        "minecraft:rideable",
+        "minecraft:type_family",
+        "minecraft:underwater_movement"
+      ],
+      "namedComponent": null,
+      "fresh": {
+        "valid": true,
+        "hp": 10,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "spent": {
+        "valid": true,
+        "hp": 10,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "before_hurt",
+      "name": "fresh_absorption",
+      "phase": "lethal_comparison",
+      "damage": 13,
+      "before": {
+        "valid": true,
+        "hp": -3,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "handled": false,
+      "cancel": false,
+      "after": {
+        "valid": true,
+        "hp": -3,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "before_hurt",
+      "name": "spent_absorption",
+      "phase": "lethal_comparison",
+      "damage": 13,
+      "before": {
+        "valid": true,
+        "hp": -3,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "handled": false,
+      "cancel": false,
+      "after": {
+        "valid": true,
+        "hp": -3,
+        "absorption": {
+          "amplifier": 0,
+          "duration": 378
+        },
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "after_hurt",
+      "name": "fresh_absorption",
+      "phase": "lethal_comparison",
+      "damage": 13,
+      "state": {
+        "valid": true,
+        "hp": 1,
+        "absorption": null,
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "after_hurt",
+      "name": "spent_absorption",
+      "phase": "lethal_comparison",
+      "damage": 13,
+      "state": {
+        "valid": true,
+        "hp": 0,
+        "absorption": null,
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      }
+    },
+    {
+      "kind": "death",
+      "name": "spent_absorption",
+      "phase": "lethal_comparison"
+    },
+    {
+      "kind": "absorption_results",
+      "fresh": {
+        "valid": true,
+        "hp": 1,
+        "absorption": null,
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "spent": {
+        "valid": true,
+        "hp": 0,
+        "absorption": null,
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": null
+      },
+      "freshDied": false,
+      "spentDied": true
+    },
+    {
+      "kind": "before_hurt",
+      "name": "totem_control",
+      "phase": "lethal_comparison",
+      "damage": 100,
+      "before": {
+        "valid": true,
+        "hp": -90,
+        "absorption": null,
+        "effects": {},
+        "offhand": "minecraft:totem_of_undying"
+      },
+      "handled": false,
+      "cancel": false,
+      "after": {
+        "valid": true,
+        "hp": -90,
+        "absorption": null,
+        "effects": {},
+        "offhand": "minecraft:totem_of_undying"
+      }
+    },
+    {
+      "kind": "before_hurt",
+      "name": "totem_heavy",
+      "phase": "lethal_comparison",
+      "damage": 100,
+      "before": {
+        "valid": true,
+        "hp": -90,
+        "absorption": null,
+        "effects": {
+          "heavy_metal": {
+            "until": 21600,
+            "amp": 0
+          }
+        },
+        "offhand": "minecraft:totem_of_undying"
+      },
+      "handled": true,
+      "cancel": true,
+      "after": {
+        "valid": true,
+        "hp": -90,
+        "absorption": null,
+        "effects": {
+          "heavy_metal_poisoning": {
+            "until": 30000,
+            "amp": 0
+          }
+        },
+        "offhand": "minecraft:totem_of_undying"
+      }
+    },
+    {
+      "kind": "after_hurt",
+      "name": "totem_control",
+      "phase": "lethal_comparison",
+      "damage": 100,
+      "state": {
+        "valid": true,
+        "hp": 1,
+        "absorption": {
+          "amplifier": 1,
+          "duration": 100
+        },
+        "effects": {},
+        "offhand": null
+      }
+    },
+    {
+      "kind": "totem_results",
+      "control": {
+        "valid": true,
+        "hp": 2,
+        "absorption": {
+          "amplifier": 1,
+          "duration": 97
+        },
+        "effects": {},
+        "offhand": null
+      },
+      "heavy": {
+        "valid": true,
+        "hp": 1,
+        "absorption": null,
+        "effects": {
+          "heavy_metal_poisoning": {
+            "until": 30000,
+            "amp": 0
+          }
+        },
+        "offhand": "minecraft:totem_of_undying"
+      }
+    },
+    {
+      "kind": "complete",
+      "ok": true,
+      "scope": "controls and order observed; no parity claim"
+    },
+    {
+      "kind": "disconnected",
+      "players": 0
+    }
+  ],
+  "native_errors": [],
+  "normal_stop": true,
+  "returncode": 0,
+  "memory_peak_bytes": 460607488,
+  "live_modified": false,
+  "client": false,
+  "limits": [
+    "No remaining absorption component was exposed on the tested native pig",
+    "Current public before-hurt surface is before native absorption/totem resolution; after-hurt and after-death are not cancellable death hooks",
+    "No global shield ledger or inferred totem-success repair was introduced"
+  ]
+}
