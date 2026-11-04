@@ -1,5 +1,5 @@
 import {readPlayerControl} from '../core/player_props.js';
-import {readEffects,writeEffects} from "../effect_state_runtime.js";
+import {readEffects,writeEffects,cureTotemEffects} from "../effect_state_runtime.js";
 import {now} from "../core/actions.js";
 import {FX_KEY,mergeEffectApplication} from "../effect_lifecycle_core.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
@@ -9,9 +9,9 @@ import {forgetDragonHealth,nativeDragonHealth} from "../dragon_native_health.js"
 import {awardMetalToleranceFailed,awardOrdinaryChallenge,ordinaryChallengeOutcome} from "../advancement/advancement_challenge_runtime.js";
 import {DANGEROUS_FOODS,hasFoodUse} from "../food/runtime.js";
 import {invincibleAmbientFeedback,invincibleDamageFeedback,ordinaryFatalFeedback,ordinaryShieldFeedback} from "../immersion_effect_feedback.js";
-import {system,world} from "@minecraft/server";
+import {system,world,EntityHealCause} from "@minecraft/server";
 import {abandonProjectileDodge,forgetProjectileDodge,reserveProjectileDodge,settleProjectileDodge} from "../projectile_dodge_runtime.js";
-import {forgetHeavyMetalRescue,handleHeavyMetalBeforeHurt,handleHeavyMetalAfterHeal} from "../heavy_metal_damage_runtime.js";
+import {forgetHeavyMetalRescue,handleHeavyMetalBeforeHurt} from "../heavy_metal_damage_runtime.js";
 import {tryProjectileDodgeMovement} from "../projectile_dodge_movement_runtime.js";
 import {FLATULENCE_SOUND_ID,projectileDodgeTeleportFeedback} from "../projectile_dodge_audio_runtime.js";
 import {isCookeryLivingEntity} from "../cookery_living_class.js";
@@ -109,7 +109,17 @@ function applyOrdinary(player){
  system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'override'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
 
-world.afterEvents.entityHeal.subscribe(handleHeavyMetalAfterHeal);
+world.afterEvents.entityHeal.subscribe(event=>{
+ if(event.healSource?.cause!==EntityHealCause.TotemOfUndying||!(event.healing>0))return;
+ try{
+  const entity=event.healedEntity;
+  if(entity.isValid===false||!(entity.getComponent('minecraft:health')?.currentValue>0))return;
+  // A native totem may follow an earlier rescue in this tick. Its result owns
+  // health now, independently of whether any curable custom effect remains.
+  forgetHeavyMetalRescue(entity);forgetProjectileDodge(entity);forgetDragonHealth(entity.id);
+  cureTotemEffects(entity);
+ }catch(error){console.warn('[Grilling native totem cure] '+error)}
+});
 
 world.afterEvents.entityDie.subscribe(e=>{forgetProjectileDodge(e.deadEntity);forgetHeavyMetalRescue(e.deadEntity)});
 

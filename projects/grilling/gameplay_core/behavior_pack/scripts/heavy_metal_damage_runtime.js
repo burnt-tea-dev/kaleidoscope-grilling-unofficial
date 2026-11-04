@@ -1,4 +1,4 @@
-import {world,system,EntityHealCause} from '@minecraft/server';
+import {world,system} from '@minecraft/server';
 import {FX_KEY,activeEffects,effectPayload} from './effect_lifecycle_core.js';
 import {writeEffects} from './effect_state_runtime.js';
 import {definitelyLethalProvisionalHealth,sameHeavyMetalEffect,planHeavyMetalTransition} from './heavy_metal_damage_core.js';
@@ -78,26 +78,6 @@ function settle(entity,id,token){
   // Keep the pre-cancel persistent receipt even when this callback is forgotten.
   console.warn('[Grilling heavy metal] '+error);
  }finally{release(id,token)}
-}
-
-/** The engine's confirmed totem heal, not a changed hand slot, owns this cure.
- * Keep poisoning and unrelated effects intact; only this module's Heavy Metal
- * behavior is adapted here. Other custom-effect cure rules are out of scope.
- */
-export function handleHeavyMetalAfterHeal(event){
- if(event.healSource?.cause!==EntityHealCause.TotemOfUndying||!(event.healing>0))return false;
- try{
-  const entity=event.healedEntity;
-  if(entity.isValid===false||!(entity.getComponent('minecraft:health')?.currentValue>0))return false;
-  // A real native totem may follow an earlier canceled hit in the same tick.
-  // Its own health outcome must not be overwritten by that queued settlement.
-  forgetHeavyMetalRescue(entity);
-  const state=snapshot(entity);
-  if(!state.effects.heavy_metal)return false;
-  const next={...state.effects};delete next.heavy_metal;
-  writeEffects(entity,next,{expectedRaw:state.raw});
-  return true;
- }catch(error){console.warn('[Grilling native totem cure] '+error);return false}
 }
 
 /** Called only by the existing before-hurt subscriber, after dodge and
