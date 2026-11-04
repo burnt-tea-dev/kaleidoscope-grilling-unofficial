@@ -16,3 +16,10 @@ test('pending completion retains original native metadata',async t=>{
  console.log(JSON.stringify({before:envelope(stack),after:envelope(actual)}));
  assert.deepEqual(envelope(actual),envelope(stack));
 });
+test('simulated offhand completion preserves custom bottle name',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
+ const food=await f.load('food/food_state_adapter.js');const bottle=f.item(N+'pending_seasoning_f3',1,{nameTag:'Offhand bottle'});
+ food.setFoodSeasonings(bottle,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);const p=f.player({off:bottle});
+ f.emit('world.afterEvents.itemStartUse',{source:p,itemStack:p.off.clone(),useDuration:80});f.tick(80);f.emit('world.afterEvents.itemCompleteUse',{source:p,itemStack:p.off.clone(),useDuration:0});
+ assert.ok(p.off?.typeId.startsWith(N+'special_seasoning'),'simulated event reaches SPECIAL');assert.equal(p.off.nameTag,'Offhand bottle');
+});
