@@ -72,7 +72,6 @@ TEST 比上述 stable 更舊，不是降版建議。兩者都要求作者 [Cooke
 
 ```sh
 python3 tools/baseline_gate.py check
-python3 tools/guards/save_compat.py check
 python3 tools/guards/growth_ratchet.py check
 ```
 

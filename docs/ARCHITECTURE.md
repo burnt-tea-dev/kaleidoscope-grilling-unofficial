@@ -44,9 +44,9 @@ Cookery 的公開宿主使用同一份 helper，卻仍在自己的腳本環境�
 
 ## 保存與交易邊界
 
-烤架、料理架與調料瓶的隱藏庫存實體裝著真實 ItemStack。它們的 identifier、容量、component schema 與 ownership 受 `save-compat.lock.json` 保護；普通「清理實體」不能刪它們或縮減庫存。
+烤架、料理架與調料瓶的隱藏庫存實體裝著真實 ItemStack。這些實體持有玩家物品；普通「清理實體」不能刪它們或縮減庫存。原存檔相容鎖已移除，變更以相關保存測試與一份可用備份確認。
 
-目前有 world／entity／item dynamic properties、保存 envelope、claim、批次／回復記錄及其他 persisted key。完整字面值／前綴以 [save-compat.lock.json](../tools/guards/save-compat.lock.json) 的 `persisted_key_literals` 為準，不抄固定舊數量。未知交付不能當失敗重試；外來槽位與 metadata 不因本次回滾被覆寫。API 讀回也不證明磁碟 flush 或任意 crash 原子性。
+目前有 world／entity／item dynamic properties、保存 envelope、claim、批次／回復記錄及其他 persisted key。當前 key 以 `core/persist_keys.js` 為準；需要世界普查時，由 `tools/ops/runtime_inventory.py` 讀取當前來源，不維護第二份鎖清單。未知交付不能當失敗重試；外來槽位與 metadata 不因本次回滾被覆寫。API 讀回也不證明磁碟 flush 或任意 crash 原子性。
 
 P3 將保存鍵集中與交易收斂時，仍要逐字保留既有 key／ID／UUID。任何退役走 [SAVE-COMPAT](SAVE-COMPAT.md) 的完整流程；文件改名或目錄整理不是例外。
 
@@ -58,7 +58,7 @@ manifest 的 Cookery 相依只表示包身份要求，不證明每項 adapter／
 
 ## CI 與證據
 
-[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法測試、指南／戰利品宣告、Java 萃取與保留工具回歸；[guards.yml](../.github/workflows/guards.yml) 另以 base lock／ratchet 保護規則。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
+[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法測試、指南／戰利品宣告、Java 萃取與保留工具回歸；舊的 `guards.yml` 已依擁有者指示退役；存檔相容鎖不再是合併或發布門檻。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
 
 保留測試包含純規則，以及 #250 以[受控外部 API 邊界](../tests/helpers/README.md)執行 canonical ESM、已註冊事件與排程的情境；loader 只解析外部依賴，不切割、改寫或替換正式模組。具體覆蓋與未補場景見 [分類補充](../tests/legacy/classification.json) 的 `native_scenario_addendum`；受控 API 結果仍不等於完整 BDS／Player 流程。需要 native binding 的 census 合成測試另有隔離入口；既有工具能執行不代表真實 LKG 重跑或 staging 已通過。實際來源、CI、staging、部署、真人證據分開記錄。
 
