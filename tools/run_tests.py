@@ -21,6 +21,7 @@ SMOKE_TESTS = (
     'tests/legacy/test_food_finish.mjs',
     'tests/legacy/test_food_snapshot.mjs',
     'tests/legacy/test_bottle_raw_lore.mjs',
+    'tests/scenario/test_pending_seasoning_metadata.mjs',
     'tests/legacy/test_java_survival_parity.mjs',
     'tests/legacy/test_java_heat_deadlines.mjs',
     'tests/legacy/test_cookery_output_contract_core.mjs',
