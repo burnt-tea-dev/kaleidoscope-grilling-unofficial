@@ -167,3 +167,11 @@ G221 的新原生對照已重現兩個差異，**尚未修正**：
 - 10HP原生模擬玩家副手持圖騰、受100點傷害：不帶重金屬的 control 消耗圖騰並存活；帶重金屬時，handler 先取消傷害、添加中毒，圖騰仍留在副手。這與 Java 的原生圖騰優先不同。
 
 所選引擎已觀察到 before-hurt 位於原生吸收／圖騰處理之前；目前公開的 [before-hurt](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entityhurtbeforeevent?view=minecraft-bedrock-experimental) 沒有剩餘吸收值或圖騰結果，而 [after-hurt／after-death](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-experimental) 不能取消最終死亡。單靠「手上曾有圖騰」猜成功，亦不足以正確清除自有保存效果。本次沒有新增全域傷害仲裁、盾量追蹤或推測式補丁；這是上述引擎／公開介面的精確缺口，並非宣稱所有未來API都不可行。4案只做一次正常停服，未重跑到期／保存證據，沒有改 runtime、版本或 LIVE。
+
+#### 原生圖騰成功訊號的來源調查（2026-11-05）
+
+官方 1.26.60.5 [server 2.12.0-beta bindings](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/script_modules/%40minecraft/server-bindings_2.12.0-beta.json) 已提供 `entityHeal` 與 `EntityHealCause.TotemOfUndying`。成功後事件能確認原生圖騰治療，不應把「before-hurt 沒有結果」擴大成所有公開 API 都無法得知成功。它仍不是可取消的最終死亡階段；同份 bindings 沒有暴露剩餘吸收值。
+
+G227 來源候選只在正值的 `TotemOfUndying` after-heal 清除存活實體的重金屬，保留既有中毒、claim 與不在本次範圍的其他效果，並撤銷同一實體先前尚未執行的救援生命寫回。這修正原生圖騰確實成功後仍留下重金屬，以及舊延後結算覆蓋新原生生命結果的窄範圍問題。它不改 before-hurt 的傷害取消決策，**上述部分盾漏救與重金屬搶先圖騰仍未修正**。
+
+沒有採用「手持圖騰就略過重金屬」：其他訂閱者仍可能在更後階段取消圖騰治療；此情況的存活／死亡結果，本次沒有可用的原生驗證。成功 after-heal 只能確認已發生的治療，不能保證稍後必然成功，也不能取消最終死亡。因此，提前讓路可能失去原有重金屬保護，屬尚未驗證的回歸風險，不是已確立的原生死亡結果。來源情境只驗證已確認事件的保存狀態清理、普通／零治療不誤清、寫入失敗、以及原有 entityAttack／override／void／selfDestruct 傷害決策不變；不是原生圖騰順序或完整 Java 等價驗收。

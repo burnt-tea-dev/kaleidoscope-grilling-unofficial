@@ -11,7 +11,7 @@ import {DANGEROUS_FOODS,hasFoodUse} from "../food/runtime.js";
 import {invincibleAmbientFeedback,invincibleDamageFeedback,ordinaryFatalFeedback,ordinaryShieldFeedback} from "../immersion_effect_feedback.js";
 import {system,world} from "@minecraft/server";
 import {abandonProjectileDodge,forgetProjectileDodge,reserveProjectileDodge,settleProjectileDodge} from "../projectile_dodge_runtime.js";
-import {forgetHeavyMetalRescue,handleHeavyMetalBeforeHurt} from "../heavy_metal_damage_runtime.js";
+import {forgetHeavyMetalRescue,handleHeavyMetalBeforeHurt,handleHeavyMetalAfterHeal} from "../heavy_metal_damage_runtime.js";
 import {tryProjectileDodgeMovement} from "../projectile_dodge_movement_runtime.js";
 import {FLATULENCE_SOUND_ID,projectileDodgeTeleportFeedback} from "../projectile_dodge_audio_runtime.js";
 import {isCookeryLivingEntity} from "../cookery_living_class.js";
@@ -108,6 +108,8 @@ function applyOrdinary(player){
  // Java uses damage, not generic kill: Heavy Metal and native totems retain their damage/death route.
  system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'override'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
+
+world.afterEvents.entityHeal.subscribe(handleHeavyMetalAfterHeal);
 
 world.afterEvents.entityDie.subscribe(e=>{forgetProjectileDodge(e.deadEntity);forgetHeavyMetalRescue(e.deadEntity)});
 
