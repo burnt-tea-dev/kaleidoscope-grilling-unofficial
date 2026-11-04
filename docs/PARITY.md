@@ -122,9 +122,20 @@ Regression events exercise actual main.js subscriptions, successful and failed
 ignition, redundant ignition/extinguish silence, thread/disassembly exclusivity,
 block insertion category, negative player position and pitch extrema. No new
 OGG, texture, model, use timing, cancellation or debit policy is introduced.
-The optional Cookery cuisine-seasoning audience/category mismatch remains
-separate and unfixed; native eating/burp duplication and listening acceptance
-also remain open. Test doubles do not establish that a player heard the sound.
+G220 fixes the Cookery cuisine-seasoning audience/category mismatch in
+`food/cookery_cuisine_runtime.js`. Both the
+[NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java#L22-L23)
+and [Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java#L22-L23)
+references broadcast from the player's BlockPos in PLAYERS, at .85/1. The
+adapter now uses the existing dimension-wide `useSound` route and a
+`kg_imm.cuisine_season` alias in `player`, reusing the season sample. Grill
+seasoning retains the `block` alias. The registered runtime callbacks in
+[immersion_audio](../tests/legacy/test_immersion_audio.mjs) cover pot/stockpot
+success, the final bottle use, negative player coordinates and silence for
+missing host capability, empty seasoning, changed hand, repeated input and a
+rejected commit. No saved data or debit rules change. Native eating/burp
+duplication, actual loudness, attenuation and category-slider behavior remain
+unverified. Test doubles do not establish that a player heard the sound.
 
 ## T3.3 oil POI 接續（2026-11-03）
 
