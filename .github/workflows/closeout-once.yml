@@ -1,0 +1,118 @@
+name: One-time public gameplay closeout
+on:
+  push:
+    branches: [integration/public-minimal-closeout-20261104]
+    paths: [.github/workflows/closeout-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.repository_id == '1377218440'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: integration/public-minimal-closeout-20261104
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply only reviewed domain changes; preserve historical identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, re, subprocess
+          root=pathlib.Path('.')
+          def git(*args): return subprocess.check_output(['git',*args])
+          target=json.loads((root/'.repo-target.json').read_text())
+          assert target['repository_id']==1377218440 and target['repository']=='burnt-tea-dev/kaleidoscope-grilling-unofficial'
+          assert git('branch','--show-current').decode().strip()=='integration/public-minimal-closeout-20261104'
+          bp='projects/grilling/gameplay_core/behavior_pack/'
+          changes=[
+            ('343','6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3',[bp+'scripts/food/cookery_cuisine_core.js',bp+'scripts/food/cookery_cuisine_runtime.js','tests/legacy/test_a2750_core.mjs','tests/legacy/test_cookery_output_contract_core.mjs']),
+            ('347','f5d3f44ffc233a0976f4b85c0b6255ba0a2eee35',[bp+'scripts/grill/runtime.js',bp+'scripts/skewer/runtime.js','tests/scenario/test_skewer_item_snapshot.mjs']),
+            ('348','55560f009b3e8b4a0b35169984fc284df8dbdf83',[bp+'scripts/seasoning/runtime.js','tests/legacy/test_bottle_raw_lore.mjs']),
+            ('339','d0c8f09aaee64520cd446efbf227f471d358edda',[bp+'scripts/oil/oil_machine_runtime.js','tests/legacy/test_oil_transactions.mjs']),
+            ('346','ae6bc7b959b1e47e3f06dc0301df052728175679',[bp+'scripts/plate/plate_recipe_runtime.js'])
+          ]
+          original=json.loads((root/'release-history.json').read_text()); history=dict(original)
+          for number,sha,paths in changes:
+            base=git('merge-base','origin/main',sha).decode().strip()
+            patch=git('diff','--binary',base,sha,'--',*paths)
+            assert patch, 'No domain patch for '+number
+            subprocess.run(['git','apply','--3way','--index'],input=patch,check=True)
+            old=json.loads(git('show',sha+':release-history.json'))
+            for key,value in old.items():
+              if key in history and history[key]!=value: raise RuntimeError('Conflicting prior identity '+key)
+              history[key]=value
+            print('APPLIED',number,sha,paths)
+          assert '2.8.219' not in history
+          assert max(tuple(map(int,k.split('.'))) for k in history)<(2,8,219)
+          (root/'release-history.json').write_text(json.dumps(history,indent=2)+'\n')
+          baseline=json.loads((root/'baseline.json').read_text()); previous=baseline['version']; version=[2,8,219]
+          own={row['uuid'] for row in baseline['packs'].values()}
+          for side,relative in baseline['runtime'].items():
+            path=root/relative/'manifest.json'; value=json.loads(path.read_text())
+            value['header']['version']=version
+            for module in value['modules']: module['version']=version
+            for dependency in value.get('dependencies',[]):
+              if dependency.get('uuid') in own: dependency['version']=version
+            path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+            baseline['packs'][side]['dependencies']=value.get('dependencies',[])
+          baseline['version']=version
+          (root/'baseline.json').write_text(json.dumps(baseline,indent=2)+'\n')
+          for name in ['config.json','projects/grilling/gameplay_core/config.json']:
+            path=root/name
+            path.write_text(path.read_text().replace('.'.join(map(str,previous)),'2.8.219').replace('_'.join(map(str,previous)),'2_8_219'))
+          for path in root.glob('README*.md'):
+            text=path.read_text()
+            text=re.sub(r'(?m)^(## (?:Current maintained baseline: |當前維護基線：))\d+\.\d+\.\d+$',r'\g<1>2.8.219',text)
+            if text!=path.read_text(): path.write_text(text)
+          # Temporary execution entry is not part of the delivered source.
+          (root/'.github/workflows/closeout-once.yml').unlink()
+          pathlib.Path('/tmp/closeout-base-history.json').write_text(json.dumps(original))
+          PY
+          python tools/baseline_gate.py freeze
+          git add -A
+          git diff --cached --check
+      - name: Run existing full gameplay once for the integrated candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/run_tests.py --full | tee /tmp/closeout-gameplay.log
+          python tools/guards/save_compat.py check | tee /tmp/closeout-save.log
+          python tools/baseline_gate.py check
+          git ls-files -z -- '*.json' | xargs -0 -r python tools/check_json.py
+          python tools/test_guide_icon_regression.py
+          python tools/test_fortress_loot_current.py
+      - name: Commit tested source to this integration branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = integration/public-minimal-closeout-20261104
+          git config user.name 'Grilling integration'
+          git config user.email 'noreply@users.noreply.github.com'
+          git add -A
+          git commit -m 'T3.3: integrate public capability, item metadata and oil delivery fixes as G219'
+          python tools/baseline_gate.py check --release
+          git push origin HEAD:refs/heads/integration/public-minimal-closeout-20261104
+          git log -1 --format='%H %T %s'
+          git diff --stat origin/main HEAD
+          git archive --format=tar.gz --output=/tmp/grilling-g219-source.tar.gz HEAD
+          sha256sum /tmp/grilling-g219-source.tar.gz
+      - name: Preserve owned source and test output only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-gameplay-closeout-owned-source
+          path: |
+            /tmp/grilling-g219-source.tar.gz
+            /tmp/closeout-gameplay.log
+            /tmp/closeout-save.log
+          if-no-files-found: ignore
+          retention-days: 7
