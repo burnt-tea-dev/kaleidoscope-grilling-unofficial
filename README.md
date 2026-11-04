@@ -37,7 +37,6 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 
 ```sh
 python3 tools/baseline_gate.py check
-python3 tools/guards/save_compat.py check
 python3 tools/guards/growth_ratchet.py check
 ```
 

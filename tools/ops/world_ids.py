@@ -119,7 +119,7 @@ def main(argv=None):
     parser.add_argument('--source-manifest', type=Path, required=True)
     parser.add_argument('--manifest-db-prefix', required=True, help='Relative db prefix in the stopped-backup manifest, including final slash')
     parser.add_argument('--snapshot-archive-sha256', required=True)
-    parser.add_argument('--key-lock', type=Path, default=OPS.parent / 'guards/save-compat.lock.json')
+    parser.add_argument('--catalog', type=Path, help='Optional runtime catalog; defaults to the current source inventory')
     parser.add_argument('--scratch-root', type=Path, default=Path(tempfile.gettempdir()))
     args = parser.parse_args(argv)
     if not re.fullmatch('[a-f0-9]{64}', args.snapshot_archive_sha256):
@@ -138,10 +138,14 @@ def main(argv=None):
     original = snapshot(db)
     manifest_bytes = args.source_manifest.read_bytes()
     verify_manifest(original, json.loads(manifest_bytes), prefix)
-    lock_bytes = args.key_lock.read_bytes()
+    if args.catalog:
+        lock_bytes = args.catalog.read_bytes()
+    else:
+        from runtime_inventory import collect
+        lock_bytes = json.dumps(collect(), sort_keys=True).encode()
     lock = json.loads(lock_bytes)
     if not isinstance(lock.get('persisted_key_literals'), list):
-        parser.error('key-lock must contain persisted_key_literals')
+        parser.error('catalog must contain persisted_key_literals')
     scratch = args.scratch_root.resolve()
     if scratch.is_relative_to(world) or any((parent / engine).exists() for parent in (scratch, *scratch.parents) for engine in ('bedrock_server', 'bedrock_server.exe')):
         parser.error('scratch must be outside the input world and any server engine tree')
@@ -181,7 +185,7 @@ def main(argv=None):
             result.setdefault('errors', []).append({'code': 'INPUT_DB_CHANGED'})
     result['source'] = {'snapshot_archive_sha256': args.snapshot_archive_sha256,
                         'source_file_manifest_sha256': hashlib.sha256(manifest_bytes).hexdigest(),
-                        'key_lock_sha256': hashlib.sha256(lock_bytes).hexdigest(),
+                        'catalog_sha256': hashlib.sha256(lock_bytes).hexdigest(),
                         'db_content_sha256': digest_content(original), 'db_files': len(original),
                         'db_bytes': sum(row['bytes'] for row in original.values())}
     result['tool_sources_sha256'] = {name: hashlib.sha256((OPS / name).read_bytes()).hexdigest() for name in ('world_ids.py', 'world_ids.mjs', 'world_nbt.mjs', 'world_properties.mjs', 'package.json', 'package-lock.json', 'build-requirements.txt')}

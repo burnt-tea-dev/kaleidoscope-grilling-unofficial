@@ -3,6 +3,7 @@ import {onBeforeBlockBreak,onExplosion,onScriptEvent} from '../core/events.js';
 import {onBlockInteraction} from '../core/events.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {beginSeasoningMotion} from '../seasoning_motion_runtime.js';
+import {useSound} from '../immersion_audio_runtime.js';
 import {replaceSeasoningUsesLore} from '../bottle_lore_core.js';
 import {getItemProperty,setItemProperty,getItemRawLore,setItemLore} from '../core/persist.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from '../core/interaction_feedback.js';
@@ -124,7 +125,7 @@ function applySeasoning(player,block){
   interactionFailure(player,result.rollbackErrors?'§c操作失敗且回滾不完整，請查看 Content Log':'§c操作未完成，調料與鍋具狀態已回復');return true;
  }
  try{beginSeasoningMotion(player,'main');player.playAnimation('animation.kg_imm.player.season.main',{blendOutTime:0})}catch{}
- try{player.playSound('kg_imm.season',{volume:.85,pitch:1})}catch{}
+ useSound(player,'cuisine_season',.85,1);
  return true;
 }
 function finishHostInteraction(dimension,location,beforeHasOil,candidateOil,stateBefore){
