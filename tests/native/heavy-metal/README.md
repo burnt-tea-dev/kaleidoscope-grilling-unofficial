@@ -26,3 +26,11 @@ This establishes only the measured restricted-callback writes, health update
 and affected saved-data behavior. The actual main event routing and failure
 rollback are tested separately in the ESM scenario. It does not establish
 totem/absorption ordering, other-addon arbitration, client visuals or sound.
+
+`damage_order_probe.js` is a separate four-case diagnostic with server-gametest
+1.0.0-beta. Use it as the entry instead of `probe.js`; it creates two pigs and
+two simulated players and disconnects both players after one observation.
+The [damage-order observation](damage-order-observed.json) records full versus
+partly spent absorption and native offhand totem versus totem plus Heavy Metal.
+Its controls passed while Java parity failed. Do not call its execution success
+a repair. It needs one normal stop and does not repeat the expiry/save cycle.
