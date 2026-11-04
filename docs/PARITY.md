@@ -50,6 +50,12 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | Cookery／Tavern 指南入口與多語 | 家族整合能力；不冒充 Java 原作玩法 | `guide/main.js`、guide publisher；[指南規範](GUIDE-STANDARD.md) | 來源已實作：單入口、內容與交接 | 接收章節不等於玩家 UI 正確；返回、關閉、逾時、觸控、三語及多人隔離待驗 | [指南靜態檢查](../tools/check_grilling_guide.py)；[GUIDE-STANDARD](GUIDE-STANDARD.md)；既有指南檢查與真人場景分開 |
 | HUD、平台替代與效能 | Java HUD／流體／碰撞／mixin／選用模組 | 目前 HUD、油流與明列 adapter；現況見 [ARCHITECTURE](ARCHITECTURE.md) | 來源已實作：有限替代；部分能力未實作 | 原始資料碼外露、位置與延遲保留失敗；未有完整效能預算。D3／D5／D6 仍按計畫待決 | [a2739_core](../tests/legacy/test_a2739_core.mjs)、[a2740_core](../tests/legacy/test_a2740_core.mjs)；僅 HUD 目標／狀態規則；無完整效能或畫面驗收。CLIENT-HUD、平台與效能；`hud.json`、`minecraft_assets.json` |
 
+## 搖瓶完成的額外資料保存適配
+
+G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/350) 的單一修復：`food/runtime.js:completePending` 使用已核對的目前手持瓶，經既有 `copyEatingVariant` 保留 API 可見名稱、RawMessage lore、keepOnDeath／lockMode、Adventure 放置／破壞限制和可讀寫的動態欄位；只重建已知由煙火持有的 lore，重設 uses=0 與隨機 variant。失敗回復目前的原生 pending stack，不回寫開始食用時已過期的旗標／限制快照。[原有真main回歸](../tests/scenario/test_pending_seasoning_metadata.mjs)已在當前來源依賴執行，覆蓋目前 metadata、主副手失敗回復和拒絕新 variant 後重試；原生操作／保存範圍見[專用探針](../tests/native/seasoning-metadata/README.md)。
+
+這是**擁有者資料保護要求下的額外適配，不是 Java 缺口計數**。固定 Java1.1.1 的 [NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java)／[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java) `finishUsingItem` 本身也建立新 SPECIAL stack，只轉 ingredients／隨機 variant，沒有複製名稱與任意 metadata。跨種類成功轉換沿既有公開欄位投影，不等於同種類 `ItemStack.clone()` 的完整原生複製；未知 NBT、不可讀欄位及其他 pack 私有資料不在已證明範圍。原料、產量、次數上限與隨機機率不變。
+
 ## 指南內容的歷史來源索引
 
 以下章節承接 catalog 的 `source_refs`。連結固定在文件收斂前的 `df0ff11de5fbff8f0c64324d8e2c3bf7d618084b`，保留每份記錄的原候選、日期與驗證限制；它們是歷史來源，不是目前候選已完成原生／真人驗收的證據。catalog 的正文、配方、payload、語言與 icon 不因此改變。
