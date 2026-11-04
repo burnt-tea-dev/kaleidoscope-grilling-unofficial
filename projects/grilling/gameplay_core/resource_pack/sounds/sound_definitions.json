@@ -61,6 +61,14 @@
         }
       ]
     },
+    "kg_imm.cuisine_season": {
+      "category": "player",
+      "sounds": [
+        {
+          "name": "sounds/kg_imm/season"
+        }
+      ]
+    },
     "kg_imm.season": {
       "category": "block",
       "sounds": [

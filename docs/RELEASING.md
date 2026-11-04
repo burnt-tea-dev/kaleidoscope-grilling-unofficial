@@ -1,8 +1,8 @@
 # 安裝、驗證與發布
 
-## 現行公開安裝與發布：G212（2026-11-03 查核）
+## 公開下載與來源開發主線
 
-目前 main 的自有 BP/RP 來源身份為 [baseline.json](../baseline.json) 的 **2.8.212**；已發布下載為 [A2.8.212](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.212) **預發布**，不能僅以 main/Release 判斷真人可用、存檔准入或 LIVE 已部署。當次已發布資產、雜湊須查對該 Release 實際項目；[Release 請求](../.github/release-request.json) 是提交/審查紀錄，不取代實際公開資產與其雜湊。
+main 的自有 BP/RP 來源身份查 [baseline.json](../baseline.json)。本節記錄的已發布下載為 [A2.8.212](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/tag/A2.8.212) **預發布**（2026-11-03 查核），與後續開發主線分開。不能僅以 main/Release 判斷存檔准入或 LIVE 已部署。當次已發布資產、雜湊須查對該 Release 實際項目；[Release 請求](../.github/release-request.json) 是提交/審查紀錄，不取代實際公開資產與其雜湊。
 
 公開 **精確 T194／G212／W180** 組裝指引及 Cookery 1.6.4 / 1.6.20012 本機相容輸入見 [Core G212 現行配套](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#current-g212-installation)。作者 Cookery／Immersive Eating 必須自行從合法來源取得並按精確 descriptor 由使用者本機接入；本庫下載只含自有 Grilling BP/RP。這不是三個倉庫各自最新 main 的任意拼接；當次 G212 完整家族的保存、真人客戶端及 LIVE 驗收，未有相同精確身份的證據時一律維持**未知／未驗**，不得沿用 G206 紀錄。
 

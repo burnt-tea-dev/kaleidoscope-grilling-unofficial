@@ -168,3 +168,55 @@ test('failed ignition hand commit produces no ignition sound',async()=>{
   const state=await f.load('grill/grill_state_adapter.js');assert.equal(state.readGrillState(f.grill).lit,false);
  }finally{f.dispose()}
 });
+
+async function cuisineFixture(type='pot',ready=true){
+ const f=await interactionFixture();
+ f.station=f.block('kaleidoscope_cookery:'+type,{x:5,y:80,z:5});
+ f.cuisine=await f.load('food/cookery_cuisine_runtime.js');
+ f.food=await f.load('food/food_state_adapter.js');
+ f.data=await f.load('core/persist.js');
+ f.bottle=f.item(N+'special_seasoning');
+ f.food.setFoodSeasonings(f.bottle,[N+'green_chili_powder',N+'onion_powder']);
+ f.data.setItemProperty(f.bottle,N+'uses',15);f.p.main=f.bottle;
+ if(ready)f.emit('system.afterEvents.scriptEventReceive',{
+  id:'kaleidoscope_cookery:api_ready',sourceType:'Server',
+  message:JSON.stringify({api:1,capabilities:['cuisine_output_receipt_v2']})
+ });
+ f.season=(first=true)=>f.emit('world.beforeEvents.playerInteractWithBlock',{
+  block:f.station,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:first,cancel:false
+ });
+ return f;
+}
+for(const type of ['pot','stockpot'])test(type+' seasoning broadcasts once at the player BlockPos in PLAYERS after commit',async()=>{
+ const f=await cuisineFixture(type);
+ try{
+  const definitions=JSON.parse(await readFile(new URL('../../projects/grilling/gameplay_core/resource_pack/sounds/sound_definitions.json',import.meta.url),'utf8')).sound_definitions;
+  f.season();f.flush();
+  const sounds=f.sounds.filter(s=>s.sound==='kg_imm.cuisine_season');
+  assert.equal(sounds.length,1);assert.strictEqual(sounds[0].source,f.dimension);
+  assert.deepEqual(sounds[0].location,{x:-.5,y:80.5,z:2.5});
+  assert.deepEqual(sounds[0].options,{volume:.85,pitch:1});
+  assert.equal(definitions[sounds[0].sound].category,'player');
+  assert.deepEqual(definitions[sounds[0].sound].sounds,definitions['kg_imm.season'].sounds);
+  assert.equal(definitions['kg_imm.season'].category,'block','grill seasoning keeps its BLOCKS category');
+  assert.equal(f.sounds.filter(s=>s.sound==='kg_imm.season').length,0,'no private duplicate');
+  assert.deepEqual(f.cuisine.readCuisineExtensionState(f.station).seasoning,[N+'green_chili_powder',N+'onion_powder']);
+  assert.equal(f.p.main.typeId,N+'empty_seasoning_bottle');
+ }finally{f.dispose()}
+});
+for(const mode of ['host unavailable','empty ingredients','hand changed','repeated input','commit rejected'])test('cuisine seasoning is silent when '+mode,async()=>{
+ const f=await cuisineFixture('pot',mode!=='host unavailable');
+ try{
+  if(mode==='empty ingredients'){
+   f.food.setFoodSeasonings(f.bottle,[]);f.p.main=f.bottle;
+  }
+  if(mode==='commit rejected')f.faults.failNext(f.p.inventory,'setItem',{
+   phase:'before',predicate:(slot,stack)=>stack?.typeId===N+'empty_seasoning_bottle'
+  });
+  f.season(mode!=='repeated input');
+  if(mode==='hand changed')f.p.main=f.item('minecraft:stick');
+  f.flush();
+  assert.equal(f.sounds.filter(s=>s.sound==='kg_imm.cuisine_season'||s.sound==='kg_imm.season').length,0);
+  assert.deepEqual(f.cuisine.readCuisineExtensionState(f.station).seasoning,[]);
+ }finally{f.dispose()}
+});
