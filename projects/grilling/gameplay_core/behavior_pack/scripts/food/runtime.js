@@ -3,7 +3,7 @@ import {clearEatingPresentation,updatePlayerPresentation,flushPlayerPresentation
 import {WOK_FOOD_IDS} from "./wok_food_core.js";
 import {STOCKPOT_FOOD_IDS} from "./stockpot_food_core.js";
 import {seasoningFinished,seasoningShakeSound,stopSoundHandle} from "../immersion_audio_runtime.js";
-import {EquipmentSlot,ItemStack,system,world} from "@minecraft/server";
+import {EquipmentSlot,system,world} from "@minecraft/server";
 import {SKEWER_EATING_IDS,canonicalFoodId,isPlainEatingId} from "../eating_profile_ids.js";
 import {applyFixedEffect,applyOrdinary,applySeasoning,dangerousPreservation,doubleNewFx,doubleNewNative,fxSnapshot,nativeSnapshot} from "../effect/runtime.js";
 import {awardEatItHot} from "../advancement/advancement_event_runtime.js";
@@ -23,11 +23,11 @@ import {completedUseStillCurrent} from "../core/use_transaction.js";
 import {a25PlateItem,a25PlateRows,a25RestoreStack} from "../plate/plate_recipe_runtime.js";
 import {PLATE_ID,plateHighestNutritionIndex} from "../plate/plate_recipe_core.js";
 import {captureInteractionIntent,interactionIntentStillCurrent,primitiveStackProps} from "../core/interaction_intent_adapter.js";
-import {SEASONING_MAX_USES,SEASONING_VARIANT_KEY as SEASON_VARIANT_KEY,SEASONING_VARIANT_MAX,isPendingSeasoningId} from "../seasoning/seasoning_contract_core.js";
+import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY,SEASONING_VARIANT_KEY as SEASON_VARIANT_KEY,SEASONING_VARIANT_MAX,isPendingSeasoningId} from "../seasoning/seasoning_contract_core.js";
 import {specialSeasoningVisualId} from "../seasoning/special_seasoning_visual_core.js";
-import {getUses,setUses} from "../grill/runtime.js";
+import {setUses} from "../grill/runtime.js";
 import {bottleLoreSignature,isOwnedBottleLore,isOwnedSeasoningUsesLore} from '../bottle_lore_core.js';
-import {getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
+import {getItemProperty,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {seasoningLore} from "../localized_lore_core.js";
 import {syncSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {canUseCuisineFood,captureCuisineUse,completedCuisineUse,cuisineUseEventMatches} from "../cuisine_eating_core.js";
@@ -164,17 +164,20 @@ function completePlateUse(player,eventStack){
 
 function completePending(player,stack){
  const a=PENDING_USES.get(player.id);
- if(!a||!completedUseStillCurrent(a.use,stack,heldByHand(player,a.hand),player.selectedSlotIndex))return;
+ const current=a&&heldByHand(player,a.hand);
+ if(!a||!completedUseStillCurrent(a.use,stack,current,player.selectedSlotIndex))return;
  PENDING_USES.delete(player.id);stopSoundHandle(a.audio);
  // Both current Java branches finish any PENDING identity. Legacy pending
  // bottles may lack a base ingredient; EMPTY promotion owns that requirement.
- const list=readSeasonings(stack);
- const variant=Math.floor(Math.random()*(SEASONING_VARIANT_MAX+1)),out=copyEatingVariant(stack,specialSeasoningVisualId(0,variant));setSeasonings(out,list);setUses(out,0);
+ // Use the validated held bottle for conversion and rollback: event/start
+ // snapshots may predate changes to public flags, restrictions or raw lore.
+ const list=readSeasonings(current);
+ const variant=Math.floor(Math.random()*(SEASONING_VARIANT_MAX+1)),out=copyEatingVariant(current,specialSeasoningVisualId(0,variant));setSeasonings(out,list);setUses(out,0);
  setItemProperty(out,SEASON_VARIANT_KEY,variant);
- const lore=[...getItemRawLore(stack).filter(line=>!isOwnedBottleLore(line)&&!isOwnedSeasoningUsesLore(line)),...seasoningLore(SEASONING_MAX_USES,list.length)];
+ const lore=[...getItemRawLore(current).filter(line=>!isOwnedBottleLore(line)&&!isOwnedSeasoningUsesLore(line)),...seasoningLore(SEASONING_MAX_USES,list.length)];
  setItemLore(out,lore);if(bottleLoreSignature(getItemRawLore(out))!==bottleLoreSignature(lore))throw new Error('Seasoning lore write failed');
- if(JSON.stringify(readSeasonings(out))!==JSON.stringify(list)||getUses(out)!==0)throw new Error('Seasoning data write failed');
- if(commitEating({debit:()=>writeUseHand(player,a.use,out),reward:()=>{},restoreFood:()=>writeUseHand(player,a.use,a.stack),restoreNutrition:()=>{}})){seasoningFinished(player);awardSeasoningFinishedChallenges(player,list)}
+ if(JSON.stringify(readSeasonings(out))!==JSON.stringify(list)||getItemProperty(out,SEASON_USES_KEY)!==0||getItemProperty(out,SEASON_VARIANT_KEY)!==variant)throw new Error('Seasoning data write failed');
+ if(commitEating({debit:()=>writeUseHand(player,a.use,out),reward:()=>{},restoreFood:()=>writeUseHand(player,a.use,current),restoreNutrition:()=>{}})){seasoningFinished(player);awardSeasoningFinishedChallenges(player,list)}
 }
 
 function showEatingPresentation(e,a){
