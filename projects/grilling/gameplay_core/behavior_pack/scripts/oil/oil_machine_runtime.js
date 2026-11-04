@@ -220,8 +220,11 @@ function bucketDelivery(p,hand,output){
    if(item)after.amount++;break;
   }
  }
- return {apply(){if(slot>=0)container.setItem(slot,after);else{drop=p.dimension.spawnItem(output,{...p.location,y:p.location.y+.5});if(!drop)throw Error('Oil bucket drop unavailable')}},
-  rollback(){if(slot>=0)container.setItem(slot,before);else if(drop)drop.remove()}};
+ // The shared slot writer verifies delivery and never rolls back a foreign
+ // replacement. Full-inventory drops retain their existing native lifecycle.
+ if(slot>=0)return ownedItemStep({read:()=>container.getItem(slot),write:stack=>container.setItem(slot,stack),before,after});
+ return {apply(){drop=p.dimension.spawnItem(output,{...p.location,y:p.location.y+.5});if(!drop)throw Error('Oil bucket drop unavailable')},
+  rollback(){if(drop)drop.remove()}};
 }
 
 function fillVatFromBucket(block,p,hand,item){

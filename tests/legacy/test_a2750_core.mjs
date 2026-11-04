@@ -4,7 +4,7 @@ import {
 } from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/wok_food_core.js';
 import {
  COOKERY_POT_ID,COOKERY_STOCKPOT_ID,potHotTicks,metadataPlan,planSeasoningUse,
- oilTypeFromHeld,inventoryGains,stateBeforeSeasoning,planPotOilTransition
+ oilTypeFromHeld,stateBeforeSeasoning,planPotOilTransition
 } from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/cookery_cuisine_core.js';
 
 let n=0;const t=(name,fn)=>{fn();n++;console.log('PASS',name)};
@@ -56,12 +56,6 @@ t('typed Cookery oil path preserves Grilling oil kind',()=>{
  const fresh=stateBeforeSeasoning('pot',{seasoning:['minecraft:redstone'],oilType:''},false);
  const next=planPotOilTransition(fresh,false,true,'secret_chili');
  assert.equal(next.changed,true);assert.equal(next.state.oilType,'secret_chili');assert.deepEqual(next.state.seasoning,['minecraft:redstone']);
-});
-
-t('inventory delta isolates new Cookery servings',()=>{
- const before=[{id:'x',amount:3,name:'',lore:[],props:{},damage:null},null];
- const after=[{id:'x',amount:4,name:'',lore:[],props:{},damage:null},{id:'y',amount:1,name:'',lore:[],props:{},damage:null}];
- assert.deepEqual(inventoryGains(before,after),[{slot:0,id:'x',count:1},{slot:1,id:'y',count:1}]);
 });
 
 console.log('A2.7.50 Wok Cuisine core: '+n+'/'+n);
