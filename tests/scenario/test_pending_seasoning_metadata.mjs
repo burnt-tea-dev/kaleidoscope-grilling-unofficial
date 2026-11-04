@@ -5,7 +5,7 @@ const N='kaleidoscope_grilling:';
 test('pending completion retains original native metadata',async t=>{
  const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
  const data=await f.load('core/persist.js'),food=await f.load('food/food_state_adapter.js');
- const stack=f.item(N+'pending_seasoning_f3',1,{nameTag:'Owned bottle',keepOnDeath:true,lockMode:'slot',canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],rawLore:[{text:'foreign retained'}]});
+ const stack=f.item(N+'pending_seasoning_f3',1,{nameTag:'Owned bottle',keepOnDeath:true,lockMode:'slot',canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],rawLore:[{text:'foreign retained'},{translate:'tooltip.kaleidoscope_grilling.seasoning.ingredients',with:['3','8']},{translate:'tooltip.kaleidoscope_grilling.seasoning.ready'}]});
  data.setItemProperty(stack,'foreign:owner','retained');food.setFoodSeasonings(stack,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);
  const p=f.player({main:stack});
  f.emit('world.afterEvents.itemStartUse',{source:p,itemStack:p.main.clone(),useDuration:80});
@@ -15,6 +15,10 @@ test('pending completion retains original native metadata',async t=>{
  const envelope=s=>({name:s.nameTag,keepOnDeath:s.keepOnDeath,lockMode:s.lockMode,canDestroy:s.getCanDestroy(),canPlaceOn:s.getCanPlaceOn(),foreign:data.getItemProperty(s,'foreign:owner'),customLore:s.getRawLore().filter(x=>x.text==='foreign retained')});
  console.log(JSON.stringify({before:envelope(stack),after:envelope(actual)}));
  assert.deepEqual(envelope(actual),envelope(stack));
+ const lore=actual.getRawLore();assert.equal(lore.filter(x=>x.translate==='tooltip.kaleidoscope_grilling.seasoning.ready').length,0);
+ assert.equal(lore.filter(x=>x.translate==='tooltip.kaleidoscope_grilling.seasoning.uses').length,1);
+ assert.equal(lore.filter(x=>x.translate==='tooltip.kaleidoscope_grilling.seasoning.ingredients').length,1);
+ assert.deepEqual(food.readFoodSeasonings(actual),food.readFoodSeasonings(stack));
 });
 test('simulated offhand completion preserves custom bottle name',async t=>{
  const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
