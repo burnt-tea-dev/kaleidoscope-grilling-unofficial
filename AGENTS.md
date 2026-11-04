@@ -1,6 +1,6 @@
 # AGENTS.md — 煙火基岩版移植（重建期）
 
-> 這份是**所有 AI 代理與維護者的行為規則**。工作內容與順序在 [`docs/REBUILD-PLAN.md`](docs/REBUILD-PLAN.md)，存檔硬規則在 [`docs/SAVE-COMPAT.md`](docs/SAVE-COMPAT.md)。三者高於 repo 內其他所有文件；舊的 `docs/STATUS-*`、`RELEASE-NOTES-*`、`audit/`、`evidence/`、`history/` 只是歷史紀錄，不是指令。
+> 這份是**所有 AI 代理與維護者的行為規則**。工作內容與順序在 [`docs/REBUILD-PLAN.md`](docs/REBUILD-PLAN.md)，存檔變更說明在 [`docs/SAVE-COMPAT.md`](docs/SAVE-COMPAT.md)。三者高於 repo 內其他所有文件；舊的 `docs/STATUS-*`、`RELEASE-NOTES-*`、`audit/`、`evidence/`、`history/` 只是歷史紀錄，不是指令。
 
 ## 1. 身份與寫入目標
 
@@ -17,8 +17,8 @@
 
 ## 3. 硬規則（違反即拒絕合併）
 
-1. **存檔相容**：item／block／block state 值／entity／persisted key／pack UUID 只增不減；移除只能走 `docs/SAVE-COMPAT.md` 退役流程。`python3 tools/guards/save_compat.py check` 必須通過。
-2. **精簡驗證**：PR 僅以存檔相容、可載入的 JSON 與核心玩法測試作為常設檢查；膨脹棘輪與歷史回歸保留在手動發布檢查，不阻塞普通功能 PR。不要因少見的理論情境額外增添門檻。
+1. **存檔相容鎖已移除（2026-11-04 擁有者指示）**：不再以 ID 清單、退役收據或等待期阻擋。影響保存資料時，測試實際讀寫與重啟；只有確實需要時才做資料轉換。
+2. **精簡驗證**：PR 僅以可載入的 JSON 與核心玩法測試作為常設檢查；膨脹棘輪與歷史回歸保留在手動發布檢查，不阻塞普通功能 PR。不要因少見的理論情境額外增添門檻。
 3. **禁止模式**（詳見計畫 §2.2）：不新增每版驗證器、`augment_a*`、`tools/gNNN_*`、`STATUS-*` 文件；不寫切原始碼文字的測試；不為選動畫／圖示新增或替換 item ID；不新增全域 `playerInteractWithBlock`／`runInterval`；不 commit 建置產物；不修改作者 Cookery 檔案；不擴充 `player.json`。
 4. **P2 之前不改 runtime 行為**；P2 的 PR 必須證明 BP 位元組不變（計畫 §4 P2 共通驗收）。
 5. **最小必要保護**：存檔 ID／storage／pack UUID 及其遷移契約不可無聲破壞；歷史測試、膨脹計數器、舊流程與診斷檔可以正常精簡或退役，不再以檔案存在本身作為合併條件。
@@ -26,7 +26,7 @@
 
 ## 4. luosen 正式世界
 
-- luosen 有真實玩家資料。任何會改動它的動作，依序：停服完整備份（計畫 §5.3）→ staging 驗證（§5.4）→ 以家族既有工具部署（§5.5）→ 讀回確認 → 保留可 15 分鐘內完整回滾的上一版。
+- luosen 有真實玩家資料。任何會改動它的動作，依序：停服完整備份（計畫 §5.3）→ staging 驗證（§5.4）→ 以家族既有工具部署（§5.5）→ 讀回確認 → 保留可 15 分鐘內完整回滾的最新一份；完整世界備份總共只保留一份。
 - 不在 luosen 試錯、不在 luosen 跑模擬玩家、不把 staging 世界複製回 luosen。
 - 部署授權：擁有者 2026-10-03 的常設授權（完成 PR／檢查／合併並通過 static、BDS、存檔遷移後部署完整家族）**在擁有者回覆決策 D2 前仍然有效**；但重建 P1–P2 不產生 runtime 候選，因此不會觸發。P3 起依 D2 執行。
 - 伺服器路徑、帳號、金鑰位置只寫在私有 repo 或伺服器上的受控檔案。
@@ -45,10 +45,12 @@
 
 - BDS 載入成功、雜湊一致、測試數量都**不等於**玩法或畫面已還原。
 - 本機或未推送的工作不是「已交付」；推送後讀回遠端才算。
-- 回報包含：做了什麼、怎麼驗證、還剩什麼不確定。`client=false`、`production_ready=false` 維持到有實際真人結果。
+- 回報包含：做了什麼、怎麼驗證、還剩什麼不確定。驗收以相關自動化功能測試為準；真人驗收不作門檻，不反覆等待或要求 dot。未觀察的聲畫不冒稱完成。
 
 ## 7. 仍然有效的專案規範
 
 - 指南：遵循 `docs/GUIDE-STANDARD.md`——在既有 Cookery 書內只有一個煙火入口與六個料理分類，不新增實體書物品，不替換宿主檔案。
 - 授權：原作素材 CC BY-NC-SA 4.0；原碼及衍生工具的 BSD 聲明另列；出處見 `projects/grilling/ATTRIBUTION.md`。
 - 版本：玩法或輸出資產變更才 bump 版本並同步 manifests／`baseline.json`；只改工具或文件不 bump、不部署。
+
+- 禁止繁雜補丁式修復、特定包組合與機器環境特化。修原功能的負責來源，移除舊路徑；通用自有能力回到公開 addon／既有共用依賴，私有整合只保留必要跨包連接。

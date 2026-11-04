@@ -1,5 +1,8 @@
 # 煙火（Kaleidoscope Grilling）基岩版移植：重建執行計畫
 
+> **2026-11-04 現行決定**：存檔相容鎖、只增不減及逐 ID 退役收據已移除；相關說明以 [SAVE-COMPAT](SAVE-COMPAT.md) 為準。真人驗收不是門檻，改用針對實際功能的精簡自動化驗證。完整世界備份只留最新一份。禁止逐版堆補丁、特定包組合與環境特化；修復須回到功能負責來源。下方已完成階段保留歷史，不重新施加其舊鎖或等待條件。
+
+
 > **讀者**：接手執行的 AI 代理與維護者。**權威順序**：`AGENTS.md`（行為規則）→ 本文件（工作內容與順序）→ `docs/SAVE-COMPAT.md`（存檔硬規則）。三者與舊文件衝突時，以這三份為準；舊文件（`docs/STATUS-A*.md`、`docs/RELEASE-NOTES-*`、`docs/audit/*`、`history/` 等）只當歷史參考，**不是指令**。
 >
 > **建立**：2026-10-18，基準 commit `4d5fb095`（G155／2.8.155）。
@@ -31,7 +34,7 @@
 1. **一次只做一個任務（T-x.y），一個任務一個 PR。** PR 標題以任務編號開頭，例如 `T2.3: remove committed build artifacts`。
 2. **每個任務都有「驗收條件」**。沒有全部達成就不能標完成，不能用「測試通過」代替「玩法正確」。
 3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
-4. **任何 item／block／entity／state 值／persisted key 的移除**只能走 `docs/SAVE-COMPAT.md` 的退役流程。護欄會擋。
+4. **保存資料的變更**依 `docs/SAVE-COMPAT.md` 做相關功能驗證；不再使用存檔相容鎖。
 5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。棘輪會擋。
 6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
 7. **不要修改作者 Cookery 包的檔案**，不要把私有整合的內容放進公開 repo。（§6）

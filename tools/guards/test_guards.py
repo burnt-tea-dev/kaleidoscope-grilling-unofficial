@@ -1,4 +1,4 @@
-"""The two guards must fail on the exact damage they exist to stop."""
+"""Read-only inventory, census and persistence-tool regressions."""
 import json
 import sys
 import unittest
@@ -12,103 +12,8 @@ from uuid import uuid4
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import save_compat as sc  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ops"))
 import persistence_spotcheck as spot  # noqa: E402
-
-
-class SaveCompat(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.now = sc.collect()
-        cls.lock = json.loads(sc.LOCK.read_text(encoding="utf-8"))
-
-    def test_current_runtime_matches_lock(self):
-        errors, additions = sc.check(self.lock, self.now)
-        self.assertEqual(errors, [])
-        self.assertEqual(additions, [])
-
-    def test_removed_item_entity_state_and_uuid_fail(self):
-        now = json.loads(json.dumps(self.now))
-        now["items"].remove("kaleidoscope_grilling:grilled_beef_skewer_native_plain")
-        now["entities"].remove("kaleidoscope_grilling:inventory_grill_v1")
-        now["persisted_key_literals"].remove("kaleidoscope_grilling:storage_v1/")
-        now["blocks"]["kaleidoscope_grilling:canola_crop"]["kaleidoscope_grilling:age"].remove("7")
-        now["packs"]["BP"]["header_uuid"] = "00000000-0000-0000-0000-000000000000"
-        with mock.patch.object(sc, "load_retirements", return_value={}):
-            errors, _ = sc.check(self.lock, now)
-        text = "\n".join(errors)
-        for needle in ("grilled_beef_skewer_native_plain", "inventory_grill_v1", "storage_v1/",
-                       "#state:kaleidoscope_grilling:age=7", "header UUID changed"):
-            self.assertIn(needle, text)
-
-    def test_retirement_needs_receipt_and_living_runtime_migration(self):
-        now = json.loads(json.dumps(self.now))
-        gone = "kaleidoscope_grilling:grilled_beef_skewer_native_plain"
-        now["items"].remove(gone)
-        incomplete = {gone: {"id": gone, "replacement": "kaleidoscope_grilling:grilled_beef_skewer",
-                             "migration": "runtime", "reason": "shadow route item"}}
-        with mock.patch.object(sc, "load_retirements", return_value=incomplete):
-            errors, _ = sc.check(self.lock, now)
-        self.assertTrue(any("world_rewrite_receipt" in e for e in errors), errors)
-        complete = {gone: dict(incomplete[gone], world_rewrite_receipt="ops/receipts/example.json")}
-        with mock.patch.object(sc, "load_retirements", return_value=complete):
-            errors, _ = sc.check(self.lock, now)
-        self.assertTrue(any("invalid migration evidence" in e for e in errors), errors)
-
-    def test_storage_capacity_and_ownership_cannot_change_silently(self):
-        for edit in (lambda row: row.update(inventory_size=1),
-                     lambda row: row.update(restrict_to_owner=False)):
-            now = json.loads(json.dumps(self.now))
-            edit(now["storage_components"]["kaleidoscope_grilling:inventory_grill_v1"]["components"])
-            errors, _ = sc.check(self.lock, now)
-            self.assertTrue(any("storage component" in e for e in errors), errors)
-        now = json.loads(json.dumps(self.now))
-        del now["storage_components"]["kaleidoscope_grilling:inventory_grill_v1"]
-        errors, _ = sc.check(self.lock, now)
-        self.assertTrue(any("storage component" in e for e in errors), errors)
-
-    def test_added_state_values_must_enter_the_lock(self):
-        now = json.loads(json.dumps(self.now))
-        now["blocks"]["kaleidoscope_grilling:canola_crop"]["kaleidoscope_grilling:age"].append("8")
-        errors, additions = sc.check(self.lock, now)
-        self.assertFalse(errors)
-        self.assertTrue(any("value added: 8" in line for line in additions))
-
-    def test_receipt_requires_valid_mode_binding_and_preserved_counts(self):
-        gone = "guard:old"
-        base = {"items": [gone]}
-        now = {"items": [], "entities": [], "persisted_key_literals": [], "blocks": {}, "packs": {}}
-        row = {"id": gone, "replacement": "guard:new", "migration": "offline-rewrite",
-               "reason": "synthetic fixture", "world_rewrite_receipt": "proof.json"}
-        proof = {"id": gone, "replacement": "guard:new", "migration": "offline-rewrite",
-                 "staging_first_load": True, "staging_restart": True,
-                 "counts_before": {gone: 3, "guard:new": 2}, "counts_after": {gone: 0, "guard:new": 5}}
-        with tempfile.TemporaryDirectory() as temp, mock.patch.object(sc, "ROOT", Path(temp)):
-            data = json.dumps(proof).encode()
-            (Path(temp) / "proof.json").write_bytes(data)
-            row["receipt_sha256"] = hashlib.sha256(data).hexdigest()
-            with mock.patch.object(sc, "load_retirements", return_value={gone: row}):
-                self.assertEqual(sc.check(base, now)[0], [])
-                for changes in ({"migration": "anything"}, {"receipt_sha256": "fake"},
-                                {"world_rewrite_receipt": "missing.json"},
-                                {"world_rewrite_receipt": "../proof.json"}):
-                    with mock.patch.dict(row, changes):
-                        self.assertTrue(sc.check(base, now)[0], changes)
-                proof["counts_after"]["guard:new"] = 4
-                data = json.dumps(proof).encode()
-                (Path(temp) / "proof.json").write_bytes(data)
-                row["receipt_sha256"] = hashlib.sha256(data).hexdigest()
-                self.assertTrue(sc.check(base, now)[0])
-
-    def test_state_retirement_uses_the_evidence_path(self):
-        now = json.loads(json.dumps(self.now))
-        ident = "kaleidoscope_grilling:canola_crop#state:kaleidoscope_grilling:age=7"
-        now["blocks"]["kaleidoscope_grilling:canola_crop"]["kaleidoscope_grilling:age"].remove("7")
-        row = {"id": ident, "replacement": "fixture:new", "migration": "invalid",
-               "reason": "fixture", "world_rewrite_receipt": "fake.json"}
-        with mock.patch.object(sc, "load_retirements", return_value={ident: row}):
-            self.assertTrue(any("unsupported migration" in e for e in sc.check(self.lock, now)[0]))
 
 
 class LexicalGuards(unittest.TestCase):
@@ -176,7 +81,7 @@ class LexicalGuards(unittest.TestCase):
 class ServerInventory(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        path = Path(sc.__file__).resolve().parents[1] / "ops/server_inventory.py"
+        path = Path(__file__).resolve().parents[1] / "ops/server_inventory.py"
         spec = importlib.util.spec_from_file_location("server_inventory", path)
         cls.ops = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.ops)
@@ -955,7 +860,7 @@ process.stdout.write(JSON.stringify(output, (key, value) => typeof value === 'bi
         import subprocess
         run = subprocess.run([sys.executable, str(self.ops / 'world_ids.py'), '--world-copy', str(world),
                              '--source-manifest', str(manifest), '--manifest-db-prefix', 'fixture/db/',
-                             '--snapshot-archive-sha256', '0' * 64, '--key-lock', str(lock),
+                             '--snapshot-archive-sha256', '0' * 64, '--catalog', str(lock),
                              '--scratch-root', str(scratch)], text=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, timeout=45)
         try:
@@ -1015,7 +920,7 @@ process.stdout.write(JSON.stringify(output, (key, value) => typeof value === 'bi
             import subprocess
             run = subprocess.run([sys.executable, str(self.ops / 'world_ids.py'), '--world-copy', str(world),
                                   '--source-manifest', str(manifest), '--manifest-db-prefix', 'fixture/db/',
-                                  '--snapshot-archive-sha256', '0' * 64, '--key-lock', str(lock),
+                                  '--snapshot-archive-sha256', '0' * 64, '--catalog', str(lock),
                                   '--scratch-root', str(scratch)], text=True, capture_output=True, timeout=30)
             self.assertNotEqual(run.returncode, 0)
             self.assertIn('db must be a real directory', run.stderr)
