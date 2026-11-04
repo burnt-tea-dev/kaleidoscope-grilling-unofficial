@@ -210,6 +210,62 @@ test('placed grill cooks and returns exactly three beef skewers through player c
   assert.equal(f.drops.length,0);assert.equal(f.grillState().phase,0);
  }finally{f.dispose();}
 });
+// Raw-to-cooked IDs change; native ownership metadata must not.
+async function oneBeefReadyForExtraction(f,raw){
+ f.p.main=raw;f.interact();
+ assert.equal(f.contents.getItem(0)?.typeId,N+'raw_beef_skewer');
+ const oil=await f.load('oil/cookery_oil_pot_adapter.js');
+ f.p.main=oil.buildCookeryOilPot('canola',1);assert.ok(f.p.main);f.interact();
+ f.p.main=undefined;
+ for(let flip=1;flip<=4;flip++){
+  f.interact();assert.equal(f.grillState().flips,flip);
+  for(let tick=0;tick<20;tick++){f.tick();f.component(N+'grill_tick','onTick',{block:f.grill});}
+ }
+ assert.equal(f.grillState().phase,2);
+ const food=await f.load('food/food_state_adapter.js'),bottle=f.item(N+'special_seasoning');
+ food.setFoodSeasonings(bottle,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);
+ f.data.setItemProperty(bottle,N+'uses',15);f.p.main=bottle;f.interact();
+ assert.equal(f.grillState().seasoned,true);f.p.main=undefined;f.p.isSneaking=true;
+}
+test('cooked beef from a normal grill preserves native ownership and foreign metadata',async()=>{
+ const f=await placedGrillFixture();
+ try{
+  const raw=f.item(N+'raw_beef_skewer',1,{
+   nameTag:'Named by another addon',keepOnDeath:true,lockMode:'slot',
+   canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],
+   rawLore:[{text:'foreign: preserve my note'}]
+  });
+  f.data.setItemProperty(raw,'foreign:owner','retained');
+  await oneBeefReadyForExtraction(f,raw);f.interact();
+  const cooked=f.p.inventory.items().find(x=>x?.typeId===N+'grilled_beef_skewer');
+  assert.ok(cooked,'the cooked serving must be delivered');
+  assert.equal(cooked.amount,1);assert.equal(cooked.nameTag,raw.nameTag);
+  assert.equal(cooked.keepOnDeath,true);assert.equal(cooked.lockMode,'slot');
+  assert.deepEqual(cooked.getCanDestroy(),['minecraft:stone']);
+  assert.deepEqual(cooked.getCanPlaceOn(),['minecraft:dirt']);
+  assert.ok(cooked.getRawLore().some(line=>line.text==='foreign: preserve my note'));
+  assert.equal(f.data.getItemProperty(cooked,'foreign:owner'),'retained');
+  assert.equal(f.contents.getItem(0),undefined);assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
+test('unwritable cooked fields leave the original raw skewer on its grill and permit retry',async()=>{
+ const f=await placedGrillFixture(),original=f.ItemStack.prototype.setCanDestroy;
+ try{
+  await oneBeefReadyForExtraction(f,f.item(N+'raw_beef_skewer',1));
+  f.ItemStack.prototype.setCanDestroy=function(list){
+   if(this.typeId===N+'grilled_beef_skewer')throw Error('unavailable cooked native field');
+   return original.call(this,list);
+  };
+  f.interact();
+  assert.equal(f.contents.getItem(0)?.typeId,N+'raw_beef_skewer');
+  assert.equal(f.grillState().seasoned,true);
+  assert.equal(f.p.inventory.items().some(x=>x?.typeId===N+'grilled_beef_skewer'),false);
+  assert.equal(f.drops.length,0);
+  f.ItemStack.prototype.setCanDestroy=original;f.interact();
+  assert.equal(f.contents.getItem(0),undefined);
+  assert.equal(f.p.inventory.items().filter(x=>x?.typeId===N+'grilled_beef_skewer').length,1);
+ }finally{f.ItemStack.prototype.setCanDestroy=original;f.dispose()}
+});
 test('normal grill before event plus native component flips exactly once and cancels vanilla use',async()=>{
  const f=await nativeGrillInteractionFixture();
  try{

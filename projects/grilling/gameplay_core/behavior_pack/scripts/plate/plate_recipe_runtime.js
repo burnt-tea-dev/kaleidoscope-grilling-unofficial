@@ -10,7 +10,7 @@ import {itemTranslationKey} from '../hud/skewer_recipe_hud_core.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../skewer_item_snapshot.js';
 import {decodePlateStorage,verifiedPlateStep,commitPlateSteps,plateFacingFromYaw} from '../plate_transaction_core.js';
 import {nativeItemSignature,ownedItemStep,planOwnedInventoryDelivery,commitPlayerItemTransaction} from '../core/transaction.js';
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
+import {getItemProperty,setItemProperty,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
 import {hasSolidTop,hasFullCubeCollision,hasSturdySide} from '../blockSupport.js';
 import {withoutAutomaticCreatorLore} from '../skewer/hot_runtime.js';
 import {creatorLore} from '../localized_lore_core.js';
@@ -25,7 +25,7 @@ import {
  PLATE_ID,PLATE_BLOCK_ID,BOOK_ID,RECIPE_BLOCK_ID,PLATE_SKEWERS_KEY,BOOK_RECORD_KEY,PLATE_CAPACITY,
  normalizePlateRows,plateAdd,plateRemoveLast,isRecordableRecipe,makeBookRecord,bookIngredientSlots,planInventoryConsumption
 } from './plate_recipe_core.js';
-import {playerInventory as mainContainer,getMainHand as heldMain,setMainHand as setMain,getOffHand as heldOff,setOffHand as setOff,getHand as heldByHand,setHand,isCreative as creative,captureWritableHand} from '../core/player_io.js';
+import {playerInventory as mainContainer,getMainHand as heldMain,getOffHand as heldOff,getHand as heldByHand,isCreative as creative,captureWritableHand} from '../core/player_io.js';
 import {isInitialBlockPress} from '../grill/grill_input_core.js';
 import {stackIntentSignature as interactionStackSignature} from '../core/interaction_intent_core.js';
 import {captureInteractionIntent,interactionIntentStillCurrent} from '../core/interaction_intent_adapter.js';
@@ -46,27 +46,6 @@ function enc(n){return n<0?'m'+Math.abs(n):'p'+n}
 function posKey(prefix,block){return prefix+block.dimension.id.replace(/[^a-z0-9]/gi,'_')+'_'+enc(block.x)+'_'+enc(block.y)+'_'+enc(block.z)}
 const message=interactionFeedback;
 function cloneOne(stack){const out=stack.clone();out.amount=1;return out}
-function decrementMain(player,count=1){
- if(creative(player))return true;const s=heldMain(player);if(!s||s.amount<count)return false;
- if(s.amount===count)setMain(player,undefined);else{s.amount-=count;setMain(player,s)}return true;
-}
-function decrementOff(player,count=1){
- if(creative(player))return true;const s=heldOff(player);if(!s||s.amount<count)return false;
- if(s.amount===count)setOff(player,undefined);else{s.amount-=count;setOff(player,s)}return true;
-}
-function decrementHand(player,hand,count=1){
- if(creative(player))return true;const s=heldByHand(player,hand);if(!s||s.amount<count)return false;
- if(s.amount===count)setHand(player,hand,undefined);else{s.amount-=count;setHand(player,hand,s)}return true;
-}
-function primitiveProps(stack){
- const out={};let ids=[];try{ids=getItemPropertyIds(stack)}catch{}
- for(const id of ids)try{
-  const value=getItemProperty(stack,id);
-  if(['string','number','boolean'].includes(typeof value))out[id]=value;
-  else if(value&&typeof value==='object'&&Number.isFinite(value.x)&&Number.isFinite(value.y)&&Number.isFinite(value.z))out[id]={x:value.x,y:value.y,z:value.z};
- }catch{}
- return out;
-}
 function parseRowsProperty(stack,key,limit=5){
  try{
   const raw=getItemProperty(stack,key);if(typeof raw!=='string')return [];
@@ -84,8 +63,7 @@ function skewerFood(stack){
  try{const food=stack.getComponent('minecraft:food');return {nutrition:Math.max(0,Number(food?.nutrition)||0),saturation:Math.max(0,Number(food?.saturationModifier)||0)}}catch{return {nutrition:0,saturation:0}}
 }
 function stackRow(stack){
- const food=skewerFood(stack),props=primitiveProps(stack);let lore=[],name='';
- try{lore=getItemLore(stack)}catch{}try{name=stack.nameTag??''}catch{}
+ const food=skewerFood(stack);
  return {id:stack.typeId,native:captureSkewerMetadata(stack),nutrition:food.nutrition,saturation:food.saturation};
 }
 function restoreStack(row){
@@ -188,16 +166,6 @@ function plateTransaction(block,steps){
  if(result.ok)try{queueStationContentsVisual(block)}catch{}
  return result.ok;
 }
-function syncPlateCount(block,count){
- const expected=Math.max(0,Math.min(5,count|0));
- block.setPermutation(block.permutation.withState('kaleidoscope_grilling:plate_count',expected));
- if(block.permutation.getState('kaleidoscope_grilling:plate_count')!==expected)throw Error('Grilling: plate count rejected');
-}
-function writePlateBlock(block,rows){
- const clean=normalizePlateRows(rows),value=JSON.stringify(clean);setWorldProperty(world,posKey(PLATE_PREFIX,block),value);
- if(getWorldProperty(world,posKey(PLATE_PREFIX,block))!==value)throw Error('Grilling: plate block write rejected');syncPlateCount(block,clean.length);
-}
-function clearPlateBlock(block){setWorldProperty(world,posKey(PLATE_PREFIX,block))}
 function readBookRecord(book){
  try{
   const raw=getItemProperty(book,BOOK_RECORD_KEY);if(typeof raw!=='string')return null;
@@ -320,10 +288,6 @@ function faceOffset(face){
 }
 function blockAtOffset(block,off){return off?block.dimension.getBlock({x:block.x+off.x,y:block.y+off.y,z:block.z+off.z}):undefined}
 function isAirReplaceable(block){return !!block&&['minecraft:air','minecraft:short_grass','minecraft:tall_grass','minecraft:snow_layer'].includes(block.typeId)}
-function setFacing(block,face){
- const f=faceName(face);if(!['north','south','west','east'].includes(f))return;
- try{block.setPermutation(block.permutation.withState('minecraft:cardinal_direction',f))}catch{}
-}
 function placePlateOn(support,face,player,source,hand='main'){
  if(faceName(face)!=='up'||!player.isSneaking)return false;
  if(support.typeId===COOKERY_TABLE&&!grillingConfig().interceptCookeryTableWhenPlacingPlate)return false;

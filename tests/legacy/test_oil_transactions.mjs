@@ -199,6 +199,39 @@ for(const kind of ['hand','output','spawn','vat'])test(`${kind} failure restores
  if(kind!=='spawn')assert.equal(f.holder.inventory.getItem(1),undefined);
  assert.equal(recoveries(f).length,0);
 });
+test('vat extraction rejects a silently dropped output credit without draining fluid',async()=>{
+ const f=await fixture({count:16});
+ const inventory=f.holder.inventory,originalSet=inventory.setItem.bind(inventory),source=f.signature(f.held());
+ // The engine reports a void write but the target slot remains empty.
+ inventory.setItem=(slot,stack)=>{
+  if(slot===1&&stack?.typeId===N+'canola_oil_bucket')return;
+  return originalSet(slot,stack);
+ };
+ use(f);
+ assert.equal(f.signature(f.held()),source,'all sixteen empty buckets remain with their original metadata');
+ assert.equal(inventory.getItem(1),undefined,'a missing output must not be treated as credited');
+ assert.deepEqual(f.readVat(),{type:'canola',buckets:4},'the vat is not debited for an unconfirmed bucket');
+ assert.equal(f.drops.length,0);
+ assert.equal(recoveries(f).length,0);
+});
+test('vat extraction never overwrites a newly occupied output slot',async()=>{
+ const f=await fixture({count:16}),inventory=f.holder.inventory,source=f.signature(f.held());
+ let raced=false;
+ f.setFault((kind,item)=>{
+  if(!raced&&kind==='slot0'&&item?.typeId==='minecraft:bucket'&&item.amount===15){
+   raced=true;
+   inventory.setItem(1,f.item('minecraft:diamond',1));
+  }
+  return false;
+ });
+ use(f);
+ assert.equal(raced,true,'simulate a foreign insertion between input debit and output delivery');
+ assert.equal(inventory.getItem(1)?.typeId,'minecraft:diamond','the new owner is preserved');
+ assert.equal(f.signature(f.held()),source,'only the original empty buckets are refunded');
+ assert.deepEqual(f.readVat(),{type:'canola',buckets:4});
+ assert.equal(f.drops.length,0);
+ assert.equal(recoveries(f).length,0);
+});
 test('filled bucket insertion credits one bucket and rejects incompatible or full vats',async()=>{
  for(const vat of [{type:'canola',buckets:4},{type:'premium_chili',buckets:4},{type:'canola',buckets:8}]){
   const f=await fixture({vat}),bucket=f.item(N+'canola_oil_bucket');f.setHand(bucket);use(f);
