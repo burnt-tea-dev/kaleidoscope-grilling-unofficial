@@ -17,15 +17,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import os, urllib.request, re
+          import os, urllib.request, urllib.error, re
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl): return None
           url='https://api.github.com/repos/burnt-tea-dev/kaleidoscope-grilling-unofficial/actions/jobs/126300036720/logs'
           request=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-          raw=urllib.request.urlopen(request).read().decode('utf-8-sig')
-          lines=[re.sub(r'^\S+Z\s*','',row) for row in raw.splitlines()]
-          hits=[i for i,row in enumerate(lines) if row.startswith('not ok ') or row.startswith('FAIL ') or 'AssertionError' in row]
+          try: raw=urllib.request.build_opener(NoRedirect).open(request).read()
+          except urllib.error.HTTPError as error:
+              if error.code!=302: raise
+              raw=urllib.request.urlopen(error.headers['Location']).read()
+          lines=[re.sub(r'^\S+Z\s*','',row) for row in raw.decode('utf-8-sig').splitlines()]
+          hits=[i for i,row in enumerate(lines) if row.startswith('not ok ') or row.startswith('FAIL ')]
           selected=set()
           for i in hits:
-              for k in range(max(0,i-2),min(len(lines),i+34)): selected.add(k)
+              for k in range(max(0,i-2),min(len(lines),i+38)): selected.add(k)
           print('TOTAL_LOG_LINES',len(lines),'FAILURE_MARKERS',len(hits))
           for i in sorted(selected): print(str(i+1)+': '+lines[i])
           print('\nSUMMARY')
