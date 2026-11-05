@@ -1,0 +1,310 @@
+{
+  "schema": 1,
+  "observed_date": "2026-11-05",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "source_commit": "e9d495816dc8961fd86071016a797185f55c7473",
+  "source_version": [
+    2,
+    8,
+    234
+  ],
+  "production_files": {
+    "effect/runtime.js": "2f4c8781fca9117551ba7738382839f9979dc5574d3887195ebe43d7eb7a4058"
+  },
+  "probe_sha256": "4ca6e50362cee63eb793e318fe8143f7710d70c77b65bd7d05e18e241b38f592",
+  "diagnostic_manifests": {
+    "BP": {
+      "format_version": 2,
+      "header": {
+        "name": "Captain Gift native QA BP",
+        "description": "Isolated real source water motion",
+        "uuid": "dc1a5cd9-bf91-4cd2-8893-b65fb8722022",
+        "version": [
+          1,
+          0,
+          0
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          60
+        ]
+      },
+      "modules": [
+        {
+          "type": "data",
+          "uuid": "cb8c6cad-e80b-43c2-a930-30881c196a5e",
+          "version": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "type": "script",
+          "language": "javascript",
+          "uuid": "9bc871b9-e115-4d11-8a20-8e4aa7c6f935",
+          "version": [
+            1,
+            0,
+            0
+          ],
+          "entry": "scripts/probe.js"
+        }
+      ],
+      "dependencies": [
+        {
+          "module_name": "@minecraft/server",
+          "version": "2.12.0-beta"
+        },
+        {
+          "module_name": "@minecraft/server-gametest",
+          "version": "1.0.0-beta"
+        },
+        {
+          "module_name": "@minecraft/server-ui",
+          "version": "2.2.0"
+        }
+      ]
+    },
+    "RP": {
+      "format_version": 2,
+      "header": {
+        "name": "Captain Gift native QA RP",
+        "description": "Isolated real source water motion",
+        "uuid": "b3100f6e-3f46-4f5e-8328-e1805cde07ed",
+        "version": [
+          1,
+          0,
+          0
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          60
+        ]
+      },
+      "modules": [
+        {
+          "type": "resources",
+          "uuid": "b6610160-21fe-4ba6-99a7-ddbefe9e773a",
+          "version": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "dependencies": []
+    }
+  },
+  "player_definition_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "diagnostic_scope": "Copied unchanged G234 scripts, separate diagnostic BP/RP, exported effect application and tick only. Add the unchanged production player definition required by effect presentation; do not load full main.",
+  "prior_attempt": "The first diagnostic omitted required player properties and failed. The configured run adds the unchanged G234 definition and passes on that same QA world; no production player field was added.",
+  "passed": true,
+  "report": {
+    "passed": true,
+    "phase": "warmth",
+    "checks": [
+      {
+        "name": "production effect application accepts native Player warmth",
+        "passed": true
+      },
+      {
+        "name": "minecraft:campfire extinguished does not heal",
+        "passed": true
+      },
+      {
+        "name": "minecraft:campfire burning heals one HP",
+        "passed": true
+      },
+      {
+        "name": "minecraft:soul_campfire extinguished does not heal",
+        "passed": true
+      },
+      {
+        "name": "minecraft:soul_campfire burning heals one HP",
+        "passed": true
+      },
+      {
+        "name": "minecraft:furnace idle does not heal",
+        "passed": true
+      },
+      {
+        "name": "minecraft:furnace actual input and fuel ignite its native block",
+        "passed": true
+      },
+      {
+        "name": "minecraft:furnace genuinely burning heals one HP",
+        "passed": true
+      },
+      {
+        "name": "minecraft:smoker idle does not heal",
+        "passed": true
+      },
+      {
+        "name": "minecraft:smoker actual input and fuel ignite its native block",
+        "passed": true
+      },
+      {
+        "name": "minecraft:smoker genuinely burning heals one HP",
+        "passed": true
+      },
+      {
+        "name": "minecraft:blast_furnace idle does not heal",
+        "passed": true
+      },
+      {
+        "name": "minecraft:blast_furnace actual input and fuel ignite its native block",
+        "passed": true
+      },
+      {
+        "name": "minecraft:blast_furnace genuinely burning heals one HP",
+        "passed": true
+      },
+      {
+        "name": "native simulated Player disconnected",
+        "passed": true
+      }
+    ],
+    "samples": [
+      {
+        "label": "minecraft:campfire extinguished does not heal",
+        "tick": 180,
+        "type": "minecraft:campfire",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "extinguished": true,
+          "direction": 0
+        },
+        "before": 10,
+        "after": 10
+      },
+      {
+        "label": "minecraft:campfire burning heals one HP",
+        "tick": 200,
+        "type": "minecraft:campfire",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "extinguished": false,
+          "direction": 0
+        },
+        "before": 10,
+        "after": 11
+      },
+      {
+        "label": "minecraft:soul_campfire extinguished does not heal",
+        "tick": 220,
+        "type": "minecraft:soul_campfire",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "extinguished": true,
+          "direction": 0
+        },
+        "before": 10,
+        "after": 10
+      },
+      {
+        "label": "minecraft:soul_campfire burning heals one HP",
+        "tick": 240,
+        "type": "minecraft:soul_campfire",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "extinguished": false,
+          "direction": 0
+        },
+        "before": 10,
+        "after": 11
+      },
+      {
+        "label": "minecraft:furnace idle does not heal",
+        "tick": 260,
+        "type": "minecraft:furnace",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 10
+      },
+      {
+        "label": "minecraft:furnace genuinely burning heals one HP",
+        "tick": 280,
+        "type": "minecraft:lit_furnace",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 11
+      },
+      {
+        "label": "minecraft:smoker idle does not heal",
+        "tick": 300,
+        "type": "minecraft:smoker",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 10
+      },
+      {
+        "label": "minecraft:smoker genuinely burning heals one HP",
+        "tick": 320,
+        "type": "minecraft:lit_smoker",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 11
+      },
+      {
+        "label": "minecraft:blast_furnace idle does not heal",
+        "tick": 340,
+        "type": "minecraft:blast_furnace",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 10
+      },
+      {
+        "label": "minecraft:blast_furnace genuinely burning heals one HP",
+        "tick": 360,
+        "type": "minecraft:lit_blast_furnace",
+        "states": {
+          "minecraft:cardinal_direction": "south",
+          "facing_direction": 3
+        },
+        "before": 10,
+        "after": 11
+      }
+    ],
+    "playersAfter": 0,
+    "scope": "G234 exported production effect application/tick with native SimulatedPlayer health, campfire states, and vanilla furnaces ignited by actual inventory input/fuel. Does not claim full main startup, client rendering, unchanged effects or new saved-state behavior; LIVE unchanged."
+  },
+  "normal_stop_requested": true,
+  "quit_correctly": true,
+  "returncode": 0,
+  "errors": [],
+  "memory_events": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0,
+    "sock_throttled": 0
+  },
+  "memory_peak_bytes": 387932160,
+  "client": false,
+  "live_modified": false,
+  "limits": [
+    "Not full main startup, client input, presentation, complete family or changed persistence validation.",
+    "Heat-source results belong to G234. They do not verify the later remaining-duration timing change."
+  ]
+}

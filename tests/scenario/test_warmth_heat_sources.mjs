@@ -4,8 +4,8 @@ import {createFixture} from '../helpers/minecraft-fixture.mjs';
 
 // Cookery WarmthEffect: one heal per check within x/z +/-2, y +/-1,
 // from a tagged heat source or a block whose Java LIT property is true.
-async function warmthFixture(options={}){
- const f=createFixture();
+async function warmthFixture(options={},clock={}){
+ const f=createFixture(clock);
  await f.load('main.js');f.startup();f.flush();
  f.p=f.player({location:{x:0,y:0,z:0},...options});
  f.hp=f.p.getComponent('minecraft:health');f.hp.currentValue=10;
@@ -110,4 +110,53 @@ test('an extinguished Nether campfire uses slow fallback; real heat takes preced
   block.setType('minecraft:lit_furnace');
   f.tick(20);assert.equal(f.hp.currentValue,11.5,'heat heals once and skips Nether fallback');
  }finally{Math.random=random;f.dispose()}
+});
+
+test('Warmth checks remaining duration rather than process-wide multiples of twenty',async()=>{
+ const f=await warmthFixture({},{currentTick:6});
+ try{
+  const state=await f.load('effect_state_runtime.js'),effects=await f.load('effect/runtime.js');
+  state.writeEffects(f.p,{});effects.fxApply(f.p,'warmth',40);
+  f.block('minecraft:lit_furnace',{x:1,y:0,z:0});
+  assert.equal(state.readEffects(f.p).warmth.until,47);
+  f.tick(13);assert.equal(f.system.currentTick,20);
+  assert.equal(f.hp.currentValue,10,'27 remaining is not a Java Warmth tick');
+  f.tick(7);assert.equal(f.hp.currentValue,11,'20 remaining is a Java Warmth tick');
+  f.tick(20);assert.equal(f.hp.currentValue,11,'expiry does not create a final heal at zero');
+ }finally{f.dispose()}
+});
+
+test('a stored Warmth deadline keeps its check phase when the process clock restarts',async()=>{
+ const first=await warmthFixture({},{currentTick:6,absoluteTime:10012});let raw;
+ try{
+  const state=await first.load('effect_state_runtime.js'),effects=await first.load('effect/runtime.js');
+  const {FX_KEY}=await first.load('effect_lifecycle_core.js');
+  state.writeEffects(first.p,{});effects.fxApply(first.p,'warmth',40);first.tick(16);
+  assert.equal(first.world.getAbsoluteTime(),10035);
+  raw=first.p.getDynamicProperty(FX_KEY);
+  assert.equal(JSON.parse(raw).warmth.until,10059);
+ }finally{first.dispose()}
+ const next=await warmthFixture({},{currentTick:0,absoluteTime:10035});
+ try{
+  const {FX_KEY}=await next.load('effect_lifecycle_core.js');
+  next.p.setDynamicProperty(FX_KEY,raw);
+  next.block('minecraft:lit_furnace',{x:1,y:0,z:0});
+  next.tick(2);assert.equal(next.hp.currentValue,10);
+  next.tick();assert.equal(next.world.getAbsoluteTime(),10039);
+  assert.equal(next.hp.currentValue,11,'stored effect has 20 remaining at process tick four');
+  assert.equal(next.p.getDynamicProperty(FX_KEY),raw,'checking does not rewrite the stored deadline');
+ }finally{next.dispose()}
+});
+
+test('refreshing Warmth moves its check to the renewed deadline',async()=>{
+ const f=await warmthFixture({},{currentTick:6});
+ try{
+  const state=await f.load('effect_state_runtime.js'),effects=await f.load('effect/runtime.js');
+  state.writeEffects(f.p,{});effects.fxApply(f.p,'warmth',40);
+  f.block('minecraft:lit_furnace',{x:1,y:0,z:0});
+  f.tick(13);effects.fxApply(f.p,'warmth',60);
+  assert.equal(state.readEffects(f.p).warmth.until,80);
+  f.tick(7);assert.equal(f.hp.currentValue,10,'the previous deadline no longer owns the check');
+  f.tick(13);assert.equal(f.hp.currentValue,11,'the renewed effect has 40 ticks remaining');
+ }finally{f.dispose()}
 });

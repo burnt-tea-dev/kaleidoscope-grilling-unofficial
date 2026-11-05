@@ -54,7 +54,9 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 
 G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營火不供熱；原生 `lit_furnace`、`lit_smoker`、`lit_blast_furnace`、已亮的紅石類型及 `lit=true` 的蠟燭／銅燈供熱；火、靈魂火、靜止／流動岩漿、岩漿塊與既有已點火烤架仍有效。依據為已釘選 Cookery [WarmthEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/WarmthEffect.java) 的 LIT 判斷及[熱源 tag](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/generated/resources/data/kaleidoscope_cookery/tags/block/warmth_heat_source_blocks.json)；Bedrock 名稱與狀態來自官方 1.26.60.5 [mojang-blocks.json](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/vanilladata_modules/mojang-blocks.json)。該引擎的營火使用布林 `extinguished`，不是舊名稱 `extinguished_bit`。
 
-[真 main 排程情境](../tests/scenario/test_warmth_heat_sources.mjs)先重現原本三熔爐不回血、兩熄滅營火誤回血，修後涵蓋原生 ID／狀態切換、5×3×5 邊界、多熱源只回血一次、生命上限、烤架與下界慢速回復。保存鍵、效果期限和現行檢查頻率不變。這是受控 API 入口結果，尚未進行本次熱源的 BDS／客戶端操作；它也沒有解決 Java 效果剩餘時長與全域 tick 相位的差異，或宣稱所有 LivingEntity 均已獲得等價效果。
+[真 main 排程情境](../tests/scenario/test_warmth_heat_sources.mjs)先重現原本三熔爐不回血、兩熄滅營火誤回血，修後涵蓋原生 ID／狀態切換、5×3×5 邊界、多熱源只回血一次、生命上限、烤架與下界慢速回復。G234 的保存鍵、效果期限和檢查頻率不變。[既有原生觀察](../tests/native/warmth/heat-observed.json)已確認15項：兩種營火真實extinguished狀態、三種熔爐投入原生食材與煤後自行燃燒、idle不回血及burning回1HP，正常停服、0players/errors/OOM。該窄測使用正式effect application/tick入口，並非完整main或客戶端驗證；首次診斷缺少player屬性及同一世界補入未修改G234 player定義後成功的範圍，見[探針說明](../tests/native/warmth/README.md)。它不證明後續時機修正已通過原生測試。
+
+G235 接續修正獨立時機反例：tick7加40tick效果後，原G234在tick20（尚餘27tick）誤回血；同一份保存期限換成重新啟動的process clock，原G234也會漏掉尚餘20tick的檢查。正式owner改看既有active effect的`until - world absolute time`，在正值剩餘時間為20的倍數時處理，沿用Java `WarmthEffect.shouldApplyEffectTickThisTick`；不新增保存欄位、計時器或待辦資料。真main情境涵蓋非整20tick套用、到期不補零tick回血及保存deadline在不同process clock恢復。此為API模型的保存重載證據，G235的原生時機／正常重啟尚未驗證；完整Java同tick事件先後及非玩家效果仍不宣稱等價。
 
 ## 搖瓶完成的額外資料保存適配
 
