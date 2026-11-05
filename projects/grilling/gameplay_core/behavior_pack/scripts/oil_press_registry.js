@@ -11,6 +11,12 @@ export function createOilPressRegistry(world,legacyKey){
   return {k:row.d+'|'+row.x+'|'+row.y+'|'+row.z,d:row.d,x:row.x,y:row.y,z:row.z};
  }
  const property=row=>prefix+encodeURIComponent(row.k);
+ function write(id,value){
+  try{
+   setWorldProperty(world,id,value);
+   if(getWorldProperty(world,id)!==value)throw Error('Oil press registry write not confirmed');
+  }catch(error){loaded=false;throw error}
+ }
  function load(){
   if(loaded)return;
   const found=new Map(),raw=getWorldProperty(world,legacyKey);
@@ -22,17 +28,17 @@ export function createOilPressRegistry(world,legacyKey){
    found.set(row.k,row);
   }
   // Migration is restartable: retain the old array until all entries persist.
-  for(const value of old){const row=normalize(value);setWorldProperty(world,property(row),JSON.stringify(row));}
-  if(raw!==undefined)setWorldProperty(world,legacyKey,undefined);
+  for(const value of old){const row=normalize(value);write(property(row),JSON.stringify(row));}
+  if(raw!==undefined)write(legacyKey,undefined);
   cache.clear();for(const [k,row] of found)cache.set(k,row);loaded=true;
  }
  return {
   rows(){load();return [...cache.values()];},
   add(value){load();const row=normalize(value);if(cache.has(row.k))return;
-   setWorldProperty(world,property(row),JSON.stringify(row));cache.set(row.k,row);
+   write(property(row),JSON.stringify(row));cache.set(row.k,row);
   },
   remove(value){load();const row=normalize(value);if(!cache.has(row.k))return;
-   setWorldProperty(world,property(row),undefined);cache.delete(row.k);}
+   write(property(row),undefined);cache.delete(row.k);}
  };
 }
 
