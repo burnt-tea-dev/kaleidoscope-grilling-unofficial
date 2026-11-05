@@ -9,9 +9,9 @@ import {HEAVY_METAL_CLAIM_KEY,parseHeavyMetalClaim,heavyMetalClaimPayload} from 
 // Do not expire that receipt or infer a new effect from a clock rollback.
 const rescues=new Map();
 function nativeTotemTakesPriority(entity,cause){
- // Void and forced death do not use native held-totem protection. Preserve
- // Heavy Metal's existing rescue for those sources instead of skipping all
- // damage merely because a totem is equipped.
+ // Java totems reject void/forced-death damage, including Ordinary's tagged
+ // damage mapped to override here. Preserve Heavy Metal for those paths;
+ // holding a totem alone does not make every damage source eligible.
  if(cause==='void'||cause==='override'||cause==='selfDestruct')return false;
  const equipment=entity.getComponent('minecraft:equippable');
  return equipment?.getEquipment(EquipmentSlot.Mainhand)?.typeId==='minecraft:totem_of_undying'||
