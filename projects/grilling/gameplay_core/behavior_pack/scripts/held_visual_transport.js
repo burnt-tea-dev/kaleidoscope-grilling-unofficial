@@ -45,7 +45,9 @@ export function createSnapshotPublisher(currentTick=()=>0){
     const saved=player.getProperty?.(FRAME_PROPERTY);
     state={frame:Number.isInteger(saved)&&saved>=0&&saved<=FRAME_MAX?saved:0};states.set(player.id,state);
    }
-   if(state.sent?.signature===signature){
+   // A failed newer submit may already have changed the native frame. Rebuild
+   // even when the hand returns to older sent data, rather than leaving it hidden.
+   if(!state.pending&&state.sent?.signature===signature){
     if(currentTick()-state.lastBroadcastTick<REFRESH_TICKS)return false;
     send(player,state.sent);state.lastBroadcastTick=currentTick();return true;
    }

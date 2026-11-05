@@ -50,6 +50,14 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | Cookery／Tavern 指南入口與多語 | 家族整合能力；不冒充 Java 原作玩法 | `guide/main.js`、guide publisher；[指南規範](GUIDE-STANDARD.md) | 來源已實作：單入口、內容與交接 | 接收章節不等於玩家 UI 正確；返回、關閉、逾時、觸控、三語及多人隔離待驗 | [指南靜態檢查](../tools/check_grilling_guide.py)；[GUIDE-STANDARD](GUIDE-STANDARD.md)；既有指南檢查與真人場景分開 |
 | HUD、平台替代與效能 | Java HUD／流體／碰撞／mixin／選用模組 | 目前 HUD、油流與明列 adapter；現況見 [ARCHITECTURE](ARCHITECTURE.md) | 來源已實作：有限替代；部分能力未實作 | 原始資料碼外露、位置與延遲保留失敗；未有完整效能預算。D3／D5／D6 仍按計畫待決 | [a2739_core](../tests/legacy/test_a2739_core.mjs)、[a2740_core](../tests/legacy/test_a2740_core.mjs)；僅 HUD 目標／狀態規則；無完整效能或畫面驗收。CLIENT-HUD、平台與效能；`hud.json`、`minecraft_assets.json` |
 
+## 手持快照的提交失敗回復
+
+T3.5 的正式路徑由 `held_visual_dispatch_runtime.js` 匯集兩手provider，交同一個 `held_visual_transport.js` publisher；`tests/native/held-snapshot/` 是獨立歷史原型，並非另一個由main啟動的writer，不能只因名稱相似就刪除。實際property宣告查 [player.json](../projects/grilling/gameplay_core/behavior_pack/entities/player.json)，來源使用既有四個欄位，不靠新增欄位修復回復流程。
+
+G237 修正既有失敗分支：A已送出，改成B時先更新原生frame、但動畫提交拋錯，之後兩手又回A；舊去重直接認定A已送過，留下原生frame B與舊packet A不相符，連週期refresh也只重送舊frame。正式publisher現有pending時直接建立與目前兩手資料一致的新generation，成功後才恢復去重，不新增retry queue、保存欄位或第二writer。
+
+[真實publisher／staged-owner情境](../tests/scenario/test_held_snapshot_recovery.mjs)使用既有API fixture的延後property寫入，覆蓋動畫submit前失敗及呼叫已套用後拋錯兩種既有故障模型；兩者原版均未重送、修後均以新frame恢復兩手完整內容，晚到的A/B packet不能覆蓋。這是API故障注入及實際生成Molang請求的query邊界執行，未聲稱BDS自然出現此錯誤、真客戶端變數scope或完整renderer已驗證；現有低槽通道的客戶端限制仍保留。
+
 ## 溫暖效果的熱源判斷
 
 G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營火不供熱；原生 `lit_furnace`、`lit_smoker`、`lit_blast_furnace`、已亮的紅石類型及 `lit=true` 的蠟燭／銅燈供熱；火、靈魂火、靜止／流動岩漿、岩漿塊與既有已點火烤架仍有效。依據為已釘選 Cookery [WarmthEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/WarmthEffect.java) 的 LIT 判斷及[熱源 tag](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/generated/resources/data/kaleidoscope_cookery/tags/block/warmth_heat_source_blocks.json)；Bedrock 名稱與狀態來自官方 1.26.60.5 [mojang-blocks.json](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/vanilladata_modules/mojang-blocks.json)。該引擎的營火使用布林 `extinguished`，不是舊名稱 `extinguished_bit`。
