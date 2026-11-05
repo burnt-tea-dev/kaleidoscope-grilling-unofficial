@@ -44,7 +44,7 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 
 ## 其他必須保留的界線
 
-- **WARMTH-HEAT-SOURCES**：熱源誤判已有G234的15項原生觀察；後續效果時機已由原owner改依既有剩餘期限，真main保存重載情境通過，但該時機變更的原生／正常重啟尚未驗證。[PARITY 的熱源與測試範圍](PARITY.md#溫暖效果的熱源判斷)為本項權威紀錄；完整同tick事件先後、客戶端與非玩家實體仍非完整Java等價。
+- **WARMTH-HEAT-SOURCES**：熱源誤判已有G234的15項原生觀察；G236按Java扣減前時長處理效果，真main第一tick／保存重載／續期情境通過，但新時機的原生／正常重啟尚未驗證。[PARITY 的熱源與測試範圍](PARITY.md#溫暖效果的熱源判斷)為本項權威紀錄；跨模組完整同tick順序、客戶端與非玩家實體仍非完整Java等價。
 
 - **ADVANCEMENT-CLAIM**：G132 記錄先保存 claim 再作單次 XP 嘗試，未知結果不 fallback／重試。這是 at-most-once attempt；未發 XP 的人工恢復、跨 API 原子性及當前原生／真人結果仍未完成。[原範圍](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md#進度獎勵失敗邊界g132)
 - **天然要塞**：公開 integration API 不提供 vanilla 新區塊／要塞生成回呼；不能用附近方塊猜歷史，也不能以人工搭建的原生測試冒充自然 25% 替換完成。見 [API](BEDROCK-INTEGRATION-API.md#新生成宿主)。

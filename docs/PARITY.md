@@ -56,7 +56,9 @@ G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營
 
 [真 main 排程情境](../tests/scenario/test_warmth_heat_sources.mjs)先重現原本三熔爐不回血、兩熄滅營火誤回血，修後涵蓋原生 ID／狀態切換、5×3×5 邊界、多熱源只回血一次、生命上限、烤架與下界慢速回復。G234 的保存鍵、效果期限和檢查頻率不變。[既有原生觀察](../tests/native/warmth/heat-observed.json)已確認15項：兩種營火真實extinguished狀態、三種熔爐投入原生食材與煤後自行燃燒、idle不回血及burning回1HP，正常停服、0players/errors/OOM。該窄測使用正式effect application/tick入口，並非完整main或客戶端驗證；首次診斷缺少player屬性及同一世界補入未修改G234 player定義後成功的範圍，見[探針說明](../tests/native/warmth/README.md)。它不證明後續時機修正已通過原生測試。
 
-G235 接續修正獨立時機反例：tick7加40tick效果後，原G234在tick20（尚餘27tick）誤回血；同一份保存期限換成重新啟動的process clock，原G234也會漏掉尚餘20tick的檢查。正式owner改看既有active effect的`until - world absolute time`，在正值剩餘時間為20的倍數時處理，沿用Java `WarmthEffect.shouldApplyEffectTickThisTick`；不新增保存欄位、計時器或待辦資料。真main情境涵蓋非整20tick套用、到期不補零tick回血及保存deadline在不同process clock恢復。此為API模型的保存重載證據，G235的原生時機／正常重啟尚未驗證；完整Java同tick事件先後及非玩家效果仍不宣稱等價。
+G236 接續修正獨立時機差異。Mojang 1.20.1／1.21.1 的 `MobEffectInstance.tick` 均先呼叫效果的duration判斷／apply，再`tickDownDuration`；以官方[1.20.1 JAR](https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt)、[1.21.1 JAR](https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt)核對，對應1.20.1 `bfa.a(bfz,Runnable)`、1.21.1 `brz.a(btn,Runnable)`。因此tick7套用40tick效果，後續tick8先處理duration40、tick28處理duration20；原G234的全域時鐘只在tick20／40回復。直接把`until-now`當作扣減前duration的G235草稿也漏掉第一tick，未獨立合併或部署；其身份保留，由G236取代。
+
+正式owner以既有active deadline恢復本次扣減前的`until - world absolute time + 1`，判斷20的倍數；不新增保存欄位、計時器或待辦資料。[真main情境](../tests/scenario/test_warmth_heat_sources.mjs)核對第一tick、第二次回復、續期、到期不補零tick回血，以及原生DP欄位模型在process clock重啟後保留同deadline。12項情境通過，原G234在新增的三項失敗。這是API模型的保存重載證據，G236的原生時機／正常重啟尚未驗證；跨其他模組的完整同tick順序及非玩家效果仍不宣稱等價。
 
 ## 搖瓶完成的額外資料保存適配
 

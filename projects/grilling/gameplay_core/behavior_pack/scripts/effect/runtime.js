@@ -201,9 +201,9 @@ const fx=readFx(p);
   const sneak=!!p.isSneaking,was=SNEAK_LAST.get(p.id)??false;if(sneak&&!was&&fx.flatulence){p.applyImpulse({x:0,y:.75,z:0});const dimension=p.dimension;interactionParticleBurst(dimension,p.location,'flatulence');try{const origin=flatulenceSoundOrigin(p);if(origin){const pitch=flatulenceSoundPitch();if(pitch!==undefined)dimension.playSound(FLATULENCE_SOUND_ID,origin,{volume:1,pitch})}}catch{}}SNEAK_LAST.set(p.id,sneak);
   if(system.currentTick%5===0){if(fx.mustard)fleeCreepers(p);if(fx.sulfur)repelPhantoms(p)}
   if(fx.tundra_strider){try{const b=p.getBlockStandingOn();if(b&&TUNDRA_BLOCKS.has(b.typeId)){const v=p.getVelocity(),factor=tundraFactor(b.typeId);p.applyImpulse({x:v.x*(factor-1),y:0,z:v.z*(factor-1)});if(b.typeId==='minecraft:powder_snow'&&v.y<.02)p.applyImpulse({x:0,y:Math.min(.16,Math.max(.04,-v.y+.04)),z:0})}}catch{}}
-  // Java checks the active effect's remaining duration. Process uptime must
-  // not shift healing when an effect is applied, refreshed or loaded again.
-  if(fx.warmth&&(fx.warmth.until-now())%20===0){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
+  // Java checks before decrementing the duration. The world clock has already
+  // advanced for this tick, so restore that one tick from the stored deadline.
+  if(fx.warmth&&(fx.warmth.until-now()+1)%20===0){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
   const db=fx.dragon_blood;nativeDragonHealth(p,db?.amp);
   updateNumbVisual(p,!!fx.numb&&!hasFoodUse(p.id)&&!(readPlayerControl(p,'season_phase')>0),system.currentTick);
 }

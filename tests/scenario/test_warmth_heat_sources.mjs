@@ -19,7 +19,7 @@ for(const id of ['minecraft:furnace','minecraft:smoker','minecraft:blast_furnace
   const f=await warmthFixture();
   try{
    const block=f.block(id,{x:1,y:0,z:0});
-   f.tick(19);assert.equal(f.hp.currentValue,10,'idle furnace is not a heat source');
+   f.tick(20);assert.equal(f.hp.currentValue,10,'idle furnace is not a heat source');
    block.setType('minecraft:lit_'+id.split(':')[1]);
    f.tick(20);assert.equal(f.hp.currentValue,11,'native burning ID supplies heat');
    block.setType(id);
@@ -33,7 +33,7 @@ for(const id of ['minecraft:campfire','minecraft:soul_campfire']){
   const f=await warmthFixture();
   try{
    const block=f.block(id,{x:1,y:0,z:0},{states:{extinguished:true}});
-   f.tick(19);assert.equal(f.hp.currentValue,10,'extinguished campfire supplies no heat');
+   f.tick(20);assert.equal(f.hp.currentValue,10,'extinguished campfire supplies no heat');
    block.setPermutation(block.permutation.withState('extinguished',false));
    f.tick(20);assert.equal(f.hp.currentValue,11,'lit campfire supplies heat');
    block.setPermutation(block.permutation.withState('extinguished',true));
@@ -46,7 +46,7 @@ test('Warmth uses native lit states and split redstone block IDs',async()=>{
  const f=await warmthFixture();
  try{
   const block=f.block('minecraft:candle',{x:0,y:1,z:0},{states:{lit:false}});
-  f.tick(19);assert.equal(f.hp.currentValue,10);
+  f.tick(20);assert.equal(f.hp.currentValue,10);
   for(const id of ['minecraft:candle','minecraft:candle_cake','minecraft:copper_bulb']){
    block.setPermutation(f.BlockPermutation.resolve(id,{lit:true}));
    f.tick(20);assert.equal(f.hp.currentValue,11);f.hp.currentValue=10;
@@ -57,7 +57,7 @@ test('Warmth uses native lit states and split redstone block IDs',async()=>{
  const redstone=await warmthFixture();
  try{
   const block=redstone.block('minecraft:redstone_lamp',{x:1,y:0,z:0});
-  redstone.tick(19);assert.equal(redstone.hp.currentValue,10);
+  redstone.tick(20);assert.equal(redstone.hp.currentValue,10);
   for(const [off,on] of [
    ['minecraft:redstone_lamp','minecraft:lit_redstone_lamp'],
    ['minecraft:redstone_ore','minecraft:lit_redstone_ore'],
@@ -74,7 +74,7 @@ test('Warmth retains tagged fire/lava sources and the saved grill state',async()
  const f=await warmthFixture();
  try{
   const block=f.block('minecraft:fire',{x:1,y:0,z:0});
-  f.tick(19);assert.equal(f.hp.currentValue,11);f.hp.currentValue=10;
+  f.tick(20);assert.equal(f.hp.currentValue,11);f.hp.currentValue=10;
   for(const id of ['minecraft:soul_fire','minecraft:lava','minecraft:flowing_lava','minecraft:magma']){
    block.setType(id);f.tick(20);assert.equal(f.hp.currentValue,11);f.hp.currentValue=10;
   }
@@ -91,7 +91,7 @@ test('Warmth keeps the 5x3x5 boundary and heals only once for several sources',a
  try{
   f.block('minecraft:lit_furnace',{x:2,y:4,z:-1});
   f.block('minecraft:fire',{x:-1,y:6,z:-1});
-  f.tick(19);assert.equal(f.hp.currentValue,10,'x+3 and y+2 are outside the Java scan');
+  f.tick(20);assert.equal(f.hp.currentValue,10,'x+3 and y+2 are outside the Java scan');
   f.block('minecraft:lit_furnace',{x:1,y:5,z:1});
   f.block('minecraft:fire',{x:-3,y:3,z:-3});
   f.tick(20);assert.equal(f.hp.currentValue,11,'both inclusive corners still give only one heal');
@@ -106,23 +106,29 @@ test('an extinguished Nether campfire uses slow fallback; real heat takes preced
   f.p.dimension=f.getDimension('nether');
   const block=f.block('minecraft:campfire',{x:1,y:0,z:0},{dimension:f.p.dimension,states:{extinguished:true}});
   Math.random=()=>0;
-  f.tick(19);assert.equal(f.hp.currentValue,10.5);
+  f.tick(20);assert.equal(f.hp.currentValue,10.5);
   block.setType('minecraft:lit_furnace');
   f.tick(20);assert.equal(f.hp.currentValue,11.5,'heat heals once and skips Nether fallback');
  }finally{Math.random=random;f.dispose()}
 });
 
-test('Warmth checks remaining duration rather than process-wide multiples of twenty',async()=>{
+// Mojang MobEffectInstance.tick (1.20.1 bfa / 1.21.1 brz) calls the effect's
+// duration predicate and apply handler before tickDownDuration, including the
+// first tick. These are fixed event expectations, not a copied tick simulator.
+test('Warmth checks the pre-decrement duration from its first tick',async()=>{
  const f=await warmthFixture({},{currentTick:6});
  try{
   const state=await f.load('effect_state_runtime.js'),effects=await f.load('effect/runtime.js');
   state.writeEffects(f.p,{});effects.fxApply(f.p,'warmth',40);
   f.block('minecraft:lit_furnace',{x:1,y:0,z:0});
   assert.equal(state.readEffects(f.p).warmth.until,47);
-  f.tick(13);assert.equal(f.system.currentTick,20);
-  assert.equal(f.hp.currentValue,10,'27 remaining is not a Java Warmth tick');
-  f.tick(7);assert.equal(f.hp.currentValue,11,'20 remaining is a Java Warmth tick');
-  f.tick(20);assert.equal(f.hp.currentValue,11,'expiry does not create a final heal at zero');
+  f.tick();assert.equal(f.system.currentTick,8);
+  assert.equal(f.hp.currentValue,11,'the first effect tick checks duration forty before decrement');
+  f.tick(12);assert.equal(f.system.currentTick,20);
+  assert.equal(f.hp.currentValue,11,'process tick twenty does not add another heal');
+  f.tick(7);assert.equal(f.hp.currentValue,11,'duration twenty-one does not heal');
+  f.tick();assert.equal(f.hp.currentValue,12,'the next effect check sees duration twenty');
+  f.tick(19);assert.equal(f.hp.currentValue,12,'expiry does not create a final heal at zero');
  }finally{f.dispose()}
 });
 
@@ -143,7 +149,9 @@ test('a stored Warmth deadline keeps its check phase when the process clock rest
   next.block('minecraft:lit_furnace',{x:1,y:0,z:0});
   next.tick(2);assert.equal(next.hp.currentValue,10);
   next.tick();assert.equal(next.world.getAbsoluteTime(),10039);
-  assert.equal(next.hp.currentValue,11,'stored effect has 20 remaining at process tick four');
+  assert.equal(next.hp.currentValue,10,'pre-decrement duration twenty-one does not heal');
+  next.tick();assert.equal(next.world.getAbsoluteTime(),10040);
+  assert.equal(next.hp.currentValue,11,'stored effect reaches pre-decrement duration twenty at process tick five');
   assert.equal(next.p.getDynamicProperty(FX_KEY),raw,'checking does not rewrite the stored deadline');
  }finally{next.dispose()}
 });
@@ -154,9 +162,10 @@ test('refreshing Warmth moves its check to the renewed deadline',async()=>{
   const state=await f.load('effect_state_runtime.js'),effects=await f.load('effect/runtime.js');
   state.writeEffects(f.p,{});effects.fxApply(f.p,'warmth',40);
   f.block('minecraft:lit_furnace',{x:1,y:0,z:0});
-  f.tick(13);effects.fxApply(f.p,'warmth',60);
+  f.tick(13);assert.equal(f.hp.currentValue,11);effects.fxApply(f.p,'warmth',60);
   assert.equal(state.readEffects(f.p).warmth.until,80);
-  f.tick(7);assert.equal(f.hp.currentValue,10,'the previous deadline no longer owns the check');
-  f.tick(13);assert.equal(f.hp.currentValue,11,'the renewed effect has 40 ticks remaining');
+  f.tick();assert.equal(f.hp.currentValue,12,'the renewed effect checks duration sixty before decrement');
+  f.tick(7);assert.equal(f.hp.currentValue,12,'the previous deadline no longer owns the check');
+  f.tick(13);assert.equal(f.hp.currentValue,13,'the renewed effect checks duration forty before decrement');
  }finally{f.dispose()}
 });
