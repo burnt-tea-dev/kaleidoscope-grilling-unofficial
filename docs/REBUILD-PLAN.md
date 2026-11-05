@@ -430,15 +430,19 @@ CLI、Core 本機安裝器與私有來源應共同呼叫 `compose_files`；有 T
 
 ##### T3.5-e／P0：公開發行先有通用最小安裝路徑，特殊整合不得倒置為核心相依
 
-**目前實作（2026-11-04 核對）**：[Core 的公開最小安裝入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已實作 Grilling＋本機適配 Cookery 的四包候選；`build_owned_family_recipe.py::install_public_pair` 明確只選這四包，並使用既有玩家資源合成器。Tavern、世界名酒、IE、TACZ 與私有整合不是必要安裝項。歷史 full-family 配方及 IE 安裝工具是另一條選用路徑，不能當成公開最小入口的要求。**尚未完成**的是公開成品交付及該最小候選的引擎功能／保存重啟驗證；目前仍需本機適配 Cookery，不能宣稱普通兩個原包直接匯入即可完整使用。實際入口、輸入與證據由上述 Core 文件維護。
+**目前實作（2026-11-06 核對）**：[Core公開最小入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已提供Grilling＋本機適配Cookery的四包組裝，不要求Tavern、世界名酒、IE、TACZ或私有整合。真作者輸入重建、來源／鍋具測試、直接CLI及重複組裝已完成；精確來源、輸入及結果只由[Core驗證記錄](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/validation-public-minimal.json)的`grilling_source`、`source_checks`與`retained_native_evidence`持有。G238圖騰優先的新窄原生，以及先前公開四包同QA首次載入／保存重啟／回退，均按各自實測身份與未變路徑重用；沒有將舊四包結果改稱這次G238完整新世界PASS。
 
-- **P0：公開核心（基礎版）**。目標只要求 Grilling 自有 BP/RP、指定可取得的 Cookery 正式相依與公開可重現的必要接入機制，以及引擎／實驗設定；**不要求** Tavern、世界名酒、Immersive Eating、TACZ、私有修復包、私有 family lock 或森羅伺服器。現有本機公開工具已實作 Cookery 接入，但尚須完成 **公開交付與必要功能驗證**；不得把複雜步驟改寫成「單獨匯入即用」或假設玩家擁有我們的環境。優先設計為只需正常下載／匯入或可選的公開一鍵組裝，不上傳作者完整素材。
+**公開交付與驗證分開看**：本輪最小入口的公開成品Release仍待交付，已發布下載另查[RELEASING](RELEASING.md#公開下載與來源開發主線)；這不表示保存驗證尚未做。仍需本機適配Cookery，不能宣稱兩個原包直接匯入即用。未觀察的真實輸入、聲畫或多人範圍保留未知，不另成等待真人的門檻。
+
+> **2026-11-04 歷史快照（保留當時觀察，不作現行待辦）**：[Core 的公開最小安裝入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已實作 Grilling＋本機適配 Cookery 的四包候選；`build_owned_family_recipe.py::install_public_pair` 明確只選這四包，並使用既有玩家資源合成器。Tavern、世界名酒、IE、TACZ 與私有整合不是必要安裝項。歷史 full-family 配方及 IE 安裝工具是另一條選用路徑，不能當成公開最小入口的要求。**尚未完成**的是公開成品交付及該最小候選的引擎功能／保存重啟驗證；目前仍需本機適配 Cookery，不能宣稱普通兩個原包直接匯入即可完整使用。實際入口、輸入與證據由上述 Core 文件維護。
+
+- **P0：公開核心（基礎版）**。目標只要求 Grilling 自有 BP/RP、指定可取得的 Cookery 正式相依與公開可重現的必要接入機制，以及引擎／實驗設定；**不要求** Tavern、世界名酒、Immersive Eating、TACZ、私有修復包、私有 family lock 或森羅伺服器。本機公開工具已實作Cookery接入，已完成與仍未確認的驗證範圍查上述Core記錄；本輪公開成品Release交付仍待收尾；不得把複雜步驟改寫成「單獨匯入即用」或假設玩家擁有我們的環境。優先設計為只需正常下載／匯入或可選的公開一鍵組裝，不上傳作者完整素材。
 - **P1：選用第三方相容**。IE、TACZ 與其他已知會佔用 `minecraft:player`、渲染控制器、腳本 API 或其他資產路徑的 Addon，採用**獨立、可辨識、明確選擇的相容 profile／adapter**。沒有安裝該 Addon 時，不載入其專用條件、資源或修補；某特定 TACZ 版本的動畫、槍械、模型及材質修正不得寫入 Grilling 公開核心。支援新版本需核對實際接口／來源差異及新增可審查 profile；舊 SHA 不是「所有 TACZ 版本通用」。
 - **P2：森羅完整家族／伺服器**。高優先權修復包、完整 28 格指定組合、私服 UI 與 family lock 只屬這一 profile 的驗收及部署；不能成為 P0 公開核心的必要入口，也不能用完整家族 BDS 成功取代一般安裝驗收。
 - **相容性實作原則**。共用邏輯只依穩定 API／公開能力契約，而不是硬編碼「森羅已安裝第 N 包」；缺少可選 provider 時不應損壞基本玩法或存檔。對會整份覆寫的 `minecraft:player`／FP controller 等引擎衝突，先保留所選宿主完整定義，檢查實際生效的欄位、控制器與骨骼；已知版本以可審查的選用 adapter 產生本機合併副本，未知衝突要清楚拒絕或標示未支援，**不可盲目合併、靜默覆蓋或聲稱任意 Addon 均相容**。作者原包與玩家存檔維持唯讀／可回滾。
 - **公開版可發布的最低出口**。以空白世界和一般下載流程驗證 Minecraft＋Cookery＋Grilling（不含 IE／TACZ／Tavern／世界名酒／私包）：正常啟動、依賴能力、取材→穿串→烤油→撒料→食用→餐盤／存檔重開、第一／第三人稱及兩手、日誌及基本效能；另一組再驗 IE／TACZ 為可選 addon 的存在／缺席及移除。每組保留完整 BP/RP 身份，針對真正改動做引擎功能與保存驗證；官方素材來源、相依版本與必要步驟寫在公開安裝說明。森羅整包的結果不能代替最小安裝路徑的結果；證據與完成標準依現行擁有者簡化規則。
 
-**優先順序**：先排除 P0「最小普通安裝還需要家族專用組裝」這一發行阻塞，再擴張 TACZ 專項動畫與私服最終優化。T3.5-e 的整合 owner 負責通用公開入口；Grilling 功能代理負責基本玩法不依賴選用 Addon；優先完成**最小公開版**的必要功能驗證與交付，與完整家族／TACZ 分開回報。
+**優先順序**：P0已具不依賴家族專用組裝的公開入口，先收尾最小公開版交付，再擴張TACZ專項動畫與私服最終優化。T3.5-e整合owner負責通用公開入口；Grilling功能owner負責基本玩法不依賴選用Addon。沿Core記錄重用仍有效的驗證，只補實際改動或具體故障所需範圍，與完整家族／TACZ分開回報。
 
 **已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
 
@@ -599,6 +603,8 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 - staging 完整走過 §9.5 全清單並記錄；luosen 部署 2.9.0（§5.5）。
 
 ### P4：視覺重建與影子 ID 退役
+
+**已核實的範圍**：單檔模型大小預算已達，觀察日期、來源範圍及其限制由[ARCHITECTURE的模型預算](ARCHITECTURE.md#視覺與跨包接口)持有；這不等同本階段所有表面或整體圖像完成，不為重做已達數字而另開模型改造。
 
 **T4.1 視覺盤點表**：以 `data/java/` 的物品清單產生 `docs/PARITY.md` 的視覺子表：每個物品 × {背包圖示、第一人稱、第三人稱、放置、進食}，記 Java 參考（模型路徑）與 Bedrock 實作方式（§7）。
 
