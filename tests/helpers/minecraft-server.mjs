@@ -4,7 +4,7 @@ const api = globalThis[Symbol.for('grilling.test.minecraft.fixtures')]?.get(id)?
 if (!api) throw new Error(`Unknown Minecraft test fixture: ${id}`);
 export const {
   world, system, ItemStack, BlockPermutation, EquipmentSlot, GameMode,
-  ItemComponentTypes, EntityComponentTypes, EnchantmentType, MolangVariableMap,
+  EntityHealCause, ItemComponentTypes, EntityComponentTypes, EnchantmentType, MolangVariableMap,
   CommandPermissionLevel, CustomCommandParamType, CustomCommandStatus,
   Direction, ItemLockMode, ItemTypes, BlockTypes,
 } = api;

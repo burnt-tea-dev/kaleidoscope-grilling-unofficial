@@ -80,8 +80,9 @@ function settle(entity,id,token){
  }finally{release(id,token)}
 }
 
-/** Called only by main's existing before-hurt subscriber, after dodge and
- * invincibility. This module adds no competing event subscription.
+/** Called only by the existing before-hurt subscriber, after dodge and
+ * invincibility. Native totem admission is unchanged here: a held item alone
+ * does not prove a later native heal will be accepted.
  */
 export function handleHeavyMetalBeforeHurt(event){
  let entity,id,token;

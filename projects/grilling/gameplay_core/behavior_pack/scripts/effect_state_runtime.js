@@ -1,6 +1,7 @@
 import {world,system} from '@minecraft/server';
 import {nativeDragonHealth} from './dragon_native_health.js';
-import {FX_KEY,activeEffects,effectPayload,milkEffects} from './effect_lifecycle_core.js';
+import {FX_KEY,activeEffects,effectPayload,milkEffects,totemEffects,TOTEM_CURED_EFFECTS} from './effect_lifecycle_core.js';
+import {updateNumbVisual} from './numb_visual_runtime.js';
 import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
 const snapshots=new WeakMap(),identities=new Map(),dodgeStates=new Map();let identityTick=-1;
 const copyEffects=fx=>activeEffects(fx,effectTime());
@@ -46,6 +47,25 @@ export function clearEffects(entity,{milk=false}={}){
  writeEffects(entity,milk?milkEffects(readEffects(entity),effectTime()):{},{refreshProjectileDodge:true});
   entity.setDynamicProperty(PersistedKey.DRAGON_POOL,undefined);
  discard(entity);
+}
+
+/** Only the confirmed native totem event owns this cure. Use the saved field,
+ * not an earlier same-tick cache, and tear down native state only after the
+ * effect writer acknowledges the removal. Native callback ordering is external.
+ */
+export function cureTotemEffects(entity){
+ const time=world.getAbsoluteTime(),raw=entity.getDynamicProperty(FX_KEY);
+ if(!Number.isFinite(time)||raw!==undefined&&typeof raw!=='string')throw Error('Totem cure state is unreadable');
+ const value=raw===undefined?{}:JSON.parse(raw);
+ if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Totem cure state is invalid');
+ const before=activeEffects(value,time);
+ if(!TOTEM_CURED_EFFECTS.some(name=>before[name]))return false;
+ writeEffects(entity,totemEffects(before,time),{expectedRaw:raw,refreshProjectileDodge:true});
+ if(before.dragon_blood){
+  try{nativeDragonHealth(entity,undefined)}catch(error){console.warn('[Grilling totem dragon teardown] '+error)}
+ }
+ if(before.numb)updateNumbVisual(entity,false,system.currentTick);
+ return true;
 }
 
 // Named-effect generations stay in memory. No persistence/schema field is added.
