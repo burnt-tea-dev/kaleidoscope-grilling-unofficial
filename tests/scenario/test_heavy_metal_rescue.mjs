@@ -120,12 +120,35 @@ test('confirmed native totem cure removes Heavy Metal after an absorption-ambigu
   assert.equal(f.sounds.filter(s=>s.sound==='kg_java21.heavy_metal').length,0);
  }finally{f.dispose()}
 });
-for(const cause of ['entityAttack','override','void','selfDestruct'])test(cause+' rescue admission is unchanged by an equipped totem',async()=>{
+for(const cause of ['entityAttack','magic','fall'])for(const hand of ['main','off'])test(cause+' yields to a native '+hand+'hand totem without spending Heavy Metal',async()=>{
+ const f=await rescueFixture(1000);
+ try{
+  f.p[hand]=new f.ItemStack('minecraft:totem_of_undying');
+  assert.equal(f.hurt({cause}).cancel,false);
+  assert.deepEqual(f.saved(),f.before,'letting native death protection run is not a cure signal');
+  assert.equal(f.p.getDynamicProperty(f.claims.HEAVY_METAL_CLAIM_KEY),undefined);
+  f.hp.currentValue=1;f.p[hand]=undefined;
+  f.emit('world.afterEvents.entityHeal',{healedEntity:f.p,healing:1,healSource:{cause:'TotemOfUndying'}});
+  assert.deepEqual(f.saved(),{});
+  f.tick();assert.equal(f.hp.currentValue,1);
+  assert.equal(f.sounds.filter(s=>s.sound==='kg_java21.heavy_metal').length,0);
+ }finally{f.dispose()}
+});
+for(const cause of ['override','void','selfDestruct'])test(cause+' keeps Heavy Metal protection with an equipped totem',async()=>{
  const f=await rescueFixture(1000);
  try{
   f.p.off=new f.ItemStack('minecraft:totem_of_undying');
   assert.equal(f.hurt({cause}).cancel,true);
   assert.ok(f.saved().heavy_metal_poisoning);assert.equal(f.p.off.typeId,'minecraft:totem_of_undying');
+ }finally{f.dispose()}
+});
+test('a totem in the backpack does not suppress Heavy Metal protection',async()=>{
+ const f=await rescueFixture(1000);
+ try{
+  f.p.inventory.setItem(5,new f.ItemStack('minecraft:totem_of_undying'));
+  assert.equal(f.hurt().cancel,true);f.tick();assert.equal(f.hp.currentValue,1);
+  assert.ok(f.saved().heavy_metal_poisoning);
+  assert.equal(f.p.inventory.getItem(5).typeId,'minecraft:totem_of_undying');
  }finally{f.dispose()}
 });
 test('ordinary healing, zero healing and missing after-heal cannot infer a totem cure',async()=>{

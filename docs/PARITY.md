@@ -189,16 +189,16 @@ G221 修正已重現的最後一 tick 競態：tick9 的重金屬期限為10，�
 [原生觀察](../tests/native/heavy-metal/observed.json)直接執行未改寫的 handler／effect writer：BDS1.26.60.6、server2.12.0-beta、Beta APIs與upcoming creator features已開；native豬受到100傷害時，before-hurt讀到暫時計算的-90HP，立即讀回效果轉換及claim，cancel=true，native恢復10HP，下一tick變成1HP。正常停服／同世界重開後保留相同中毒期限、無關warmth、claim及1HP。這是隔離能力與受影響保存資料的證據；真main事件、到期及失敗回復另由上述ESM情境覆蓋，不是完整家族、原生圖騰／剩餘absorption、其他addon仲裁或客戶端聲畫等價證明。
 
 <a id="heavy-metal-damage-order"></a>
-### 吸收生命與原生圖騰順序（2026-11-05）
+### 吸收生命與原生圖騰順序（2026-11-06）
 
 Java 兩分支先扣實際剩餘吸收生命，再檢查原生圖騰，只有仍要死亡才進 `AdvancedSeasoningHandler.onDeath`。已從 Mojang 官方1.20.1／1.21.1 client JAR及 mappings核對 `LivingEntity.hurt`：`actuallyHurt` 先計吸收值，`checkTotemDeathProtection` 成功則跳過 `die`。Forge／NeoForge 的死亡掛鉤分別在 [Forge `die`](https://github.com/MinecraftForge/MinecraftForge/blob/d13dd327bdc75c010f3358992e80e7e92f51e030/patches/minecraft/net/minecraft/world/entity/LivingEntity.java.patch)／[NeoForge `die`](https://github.com/neoforged/NeoForge/blob/624c929f49920c250166e2a8df7af87f16d220ef/patches/net/minecraft/world/entity/LivingEntity.java.patch)。原生圖騰成功不會由重金屬添加中毒；NeoForge 的一般重金屬使用預設 [PROTECTED_BY_TOTEM cure](https://github.com/neoforged/NeoForge/blob/624c929f49920c250166e2a8df7af87f16d220ef/src/main/java/net/neoforged/neoforge/common/EffectCures.java)，亦會被該圖騰清除。官方JAR／mappings來源記在[本次觀察](../tests/native/heavy-metal/damage-order-observed.json)。
 
-G221 的新原生對照已重現兩個差異，**尚未修正**：
+G221 的歷史原生對照重現以下兩個差異；部分盾仍未修正，圖騰優先由下述 G238 來源修復接續：
 
 - 兩隻10HP原生豬同時取得吸收I，其中一隻先受3點傷害。再各受13點傷害時，兩個 before-hurt 均讀到 -3HP、amp0、期限378ticks，現行 handler 都不取消；完整盾的豬存活1HP，部分盾的豬死亡，漏掉原作應有的重金屬救援。測試中 `getComponents()` 沒有吸收量元件，`getComponent('minecraft:absorption')` 回傳空值。[Effect](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/effect?view=minecraft-bedrock-experimental) 只提供等級／期限等欄位，不能由它推得剩餘盾量。
 - 10HP原生模擬玩家副手持圖騰、受100點傷害：不帶重金屬的 control 消耗圖騰並存活；帶重金屬時，handler 先取消傷害、添加中毒，圖騰仍留在副手。這與 Java 的原生圖騰優先不同。
 
-所選引擎已觀察到 before-hurt 位於原生吸收／圖騰處理之前；目前公開的 [before-hurt](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entityhurtbeforeevent?view=minecraft-bedrock-experimental) 沒有剩餘吸收值或圖騰結果，而 [after-hurt／after-death](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-experimental) 不能取消最終死亡。單靠「手上曾有圖騰」猜成功，亦不足以正確清除自有保存效果。本次沒有新增全域傷害仲裁、盾量追蹤或推測式補丁；這是上述引擎／公開介面的精確缺口，並非宣稱所有未來API都不可行。4案只做一次正常停服，未重跑到期／保存證據，沒有改 runtime、版本或 LIVE。
+所選引擎的 [before-hurt](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entityhurtbeforeevent?view=minecraft-bedrock-experimental) 位於原生吸收／圖騰處理之前，沒有剩餘吸收值或最終圖騰結果；[after-hurt／after-death](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-experimental) 不能取消最終死亡。這限制了部分盾修復，**不代表無法實讀兩手圖騰並讓原生先處理**：上述舊 probe 已在 before-hurt 讀到真副手圖騰。讓路與清理是兩件事；持有物只能決定優先路徑，效果清理仍須下述真實成功治療訊號。舊4案本身未改 runtime 或 LIVE，原始失敗不改寫。
 
 #### 原生圖騰成功訊號的來源調查（2026-11-05）
 
@@ -206,6 +206,10 @@ G221 的新原生對照已重現兩個差異，**尚未修正**：
 
 G233 將原 G230 清理來源原樣整合至 G232 主線；來源候選沿用同一個正值 `TotemOfUndying` after-heal 路徑，清除存活實體的 16 種已核對預設可治療效果及其隱藏層：煙火的 heavy_metal、dragon_blood、numb、invincible，以及 Cookery 的 flatulence、tundra_strider、warmth、satiated_shield、vigor、sulfur、mustard、preservation、hinder、projectile_dodge、instant_smelting、vitality。保留不可治療中毒、重金屬 claim 與未知名稱效果；G227 的窄範圍版本身份不改寫。來源為釘選 [Grilling ModEffects](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModEffects.java)、[Cookery ModEffects](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/init/ModEffects.java) 與 [BaseEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/BaseEffect.java)，配合 NeoForge 的預設 PROTECTED_BY_TOTEM cure；不涵蓋其他 Java 模組事後修改 cure 或否決移除的情形。
 
-效果保存移除確認後，既有 owner 請求生命群組重設、停止麻痺姿勢。成功原生圖騰先撤銷較早的龍血待補生命、彈射物閃避與重金屬待結算，防止效果剛過期或保存移除失敗時，舊回呼仍補傳送或覆蓋新生命結果；保存寫入失敗時不冒稱已清除效果。龍血的事件前綴原先讀取不存在的 `PERSISTED_KEY.DRAGON_HEALTH_PREFIX`，本次改用已存在且對應 player.json 的 `LOCKED_DRAGON_HEALTH_EVENT_PREFIX`，不新增 player 覆寫。這修正成功圖騰後的效果殘留與舊延後結算問題，不改 before-hurt 傷害取消決策，**上述部分盾漏救與重金屬搶先圖騰仍未修正**。API 情境中的 fresh-runtime reload 只證明保存值可由新模組讀回；生命群組與姿勢只驗證請求，不等同原生生命上限、磁碟重啟或客戶端畫面驗收。
+效果保存移除確認後，既有 owner 請求生命群組重設、停止麻痺姿勢。成功原生圖騰先撤銷較早的龍血待補生命、彈射物閃避與重金屬待結算，防止效果剛過期或保存移除失敗時，舊回呼仍補傳送或覆蓋新生命結果；保存寫入失敗時不冒稱已清除效果。龍血的事件前綴原先讀取不存在的 `PERSISTED_KEY.DRAGON_HEALTH_PREFIX`，本次改用已存在且對應 player.json 的 `LOCKED_DRAGON_HEALTH_EVENT_PREFIX`，不新增 player 覆寫。這修正成功圖騰後的效果殘留與舊延後結算問題，不改 before-hurt 傷害取消決策，**G233 當時仍有部分盾漏救與重金屬搶先圖騰；目前圖騰修復見下段，部分盾仍未修正**。API 情境中的 fresh-runtime reload 只證明保存值可由新模組讀回；生命群組與姿勢只驗證請求，不等同原生生命上限、磁碟重啟或客戶端畫面驗收。
 
-沒有採用「手持圖騰就略過重金屬」：其他訂閱者仍可能在更後階段取消圖騰治療；此情況的存活／死亡結果，本次沒有可用的原生驗證。成功 after-heal 只能確認已發生的治療，不能保證稍後必然成功，也不能取消最終死亡。因此，提前讓路可能失去原有重金屬保護，屬尚未驗證的回歸風險，不是已確立的原生死亡結果。來源情境只驗證已確認事件的保存狀態清理、普通／零治療不誤清、寫入失敗、以及原有 entityAttack／override／void／selfDestruct 傷害決策不變；不是原生圖騰順序或完整 Java 等價驗收。
+G233 當時沒有讓手持圖騰先行，其原因是尚未驗證這條路徑；假設其他訂閱者之後取消治療，亦不是已重現的原生死亡結果。G238 現在直接修正原 owner：確定致命且主手／副手真持原生圖騰時，合適的傷害先交原生，當場不消耗重金屬、不寫 claim、不自行清理效果。只放背包的圖騰不算可用；void／override／selfDestruct 保留重金屬原處理，不能見圖騰就對所有 cause 跳過。普通無圖騰、已確認 Totem cure、寫入失敗與排程撤銷的情境保留，正式 main 註冊事件整檔35項通過。
+
+排除 override 有實際 Java 路徑：兩分支 [CursedSkewerItem](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java) 用 ordinary_skewer／Float.MAX_VALUE，而作者共同 [bypasses_invulnerability tag](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json) 明確包含該傷害。Mojang兩版圖騰檢查都先拒絕此 tag；Java原生圖騰不擋它，重金屬的LivingDeath仍可救。Bedrock既有平凡owner映射為override；已就地修正原碼誤稱保留Java圖騰的註解，沒有改平凡傷害或新增旁路。
+
+新的[窄原生 observer](../tests/native/heavy-metal/totem_priority_probe.js)直接載入正式 effect/runtime 的已註冊傷害／after-heal入口，準備對照雙手、entityAttack／magic／fall／none、void／平凡實際override傷害／selfDestruct，以及無圖騰／背包圖騰；尚未執行，不將來源情境冒充圖騰消耗、真實治療或native成功。此修復不新增屬性、interval、盾量追蹤、復活或版本例外；未驗其他addon後續否決、client聲畫或完整家族保存。

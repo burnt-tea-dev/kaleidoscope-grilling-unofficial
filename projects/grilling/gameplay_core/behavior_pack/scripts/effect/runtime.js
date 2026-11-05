@@ -110,7 +110,8 @@ function applyOrdinary(player){
  if(outcome==='shield'){awardOrdinaryChallenge(player,outcome);ordinaryShieldFeedback(player);return}
  if(outcome==='spear')awardOrdinaryChallenge(player,outcome);
  ordinaryFatalFeedback(player);
- // Java uses damage, not generic kill: Heavy Metal and native totems retain their damage/death route.
+ // Java uses damage and Heavy Metal can rescue it. Ordinary's damage type is
+ // tagged bypasses_invulnerability, which Java totems reject before LivingDeath.
  system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'override'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
 
