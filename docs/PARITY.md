@@ -50,6 +50,12 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | Cookery／Tavern 指南入口與多語 | 家族整合能力；不冒充 Java 原作玩法 | `guide/main.js`、guide publisher；[指南規範](GUIDE-STANDARD.md) | 來源已實作：單入口、內容與交接 | 接收章節不等於玩家 UI 正確；返回、關閉、逾時、觸控、三語及多人隔離待驗 | [指南靜態檢查](../tools/check_grilling_guide.py)；[GUIDE-STANDARD](GUIDE-STANDARD.md)；既有指南檢查與真人場景分開 |
 | HUD、平台替代與效能 | Java HUD／流體／碰撞／mixin／選用模組 | 目前 HUD、油流與明列 adapter；現況見 [ARCHITECTURE](ARCHITECTURE.md) | 來源已實作：有限替代；部分能力未實作 | 原始資料碼外露、位置與延遲保留失敗；未有完整效能預算。D3／D5／D6 仍按計畫待決 | [a2739_core](../tests/legacy/test_a2739_core.mjs)、[a2740_core](../tests/legacy/test_a2740_core.mjs)；僅 HUD 目標／狀態規則；無完整效能或畫面驗收。CLIENT-HUD、平台與效能；`hud.json`、`minecraft_assets.json` |
 
+## 溫暖效果的熱源判斷
+
+G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營火不供熱；原生 `lit_furnace`、`lit_smoker`、`lit_blast_furnace`、已亮的紅石類型及 `lit=true` 的蠟燭／銅燈供熱；火、靈魂火、靜止／流動岩漿、岩漿塊與既有已點火烤架仍有效。依據為已釘選 Cookery [WarmthEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/WarmthEffect.java) 的 LIT 判斷及[熱源 tag](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/generated/resources/data/kaleidoscope_cookery/tags/block/warmth_heat_source_blocks.json)；Bedrock 名稱與狀態來自官方 1.26.60.5 [mojang-blocks.json](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/vanilladata_modules/mojang-blocks.json)。該引擎的營火使用布林 `extinguished`，不是舊名稱 `extinguished_bit`。
+
+[真 main 排程情境](../tests/scenario/test_warmth_heat_sources.mjs)先重現原本三熔爐不回血、兩熄滅營火誤回血，修後涵蓋原生 ID／狀態切換、5×3×5 邊界、多熱源只回血一次、生命上限、烤架與下界慢速回復。保存鍵、效果期限和現行檢查頻率不變。這是受控 API 入口結果，尚未進行本次熱源的 BDS／客戶端操作；它也沒有解決 Java 效果剩餘時長與全域 tick 相位的差異，或宣稱所有 LivingEntity 均已獲得等價效果。
+
 ## 搖瓶完成的額外資料保存適配
 
 G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/350) 的單一修復：`food/runtime.js:completePending` 使用已核對的目前手持瓶，經既有 `copyEatingVariant` 保留 API 可見名稱、RawMessage lore、keepOnDeath／lockMode、Adventure 放置／破壞限制和可讀寫的動態欄位；只重建已知由煙火持有的 lore，重設 uses=0 與隨機 variant。失敗回復目前的原生 pending stack，不回寫開始食用時已過期的旗標／限制快照。[原有真main回歸](../tests/scenario/test_pending_seasoning_metadata.mjs)已在當前來源依賴執行，覆蓋目前 metadata、主副手失敗回復和拒絕新 variant 後重試；原生操作／保存範圍見[專用探針](../tests/native/seasoning-metadata/README.md)。
