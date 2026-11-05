@@ -52,7 +52,11 @@ P3 將保存鍵集中與交易收斂時，仍要逐字保留既有 key／ID／UU
 
 ## 視覺與跨包接口
 
-目前 player property、held transport、RP controller 與 attachable 共同呈現食物／瓶／盤。Grilling 仍有自己的 `entities/player.json`；共用 player owner 與其他進食包相容屬 T3.4／D6，本文不把未來方案寫成已部署架構。巨型烘焙模型、影子 item ID 與多代路線也仍在 runtime；P2 文件收斂沒有退役它們。
+食物／瓶／盤的手持與放置表面由 player property、held transport、RP controller 與 attachable 配合呈現；背包／快捷欄圖示是另一條路徑，任意三食材每 stack 的圖示仍有[已列明缺口](PARITY.md#秘製串背包圖示gui-display)。烘焙幾何、影子 item ID 與不同呈現路線仍有保留，但不能把它們一概寫成目前仍有超大單檔。
+
+**單檔模型預算（2026-11-06 核對的來源快照）**：已核對的最大 geometry 為523686 bytes，低於512 KiB。G237到G238的RP只有manifest身份變更，沿用相同幾何輸入的有效結果，沒有為此再掃全庫。這只代表單檔大小預算已達；每個表面的Java外觀、動畫與其他差距仍按[PARITY](PARITY.md)核對，不代表P4或整體視覺已完成。
+
+Grilling原始BP仍提供自己的`entities/player.json`；[Core公開最小入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已用本庫合成器，將指定原版player接入Grilling既有RP，要求唯一有效BP player owner及完整RP player。這是已實作的本機組裝路徑；與其他進食包／TACZ共存仍依選定profile及實際接口核對，不能據此宣稱任意組合或客戶端畫面已通過。公開入口的建置及各份原生／保存證據只查[Core驗證記錄](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/validation-public-minimal.json)。
 
 manifest 的 Cookery 相依只表示包身份要求，不證明每項 adapter／宿主能力已存在。公開接口的來源、認證界線與 failure behavior 以 [BEDROCK-INTEGRATION-API](BEDROCK-INTEGRATION-API.md) 為準；指南只使用既有 Cookery 書的一個煙火入口與六個根類。原作者完整包、私有整合邏輯與機密不放入這裡。
 
