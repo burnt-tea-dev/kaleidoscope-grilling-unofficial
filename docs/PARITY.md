@@ -66,7 +66,9 @@ G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營
 
 G236 接續修正獨立時機差異。Mojang 1.20.1／1.21.1 的 `MobEffectInstance.tick` 均先呼叫效果的duration判斷／apply，再`tickDownDuration`；以官方[1.20.1 JAR](https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt)、[1.21.1 JAR](https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt)核對，對應1.20.1 `bfa.a(bfz,Runnable)`、1.21.1 `brz.a(btn,Runnable)`。因此tick7套用40tick效果，後續tick8先處理duration40、tick28處理duration20；原G234的全域時鐘只在tick20／40回復。直接把`until-now`當作扣減前duration的G235草稿也漏掉第一tick，未獨立合併或部署；其身份保留，由G236取代。
 
-正式owner以既有active deadline恢復本次扣減前的`until - world absolute time + 1`，判斷20的倍數；不新增保存欄位、計時器或待辦資料。[真main情境](../tests/scenario/test_warmth_heat_sources.mjs)核對第一tick、第二次回復、續期、到期不補零tick回血，以及原生DP欄位模型在process clock重啟後保留同deadline。12項情境通過，原G234在新增的三項失敗。這是API模型的保存重載證據，G236的原生時機／正常重啟尚未驗證；跨其他模組的完整同tick順序及非玩家效果仍不宣稱等價。
+正式owner以既有active deadline恢復本次扣減前的`until - world absolute time + 1`，判斷20的倍數；不新增保存欄位、計時器或待辦資料。[真main情境](../tests/scenario/test_warmth_heat_sources.mjs)核對第一tick、第二次回復、續期、到期不補零tick回血，以及原生DP欄位模型在process clock重啟後保留同deadline。12項情境通過，原G234在新增的三項失敗。
+
+2026-11-06 的[G236原生觀察](../tests/native/warmth/timing-observed.json)沿未改寫的exported函式通過10＋11項：原生Player在tick87套用40tick效果，elapsed1／13／20／21／40的HP為5／5／5／6／6；同QA正常停服再開，原生保存actor的相同DP期限及4HP保留，在absolute741（扣減前601）不回復、742（600）回到5HP，期限不變。兩次正常stop／exit0、players/errors/OOM為0。這確認原生時機與受影響保存資料；沒有證明native process clock重置、完整main、跨模組完整同tick順序、客戶端或自動非玩家支援，詳見[探針說明](../tests/native/warmth/README.md#g236-duration-timing-and-same-world-restart)。
 
 ## 搖瓶完成的額外資料保存適配
 
