@@ -19,14 +19,14 @@
 | OIL-NAMED-TICK | G194 修復 26.60 命名事件 API 錯配：以 ownership-aware `isName` 取代不存在的 `isMine/name`，不呼叫不存在的取消方法；原生回呼消耗一次排程，只有未完成工作才重排。原形狀反例失敗，既有油機測試修後通過 | 同候選真引擎榨油→完成→收料、倒數途中拆除、卸載與重啟、重複事件及保存故障；來源模型不等於完整 BDS／真人驗收 |
 | HAND-ACTION-PREPARATION | G157 與 G180 的 API 模型可重現新製 Secret 在延後拆串前被 idle 換成 THREE_ALT，原有嚴格 intent 因而拒絕；關閉動畫的 native_plain 與立即入爐也會遇到同根因。G181 以暫時 hand reservation 修復自家外觀替換競爭，未放寬 ownership | 原生新製 Secret 立即拆／入爐；動畫開／關、主副手、被其他玩家或 addon 換 metadata、取消、滿包與重試。來源測試不能證明 native 排程或客戶端已通過 |
 | GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |
-| SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；任意 stack GUI 合成仍是另一項未實作能力 |
+| SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；每stack背包圖示合成仍是另一項未實作能力 |
 | SKEWER-CONTENTS | 玩家曾回報配方不合、穿料後只見竹籤與吃空氣；G151／152 有取得契約、短配方、內容、圖像及共同資料守衛修補 | 正常取得→1／2／3 料穿製→烤製→盤／手持→食用／保存；空／不完整串不能被重複穿外層，合法零營養仍遵循原作。任意 stack icon 另驗 |
 | CLIENT-HUD | 曾無森羅 UI、外露 `KT_HUD!` 資料、位置錯及秒級延遲；G138／140–142 有入口、錨點、時計及圖像裁剪來源修補 | 觸控／Desktop、全食品、兩手、連吃、取消、END 隱藏與真實延遲；送出 packet、BDS 載入與舊窄片不代替結果 |
 | EATING-OWNER | G143 修 owning-player property 環境、副手進度、末段隱藏、RawMessage 等價比較及失敗掃描節流 | 近鏡放大、末段平片、換槽／重登、瓶子與食物 preparation 並存仍需當前驗收；不猜改 Java 曲線掩蓋失敗 |
 | GRILL-DEFERRED-OWNER | G125 延後重讀 cancel 並核 type／permutation／owner／完整物品；舊四個原生 API 診斷用代用容器 | 後續 listener 取消爆炸、排程後換方塊、合法計時中拆爐；須保留整個 customBreak、容器內容與玩家結果 |
 | ITEM-DELIVERY | G125 在扣料前核站點身份，保留滿包 planner、實際交付讀回與不明結果隔離 | 榨油機延後扣料、串譜／穿串／拆串滿包、外來槽位和掉落回收未知；未確認回收不得退原料或重發 |
 | SEASONING-DATA-RELOAD | G124 合併目前資料根，取料／效果／HUD 共用 resolver，保存失敗恢復；不自動讀 Java datapack | 後根覆寫、錯誤根不部分生效、舊食物依新映射、未知 kind 與 provider 缺席；真人效果仍待驗 |
-| SKEWER-GUI | issue #166 有任意三槽 GUI 的失敗觀察；參考圖與手持 geometry 不證明 native inventory 合成 | 同一串三份胡蘿蔔及不同原料、raw／cooked／variant，查看背包與快捷欄；固定五幀 icon 不能取代此項 |
+| SKEWER-GUI | issue #166 保留任意三食材背包圖示（GUI display）的失敗觀察；範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不是三格製作視窗 | 同一串三份胡蘿蔔及不同原料、raw／cooked／variant，查看背包與快捷欄；原生庫存保存、手持geometry及固定五幀icon不能取代此項 |
 | SEASONING-FLOW | 舊 LIVE 取瓶失敗；RawMessage／材料數與後續動作有來源修補，未有完整同瓶驗收 | 同瓶放三種必要 base→取回 PENDING→持續 80 tick→SPECIAL→向有串烤架撒料；核材料、uses、取消／換槽／重登，不能用改配方或即時轉換通過 |
 | SEASONING-EXPLOSION-CANCEL | G117 延後工作僅在 cancel 明確 false 時繼續；取消／event 讀失敗保留瓶、ItemStack、容器及保存記錄 | 在瓶 handler 後取消爆炸，驗內容與 ownership；未取消爆炸的原作毀損規則不變。API 模型不是原生事件結果 |
 | PLATE-SATURATION | G116 餐盤在寫 hunger 後重取 saturation／effectiveMax，失敗回滾；舊 trace 曾在 hunger 10→13 後仍用 cap 10 | 重現相同飢餓／食物及原生 cap 條件，核一次營養結算、不吞物品、不虛構 max；同候選 Player／client 待驗 |

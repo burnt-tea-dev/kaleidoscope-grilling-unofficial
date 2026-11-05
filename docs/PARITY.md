@@ -34,7 +34,7 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | 食用、停止、換手與離線 | `MultiBiteSkewerItem`、`SkewerEatingAnimation` | `secret_eating_core.js`、`cuisine_eating_core.js`、`main.js` | 來源已實作：會話、進度與結算 | readiness、release grace、完整動畫長度分開；直接離線依[已接受的Java差異](REBUILD-PLAN.md#t3-4-direct-logout-policy)處理；真人斷線、缺少 counter、crash 與副手事件尚未全面驗收 | [a285_core](../tests/legacy/test_a285_core.mjs)、[food_finish](../tests/legacy/test_food_finish.mjs)、[skewer_item_snapshot](../tests/scenario/test_skewer_item_snapshot.mjs)；純規則與受控 API 情境涵蓋 use/start/complete admission、匹配完成的一次結算、效果期限及消耗 metadata；stop/leave、缺少 counter、crash、副手與原生完整流程仍待驗。`eating_profiles.json`、`animation_curves.json`；EATING-ACCEPTANCE；T1.3-3 |
 | 手持／進食模型、聲音與持物 ownership | `SkewerEatingPiece`、`SkewerColorProvider`、各 `*FirstPersonAnimation` | `core/player_props.js`、`held_visual_dispatch_runtime.js`、`secret_visual_state_core.js`、RP attachables／animations | 來源已實作：目前呈現路由與八種新增食材的既有索引擴充 | owning-player 修正不等於近鏡、末段平片、皮膚／FOV、旁觀者、兩手及聲音中斷已正確；八食材雙手／helper 實際畫面仍待驗 | [immersion_audio](../tests/legacy/test_immersion_audio.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；後者執行 225 個索引、owner 與 resource expression，不是 renderer；`animation_curves.json`、`model_frames.json`、`sounds.json`；EATING-OWNER；T1.3-3 |
 | 固定動態背包 icon | `SkewerColorProvider`、原動態 sprites | RP textures／texture animation 定義 | 來源已實作：固定圖像路由 | 熟史萊姆與神秘串五幀、每幀 4 tick 的真人觀察仍需同候選結果；不代替任意 stack GUI | 當前沒有完整自動化情境；`model_frames.json`；T1.3-4 |
-| 任意三槽秘製串背包 GUI | `CustomSkewerGuiTexture`、`CustomSkewerGuiDecorator` | 現有 fallback icon；手持 renderer 是另一條路徑 | 未實作：完整每 stack 原作 GUI 合成 | 有原始失敗觀察；計畫採通用圖示＋名稱／lore 的平台方案，不新增視覺影子 ID；不把平台取捨寫成真人完成 | 當前沒有完整自動化情境；SKEWER-GUI；issue #166；`model_frames.json` |
+| 任意三食材秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | 現有 fallback icon；手持 renderer 是另一條路徑 | 未實作：完整每stack原作背包／快捷欄圖示合成 | [本項範圍](#秘製串背包圖示gui-display)：不是三格製作視窗。通用圖示＋名稱／lore仍是降級，不新增視覺影子ID，也不當成原作圖示已還原 | 當前沒有完整自動化情境；SKEWER-GUI；issue #166；`model_frames.json` |
 | 餐盤交易、營養與互動仲裁 | `SkewerPlateBlock(Entity)`、`SkewerPlateItem` | `a25_plate_recipe_core.js`、`a25_plate_recipe_runtime.js`、`plate_transaction_core.js` | 來源已實作：保存、回滾與互動路由 | 放置／取回、點盤誤吃、未知交付、外來槽位及併發必須各自保留；不得用 PR 關閉認定修好 | [a25_core](../tests/legacy/test_a25_core.mjs)、[plate_transactions](../tests/legacy/test_plate_transactions.mjs)；PLATE-SATURATION、PLATE-USE-ARBITRATION；T1.3-1、T1.3-5 |
 | 放置餐盤與牆上串譜顯示 | `SkewerPlateRenderer`、`SkewerRecipeBlockRenderer` | `plate_recipe_visual_core.js`、`a2770_placed_visual_runtime.js`、共享 secret palette | 來源已實作：內容、份數、四朝向與八食材放置色板 | 1–5 份、八食材、真材質、光照、重載與更新待驗；舊 tiny-edge-pixel 觀察保留原身份 | [a2770_core](../tests/legacy/test_a2770_core.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；放置 resource expression 非實際畫面；`model_frames.json`；PLATE-PLACED-DISPLAY |
 | 手持餐盤內容與同步 | `SkewerPlateRenderer` | `plate_held_visual_core.js`、`plate_held_visual_runtime.js`、共享 held transport | 來源已實作：reader、writer、獨立 count | 兩手混持、切槽、重登、skin／FOV、旁觀者及未知外來模型待驗；數學模型不能替代 client | [plate_food_cache](../tests/legacy/test_plate_food_cache.mjs)；僅內容 cache 規則；held transport 事件與畫面仍待驗。PLATE-HELD-CONTENTS／DECODE；`model_frames.json` |
@@ -49,6 +49,12 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | 進度與獎勵 | Java advancements 與完成回呼 | [advancement_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_runtime.js)、[advancement_event_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_event_runtime.js)、[advancement_challenge_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_challenge_runtime.js) | 來源已實作：單次 XP 嘗試 | 原生XP／claim及未確認的範圍見[本項說明](#進度獎勵與領取紀錄) | [a2753_core](../tests/legacy/test_a2753_core.mjs)、[a2756_core](../tests/legacy/test_a2756_core.mjs)、[a2758_core](../tests/legacy/test_a2758_core.mjs)只覆蓋條件／計數；[原生XP／claim](../tests/native/advancement-claim/observed.json)17項通過 |
 | Cookery／Tavern 指南入口與多語 | 家族整合能力；不冒充 Java 原作玩法 | `guide/main.js`、guide publisher；[指南規範](GUIDE-STANDARD.md) | 來源已實作：單入口、內容與交接 | 接收章節不等於玩家 UI 正確；返回、關閉、逾時、觸控、三語及多人隔離待驗 | [指南靜態檢查](../tools/check_grilling_guide.py)；[GUIDE-STANDARD](GUIDE-STANDARD.md)；既有指南檢查與真人場景分開 |
 | HUD、平台替代與效能 | Java HUD／流體／碰撞／mixin／選用模組 | 目前 HUD、油流與明列 adapter；現況見 [ARCHITECTURE](ARCHITECTURE.md) | 來源已實作：有限替代；部分能力未實作 | 原始資料碼外露、位置與延遲保留失敗；未有完整效能預算。D3／D5／D6 仍按計畫待決 | [a2739_core](../tests/legacy/test_a2739_core.mjs)、[a2740_core](../tests/legacy/test_a2740_core.mjs)；僅 HUD 目標／狀態規則；無完整效能或畫面驗收。CLIENT-HUD、平台與效能；`hud.json`、`minecraft_assets.json` |
+
+## 秘製串背包圖示（GUI display）
+
+本項的GUI指背包／快捷欄中每串圖示的繪製，不是輸入三格食材的製作視窗。固定Java `9a1acdab`的[Forge1.20.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)與[NeoForge1.21.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)均以雙手逐次穿料、直接更新手上成品；兩分支的`CustomSkewerGuiTexture`／`SkewerGuiDecorator`讀每stack食材、生熟及variant畫圖示。沒有新增三格窗口、關閉返料或自動烹飪的原作要求；`secret_terminal_visibility.py`處理的是食用末段顯示，不能當成製作終端。
+
+原生庫存保存、手持模型及固定五幀圖示各有自己的證據範圍，不能代替任意三食材每stack圖示。此項仍未實作；原始失敗與範圍見[issue166](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/166)，不能把舊截圖當作目前畫面重測。
 
 ## 進度獎勵與領取紀錄
 
@@ -121,7 +127,7 @@ G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unoff
 | T1.3-1／#214 | 餐盤／食譜交易失敗或花椒採收掉落不明時，保留物品資料與所有權，不覆寫外來物品、不重複退款／採收、不遺失內容 | 餐盤、串譜、作物與世界；未知結果／故障注入和同候選真人流程仍需對照 |
 | T1.3-2／#217 | 烤架與貼牆廚具架碰撞／選取符合 Java，避免空氣阻擋與靠牆點不中 | 烤架、料理架；已有來源承接不代替四朝向與貼牆實際結果 |
 | T1.3-3／#220 | 20 種既定 THREE 路線烤串在站立、第一人稱主手食用時，逐口模型與手臂投影符合 Java | 食用與呈現；精確食品／路線與鏡頭條件不擴張成全食品驗收 |
-| T1.3-4／#222 | 熟史萊姆串與神秘串背包圖示按 Java 五幀、每幀 4 tick 動畫呈現 | 固定動態 inventory icon；與任意三槽 GUI 缺口分開 |
+| T1.3-4／#222 | 熟史萊姆串與神秘串背包圖示按 Java 五幀、每幀 4 tick 動畫呈現 | 固定動態 inventory icon；與任意三食材每stack圖示缺口分開 |
 | T1.3-5／#232 | 放置／取回餐盤、錄製食譜與 Cookery 書轉換在併發或 API 回應不明時保留物品所有權與資料，避免覆寫、遺失及複製 | 餐盤、串譜、Cookery；G155 來源承接不等於 API 故障及真人路徑都已驗收 |
 
 ## 來源與後續更新

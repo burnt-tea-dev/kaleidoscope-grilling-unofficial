@@ -780,7 +780,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 餐盤（1–5 串） | `SkewerPlateRenderer` | 同上模式：顯示實體 5 個 slot bone＋5 個 render controller；朝向用 block state 傳給實體 property | `plate_food_visual` 烘焙＋投影 |
 | 固定串手持 | Java item model（`models/item/fixed_skewers/*`） | 每個物品一個 attachable，geometry 用 Blockbench 從 Java item model 轉出（通常是 2D 精靈擠出）；第一／第三人稱位移在 attachable 動畫或 geometry 的 item_display_transforms 對齊 Java `display` | 多代 `aNNN_hand` 幾何 |
 | 秘製串手持（任意 3 食材） | `SecretSkewerItem`、`SkewerColorProvider` | 共用 attachable：3 個食材 bone，貼圖陣列（全部食材精靈拼成的 atlas 或陣列）以 player property `secret_main_0..2`／`secret_off_0..2` 索引；竹籤一個 bone | 1.8 MB `secret_held` 烘焙＋多段校準 |
-| 秘製串背包圖示 | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | **平台限制**：Bedrock 無法依 stack 合成圖示 → 通用圖示＋lore 列食材（KNOWN-ISSUES） | 影子 ID 嘗試 |
+| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | 目前未有已證可用的逐stack圖示合成入口；通用圖示＋lore是降級，範圍與未完成處只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
 | 失敗串 | `FailedSkewerData` | 與秘製串相同 attachable，換貼圖陣列 | 7.3 MB `failure_skewer_held` |
 | 進食動畫 | `SkewerEatingAnimation`、`SkewerEatingPiece`、`EnderPearlEatingAnimation` | attachable 動畫＋動畫控制器，條件 `q.is_using_item`＋`q.property('…:eat_profile')`；一口一口的消失用 bone 可見度（`q.property('…:eat_piece')`），不是 150 個 bite 幾何 | `a22_bites` 150 幾何、影子 ID 換手 |
 | 調料瓶（放置） | `SeasoningBottleRenderer` | block geometry＋state（內容量階段），4 個瓶位用 permutation | 保留，整理 |
