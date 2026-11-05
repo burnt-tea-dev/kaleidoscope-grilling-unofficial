@@ -40,9 +40,9 @@ async function run(){
  dimension.runCommand('gamerule keepinventory true');
  dimension.runCommand('fill -2 79 -2 2 79 2 stone');
  dimension.runCommand('fill -2 80 -2 2 84 2 air');
- async function hit(cause,{heavy,hand='off',backpack=false}={}){
+ async function hit(cause,{heavy,hand='off',backpack=false,damage=100}={}){
   let player;
-  const row={cause,heavy:!!heavy,hand:backpack?'backpack':hand,before:[],heals:[],died:false};
+  const row={cause,damage,heavy:!!heavy,hand:backpack?'backpack':hand,before:[],heals:[],died:false};
   try{
    player=spawnSimulatedPlayer({dimension,x:.5,y:80,z:.5},'TotemPriority'+(++sequence),GameMode.Survival);
    targets.set(player.id,row);player.selectedSlotIndex=0;
@@ -55,7 +55,7 @@ async function run(){
    fxApply(player,'warmth',1200);
    if(heavy)fxApply(player,'heavy_metal',1200);
    row.input=state(player);
-   row.applied=player.applyDamage(100,{cause});
+   row.applied=player.applyDamage(damage,{cause});
    row.immediate=state(player);await wait(3);row.result=state(player);
   }finally{
    if(player){try{player.disconnect()}catch(error){row.disconnectError=String(error)}targets.delete(player.id);}
@@ -73,7 +73,9 @@ async function run(){
   check(label+' actual after-heal cures Heavy Metal and Warmth',candidate.heals.some(e=>e.totem&&e.healing>0)&&!candidate.result.effects.heavy_metal&&!candidate.result.effects.warmth);
  }
  for(const cause of ['void','override','selfDestruct']){
-  const control=await hit(cause,{heavy:false}),candidate=await hit(cause,{heavy:true});
+  // The owned Ordinary seasoning uses this exact override damage, rather than /kill.
+  const damage=cause==='override'?3.4028234663852886e38:100;
+  const control=await hit(cause,{heavy:false,damage}),candidate=await hit(cause,{heavy:true,damage});
   // Java rejects out_of_world/generic_kill before looking in either hand.
   // Also record the Bedrock control instead of assuming its forced-death rule.
   check(cause+' keeps the existing Heavy Metal cancellation attempt',candidate.before.length===1&&candidate.before[0].cancel===true);
