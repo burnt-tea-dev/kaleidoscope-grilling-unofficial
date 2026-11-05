@@ -48,7 +48,7 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 
 - **WARMTH-HEAT-SOURCES**：G234熱源與G236時機／同世界正常重啟已有原生觀察；結果與仍未驗證的範圍只查[PARITY](PARITY.md#溫暖效果的熱源判斷)。跨模組完整同tick順序、客戶端與自動非玩家實體仍非完整Java等價。
 
-- **ADVANCEMENT-CLAIM**：目前owner、最多單次XP嘗試的限制及原生觀察狀態只查[PARITY](PARITY.md#進度獎勵與領取紀錄)。窄observer已備但未執行；未實作未發XP恢復，不宣稱跨API原子性或真人結果。
+- **ADVANCEMENT-CLAIM**：目前owner、單次XP／重複與pending拒絕的原生觀察，以及仍有的限制只查[PARITY](PARITY.md#進度獎勵與領取紀錄)。未實作未發XP恢復，不宣稱跨API原子性或真人結果。
 - **天然要塞**：公開 integration API 不提供 vanilla 新區塊／要塞生成回呼；不能用附近方塊猜歷史，也不能以人工搭建的原生測試冒充自然 25% 替換完成。見 [API](BEDROCK-INTEGRATION-API.md#新生成宿主)。
 - **平台差異**：真自訂流體、Numb 準星、Pepper entityInside、任意食品／smoking 回呼、Create／Maid 等 Java 模組各自列為未支援或待評估。按計畫和實際 API 決定，不由舊 README 永久宣告放棄，也不杜撰等價能力。
 - **視覺全量**：全物品第一人稱／側面貼圖、瓶／盤／串完整操作仍未閉合。舊 G17 editor captures、代表瓶預覽、隔離兩食品片及零玩家 BDS 都只保留原範圍。
