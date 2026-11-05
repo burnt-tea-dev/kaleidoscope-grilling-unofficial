@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "observed_date": "2026-11-06",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "source_commit": "fd4ac5dcd047b4c9baf6424cff11bade52a72807",
+  "source_version": [
+    2,
+    8,
+    236
+  ],
+  "production_files": {
+    "effect/runtime.js": "1b604faaea792265df134da70c22ecfb24301591bdc930cc4dc871114e6ffa4c"
+  },
+  "unchanged_player_definition_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "probe_sha256": "09c537396fdba4a596b310974cd232170c8eaeccbf4eec8ac14a0e27420902f0",
+  "diagnostic_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    }
+  ],
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "isolation": {
+    "memory_max_bytes": 2684354560,
+    "memory_high_bytes": 2147483648,
+    "memory_swap_max_bytes": 0,
+    "private_network": true,
+    "shared_maintenance_lock": true
+  },
+  "passed": true,
+  "stages": [
+    {
+      "passed": true,
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 636112896,
+      "observation": {
+        "passed": true,
+        "phase": "timing-first",
+        "checks": [
+          {
+            "name": "no external players in isolated QA",
+            "passed": true
+          },
+          {
+            "name": "production writer accepts forty-tick native Player effect",
+            "passed": true
+          },
+          {
+            "name": "native observation completed within its tick budget",
+            "passed": true
+          },
+          {
+            "name": "first duration-forty tick",
+            "passed": true
+          },
+          {
+            "name": "process-wide twenty is not another pulse",
+            "passed": true
+          },
+          {
+            "name": "duration twenty-one does not pulse",
+            "passed": true
+          },
+          {
+            "name": "second duration-twenty tick",
+            "passed": true
+          },
+          {
+            "name": "expiry adds no zero-tick pulse",
+            "passed": true
+          },
+          {
+            "name": "native persisted actor owns the production effect deadline",
+            "passed": true
+          },
+          {
+            "name": "native simulated Player disconnected",
+            "passed": true
+          }
+        ],
+        "samples": [
+          {
+            "label": "first duration-forty tick",
+            "tick": 88,
+            "absolute": 89,
+            "elapsed": 1,
+            "health": 5
+          },
+          {
+            "label": "process-wide twenty is not another pulse",
+            "tick": 100,
+            "absolute": 101,
+            "elapsed": 13,
+            "health": 5
+          },
+          {
+            "label": "duration twenty-one does not pulse",
+            "tick": 107,
+            "absolute": 108,
+            "elapsed": 20,
+            "health": 5
+          },
+          {
+            "label": "second duration-twenty tick",
+            "tick": 108,
+            "absolute": 109,
+            "elapsed": 21,
+            "health": 6
+          },
+          {
+            "label": "expiry adds no zero-tick pulse",
+            "tick": 127,
+            "absolute": 128,
+            "elapsed": 40,
+            "health": 6
+          },
+          {
+            "label": "native save input",
+            "id": "-4294967294",
+            "raw": "{\"warmth\":{\"until\":1341,\"amp\":0}}",
+            "appliedAbsolute": 128,
+            "targetAbsolute": 742,
+            "health": 4
+          }
+        ],
+        "startTick": 87,
+        "startAbsolute": 88,
+        "playersAfter": 0,
+        "scope": "G236 unchanged exported effect functions. Stage one uses a native SimulatedPlayer every tick; stage two checks an actual saved native pig effect deadline and world clock after normal restart. Not full main startup, automatic non-player effects, client input, or LIVE."
+      }
+    },
+    {
+      "passed": true,
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 636112896,
+      "observation": {
+        "passed": true,
+        "phase": "timing-restart",
+        "checks": [
+          {
+            "name": "no external players in isolated QA",
+            "passed": true
+          },
+          {
+            "name": "same native actor survives normal server restart",
+            "passed": true
+          },
+          {
+            "name": "native effect bytes preserve the same deadline after restart",
+            "passed": true
+          },
+          {
+            "name": "native actor health survives normal server restart",
+            "passed": true
+          },
+          {
+            "name": "persisted world clock has not skipped the fixed Java checkpoint",
+            "passed": true
+          },
+          {
+            "name": "native observation completed within its tick budget",
+            "passed": true
+          },
+          {
+            "name": "native observation completed within its tick budget",
+            "passed": true
+          },
+          {
+            "name": "restored duration 601 does not pulse",
+            "passed": true
+          },
+          {
+            "name": "restored duration 600 pulses independently of the new process clock",
+            "passed": true
+          },
+          {
+            "name": "healing leaves the persisted deadline unchanged",
+            "passed": true
+          },
+          {
+            "name": "native simulated Player disconnected",
+            "passed": true
+          }
+        ],
+        "samples": [
+          {
+            "label": "pre-decrement duration 601",
+            "tick": 740,
+            "absolute": 741,
+            "elapsed": 1,
+            "health": 4
+          },
+          {
+            "label": "pre-decrement duration 600",
+            "tick": 741,
+            "absolute": 742,
+            "elapsed": 2,
+            "health": 5
+          }
+        ],
+        "startTick": 739,
+        "startAbsolute": 740,
+        "playersAfter": 0,
+        "scope": "G236 unchanged exported effect functions. Stage one uses a native SimulatedPlayer every tick; stage two checks an actual saved native pig effect deadline and world clock after normal restart. Not full main startup, automatic non-player effects, client input, or LIVE."
+      }
+    }
+  ],
+  "clock_scope": "Recorded native system.currentTick and world absolute time are retained in samples. This same-world restart does not establish a native process-clock reset; the separate main API model covers an injected clock reset. The checkpoint observes deadline persistence and duration-based pulse selection.",
+  "scope": "Unchanged exported production fxApply/tickPlayerEffects; native SimulatedPlayer timing and actual saved native pig DP after normal same-world restart. Not full main startup, automatic non-player effects, client input/render/audio, or LIVE.",
+  "cleanup": {
+    "normal_exit_stages": 2,
+    "players_after": 0,
+    "temporary_world_and_engine_removed": true,
+    "logs_reports_source_retained": true
+  },
+  "client": false,
+  "live_modified": false
+}
