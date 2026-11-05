@@ -1,4 +1,4 @@
-import {world,system} from '@minecraft/server';
+import {world,system,EquipmentSlot} from '@minecraft/server';
 import {FX_KEY,activeEffects,effectPayload} from './effect_lifecycle_core.js';
 import {writeEffects} from './effect_state_runtime.js';
 import {definitelyLethalProvisionalHealth,sameHeavyMetalEffect,planHeavyMetalTransition} from './heavy_metal_damage_core.js';
@@ -8,6 +8,15 @@ import {HEAVY_METAL_CLAIM_KEY,parseHeavyMetalClaim,heavyMetalClaimPayload} from 
 // until/amplifier across logout or script reload, even if settlement never ran.
 // Do not expire that receipt or infer a new effect from a clock rollback.
 const rescues=new Map();
+function nativeTotemTakesPriority(entity,cause){
+ // Void and forced death do not use native held-totem protection. Preserve
+ // Heavy Metal's existing rescue for those sources instead of skipping all
+ // damage merely because a totem is equipped.
+ if(cause==='void'||cause==='override'||cause==='selfDestruct')return false;
+ const equipment=entity.getComponent('minecraft:equippable');
+ return equipment?.getEquipment(EquipmentSlot.Mainhand)?.typeId==='minecraft:totem_of_undying'||
+  equipment?.getEquipment(EquipmentSlot.Offhand)?.typeId==='minecraft:totem_of_undying';
+}
 function snapshot(entity){
  const time=world.getAbsoluteTime();
  if(!Number.isFinite(time))throw Error('Heavy Metal absolute clock is unavailable');
@@ -81,8 +90,8 @@ function settle(entity,id,token){
 }
 
 /** Called only by the existing before-hurt subscriber, after dodge and
- * invincibility. Native totem admission is unchanged here: a held item alone
- * does not prove a later native heal will be accepted.
+ * invincibility. Yield eligible held-totem hits without spending or curing
+ * effects; only the existing confirmed after-heal path cures them.
  */
 export function handleHeavyMetalBeforeHurt(event){
  let entity,id,token;
@@ -101,6 +110,7 @@ export function handleHeavyMetalBeforeHurt(event){
   if(sameHeavyMetalEffect(prior.claim,metal))return false;
   const health=entity.getComponent('minecraft:health');
   if(!health||!definitelyLethalProvisionalHealth(health.currentValue,entity.getEffect?.('absorption')))return false;
+  if(nativeTotemTakesPriority(entity,event.damageSource?.cause))return false;
   const next=planHeavyMetalTransition(state.effects,metal,state.time);
   token={...metal,time:state.time,phase:'reserving',claimBefore:prior.raw,claimRaw:heavyMetalClaimPayload(metal,state.time),
    effectsBeforeRaw:state.raw,effectsBefore:state.effects,effectsRaw:effectPayload(next,state.time)};
