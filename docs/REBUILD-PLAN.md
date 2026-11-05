@@ -384,6 +384,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 
 #### T3.5 玩家屬性瘦身計畫（2026-10-30）
 
+當前自有欄位以 [BP player property宣告](../projects/grilling/gameplay_core/behavior_pack/entities/player.json) 為準；下方T3.5-b的27格是當時中間階段，不能當作目前總數。正式共用writer與歷史C-1原型的界線、提交失敗回復見 [PARITY](PARITY.md#手持快照的提交失敗回復)；原型仍供獨立診斷，不因它未被main載入就刪除其已保留證據。
+
 **原始計畫範圍（2026-10-30）**：展開既有 T3.5／D6 的盤點、協議設計、實作順序及驗收。最初的計畫 PR 未改 runtime；以下 G201 盤點及原型紀錄保留其觀察日期。現行實作見本節的 2026-11-01 更新，不改寫 T3.4 已記錄的時長 variant 與直接離線不補結算決定。
 
 **基線**：主線 [`61864d017a1e4e9847325cd7313098b4379dc2e9`](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/commit/61864d017a1e4e9847325cd7313098b4379dc2e9)，`baseline.json` 為 **2.8.201／G201**。提問中的 G194 為前次檢查基線；本次重新讀取 G201 的 `behavior_pack/entities/player.json`，仍有 **32 個、全部 client_sync=true**。以下 BP／RP 路徑相對於 `projects/grilling/gameplay_core/`。

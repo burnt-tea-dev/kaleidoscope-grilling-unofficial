@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.237 手持快照提交失敗後恢復舊內容
+
+- 新generation提交失敗後，即使兩手已換回上一次成功內容，仍由原publisher補送目前完整快照，避免原生frame與舊packet不相符；成功後恢復原去重。property schema、物品metadata與24個內容word格式不變。
+- 正式staged-owner／publisher及延後property模型覆蓋submit前失敗和套用後拋錯，並執行生成請求核對晚到packet拒絕；不是BDS自然故障或客戶端renderer通過。
+
 ## 2.8.236 溫暖按 Java 扣減前時長處理
 
 - 依 Mojang 1.20.1／1.21.1 的效果 tick 順序，在期限剩餘時間補回本 tick 的一格，再判斷 Java 每20tick回復點；涵蓋效果第一tick、續期及同一保存期限在process重啟後的時機。保存格式、熱源與回血量不變。
