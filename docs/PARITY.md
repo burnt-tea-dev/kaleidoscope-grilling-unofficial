@@ -212,4 +212,8 @@ G233 當時沒有讓手持圖騰先行，其原因是尚未驗證這條路徑；
 
 排除 override 有實際 Java 路徑：兩分支 [CursedSkewerItem](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java) 用 ordinary_skewer／Float.MAX_VALUE，而作者共同 [bypasses_invulnerability tag](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json) 明確包含該傷害。Mojang兩版圖騰檢查都先拒絕此 tag；Java原生圖騰不擋它，重金屬的LivingDeath仍可救。Bedrock既有平凡owner映射為override；已就地修正原碼誤稱保留Java圖騰的註解，沒有改平凡傷害或新增旁路。
 
-新的[窄原生 observer](../tests/native/heavy-metal/totem_priority_probe.js)直接載入正式 effect/runtime 的已註冊傷害／after-heal入口，準備對照雙手、entityAttack／magic／fall／none、void／平凡實際override傷害／selfDestruct，以及無圖騰／背包圖騰；尚未執行，不將來源情境冒充圖騰消耗、真實治療或native成功。此修復不新增屬性、interval、盾量追蹤、復活或版本例外；未驗其他addon後續否決、client聲畫或完整家族保存。
+G238 的[窄原生觀察](../tests/native/heavy-metal/totem-priority-observed.json)於2026-11-06 04:50 HKT完成39項：BDS1.26.60.6／server2.12.0-beta、server-ui2.2.0、gametest1.0.0-beta，gametest及upcoming_creator_features實際保存為1；來源固定100b6fde（與受檢3862b992同tree）。[原observer](../tests/native/heavy-metal/totem_priority_probe.js)直接載入正式 effect/runtime 的已註冊傷害／after-heal入口，使用真native Players／applyDamage；QA另用1.0身份，不冒稱完整候選載入。entityAttack的主／副手，以及magic／fall／none副手均先耗原生圖騰、產生正值TotemOfUndying治療；Heavy／Warmth隨後清除，無中毒或claim。void／平凡實際override maxfloat／selfDestruct帶Heavy時均保留手持圖騰、付款並救回1HP；無圖騰／只在背包同樣保留Heavy救援，背包圖騰不變。
+
+**不符合Java的原生結果亦保留**：void／selfDestruct無Heavy controls沒有圖騰治療，玩家死亡、圖騰仍在；override／maxfloat無Heavy control則耗掉圖騰且產生正值TotemOfUndying治療，仍死亡且Warmth未清。後者不等同Java ordinary_skewer先拒圖騰，且證明正值治療不保證存活；既有清理還要求存活生命值，未把該control誤清。這個control差異不改標成全Java等價，沒有為它新增傷害旁路或復活。
+
+本次正常stop／exit0、players0／errors空／OOM0，自己的QA世界已清且槽已交還。未重跑剩餘盾或舊保存；未驗其他addon後續否決、所有cause、client聲畫或完整家族保存。修復未新增屬性、interval、盾量追蹤、復活或版本例外，部分盾漏救仍未修正。
