@@ -4,6 +4,7 @@ import * as snapshot from '../../projects/grilling/gameplay_core/behavior_pack/s
 import {FAILED_SOURCE_KEY} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/failure_skewer_visual_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import * as tx from '../../projects/grilling/gameplay_core/behavior_pack/scripts/plate_transaction_core.js';
 import * as support from '../../projects/grilling/gameplay_core/behavior_pack/scripts/blockSupport.js';
 
@@ -368,3 +369,80 @@ test('real plate providers rebuild metadata on spawn, refresh unchanged displays
  assert.ok(player.getProperty(formal.FRAME_PROPERTY)>frame);
  assert.equal(f.logs.filter(row=>row.level==='warn').length,0,JSON.stringify(f.logs));
 });
+
+// Real placed-plate projection, with only Minecraft entities substituted.
+{
+const N='kaleidoscope_grilling:',at={x:0,y:80,z:0},key=N+'a25_plate_minecraft_overworld_p0_p80_p0';
+const json=path=>JSON.parse(readFileSync(new URL('../../projects/grilling/gameplay_core/'+path,import.meta.url),'utf8'));
+const entity=json('behavior_pack/entities/plate_food_visual.json')['minecraft:entity'].description;
+const client=json('resource_pack/entity/plate_food_visual.entity.json')['minecraft:client_entity'].description;
+const controller=json('resource_pack/render_controllers/plate_food_visual.render_controllers.json').render_controllers['controller.render.kg_station.plate'];
+async function visualFixture(saved){
+ const f=createFixture({dynamicProperties:saved}),api=await f.load('plate/plate_recipe_runtime.js');
+ const visual=await f.load('station_contents_visual_runtime.js'),core=await f.load('plate_recipe_visual_core.js'),persist=await f.load('core/persist.js');
+ visual.configureSecretVisuals((stack,cooked)=>JSON.parse(persist.getItemProperty(stack,N+(cooked?'secret_cooked_ingredients':'skewer_ingredients'))??'[]'));
+ f.startup();f.flush();
+ const b=f.block(N+'skewer_plate_block',at),observer={dimensionId:f.dimension.id,...at};
+ const spawned=[],spawn=f.dimension.spawnEntity;
+ f.dimension.spawnEntity=(...args)=>{
+  const e=spawn.apply(f.dimension,args),teleport=e.teleport,set=e.setProperty;spawned.push(e);
+  e.teleport=(location,options)=>{e.lastRotation=options.rotation;teleport.call(e,location,options)};
+  e.setProperty=(name,value)=>{const definition=entity.properties[name];if(definition?.range)assert.ok(value>=definition.range[0]&&value<=definition.range[1],name+' bounds');set.call(e,name,value)};
+  return e;
+ };
+ const fixed=id=>({id:N+id,native:{version:1,id:N+id,name:'Saved '+id,props:{'foreign:marker':'preserve'}}});
+ const {plateRows}=await import('../native/held-snapshot/scripts/cases.js');
+ const rows=[fixed('ordinary_skewer'),plateRows()[0],fixed('grilled_slime_skewer'),fixed('dark_grilling'),fixed('raw_beef_skewer')];
+ const save=(count,face='south')=>{f.world.setDynamicProperty(key,JSON.stringify(rows.slice(0,count)));b.setPermutation(b.permutation.withState(N+'plate_count',count).withState('minecraft:cardinal_direction',face))};
+ const sync=()=>visual.syncStationContentsVisual(b,[observer]);
+ return Object.assign(f,{api,visual,core,persist,b,rows,save,sync,spawned,live:()=>spawned.filter(e=>e.isValid)});
+}
+test('ordinary placed mesh has a dedicated full model without displacing slime or held indices',async()=>{
+ const f=await visualFixture(),plan=f.core.plateMeshPlan(f.item(N+'ordinary_skewer'));
+ assert.deepEqual(plan,{model:232,secret:[0,0,0]});
+ const held=await f.load('plate_held_visual_core.js');assert.deepEqual(held.plateHeldRowPlan(f.rows[0]),[39,0]);
+ assert.equal(f.core.recipeIconModel(f.item(N+'ordinary_skewer')),38);
+ assert.equal(controller.arrays.geometries['Array.models'][plan.model],'Geometry.ordinary');
+ assert.equal(controller.arrays.textures['Array.stages'][plan.model],'Texture.ordinary');
+ assert.equal(client.textures.ordinary,'textures/a22_bites/ordinary_skewer_stage0');
+ const geometry=json('resource_pack/models/entity/plate_ordinary.geo.json')['minecraft:geometry'][0];
+ assert.equal(client.geometry.ordinary,geometry.description.identifier);
+ assert.equal(geometry.bones.flatMap(b=>b.cubes??[]).length,19);
+ assert.equal(entity.properties[N+'model'].range[1],controller.arrays.geometries['Array.models'].length-1);
+ assert.equal(controller.arrays.textures['Array.stages'].length,controller.arrays.geometries['Array.models'].length);
+ for(let frame=0;frame<5;frame++){
+  const model=f.core.plateMeshPlan(f.item(N+'grilled_slime_skewer'),undefined,frame).model;
+  assert.equal(model,115+frame);assert.equal(client.textures['s'+model],'textures/slime_frames/slime_frame_0');
+  assert.equal(client.geometry['s'+model],frame===0?'geometry.kg_station.grill.raw_slime_skewer':'geometry.kg_plate_special.slime_'+frame);
+ }
+});
+for(const [face,angle] of [['south',0],['west',90],['north',180],['east',270]])test('placed ordinary and mixed five-slot plate updates and reloads: '+face,async()=>{
+ const f=await visualFixture();
+ for(const count of [1,2,3,4,5,4,3,5]){
+  f.save(count,face);const saved=f.world.getDynamicProperty(key);f.sync();
+  const live=f.live();assert.equal(live.length,count);assert.equal(f.visual.contentsVisualHelperCount(),count);
+  for(let i=0;i<count;i++){
+   assert.equal(live[i].typeId,N+'plate_food_visual');assert.equal(live[i].getProperty(N+'ready'),true);
+   const plan=f.core.plateMeshPlan(f.api.a25RestoreStack(f.rows[i]),(stack,cooked)=>JSON.parse(f.persist.getItemProperty(stack,N+(cooked?'secret_cooked_ingredients':'skewer_ingredients'))??'[]'));
+   assert.equal(live[i].getProperty(N+'model'),plan.model);
+   for(let cell=0;cell<3;cell++)assert.equal(live[i].getProperty(N+'secret_'+cell),plan.secret[cell]);
+  }
+  assert.equal(live[0].getProperty(N+'model'),232);assert.equal(f.world.getDynamicProperty(key),saved);
+ }
+ // Pinned Java 1.1.1 five-slot layout, checked independently of plateSlotPose.
+ const slots=[[8,3.95,6.35,0],[12.55,4,6.3,0],[3.45,4,6.3,0],[10.4,7.325,7.4,-22.5],[5.7,7.375,7.35,-22.5]],r=angle*Math.PI/180;
+ f.live().forEach((e,i)=>{const [x,y,z,yaw]=slots[i],dx=x/16-.5,dz=z/16-.5;const expected={x:.5+dx*Math.cos(r)-dz*Math.sin(r),y:80+y/16,z:.5+dx*Math.sin(r)+dz*Math.cos(r)};for(const axis of ['x','y','z'])assert.ok(Math.abs(e.location[axis]-expected[axis])<1e-9);assert.deepEqual(e.lastRotation,{x:0,y:-(angle-yaw)})});
+ assert.equal(f.commandCalls.length,0,'known plate foods never use equipped-item fallback');
+ const saved=f.snapshotProperties(),reload=await visualFixture(saved);reload.b.setPermutation(reload.b.permutation.withState(N+'plate_count',5).withState('minecraft:cardinal_direction',face));reload.sync();
+ assert.deepEqual(reload.live().map(e=>[e.typeId,e.properties,e.location]),f.live().map(e=>[e.typeId,e.properties,e.location]));
+ assert.equal(reload.world.getDynamicProperty(key),f.world.getDynamicProperty(key));
+});
+test('failed mixed-plate helper cleanup cannot multiply ordinary models or change saved contents',async()=>{
+ const f=await visualFixture();f.save(5);f.sync();const old=f.live()[3];
+ f.faults.failNext(old,'remove',{phase:'before'});f.save(3);f.sync();assert.equal(f.live().length,4);
+ f.save(4);f.sync();assert.equal(f.live().length,4);assert.equal(f.live()[3],old);
+ f.save(5);const saved=f.world.getDynamicProperty(key);f.sync();assert.equal(f.live().length,5);
+ assert.equal(f.visual.contentsVisualHelperCount(),5);assert.equal(f.world.getDynamicProperty(key),saved);
+ f.save(0);f.sync();assert.equal(f.live().length,0);assert.equal(f.visual.contentsVisualHelperCount(),0);
+});
+}
