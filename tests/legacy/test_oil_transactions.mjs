@@ -55,10 +55,26 @@ test('shared transaction drops a full-inventory remainder with all item metadata
  }finally{f.dispose()}
 });
 
-test('legacy registry migration is resumable when a write fails',()=>{
+for(const failure of ['throw','ignore entry','ignore legacy removal'])test(`legacy registry migration is resumable after ${failure}`,()=>{
  const dp=new Map([[N+'a26_press_registry',JSON.stringify([{d:'minecraft:overworld',x:1,y:2,z:3},{d:'minecraft:overworld',x:2,y:2,z:3}])]]);let fail=true;
- const world={getDynamicProperty:k=>dp.get(k),getDynamicPropertyIds:()=>[...dp.keys()],setDynamicProperty(k,v){if(fail&&k.endsWith('%7C2%7C2%7C3'))throw Error('migration failure');if(v===undefined)dp.delete(k);else dp.set(k,v);}};
- assert.throws(()=>createOilPressRegistry(world,N+'a26_press_registry').rows());assert.ok(dp.has(N+'a26_press_registry'));fail=false;assert.equal(createOilPressRegistry(world,N+'a26_press_registry').rows().length,2);assert.equal(dp.has(N+'a26_press_registry'),false);
+ const world={getDynamicProperty:k=>dp.get(k),getDynamicPropertyIds:()=>[...dp.keys()],setDynamicProperty(k,v){
+  if(fail&&(failure==='ignore legacy removal'?k===N+'a26_press_registry':k.endsWith('%7C2%7C2%7C3'))){if(failure==='throw')throw Error('migration failure');return;}
+  if(v===undefined)dp.delete(k);else dp.set(k,v);
+ }};
+ const saved=dp.get(N+'a26_press_registry');
+ assert.throws(()=>createOilPressRegistry(world,N+'a26_press_registry').rows());assert.equal(dp.get(N+'a26_press_registry'),saved);
+ fail=false;const recovered=createOilPressRegistry(world,N+'a26_press_registry');assert.equal(recovered.rows().length,2);assert.equal(dp.has(N+'a26_press_registry'),false);
+ recovered.remove({d:'minecraft:overworld',x:2,y:2,z:3});
+ assert.deepEqual(createOilPressRegistry(world,N+'a26_press_registry').rows().map(row=>row.x),[1],'restart must not lose pending work or resurrect removed work');
+});
+test('registry cache changes only after durable add and removal',()=>{
+ const dp=new Map();let fail=true;
+ const world={getDynamicProperty:k=>dp.get(k),getDynamicPropertyIds:()=>[...dp.keys()],setDynamicProperty(k,v){if(fail)return;if(v===undefined)dp.delete(k);else dp.set(k,v)}};
+ const row={d:'minecraft:overworld',x:1,y:2,z:3},registry=createOilPressRegistry(world,N+'a26_press_registry');
+ assert.throws(()=>registry.add(row));assert.equal(registry.rows().length,0);
+ fail=false;registry.add(row);assert.equal(createOilPressRegistry(world,N+'a26_press_registry').rows().length,1);
+ fail=true;assert.throws(()=>registry.remove(row));assert.equal(registry.rows().length,1);
+ fail=false;registry.remove(row);assert.equal(createOilPressRegistry(world,N+'a26_press_registry').rows().length,0);
 });
 test('press stones accept the native addon tag and preserve anvil precedence',()=>{
  assert.equal(core.toolProgress('addon:stone',['kaleidoscope_grilling:press_stones']),1);
@@ -287,6 +303,39 @@ test('saved pending press resumes once in a fresh runtime and world instance',as
  assert.deepEqual(reloaded.drops.map(e=>[e.itemStack.typeId,e.itemStack.amount]),[[core.OIL_RESIDUE_ID,4]]);
  assert.equal(createOilPressRegistry(reloaded.world,REGISTRY).rows().length,0);
  reloaded.tick(12);assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(reloaded.drops.length,1);
+});
+test('unconfirmed pending registration preserves the batch for a successful retry after restart',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:12}}),nativeWrite=f.world.setDynamicProperty.bind(f.world);
+ f.world.setDynamicProperty=(id,value)=>{if(id.startsWith(REGISTRY+'_entry_'))return;return nativeWrite(id,value)};
+ f.setHand(f.item('minecraft:anvil'));use(f,f.press);f.tick(core.PRESS_IMPACT_TICK);
+ assert.equal(f.readPress().progress,12,'do not commit completed work without its recovery entry');
+ assert.equal(f.readPress().cakes,4);assert.equal(f.readVat().buckets,0);assert.equal(f.drops.length,0);
+ const reloaded=createFixture({dynamicProperties:snapshot(f)});
+ const vat=reloaded.block(core.BIG_VAT_ID,f.vat.location,{states:f.vat.permutation.getAllStates()});
+ const press=reloaded.block(core.OIL_PRESS_ID,f.press.location,{states:f.press.permutation.getAllStates()});
+ const player=reloaded.player({main:reloaded.item('minecraft:anvil')});
+ const api=await reloaded.load('oil/oil_machine_runtime.js');reloaded.startup();reloaded.tick(1);
+ const event={block:press,player,itemStack:player.inventory.getItem(0),cancel:false,isFirstEvent:true};
+ reloaded.emit('world.beforeEvents.playerInteractWithBlock',event);assert.equal(event.cancel,true);reloaded.flush();
+ reloaded.tick(core.PRESS_IMPACT_TICK);
+ assert.equal(api.a26ReadPress(press).progress,16);assert.equal(createOilPressRegistry(reloaded.world,REGISTRY).rows().length,1);
+ reloaded.tick(core.PRESS_COMPLETION_DELAY);
+ assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(api.a26ReadPress(press).cakes,0);
+ assert.deepEqual(reloaded.drops.map(e=>[e.itemStack.typeId,e.itemStack.amount]),[[core.OIL_RESIDUE_ID,4]]);
+ reloaded.tick(20);assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(reloaded.drops.length,1);
+});
+test('post-apply registry removal failure restores pending work across restart',async()=>{
+ const f=await fixture({vat:{},press:{cakes:4,progress:16,completionDelay:1}});
+ failOnce(f,(key,value)=>key.startsWith(REGISTRY+'_entry_')&&value===undefined);f.tick(1);
+ assert.equal(f.readPress().cakes,4);assert.equal(f.readVat().buckets,0);assert.equal(f.drops.length,0);
+ assert.equal(f.registry().length,1,'rollback must recreate the persisted entry, not just trust its stale cache');
+ const reloaded=createFixture({dynamicProperties:snapshot(f)});
+ const vat=reloaded.block(core.BIG_VAT_ID,f.vat.location,{states:f.vat.permutation.getAllStates()});
+ const press=reloaded.block(core.OIL_PRESS_ID,f.press.location,{states:f.press.permutation.getAllStates()});
+ const api=await reloaded.load('oil/oil_machine_runtime.js');reloaded.startup();reloaded.tick(2);
+ assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(api.a26ReadPress(press).cakes,0);
+ assert.deepEqual(reloaded.drops.map(e=>[e.itemStack.typeId,e.itemStack.amount]),[[core.OIL_RESIDUE_ID,4]]);
+ reloaded.tick(20);assert.equal(api.a26ReadVat(vat).buckets,4);assert.equal(reloaded.drops.length,1);
 });
 test('durable quarantine still blocks a vat after its runtime cache is replaced',async()=>{
  const f=await fixture();f.setFault(key=>key.startsWith(VAT));use(f);f.setFault(()=>false);

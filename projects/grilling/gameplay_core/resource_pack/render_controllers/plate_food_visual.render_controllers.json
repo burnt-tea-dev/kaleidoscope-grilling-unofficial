@@ -236,7 +236,8 @@
             "Geometry.s228",
             "Geometry.s229",
             "Geometry.s230",
-            "Geometry.s231"
+            "Geometry.s231",
+            "Geometry.ordinary"
           ]
         },
         "textures": {
@@ -472,7 +473,8 @@
             "Texture.s228",
             "Texture.s229",
             "Texture.s230",
-            "Texture.s231"
+            "Texture.s231",
+            "Texture.ordinary"
           ]
         }
       },

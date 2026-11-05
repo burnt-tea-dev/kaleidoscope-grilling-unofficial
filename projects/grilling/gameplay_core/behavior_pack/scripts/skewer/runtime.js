@@ -6,6 +6,7 @@ import {captureTwoHandIntent,primitiveStackProps,twoHandIntentStillCurrent} from
 import {captureSkewerMetadata,metadataSignature,restoreSkewerMetadata} from "../skewer_item_snapshot.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {creatorLore} from "../localized_lore_core.js";
+import {refreshHotLore} from "../food/food_state_adapter.js";
 import {resolveSecretSmokedId} from "../secret_compat_core.js";
 import {secretEatingRows} from "../secret_eating_core.js";
 import {FOOD_DATA} from "../eating_data_lookup.js";
@@ -163,7 +164,7 @@ function threadCurrent(player){
  const variants=JSON.stringify(appendedModelVariants(off.typeId==='minecraft:stick'?undefined:getItemProperty(off,SECRET_MODEL_VARIANTS_KEY),rows.length));
  setItemProperty(next,SECRET_MODEL_VARIANTS_KEY,variants);
  if(getItemProperty(next,SECRET_MODEL_VARIANTS_KEY)!==variants)throw Error('Grilling: skewer model variants were not saved');
- if(outcome.kind==='secret')setSecretCreator(next,player);
+ if(outcome.kind==='secret'){setSecretCreator(next,player);refreshHotLore(next);}
  if(getItemProperty(next,SKEWER_INGREDIENTS_KEY)!==JSON.stringify(nextRows))throw new Error('Grilling: skewer data was not saved');
  if(outcome.kind==='secret'&&!getItemProperty(next,SECRET_CREATOR_KEY))throw new Error('Grilling: creator data was not saved');
  const free=creative(player),nextMain=free?food:reducedStack(food),outputs=[];

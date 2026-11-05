@@ -61,6 +61,8 @@ export function plateMeshPlan(stack,readIngredients,frame=0){
  const special=plateSpecialModel(id,getItemProperty(stack,FAILED_SOURCE_KEY),getItemProperty(stack,SECRET_MODEL_VARIANTS_KEY),frame);
  if(special!==undefined)return {model:PLATE_SPECIAL_WORLD_START+special,secret:[0,0,0]};
  if(id===SECRET)return {model:114,secret:secretVisualState(stack,readIngredients)};
+ // Plate-only full ordinary mesh; 115..231 remain the special/slime palette.
+ if(id==='kaleidoscope_grilling:ordinary_skewer')return {model:232,secret:[0,0,0]};
  const raw=COOKED_TO_RAW[id]??id,index=GRILL_MODEL_INDEX[raw];
  return index===undefined?undefined:{model:index*6+(raw===id?0:4),secret:[0,0,0]};
 }

@@ -18,3 +18,17 @@ export function seasoningLore(uses,ingredients,{pending=false,missingBase=false}
  return lines;
 }
 export function creatorLore(name){return {translate:'tooltip.kaleidoscope_grilling.creator',with:[String(name)]};}
+
+export function secretStageLore(cooked){
+ return {rawtext:[{text:cooked?'§r§6':'§r§8'},{translate:'tooltip.kaleidoscope_grilling.secret_skewer.'+(cooked?'cooked':'raw')},{text:'§r'}]};
+}
+export function isSecretStageLore(line){
+ // Only our exact RawMessage is owned. Similar foreign rows, including ones
+ // with translation arguments or extra text, must not be discarded.
+ const parts=line?.rawtext;
+ return line&&Object.keys(line).length===1&&Array.isArray(parts)&&parts.length===3
+  &&parts.every(part=>part&&Object.keys(part).length===1)
+  &&parts[2].text==='§r'
+  &&((parts[0].text==='§r§8'&&parts[1].translate==='tooltip.kaleidoscope_grilling.secret_skewer.raw')
+   ||(parts[0].text==='§r§6'&&parts[1].translate==='tooltip.kaleidoscope_grilling.secret_skewer.cooked'));
+}
