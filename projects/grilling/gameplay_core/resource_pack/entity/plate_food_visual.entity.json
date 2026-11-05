@@ -1820,7 +1820,8 @@
         "food_225_s3": "textures/secret_food_palette/food_225_3",
         "food_225_s4": "textures/secret_food_palette/food_225_4",
         "food_225_s5": "textures/secret_food_palette/food_225_5",
-        "food_225_s6": "textures/secret_food_palette/food_225_6"
+        "food_225_s6": "textures/secret_food_palette/food_225_6",
+        "ordinary": "textures/a22_bites/ordinary_skewer_stage0"
       },
       "geometry": {
         "s0": "geometry.kg_station.grill.raw_beef_skewer",
@@ -2138,7 +2139,8 @@
         "s228": "geometry.kg_plate_special.mysterious_skewer_52",
         "s229": "geometry.kg_plate_special.mysterious_skewer_53",
         "s230": "geometry.kg_plate_special.mysterious_skewer_54",
-        "s231": "geometry.kg_plate_special.mysterious_skewer_55"
+        "s231": "geometry.kg_plate_special.mysterious_skewer_55",
+        "ordinary": "geometry.kg_station.plate.ordinary_skewer"
       },
       "scripts": {
         "pre_animation": [
