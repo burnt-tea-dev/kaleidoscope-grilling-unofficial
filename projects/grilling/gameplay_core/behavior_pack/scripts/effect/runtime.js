@@ -22,7 +22,12 @@ import {forgetNumbVisual,updateNumbVisual} from "../numb_visual_runtime.js";
 const VIGOR_LAST=new Map();
 const SNEAK_LAST=new Map();
 
-const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:campfire','minecraft:soul_campfire','minecraft:magma']);
+const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:flowing_lava','minecraft:magma']);
+// These Bedrock blocks encode Java's LIT=true in their type, not a state.
+const LIT_HEAT_BLOCKS=new Set([
+ 'minecraft:lit_furnace','minecraft:lit_smoker','minecraft:lit_blast_furnace',
+ 'minecraft:lit_redstone_lamp','minecraft:lit_redstone_ore','minecraft:lit_deepslate_redstone_ore','minecraft:redstone_torch'
+]);
 
 const TUNDRA_BLOCKS=new Set(['minecraft:snow','minecraft:snow_layer','minecraft:snow_block','minecraft:powder_snow','minecraft:ice','minecraft:packed_ice','minecraft:blue_ice','minecraft:frosted_ice']);
 
@@ -158,8 +163,22 @@ world.afterEvents.entityHurt.subscribe(e=>{
  }catch{} // A removed actor/projectile must not abort other damage subscribers.
 });
 
+function warmthHeatSource(block){
+ if(HEAT_BLOCKS.has(block.typeId)||LIT_HEAT_BLOCKS.has(block.typeId))return true;
+ if(block.typeId===GRILL_ID)return readState(block).lit;
+ if(block.typeId==='minecraft:campfire'||block.typeId==='minecraft:soul_campfire')return block.permutation.getState('extinguished')===false;
+ return block.permutation.getState('lit')===true;
+}
+
 function nearHeat(player){
- const p=player.location,d=player.dimension;for(let x=-2;x<=2;x++)for(let y=-1;y<=1;y++)for(let z=-2;z<=2;z++){try{const b=d.getBlock({x:Math.floor(p.x)+x,y:Math.floor(p.y)+y,z:Math.floor(p.z)+z});if(!b)continue;if(HEAT_BLOCKS.has(b.typeId))return true;if(b.typeId===GRILL_ID&&readState(b).lit)return true;if(['minecraft:furnace','minecraft:smoker','minecraft:blast_furnace'].includes(b.typeId)&&b.permutation.getState('lit')===true)return true}catch{}}return false;
+ const p=player.location,d=player.dimension;
+ for(let x=-2;x<=2;x++)for(let y=-1;y<=1;y++)for(let z=-2;z<=2;z++){
+  try{
+   const block=d.getBlock({x:Math.floor(p.x)+x,y:Math.floor(p.y)+y,z:Math.floor(p.z)+z});
+   if(block&&warmthHeatSource(block))return true;
+  }catch{}
+ }
+ return false;
 }
 
 function fleeCreepers(player){

@@ -19,7 +19,7 @@
 
 1. **存檔相容鎖已移除（2026-11-04 擁有者指示）**：不再以 ID 清單、退役收據或等待期阻擋。影響保存資料時，測試實際讀寫與重啟；只有確實需要時才做資料轉換。
 2. **精簡驗證**：PR 僅以可載入的 JSON 與核心玩法測試作為常設檢查；膨脹棘輪與歷史回歸保留在手動發布檢查，不阻塞普通功能 PR。不要因少見的理論情境額外增添門檻。
-3. **禁止模式**（詳見計畫 §2.2）：不新增每版驗證器、`augment_a*`、`tools/gNNN_*`、`STATUS-*` 文件；不寫切原始碼文字的測試；不為選動畫／圖示新增或替換 item ID；不新增全域 `playerInteractWithBlock`／`runInterval`；不 commit 建置產物；不修改作者 Cookery 檔案；不擴充 `player.json`。
+3. **禁止模式**（詳見計畫 §2.2）：不新增每版驗證器、`augment_a*`、`tools/gNNN_*`、`STATUS-*` 文件；不寫切原始碼文字的測試；不為選動畫／圖示新增或替換 item ID；不新增全域 `playerInteractWithBlock`／`runInterval`；不 commit 建置產物；不公開完整作者 Cookery 檔案或改寫作者原始歸檔；不擴充 `player.json`。
 4. **P2 之前不改 runtime 行為**；P2 的 PR 必須證明 BP 位元組不變（計畫 §4 P2 共通驗收）。
 5. **最小必要保護**：存檔 ID／storage／pack UUID 及其遷移契約不可無聲破壞；歷史測試、膨脹計數器、舊流程與診斷檔可以正常精簡或退役，不再以檔案存在本身作為合併條件。
 6. **不改寫 Git 歷史、不 force push main、不刪 tag**。分支刪除需擁有者決策 D7。
@@ -50,6 +50,7 @@
 ## 7. 仍然有效的專案規範
 
 - 指南：遵循 `docs/GUIDE-STANDARD.md`——在既有 Cookery 書內只有一個煙火入口與六個料理分類，不新增實體書物品，不替換宿主檔案。
+- 已授權的宿主適配沿公開來源契約與現有 Core 本機組裝流程，使用者自行提供合法原包；保留原始輸入，為變更輸出固定新配對身份。自有玩法修回 canonical owner，私有只留必要跨包連接；作者完整腳本與原包不公開。
 - 授權：原作素材 CC BY-NC-SA 4.0；原碼及衍生工具的 BSD 聲明另列；出處見 `projects/grilling/ATTRIBUTION.md`。
 - 版本：玩法或輸出資產變更才 bump 版本並同步 manifests／`baseline.json`；只改工具或文件不 bump、不部署。
 

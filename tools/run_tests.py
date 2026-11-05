@@ -28,6 +28,7 @@ SMOKE_TESTS = (
     'tests/legacy/test_cuisine_quality_java.mjs',
     'tests/legacy/test_immersion_audio.mjs',
     'tests/scenario/test_heavy_metal_rescue.mjs',
+    'tests/scenario/test_warmth_heat_sources.mjs',
     'tests/legacy/test_skewer_compat_core.mjs',
     'tests/legacy/test_secret_compat_core.mjs',
     'tests/legacy/test_rack_aim_hit.mjs',

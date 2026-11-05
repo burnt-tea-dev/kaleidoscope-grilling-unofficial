@@ -35,9 +35,9 @@
 2. **每個任務都有「驗收條件」**。沒有全部達成就不能標完成，不能用「測試通過」代替「玩法正確」。
 3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
 4. **保存資料的變更**依 `docs/SAVE-COMPAT.md` 做相關功能驗證；不再使用存檔相容鎖。
-5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。棘輪會擋。
+5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。這些是實作規則，不另設棘輪 PR 門檻。
 6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
-7. **不要修改作者 Cookery 包的檔案**，不要把私有整合的內容放進公開 repo。（§6）
+7. **保留作者原始歸檔，不公開完整作者檔案或私有整合內容**。已授權的宿主適配沿公開來源契約與現有 Core 本機組裝流程，使用者自行提供合法原包；適配輸出須有新配對身份與來源紀錄。（§6）
 8. **遇到計畫沒寫的決策**：停下，把選項寫進 PR 描述的「需要擁有者決定」段落，不要自行假設後繼續大規模工作。
 9. 報告用語依 `AGENTS.md` §6；按實際來源、檢查與部署狀態分開寫，不另加完成門檻。
 
@@ -82,34 +82,20 @@
 
 - Java 原作 1.1.1（`breezeth-CN/KaleidoscopeGrilling@9a1acdab`）的素材已逐位元匯入於 `projects/grilling/source_snapshots/`，`source_manifest.json` 有逐檔雜湊與授權。**這是視覺還原的唯一正確來源**，保留。
 - `development/gameplay_core/fixtures/java-*` 中由 Java 原碼萃取的資料（配方、熱度期限、效果、HUD 尺寸、進食曲線、音效）有價值，**重新整理為 `data/java/` 的單一資料表**後保留（T2.3）。
-- BP/RP UUID、所有 item／block／entity ID、persisted key：存檔相依，**全部保留**（護欄已鎖）。
+- BP/RP UUID、item／block／entity ID、persisted key：涉及保存資料，依 [SAVE-COMPAT](SAVE-COMPAT.md) 驗證實際受影響的讀寫與重啟；不使用逐 ID 鎖或退役登記。
 - 已存在的交易安全觀念（先快照、寫入失敗回滾、不吞物品）：觀念保留，實作收斂到 `core/transaction.js` 一處（T3.2）。
 
 ---
 
 ## 2. 已就位的護欄與禁止模式
 
-### 2.1 護欄（P0 已完成；現行 PR 只強制存檔相容）
+### 2.1 現行檢查與保存保護
 
-> 現行簡化策略（2026-11-03）：`guards.yml` 在 PR 檢查存檔 ID、儲存元件及 pack 身份，並與 base lock 對照一次；`growth_ratchet` 與其自測、release baseline、bridge export 和過往相容性候選改為手動發布前驗證。此策略取代本節舊的「每個 PR 全量必跑」描述。既有真人世界上線前的備份與存檔不丟失要求不變。
+2026-11-04 擁有者已移除存檔相容鎖、逐 ID 退役登記及其 required CI；`guards.yml` 已刪除。保存變更只按 [SAVE-COMPAT](SAVE-COMPAT.md) 驗證實際受影響的資料，不要求新增 ID 更新鎖或先提交退役收據。
 
-| 護欄 | 檔案 | 擋什麼 |
-| --- | --- | --- |
-| 存檔相容鎖 | `tools/guards/save_compat.py`、`save-compat.lock.json`、`id-retirements.json` | 任何 item／block／block state 值／entity／persisted key 字面值／pack UUID 的消失；CI 另用 base 分支的 lock 再查，手改 lock 藏不住 |
-| 膨脹棘輪 | `tools/guards/growth_ratchet.py`、`growth-ratchet.json` | 24 項反模式計數只能下降；CI 另用 base 分支的上限再查，PR 不能自己調高上限 |
-| 受保護檔案 | `guards.yml` | 刪除護欄、`AGENTS.md`、本計畫、`SAVE-COMPAT.md` 會直接失敗 |
-| 標籤不提供旁路 | `guards.yml` | PR label 不會跳過 base 分支的存檔鎖或棘輪上限比較；不得在任務 PR 中自行放寬護欄 |
+PR 的實際檢查由 [ci.yml](../.github/workflows/ci.yml) 定義：可載入 JSON、核心玩法測試、指南圖示與要塞戰利品檢查。針對修改先跑能區分故障的測試，已有相同輸入的有效結果便重用；不要求每次在本機重跑整套 CI。
 
-規則：
-
-- 每個 PR 結束前在本機跑：
-  ```sh
-  python3 tools/guards/test_guards.py
-  python3 tools/guards/save_compat.py check
-  python3 tools/guards/growth_ratchet.py check
-  ```
-- 清理讓計數下降後，在同一個 PR 執行 `python3 tools/guards/growth_ratchet.py tighten` 鎖住新上限。
-- 新增合法 ID 後，在同一個 PR 執行 `python3 tools/guards/save_compat.py update`。
+既有 `growth_ratchet.py`、其自測及過往相容性測試仍可手動使用，不是普通 PR 的新增門檻。輸出 runtime 改變時，依 `baseline.json`、`tools/baseline_gate.py` 及 append-only `release-history.json` 固定新配對身份；部署前的備份、相關原生功能及存檔驗證仍有效。
 
 ### 2.2 禁止模式（看到就拒絕）
 
@@ -122,7 +108,7 @@
 | F5 | 新的全域 `world.beforeEvents.playerInteractWithBlock` 等監聽 | block／item custom components；或 `core/events.js` 的唯一路由 |
 | F6 | 新的 `system.runInterval` | `core/scheduler.js` 的唯一排程器（分攤、按需） |
 | F7 | 把建置產物、截圖、log commit 進 repo | GitHub Actions artifact／Releases |
-| F8 | 修改作者 Cookery 的檔案或在部署時注入 runtime | `compat/cookery` 介面卡＋能力探測（§6） |
+| F8 | 改寫作者原始歸檔、公開完整作者腳本，或把自有玩法藏進私有覆蓋／部署補丁 | 自有功能回 canonical owner；已授權宿主適配沿公開契約＋Core 本機組裝（§6） |
 | F9 | 以模板字串重新拼出 persisted key | `core/persist_keys.js` 逐字字面值（SAVE-COMPAT） |
 | F10 | 在 luosen 直接試錯 | staging 世界（§5.4） |
 | F11 | 把「BDS 載入成功／hash 一致／測試數」寫成「已還原」 | §0 第 9 條五級用語 |
@@ -233,10 +219,10 @@ scripts/
 
 ### 3.6 CI 與發布
 
-- `ci.yml`（每 PR，目標 < 3 分鐘）：guards → `node --test tests/unit tests/scenario` → `tsc --noEmit --checkJs`（用 `@minecraft/server` 型別檢查 JS）→ `eslint` → `python3 tools/validate.py`（靜態包驗證，§9.3）→ `python3 tools/build.py` 產出 `.mcaddon` 上傳為 workflow artifact（**不 commit**）。
-- `gametest.yml`（每晚＋手動）：下載 BDS、載入正式 BP/RP＋`tests/gametest` BP，跑 `/gametest runall`，解析 log。
-- `release.yml`（手動）：從已通過 CI 的 tag 建包、上傳 GitHub Release、寫 SHA256。
-- 版本號：語意版本。玩法／資產變更 bump minor 或 patch；文件／工具不 bump。**不再使用 G/T/W 代號與 `STATUS` 文件**；家族配對關係記在家族 repo 的單一 lock 檔。
+- 現行 PR 檢查見 [ci.yml](../.github/workflows/ci.yml) 與 §2.1；完整過渡測試由該 workflow 的手動輸入選擇，並非每個 PR 必跑。
+- 原生 BDS／保存驗證沿既有隔離流程及共同持有人的時段安排；本庫沒有已啟用的 `gametest.yml` 每晚流程，不能把它當成現況或以載入成功代替玩法。
+- 發布與組裝見 [RELEASING](RELEASING.md)，實際手動 workflows 以 `.github/workflows/` 為準；不提交建置產物。
+- 輸出版本與配對以 `baseline.json`、manifest 和追加發布歷史為準；runtime 改變須用全新配對身份，文件／工具且輸出不變時不升包。G/T/W 僅是既有版本簡稱，不另維護易過期的版本表；家族 lock 只作來源提醒，精確相依與保存要求仍有效。
 
 ### 3.7 文件保留清單（與 §3.1 一致）
 
@@ -363,8 +349,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 以 `@minecraft/server` 的型別為準，只實作用到的子集；**不 mock 任何 runtime 模組**，透過 import map 把 `@minecraft/server` 換成 harness。
 - 驗收：用 harness 跑通「放烤架→點火→放 3 串生牛肉串→時間推進→取出熟串」的完整流程測試。
 
-**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 `tools/guards/save-compat.lock.json` 的 `persisted_key_literals` 全部逐字集中，含各 namespace 的 key 與前綴；清單與數量以執行任務時的鎖為準，舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`（已將 `owned_item_transaction_core.js` 的共用交易實作遷入；呼叫端直接使用此核心 owner）、`storage.js`（已將原 `family_station_storage.js` 實作遷入；呼叫端直接使用此核心 owner，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
-- 驗收：`save_compat` 保留既有 key；若發現已在用但漏鎖的字面值，只補錄該既有 key，不改 key 或存檔格式。既有 core owner 測試覆蓋：寫入失敗回滾、容器滿時剩餘掉落、metadata 完整保留。
+**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（保存鍵與前綴的常數 owner，舊模組直接 import；不從已刪除的存檔鎖生成另一份清單）、`persist.js`、`transaction.js`（已將 `owned_item_transaction_core.js` 的共用交易實作遷入；呼叫端直接使用此核心 owner）、`storage.js`（已將原 `family_station_storage.js` 實作遷入；呼叫端直接使用此核心 owner，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
+- 驗收：保護本次受影響的實際保存行為，不新增 key 鎖。既有 core owner 測試覆蓋寫入失敗回滾、容器滿時剩餘掉落及公開 metadata 保留；不可讀的原生欄位不冒稱已驗證。
 
 **T3.3 逐域搬遷**（每個域一個 PR，順序：`grill` → `skewer` → `plate` → `recipe` → `seasoning` → `oil` → `rack` → `food`/`effect` → `crops` → `world` → `advancement` → `compat` → `guide`）
 
@@ -374,8 +360,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 3. 該域的方塊改用 custom component（block JSON 加 component 宣告），刪除對應的全域監聽。
 4. 該域所有計時移入 `core/scheduler.js` 或方塊 `onTick`。
 5. `npx tsc --noEmit` 對新檔通過；舊 `tests/legacy/` 中該域的測試刪除。
-6. 棘輪 tighten：`script_modules`、`version_prefixed_script_modules`、`global_*`、`run_intervals` 應下降。
-7. 打包後在 **staging** 跑該域的人工檢查清單（§9.5），結果貼在 PR。
+6. 移除該域不再使用的舊呼叫與重複路徑；不因拆分另設棘輪 PR 門檻。
+7. 來源通過必要 CI／合併後，由共同持有人安排受影響功能的原生及保存驗證；未觀察的真人聲畫明列未知，不作完成門檻。
 
 **T3.4 進食系統重寫**（跨 skewer/food/plate，單獨一個 PR，高風險）
 - 刪除 `prepareEatingItems` 換手持物品的機制；進食動畫選擇改為：`itemStartUse` 時寫 player property（profile、hand、random alt），attachable 動畫控制器讀 `q.property`（必要時 `c.owning_entity`）。
@@ -768,7 +754,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 類別 | 去處 |
 | --- | --- |
 | A 遊戲邏輯 | 移入對應公開 repo（例如 `grilling/compat/cookery/`），以能力探測啟用；不能公開的（作者授權問題）改為不需要 |
-| B 宿主修補（改 Cookery 檔案） | 依 T6.1 的新決定，首批改為公開來源宣告＋Core 本機接入工具，使用者提供乾淨作者包，不發布完整作者腳本。持續向作者提出 API 需求；作者提供等效能力後，逐項移除對應接入點。不能公開的能力依介面卡降級，未驗證處寫進 KNOWN-ISSUES。 |
+| B 宿主適配 | 沿 T6.1 的公開來源宣告＋Core 本機接入工具，使用者提供乾淨作者包，不發布完整作者腳本。作者提供等效能力後，移除對應舊接入點；作者聯絡另需明確授權。不能公開的能力依介面卡降級，未驗證處寫進 KNOWN-ISSUES。 |
 | C 部署設定 | 留在私有 repo，只剩設定檔與部署腳本 |
 | D 憑證 | 不放 repo；伺服器上的權限受控檔案 |
 
