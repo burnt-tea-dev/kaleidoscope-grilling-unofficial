@@ -62,7 +62,7 @@ manifest 的 Cookery 相依只表示包身份要求，不證明每項 adapter／
 
 ## CI 與證據
 
-[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法測試、指南／戰利品宣告、Java 萃取與保留工具回歸；舊的 `guards.yml` 已依擁有者指示退役；存檔相容鎖不再是合併或發布門檻。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
+CI的實際觸發條件與檢查範圍直接查[ci.yml](../.github/workflows/ci.yml)，本文不另列步驟清單。結果只證明該次來源與所執行測試涵蓋的行為，不代替完整BDS、存檔重啟或客戶端效果。發布時的runtime身份、BP/RP配對及輸出一致性沿既有[release baseline](../.github/workflows/baseline.yml)與[baseline gate](../tools/baseline_gate.py)確認；保存變更依[SAVE-COMPAT](SAVE-COMPAT.md)驗證實際受影響的讀寫與重啟。退役的存檔相容鎖不恢復，工具退役亦不放寬這些保存／身份界線。
 
 保留測試包含純規則，以及 #250 以[受控外部 API 邊界](../tests/helpers/README.md)執行 canonical ESM、已註冊事件與排程的情境；loader 只解析外部依賴，不切割、改寫或替換正式模組。具體覆蓋與未補場景見 [分類補充](../tests/legacy/classification.json) 的 `native_scenario_addendum`；受控 API 結果仍不等於完整 BDS／Player 流程。需要 native binding 的 census 合成測試另有隔離入口；既有工具能執行不代表真實 LKG 重跑或 staging 已通過。實際來源、CI、staging、部署、真人證據分開記錄。
 
