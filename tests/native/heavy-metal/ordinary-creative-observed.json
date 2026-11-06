@@ -1,0 +1,512 @@
+{
+  "observed_date": "2026-11-06",
+  "normal_stop_log": "[2026-11-06 18:35:40:800 INFO] Server stop requested.",
+  "runtime_source": "a0990b7c5692ef7dfacff9e542390d8448214724",
+  "diagnostic_source": "b0171564a5738f6bb4b8810d8f5e3c652a518fae",
+  "engine": {
+    "version": "1.26.60.6",
+    "archive_sha256": "cbbd5414fa6a310353ed1fc76a0ba691c3fd1ea852fd04bb76764ee4c1afdb98",
+    "executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+    "official_archive_executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad"
+  },
+  "api_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    }
+  ],
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "prestart": {
+    "host_pid_namespace": "pid:[4026531836]",
+    "current_config_host_matches": true,
+    "own_engine_assert_idle": true,
+    "QA_ports_available": [
+      27962,
+      27963
+    ],
+    "shared_lock_held": true
+  },
+  "production_source_sha256": {
+    "heavy_metal_damage_runtime.js": "91552f149ee1b86830570cfb49eb51fcaced957bb68bfca9c7b0f7cbb314bd5b",
+    "heavy_metal_damage_core.js": "85b914abc6db504dd90144cc40a522e752bd55c9e64f36bce866bf1bae817c6a",
+    "effect/runtime.js": "9e24b21ce5cfb961560779c7b6c7876f5de1094ec7802bd3eac8509ea72e464e",
+    "food/runtime.js": "68c6c9bc5e85e69ae5bb3ed7a6fa87fbcba7b6e84ed7d94c499a8a8b3a63dc0d",
+    "effect_state_runtime.js": "aea5667cac1185de8a8d30a93c2b48c5406e7ef2f42015c897f14e7e8e416dc0",
+    "effect_lifecycle_core.js": "61569db6c70e81d5c36e50ae44a90eb105629c33781c48e799b230cd8bc55b28",
+    "core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad"
+  },
+  "unchanged_own_player_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "probe_sha256": "092d66c15d05d94dde32ad27a118460ebba161d5f224d8be00b24912c10b42d6",
+  "new_player_overlay": false,
+  "runtime_changed": false,
+  "QA_identity": [
+    1,
+    0,
+    0
+  ],
+  "diagnostic_not_complete_candidate": true,
+  "java_author_ref": "9a1acdab27698457bec16c9362678e574895a28c",
+  "java_reference_metadata": {
+    "schema": 1,
+    "checked_at": "2026-11-06T10:28:21.997197+00:00",
+    "read_only": true,
+    "automatic_deployment": false,
+    "downloads": false,
+    "all_reference_release_metadata_current": true,
+    "full_java_parity_verified": false,
+    "projects": [
+      {
+        "name": "Grilling",
+        "project_id": 1666863,
+        "parity_verified": false,
+        "minecraft": "1.20.1",
+        "loader": "Forge",
+        "source_reference_file_ids": [
+          8726006
+        ],
+        "source_scope": "Author1.1.1; maintained Forge1.20.1 reference. Source-backed producer, seasoning, persistence and platform/client scopes are maintained in Grilling docs/PARITY-MATRIX.md; current full-family deployment in Tavern family/BASELINE-STATUS.md. No complete Java or client parity claimed.",
+        "newest_author_file": {
+          "id": 8726006,
+          "displayName": "kaleidoscope_grilling-1.1.1-forge1.20.1.jar",
+          "fileDate": "2026-08-24T18:01:22.283Z",
+          "releaseType": 1
+        },
+        "newest_stable_file": {
+          "id": 8726006,
+          "displayName": "kaleidoscope_grilling-1.1.1-forge1.20.1.jar",
+          "fileDate": "2026-08-24T18:01:22.283Z",
+          "releaseType": 1
+        },
+        "status": "reference_metadata_current_parity_pending"
+      },
+      {
+        "name": "Grilling",
+        "project_id": 1666863,
+        "parity_verified": false,
+        "minecraft": "1.21.1",
+        "loader": "NeoForge",
+        "source_reference_file_ids": [
+          8726014
+        ],
+        "source_scope": "Author1.1.1; maintained NeoForge1.21.1 reference. Source-backed producer, seasoning, persistence and platform/client scopes are maintained in Grilling docs/PARITY-MATRIX.md; current full-family deployment in Tavern family/BASELINE-STATUS.md. No complete Java or client parity claimed.",
+        "newest_author_file": {
+          "id": 8726014,
+          "displayName": "kaleidoscope_grilling-1.1.1-neoforge1.21.1.jar",
+          "fileDate": "2026-08-24T18:02:36.913Z",
+          "releaseType": 1
+        },
+        "newest_stable_file": {
+          "id": 8726014,
+          "displayName": "kaleidoscope_grilling-1.1.1-neoforge1.21.1.jar",
+          "fileDate": "2026-08-24T18:02:36.913Z",
+          "releaseType": 1
+        },
+        "status": "reference_metadata_current_parity_pending"
+      }
+    ]
+  },
+  "java_vanilla_provenance": [
+    {
+      "minecraft": "1.20.1",
+      "client": {
+        "url": "https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar",
+        "sha1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838"
+      },
+      "mappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt",
+        "sha1": "6c48521eed01fe2e8ecdadbd5ae348415f3c47da"
+      }
+    },
+    {
+      "minecraft": "1.21.1",
+      "client": {
+        "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+        "sha1": "30c73b1c5da787909b2f73340419fdf13b9def88"
+      },
+      "mappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt",
+        "sha1": "2244b6f072256667bcd9a73df124d6c58de77992"
+      }
+    }
+  ],
+  "java_source_findings": {
+    "Forge_1_20_1_and_NeoForge_1_21_1": "Always-edible Ordinary reaches MultiBite finishUsingItem then Cursed afterFoodCommitted without excluding Creative.",
+    "custom_damage_source": "ordinary_skewer with Float.MAX_VALUE; additive bypasses_invulnerability. Not a genericKill call.",
+    "Creative": "Both vanilla Player hurt and Entity invulnerability checks allow bypasses_invulnerability.",
+    "Spectator": "Both vanilla ServerPlayerGameMode useItem callers return PASS before invoking the item; no synthetic food requirement tested.",
+    "Heavy_Metal": "Both AdvancedSeasoningHandler onDeath implementations cancel death, consume Heavy Metal, set 1HP and apply poisoning without excluding Creative."
+  },
+  "valid_entry_controls": 11,
+  "unmet_java_expectations": [
+    "Creative no Heavy Metal native max-float hit reaches the registered handler",
+    "Creative Ordinary bypasses immunity and kills without a claim",
+    "Creative Heavy Metal native max-float hit reaches the registered handler",
+    "Creative Heavy Metal pays before cancellation and rescues to 1 HP"
+  ],
+  "raw_result": {
+    "passed": false,
+    "reason": "complete",
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "report": {
+      "passed": false,
+      "phase": "ordinary-creative",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal actual native mode is Creative",
+          "passed": true
+        },
+        {
+          "name": "Creative ordinary native attack retains its immunity",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal real native food completes while retaining the Creative serving",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal real Ordinary completion reaches its fatal feedback",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal native max-float hit reaches the registered handler",
+          "passed": false
+        },
+        {
+          "name": "Creative no Heavy Metal totem stays untouched without a native totem heal",
+          "passed": true
+        },
+        {
+          "name": "Creative Ordinary bypasses immunity and kills without a claim",
+          "passed": false
+        },
+        {
+          "name": "Creative Heavy Metal actual native mode is Creative",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal real native food completes while retaining the Creative serving",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal real Ordinary completion reaches its fatal feedback",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal native max-float hit reaches the registered handler",
+          "passed": false
+        },
+        {
+          "name": "Creative Heavy Metal totem stays untouched without a native totem heal",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal pays before cancellation and rescues to 1 HP",
+          "passed": false
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "samples": [
+        {
+          "heavy": false,
+          "phase": "food",
+          "food": [
+            {
+              "event": "itemStartUse",
+              "tick": 92,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 100,
+              "feedback": {
+                "particleAccepted": 0,
+                "particleFailed": 0,
+                "soundAccepted": 0,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            },
+            {
+              "event": "itemCompleteUse",
+              "tick": 192,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0,
+              "feedback": {
+                "particleAccepted": 42,
+                "particleFailed": 0,
+                "soundAccepted": 2,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            },
+            {
+              "event": "itemStopUse",
+              "tick": 192,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0,
+              "feedback": {
+                "particleAccepted": 42,
+                "particleFailed": 0,
+                "soundAccepted": 2,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            }
+          ],
+          "before": [],
+          "heals": [],
+          "died": false,
+          "normalControl": {
+            "before": {
+              "mode": "Creative",
+              "health": 10,
+              "time": 88,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null
+            },
+            "applied": false,
+            "after": {
+              "mode": "Creative",
+              "health": 10,
+              "time": 90,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null
+            }
+          },
+          "input": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 93,
+            "main": {
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "amount": 1
+            },
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1290,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "feedbackBefore": {
+            "particleAccepted": 0,
+            "particleFailed": 0,
+            "soundAccepted": 0,
+            "soundFailed": 0,
+            "lastParticleError": "",
+            "lastSoundError": ""
+          },
+          "useAccepted": true,
+          "result": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 198,
+            "main": {
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "amount": 1
+            },
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1290,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "feedbackAfter": {
+            "particleAccepted": 42,
+            "particleFailed": 0,
+            "soundAccepted": 2,
+            "soundFailed": 0,
+            "lastParticleError": "",
+            "lastSoundError": ""
+          }
+        },
+        {
+          "heavy": true,
+          "phase": "food",
+          "food": [
+            {
+              "event": "itemStartUse",
+              "tick": 205,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 100,
+              "feedback": {
+                "particleAccepted": 42,
+                "particleFailed": 0,
+                "soundAccepted": 2,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            },
+            {
+              "event": "itemCompleteUse",
+              "tick": 305,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0,
+              "feedback": {
+                "particleAccepted": 84,
+                "particleFailed": 0,
+                "soundAccepted": 4,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            },
+            {
+              "event": "itemStopUse",
+              "tick": 305,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0,
+              "feedback": {
+                "particleAccepted": 84,
+                "particleFailed": 0,
+                "soundAccepted": 4,
+                "soundFailed": 0,
+                "lastParticleError": "",
+                "lastSoundError": ""
+              }
+            }
+          ],
+          "before": [],
+          "heals": [],
+          "died": false,
+          "input": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 206,
+            "main": {
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "amount": 1
+            },
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1403,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1403,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "feedbackBefore": {
+            "particleAccepted": 42,
+            "particleFailed": 0,
+            "soundAccepted": 2,
+            "soundFailed": 0,
+            "lastParticleError": "",
+            "lastSoundError": ""
+          },
+          "useAccepted": true,
+          "result": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 311,
+            "main": {
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "amount": 1
+            },
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1403,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1403,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "feedbackAfter": {
+            "particleAccepted": 84,
+            "particleFailed": 0,
+            "soundAccepted": 4,
+            "soundFailed": 0,
+            "lastParticleError": "",
+            "lastSoundError": ""
+          }
+        }
+      ],
+      "playersAfter": 0,
+      "scope": "Only actual Creative food completion through unchanged G242 food/effect handlers. One normal native attack is the mode-immunity control. No direct food callback, native-method replacement, mode exception, new Player overlay, damage replay, resurrection or remaining-shield estimate. Existing Survival results are reused, not repeated. Spectator food is excluded by both Java callers. No claim about every invulnerability source, armor/resistance, full family, persistence, client or LIVE."
+    },
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 590299136,
+    "client": false,
+    "native_player": "QA SimulatedPlayer; actual native Creative Ordinary food use and registered food/effect handlers",
+    "live_modified": false
+  },
+  "cleanup": {
+    "engine_and_temporary_world_removed": true,
+    "normal_stop": true,
+    "players_after": 0,
+    "cleanup_inside_shared_lock": true,
+    "live_modified": false,
+    "observed_at": "2026-11-06T10:36:56.362876+00:00",
+    "service_state": "ActiveState=failed\nSubState=failed\nMainPID=0\nExecMainStatus=1\n",
+    "shared_lock_acquired_then_released": true
+  },
+  "selected_applyDamage_options": [
+    "cause",
+    "damagingEntity"
+  ],
+  "creative_java_parity": false,
+  "other_causes_or_kill_measured": false,
+  "all_invulnerability_sources_measured": false,
+  "new_runtime_adopted": false,
+  "saved_world_restart_tested": false,
+  "client": false,
+  "live_modified": false,
+  "replacement_path_review": {
+    "existing_Heavy_native_observers_measure_Entity_kill_or_kill_damage_commands": false,
+    "documented_Entity_kill_and_kill_command_kill_entities": true,
+    "documented_before_hurt_cancellation_and_Heavy_payment_contract": false,
+    "damage_command_amount_type": "int, not Float.MAX_VALUE",
+    "other_paths_rejected_by_this_native_test": false,
+    "replacement_adopted": false
+  }
+}
