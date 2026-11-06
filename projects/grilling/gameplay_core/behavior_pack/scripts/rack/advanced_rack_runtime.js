@@ -215,6 +215,8 @@ function scheduleRackPlacement(event){
  const candidates=rackPlacementCandidates(event.block.location,event.blockFace)
   .map(location=>({location,wasRack:dimension.getBlock(location)?.typeId===ADVANCED_RACK_BLOCK_ID}));
  system.run(()=>{
+  // Later owners may cancel the same before-event after our placement capture.
+  try{if(event.cancel!==false)return}catch{return}
   for(const row of candidates){
    if(row.wasRack)continue;
    const block=dimension.getBlock(row.location);
@@ -271,6 +273,8 @@ function rackQa(player,stage,details={}){
  try{if(player.hasTag('kg_rack_qa'))console.warn('[Grilling rack QA] '+JSON.stringify({stage,...details}));}catch{}
 }
 onBlockInteraction('a2746_advanced_rack_runtime',event=>{
+ // Placing a packed rack targets its support, not an existing rack block.
+ if(event.block.typeId!==ADVANCED_RACK_BLOCK_ID&&event.itemStack?.typeId!==ADVANCED_RACK_ITEM_ID)return;
  const p=event.player;
  if(event.isFirstEvent!==false){
   const hit=event.faceLocation;
@@ -309,7 +313,7 @@ onBlockInteraction('a2746_advanced_rack_runtime',event=>{
   return;
  }
  try{scheduleRackPlacement(event)}catch{}
-},{"priority":70,"blocks":["kaleidoscope_grilling:advanced_rack_block"]});
+},{"priority":70});
 
 onBeforeBlockBreak('rack/advanced_rack_runtime.js:0',event=>{
  if(event.cancel||event.block.typeId!==ADVANCED_RACK_BLOCK_ID)return;

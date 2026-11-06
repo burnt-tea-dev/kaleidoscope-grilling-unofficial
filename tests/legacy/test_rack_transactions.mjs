@@ -134,6 +134,70 @@ function command(f) {f.command(RACK_COMMAND, {sourceEntity: f.holder});}
 function activeDrops(f) {return f.drops.filter(drop => drop.isValid !== false);}
 function droppedStack(drop) {return drop.itemStack ?? drop.stack ?? drop.getComponent('minecraft:item')?.itemStack;}
 
+test('packed rack placement on support restores contents and filters through another break', async () => {
+ for (const [face, offset] of [['Up', [0, 1, 0]], ['Down', [0, -1, 0]],
+  ['North', [0, 0, -1]], ['South', [0, 0, 1]], ['East', [1, 0, 0]], ['West', [-1, 0, 0]]]) {
+  const f = await fixture(), held = tool(f);
+  const items = Array(9).fill(null), filters = Array(9).fill(null);
+  items[5] = held; filters[5] = core.rackCanonicalFilter(held.typeId, held.getTags(), 5);
+  const packed = f.codec.writeRackPayloadItem(f.item(core.ADVANCED_RACK_ITEM_ID), items, filters);
+  f.inv.setItem(0, packed);
+  const support = f.block('minecraft:stone', {x: 0, y: 64, z: 1});
+  const event = {block: support, player: f.holder, blockFace: face,
+   itemStack: packed.clone(), isFirstEvent: true, cancel: false};
+  f.emit('world.beforeEvents.playerInteractWithBlock', event);
+  assert.equal(event.cancel, false);
+  // Model block_placer after the before-event, before the deferred restore.
+  const placed = f.rack(offset[0], 64 + offset[1], 1 + offset[2]);
+  f.inv.setItem(0, undefined); f.flush();
+  same(f.state.readRackItems(placed)[5], held, face);
+  same(f.state.readRackFilters(placed), filters, face);
+  f.emit('world.beforeEvents.playerBreakBlock', {cancel: false, block: placed, player: f.holder});
+  f.flush();
+  assert.equal(activeDrops(f).length, 1);
+  const saved = f.codec.readRackPayloadItem(droppedStack(activeDrops(f)[0]));
+  same(saved.items[5], held, face); same(saved.filters, filters, face);
+  if (face === 'Up') {
+   // Only saved payload bytes cross into a fresh runtime graph. This is a
+   // persistence model, not a native disk-restart or client-placement test.
+   const raw = droppedStack(activeDrops(f)[0]).getDynamicProperty(core.RACK_PAYLOAD_KEY);
+   const restarted = await fixture(), item = restarted.item(core.ADVANCED_RACK_ITEM_ID);
+   item.setDynamicProperty(core.RACK_PAYLOAD_KEY, raw);
+   restarted.inv.setItem(0, item);
+   const support2 = restarted.block('minecraft:stone', {x: 0, y: 63, z: 1});
+   restarted.emit('world.beforeEvents.playerInteractWithBlock', {block: support2, player: restarted.holder,
+    blockFace: 'Up', itemStack: item.clone(), isFirstEvent: true, cancel: false});
+   const loaded = restarted.rack(0, 64, 1);
+   restarted.inv.setItem(0, undefined); restarted.flush();
+   same(restarted.state.readRackItems(loaded)[5], held);
+   same(restarted.state.readRackFilters(loaded), filters);
+  }
+ }
+});
+
+test('cancelled, repeated and unrelated placement gestures do not restore packed contents', async () => {
+ for (const mode of ['already_cancelled', 'later_cancelled', 'repeated', 'other_item', 'existing_rack']) {
+  const f = await fixture(), held = tool(f), items = Array(9).fill(null);
+  items[5] = held;
+  const packed = f.codec.writeRackPayloadItem(f.item(core.ADVANCED_RACK_ITEM_ID), items, []);
+  f.inv.setItem(0, packed);
+  const support = f.block('minecraft:stone', {x: 0, y: 63, z: 1});
+  let placed = mode === 'existing_rack' ? f.rack(0, 64, 1) : undefined;
+  const event = {block: support, player: f.holder, blockFace: 'Up',
+   itemStack: mode === 'other_item' ? f.item('minecraft:stone') : packed.clone(),
+   isFirstEvent: mode !== 'repeated', cancel: mode === 'already_cancelled'};
+  f.emit('world.beforeEvents.playerInteractWithBlock', event);
+  if (mode === 'later_cancelled') event.cancel = true;
+  // A foreign/native placement at this position must not acquire this payload.
+  placed ??= f.rack(0, 64, 1);
+  f.flush();
+  assert.equal(f.state.readRackItems(placed).some(Boolean), false, mode);
+  same(f.state.readRackFilters(placed), Array(9).fill(null), mode);
+  same(f.inv.getItem(0), packed, mode);
+  assert.equal(f.holder.getDynamicProperty('kaleidoscope_grilling:adv_neat_and_orderly'), undefined, mode);
+ }
+});
+
 // Transactions use the actual exported functions, and all runtime actions below
 // enter through registered events or the registered command. No private exports.
 test('public rack tags admit each correct slot independently, including dual-tag items', () => {
