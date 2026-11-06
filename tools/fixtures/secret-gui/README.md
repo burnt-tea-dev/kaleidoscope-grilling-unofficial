@@ -21,7 +21,13 @@ is hidden. `tools/test_secret_gui_ui.py` calls the actual generator with the
 runtime marker source and checks both exported UI files, the native binding
 prefix and alpha/layer wiring. UI-only imports need no image library. This does
 not execute the Minecraft UI parser, establish derived caller data supply or
-render a frame.
+render a frame. `native-item-callers.json` retains the selected-icon and
+inventory/hotbar caller definitions from the same Mojang revision. The selected
+icon uses global bindings without `$item_collection_name`; the overlay defaults
+to an empty name and is ignored there, retaining the native cursor icon instead
+of borrowing an unrelated inventory slot. Actual collection callers still enter
+the existing recipe factory. The regression substitutes only variable-default
+and boolean-expression boundaries with these caller inputs.
 Each generated food/style image packs six 16px masks in one 96x16 strip; the
 six item layers use fixed UV cells and keep independent per-slot recipe data.
 `tools/test_secret_gui_assets.py` runs both original Java composers with only

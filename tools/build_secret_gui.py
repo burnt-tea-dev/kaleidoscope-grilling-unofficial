@@ -103,6 +103,10 @@ def ui(data):
         'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls
     }, 'slot_overlay':{
         'type':'stack_panel', 'size':['100%', '100%'],
+        # Native cursor/selected-item callers have global bindings and no
+        # collection. Do not invent a slot or enter its collection factory.
+        '$item_collection_name|default':'',
+        'ignored':"($item_collection_name = '')",
         'collection_name':'$item_collection_name',
         # The native collection-factory pattern creates zero icon subtrees for
         # unmarked slots and one for a marked secret. The source stays present

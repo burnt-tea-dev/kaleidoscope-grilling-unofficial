@@ -1,0 +1,76 @@
+{
+  "source": "https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/resource_pack/ui/ui_common.json",
+  "license": "Mojang/bedrock-samples LICENSE (MIT)",
+  "namespace": "common",
+  "definitions": {
+    "inventory_selected_icon@common.item_renderer": {
+      "layer": 50,
+      "size": [
+        21,
+        21
+      ],
+      "offset": [
+        -1,
+        -2
+      ],
+      "bindings": [
+        {
+          "binding_name": "#inventory_selected_item",
+          "binding_name_override": "#item_id_aux",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_item_charged_item",
+          "binding_name_override": "#charged_item",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_item_color",
+          "binding_name_override": "#item_custom_color",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_armor_trim_material",
+          "binding_name_override": "#armor_trim_material",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_banner_patterns",
+          "binding_name_override": "#banner_patterns",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#shield_base_color_hovered",
+          "binding_name_override": "#shield_base_color",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_banner_colors",
+          "binding_name_override": "#banner_colors",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_banner_type",
+          "binding_name_override": "#banner_type",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_decorated_pot_sherds",
+          "binding_name_override": "#decorated_pot_sherds",
+          "binding_condition": "always_when_visible"
+        },
+        {
+          "binding_name": "#inventory_selected_serialized_actor_pose",
+          "binding_name_override": "#serialized_actor_pose",
+          "binding_condition": "always_when_visible"
+        }
+      ]
+    },
+    "grid_item_for_inventory@common.container_item": {
+      "$item_collection_name": "inventory_items"
+    },
+    "grid_item_for_hotbar@common.container_item": {
+      "$item_collection_name": "hotbar_items"
+    }
+  }
+}
