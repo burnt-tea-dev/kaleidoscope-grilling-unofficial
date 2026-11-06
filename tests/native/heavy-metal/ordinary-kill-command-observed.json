@@ -1,0 +1,353 @@
+{
+  "observed_date": "2026-11-06",
+  "normal_stop_log": "[2026-11-06 19:06:00:573 INFO] Server stop requested.",
+  "runtime_source": "b3ad8574fa5cab7c64c68e501ca402d6fcff0a07",
+  "diagnostic_source": "d3077e66c5ca5ea3fddb1b7ef1db1b006f27184e",
+  "engine": {
+    "version": "1.26.60.6",
+    "archive_sha256": "cbbd5414fa6a310353ed1fc76a0ba691c3fd1ea852fd04bb76764ee4c1afdb98",
+    "executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+    "official_archive_executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad"
+  },
+  "api_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    }
+  ],
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "prestart": {
+    "host_pid_namespace": "pid:[4026531836]",
+    "current_config_host_matches": true,
+    "own_engine_assert_idle": true,
+    "QA_ports_available": [
+      27962,
+      27963
+    ],
+    "shared_lock_held": true
+  },
+  "production_source_sha256": {
+    "heavy_metal_damage_runtime.js": "91552f149ee1b86830570cfb49eb51fcaced957bb68bfca9c7b0f7cbb314bd5b",
+    "heavy_metal_damage_core.js": "85b914abc6db504dd90144cc40a522e752bd55c9e64f36bce866bf1bae817c6a",
+    "effect/runtime.js": "9e24b21ce5cfb961560779c7b6c7876f5de1094ec7802bd3eac8509ea72e464e",
+    "food/runtime.js": "68c6c9bc5e85e69ae5bb3ed7a6fa87fbcba7b6e84ed7d94c499a8a8b3a63dc0d",
+    "effect_state_runtime.js": "aea5667cac1185de8a8d30a93c2b48c5406e7ef2f42015c897f14e7e8e416dc0",
+    "effect_lifecycle_core.js": "61569db6c70e81d5c36e50ae44a90eb105629c33781c48e799b230cd8bc55b28",
+    "core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad"
+  },
+  "unchanged_own_player_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "probe_sha256": "87b5db16b2171fc1965bf0cbda5b17815d76bdb708e48b1a1837ff27f0ab779e",
+  "new_player_overlay": false,
+  "runtime_changed": false,
+  "QA_identity": [
+    1,
+    0,
+    0
+  ],
+  "diagnostic_not_complete_candidate": true,
+  "single_entry": "kill command through Script Dimension.runCommand",
+  "official_positive_contract": "https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable",
+  "target_permission_control": "https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/testfor?view=minecraft-bedrock-stable",
+  "server_allow_cheats": "true",
+  "valid_conditions": 8,
+  "unmet_expectations": [
+    "Creative no Heavy Metal kill command reaches the controlled native Player",
+    "Creative no Heavy Metal command provides a positive native before-hurt event",
+    "Creative kill control dies without cancellation or a Heavy claim",
+    "Creative Heavy Metal kill command reaches the controlled native Player",
+    "Creative Heavy Metal command provides a positive native before-hurt event",
+    "Creative command allows the original Heavy payment before cancellation",
+    "Creative command preserves the original rescue to 1 HP"
+  ],
+  "raw_result": {
+    "passed": false,
+    "reason": "complete",
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "report": {
+      "passed": false,
+      "phase": "ordinary-kill-command",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal actual native mode and effect inputs are ready",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal exact target and native command permission control succeeds",
+          "passed": true
+        },
+        {
+          "name": "Creative no Heavy Metal kill command reaches the controlled native Player",
+          "passed": false
+        },
+        {
+          "name": "Creative no Heavy Metal command provides a positive native before-hurt event",
+          "passed": false
+        },
+        {
+          "name": "Creative no Heavy Metal totem is untouched without a native totem heal",
+          "passed": true
+        },
+        {
+          "name": "Creative kill control dies without cancellation or a Heavy claim",
+          "passed": false
+        },
+        {
+          "name": "Creative Heavy Metal actual native mode and effect inputs are ready",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal exact target and native command permission control succeeds",
+          "passed": true
+        },
+        {
+          "name": "Creative Heavy Metal kill command reaches the controlled native Player",
+          "passed": false
+        },
+        {
+          "name": "Creative Heavy Metal command provides a positive native before-hurt event",
+          "passed": false
+        },
+        {
+          "name": "Creative Heavy Metal totem is untouched without a native totem heal",
+          "passed": true
+        },
+        {
+          "name": "Creative command allows the original Heavy payment before cancellation",
+          "passed": false
+        },
+        {
+          "name": "Creative command preserves the original rescue to 1 HP",
+          "passed": false
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "samples": [
+        {
+          "name": "GKillControl",
+          "heavy": false,
+          "before": [],
+          "after": [],
+          "heals": [],
+          "deaths": [],
+          "input": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 87,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1287,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "playersBefore": [
+            {
+              "name": "GKillControl",
+              "mode": "Creative"
+            }
+          ],
+          "selector": "@a[name=\"GKillControl\",tag=\"grilling_qa_kill_command\"]",
+          "targetControl": {
+            "command": "testfor @a[name=\"GKillControl\",tag=\"grilling_qa_kill_command\"]",
+            "result": {
+              "successCount": 1
+            }
+          },
+          "command": {
+            "text": "kill @a[name=\"GKillControl\",tag=\"grilling_qa_kill_command\"]",
+            "start": {
+              "order": 1,
+              "tick": 86
+            },
+            "result": {
+              "successCount": 0
+            },
+            "returned": {
+              "order": 2,
+              "tick": 86
+            }
+          },
+          "immediate": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 87,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1287,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "result": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 91,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1287,
+                "amp": 0
+              }
+            },
+            "claim": null
+          }
+        },
+        {
+          "name": "GKillHeavy",
+          "heavy": true,
+          "before": [],
+          "after": [],
+          "heals": [],
+          "deaths": [],
+          "input": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 96,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1296,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1296,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "playersBefore": [
+            {
+              "name": "GKillHeavy",
+              "mode": "Creative"
+            }
+          ],
+          "selector": "@a[name=\"GKillHeavy\",tag=\"grilling_qa_kill_command\"]",
+          "targetControl": {
+            "command": "testfor @a[name=\"GKillHeavy\",tag=\"grilling_qa_kill_command\"]",
+            "result": {
+              "successCount": 1
+            }
+          },
+          "command": {
+            "text": "kill @a[name=\"GKillHeavy\",tag=\"grilling_qa_kill_command\"]",
+            "start": {
+              "order": 3,
+              "tick": 95
+            },
+            "result": {
+              "successCount": 0
+            },
+            "returned": {
+              "order": 4,
+              "tick": 95
+            }
+          },
+          "immediate": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 96,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1296,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1296,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "result": {
+            "mode": "Creative",
+            "health": 10,
+            "time": 100,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1296,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1296,
+                "amp": 0
+              }
+            },
+            "claim": null
+          }
+        }
+      ],
+      "playersAfter": 0,
+      "scope": "Only the native kill command against two actual Creative Players, with exact-target/testfor permission controls and the unchanged G242 registered damage/after-heal handlers. A capability observation, not food completion or an adopted Ordinary repair. No Entity.kill, cause scan, synthetic callback, effect prepayment, health clearing, mode switch, immunity change, Player overlay, replay or resurrection. Callback order is observed, not a guarantee about every internal native step. Existing Survival/Creative food, fatal, shield, save and P140 results are not repeated."
+    },
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 502857728,
+    "client": false,
+    "native_player": "QA SimulatedPlayer; actual native kill command and unchanged registered G242 damage/after-heal handlers",
+    "live_modified": false
+  },
+  "cleanup": {
+    "engine_and_temporary_world_removed": true,
+    "normal_stop": true,
+    "players_after": 0,
+    "cleanup_inside_shared_lock": true,
+    "live_modified": false,
+    "observed_at": "2026-11-06T11:07:05.023839+00:00",
+    "service_state": "ActiveState=failed\nSubState=failed\nMainPID=0\nExecMainStatus=1\n",
+    "shared_lock_acquired_then_released": true
+  },
+  "precise_target_testfor_success_counts": [
+    1,
+    1
+  ],
+  "kill_command_success_counts": [
+    0,
+    0
+  ],
+  "successful_kill_effect_witnessed": false,
+  "cancellable_before_hurt_and_heavy_payment_established": false,
+  "replacement_adopted": false,
+  "other_origins_or_Entity_kill_or_causes_tested": false,
+  "PR375_raw_unchanged": true,
+  "saved_world_restart_tested": false,
+  "client": false,
+  "live_modified": false,
+  "limits": "This selected script-command/selector/Creative SimulatedPlayer/unchanged G Player configuration produced no positive kill result or hurt/heal/death. It does not establish event order after a successful kill and does not rule out other native entries, command origins or versions. No second attempt, cause sweep or runtime replacement follows."
+}
