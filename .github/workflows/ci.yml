@@ -44,8 +44,9 @@ jobs:
       - name: Full legacy regression suite (requested manually, not a PR gate)
         if: github.event_name == 'workflow_dispatch' && inputs.full_legacy_suite
         run: python tools/run_tests.py --full
-      - name: Validate current guide icons and loot
+      - name: Validate UI, guide icons and loot
         run: |
           python tools/test_secret_gui_ui.py
+          python tools/test_eating_hud_ui.py
           python tools/test_guide_icon_regression.py
           python tools/test_fortress_loot_current.py

@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.244 普通提示略過進食HUD子樹
+
+- 把原base圖層已有的ignored條件前移到packet根層，普通actionbar、其他addon訊息與END略過進食圖層；有效G進食packet、位置、0.2秒到期及BP發送皆保留。
+- 入口情境讀實際UI式並呼叫正式formatter，修前失敗／修後通過；僅模型邊界證據，未量測native UI建構或FPS，不把這項來源修正稱為全程卡頓已解。
+
 ## 2.8.243 原生物品圖示基底與秘製圖層成本
 
 - 修正共用item_renderer同名定義漏掉type、renderer及native bindings，導致一般背包、快捷列與bundle圖示連鎖失效。從固定Mojang參考保留原生基底；不修改物品或雙手操作。
