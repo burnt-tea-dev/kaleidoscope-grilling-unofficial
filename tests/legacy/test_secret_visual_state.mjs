@@ -743,3 +743,52 @@ subprocess.run([sys.executable,'tools/build_plate_pose.py'],check=True,capture_o
 assert b.POSE.read_bytes()==before
 `],{cwd:pathOf(new URL('../../',import.meta.url)),stdio:'pipe'});
 });
+
+test('plate calibration keeps its historical identity across pack versions and rejects pose drift',()=>{
+ runPython('python3',['-c',String.raw`
+import sys,json,copy,io,tempfile
+from contextlib import redirect_stdout
+from pathlib import Path
+from unittest.mock import patch
+sys.path.insert(0,'tools')
+import build_plate_pose as b
+profile_bytes=b.PROFILE.read_bytes();pose_bytes=b.POSE.read_bytes()
+profile=json.loads(profile_bytes);document=json.loads(pose_bytes)
+current=json.loads((b.ROOT/'baseline.json').read_text())['version']
+with tempfile.TemporaryDirectory() as directory:
+ root=Path(directory);calibration=root/'calibration.json';pose=root/'pose.json'
+ calibration.write_bytes(profile_bytes);pose.write_bytes(pose_bytes)
+ with patch.multiple(b,ROOT=root,PROFILE=calibration,POSE=pose),patch.object(sys,'argv',['build_plate_pose.py']):
+  for version in [profile['candidate_version'],current,[current[0]+1,0,0]]:
+   (root/'baseline.json').write_text(json.dumps({'version':version}))
+   before={p:p.read_bytes() for p in root.iterdir()}
+   output=io.StringIO()
+   with redirect_stdout(output): b.main()
+   report=json.loads(output.getvalue())
+   assert report['version']==version
+   assert report['calibration_version']==profile['candidate_version']
+   assert report['source_base_commit']==profile['source_base_commit']
+   assert not report['client'] and not report['production_ready'] and not report['wrote_source']
+   assert {p:p.read_bytes() for p in root.iterdir()}==before
+  # A version bump must not hide any changed first-person position or scale.
+  for hand in ['right','left']:
+   for field in ['position','scale']:
+    changed=copy.deepcopy(document)
+    changed['animations']['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose'][field][0]+=.01
+    pose.write_text(json.dumps(changed));before=pose.read_bytes()
+    try: b.main(); raise AssertionError('pose drift accepted')
+    except SystemExit as error: assert 'FP pose differs' in str(error)
+    assert pose.read_bytes()==before
+  pose.write_bytes(pose_bytes)
+  # Release identity is independent; engine/calibration and acceptance guards remain strict.
+  for section,key,value in [('host','client','unreviewed'),('java','minecraft','unreviewed'),
+                            ('evidence','postcapture_refit',True),(None,'client_acceptance',True),
+                            (None,'production_ready',True)]:
+   changed=copy.deepcopy(profile)
+   (changed if section is None else changed[section])[key]=value
+   calibration.write_text(json.dumps(changed));before=pose.read_bytes()
+   try: b.main(); raise AssertionError('unreviewed calibration accepted')
+   except ValueError: pass
+   assert pose.read_bytes()==before
+`],{cwd:pathOf(new URL('../../',import.meta.url)),stdio:'pipe'});
+});

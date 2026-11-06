@@ -621,6 +621,8 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 #333 `a6a978e` 的版本，未為全盤入鏡推遠餐盤。既有校準只涵蓋 1.26.60.4、
 P106/G206、標準寬身 Steve 的靜止非 VR 狀態，不代表新版宿主、TACZ 動作或
 Java 實機通過。來源／編輯器結果與引擎畫面分開記錄；此次不操作客戶端或部署。
+校準檔的 `candidate_version` 與 `source_base_commit` 保留歷史來源，不隨後續版本更新；
+工具分別回報目前 `version` 與歷史 `calibration_version`，仍核對完整仿射姿態，預設不寫入。
 
 **T4.3 影子 ID 退役**（走 SAVE-COMPAT 流程，最高風險）
 - 前置：先確認該 variant 的實際能力已由替代路徑承接。T3.4 的早扣份 spike 已失敗，現行所需時長 variant 繼續保留；不能為了達成 ID 數量目標刪除它們。
