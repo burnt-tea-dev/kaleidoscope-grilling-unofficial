@@ -231,3 +231,11 @@ G238 的[窄原生觀察](../tests/native/heavy-metal/totem-priority-observed.js
 **不符合Java的原生結果亦保留**：void／selfDestruct無Heavy controls沒有圖騰治療，玩家死亡、圖騰仍在；override／maxfloat無Heavy control則耗掉圖騰且產生正值TotemOfUndying治療，仍死亡且Warmth未清。後者不等同Java ordinary_skewer先拒圖騰，且證明正值治療不保證存活；既有清理還要求存活生命值，未把該control誤清。這個control差異不改標成全Java等價，沒有為它新增傷害旁路或復活。
 
 本次正常stop／exit0、players0／errors空／OOM0，自己的QA世界已清且槽已交還。未重跑剩餘盾或舊保存；未驗其他addon後續否決、所有cause、client聲畫或完整家族保存。修復未新增屬性、interval、盾量追蹤、復活或版本例外，部分盾漏救仍未修正。
+
+#### 被動原生fatal sensor新路徑（2026-11-06，未採用）
+
+官方[has_damage:fatal](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/filters/has_damage?view=minecraft-bedrock-stable)及[damage_sensor](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/entitycomponents/minecraftcomponent_damage_sensor?view=minecraft-bedrock-stable)提供另一個待驗入口，並未承諾Player或護盾／圖騰時序。[新窄對照](../tests/native/fatal-sensor/README.md)在BDS1.26.60.6／server2.12beta以真Survival Player、固定Mojang原Player及QA-only被動overlay執行，無Heavy handler或傷害取消。28個控制條件成立，無條件sensor、JSON property及data-driven event均有正向witness，因此不是沒有接到原生事件。
+
+同10HP／吸收I／同期限、13傷害時，完整盾存活1HP卻發fatal event；先耗3盾者死亡，亦發同fatal event。[逐案與時序](../tests/native/fatal-sensor/observed.json)另記全鑽甲存活5.710000038146973HP且無fatal、圖騰真消耗／正值治療／存活卻有fatal。此predicate在本測配置無法分清必要的fresh／spent盾，依這個反例停止路線，不發布降級修復。data-event回應另晚於Script beforeHurt；晚回應只限制接入既有回呼，不是單獨否定所有原生component能力，也不由回應先後推斷內部判斷順序。條件式deals_damage與後續Heavy付款未測、未採用。
+
+本場正常stop／exit0、players／errors／OOM皆0，QA已清／時段已還；沒有重啟、保存格式變更或runtime採用。G240及原圖騰優先修復不變，部分盾缺口仍在。此結果只限列明的引擎／Player定義／被動component與entityAttack cases，不推成所有Player或版本均不支持。

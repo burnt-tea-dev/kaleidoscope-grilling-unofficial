@@ -1,0 +1,1347 @@
+{
+  "observed_at": "2026-11-06T03:25:57Z",
+  "probe_source_commit": "64f507c8b68e993675a1ce976fc2f94c14df1c98",
+  "unchanged_runtime_source": "bb802c72752b0f38122d4fd18344307dad42215f",
+  "engine_version": "1.26.60.6",
+  "modules": {
+    "@minecraft/server": "2.12.0-beta",
+    "@minecraft/server-gametest": "1.0.0-beta",
+    "@minecraft/server-ui": "2.2.0"
+  },
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "reference_player": {
+    "repository": "Mojang/bedrock-samples",
+    "ref": "15701fa9c13923f12662984c32c124327e40e3d3",
+    "declared_reference_version": "1.26.60.5",
+    "path": "behavior_pack/entities/player.json",
+    "blob": "c46b9396518da4b89b2718cad24942b118c7c768",
+    "sha256": "91d833706b33477293053921af7604c29c687b33e7064130342b37e3b6614434"
+  },
+  "qa_player_definition_sha256": "7bc1d62e394e45a6ca30f3c27a5d396734c21f4e07646184d7e08ce076adae8a",
+  "overlay_sha256": "7858085d26a78bc7e75b36c855db9aa04f984b42c9521331d4c20a530ee5949b",
+  "probe_sha256": "b6db963ac948addadcac2e90237e53c0a543b0d36503c884c41423a6d47bdbbc",
+  "diagnostic_identity_only": true,
+  "no_heavy_handler_or_damage_cancel": true,
+  "stage": {
+    "passed": true,
+    "reason": "complete",
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 707616768
+  },
+  "observation": {
+    "passed": true,
+    "phase": "fatal-sensor",
+    "checks": [
+      {
+        "name": "isolated QA has no external Players",
+        "passed": true
+      },
+      {
+        "name": "manual_event_positive_control starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "manual JSON event changes the real Player property",
+        "passed": true
+      },
+      {
+        "name": "unconditional_sensor_control starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "passive unconditional sensor retains native one-point damage",
+        "passed": true
+      },
+      {
+        "name": "none_fresh_shield starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "none_spent_shield starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "none shield pair has matching 10HP, amplifier, duration and reset marker",
+        "passed": true
+      },
+      {
+        "name": "fatal_fresh_shield starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "fatal_spent_shield starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "fatal shield pair has matching 10HP, amplifier, duration and reset marker",
+        "passed": true
+      },
+      {
+        "name": "native baseline full shield survives and spent shield dies",
+        "passed": true
+      },
+      {
+        "name": "passive fatal filter keeps the same native shield outcomes",
+        "passed": true
+      },
+      {
+        "name": "bare_fatal_positive_control starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "bare 10HP control dies to native 13 damage",
+        "passed": true
+      },
+      {
+        "name": "armor_baseline starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "armor_baseline equips all four native armor pieces",
+        "passed": true
+      },
+      {
+        "name": "armor_fatal_sensor starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "armor_fatal_sensor equips all four native armor pieces",
+        "passed": true
+      },
+      {
+        "name": "native armor baseline survives 13 raw damage",
+        "passed": true
+      },
+      {
+        "name": "passive sensor keeps the same armored result",
+        "passed": true
+      },
+      {
+        "name": "totem_baseline starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "totem_baseline equips the native offhand totem",
+        "passed": true
+      },
+      {
+        "name": "totem_fatal_sensor starts at 10 native HP with a reset marker",
+        "passed": true
+      },
+      {
+        "name": "totem_fatal_sensor equips the native offhand totem",
+        "passed": true
+      },
+      {
+        "name": "totem_baseline preserves native totem consumption and actual healing",
+        "passed": true
+      },
+      {
+        "name": "totem_fatal_sensor preserves native totem consumption and actual healing",
+        "passed": true
+      },
+      {
+        "name": "all native Players disconnected",
+        "passed": true
+      }
+    ],
+    "samples": [
+      {
+        "name": "manual_event_positive_control",
+        "mode": "none",
+        "phase": "setup",
+        "events": [
+          {
+            "index": 1,
+            "tick": 85,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_none",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 2,
+            "tick": 87,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "after": {
+          "health": 10,
+          "marker": 2,
+          "absorption": null,
+          "offhand": null
+        }
+      },
+      {
+        "name": "unconditional_sensor_control",
+        "mode": "any",
+        "phase": "test",
+        "events": [
+          {
+            "index": 3,
+            "tick": 93,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_any",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 4,
+            "tick": 95,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 1,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": 9,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 5,
+            "tick": 95,
+            "phase": "test",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_any",
+            "state": {
+              "health": 9,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 6,
+            "tick": 95,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 1,
+            "cause": "entityAttack",
+            "state": {
+              "health": 9,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 9,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 9,
+          "marker": 1,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 4,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "none_fresh_shield",
+        "mode": "none",
+        "phase": "test",
+        "events": [
+          {
+            "index": 7,
+            "tick": 101,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_none",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 11,
+            "tick": 129,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:reset_sensor",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 378
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 13,
+            "tick": 131,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -3,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 376
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 15,
+            "tick": 131,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 0,
+            "duration": 376
+          },
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 1,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 1,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 13,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "none_spent_shield",
+        "mode": "none",
+        "phase": "test",
+        "events": [
+          {
+            "index": 8,
+            "tick": 105,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_none",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 9,
+            "tick": 107,
+            "phase": "spend",
+            "kind": "before_hurt",
+            "damage": 3,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": 7,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 400
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 10,
+            "tick": 107,
+            "phase": "spend",
+            "kind": "after_hurt",
+            "damage": 3,
+            "cause": "entityAttack",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 400
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 12,
+            "tick": 129,
+            "phase": "spend",
+            "kind": "data_event",
+            "eventId": "grilling_qa:reset_sensor",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 378
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 14,
+            "tick": 131,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -3,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 376
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 16,
+            "tick": 131,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 17,
+            "tick": 131,
+            "phase": "test",
+            "kind": "death",
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": true,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 0,
+            "duration": 376
+          },
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 0,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 0,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 14,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "fatal_fresh_shield",
+        "mode": "fatal",
+        "phase": "test",
+        "events": [
+          {
+            "index": 18,
+            "tick": 139,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 22,
+            "tick": 167,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:reset_sensor",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 378
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 24,
+            "tick": 169,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -3,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 376
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 26,
+            "tick": 169,
+            "phase": "test",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_fatal",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 28,
+            "tick": 169,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 0,
+            "duration": 376
+          },
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 1,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 1,
+          "marker": 2,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": true,
+          "markerObserved": true,
+          "ackIndex": 26,
+          "beforeHurtIndex": 24,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "fatal_spent_shield",
+        "mode": "fatal",
+        "phase": "test",
+        "events": [
+          {
+            "index": 19,
+            "tick": 143,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 20,
+            "tick": 145,
+            "phase": "spend",
+            "kind": "before_hurt",
+            "damage": 3,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": 7,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 400
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 21,
+            "tick": 145,
+            "phase": "spend",
+            "kind": "after_hurt",
+            "damage": 3,
+            "cause": "entityAttack",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 400
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 23,
+            "tick": 167,
+            "phase": "spend",
+            "kind": "data_event",
+            "eventId": "grilling_qa:reset_sensor",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 378
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 25,
+            "tick": 169,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -3,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 0,
+                "duration": 376
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 27,
+            "tick": 169,
+            "phase": "test",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_fatal",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 29,
+            "tick": 169,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 30,
+            "tick": 169,
+            "phase": "test",
+            "kind": "death",
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": true,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 0,
+            "duration": 376
+          },
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 0,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 0,
+          "marker": 2,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": true,
+          "markerObserved": true,
+          "ackIndex": 27,
+          "beforeHurtIndex": 25,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "bare_fatal_positive_control",
+        "mode": "fatal",
+        "phase": "test",
+        "events": [
+          {
+            "index": 31,
+            "tick": 177,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 32,
+            "tick": 179,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -3,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 33,
+            "tick": 179,
+            "phase": "test",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_fatal",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 34,
+            "tick": 179,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 13,
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 35,
+            "tick": 179,
+            "phase": "test",
+            "kind": "death",
+            "cause": "entityAttack",
+            "state": {
+              "health": 0,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": true,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 0,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 0,
+          "marker": 2,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": true,
+          "markerObserved": true,
+          "ackIndex": 33,
+          "beforeHurtIndex": 32,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "armor_baseline",
+        "mode": "none",
+        "phase": "test",
+        "events": [
+          {
+            "index": 36,
+            "tick": 185,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_none",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 37,
+            "tick": 187,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 4.289999961853027,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": 5.710000038146973,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 38,
+            "tick": 187,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 4.289999961853027,
+            "cause": "entityAttack",
+            "state": {
+              "health": 5.710000038146973,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 5.710000038146973,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 5.710000038146973,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 37,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "armor_fatal_sensor",
+        "mode": "fatal",
+        "phase": "test",
+        "events": [
+          {
+            "index": 39,
+            "tick": 193,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 40,
+            "tick": 195,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 4.289999961853027,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": 5.710000038146973,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 41,
+            "tick": 195,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 4.289999961853027,
+            "cause": "entityAttack",
+            "state": {
+              "health": 5.710000038146973,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 5.710000038146973,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "after": {
+          "health": 5.710000038146973,
+          "marker": 0,
+          "absorption": null,
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 40,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "totem_baseline",
+        "mode": "none",
+        "phase": "test",
+        "events": [
+          {
+            "index": 42,
+            "tick": 201,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_none",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 43,
+            "tick": 203,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 100,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "marker": 0,
+              "absorption": null,
+              "offhand": "minecraft:totem_of_undying"
+            }
+          },
+          {
+            "index": 44,
+            "tick": 203,
+            "phase": "test",
+            "kind": "heal",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 100
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 45,
+            "tick": 203,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 100,
+            "cause": "entityAttack",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 100
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 46,
+            "tick": 204,
+            "phase": "test",
+            "kind": "heal",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 99
+              },
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": "minecraft:totem_of_undying"
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 1,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 1,
+            "duration": 100
+          },
+          "offhand": null
+        },
+        "after": {
+          "health": 2,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 1,
+            "duration": 98
+          },
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": false,
+          "markerObserved": false,
+          "ackIndex": null,
+          "beforeHurtIndex": 43,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      },
+      {
+        "name": "totem_fatal_sensor",
+        "mode": "fatal",
+        "phase": "test",
+        "events": [
+          {
+            "index": 47,
+            "tick": 209,
+            "phase": "setup",
+            "kind": "data_event",
+            "eventId": "grilling_qa:observe_fatal",
+            "state": {
+              "health": 10,
+              "marker": 0,
+              "absorption": null,
+              "offhand": null
+            }
+          },
+          {
+            "index": 48,
+            "tick": 211,
+            "phase": "test",
+            "kind": "before_hurt",
+            "damage": 100,
+            "cause": "entityAttack",
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "marker": 0,
+              "absorption": null,
+              "offhand": "minecraft:totem_of_undying"
+            }
+          },
+          {
+            "index": 49,
+            "tick": 211,
+            "phase": "test",
+            "kind": "data_event",
+            "eventId": "grilling_qa:ack_fatal",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 100
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 50,
+            "tick": 211,
+            "phase": "test",
+            "kind": "heal",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 100
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 51,
+            "tick": 211,
+            "phase": "test",
+            "kind": "after_hurt",
+            "damage": 100,
+            "cause": "entityAttack",
+            "state": {
+              "health": 1,
+              "marker": 0,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 100
+              },
+              "offhand": null
+            }
+          },
+          {
+            "index": 52,
+            "tick": 212,
+            "phase": "test",
+            "kind": "heal",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "marker": 2,
+              "absorption": {
+                "amplifier": 1,
+                "duration": 99
+              },
+              "offhand": null
+            }
+          }
+        ],
+        "died": false,
+        "before": {
+          "health": 10,
+          "marker": 0,
+          "absorption": null,
+          "offhand": "minecraft:totem_of_undying"
+        },
+        "accepted": true,
+        "immediate": {
+          "health": 1,
+          "marker": 0,
+          "absorption": {
+            "amplifier": 1,
+            "duration": 100
+          },
+          "offhand": null
+        },
+        "after": {
+          "health": 2,
+          "marker": 2,
+          "absorption": {
+            "amplifier": 1,
+            "duration": 98
+          },
+          "offhand": null
+        },
+        "fatal": {
+          "eventAck": true,
+          "markerObserved": true,
+          "ackIndex": 49,
+          "beforeHurtIndex": 48,
+          "ackBeforeScriptBeforeHurt": false,
+          "markerAtScriptBeforeHurt": 0
+        }
+      }
+    ],
+    "capabilities": {
+      "playerUnconditionalDamageEvent": true,
+      "bareFatalEvent": true,
+      "distinguishesFreshAndSpentShields": false,
+      "fatalSignalAvailableBeforeScriptHurt": false,
+      "armoredSurvivalIncorrectlyMarkedFatal": false,
+      "protectedTotemHitMarkedFatal": true
+    },
+    "playersAfter": 0,
+    "javaParity": false,
+    "adoptedRuntime": false,
+    "scope": "Passive has_damage:fatal capability and event timing on actual Players using a QA overlay over pinned Mojang player data. Controls validate native shield/armor/totem outcomes; capability observations are separate. No Heavy Metal handler, remaining-shield ledger, resurrection, client, full-family or LIVE claim."
+  },
+  "temporary_world_removed": true,
+  "live_modified": false,
+  "runtime_adopted": false,
+  "required_shield_distinction_works": false,
+  "conditional_damage_suppression_tested": false,
+  "conclusion": "Stop this selected passive fatal-predicate route: both full-shield survival and spent-shield death emit the same native fatal event. Later callback delivery separately limits the existing Script before-hurt input; it alone does not disprove every native component use."
+}

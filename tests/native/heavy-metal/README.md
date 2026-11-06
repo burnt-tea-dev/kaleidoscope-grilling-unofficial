@@ -34,3 +34,8 @@ The [damage-order observation](damage-order-observed.json) records full versus
 partly spent absorption and native offhand totem versus totem plus Heavy Metal.
 Its controls passed while Java parity failed. Do not call its execution success
 a repair. It needs one normal stop and does not repeat the expiry/save cycle.
+
+[The later passive fatal-sensor probe](../fatal-sensor/README.md) is a separate
+actual-Player capability observation. Its native event witnesses are positive,
+but the predicate marks both full-shield survival and spent-shield death fatal.
+It does not repair or replace this handler and changes no production runtime.

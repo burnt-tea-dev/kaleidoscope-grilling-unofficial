@@ -3,6 +3,27 @@
 This is a new diagnostic path, not an implementation of Heavy Metal. The
 runtime, pack identities, Core and installed family remain unchanged.
 
+The [2026-11-06 observation](observed.json) has 28 valid controls and a negative
+shield result. Actual Player unconditional damage events and bare fatal
+events both work. However, at the same 10HP/absorption-I/duration, 13 damage
+emits the fatal event for both the full shield (survives at 1HP) and the shield
+previously reduced by 3 (dies). Neither shield amount is read or inferred by a
+ledger. This predicate cannot supply the required distinction in this tested
+configuration, so stop the route and adopt no runtime.
+
+Full diamond armor survives at 5.710000038146973HP with no fatal event; native
+offhand totems are consumed, heal and survive, yet still emit a fatal event.
+Those are individual control outcomes, not a claim about internal evaluation
+order or every cause. Native data-event acknowledgments follow Script
+before-hurt, and the diagnostic property appears later still. This separately
+limits the existing callback input, not all possible component designs.
+Conditional damage suppression and a Heavy Metal transaction were not tested.
+
+The run stopped normally, exit0, players/errors/OOM zero, peak707616768 bytes;
+its temporary world was removed and the shared slot returned before publishing.
+`passed` in the raw result refers to controls and unchanged native outcomes;
+`javaParity` and `adoptedRuntime` remain false. The probe did not run a restart.
+
 Primary references, read 2026-11-06:
 
 - [has_damage filter](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/filters/has_damage?view=minecraft-bedrock-stable)
