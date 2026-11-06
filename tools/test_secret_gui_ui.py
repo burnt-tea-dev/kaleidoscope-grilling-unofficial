@@ -33,6 +33,28 @@ class NativeItemRenderer(unittest.TestCase):
                 actual = actual[:len(value)]
             self.assertEqual(actual, value, name)
 
+    def test_noncollection_cursor_skips_the_recipe_source_without_guessing_a_slot(self):
+        callers = json.loads((FIX/'native-item-callers.json').read_text())['definitions']
+        overlay = self.view['slot_overlay']
+        default = overlay.get('$item_collection_name|default')
+        self.assertEqual(default, '', 'The cursor has no collection; never substitute inventory_items')
+        expression = overlay.get('ignored')
+        self.assertIsInstance(expression, str, 'Skip the collection subtree before binding an empty name')
+        for name, caller in callers.items():
+            with self.subTest(caller=name):
+                # Only substitute the native variable-default and boolean UI
+                # boundary. Both caller declarations and generator are real.
+                collection = caller.get('$item_collection_name', default)
+                code = expression.replace('$item_collection_name', 'collection').replace(' = ', ' == ')
+                skipped = eval(code, {'__builtins__': {}}, {'collection': collection})
+                self.assertEqual(skipped, name.startswith('inventory_selected_icon@'))
+        selected = callers['inventory_selected_icon@common.item_renderer']
+        renderer = {**self.hook['item_renderer'], **selected}
+        self.assertEqual(renderer['renderer'], 'inventory_item_renderer')
+        self.assertEqual(renderer['bindings'], selected['bindings'],
+                         'The cursor keeps its native global data, not a fabricated slot binding')
+        self.assertNotIn('modifications', renderer)
+
     def test_alpha_is_a_direct_binding_on_the_complete_native_definition(self):
         renderer = self.hook['item_renderer']
         self.assertNotIn('modifications', renderer,
