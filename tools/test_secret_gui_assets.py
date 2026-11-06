@@ -98,8 +98,9 @@ def main():
             for number, (foods, style, variants) in enumerate(cases):
                 actual = Image.open(RP/(TEXTURES+'/stick.png')).convert('RGBA')
                 for slot in [2, 1, 0]:
-                    layer = RP/(TEXTURES+f'/food_{slot}_{(variants>>slot)&1}_{style}_{foods[slot]}.png')
-                    actual.alpha_composite(Image.open(layer).convert('RGBA'))
+                    layer = RP/(TEXTURES+f'/food_{style}_{foods[slot]}.png')
+                    cell = slot*2+((variants>>slot)&1)
+                    actual.alpha_composite(Image.open(layer).convert('RGBA').crop((cell*16,0,(cell+1)*16,16)))
                 reference = Image.open(images/f'{number}.png')
                 if pixels(actual) != pixels(reference):
                     raise SystemExit(f'GUI pixels differ: {branch}, foods={foods}, style={style}, variants={variants}')

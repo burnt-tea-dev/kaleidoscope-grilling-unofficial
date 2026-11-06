@@ -8,6 +8,8 @@ Assets retain CC BY-NC-SA 4.0 attribution in `projects/grilling/LICENSE-ASSETS`;
 Java source retains the BSD notice in `data/java/LICENSE-CODE`.
 
 `tools/build_secret_gui.py` uses these masks and the existing pinned GUI palette.
+Each generated food/style image packs six 16px masks in one 96x16 strip; the
+six item layers use fixed UV cells and keep independent per-slot recipe data.
 `tools/test_secret_gui_assets.py` runs both original Java composers with only
 the external Minecraft/image boundary substituted. Its pixels do not establish
 that a particular Minecraft client's per-slot bindings rendered them.

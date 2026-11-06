@@ -83,9 +83,10 @@ def ui(data):
         for variant in range(2):
             choices = [n for n in range(8) if ((n >> slot) & 1) == variant]
             chosen = '('+' or '.join(present(data['markers'][6][n]) for n in choices)+')'
-            texture = "('"+TEXTURES+'/food_'+str(slot)+'_'+str(variant)+"_' + "+style+" + '_' + "+food+')'
+            texture = "('"+TEXTURES+"/food_' + "+style+" + '_' + "+food+')'
             controls.append({'food_'+str(slot)+'_'+str(variant):{
                 'type':'image', 'size':['100%', '100%'], 'texture':'#texture',
+                'uv':[(slot*2+variant)*16,0], 'uv_size':[16,16],
                 'allow_debug_missing_texture':False, 'bilinear':False, 'layer':3-slot,
                 'property_bag':{'#kg_secret_recipe':''},
                 'bindings':bindings()+[
@@ -104,10 +105,11 @@ def ui(data):
     hook = {'namespace':'common', 'item_renderer':{
         'propagate_alpha':False,
         'property_bag':{'#kg_secret_recipe':''},
+        # The pinned native renderer has bindings but no controls array.
+        'controls':[{'kg_secret_icon@kg_secret_gui.icon':{}}],
         'modifications':[
             {'array_name':'bindings', 'operation':'insert_back', 'value':bindings()[1:]+[
-                {'binding_type':'view', 'source_property_name':'(not ('+active+'))', 'target_property_name':'#alpha'}]},
-            {'array_name':'controls', 'operation':'insert_back', 'value':[{'kg_secret_icon@kg_secret_gui.icon':{}}]}
+                {'binding_type':'view', 'source_property_name':'(not ('+active+'))', 'target_property_name':'#alpha'}]}
         ]
     }}
     return view, hook
@@ -116,12 +118,16 @@ def ui(data):
 def outputs():
     data = source_data()
     result = {RP/(TEXTURES+'/stick.png'):(FIX/'stick.png').read_bytes()}
-    for slot in range(3):
-        for variant in range(2):
-            mask = Image.open(FIX/f'food_{slot+1}_{variant+1}.png').convert('RGBA')
-            for style in STYLES:
-                for food, colors in enumerate(data['colors']):
-                    result[RP/(TEXTURES+f'/food_{slot}_{variant}_{style}_{food}.png')] = png(painted(mask, colors[style]))
+    masks = [Image.open(FIX/f'food_{slot+1}_{variant+1}.png').convert('RGBA')
+             for slot in range(3) for variant in range(2)]
+    for style in STYLES:
+        for food, colors in enumerate(data['colors']):
+            # Six fixed UV cells share one food texture; slots keep independent
+            # recipe bindings without thousands of duplicate texture files.
+            atlas = Image.new('RGBA', (96,16))
+            for cell, mask in enumerate(masks):
+                atlas.paste(painted(mask, colors[style]), (cell*16,0))
+            result[RP/(TEXTURES+f'/food_{style}_{food}.png')] = png(atlas)
     view, hook = ui(data)
     for name, content in [('kg_secret_gui.json', view), ('kg_secret_gui_common.json', hook)]:
         result[RP/'ui'/name] = (json.dumps(content, ensure_ascii=False, indent=2)+'\n').encode()
@@ -138,6 +144,9 @@ def main():
         if different:
             raise SystemExit('Secret GUI generation differs: '+', '.join(different[:5]))
     else:
+        for path in (RP/TEXTURES).glob('*.png'):
+            if path not in generated:
+                path.unlink()
         for path, value in generated.items():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(value)

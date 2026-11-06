@@ -22,3 +22,10 @@ This tests the lore API and affected saved data. It cannot test `#hover_text`
 values in a real inventory/hotbar collection, JSONUI loading or actual pixels.
 There is currently no observed client rendering result. Current delivery scope
 is maintained in [PARITY](../../../docs/PARITY.md#秘製串背包圖示gui-display).
+
+[Observed results](observed.json): BDS 1.26.60.6 on 2026-11-06, write 24 and
+same-world reload 6 checks passed, two normal stops, players/errors/OOM zero.
+This confirms this formatting-only RawMessage path; it does not invalidate the
+documented 50-character limit for arbitrary string lore. Source runtime scripts
+match the diagnostic commit recorded in the result. QA manifests/entry/minimal
+content differ from the complete exported game candidate. No client was used.
