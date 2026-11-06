@@ -256,6 +256,16 @@ G238舊probe的selfDestruct只給100傷害，只有override才用Float.MAX_VALUE
 
 本包既有Heavy原生腳本及G238／G242相關observer未測Entity.kill、原生命令kill或damage，沒有可沿用的Heavy攔截反證，也沒有成功證據。官方[Entity.kill](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#kill)及[kill命令](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable)有殺死實體的正面說明，沒有承諾before-hurt／可取消死亡與Heavy付款順序；[damage命令](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/damage?view=minecraft-bedrock-stable)則以整數amount為參數，不能直接表達原Float.MAX_VALUE。這些是尚未建立等價契約的獨立入口，不是本輪已否定的路徑；未以換字串掃cause、清health或kill繞過Heavy，也未為它們盲開另一場BDS或發布空G243。
 
+#### 單一kill命令的Creative觀察（2026-11-06，未採用）
+
+前段記PR375當時尚未測量的替代入口；其raw及歷史不改。後續明確續派一個不同的原生命令入口：[kill](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable)支援player target，足以做有界能力觀察；沒有排序保證只限制直接採用，不禁止觀察。[同權限testfor](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/testfor?view=minecraft-bedrock-stable)先以同一固定QA name/tag selector核目標，兩者均需Game Directors與cheats。這次只各執行一次kill，不掃Entity.kill、其他cause／版本或其他command origin。
+
+[固定observer](../tests/native/heavy-metal/ordinary_kill_command_probe.js)在G242原registered before/after-hurt及after-heal handler／原Player定義下，依序測無Heavy／有Heavy兩名真Creative Player。BDS1.26.60.6／server2.12beta的[原始結果](../tests/native/heavy-metal/ordinary-kill-command-observed.json)：兩場實讀Creative、10HP及正確effects／claim／totem，世界各只有該名Player；testfor均successCount1，kill均successCount0、沒有exception。before/afterHurt、heal、death全空，立即及四tick後仍10HP；Heavy／Warmth原樣、claim null。目標可找到及同權限控制成立，不等於kill已有成功效果；沒有可分析的傷害cause／amount／cancel事件，不能宣稱成功殺死後才無攔截，或付款發生在某個已觀察的死亡之後。
+
+8個輸入／target／control成立、7個命令效果／Java及Heavy期待未滿足，raw passed=false原樣保留。BDS在19:06 HKT正常stop／Quit correctly／exit0、players0/errors[]/OOM0，peak502857728bytes；wrapper因期待未滿足exit1、MainPID0，QA在shared flock內assert_idle後清除，先於來源CI還槽。本輪不是食用完成或Ordinary修復，沒有改runtime／身份、預付Heavy、偽造hurt、清health、切模式／關免傷、Player overlay、重播或復活；原Survival／PR375／39案／fatal／盾／保存／P140不重播。
+
+這個selected Script.Dimension.runCommand／selector／Creative SimulatedPlayer／既有G Player配置未建立成功kill與合格可取消hurt／Heavy付款救援，故不採為替代入口、不發布空G243。這不證明Entity.kill、其他origin、所有命令／cause或未來版本均失敗；本輪依限定問題做一次即停。創造模式食用差距仍未修，已確認的G242 Survival玩法保留。
+
 #### 被動原生fatal sensor新路徑（2026-11-06，未採用）
 
 官方[has_damage:fatal](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/filters/has_damage?view=minecraft-bedrock-stable)及[damage_sensor](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/entitycomponents/minecraftcomponent_damage_sensor?view=minecraft-bedrock-stable)提供另一個待驗入口，並未承諾Player或護盾／圖騰時序。[新窄對照](../tests/native/fatal-sensor/README.md)在BDS1.26.60.6／server2.12beta以真Survival Player、固定Mojang原Player及QA-only被動overlay執行，無Heavy handler或傷害取消。28個控制條件成立，無條件sensor、JSON property及data-driven event均有正向witness，因此不是沒有接到原生事件。

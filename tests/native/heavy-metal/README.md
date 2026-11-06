@@ -90,3 +90,30 @@ removed and the slot returned before source CI. No runtime or release identity
 changed. This is a selected-path counterexample, not proof that every cause,
 kill operation or future native capability fails; no unverified replacement is
 adopted. The existing Survival results are reused within their original scope.
+
+`ordinary_kill_command_probe.js` prepares a separately authorized, single-entry
+Creative capability question. Official [kill](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable)
+supports player targets. Lack of a promised callback order prevents adopting it
+without evidence; it does not prevent this bounded observation. One no-Heavy
+and one Heavy Player use the unchanged G242 handlers and own Player definition.
+The same exact name/tag selector first passes native testfor, which shares
+kill's Game Directors/cheats requirement, then receives one kill command.
+Record the native command result, actual mode, before/after-hurt cause/amount,
+cancel state, claim/effect payment, heals, death and observed callback order.
+No synthetic hurt, effect prepayment, health clearing, mode/immunity switch,
+Entity.kill, cause sweep or new Player overlay is allowed. This is not food
+completion or a production repair. Prepare once, obtain a fresh shared slot,
+then stop/clean and return it immediately; PR375's raw/history stay unchanged.
+
+The [2026-11-06 command observation](ordinary-kill-command-observed.json) has
+eight valid input/target/control conditions and seven unmet effect/Heavy
+expectations. Both exact selectors pass testfor with successCount1, but both
+kill commands return successCount0 without throwing. No before/after-hurt,
+heal or death event is observed; both Players stay at 10HP and Heavy remains
+unpaid with a null claim. Target selection is witnessed; a successful kill is
+not, so do not infer post-kill cancellation or payment order from absent events.
+Raw passed=false and wrapper exit1 are retained. BDS stops normally with exit0,
+zero errors/OOM/Players, and QA is removed before returning the slot, before CI.
+This selected script-command configuration is not adopted as an Ordinary repair.
+No second origin, Entity.kill, cause sweep or replay follows this observation;
+the result does not rule out all other native capabilities or versions.
