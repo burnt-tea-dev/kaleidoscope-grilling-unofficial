@@ -62,3 +62,20 @@ first fixture omitted a variant and stopped before damage; that failure is
 retained separately. Both temporary worlds were removed after normal stops;
 the successful run returned the shared slot before source CI. These are narrow
 native results, not a claim about armor/resistance or the full family release.
+
+`ordinary_creative_probe.js` prepares only the previously unmeasured Creative
+boundary. Both reviewed Java branches register Ordinary as always edible and
+call its custom `ordinary_skewer` source after committed food, without excluding
+Creative. Their vanilla Player immunity checks allow `bypasses_invulnerability`;
+the author's additive tag includes Ordinary. This shares that tag with vanilla
+generic_kill but is not a call to genericKill. In contrast, both vanilla server
+game-mode callers return PASS for Spectator before invoking the item, so do not
+create a synthetic Spectator food/damage requirement.
+
+Use unchanged G242 scripts, the existing three Ordinary definitions and own
+Player definition. Require the actual Creative mode, native food completion
+with its serving retained, existing Ordinary feedback, native damage events,
+and the no-Heavy/Heavy outcomes separately. One ordinary native attack controls
+for Creative immunity. Feedback request counters witness code execution, not
+audible sound. This preparation is not an executed native result; obtain the
+shared owner's fresh slot first. It changes no runtime or release identity.
