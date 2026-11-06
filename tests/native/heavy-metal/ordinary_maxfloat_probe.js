@@ -6,7 +6,7 @@ import {FX_KEY} from './effect_lifecycle_core.js';
 import {HEAVY_METAL_CLAIM_KEY} from './heavy_metal_claim_core.js';
 import {configureItemDataWorld} from './core/persist.js';
 configureItemDataWorld(world);
-const FOOD='kaleidoscope_grilling:ordinary_skewer_native_plain';
+const FOOD='kaleidoscope_grilling:ordinary_skewer';
 const TOTEM='minecraft:totem_of_undying',MAX_FLOAT=3.4028234663852886e38;
 const targets=new Map(),wait=ticks=>new Promise(resolve=>system.runTimeout(resolve,ticks));
 const read=fn=>{try{return fn()}catch(error){return {error:String(error)}}};
@@ -54,11 +54,14 @@ async function run(){
    player.getComponent('minecraft:equippable').setEquipment(EquipmentSlot.Offhand,new ItemStack(TOTEM));
    player.getComponent('minecraft:health').setCurrentValue(10);
    fxApply(player,'warmth',1200);if(heavy)fxApply(player,'heavy_metal',1200);
+   // Let the unchanged production preparation select its existing animation
+   // variant before use. The QA pack must include all three owned definitions.
+   await wait(3);
    row.input=state(player);row.useAccepted=player.useItemInSlot(0);
-   for(let i=0;i<80;i++){await wait(1);if(row.before.length||row.died)break;}
+   for(let i=0;i<140;i++){await wait(1);if(row.before.length||row.died)break;}
    await wait(4);row.result=state(player);
    const hit=row.before[0],start=row.food.find(e=>e.event==='itemStartUse'),finish=row.food.find(e=>e.event==='itemCompleteUse');
-   check(label+' real native food completes and consumes its serving',row.useAccepted&&start?.id===FOOD&&finish?.id===FOOD&&finish.tick-start.tick>=25&&row.result.main===null);
+   check(label+' real native food completes and consumes its serving',row.useAccepted&&start?.id===row.input.main&&finish?.id===row.input.main&&finish.tick-start.tick>=25&&row.result.main===null);
    check(label+' actual Ordinary delivers exactly one selfDestruct max-float hit',row.before.length===1&&hit.cause==='selfDestruct'&&hit.damage===MAX_FLOAT&&hit.tick>=finish?.tick);
    check(label+' held totem remains and no native totem heal is emitted',row.result.off===TOTEM&&!row.heals.some(e=>e.totem&&e.healing>0));
    if(heavy){
@@ -75,5 +78,5 @@ async function run(){
  }
  check('all native Players disconnected',world.getAllPlayers().length===0);
  console.warn('GRILLING_QA_RESULT '+JSON.stringify({passed:checks.every(x=>x.passed),phase:'ordinary-maxfloat',checks,samples,playersAfter:world.getAllPlayers().length,
-  scope:'Actual native 25-tick plain Ordinary food use and registered food/effect handlers, including the candidate applyOrdinary selfDestruct max-float call. No callback invocation, replacement methods, remaining-shield estimate, damage replay, resurrection or new Player overlay. Does not establish armor/resistance bypass, all Java parity, complete main startup, persistence, client or LIVE behavior.'}));
+  scope:'Actual native default Ordinary food use with its existing production preparation/animation variants and registered food/effect handlers, including the candidate applyOrdinary selfDestruct max-float call. No callback invocation, replacement methods, remaining-shield estimate, damage replay, resurrection or new Player overlay. Does not establish armor/resistance bypass, all Java parity, complete main startup, persistence, client or LIVE behavior.'}));
 }

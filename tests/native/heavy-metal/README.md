@@ -45,7 +45,8 @@ The older Totem-priority probe used 100 damage for selfDestruct; only override
 used Float.MAX_VALUE. That result does not settle selfDestruct at the actual
 Ordinary amount. Use the candidate's real `applyOrdinary` and registered
 food/effect handlers with two native Survival Players, one at a time, through
-the unchanged 25-tick `ordinary_skewer_native_plain` food definition. Require a
+the default Ordinary food and its unchanged preparation/animation variants. The
+QA pack must include all three existing Ordinary definitions. Require a
 native completion and one max-float hit, an untouched offhand totem and no
 TotemOfUndying healing. Without Heavy Metal the Player must die; with it the
 existing handler must pay before cancelling and rescue to 1HP. Do not replace
