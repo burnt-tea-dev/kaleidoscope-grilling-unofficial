@@ -14,7 +14,7 @@
 
 | ID | 已知事實與來源修補範圍 | 必須保留的重現／驗收 |
 | --- | --- | --- |
-| RACK-PACKED-PLACEMENT | G248 修正既有 rack owner 的過窄方塊篩選；點石頭等支撐放置 packed rack 時，內容與篩選復原不再是不可達分支。六面、保存 payload 新 runtime 讀回、再次拆下及取消／重複情境已由既有玩法套件驗證，保存格式不變 | 原生 block_placer 時序及實際世界磁碟重啟未於本輪驗證；API 模型不等於引擎／客戶端／部署結果 |
+| RACK-PACKED-PLACEMENT | G248 修正既有 rack owner 的過窄篩選；保存格式不變。既有套件涵蓋六面與拆回；隔離 BDS 已驗向上 block_placer、後置取消及同世界磁碟重啟，精確來源與範圍見 [PARITY](PARITY.md#裝滿料理架重新放置) | 原生只量測石頭向上面與兩工具 payload；其餘五面、調味品／附魔原生覆蓋、完整 main／家族、客戶端及部署仍未於本輪驗證 |
 | COLD-HOUTTUYNIA-DELIVERY | 舊成品寫入／drop已套用後拋錯會補發第二份；正常耗盡油壺丟本包可讀DP。已由原cold owner／油壺adapter修復，精確來源與證據只查[PARITY](PARITY.md#涼拌折耳根的製作交付) | 新真main場景驗普通、最後原料釋slot、滿包、確認回收及未確認drop；API故障模型不等於原生自然故障或真人操作 |
 | PLAYER-PROPERTY-SLIMMING | [T3.5-b](REBUILD-PLAN.md#t3-5-property-slimming) 來源已由 32 減至 27 格；隔離 BDS 已核 27 格 schema、同 tick 合併與 72000 時計。物品／雙手 bank 格式不變 | 配對 BP/RP 的完整家族、原存檔首次載入／重啟／回退與實際 FP／TP／旁觀者仍待。低槽通道和 TACZ 路由未完成，不宣稱相容 |
 | PREMIUM-OIL-CRAFT-REMAINDER | G201 來源改用原生單一 Premium Chili Oil 配方結果；Bedrock `playerCraftRecipe` after-event 對實際製作出的該油桶按數量歸還空桶，背包滿時交給玩家附近的掉落物。原 Java 配方與四種 shapeless 材料保留。因 Bedrock 事件沒有 Java 工作台格子的槽位資料，空桶改入背包／地面，尚未證明真人操作、取消順序或畫面結果；來源測試不是原生合成驗收 | 同候選 BDS 真工作台以任意排列製作 1 份與批次，核材料消耗、油桶數與空桶數；另驗滿包掉落拾取、非目標配方及客戶端事件行為。不可把事件 capability probe 或 API fixture 稱為 Java 全等／真人通過 |
