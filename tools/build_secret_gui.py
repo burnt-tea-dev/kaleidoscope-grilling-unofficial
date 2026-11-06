@@ -8,8 +8,6 @@ import argparse
 import io
 import json
 import subprocess
-from PIL import Image
-from secret_food_palette import _f32, _round
 
 ROOT = Path(__file__).resolve().parents[1]
 BP = ROOT/'projects/grilling/gameplay_core/behavior_pack'
@@ -29,6 +27,7 @@ console.log(JSON.stringify({header:SECRET_GUI_HEADER,markers:Array.from({length:
 
 
 def toned(color, marker):
+    from secret_food_palette import _f32, _round
     tone = max(0, min(4, _round(_f32((marker-0x30)/48))))
     channels = [(color >> shift) & 255 for shift in (16, 8, 0)]
     if tone < 2:
@@ -41,6 +40,7 @@ def toned(color, marker):
 
 
 def painted(mask, color):
+    from PIL import Image
     image = Image.new('RGBA', mask.size)
     for y in range(16):
         for x in range(16):
@@ -114,25 +114,27 @@ def ui(data):
             {'binding_type':'view', 'source_property_name':'(#kg_secret_active * 1)', 'target_property_name':'#collection_length'}
         ]
     }}
-    # Retain the native renderer and all caller bindings (bundle, hover, etc.).
+    # Retain the native renderer contract; derived callers may replace bindings.
     # Only its own drawing becomes transparent for a marked secret; the child
     # icon keeps its alpha. This does not replace container controls or inputs.
-    # A same-name definition replaces the base; modifications alone do not
-    # inherit it. Keep the selected native custom renderer and every binding.
+    # This is a complete same-name definition, not an inheritance patch.
+    # Emit the alpha view binding directly: a custom renderer rejects the
+    # modifications property and passes that error to its derived controls.
     renderer = json.loads((FIX/'native-item-renderer.json').read_text())['item_renderer']
     renderer.update({
         'propagate_alpha':False,
-        'controls':[{'kg_secret_recipe_source@kg_secret_gui.slot_overlay':{}}],
-        'modifications':[{'array_name':'bindings', 'operation':'insert_back', 'value':[
-            {'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
-             'source_property_name':'(not #kg_secret_active)', 'target_property_name':'#alpha'}
-        ]}]
+        'controls':[{'kg_secret_recipe_source@kg_secret_gui.slot_overlay':{}}]
+    })
+    renderer['bindings'].append({
+        'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
+        'source_property_name':'(not #kg_secret_active)', 'target_property_name':'#alpha'
     })
     hook = {'namespace':'common', 'item_renderer':renderer}
     return view, hook
 
 
 def outputs():
+    from PIL import Image
     data = source_data()
     result = {RP/(TEXTURES+'/stick.png'):(FIX/'stick.png').read_bytes()}
     masks = [Image.open(FIX/f'food_{slot+1}_{variant+1}.png').convert('RGBA')
