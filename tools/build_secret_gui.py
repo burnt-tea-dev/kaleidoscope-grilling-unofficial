@@ -69,7 +69,7 @@ def bindings():
     return [
         {'binding_type':'collection_details', 'binding_collection_name':'$item_collection_name'},
         {'binding_name':'#hover_text', 'binding_type':'collection', 'binding_collection_name':'$item_collection_name',
-         'binding_name_override':'#kg_secret_recipe', 'binding_condition':'always'}
+         'binding_name_override':'#kg_secret_recipe', 'binding_condition':'visible'}
     ]
 
 
@@ -78,40 +78,57 @@ def ui(data):
     controls = [{'stick':{'type':'image', 'texture':TEXTURES+'/stick', 'size':['100%', '100%'],
                          'bilinear':False, 'layer':0}}]
     for slot in range(3):
-        food = '('+digit(data['markers'], 2*slot)+' * 16 + '+digit(data['markers'], 2*slot+1)+')'
-        style = digit(data['markers'], 7)
+        # Decode small numeric properties first. Do not expand the complete
+        # recipe arithmetic into each texture-path expression.
+        style = '('+' + '.join('('+present(data['markers'][7][n])+') * '+str(n) for n in STYLES if n)+')'
         for variant in range(2):
             choices = [n for n in range(8) if ((n >> slot) & 1) == variant]
             chosen = '('+' or '.join(present(data['markers'][6][n]) for n in choices)+')'
-            texture = "('"+TEXTURES+"/food_' + "+style+" + '_' + "+food+')'
+            texture = "('"+TEXTURES+"/food_' + #kg_style + '_' + (#kg_food_hi * 16 + #kg_food_lo))"
             controls.append({'food_'+str(slot)+'_'+str(variant):{
                 'type':'image', 'size':['100%', '100%'], 'texture':'#texture',
                 'uv':[(slot*2+variant)*16,0], 'uv_size':[16,16],
                 'allow_debug_missing_texture':False, 'bilinear':False, 'layer':3-slot,
-                'property_bag':{'#kg_secret_recipe':''},
-                'bindings':bindings()+[
-                    {'binding_type':'view', 'source_property_name':'('+active+' and '+chosen+')', 'target_property_name':'#visible'},
+                'property_bag':{'#kg_secret_recipe':'', '#kg_food_hi':0, '#kg_food_lo':0, '#kg_style':0},
+                'bindings':[
+                    {'binding_type':'view', 'source_control_name':'kg_secret_recipe_source', 'source_property_name':'#kg_secret_recipe', 'target_property_name':'#kg_secret_recipe'},
+                    {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot), 'target_property_name':'#kg_food_hi'},
+                    {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot+1), 'target_property_name':'#kg_food_lo'},
+                    {'binding_type':'view', 'source_property_name':style, 'target_property_name':'#kg_style'},
+                    {'binding_type':'view', 'source_property_name':chosen, 'target_property_name':'#visible'},
                     {'binding_type':'view', 'source_property_name':texture, 'target_property_name':'#texture'}
                 ]
             }})
     view = {'namespace':'kg_secret_gui', 'icon':{
-        'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls,
-        'property_bag':{'#kg_secret_recipe':''},
-        'bindings':bindings()+[{'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#visible'}]
+        'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls
+    }, 'slot_overlay':{
+        'type':'stack_panel', 'size':['100%', '100%'],
+        'collection_name':'$item_collection_name',
+        # The native collection-factory pattern creates zero icon subtrees for
+        # unmarked slots and one for a marked secret. The source stays present
+        # so replacing a normal item with a secret updates without hovering.
+        'factory':{'name':'kg_secret_icon_factory', 'control_name':'kg_secret_gui.icon'},
+        'property_bag':{'#kg_secret_recipe':'', '#kg_secret_active':False},
+        'bindings':bindings()+[
+            {'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#kg_secret_active'},
+            {'binding_type':'view', 'source_property_name':'(#kg_secret_active * 1)', 'target_property_name':'#collection_length'}
+        ]
     }}
     # Retain the native renderer and all caller bindings (bundle, hover, etc.).
     # Only its own drawing becomes transparent for a marked secret; the child
     # icon keeps its alpha. This does not replace container controls or inputs.
-    hook = {'namespace':'common', 'item_renderer':{
+    # A same-name definition replaces the base; modifications alone do not
+    # inherit it. Keep the selected native custom renderer and every binding.
+    renderer = json.loads((FIX/'native-item-renderer.json').read_text())['item_renderer']
+    renderer.update({
         'propagate_alpha':False,
-        'property_bag':{'#kg_secret_recipe':''},
-        # The pinned native renderer has bindings but no controls array.
-        'controls':[{'kg_secret_icon@kg_secret_gui.icon':{}}],
-        'modifications':[
-            {'array_name':'bindings', 'operation':'insert_back', 'value':bindings()[1:]+[
-                {'binding_type':'view', 'source_property_name':'(not ('+active+'))', 'target_property_name':'#alpha'}]}
-        ]
-    }}
+        'controls':[{'kg_secret_recipe_source@kg_secret_gui.slot_overlay':{}}],
+        'modifications':[{'array_name':'bindings', 'operation':'insert_back', 'value':[
+            {'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
+             'source_property_name':'(not #kg_secret_active)', 'target_property_name':'#alpha'}
+        ]}]
+    })
+    hook = {'namespace':'common', 'item_renderer':renderer}
     return view, hook
 
 

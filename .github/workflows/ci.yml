@@ -46,5 +46,6 @@ jobs:
         run: python tools/run_tests.py --full
       - name: Validate current guide icons and loot
         run: |
+          python tools/test_secret_gui_ui.py
           python tools/test_guide_icon_regression.py
           python tools/test_fortress_loot_current.py

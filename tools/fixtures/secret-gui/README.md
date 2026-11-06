@@ -8,6 +8,14 @@ Assets retain CC BY-NC-SA 4.0 attribution in `projects/grilling/LICENSE-ASSETS`;
 Java source retains the BSD notice in `data/java/LICENSE-CODE`.
 
 `tools/build_secret_gui.py` uses these masks and the existing pinned GUI palette.
+
+`native-item-renderer.json` retains only Mojang's `common.item_renderer`
+definition from the linked fixed bedrock-samples revision (MIT). A same-name UI
+definition replaces that native base; the generator must preserve its `custom`
+type, `inventory_item_renderer`, layer, default and every native binding. The
+client's selected-item, hotbar and bundle controls inherit those fields.
+`tools/test_secret_gui_ui.py` checks that contract against the generated data;
+it does not execute the Minecraft UI parser or a renderer.
 Each generated food/style image packs six 16px masks in one 96x16 strip; the
 six item layers use fixed UV cells and keep independent per-slot recipe data.
 `tools/test_secret_gui_assets.py` runs both original Java composers with only
