@@ -250,7 +250,11 @@ G238舊probe的selfDestruct只給100傷害，只有override才用Float.MAX_VALUE
 
 11個入口／control條件成立、4個Java傷害／Heavy期待失敗，raw passed=false原樣保留。BDS正常stop／Quit correctly／exit0、players／errors／OOM皆0，peak590299136bytes；wrapper因期待失敗exit1、MainPID0，自己QA已在shared flock內assert_idle後清除並立即還槽，不等來源CI。未重跑既有Survival39／12案、fatal／盾／保存／P140；本輪未改runtime或發布身份。
 
+兩分支AdvancedSeasoningHandler.onDeath也沒有Creative排除：[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java#L40)／[NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java#L41)在有Heavy且無中毒時取消死亡、移除Heavy、設1HP並付款。因此不能把保留Creative免傷或直接殺掉帶Heavy的玩家當成修復。
+
 選定2.12型別的EntityApplyDamageOptions只有cause／damagingEntity；官方[applyDamage說明](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-experimental#applydamage)允許因免傷而回false。[selfDestruct原因名稱](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entitydamagecause?view=minecraft-bedrock-stable)描述kill來源，沒有承諾以applyDamage指定該enum即可繞過Creative。現在只確認這個selected engine／既有G Player／selfDestruct-maxfloat食用路徑有差距；其他cause／kill並未測量，不能因此全部封口。沒有未驗就改用它們，亦不加入mode例外、Player overlay、傷害重播或復活。Creative差距保持未修，G242已確認的Survival範圍保留；不擴稱一般所有免傷來源、護甲／抗性或完整Java等價。
+
+本包既有Heavy原生腳本及G238／G242相關observer未測Entity.kill、原生命令kill或damage，沒有可沿用的Heavy攔截反證，也沒有成功證據。官方[Entity.kill](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#kill)及[kill命令](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable)有殺死實體的正面說明，沒有承諾before-hurt／可取消死亡與Heavy付款順序；[damage命令](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/damage?view=minecraft-bedrock-stable)則以整數amount為參數，不能直接表達原Float.MAX_VALUE。這些是尚未建立等價契約的獨立入口，不是本輪已否定的路徑；未以換字串掃cause、清health或kill繞過Heavy，也未為它們盲開另一場BDS或發布空G243。
 
 #### 被動原生fatal sensor新路徑（2026-11-06，未採用）
 

@@ -146,7 +146,8 @@
     "Forge_1_20_1_and_NeoForge_1_21_1": "Always-edible Ordinary reaches MultiBite finishUsingItem then Cursed afterFoodCommitted without excluding Creative.",
     "custom_damage_source": "ordinary_skewer with Float.MAX_VALUE; additive bypasses_invulnerability. Not a genericKill call.",
     "Creative": "Both vanilla Player hurt and Entity invulnerability checks allow bypasses_invulnerability.",
-    "Spectator": "Both vanilla ServerPlayerGameMode useItem callers return PASS before invoking the item; no synthetic food requirement tested."
+    "Spectator": "Both vanilla ServerPlayerGameMode useItem callers return PASS before invoking the item; no synthetic food requirement tested.",
+    "Heavy_Metal": "Both AdvancedSeasoningHandler onDeath implementations cancel death, consume Heavy Metal, set 1HP and apply poisoning without excluding Creative."
   },
   "valid_entry_controls": 11,
   "unmet_java_expectations": [
@@ -499,5 +500,13 @@
   "new_runtime_adopted": false,
   "saved_world_restart_tested": false,
   "client": false,
-  "live_modified": false
+  "live_modified": false,
+  "replacement_path_review": {
+    "existing_Heavy_native_observers_measure_Entity_kill_or_kill_damage_commands": false,
+    "documented_Entity_kill_and_kill_command_kill_entities": true,
+    "documented_before_hurt_cancellation_and_Heavy_payment_contract": false,
+    "damage_command_amount_type": "int, not Float.MAX_VALUE",
+    "other_paths_rejected_by_this_native_test": false,
+    "replacement_adopted": false
+  }
 }
