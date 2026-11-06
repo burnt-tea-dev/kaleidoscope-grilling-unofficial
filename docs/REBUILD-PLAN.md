@@ -7,7 +7,7 @@
 >
 > **建立**：2026-10-18，基準 commit `4d5fb095`（G155／2.8.155）。
 >
-> **一句話目標**：把一個靠「版本層疊補丁＋見證測試」維持的移植，換成**一份以 Bedrock 原生機制實作、按 Java 1.1.1 功能域組織、可以放心刪改的 runtime**；同時保證 luosen 存檔裡玩家的東西一件都不會消失。
+> **一句話目標**：把一個靠「版本層疊補丁＋見證測試」維持的移植，換成**一份以 Bedrock 原生機制實作、按 Java 1.1.1 功能域組織、可以放心刪改的 runtime**；同時保證 正式世界 存檔裡玩家的東西一件都不會消失。
 
 ---
 
@@ -18,7 +18,7 @@
 2. [已就位的護欄與禁止模式](#2-已就位的護欄與禁止模式)
 3. [目標架構（終態）](#3-目標架構終態)
 4. [分階段執行（P0–P7）](#4-分階段執行p0p7)
-5. [伺服器與 luosen 存檔作業手冊](#5-伺服器與-luosen-存檔作業手冊)
+5. [伺服器與 正式世界 存檔作業手冊](#5-伺服器與-正式世界-存檔作業手冊)
 6. [senluo-family-integration-private 收斂方針](#6-senluo-family-integration-private-收斂方針)
 7. [視覺還原方法（逐表面）](#7-視覺還原方法逐表面)
 8. [邏輯還原方法（Java → Bedrock 對照）](#8-邏輯還原方法java--bedrock-對照)
@@ -36,7 +36,7 @@
 3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
 4. **保存資料的變更**依 `docs/SAVE-COMPAT.md` 做相關功能驗證；不再使用存檔相容鎖。
 5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。這些是實作規則，不另設棘輪 PR 門檻。
-6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
+6. **正式世界 是正式玩家世界**。任何改動 正式世界 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
 7. **保留作者原始歸檔，不公開完整作者檔案或私有整合內容**。已授權的宿主適配沿公開來源契約與現有 Core 本機組裝流程，使用者自行提供合法原包；適配輸出須有新配對身份與來源紀錄。（§6）
 8. **遇到計畫沒寫的決策**：停下，把選項寫進 PR 描述的「需要擁有者決定」段落，不要自行假設後繼續大規模工作。
 9. 報告用語依 `AGENTS.md` §6；按實際來源、檢查與部署狀態分開寫，不另加完成門檻。
@@ -76,7 +76,7 @@
 4. **用替換物品 ID 來挑動畫**：`prepareEatingItems` 每 tick 檢查手上的串，必要時用 `_native_plain`／`_java_three_alt` 影子物品**替換玩家手上的 ItemStack**，只為了選另一套進食動畫／時長。這會：觸發背包事件、造成不同 ID 不能堆疊、所有配方／餐盤／烤架判斷都要先 `canonicalFoodId` 還原、斷線或崩潰時玩家可能留著影子物品。
 5. **以烘焙幾何追求視覺**：把 Java 物品模型的每一種狀態（每種食材組合、每一口、每個姿勢）烘焙成獨立 geometry，數 MB 一個檔，還要用一整套「投影路線」、校準、見證文件去維護。Bedrock 原生其實有 render controller 的貼圖陣列、bone 可見度、part_visibility、entity property 驅動等機制，可以用小得多的資產表達同樣的狀態。
 6. **私有整合補宿主**：家族整合（senluo-family-integration-private）在部署時修補作者 Cookery 宿主，公開 runtime 又依賴這些修補（「家族整合提供的砧板／油壺／炒鍋…不能當作只安裝作者 Cookery 就有的功能」），形成兩個 repo 之間沒有測試的隱性契約。
-7. **流程成本壓過工程**：每個修正都要換版本、20 分鐘 CI、整套家族准入、停服部署 luosen、寫證據文件。工程時間被流程吃掉，沒有時間做正確的結構修正。
+7. **流程成本壓過工程**：每個修正都要換版本、20 分鐘 CI、整套家族准入、停服部署 正式世界、寫證據文件。工程時間被流程吃掉，沒有時間做正確的結構修正。
 
 ### 1.3 已確認可以安全保留的資產
 
@@ -110,7 +110,7 @@ PR 的實際檢查由 [ci.yml](../.github/workflows/ci.yml) 定義：可載入 J
 | F7 | 把建置產物、截圖、log commit 進 repo | GitHub Actions artifact／Releases |
 | F8 | 改寫作者原始歸檔、公開完整作者腳本，或把自有玩法藏進私有覆蓋／部署補丁 | 自有功能回 canonical owner；已授權宿主適配沿公開契約＋Core 本機組裝（§6） |
 | F9 | 以模板字串重新拼出 persisted key | `core/persist_keys.js` 逐字字面值（SAVE-COMPAT） |
-| F10 | 在 luosen 直接試錯 | staging 世界（§5.4） |
+| F10 | 在 正式世界 直接試錯 | staging 世界（§5.4） |
 | F11 | 把「BDS 載入成功／hash 一致／測試數」寫成「已還原」 | §0 第 9 條五級用語 |
 | F12 | 烘焙超過 512 KB 的單一 geometry | 原生狀態機制（§7） |
 | F13 | 新增或擴充 `player.json` 覆寫 | 先走決策 D6；預設不覆寫 |
@@ -245,7 +245,7 @@ scripts/
 - T0.5 伺服器唯讀盤點工具 `tools/ops/server_inventory.py` ✅
 - **分支保護核對**：確認 GitHub main 將 `Rebuild guards` 設為 required check，並以 GitHub 設定讀回為準；無法讀取時記為未能驗證。PR label 不提供任何護欄旁路。
 
-### P1：凍結與盤點（不改任何 runtime、不改 luosen）
+### P1：凍結與盤點（不改任何 runtime、不改 正式世界）
 
 **T1.1 凍結功能開發**
 - 步驟：在 README 頂端加一行「重建進行中，P3 前只接受 P0 等級存檔安全修補」；`.github/release-request.json` 保持 `publication_request=false`。
@@ -268,22 +268,22 @@ scripts/
 - 不要做：不要把這些 PR 的程式碼 cherry-pick 進來。
 
 **T1.4 伺服器唯讀盤點**（需要伺服器存取，§5.1）
-- 步驟：在伺服器執行 `tools/ops/server_inventory.py --server-root <luosen 所在 BDS 根>`，輸出存為 `tools/ops/receipts/luosen-inventory-<日期>.json`。**移除其中任何私密路徑或憑證後**才 commit；若有疑慮只 commit 摘要。
-- 驗收：收據列出 luosen 啟用的完整 BP/RP 順序、每包版本與雜湊、未解析 UUID、重複版本、player 覆寫衝突。
+- 步驟：在伺服器執行 `tools/ops/server_inventory.py --server-root <BDS_ROOT>`，輸出存為 `<INVENTORY_RECEIPT>.json`。**移除其中任何私密路徑或憑證後**才 commit；若有疑慮只 commit 摘要。
+- 驗收：收據列出 正式世界 啟用的完整 BP/RP 順序、每包版本與雜湊、未解析 UUID、重複版本、player 覆寫衝突。
 - 不要做：不要動 world 檔、不要重啟。
 
-**T1.5 luosen 基準備份（LKG-0）**（§5.3）
+**T1.5 正式世界 基準備份（LKG-0）**（§5.3）
 - 驗收：一份停服、完整、可還原的備份，記錄 SHA256、大小、時間、對應的 pack 組合收據；並在**另一台機器或另一個磁碟**有副本。
 
 **T1.6 世界 ID 普查（離線、只讀副本）**（§5.6）
 - 步驟：在 LKG-0 的**副本**上跑 ID 普查工具，統計每個 `kaleidoscope_grilling:*` item／block／entity 的數量與所在位置類型（玩家背包、容器、隱藏庫存實體、掉落物、方塊調色盤），以及 world dynamic property 中各 key 前綴的筆數。
-- 驗收：`tools/ops/receipts/luosen-id-census-<日期>.json`。這份數據決定 P4 退役的優先順序與風險。
+- 驗收：`<ID_CENSUS_RECEIPT>.json`。這份數據決定 P4 退役的優先順序與風險。
 
 **T1.7 私有整合盤點**（需要私有 repo 存取，§6.1）
 - 驗收：`docs/` 不放私有內容；在私有 repo 產出 `INVENTORY.md`：它修改了哪些 Cookery 檔案、注入了哪些腳本、對外提供了哪些 API、公開 runtime 依賴其中哪些。
 
 **T1.8 staging 伺服器**（§5.4）
-- 驗收：BSM 內有 `luosen-staging`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 luosen 相同；能正常開服、進入、重啟。
+- 驗收：BSM 內有 `<STAGING_SERVER>`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 正式世界 相同；能正常開服、進入、重啟。
 
 **P1 出口條件**：T1.2–T1.10 全部完成。T1.4 的 pack 組合盤點與 489 個 content log warning 分類已由 #240 完成；T1.5 的 LKG-0、還原與獨立副本收據見 #241。這些交付不代替修正版 T1.6 的真實副本重跑、私有整合盤點或 T1.8 staging 驗收。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
 
@@ -446,7 +446,9 @@ CLI、Core 本機安裝器與私有來源應共同呼叫 `compose_files`；有 T
 
 **已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
 
-第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
+**已撤回作為姿勢校準依據（2026-11-02）**：下述歷史 bbox-fit 只是在社群相機代理中保留畫面區域，不能代表 Java 握姿或實機距離。另已確認 raw Bedrock 與 Blockbench 匯入座標混用的 X 反射錯誤。工具現為唯讀診斷，禁止自動重生姿勢；固定實裝 asset 不在本工具修正中變更。詳見 [座標契約與未通過的 native hold-out](#held-preview-coordinates-diagnostic-contract-v2)。
+
+歷史紀錄（不是目前驗收結論）：第一人稱修復由 [`plate_camera_pose.py`](../tools/plate_camera_pose.py) 計算。使用社群已公開的左右手 bound-bone／相機模型，對所有餐盤 geometry、排列與容量取保守邊界，再同時反解三軸位置；保持 .4 尺寸、原轉角、TP 與 layout。該模型重現舊姿勢的下裁，新姿勢的幾何預覽可容納完整內容；真人裁切及動態效果仍須整批驗收，不能把投影當原圖。
 
 **修法依據與適用範圍（本日查閱）**：
 
@@ -600,7 +602,7 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 **P3 出口條件**：
 - 棘輪：`global_block_interact_handlers ≤ 1`、`global_break_handlers ≤ 1`、`global_explosion_handlers ≤ 1`、`script_event_listeners ≤ 1`、`run_intervals ≤ 2`、`version_prefixed_script_modules = 0`、`source_text_slicing_tests = 0`。
 - 每個域都有 unit＋scenario 測試；`tests/legacy/` 為空。
-- staging 完整走過 §9.5 全清單並記錄；luosen 部署 2.9.0（§5.5）。
+- staging 完整走過 §9.5 全清單並記錄；正式世界 部署 2.9.0（§5.5）。
 
 ### P4：視覺重建與影子 ID 退役
 
@@ -611,6 +613,14 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 **T4.2 逐表面重做**（每個表面一個 PR，順序：烤架顯示 → 餐盤顯示 → 手持串（固定串）→ 手持秘製串 → 進食 → 調料瓶 → 油刷／榨油 → 料理架 → 串譜架 → 大缸）
 - 每個 PR：從 Java 原模型在 Blockbench 建 Bedrock 模型（`.bbmodel` 存 `assets-src/blockbench/`）→ 匯出 → 改用原生狀態機制 → 刪除舊烘焙 geometry 與「投影」腳本 → staging 截圖對照 Java 截圖（同角度）。
 - 驗收：`largest_geometry_kib ≤ 512`；`rp_total_mib` 明顯下降；對照截圖附在 PR。
+
+餐盤第一人稱的局部修正沿用 #332／#333 的來源變換：`tools/plate_camera_pose.py`
+只作唯讀座標診斷，停用依包圍盒改寫姿態；`tools/build_plate_pose.py` 依
+`data/plate-idle-calibration.json` 反求 FP 位置與宿主縮放補償，不改旋轉、layout、
+第三人稱或幾何。G241 承接擁有者已確認的 Blockbench 姿態，動畫逐位元組保留
+#333 `a6a978e` 的版本，未為全盤入鏡推遠餐盤。既有校準只涵蓋 1.26.60.4、
+P106/G206、標準寬身 Steve 的靜止非 VR 狀態，不代表新版宿主、TACZ 動作或
+Java 實機通過。來源／編輯器結果與引擎畫面分開記錄；此次不操作客戶端或部署。
 
 **T4.3 影子 ID 退役**（走 SAVE-COMPAT 流程，最高風險）
 - 前置：先確認該 variant 的實際能力已由替代路徑承接。T3.4 的早扣份 spike 已失敗，現行所需時長 variant 繼續保留；不能為了達成 ID 數量目標刪除它們。
@@ -643,63 +653,53 @@ owner，先做工具／乾淨原包、原生、保存與回退驗證，再發公
 
 ---
 
-## 5. 伺服器與 luosen 存檔作業手冊
+## 5. 伺服器與 正式世界 存檔作業手冊
 
-> 以下 `<BDS>` 代表 luosen 的 BDS 根目錄。2026-10-19 盤點實測：BSM 以 Docker 容器執行（`dmedina559/bedrock-server-manager:3.10.6`，容器名 `bsm-container`），資料卷 `bsm_data` 掛在主機 `/var/lib/docker/volumes/bsm_data/_data`（容器內 `/root/bedrock-server-manager`）。所以 `<BDS>` = `/var/lib/docker/volumes/bsm_data/_data/servers/luosen`，世界 = `<BDS>/worlds/Bedrock level`。家族範本裡的 `/srv/bsm/...` 不是這台的實際路徑；`/srv/src`、`addon_quality`、`family_bundle` 的實際位置仍待確認。
+> 本節使用通用範例：`<BDS>` 是正式伺服器根目錄，`<WORLD_NAME>` 是世界目錄名稱，`<BSM_CONTAINER>`／`<BSM_IMAGE>`／`<BSM_DATA_VOLUME>` 分別代表管理容器、映像與資料卷，`<HOST_DATA_ROOT>`／`<CONTAINER_DATA_ROOT>` 是兩側掛載位置。實際值只留在擁有者的受控部署紀錄，不放在公開文件；使用前依授權目標填入，不能直接照抄範例。
 
-### 5.0 luosen 盤點紀錄（2026-10-19；各收據分別標示時點）
+### 5.0 盤點紀錄與來源邊界
 
-> 下表保留最初盤點的環境描述，不能當作此刻 LIVE 的讀回。後續完整盤點與 warning 分類見 #240 的 `tools/ops/receipts/luosen-inventory-20261019.json`；#241 的 `luosen-lkg0-backup-20261019.json` 已記錄 LKG-0 對應的完整 26 BP／24 RP 順序、版本與樹雜湊，其首位私有 BP／RP 為 1.0.59。T1.9 與 T1.10 的離線比對應綁定這份 LKG-0 的實際包身份，保留下表的 1.0.57 為歷史對照。
+歷史盤點不是目前正式環境的讀回。T1.9／T1.10 的離線比對仍須綁定 LKG-0 完整備份紀錄中的精確候選包身份，不能拿其他版本代替。完整 BP/RP 順序、版本、樹雜湊、最高優先權修復包、宿主差異、資源餘量與設定，應從對應候選的受控盤點與備份紀錄取得。公開文件只保留會影響修復的通用判斷：
 
-來源：擁有者電腦以 SSH 唯讀收集的 metadata（未停服、未寫入、不含憑證與世界資料庫內容）。原始報告不進公開 repo（含主機名稱與 port）；以下只記錄對重建有影響的事實。
-
-| 項目 | 實測 | 對計畫的影響 |
-| --- | --- | --- |
-| BDS 版本 | 伺服器內附 vanilla pack 到 1.26.52 | GameTest／staging 用同版本 BDS |
-| 世界啟用 | **26 個 BP、24 個 RP**；manifest 全部可解析、相依沒有缺 | 排查衝突時要看整個組合，不只家族包 |
-| 腳本包 | 25 個 BP 帶 script 模組，`@minecraft/server` 版本從 1.13.0 到 2.10.0 混用 | 伺服器腳本負載高；煙火的逐 tick 迴圈與 16 個 interval 會和其他 24 個腳本包搶 tick 預算（伺服器設定 `script-watchdog-slow-threshold=10`、`spike=100`） |
-| **最高優先權包** | 第 1 位是「森羅私有修復支援 1.0.57」BP（純 data）＋RP；**RP 相依 Tavern、Grilling、World Liquor、A Magic Way、Java Saturation、Immersive Eating** | 相依宣告本身不能證明私有包內有哪些與 Grilling 同路徑的檔案。若有同路徑資產，較高優先權可能使 Grilling 的修正不生效；**實際覆蓋範圍與是否造成畫面未變，待 T1.9 逐檔清單與對照確認**。 |
-| Cookery | 作者 Cookery 1.6.2（BP 第 12 位）；其中 `scripts/api/cuisine_api_host.js`、`board_api_core.js`、`food_api_core.js` 與本 repo `host_api/` 同名檔**逐位元相同** | 需確認作者官方 1.6.2 發布包是否本來就含這些檔（作者採納）或是部署時被注入（宿主修補）（T1.10） |
-| 改版的第三方包 | 「森羅廚房：國味」標示「相容修補 1.0.55；作者原版 1.0.6」、版本號改成 1.0.10657；「Java Saturation」「UI Queue」「FP decode」都帶「Senluo HUD／Senluo FP decode」標記與改過的版本號 | 家族對第三方包也做了修補版，這些都屬於 §6 要收斂的私有整合範圍；HUD 通道衝突（`KT_HUD!` 原始碼外露）與這幾個包有關 |
-| 另一個進食包 | 「Kaleidoscope Immersive Eating 1.1.0」BP＋RP 同時啟用 | 與煙火自己的進食動畫／投影可能重疊；T3.4 與 D6 必須把它列入相容驗證（staging 第 11 項） |
-| 主機資源 | 16 GB RAM、可用約 4.2 GB；**2 GB swap 已用盡**；同時有 2 個 `bedrock_server` 程序 | 記憶體吃緊；巨型 geometry 與高頻腳本會放大問題。staging 伺服器要確認記憶體足夠再開，必要時先停掉另一個 BDS |
-| 磁碟 | 248 GB 中約 33 GB 可用 | 每份停服備份的大小要先量；保留策略（§5.3）要配合可用空間 |
-| content log | 該次盤點尾段 1228 行：0 個 error、**489 個 warning** | #240 收據已完成八類分類；分類不等於已修復全部 warning 的根因或完成性能／真人驗收。 |
-| 伺服器設定 | survival、easy、`allow-cheats=true`、`tick-distance=4`、`view-distance=8`、`max-players=10`、content log 有開 | — |
+- 同一實體或資產可能被高優先權包覆蓋，應逐檔確認實際生效來源，不能由相依宣告猜測。
+- 宿主腳本須和合法取得的作者原始版本比對，區分作者能力與本機適配；自有修復回到 canonical owner，私有整合只保留必要跨包連接。
+- 多個進食或玩家動畫 provider 可能衝突，相關相容驗證使用明確選定的候選組合。
+- 啟動測試伺服器或備份前，確認記憶體、磁碟與程序使用狀況；公開摘要不包含實際主機容量、程序數量、服務設定或連線資料。
+- content log 的分類不是修復或效能驗收；保留實際檢查範圍與尚未完成的結果。
 
 新增 P1 任務：
 
-- **T1.9 私有包覆蓋清單**：列出「森羅私有修復支援」RP（與 BP）中每個與 Grilling RP／BP **同路徑**的檔案，逐一分類：(a) 已在 Grilling 修好、私有包是舊版 → 從私有包移除；(b) 私有包修的是 Grilling 的真 bug → 移進 Grilling canonical；(c) 跨包整合 → 依 §6。驗收：覆蓋 Grilling 的檔案數歸零，或每個都有分類與去處。
-- **T1.10 Cookery 原版比對**：取得作者官方 Cookery 1.6.2 發布包，比對伺服器上那份的逐檔雜湊。驗收：列出伺服器版與官方版不同的每個檔案及來源。若有任何注入，計畫 §6.2 的「B 宿主修補」要把它們全部移除。
+- **T1.9 私有包覆蓋清單**：列出 `<PRIVATE_SUPPORT_PACK>` RP（與 BP）中每個與 Grilling RP／BP **同路徑**的檔案，逐一分類：(a) 已在 Grilling 修好、私有包是舊版 → 從私有包移除；(b) 私有包修的是 Grilling 的真 bug → 移進 Grilling canonical；(c) 跨包整合 → 依 §6。驗收：覆蓋 Grilling 的檔案數歸零，或每個都有分類與去處。
+- **T1.10 Cookery 原版比對**：取得作者官方 `<COOKERY_VERSION>` 發布包，比對伺服器上那份的逐檔雜湊。驗收：列出伺服器版與官方版不同的每個檔案及來源。若有任何注入，計畫 §6.2 的「B 宿主修補」要把它們全部移除。
 
 ### 5.1 存取
 
 - SSH 金鑰由擁有者提供；**金鑰、密碼、BSM token 一律不得寫入任何 repo、PR、issue、log 或收據**。
 - 進入伺服器後第一步：
   ```sh
-  hostname; date; free -h; df -h /var/lib/docker
-  docker ps --format '{{.Names}} {{.Image}} {{.Status}}'
-  ls /var/lib/docker/volumes/bsm_data/_data/servers/
+  date; free -h; df -h <HOST_DATA_ROOT>
+  docker inspect <BSM_CONTAINER> --format '{{.State.Status}}'
+  ls <HOST_DATA_ROOT>/servers/
   grep -E '^(level-name|server-port)=' <BDS>/server.properties
   ```
 
 ### 5.2 唯讀盤點
 
 ```sh
-python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventory.json
+python3 tools/ops/server_inventory.py --server-root <BDS> > <TEMP_DIR>/server-inventory.json
 ```
 重點看 `problems`：未安裝的 UUID、同 UUID 多版本、相依不滿足、多個包覆寫 `minecraft:player`。
 
-### 5.3 停服完整備份（每次改動 luosen 之前）
+### 5.3 停服完整備份（每次改動 正式世界 之前）
 
-1. 公告玩家 → 透過 BSM 正常停止 luosen（不要 kill）。
+1. 公告玩家 → 透過 BSM 正常停止 正式世界（不要 kill）。
 2. 確認程序已結束、`<BDS>/worlds/<level>/db/LOCK` 不被占用。
-3. 打包（luosen 的附加包都裝在世界目錄內的 `behavior_packs/`、`resource_packs/`，會一起備份）：
+3. 打包（正式世界 的附加包都裝在世界目錄內的 `behavior_packs/`、`resource_packs/`，會一起備份）：
    ```sh
-   cd <BDS> && tar --zstd -cpf <備份目錄>/luosen-<YYYYMMDD-HHMM>-<目的>.tar.zst \
-     "worlds/Bedrock level" server.properties permissions.json allowlist.json 2>/dev/null
+   cd <BDS> && tar --zstd -cpf <備份目錄>/<WORLD_NAME>-<YYYYMMDD-HHMM>-<目的>.tar.zst \
+     "worlds/<WORLD_NAME>" server.properties permissions.json allowlist.json 2>/dev/null
    ```
-   `<備份目錄>` 由擁有者指定，**不要放在 bsm_data 卷內**（同一磁碟故障會一起遺失）；先 `du -sh "<BDS>/worlds/Bedrock level"` 確認空間。
+   `<備份目錄>` 由擁有者指定，**不要放在 <BSM_DATA_VOLUME> 資料卷內**（同一磁碟故障會一起遺失）；先 `du -sh "<BDS>/worlds/<WORLD_NAME>"` 確認空間。
 4. `sha256sum` 寫入同名 `.sha256`；記錄大小。
 5. 解壓到臨時目錄抽驗 `level.dat` 存在、`db/` 檔數一致。
 6. 複製一份到伺服器以外的位置（擁有者指定）。
@@ -707,17 +707,17 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 ### 5.4 staging 伺服器
 
-- 在 BSM 建立 `luosen-staging`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
-- 世界：從最新備份解壓。pack：與 luosen 相同組合（26 BP／24 RP，含私有修復支援包與 Immersive Eating），再換上候選版本。
+- 在 BSM 建立 `<STAGING_SERVER>`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
+- 世界及pack：按當次家族部署設定，從一致停服備份建立同一個測試副本，使用當次完整候選組合與順序；數量／版本查該候選清單，不沿用歷史盤點的固定包數。
 - 主機記憶體吃緊（§5.0）：開 staging 前看 `free -h`；可用記憶體不足時先和擁有者確認是否暫停另一個 BDS。
-- 每次驗證流程：開服（看 content log 無錯誤）→ 進服 → 執行 §9.5 檢查 → 正常停服 → 再開服 → 抽查資料仍在。
-- staging 世界用完可重置，**永遠不要把 staging 世界複製回 luosen**。
+- 驗證流程依家族[UPDATE-WORKFLOW](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/main/family/UPDATE-WORKFLOW.md)：沿用相同輸入下有效結果，針對改動功能及受影響保存資料驗證，同一副本正常保存／重啟。§9.5聲畫觀察可選，不要求真人進服才能部署。
+- staging 世界用完可重置，**永遠不要把 staging 世界複製回 正式世界**。
 
-### 5.5 部署到 luosen
+### 5.5 部署到 正式世界
 
 1. 前置：候選版本已 CI 通過、已在 staging 驗證、已打 tag／release。
 2. §5.3 備份。
-3. 以家族既有工具（`family_bundle`／`family_guard`／BSM 准入）安裝完整家族組合；**不手動拷貝單一包**。
+3. 以家族既有工具（`<FAMILY_INSTALLER>`／`<ADMISSION_TOOL>`）安裝完整家族組合；**不手動拷貝單一包**。
 4. 開服；看 content log；確認世界啟用的 pack 版本（再跑一次 §5.2，比對收據）。
 5. 進服抽查核心循環。
 6. 寫部署收據（時間、版本組合、備份檔名與 SHA256、驗證結果）到家族 repo 的單一部署紀錄檔。
@@ -736,7 +736,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
   - world dynamic properties（LevelDB 中 dynamic properties 記錄）→ 依 `persist_keys.js` 前綴統計。
 - 普查輸出：每個 ID × 位置類型 × 數量；每個 key 前綴筆數；找不到對應方塊的站點 key 數。
 - 改寫規則：只改 `Name`（必要時 `Damage`/`Block` 欄位），保留 `Count`、`tag`、`CanPlaceOn` 等全部欄位；方塊調色盤改名需同時處理 state 對應。
-- 安全規則：**只在停服備份的副本上執行**；改寫前後各普查一次；收據必須滿足「舊 ID＝0、新 ID 增量＝舊 ID 原量」；然後才在 staging 開服驗證，再於 luosen 停服狀態套用**同一工具同一參數**。
+- 安全規則：**只在停服備份的副本上執行**；改寫前後各普查一次；收據必須滿足「舊 ID＝0、新 ID 增量＝舊 ID 原量」；然後才在 staging 開服驗證，再於 正式世界 停服狀態套用**同一工具同一參數**。
 - 工具本身要有單元測試（用小型合成世界或從 staging 匯出的單一 chunk）。
 
 ---
@@ -745,7 +745,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 > 本計畫撰寫時無法存取該私有 repo；2026-10-20 已確認來源可讀，私有 `INVENTORY.md` 仍是未完成草稿。來源存取不再是 T1.7 全面停工的理由；具體契約、分類與去處須在私有庫補齊，不能因已有草稿就將 T1.7、T1.9 或 T1.10 標為完成。
 >
-> 伺服器盤點（§5.0）記錄了最高優先權的「森羅私有修復支援 1.0.57」BP＋RP；其 RP manifest 相依 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating。**相依宣告不等同於已確認的檔案覆蓋**，實際與 Grilling 同路徑的檔案及其內容仍待 T1.9 盤點。同時存在數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
+> 依 §5.0 的受控盤點與候選身份，先確認最高優先權支援包的實際覆蓋、相依與本機適配來源。依 T1.7／T1.9／T1.10 完成基線、逐檔覆蓋分類與作者原版比對；不能由包名或相依宣告推定具體覆蓋，也不能將某一環境的組合寫成通用要求。
 
 ### 6.1 盤點（T1.7）
 
@@ -786,7 +786,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 餐盤（1–5 串） | `SkewerPlateRenderer` | 同上模式：顯示實體 5 個 slot bone＋5 個 render controller；朝向用 block state 傳給實體 property | `plate_food_visual` 烘焙＋投影 |
 | 固定串手持 | Java item model（`models/item/fixed_skewers/*`） | 每個物品一個 attachable，geometry 用 Blockbench 從 Java item model 轉出（通常是 2D 精靈擠出）；第一／第三人稱位移在 attachable 動畫或 geometry 的 item_display_transforms 對齊 Java `display` | 多代 `aNNN_hand` 幾何 |
 | 秘製串手持（任意 3 食材） | `SecretSkewerItem`、`SkewerColorProvider` | 共用 attachable：3 個食材 bone，貼圖陣列（全部食材精靈拼成的 atlas 或陣列）以 player property `secret_main_0..2`／`secret_off_0..2` 索引；竹籤一個 bone | 1.8 MB `secret_held` 烘焙＋多段校準 |
-| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | 目前未有已證可用的逐stack圖示合成入口；通用圖示＋lore是降級，範圍與未完成處只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
+| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | G239已有逐slot JSONUI來源、Java原圖層及原生資料／保存結果；client binding／繪製尚未觀察，範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
 | 失敗串 | `FailedSkewerData` | 與秘製串相同 attachable，換貼圖陣列 | 7.3 MB `failure_skewer_held` |
 | 進食動畫 | `SkewerEatingAnimation`、`SkewerEatingPiece`、`EnderPearlEatingAnimation` | attachable 動畫＋動畫控制器，條件 `q.is_using_item`＋`q.property('…:eat_profile')`；一口一口的消失用 bone 可見度（`q.property('…:eat_piece')`），不是 150 個 bite 幾何 | `a22_bites` 150 幾何、影子 ID 換手 |
 | 調料瓶（放置） | `SeasoningBottleRenderer` | block geometry＋state（內容量階段），4 個瓶位用 permutation | 保留，整理 |
@@ -841,7 +841,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 情境 | `tests/scenario/` | 經真實 runtime＋fake world 的玩家流程，含故障注入 | 每域 3–8 | 每 PR |
 | 靜態包驗證 | `tools/validate.py` | §9.3 規則 | 1 支 | 每 PR |
 | GameTest | `tests/gametest/` | 在真 BDS 內放方塊、模擬互動、推進 tick、斷言 | 核心循環 10–20 | 每晚 |
-| 人工 | §9.5 清單 | 畫面、手感、聲音 | 每次部署 | staging |
+| 人工 | §9.5 場景參考 | 畫面、手感、聲音 | 按需選用，非部署前置 | staging；未觀察處照實保留 |
 
 ### 9.2 寫測試的規則
 
@@ -873,9 +873,9 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 純邏輯 `.mjs` | `test_core.mjs`、`test_a24_core.mjs`、`test_a25_core.mjs`、`test_plate_transactions.mjs`、`test_oil_transactions.mjs`、`test_rack_transactions.mjs` 等 | 移 `tests/legacy/`，P3 各域完成後刪除 |
 | 護欄 | `tools/guards/test_guards.py`、`tools/test_baseline_gate.py` | 保留 |
 
-### 9.5 staging 人工檢查清單（每次部署前）
+### 9.5 staging 聲畫觀察場景（按需選用）
 
-以表格記錄 ✔／✘／備註，附截圖：
+這些是可選場景，不是每次部署必跑的清單，也不等待真人驗收。觀察實際發生時，記錄候選、結果與截圖；功能／保存驗證仍按當次改動及既有流程執行：
 1. 取得食材（砧板、磨盤、作物收成、刀具掉落）。
 2. 穿串：固定配方 1 組、秘製串（3 種不同食材）、失敗串。
 3. 烤架：放置、點火、刷油、放 3 串、翻面、調味、取出熟串、燒焦、拆除（內容物掉落）、爆炸取消。
@@ -895,7 +895,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 編號 | 問題 | 建議預設 | 影響 |
 | --- | --- | --- | --- |
 | D1 | Java 對照版本 | NeoForge 1.21.1 分支、上游 commit `9a1acdab`（1.1.1）；新版本由 P7 流程跟進 | 所有還原工作的基準 |
-| D2 | luosen 部署頻率（現行 AGENTS 有「每個候選都部署」的常設授權） | 重建期間只在 **P3 結束、P4 每次退役、P5 每批** 部署；P0 級存檔安全修補隨時部署 | 降低 luosen 風險與流程成本 |
+| D2 | 正式世界 部署頻率（現行 AGENTS 有「每個候選都部署」的常設授權） | 重建期間只在 **P3 結束、P4 每次退役、P5 每批** 部署；P0 級存檔安全修補隨時部署 | 降低 正式世界 風險與流程成本 |
 | D3 | HUD（進食條、調料、油鍋、機器） | 重建期間**停用**，P5 最後以家族共用 JSON UI 通道重做或放棄 | 移除最大的 UI 衝突來源 |
 | D4 | 是否開始 TypeScript | 否；用 JS＋`// @ts-check`＋`tsc --checkJs`，避免建置步驟 | 降低 AI 執行複雜度 |
 | D5 | 料理品質與調料瓶的背包圖示是否必須不同 | 品質：否（用 lore）；調料瓶：依 Java 實際外觀數量保留最少變體 | 影子 ID 退役範圍 |
@@ -911,7 +911,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 
 | 風險 | 可能性 | 衝擊 | 對策 |
 | --- | --- | --- | --- |
-| 清理時誤刪 ID 導致 luosen 玩家物品消失 | 中 | 極高 | 存檔相容鎖＋base 比較＋退役流程＋普查＋停服備份 |
+| 清理時誤刪 ID 導致 正式世界 玩家物品消失 | 中 | 極高 | 核對實際受影響資料，按需驗證保存讀寫／重啟，保留唯一一致停服備份及正常回滾流程；不恢復ID相容鎖或逐ID退役登錄 |
 | 重構改變行為而沒被發現 | 高 | 高 | 先寫 scenario 測試；staging 清單；GameTest |
 | AI 代理遇到困難又開始疊補丁 | 高 | 高 | 棘輪＋禁止模式＋AGENTS.md；PR 審查看棘輪輸出 |
 | 離線改寫工具破壞 LevelDB | 低 | 極高 | 只在副本執行；改寫前後普查；staging 驗證；備份可 15 分鐘回滾 |
@@ -960,5 +960,85 @@ EOF
 - **canonical runtime**：`baseline.json` 指向的唯一 BP/RP。
 - **影子 ID**：為了選動畫／圖示而存在、Java 沒有的 item ID。
 - **LKG**：last known good，完整可還原的停服備份。
-- **staging**：與 luosen 同組合的測試伺服器，世界來自備份副本。
+- **staging**：與 正式世界 同組合的測試伺服器，世界來自備份副本。
 - **退役**：依 SAVE-COMPAT 流程移除一個持久化 identifier。
+
+## Held-preview coordinates: diagnostic contract v2
+
+This section records the tooling-only #332 correction, **not acceptance of a
+new runtime pose**. That correction changed no generated pack, manifest, version,
+geometry, or animation asset. Its native shield hold-outs did not pass; Java
+engine equivalence was not established. The later bounded affine candidate is
+described under T4.2; it does not erase these failed controls or establish current
+host rendering. The accepted Blockbench preview is not engine acceptance.
+
+### Proven coordinate mismatch
+
+The former Python proxy fed raw Bedrock `.geo` coordinates into a matrix that
+expects Blockbench's imported coordinates. Blockbench mirrors geometry X on
+import. Applying the preview's X/Y reflection directly to raw geometry therefore
+reflected X a second time relative to the intended Animate-mode chain.
+
+Source identities reviewed:
+- Actual Blockbench **5.2.2** app bundle SHA-256:
+  `5f71b1b122b15c1ecde787a8afd473b9c4e932db3465bbf906a7699874f1b9f8`.
+  Geometry-import evidence at character offsets 8666400–8667950; animation
+  importer at 8633750–8634530. Existing bundle read only; not executed for audit.
+- Official [geometry importer](https://github.com/JannisX11/blockbench/blob/master/js/formats/bedrock/bedrock.js), reviewed Git blob
+  `f27d89e774003486b1161b0578971f686fece0a8`: bone/cube pivot X is negated;
+  cube minimum X becomes `-(originX + sizeX)`.
+- Official [animation importer](https://github.com/JannisX11/blockbench/blob/master/js/formats/bedrock/bedrock_animation.js), reviewed Git blob
+  `ede0f8c0fecf24628390433b13082c5657b552e4`: position X and rotation X/Y
+  are negated. Branch URLs are navigation links; the blob hashes and actual
+  5.2.2 bundle identify what was reviewed, not a claim that master is immutable.
+- Community holder/camera reference:
+  [Dofes](https://github.com/Dofes/blockbench-bedrock-attachable/blob/0dbcc4919b2152f81606a7a1bb4e11b292e0ceac/plugins/bedrock_attachable/bedrock_attachable.js), commit
+  `0dbcc4919b2152f81606a7a1bb4e11b292e0ceac`, `buildModelMatrix` and
+  `buildHolderBoneMatrices`. These remain a preview model, not engine source.
+
+Let `I=diag(-1,+1,+1)` be geometry import, `F=diag(-1,-1,+1)` the
+preview conversion. With column vectors and `R=Rz Ry Rx`, BB-imported animation
+angles are `(-rx,-ry,rz)` and `F R_BB = R_raw F`. Consequently the composed
+raw-vertex conversion is `F I = diag(+1,-1,+1)`.
+
+For raw vertex `p` and raw bound pivot `b`, the corrected local point is
+`(p.x-b.x, b.y-p.y, p.z-b.z)`. The expression-binding offset in this community
+Animate replay is `(b.x,24-b.y,b.z)`, not `(-b.x,24-b.y,b.z)`.
+Apply this offset **after** the bound root's scale/rotation and **before** the
+holder transform. At zero pose and unit scale the raw pivot cancels entirely.
+Do not mix already-converted vertices with raw pivots or apply conversion twice.
+
+The pure-Python regression independently constructs geometry import, imported
+animation, preview root conversion, and their matrix composition. It covers
+asymmetric vertices, nonzero pivots, both hands, nonuniform scale and rotations.
+It does not assert pixel agreement with Minecraft. The current catalog's rotated
+cubes all explicitly provide pivots; this is not a generic missing-pivot codec.
+
+### CLI and callers
+
+`python tools/plate_camera_pose.py` or `--diagnose` is read-only and explicitly
+reports `native_acceptance=false`, `java_equivalence=false`, and no asset-write
+permission. The default extent diagnostic covers **plate body only**, not food.
+`--full-catalog` requests the slower conservative catalog-box diagnostic; it is
+still not a fitting target or an acceptance gate.
+
+The former `--check` regeneration contract now exits **2 with an explicit error**.
+Library `generate()` and `fitted()` raise errors instead of silently succeeding
+or writing a pose. The original #332 revision changed the sole tracked CLI
+caller, `.github/workflows/ci.yml`, to read-only diagnostics plus mathematical
+regressions. Main subsequently removed that automatic diagnostic block in #345;
+this forward merge preserves the current lightweight CI instead of restoring it.
+The existing legacy JavaScript test still checks this diagnostic/no-write
+contract, not a reserved screen-box target. Search included hidden workflow paths.
+
+### Why the old pose conclusion is withdrawn
+
+A bbox search reserves screen space; it cannot establish Java hand/display
+transforms or correct physical held distance. The historical rebuild-plan entry
+is superseded. After correcting the coordinate convention, actual-client shield
+controls still miss selected native corners by about 36 px. Those observations
+are **failed hold-outs**, not regression PASS fixtures. Independent trident-only
+camera estimates also did not transfer within the predeclared 6 px shield bound.
+Do not choose a camera/FOV using those hold-outs or add their residuals to plate
+position. A later pose change needs full source-traceable Java/Bedrock holder
+calibration, independent native acceptance, new paired versions and handoff.

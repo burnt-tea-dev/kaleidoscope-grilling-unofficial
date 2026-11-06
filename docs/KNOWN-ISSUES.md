@@ -14,6 +14,7 @@
 
 | ID | 已知事實與來源修補範圍 | 必須保留的重現／驗收 |
 | --- | --- | --- |
+| COLD-HOUTTUYNIA-DELIVERY | 舊成品寫入／drop已套用後拋錯會補發第二份；正常耗盡油壺丟本包可讀DP。已由原cold owner／油壺adapter修復，精確來源與證據只查[PARITY](PARITY.md#涼拌折耳根的製作交付) | 新真main場景驗普通、最後原料釋slot、滿包、確認回收及未確認drop；API故障模型不等於原生自然故障或真人操作 |
 | PLAYER-PROPERTY-SLIMMING | [T3.5-b](REBUILD-PLAN.md#t3-5-property-slimming) 來源已由 32 減至 27 格；隔離 BDS 已核 27 格 schema、同 tick 合併與 72000 時計。物品／雙手 bank 格式不變 | 配對 BP/RP 的完整家族、原存檔首次載入／重啟／回退與實際 FP／TP／旁觀者仍待。低槽通道和 TACZ 路由未完成，不宣稱相容 |
 | PREMIUM-OIL-CRAFT-REMAINDER | G201 來源改用原生單一 Premium Chili Oil 配方結果；Bedrock `playerCraftRecipe` after-event 對實際製作出的該油桶按數量歸還空桶，背包滿時交給玩家附近的掉落物。原 Java 配方與四種 shapeless 材料保留。因 Bedrock 事件沒有 Java 工作台格子的槽位資料，空桶改入背包／地面，尚未證明真人操作、取消順序或畫面結果；來源測試不是原生合成驗收 | 同候選 BDS 真工作台以任意排列製作 1 份與批次，核材料消耗、油桶數與空桶數；另驗滿包掉落拾取、非目標配方及客戶端事件行為。不可把事件 capability probe 或 API fixture 稱為 Java 全等／真人通過 |
 | OIL-NAMED-TICK | G194 修復 26.60 命名事件 API 錯配：以 ownership-aware `isName` 取代不存在的 `isMine/name`，不呼叫不存在的取消方法；原生回呼消耗一次排程，只有未完成工作才重排。原形狀反例失敗，既有油機測試修後通過 | 同候選真引擎榨油→完成→收料、倒數途中拆除、卸載與重啟、重複事件及保存故障；來源模型不等於完整 BDS／真人驗收 |
@@ -34,7 +35,7 @@
 | PLATE-USE-ARBITRATION | G116 有 block／item-use 仲裁與較近 entity 排除 | 持多份串向盤插入後不能額外吃掉剩餘串；另驗合法 air-use、潛行副手、其他方塊與取消；真輸入順序待驗 |
 | PLATE-PLACED-DISPLAY | G118 有目前內容、FIXED transform、1–5 份與四朝向的專用來源 | 固定／秘製串放盤、即看、取一份及區塊重載；核內容、材質、光照與無殘影。舊 tiny-edge-pixel／朝向故障保留其候選身份 |
 | PLATE-HELD-CONTENTS／DECODE | 目前四格來源與原型限定結果見 [T3.5](REBUILD-PLAN.md#t3-5-property-slimming)；全手持 owner 已共用快照，放置與手持旋轉仍分開 | 1–5 份、主副手混持盤／瓶／串、切槽、重登及旁觀者；舊 stored1／4→0／3 與 float32 模型不認證新 transport |
-| HEAVY-METAL-COMMIT | G238雙手圖騰優先有39項原生證據；G240平凡改為selfDestruct來源候選，相關160項來源通過；[實際範圍](PARITY.md#heavy-metal-damage-order)由該段持有，部分盾漏救仍未修 | G238 override/maxfloat耗圖騰後死亡的觀察保留；G240真平凡入口／maxfloat／護甲抗性未原生驗證。剩餘吸收量、其他addon仲裁及聲畫仍未知 |
+| HEAVY-METAL-COMMIT | G221修正到期漏付；G238修復合適傷害下的雙手圖騰優先；G242沿原Ordinary owner改selfDestruct，真食用maxfloat的圖騰繞過／Heavy救援已確認。[實際範圍與原始控制差異](PARITY.md#heavy-metal-damage-order)由該段持有，部分盾漏救仍未修 | 原override控制差異保留，現行Ordinary已換cause；巨量傷害死亡不證護甲／抗性繞過。剩餘吸收量、其他addon仲裁與聲畫仍有限制。同世界重開證據不等於crash原子性 |
 | OIL-RESIDUE-PLANTS | 已明列 29 類植物適配與兩次作用一次扣料；甜菜四階段對應、竹子 1–2 節與葉片下移、海帶長入水方塊並保留含水層已依 Java 來源實作；未知方塊／掉落／含水層恢復結果不退成本 | 竹子無 Java stage 狀態（僅以 16 高上限停止）、海帶含水層原生 `setWaterlogged` 讀回、其他 feature／外部植物仍缺；正常施肥／採果、上下半、光照／鄰位與重載待 staging 驗 |
 | JAVA-POT-LIFECYCLE | G122 有指定 exact／flex 配方、備料／翻炒／結果階段、保存與品質；有限 Java 品質向量不是完整 PotBlockEntity trace | 真鍋加油→備料→三翻→盛裝、熱源／卸載／重啟、冷卻、兩手連吃、滿包／拆鍋／保存故障及真營養；其他作者配方與未知私有資料不猜轉換 |
 | CUISINE-CONSERVATION | G120／122 修取消後清資料、出料讀回、批次 credit 及手部／站點實際寫入所有權 | 取消／拆鍋／取出／重登／不同 operationId 不得重複交付；確認站點回前像後才補償本次仍擁有的成本；不明保存保持隔離 |

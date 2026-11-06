@@ -73,8 +73,7 @@ async function run(){
   check(label+' actual after-heal cures Heavy Metal and Warmth',candidate.heals.some(e=>e.totem&&e.healing>0)&&!candidate.result.effects.heavy_metal&&!candidate.result.effects.warmth);
  }
  for(const cause of ['void','override','selfDestruct']){
-  // Retain G238's historical override/Float.MAX_VALUE control for comparison.
-  // This direct applyDamage matrix does not test the current applyOrdinary owner.
+  // The owned Ordinary seasoning uses this exact override damage, rather than /kill.
   const damage=cause==='override'?3.4028234663852886e38:100;
   const control=await hit(cause,{heavy:false,damage}),candidate=await hit(cause,{heavy:true,damage});
   // Java rejects out_of_world/generic_kill before looking in either hand.

@@ -34,3 +34,31 @@ The [damage-order observation](damage-order-observed.json) records full versus
 partly spent absorption and native offhand totem versus totem plus Heavy Metal.
 Its controls passed while Java parity failed. Do not call its execution success
 a repair. It needs one normal stop and does not repeat the expiry/save cycle.
+
+[The later passive fatal-sensor probe](../fatal-sensor/README.md) is a separate
+actual-Player capability observation. Its native event witnesses are positive,
+but the predicate marks both full-shield survival and spent-shield death fatal.
+It does not repair or replace this handler and changes no production runtime.
+
+`ordinary_maxfloat_probe.js` prepares the remaining Ordinary cause observation.
+The older Totem-priority probe used 100 damage for selfDestruct; only override
+used Float.MAX_VALUE. That result does not settle selfDestruct at the actual
+Ordinary amount. Use the candidate's real `applyOrdinary` and registered
+food/effect handlers with two native Survival Players, one at a time, through
+the default Ordinary food and its unchanged preparation/animation variants. The
+QA pack must include all three existing Ordinary definitions. Require a
+native completion and one max-float hit, an untouched offhand totem and no
+TotemOfUndying healing. Without Heavy Metal the Player must die; with it the
+existing handler must pay before cancelling and rescue to 1HP. Do not replace
+native methods or callbacks, infer remaining shields, replay damage or add a
+Player overlay. This is not complete main startup, saved-state, armor/resistance
+bypass or client validation. Any execution requires the shared owner's slot.
+
+The [2026-11-06 native observation](ordinary-maxfloat-observed.json) passed all
+12 checks with actual 100-tick food completions. No Heavy Metal means death,
+with the offhand totem untouched and no totem heal. Heavy Metal means the real
+handler pays, cancels and rescues to 1HP, preserving the totem and Warmth. The
+first fixture omitted a variant and stopped before damage; that failure is
+retained separately. Both temporary worlds were removed after normal stops;
+the successful run returned the shared slot before source CI. These are narrow
+native results, not a claim about armor/resistance or the full family release.

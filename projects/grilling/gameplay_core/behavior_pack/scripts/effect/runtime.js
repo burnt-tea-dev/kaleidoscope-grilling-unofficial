@@ -110,10 +110,8 @@ function applyOrdinary(player){
  if(outcome==='shield'){awardOrdinaryChallenge(player,outcome);ordinaryShieldFeedback(player);return}
  if(outcome==='spear')awardOrdinaryChallenge(player,outcome);
  ordinaryFatalFeedback(player);
- // Java's bypasses_invulnerability damage rejects totems before LivingDeath,
- // while Heavy Metal can still rescue it. Bedrock override consumes the totem;
- // Select selfDestruct from the native 100-damage bypass control; the exact
- // Float.MAX_VALUE path remains a native acceptance item. Keep the same handler.
+ // Java uses damage and Heavy Metal can rescue it. Ordinary's damage type is
+ // tagged bypasses_invulnerability, which Java totems reject before LivingDeath.
  system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'selfDestruct'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
 
