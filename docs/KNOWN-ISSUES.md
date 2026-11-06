@@ -27,7 +27,7 @@
 | GRILL-DEFERRED-OWNER | G125 延後重讀 cancel 並核 type／permutation／owner／完整物品；舊四個原生 API 診斷用代用容器 | 後續 listener 取消爆炸、排程後換方塊、合法計時中拆爐；須保留整個 customBreak、容器內容與玩家結果 |
 | ITEM-DELIVERY | G125 在扣料前核站點身份，保留滿包 planner、實際交付讀回與不明結果隔離 | 榨油機延後扣料、串譜／穿串／拆串滿包、外來槽位和掉落回收未知；未確認回收不得退原料或重發 |
 | SEASONING-DATA-RELOAD | G124 合併目前資料根，取料／效果／HUD 共用 resolver，保存失敗恢復；不自動讀 Java datapack | 後根覆寫、錯誤根不部分生效、舊食物依新映射、未知 kind 與 provider 缺席；真人效果仍待驗 |
-| SKEWER-GUI | G243修正實際client回報的原生renderer基底缺失，收斂逐格hover與條件圖層；已證及未證範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不是三格製作視窗 | 尚無新client錯誤／畫面／幀率讀回；原log末尾無位置Invalid expression不能只靠JSON檢查認領已修。雙手操作、資料保存與原圖層保留 |
+| SKEWER-GUI | G243修基底後的新client仍報93筆不支援modifications；生成器已改直接alpha binding，保留原生基底／圖層；已證及未證範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不是三格製作視窗 | 尚無本次修正後client／畫面／幀率讀回；新log無位置Invalid expression仍未定位。雙手操作、資料保存與原圖層保留 |
 | SEASONING-FLOW | 舊 LIVE 取瓶失敗；RawMessage／材料數與後續動作有來源修補，未有完整同瓶驗收 | 同瓶放三種必要 base→取回 PENDING→持續 80 tick→SPECIAL→向有串烤架撒料；核材料、uses、取消／換槽／重登，不能用改配方或即時轉換通過 |
 | SEASONING-EXPLOSION-CANCEL | G117 延後工作僅在 cancel 明確 false 時繼續；取消／event 讀失敗保留瓶、ItemStack、容器及保存記錄 | 在瓶 handler 後取消爆炸，驗內容與 ownership；未取消爆炸的原作毀損規則不變。API 模型不是原生事件結果 |
 | PLATE-SATURATION | G116 餐盤在寫 hunger 後重取 saturation／effectiveMax，失敗回滾；舊 trace 曾在 hunger 10→13 後仍用 cap 10 | 重現相同飢餓／食物及原生 cap 條件，核一次營養結算、不吞物品、不虛構 max；同候選 Player／client 待驗 |

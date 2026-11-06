@@ -13,9 +13,15 @@ Java source retains the BSD notice in `data/java/LICENSE-CODE`.
 definition from the linked fixed bedrock-samples revision (MIT). A same-name UI
 definition replaces that native base; the generator must preserve its `custom`
 type, `inventory_item_renderer`, layer, default and every native binding. The
-client's selected-item, hotbar and bundle controls inherit those fields.
-`tools/test_secret_gui_ui.py` checks that contract against the generated data;
-it does not execute the Minecraft UI parser or a renderer.
+client's selected-item, hotbar and bundle controls inherit that base; callers
+can replace its bindings array. The complete definition uses a direct sixth
+view binding for native alpha, not the unsupported `modifications` property.
+`propagate_alpha: false` leaves the recipe child opaque when the native drawing
+is hidden. `tools/test_secret_gui_ui.py` calls the actual generator with the
+runtime marker source and checks both exported UI files, the native binding
+prefix and alpha/layer wiring. UI-only imports need no image library. This does
+not execute the Minecraft UI parser, establish derived caller data supply or
+render a frame.
 Each generated food/style image packs six 16px masks in one 96x16 strip; the
 six item layers use fixed UV cells and keep independent per-slot recipe data.
 `tools/test_secret_gui_assets.py` runs both original Java composers with only
