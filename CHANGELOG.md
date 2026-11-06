@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.240 平凡傷害改用原生圖騰繞過路徑（來源候選）
+
+- 平凡串的原 owner 保留 Float.MAX_VALUE 與延後傷害，改用 selfDestruct；不再把會消耗圖騰的 override 當作 Java bypasses_invulnerability。沿用現有重金屬救援，不改手持物或保存資料。
+- 7 項新／更新案例先失敗，修正後相關 160 項通過。舊原生 selfDestruct 對照只驗 100 傷害；本次未執行平凡真入口／maxfloat／護甲抗性原生驗證，不能宣稱完整修復或部署。部分吸收盾漏救仍未修。
+
 ## 2.8.239 逐串秘製串背包圖示來源
 
 - 既有進度行附純顯示快取；每slot JSONUI按該串三食材、GUI variant及生熟選取Java原圖層。保留雙手逐次穿料、原ID、64堆疊與完整metadata；視覺cache不改變重複食材判定。

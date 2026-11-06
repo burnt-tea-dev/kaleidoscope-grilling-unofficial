@@ -10,7 +10,7 @@ import {HEAVY_METAL_CLAIM_KEY,parseHeavyMetalClaim,heavyMetalClaimPayload} from 
 const rescues=new Map();
 function nativeTotemTakesPriority(entity,cause){
  // Java totems reject void/forced-death damage, including Ordinary's tagged
- // damage mapped to override here. Preserve Heavy Metal for those paths;
+ // damage mapped to selfDestruct here. Preserve Heavy Metal for those paths;
  // holding a totem alone does not make every damage source eligible.
  if(cause==='void'||cause==='override'||cause==='selfDestruct')return false;
  const equipment=entity.getComponent('minecraft:equippable');
