@@ -74,5 +74,6 @@ event delivery and a successful probe are not Java-parity results.
 This test reads no remaining-shield amount, maintains no shield ledger, does
 not cancel or replay damage, and never resurrects a Player. It uses one fresh
 isolated world and normal stop/cleanup, with no saved-state or restart cycle.
-The new native slot follows the shared G240 update and already-scheduled T
-test; do not start it from an idle-lock observation alone.
+This run followed the shared G240 update and already-scheduled T test. That
+schedule is historical; any future observation follows the shared owner's
+current slot assignment, not an idle-lock observation alone.
