@@ -90,3 +90,17 @@ removed and the slot returned before source CI. No runtime or release identity
 changed. This is a selected-path counterexample, not proof that every cause,
 kill operation or future native capability fails; no unverified replacement is
 adopted. The existing Survival results are reused within their original scope.
+
+`ordinary_kill_command_probe.js` prepares a separately authorized, single-entry
+Creative capability question. Official [kill](https://learn.microsoft.com/en-us/minecraft/creator/commands/commands/kill?view=minecraft-bedrock-stable)
+supports player targets. Lack of a promised callback order prevents adopting it
+without evidence; it does not prevent this bounded observation. One no-Heavy
+and one Heavy Player use the unchanged G242 handlers and own Player definition.
+The same exact name/tag selector first passes native testfor, which shares
+kill's Game Directors/cheats requirement, then receives one kill command.
+Record the native command result, actual mode, before/after-hurt cause/amount,
+cancel state, claim/effect payment, heals, death and observed callback order.
+No synthetic hurt, effect prepayment, health clearing, mode/immunity switch,
+Entity.kill, cause sweep or new Player overlay is allowed. This is not food
+completion or a production repair. Prepare once, obtain a fresh shared slot,
+then stop/clean and return it immediately; PR375's raw/history stay unchanged.
