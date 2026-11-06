@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "observed_date": "2026-11-06",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "source_commit": "f3f32c75c7afac94557fa20e1b77e8c8da29fe7c",
+  "diagnostic_source_commit": "f3f32c75c7afac94557fa20e1b77e8c8da29fe7c",
+  "source_version": [
+    2,
+    8,
+    237
+  ],
+  "production_files": {
+    "advancement/advancement_runtime.js": "6266dd59f879ef534bea62e31bbfbbb2cc408bebecdd085a7217e8baa8ef5c4a",
+    "advancement/advancement_core.js": "b692d1c57279541334c8b96716d934a284b490933024a2683e5aee8ef217bb4b",
+    "advancement/advancement_event_core.js": "9a0450fc70a459843042d3c1e0206f688682973228c7e6733a707979c5042739",
+    "advancement/advancement_challenge_core.js": "12a2e95eff39cec97d9a0169123b04b7e551b672b09594865d3789c599b096b0",
+    "food/wedding_candy_core.js": "0c692a9947a29b48fbd426bc8ee59d8897ae8ebd08b47ad7a16935213fb891ce",
+    "core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad"
+  },
+  "probe_sha256": "378501729d19e59d9fb2ae0941da8aa8fc8004b7bb1950c8cf2e3cb96b1e8893",
+  "diagnostic_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    }
+  ],
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "player_definition_override": false,
+  "isolation": {
+    "memory_max_bytes": 2684354560,
+    "memory_high_bytes": 2147483648,
+    "memory_swap_max_bytes": 0,
+    "private_network": true,
+    "shared_maintenance_lock": true
+  },
+  "passed": true,
+  "observation": {
+    "passed": true,
+    "phase": "advancement-claim",
+    "checks": [
+      {
+        "name": "no external players in isolated QA",
+        "passed": true
+      },
+      {
+        "name": "production advancement starts unclaimed",
+        "passed": true
+      },
+      {
+        "name": "production award reports success",
+        "passed": true
+      },
+      {
+        "name": "native total XP increases by the production twenty-five points",
+        "passed": true
+      },
+      {
+        "name": "native completed claim is boolean true",
+        "passed": true
+      },
+      {
+        "name": "duplicate production award is refused",
+        "passed": true
+      },
+      {
+        "name": "duplicate award leaves native XP and completed claim unchanged",
+        "passed": true
+      },
+      {
+        "name": "looking_the_part starts unclaimed",
+        "passed": true
+      },
+      {
+        "name": "looking_the_part native pending record readback",
+        "passed": true
+      },
+      {
+        "name": "looking_the_part pending award is refused",
+        "passed": true
+      },
+      {
+        "name": "looking_the_part pending does not replay XP or erase its record",
+        "passed": true
+      },
+      {
+        "name": "gleaming_with_oil starts unclaimed",
+        "passed": true
+      },
+      {
+        "name": "gleaming_with_oil prior XP outcome was applied natively",
+        "passed": true
+      },
+      {
+        "name": "gleaming_with_oil native pending record readback",
+        "passed": true
+      },
+      {
+        "name": "gleaming_with_oil pending award is refused",
+        "passed": true
+      },
+      {
+        "name": "gleaming_with_oil pending does not replay XP or erase its record",
+        "passed": true
+      },
+      {
+        "name": "simulated Player disconnected",
+        "passed": true
+      }
+    ],
+    "samples": [
+      {
+        "case": "first award",
+        "beforeXp": 0,
+        "afterXp": 25,
+        "claim": true
+      },
+      {
+        "case": "existing pending",
+        "id": "looking_the_part",
+        "alreadyPaid": false,
+        "beforeXp": 25,
+        "afterXp": 25,
+        "claim": "{\"version\":1,\"state\":\"pending\",\"xp\":10}"
+      },
+      {
+        "case": "existing pending",
+        "id": "gleaming_with_oil",
+        "alreadyPaid": true,
+        "beforeXp": 35,
+        "afterXp": 35,
+        "claim": "{\"version\":1,\"state\":\"pending\",\"xp\":10}"
+      }
+    ],
+    "playersAfter": 0,
+    "scope": "Unchanged awardOneShotAdvancement with actual production specs, native Player total XP and DP readback. Pending inputs are seeded with both prior XP outcomes. Not a gameplay trigger, script/server reload, unknown-write fault reproduction, cross-API atomicity, announcement/client rendering, or LIVE."
+  },
+  "execution": {
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 729550848
+  },
+  "cleanup": {
+    "normal_exit_stages": 1,
+    "main_pid": 0,
+    "maintenance_lock_available": true,
+    "temporary_world_and_engine_removed": true,
+    "logs_reports_source_retained": true
+  },
+  "client": false,
+  "live_modified": false
+}

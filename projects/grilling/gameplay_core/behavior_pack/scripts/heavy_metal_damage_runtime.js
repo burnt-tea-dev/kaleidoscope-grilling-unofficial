@@ -1,5 +1,5 @@
-import {world,system} from '@minecraft/server';
-import {FX_KEY,activeEffects} from './effect_lifecycle_core.js';
+import {world,system,EquipmentSlot} from '@minecraft/server';
+import {FX_KEY,activeEffects,effectPayload} from './effect_lifecycle_core.js';
 import {writeEffects} from './effect_state_runtime.js';
 import {definitelyLethalProvisionalHealth,sameHeavyMetalEffect,planHeavyMetalTransition} from './heavy_metal_damage_core.js';
 import {HEAVY_METAL_CLAIM_KEY,parseHeavyMetalClaim,heavyMetalClaimPayload} from './heavy_metal_claim_core.js';
@@ -8,6 +8,15 @@ import {HEAVY_METAL_CLAIM_KEY,parseHeavyMetalClaim,heavyMetalClaimPayload} from 
 // until/amplifier across logout or script reload, even if settlement never ran.
 // Do not expire that receipt or infer a new effect from a clock rollback.
 const rescues=new Map();
+function nativeTotemTakesPriority(entity,cause){
+ // Java totems reject void/forced-death damage, including Ordinary's tagged
+ // damage mapped to override here. Preserve Heavy Metal for those paths;
+ // holding a totem alone does not make every damage source eligible.
+ if(cause==='void'||cause==='override'||cause==='selfDestruct')return false;
+ const equipment=entity.getComponent('minecraft:equippable');
+ return equipment?.getEquipment(EquipmentSlot.Mainhand)?.typeId==='minecraft:totem_of_undying'||
+  equipment?.getEquipment(EquipmentSlot.Offhand)?.typeId==='minecraft:totem_of_undying';
+}
 function snapshot(entity){
  const time=world.getAbsoluteTime();
  if(!Number.isFinite(time))throw Error('Heavy Metal absolute clock is unavailable');
@@ -15,7 +24,7 @@ function snapshot(entity){
  if(raw!==undefined&&typeof raw!=='string')throw Error('Heavy Metal effect state is unreadable');
  const value=raw===undefined?{}:JSON.parse(raw);
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Heavy Metal effect state is invalid');
- return {time,raw,hasMetal:Object.hasOwn(value,'heavy_metal'),effects:activeEffects(value,time),rawMetal:activeEffects({heavy_metal:value.heavy_metal},-Infinity).heavy_metal};
+ return {time,raw,effects:activeEffects(value,time),rawMetal:activeEffects({heavy_metal:value.heavy_metal},-Infinity).heavy_metal};
 }
 function claimSnapshot(entity){
  const raw=entity.getDynamicProperty(HEAVY_METAL_CLAIM_KEY);
@@ -38,6 +47,12 @@ function restoreUncanceledClaim(entity,token){
  if(actual!==token.claimRaw)throw Error('Heavy Metal claim changed before rollback');
  replaceClaim(entity,token.claimRaw,token.claimBefore);
 }
+function restoreUncanceledEffects(entity,token){
+ const actual=entity.getDynamicProperty(FX_KEY);
+ if(actual!==token.effectsBeforeRaw&&actual!==token.effectsRaw)
+  throw Error('Heavy Metal effects changed before rollback');
+ writeEffects(entity,token.effectsBefore,{expectedRaw:actual});
+}
 function release(id,token){if(rescues.get(id)===token)rescues.delete(id)}
 export function forgetHeavyMetalRescue(entityOrId){
  // Leave/death/remove/respawn invalidate callbacks without touching saved data.
@@ -49,25 +64,12 @@ function settle(entity,id,token){
  try{
   if(entity.isValid===false){release(id,token);return}
   if(claimSnapshot(entity).raw!==token.claimRaw)throw Error('Heavy Metal claim ownership changed');
-  const state=snapshot(entity);
-  if(state.time<token.time)throw Error('Heavy Metal absolute clock moved backwards');
-  const next=planHeavyMetalTransition(state.effects,token,state.time);
-  if(!next){
-   if(sameHeavyMetalEffect(state.rawMetal,token))token.phase='quarantined';
-   else release(id,token);
-   return;
-  }
   const health=entity.getComponent('minecraft:health'),value=health?.currentValue;
   if(!Number.isFinite(value))throw Error('Heavy Metal health is unreadable');
   if(value<=0){release(id,token);return} // Never resurrect a later death.
 
-  // Use the actual acknowledged effect writer once. main's legacy fxClear /
-  // fxSet wrappers swallow storage errors and cannot establish this receipt.
-  token.phase='committing';
-  writeEffects(entity,next,{expectedRaw:state.raw});
-  const saved=snapshot(entity);
-  if(saved.hasMetal||!sameHeavyMetalEffect(saved.effects.heavy_metal_poisoning,next.heavy_metal_poisoning))
-   throw Error('Heavy Metal transition was not acknowledged');
+  // Effects were already paid before cancellation. Only native health and
+  // cosmetics need deferred execution; expiry cleanup cannot revoke payment.
   token.phase='paid';
   if(rescues.get(id)!==token||entity.isValid===false)return;
   let healthError;try{health.setCurrentValue(1)}catch(error){healthError=error}
@@ -83,13 +85,13 @@ function settle(entity,id,token){
   // A canceled hit is already protection. Do not grant another one on an
   // unchanged/unreadable effect, retry unknown writes, or replay native damage.
   // Keep the pre-cancel persistent receipt even when this callback is forgotten.
-  if(token.phase!=='paid')token.phase='quarantined';
   console.warn('[Grilling heavy metal] '+error);
- }finally{if(token.phase==='paid')release(id,token)}
+ }finally{release(id,token)}
 }
 
-/** Called only by main's existing before-hurt subscriber, after dodge and
- * invincibility. This module adds no competing event subscription.
+/** Called only by the existing before-hurt subscriber, after dodge and
+ * invincibility. Yield eligible held-totem hits without spending or curing
+ * effects; only the existing confirmed after-heal path cures them.
  */
 export function handleHeavyMetalBeforeHurt(event){
  let entity,id,token;
@@ -108,11 +110,17 @@ export function handleHeavyMetalBeforeHurt(event){
   if(sameHeavyMetalEffect(prior.claim,metal))return false;
   const health=entity.getComponent('minecraft:health');
   if(!health||!definitelyLethalProvisionalHealth(health.currentValue,entity.getEffect?.('absorption')))return false;
-  token={...metal,time:state.time,phase:'reserving',claimBefore:prior.raw,claimRaw:heavyMetalClaimPayload(metal,state.time)};
+  if(nativeTotemTakesPriority(entity,event.damageSource?.cause))return false;
+  const next=planHeavyMetalTransition(state.effects,metal,state.time);
+  token={...metal,time:state.time,phase:'reserving',claimBefore:prior.raw,claimRaw:heavyMetalClaimPayload(metal,state.time),
+   effectsBeforeRaw:state.raw,effectsBefore:state.effects,effectsRaw:effectPayload(next,state.time)};
   rescues.set(id,token);
   // Stable server 2.9.0 explicitly permits dynamic-property setters in
   // restricted_execution. Native health and sound stay in the deferred callback.
   replaceClaim(entity,token.claimBefore,token.claimRaw);
+  // Java pays inside onDeath, while Heavy Metal is active. Waiting one tick
+  // lets normal expiry cleanup erase the last-tick rescue before it can pay.
+  writeEffects(entity,next,{expectedRaw:state.raw});
   token.phase='pending';
   system.run(()=>settle(entity,id,token));
   let cancelError;try{event.cancel=true}catch(error){cancelError=error}
@@ -125,7 +133,7 @@ export function handleHeavyMetalBeforeHurt(event){
     // A scheduler may queue and then throw. Revoke its exact token before
     // restoring only our receipt, and only after confirmed non-cancellation.
     release(id,token);
-    try{restoreUncanceledClaim(entity,token)}catch(rollback){console.warn('[Grilling heavy metal claim retained] '+rollback)}
+    try{restoreUncanceledEffects(entity,token);restoreUncanceledClaim(entity,token)}catch(rollback){console.warn('[Grilling heavy metal claim retained] '+rollback)}
    }else token.phase='quarantined'; // Unknown cancellation cannot refund protection.
   }
   console.warn('[Grilling heavy metal admission] '+error);return cancelled===true;

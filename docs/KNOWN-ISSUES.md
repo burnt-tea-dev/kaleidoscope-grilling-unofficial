@@ -14,19 +14,20 @@
 
 | ID | 已知事實與來源修補範圍 | 必須保留的重現／驗收 |
 | --- | --- | --- |
+| COLD-HOUTTUYNIA-DELIVERY | 舊成品寫入／drop已套用後拋錯會補發第二份；正常耗盡油壺丟本包可讀DP。已由原cold owner／油壺adapter修復，精確來源與證據只查[PARITY](PARITY.md#涼拌折耳根的製作交付) | 新真main場景驗普通、最後原料釋slot、滿包、確認回收及未確認drop；API故障模型不等於原生自然故障或真人操作 |
 | PLAYER-PROPERTY-SLIMMING | [T3.5-b](REBUILD-PLAN.md#t3-5-property-slimming) 來源已由 32 減至 27 格；隔離 BDS 已核 27 格 schema、同 tick 合併與 72000 時計。物品／雙手 bank 格式不變 | 配對 BP/RP 的完整家族、原存檔首次載入／重啟／回退與實際 FP／TP／旁觀者仍待。低槽通道和 TACZ 路由未完成，不宣稱相容 |
 | PREMIUM-OIL-CRAFT-REMAINDER | G201 來源改用原生單一 Premium Chili Oil 配方結果；Bedrock `playerCraftRecipe` after-event 對實際製作出的該油桶按數量歸還空桶，背包滿時交給玩家附近的掉落物。原 Java 配方與四種 shapeless 材料保留。因 Bedrock 事件沒有 Java 工作台格子的槽位資料，空桶改入背包／地面，尚未證明真人操作、取消順序或畫面結果；來源測試不是原生合成驗收 | 同候選 BDS 真工作台以任意排列製作 1 份與批次，核材料消耗、油桶數與空桶數；另驗滿包掉落拾取、非目標配方及客戶端事件行為。不可把事件 capability probe 或 API fixture 稱為 Java 全等／真人通過 |
 | OIL-NAMED-TICK | G194 修復 26.60 命名事件 API 錯配：以 ownership-aware `isName` 取代不存在的 `isMine/name`，不呼叫不存在的取消方法；原生回呼消耗一次排程，只有未完成工作才重排。原形狀反例失敗，既有油機測試修後通過 | 同候選真引擎榨油→完成→收料、倒數途中拆除、卸載與重啟、重複事件及保存故障；來源模型不等於完整 BDS／真人驗收 |
 | HAND-ACTION-PREPARATION | G157 與 G180 的 API 模型可重現新製 Secret 在延後拆串前被 idle 換成 THREE_ALT，原有嚴格 intent 因而拒絕；關閉動畫的 native_plain 與立即入爐也會遇到同根因。G181 以暫時 hand reservation 修復自家外觀替換競爭，未放寬 ownership | 原生新製 Secret 立即拆／入爐；動畫開／關、主副手、被其他玩家或 addon 換 metadata、取消、滿包與重試。來源測試不能證明 native 排程或客戶端已通過 |
 | GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |
-| SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；任意 stack GUI 合成仍是另一項未實作能力 |
+| SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；每stack背包圖示另查下列SKEWER-GUI |
 | SKEWER-CONTENTS | 玩家曾回報配方不合、穿料後只見竹籤與吃空氣；G151／152 有取得契約、短配方、內容、圖像及共同資料守衛修補 | 正常取得→1／2／3 料穿製→烤製→盤／手持→食用／保存；空／不完整串不能被重複穿外層，合法零營養仍遵循原作。任意 stack icon 另驗 |
 | CLIENT-HUD | 曾無森羅 UI、外露 `KT_HUD!` 資料、位置錯及秒級延遲；G138／140–142 有入口、錨點、時計及圖像裁剪來源修補 | 觸控／Desktop、全食品、兩手、連吃、取消、END 隱藏與真實延遲；送出 packet、BDS 載入與舊窄片不代替結果 |
 | EATING-OWNER | G143 修 owning-player property 環境、副手進度、末段隱藏、RawMessage 等價比較及失敗掃描節流 | 近鏡放大、末段平片、換槽／重登、瓶子與食物 preparation 並存仍需當前驗收；不猜改 Java 曲線掩蓋失敗 |
 | GRILL-DEFERRED-OWNER | G125 延後重讀 cancel 並核 type／permutation／owner／完整物品；舊四個原生 API 診斷用代用容器 | 後續 listener 取消爆炸、排程後換方塊、合法計時中拆爐；須保留整個 customBreak、容器內容與玩家結果 |
 | ITEM-DELIVERY | G125 在扣料前核站點身份，保留滿包 planner、實際交付讀回與不明結果隔離 | 榨油機延後扣料、串譜／穿串／拆串滿包、外來槽位和掉落回收未知；未確認回收不得退原料或重發 |
 | SEASONING-DATA-RELOAD | G124 合併目前資料根，取料／效果／HUD 共用 resolver，保存失敗恢復；不自動讀 Java datapack | 後根覆寫、錯誤根不部分生效、舊食物依新映射、未知 kind 與 provider 缺席；真人效果仍待驗 |
-| SKEWER-GUI | issue #166 有任意三槽 GUI 的失敗觀察；參考圖與手持 geometry 不證明 native inventory 合成 | 同一串三份胡蘿蔔及不同原料、raw／cooked／variant，查看背包與快捷欄；固定五幀 icon 不能取代此項 |
+| SKEWER-GUI | 新增逐stack JSONUI來源、快取與Java原圖層；已證及未證範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不是三格製作視窗 | 同一串三份胡蘿蔔及不同原料、raw／cooked／variant，查看背包與快捷欄；原生庫存保存、手持geometry及固定五幀icon不能取代實際client繪製 |
 | SEASONING-FLOW | 舊 LIVE 取瓶失敗；RawMessage／材料數與後續動作有來源修補，未有完整同瓶驗收 | 同瓶放三種必要 base→取回 PENDING→持續 80 tick→SPECIAL→向有串烤架撒料；核材料、uses、取消／換槽／重登，不能用改配方或即時轉換通過 |
 | SEASONING-EXPLOSION-CANCEL | G117 延後工作僅在 cancel 明確 false 時繼續；取消／event 讀失敗保留瓶、ItemStack、容器及保存記錄 | 在瓶 handler 後取消爆炸，驗內容與 ownership；未取消爆炸的原作毀損規則不變。API 模型不是原生事件結果 |
 | PLATE-SATURATION | G116 餐盤在寫 hunger 後重取 saturation／effectiveMax，失敗回滾；舊 trace 曾在 hunger 10→13 後仍用 cap 10 | 重現相同飢餓／食物及原生 cap 條件，核一次營養結算、不吞物品、不虛構 max；同候選 Player／client 待驗 |
@@ -34,7 +35,7 @@
 | PLATE-USE-ARBITRATION | G116 有 block／item-use 仲裁與較近 entity 排除 | 持多份串向盤插入後不能額外吃掉剩餘串；另驗合法 air-use、潛行副手、其他方塊與取消；真輸入順序待驗 |
 | PLATE-PLACED-DISPLAY | G118 有目前內容、FIXED transform、1–5 份與四朝向的專用來源 | 固定／秘製串放盤、即看、取一份及區塊重載；核內容、材質、光照與無殘影。舊 tiny-edge-pixel／朝向故障保留其候選身份 |
 | PLATE-HELD-CONTENTS／DECODE | 目前四格來源與原型限定結果見 [T3.5](REBUILD-PLAN.md#t3-5-property-slimming)；全手持 owner 已共用快照，放置與手持旋轉仍分開 | 1–5 份、主副手混持盤／瓶／串、切槽、重登及旁觀者；舊 stored1／4→0／3 與 float32 模型不認證新 transport |
-| HEAVY-METAL-COMMIT | G119 單次效果→HP→聲音；G120 在取消前持久 claim，不因重建 map 再救同一效果 | 原生傷害、其他 addon、圖騰、部分 absorption、重登／存檔與聲畫；API 讀回不等於磁碟 flush 或 crash 原子性 |
+| HEAVY-METAL-COMMIT | G221 修正到期漏付；G238修復合適傷害下的雙手圖騰優先，39項新原生通過；[實際範圍與控制差異](PARITY.md#heavy-metal-damage-order)由該段持有，部分盾漏救仍未修 | 剩餘吸收量未暴露；override/maxfloat無Heavy仍耗圖騰後死亡，其他addon仲裁與聲畫未知。同世界重開證據不等於 crash 原子性 |
 | OIL-RESIDUE-PLANTS | 已明列 29 類植物適配與兩次作用一次扣料；甜菜四階段對應、竹子 1–2 節與葉片下移、海帶長入水方塊並保留含水層已依 Java 來源實作；未知方塊／掉落／含水層恢復結果不退成本 | 竹子無 Java stage 狀態（僅以 16 高上限停止）、海帶含水層原生 `setWaterlogged` 讀回、其他 feature／外部植物仍缺；正常施肥／採果、上下半、光照／鄰位與重載待 staging 驗 |
 | JAVA-POT-LIFECYCLE | G122 有指定 exact／flex 配方、備料／翻炒／結果階段、保存與品質；有限 Java 品質向量不是完整 PotBlockEntity trace | 真鍋加油→備料→三翻→盛裝、熱源／卸載／重啟、冷卻、兩手連吃、滿包／拆鍋／保存故障及真營養；其他作者配方與未知私有資料不猜轉換 |
 | CUISINE-CONSERVATION | G120／122 修取消後清資料、出料讀回、批次 credit 及手部／站點實際寫入所有權 | 取消／拆鍋／取出／重登／不同 operationId 不得重複交付；確認站點回前像後才補償本次仍擁有的成本；不明保存保持隔離 |
@@ -44,7 +45,11 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 
 ## 其他必須保留的界線
 
-- **ADVANCEMENT-CLAIM**：G132 記錄先保存 claim 再作單次 XP 嘗試，未知結果不 fallback／重試。這是 at-most-once attempt；未發 XP 的人工恢復、跨 API 原子性及當前原生／真人結果仍未完成。[原範圍](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md#進度獎勵失敗邊界g132)
+- **HELD-SNAPSHOT-RECOVERY**：既有動畫提交失敗後換回先前內容，會因舊去重而留下不相符frame；G237由同一publisher重新送完整兩手generation，兩種故障情境通過。具體API／Molang範圍及未觀察的原生客戶端限制只查[PARITY](PARITY.md#手持快照的提交失敗回復)。
+
+- **WARMTH-HEAT-SOURCES**：G234熱源與G236時機／同世界正常重啟已有原生觀察；結果與仍未驗證的範圍只查[PARITY](PARITY.md#溫暖效果的熱源判斷)。跨模組完整同tick順序、客戶端與自動非玩家實體仍非完整Java等價。
+
+- **ADVANCEMENT-CLAIM**：目前owner、單次XP／重複與pending拒絕的原生觀察，以及仍有的限制只查[PARITY](PARITY.md#進度獎勵與領取紀錄)。未實作未發XP恢復，不宣稱跨API原子性或真人結果。
 - **天然要塞**：公開 integration API 不提供 vanilla 新區塊／要塞生成回呼；不能用附近方塊猜歷史，也不能以人工搭建的原生測試冒充自然 25% 替換完成。見 [API](BEDROCK-INTEGRATION-API.md#新生成宿主)。
 - **平台差異**：真自訂流體、Numb 準星、Pepper entityInside、任意食品／smoking 回呼、Create／Maid 等 Java 模組各自列為未支援或待評估。按計畫和實際 API 決定，不由舊 README 永久宣告放棄，也不杜撰等價能力。
 - **視覺全量**：全物品第一人稱／側面貼圖、瓶／盤／串完整操作仍未閉合。舊 G17 editor captures、代表瓶預覽、隔離兩食品片及零玩家 BDS 都只保留原範圍。

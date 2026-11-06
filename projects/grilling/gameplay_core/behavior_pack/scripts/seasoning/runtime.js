@@ -22,6 +22,7 @@ import {blockSound} from "../immersion_audio_runtime.js";
 import {bottleLoreMismatch,bottleLoreSignature,isOwnedBottleLore} from "../bottle_lore_core.js";
 import {metadataSignature} from "../skewer_item_snapshot.js";
 import {retargetBottleFillStack} from "../bottle_fill_item_runtime.js";
+import {copyEatingVariant} from "../eating_item_runtime.js";
 import {awardSeasoningMilestones} from "../advancement/advancement_event_runtime.js";
 import {interactionParticleBurst} from "../immersion_particles_runtime.js";
 import {refreshPlacedBottleAfterPickup} from "../presentation/placed_visual_runtime.js";
@@ -33,9 +34,16 @@ function bottleDataFromItem(stack){
  return {kind,ingredients:readSeasonings(stack),uses:kind==='special'?getUses(stack):0,variant:kind==='special'?specialSeasoningVariant(stack):0};
 }
 
-function bottleItem(data){
- const id=data.kind==='special'?specialSeasoningVisualId(data.uses??0,data.variant??0):seasoningFillVisualId(data.kind==='pending'?PENDING_SEASONING:EMPTY_SEASONING_ID,data.ingredients??[]),stack=new ItemStack(id,1);setSeasonings(stack,data.ingredients??[]);
+function bottleItem(data,originalEmpty){
+ // Legacy save readers have only a semantic record. A live EMPTY -> PENDING
+ // promotion has the original ItemStack: preserve its entire exposed envelope
+ // and mutate only Grilling's derived filling state/lore.
+ if(originalEmpty&&data.kind!=='pending')throw Error('Native bottle promotion requires PENDING target');
+ const id=data.kind==='special'?specialSeasoningVisualId(data.uses??0,data.variant??0):seasoningFillVisualId(data.kind==='pending'?PENDING_SEASONING:EMPTY_SEASONING_ID,data.ingredients??[]);
+ const stack=originalEmpty?copyEatingVariant(originalEmpty,id):new ItemStack(id,1);
+ setSeasonings(stack,data.ingredients??[]);
  if(data.kind==='special'){setUses(stack,data.uses??0);try{setItemProperty(stack,SEASON_VARIANT_KEY,data.variant??0);setItemLore(stack,seasoningLore(SEASONING_MAX_USES-(data.uses??0),data.ingredients?.length??0))}catch{}}
+ else if(originalEmpty)refreshBottleIngredientLore(stack,data);
  else try{if(data.ingredients?.length)setItemLore(stack,seasoningLore(undefined,data.ingredients.length,{pending:data.kind==='pending',missingBase:data.kind!=='pending'}))}catch{}
  if(JSON.stringify(bottleDataFromItem(stack))!==JSON.stringify({kind:data.kind,ingredients:data.ingredients??[],uses:data.uses??0,variant:data.variant??0}))throw new Error('Bottle reconstruction did not preserve its mechanic fields');
  return stack;
@@ -107,7 +115,7 @@ function handleSeasoningBlock(block,player,hand='main'){
   top.ingredients.push(id);
   // Java's explicit EMPTY -> PENDING promotion creates a fresh semantic item.
   // Same-kind fill changes preserve all stable-API metadata through readback.
-  if(top.kind==='empty'&&hasSeasoningBase(top.ingredients))items[items.length-1]=bottleItem({...top,kind:'pending'});
+  if(top.kind==='empty'&&hasSeasoningBase(top.ingredients))items[items.length-1]=bottleItem({...top,kind:'pending'},topItem);
   else{setSeasonings(topItem,top.ingredients);if(JSON.stringify(readSeasonings(topItem))!==JSON.stringify(top.ingredients))throw new Error('Bottle seasoning data write rejected');refreshBottleIngredientLore(topItem,top);items[items.length-1]=retargetBottleFillStack(topItem);}
   if(!commitBottleAndHand(block,current,items,storage,next,!free)){interactionFailure(player,'§c加料失敗，已嘗試回復原料');return}
   awardSeasoningMilestones(player,top.ingredients);
@@ -118,7 +126,7 @@ function handleSeasoningBlock(block,player,hand='main'){
  if(!id){
   const storage=captureWritableHand(player,hand);let item=items.pop();const data=bottleDataFromItem(item);
   if(storage.before)throw new Error('Grilling: take-bottle hand is no longer empty');
-  if(data.kind==='empty'&&hasSeasoningBase(data.ingredients))item=bottleItem({...data,kind:'pending'});
+  if(data.kind==='empty'&&hasSeasoningBase(data.ingredients))item=bottleItem({...data,kind:'pending'},item);
   else{if(data.kind!=='special')refreshBottleIngredientLore(item,data);item=retargetBottleFillStack(item);}
   if(!commitBottleAndHand(block,current,items,storage,item))interactionFailure(player,'§c取瓶失敗，已嘗試回復調料');
   else{refreshPlacedBottleAfterPickup(block);blockSound(block,'seasoning_bottle_place',1);warnMissingSeasoningBase(player,item)}

@@ -1,6 +1,6 @@
 import {system} from '@minecraft/server';
 import {dragonHealthBonus,dragonHealthGain} from './dragon_health_core.js';
-import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
+import {PERSISTED_KEY as PersistedKey,LOCKED_DRAGON_HEALTH_EVENT_PREFIX} from './core/persist_keys.js';
 const KEY=PersistedKey.DRAGON_NATIVE_LEVEL;
 const pending=new Map();
 /** Native max health; damage/healing remains owned by the engine. */
@@ -18,7 +18,7 @@ export function nativeDragonHealth(entity,amplifier,{heal=false}={}){
   if(legacy?.amplifier===(level===2?1:0))entity.removeEffect('health_boost');
   entity.setDynamicProperty(PersistedKey.DRAGON_POOL,undefined);
  }
- entity.triggerEvent(PersistedKey.DRAGON_HEALTH_PREFIX+level);
+ entity.triggerEvent(LOCKED_DRAGON_HEALTH_EVENT_PREFIX+level);
  entity.setDynamicProperty(KEY,level||undefined);
  // Component-group health.value is the native default/max attribute. The
  // engine preserves current HP. Heal after that event by the Java difference.

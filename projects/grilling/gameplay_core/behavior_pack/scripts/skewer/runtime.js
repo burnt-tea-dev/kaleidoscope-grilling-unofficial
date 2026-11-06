@@ -1,11 +1,13 @@
 import {getItemLore,getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {foodFacts} from "../food_snapshot_core.js";
+import {readRowsFromKey,readSkewerRows,readEffectiveSkewerRows,isSecretCooked} from "./ingredient_state.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {SECRET_COOKED_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_CREATOR_KEY,SECRET_ID,SKEWER_INGREDIENTS_KEY,UNFINISHED_ID,appendOutcome,canAppendConfigured,expectedSize,isConfiguredIngredient,isDisassemblableRaw,secretFood} from "./skewering_core.js";
 import {captureTwoHandIntent,primitiveStackProps,twoHandIntentStillCurrent} from "../core/interaction_intent_adapter.js";
 import {captureSkewerMetadata,metadataSignature,restoreSkewerMetadata} from "../skewer_item_snapshot.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {creatorLore} from "../localized_lore_core.js";
+import {refreshHotLore} from "../food/food_state_adapter.js";
 import {resolveSecretSmokedId} from "../secret_compat_core.js";
 import {secretEatingRows} from "../secret_eating_core.js";
 import {FOOD_DATA} from "../eating_data_lookup.js";
@@ -30,12 +32,12 @@ const THREAD_LAST=new Map();
 const PENDING_HAND_ACTIONS=new Map();
 
 function copyCustomData(from,to){
- try{if(from.nameTag)to.nameTag=from.nameTag}catch{}
- let lore=[];try{lore=getItemRawLore(from)}catch{}
- let ids=[];try{ids=getItemPropertyIds(from)}catch{}
- try{if(lore.length)setItemLore(to,lore);else if(ids.length)setItemLore(to,['§r'])}catch{}
- for(const id of ids)try{setItemProperty(to,id,getItemProperty(from,id))}catch{}
- return to;
+ // Raw contents are the authority. Conversion changes only the item identity:
+ // reuse the existing complete ItemStack serializer and verified readback.
+ // Unsupported native metadata must abort extraction before the grill is debited.
+ const source=captureSkewerMetadata(from);
+ return restoreSkewerMetadata({...source,id:to.typeId},
+  (id,count)=>new ItemStack(id,count),id=>new EnchantmentType(id));
 }
 
 function ingredientSnapshot(stack,full=false){
@@ -71,23 +73,7 @@ function behaviorRemainder(behavior){
  return out;
 }
 
-function readRowsFromKey(stack,key){
- const raw=getItemProperty(stack,key);if(raw===undefined)return [];
- if(typeof raw!=='string')throw Error('Grilling: invalid ingredient data');
- const rows=JSON.parse(raw);
- if(!Array.isArray(rows)||rows.length>3||rows.some(x=>!x||typeof x.id!=='string'))throw Error('Grilling: invalid ingredient rows');
- return rows;
-}
-
-function readSkewerRows(stack){return readRowsFromKey(stack,SKEWER_INGREDIENTS_KEY)}
-
 function validSecretIngredientRows(rows){return Array.isArray(rows)&&rows.length===3&&rows.every(row=>row&&/^[a-z0-9_.-]+:[a-z0-9_./-]+$/.test(row.id)&&(!row.native||(row.native.version===1&&row.native.id===row.id)))}
-
-function isSecretCooked(stack){try{return canonicalFoodId(stack?.typeId)===SECRET_ID&&getItemProperty(stack,SECRET_COOKED_KEY)===true}catch{return false}}
-
-// Default item/plate semantics follow Cooked. A grill renderer may explicitly
-// request cached cooked rows at visual stage >=4 without finishing the item.
-function readEffectiveSkewerRows(stack,preferCookedSnapshot=isSecretCooked(stack)){if(preferCookedSnapshot){const cooked=readRowsFromKey(stack,SECRET_COOKED_INGREDIENTS_KEY);if(cooked.length)return cooked}return readSkewerRows(stack)}
 
 function rowLabel(row){return String(row.id??'').replace(/^.*:/,'').replaceAll('_',' ')}
 
@@ -163,7 +149,7 @@ function threadCurrent(player){
  const variants=JSON.stringify(appendedModelVariants(off.typeId==='minecraft:stick'?undefined:getItemProperty(off,SECRET_MODEL_VARIANTS_KEY),rows.length));
  setItemProperty(next,SECRET_MODEL_VARIANTS_KEY,variants);
  if(getItemProperty(next,SECRET_MODEL_VARIANTS_KEY)!==variants)throw Error('Grilling: skewer model variants were not saved');
- if(outcome.kind==='secret')setSecretCreator(next,player);
+ if(outcome.kind==='secret'){setSecretCreator(next,player);refreshHotLore(next);}
  if(getItemProperty(next,SKEWER_INGREDIENTS_KEY)!==JSON.stringify(nextRows))throw new Error('Grilling: skewer data was not saved');
  if(outcome.kind==='secret'&&!getItemProperty(next,SECRET_CREATOR_KEY))throw new Error('Grilling: creator data was not saved');
  const free=creative(player),nextMain=free?food:reducedStack(food),outputs=[];

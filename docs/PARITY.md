@@ -34,7 +34,7 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | 食用、停止、換手與離線 | `MultiBiteSkewerItem`、`SkewerEatingAnimation` | `secret_eating_core.js`、`cuisine_eating_core.js`、`main.js` | 來源已實作：會話、進度與結算 | readiness、release grace、完整動畫長度分開；直接離線依[已接受的Java差異](REBUILD-PLAN.md#t3-4-direct-logout-policy)處理；真人斷線、缺少 counter、crash 與副手事件尚未全面驗收 | [a285_core](../tests/legacy/test_a285_core.mjs)、[food_finish](../tests/legacy/test_food_finish.mjs)、[skewer_item_snapshot](../tests/scenario/test_skewer_item_snapshot.mjs)；純規則與受控 API 情境涵蓋 use/start/complete admission、匹配完成的一次結算、效果期限及消耗 metadata；stop/leave、缺少 counter、crash、副手與原生完整流程仍待驗。`eating_profiles.json`、`animation_curves.json`；EATING-ACCEPTANCE；T1.3-3 |
 | 手持／進食模型、聲音與持物 ownership | `SkewerEatingPiece`、`SkewerColorProvider`、各 `*FirstPersonAnimation` | `core/player_props.js`、`held_visual_dispatch_runtime.js`、`secret_visual_state_core.js`、RP attachables／animations | 來源已實作：目前呈現路由與八種新增食材的既有索引擴充 | owning-player 修正不等於近鏡、末段平片、皮膚／FOV、旁觀者、兩手及聲音中斷已正確；八食材雙手／helper 實際畫面仍待驗 | [immersion_audio](../tests/legacy/test_immersion_audio.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；後者執行 225 個索引、owner 與 resource expression，不是 renderer；`animation_curves.json`、`model_frames.json`、`sounds.json`；EATING-OWNER；T1.3-3 |
 | 固定動態背包 icon | `SkewerColorProvider`、原動態 sprites | RP textures／texture animation 定義 | 來源已實作：固定圖像路由 | 熟史萊姆與神秘串五幀、每幀 4 tick 的真人觀察仍需同候選結果；不代替任意 stack GUI | 當前沒有完整自動化情境；`model_frames.json`；T1.3-4 |
-| 任意三槽秘製串背包 GUI | `CustomSkewerGuiTexture`、`CustomSkewerGuiDecorator` | 現有 fallback icon；手持 renderer 是另一條路徑 | 未實作：完整每 stack 原作 GUI 合成 | 有原始失敗觀察；計畫採通用圖示＋名稱／lore 的平台方案，不新增視覺影子 ID；不把平台取捨寫成真人完成 | 當前沒有完整自動化情境；SKEWER-GUI；issue #166；`model_frames.json` |
+| 任意三食材秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | `secret_gui_state.js`、生成的 `kg_secret_gui*.json`；手持 renderer 是另一條路徑 | G239來源已實作；原生資料／同QA重啟30項通過，實際client繪製未觀察 | [本項範圍與限制](#秘製串背包圖示gui-display)；保留雙手穿料、原ID及64堆疊 | [正式main情境](../tests/scenario/test_secret_inventory_icon.mjs)、[Java原合成器比對](../tools/test_secret_gui_assets.py)、[原生觀察](../tests/native/secret-gui/observed.json)；SKEWER-GUI；issue #166 |
 | 餐盤交易、營養與互動仲裁 | `SkewerPlateBlock(Entity)`、`SkewerPlateItem` | `a25_plate_recipe_core.js`、`a25_plate_recipe_runtime.js`、`plate_transaction_core.js` | 來源已實作：保存、回滾與互動路由 | 放置／取回、點盤誤吃、未知交付、外來槽位及併發必須各自保留；不得用 PR 關閉認定修好 | [a25_core](../tests/legacy/test_a25_core.mjs)、[plate_transactions](../tests/legacy/test_plate_transactions.mjs)；PLATE-SATURATION、PLATE-USE-ARBITRATION；T1.3-1、T1.3-5 |
 | 放置餐盤與牆上串譜顯示 | `SkewerPlateRenderer`、`SkewerRecipeBlockRenderer` | `plate_recipe_visual_core.js`、`a2770_placed_visual_runtime.js`、共享 secret palette | 來源已實作：內容、份數、四朝向與八食材放置色板 | 1–5 份、八食材、真材質、光照、重載與更新待驗；舊 tiny-edge-pixel 觀察保留原身份 | [a2770_core](../tests/legacy/test_a2770_core.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；放置 resource expression 非實際畫面；`model_frames.json`；PLATE-PLACED-DISPLAY |
 | 手持餐盤內容與同步 | `SkewerPlateRenderer` | `plate_held_visual_core.js`、`plate_held_visual_runtime.js`、共享 held transport | 來源已實作：reader、writer、獨立 count | 兩手混持、切槽、重登、skin／FOV、旁觀者及未知外來模型待驗；數學模型不能替代 client | [plate_food_cache](../tests/legacy/test_plate_food_cache.mjs)；僅內容 cache 規則；held transport 事件與畫面仍待驗。PLATE-HELD-CONTENTS／DECODE；`model_frames.json` |
@@ -44,11 +44,65 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | 外來作者、Creative 與批次出料 | `HotFoodMerge`、出料／油刷規則 | `integration_stack_core.js`、`main.js` | 來源已實作：明列出料與 metadata 路徑 | 跨作者合併、滿包、Creative 消耗及未知作者文字保留須實測；任意外部回呼未因此完成 | [a23_hot_merge](../tests/legacy/test_a23_hot_merge.mjs)、[food_snapshot](../tests/legacy/test_food_snapshot.mjs)；`foods.json`、`gameplay_rules.json`；ITEM-DELIVERY |
 | Cookery 料理資料與取消清理 | `PotOilAccess`、`OilPotCompat`、料理資料契約 | `a2750_cookery_cuisine_core.js`、`a2750_cookery_cuisine_runtime.js` | 來源已實作：保存、交付與取消保護 | 真宿主出料／拆鍋／取消／保存故障待驗；API 讀回不證明任意 NBT 或 crash 原子性 | [cookery_output_contract_core](../tests/legacy/test_cookery_output_contract_core.mjs)、[a2750_core](../tests/legacy/test_a2750_core.mjs)；CUISINE-CONSERVATION；T1.3-5；[整合 API](BEDROCK-INTEGRATION-API.md) |
 | exact／flex 鍋具生命週期與品質 | Cookery `PotBlockEntity`、`QualityEvaluator`、`QualityUtils` | `a2750_wok_food_core.js`、`a2752_stockpot_food_core.js`、`cuisine_eating_core.js` | 來源已實作：列明配方流程與品質 | 有限品質 Java 向量不等於完整事件；備料／翻炒／熱源／卸載／盛裝／冷卻／兩手食用待驗 | [java_pot_core](../tests/legacy/test_java_pot_core.mjs)、[cuisine_quality_java](../tests/legacy/test_cuisine_quality_java.mjs)；`cookery.json`、`foods.json`；JAVA-POT-LIFECYCLE |
-| 重金屬保命與其他效果 | `GrillingMobEffect`、`InvincibleHandler`、`DragonEggPowderHandler` | `effect_lifecycle_core.js`、`main.js` | 來源已實作：單次 claim 與效果路由 | final death／totem／absorption、其他 addon 競合與磁碟持久性未完全等價；聲畫另驗 | 當前沒有完整自動化情境；`effects.json`；HEAVY-METAL-COMMIT |
+| 重金屬保命與其他效果 | `AdvancedSeasoningHandler.onDeath`、`InvincibleHandler`、`DragonEggPowderHandler` | `heavy_metal_damage_runtime.js`、`effect/runtime.js` | 來源已實作：單次 claim、取消前付款；G238合適傷害下原生圖騰先處理 | 部分吸收盾漏救及override/maxfloat無重金屬control差異仍未解；現行範圍與限制見[圖騰及吸收順序](#heavy-metal-damage-order)。其他 addon 競合與 crash 持久性未完全等價；聲畫另驗 | [真main事件與失敗回復](../tests/scenario/test_heavy_metal_rescue.mjs)、[原生回呼寫入／同世界重開](../tests/native/heavy-metal/observed.json)、[歷史4案順序對照](../tests/native/heavy-metal/damage-order-observed.json)、[G238圖騰優先原生觀察](../tests/native/heavy-metal/totem-priority-observed.json)；`effects.json`；HEAVY-METAL-COMMIT |
 | 花椒生成、戰利品與天然要塞 | `PepperTreeFeature`、`FortressHouttuyniaHandler`、各 loot handler | `a2759_pepper_worldgen_fruiting_runtime.js`、`a2860_pepper_worldgen_seed_runtime.js`、`integration_api_runtime.js` | 來源已實作：列明生成與公開宿主接口；天然要塞入口未完成 | 可信新生成宿主不得由附近磚塊推測；舊區塊不能被當作新區塊掃描改寫 | [a2759_core](../tests/legacy/test_a2759_core.mjs)、[java_survival_parity](../tests/legacy/test_java_survival_parity.mjs)；`world_data.json`；[整合 API](BEDROCK-INTEGRATION-API.md#新生成宿主) |
-| 進度與獎勵 | Java advancements 與完成回呼 | `a2753_advancement_runtime.js`、`a2756_advancement_event_runtime.js`、`a2758_advancement_challenge_runtime.js` | 來源已實作：單次 XP 嘗試 | claim 後未知結果不重試；未發 XP 的恢復、跨 API 原子性及真人驗收仍缺 | [a2753_core](../tests/legacy/test_a2753_core.mjs)、[a2756_core](../tests/legacy/test_a2756_core.mjs)、[a2758_core](../tests/legacy/test_a2758_core.mjs)；僅條件／計數規則；真 XP／claim 交付仍待 scenario。`world_data.json`；ADVANCEMENT-CLAIM |
+| 進度與獎勵 | Java advancements 與完成回呼 | [advancement_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_runtime.js)、[advancement_event_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_event_runtime.js)、[advancement_challenge_runtime](../projects/grilling/gameplay_core/behavior_pack/scripts/advancement/advancement_challenge_runtime.js) | 來源已實作：單次 XP 嘗試 | 原生XP／claim及未確認的範圍見[本項說明](#進度獎勵與領取紀錄) | [a2753_core](../tests/legacy/test_a2753_core.mjs)、[a2756_core](../tests/legacy/test_a2756_core.mjs)、[a2758_core](../tests/legacy/test_a2758_core.mjs)只覆蓋條件／計數；[原生XP／claim](../tests/native/advancement-claim/observed.json)17項通過 |
 | Cookery／Tavern 指南入口與多語 | 家族整合能力；不冒充 Java 原作玩法 | `guide/main.js`、guide publisher；[指南規範](GUIDE-STANDARD.md) | 來源已實作：單入口、內容與交接 | 接收章節不等於玩家 UI 正確；返回、關閉、逾時、觸控、三語及多人隔離待驗 | [指南靜態檢查](../tools/check_grilling_guide.py)；[GUIDE-STANDARD](GUIDE-STANDARD.md)；既有指南檢查與真人場景分開 |
 | HUD、平台替代與效能 | Java HUD／流體／碰撞／mixin／選用模組 | 目前 HUD、油流與明列 adapter；現況見 [ARCHITECTURE](ARCHITECTURE.md) | 來源已實作：有限替代；部分能力未實作 | 原始資料碼外露、位置與延遲保留失敗；未有完整效能預算。D3／D5／D6 仍按計畫待決 | [a2739_core](../tests/legacy/test_a2739_core.mjs)、[a2740_core](../tests/legacy/test_a2740_core.mjs)；僅 HUD 目標／狀態規則；無完整效能或畫面驗收。CLIENT-HUD、平台與效能；`hud.json`、`minecraft_assets.json` |
+
+## 秘製串背包圖示（GUI display）
+
+本項的GUI指背包／快捷欄中每串圖示的繪製，不是輸入三格食材的製作視窗。固定Java `9a1acdab`的[Forge1.20.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)與[NeoForge1.21.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)均以雙手逐次穿料、直接更新手上成品；兩分支的`CustomSkewerGuiTexture`／`SkewerGuiDecorator`讀每stack食材、生熟及variant畫圖示。沒有新增三格窗口、關閉返料或自動烹飪的原作要求；`secret_terminal_visibility.py`處理的是食用末段顯示，不能當成製作終端。
+
+新增來源使用同版官方[Mojang UI sample](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/resource_pack/ui/ui_common.json)的每slot `#hover_text` collection binding。既有進度RawMessage附上純格式碼顯示快取，由原庫存／副手／已追蹤容器的tooltip queue更新；不新增lore行、物品ID、視窗或排程。每串的三個食材索引、原GUI variant及生熟palette選出Java原圖層；原名稱、完整快照及世界metadata record保留，重複食材比較忽略這份純視覺快取。缺少owned進度行的自訂tooltip維持原樣。額外addon食品仍受既有視覺catalogue範圍限制，未宣稱任意外部貼圖可自動讀取。
+
+`tools/build_secret_gui.py`從[公開原圖／原Java來源](../tools/fixtures/secret-gui/README.md)產生圖層與窄 `common.item_renderer` hook，不接管庫存按鈕或雙手交易。兩分支未改寫的Java GUI合成器各5400組與新圖層逐像素相同。正式main情境確認兩串同ID不同配方各自取資料、生熟快照、原雙手逐次穿料及整串拆解；原圖、來源程式與metadata測試不等於client渲染。
+
+2026-11-06 BDS1.26.60.6／server2.12.0-beta的[窄原生30項](../tests/native/secret-gui/observed.json)確認既有進度RawMessage內98碼純格式資料可寫入及完整讀回，cache穩定；真庫存事件、換槽、chest轉移、同一QA世界正常重啟後，name／count／flags／原RawMessage及private carrier／遊戲metadata完整相同。兩次正常stop／exit0、players／errors／OOM皆0，QA已清；詳見[測試範圍](../tests/native/secret-gui/README.md)。這只確認此RawMessage格式路徑，不推論任意string lore的官方單行50字限制均失效。測試用獨立QA manifest及entry，資料實作與G239相同，並非完整家族候選或client測試。
+
+目前沒有已連接的遊戲client。背包每slot與HUD hotbar的binding實際供值、UI hook載入、換槽後畫面及其他resource pack的同名UI衝突仍未觀察；不將來源或BDS載入當成完整圖示還原PASS，也不另排人驗等待。原始失敗及範圍見[issue166](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/166)。原生庫存保存、手持模型及固定五幀圖示各有自己的證據範圍。
+
+## 涼拌折耳根的製作交付
+
+兩個Java分支的[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/ColdHouttuyniaCraftingRecipe.java)／[NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/ColdHouttuyniaCraftingRecipe.java)都在四個已占用製作格中核對三份折耳根與一個至少含2點高級辣椒油的油壺，產出一份涼拌折耳根，複製原油壺後扣2點作餘物。Bedrock既有適配仍是主手至少三根、副手油壺、蹲下點工作台；這不是Java原生四格製作視窗。原料數、油量與成品數不改。
+
+正式main的[製作場景](../tests/scenario/test_cold_houttuynia_transaction.mjs)在舊來源重現三項：成品庫存寫入已套用後拋錯，舊give改丟地上而多一份；滿包drop已套用後拋錯，再spawn第二份；正常用完油轉空壺時，丟失本包可讀的附加DP。修復移除原cold owner的舊give，直接使用既有 `core/transaction.js` 與output planner；先回收可確認的成品才退款，無法確認drop時不補發或退款，沿用既有未確認交易阻擋重試的行為。最後三根釋出的主手格可接成品，滿包仍可掉落一份。油壺adapter在跨ID時保留本包可讀properties，仍清理原已知legacy油鍵；不讀取其他包私有資料，也不聲稱可複製不可見NBT。
+
+G240的新五個真main場景與受影響的既有油交易／公開API共93項通過。這是API故障模型及來源行為證據，不是BDS自然故障。2026-11-06 BDS1.26.60.6／server2.12.0-beta的[29項原生觀察](../tests/native/cold-houttuynia/observed.json)確認真craft函式、native Player／ItemStack／庫存／副手／drop的三個健康流程，空壺保留本包DP／name／raw lore／flags，存chest同QA正常重啟後資料一致；兩階段normal stop／exit0、players／errors／OOM皆0，QA已清。這使用最小外部pot內容，並非真人shiftclick、作者pot component互動、Java工作台或完整新家族候選的驗證；精確範圍見[窄測說明](../tests/native/cold-houttuynia/README.md)。
+
+## 進度獎勵與領取紀錄
+
+目前的 `advancement/advancement_runtime.js:awardOneShotAdvancement` 先以既有進度DP寫入並讀回pending，再嘗試一次原生`addExperience`；成功後將同一DP寫成布林true。已完成、pending、未知值或讀取失敗都拒絕再次發獎。若XP呼叫或完成寫入的結果不明，保留pending，不用命令fallback或自動重試；這是「最多嘗試一次」，不是XP與DP的跨API原子交易，也沒有恢復未發XP的功能。
+
+上表三個core測試只驗數值、條件及計數，不能當成原生發獎證據；舊表的a2753／a2756／a2758 runtime檔名已改連實際owner。2026-11-06的[窄原生觀察](../tests/native/advancement-claim/observed.json)在BDS1.26.60.6沿PR364原函式及observer通過17項：NativePlayer XP0→25、完成claim=true，重複拒絕且XP不變；既有pending的兩種先前付款結果保持25→25／35→35、原DP bytes不變。正常stop／exit0、players/errors/OOM為0，自己的QA世界／引擎已清，詳見[範圍與重現說明](../tests/native/advancement-claim/README.md)。這只確認直接函式與原生XP／DP，不證明真玩法trigger、重啟、未知寫入故障、跨API原子性或客戶端聲畫；真人不另立完成門檻。
+
+## 手持快照的提交失敗回復
+
+T3.5 的正式路徑由 `held_visual_dispatch_runtime.js` 匯集兩手provider，交同一個 `held_visual_transport.js` publisher；`tests/native/held-snapshot/` 是獨立歷史原型，並非另一個由main啟動的writer，不能只因名稱相似就刪除。實際property宣告查 [player.json](../projects/grilling/gameplay_core/behavior_pack/entities/player.json)，來源使用既有四個欄位，不靠新增欄位修復回復流程。
+
+G237 修正既有失敗分支：A已送出，改成B時先更新原生frame、但動畫提交拋錯，之後兩手又回A；舊去重直接認定A已送過，留下原生frame B與舊packet A不相符，連週期refresh也只重送舊frame。正式publisher現有pending時直接建立與目前兩手資料一致的新generation，成功後才恢復去重，不新增retry queue、保存欄位或第二writer。
+
+[真實publisher／staged-owner情境](../tests/scenario/test_held_snapshot_recovery.mjs)使用既有API fixture的延後property寫入，覆蓋動畫submit前失敗及呼叫已套用後拋錯兩種既有故障模型；兩者原版均未重送、修後均以新frame恢復兩手完整內容，晚到的A/B packet不能覆蓋。這是API故障注入及實際生成Molang請求的query邊界執行，未聲稱BDS自然出現此錯誤、真客戶端變數scope或完整renderer已驗證；現有低槽通道的客戶端限制仍保留。
+
+## 溫暖效果的熱源判斷
+
+G234 修正 `effect/runtime.js` 的原熱源判斷：熄滅的普通／靈魂營火不供熱；原生 `lit_furnace`、`lit_smoker`、`lit_blast_furnace`、已亮的紅石類型及 `lit=true` 的蠟燭／銅燈供熱；火、靈魂火、靜止／流動岩漿、岩漿塊與既有已點火烤架仍有效。依據為已釘選 Cookery [WarmthEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/WarmthEffect.java) 的 LIT 判斷及[熱源 tag](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/generated/resources/data/kaleidoscope_cookery/tags/block/warmth_heat_source_blocks.json)；Bedrock 名稱與狀態來自官方 1.26.60.5 [mojang-blocks.json](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/vanilladata_modules/mojang-blocks.json)。該引擎的營火使用布林 `extinguished`，不是舊名稱 `extinguished_bit`。
+
+[真 main 排程情境](../tests/scenario/test_warmth_heat_sources.mjs)先重現原本三熔爐不回血、兩熄滅營火誤回血，修後涵蓋原生 ID／狀態切換、5×3×5 邊界、多熱源只回血一次、生命上限、烤架與下界慢速回復。G234 的保存鍵、效果期限和檢查頻率不變。[既有原生觀察](../tests/native/warmth/heat-observed.json)已確認15項：兩種營火真實extinguished狀態、三種熔爐投入原生食材與煤後自行燃燒、idle不回血及burning回1HP，正常停服、0players/errors/OOM。該窄測使用正式effect application/tick入口，並非完整main或客戶端驗證；首次診斷缺少player屬性及同一世界補入未修改G234 player定義後成功的範圍，見[探針說明](../tests/native/warmth/README.md)。它不證明後續時機修正已通過原生測試。
+
+G236 接續修正獨立時機差異。Mojang 1.20.1／1.21.1 的 `MobEffectInstance.tick` 均先呼叫效果的duration判斷／apply，再`tickDownDuration`；以官方[1.20.1 JAR](https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt)、[1.21.1 JAR](https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar)及[映射](https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt)核對，對應1.20.1 `bfa.a(bfz,Runnable)`、1.21.1 `brz.a(btn,Runnable)`。因此tick7套用40tick效果，後續tick8先處理duration40、tick28處理duration20；原G234的全域時鐘只在tick20／40回復。直接把`until-now`當作扣減前duration的G235草稿也漏掉第一tick，未獨立合併或部署；其身份保留，由G236取代。
+
+正式owner以既有active deadline恢復本次扣減前的`until - world absolute time + 1`，判斷20的倍數；不新增保存欄位、計時器或待辦資料。[真main情境](../tests/scenario/test_warmth_heat_sources.mjs)核對第一tick、第二次回復、續期、到期不補零tick回血，以及原生DP欄位模型在process clock重啟後保留同deadline。12項情境通過，原G234在新增的三項失敗。
+
+2026-11-06 的[G236原生觀察](../tests/native/warmth/timing-observed.json)沿未改寫的exported函式通過10＋11項：原生Player在tick87套用40tick效果，elapsed1／13／20／21／40的HP為5／5／5／6／6；同QA正常停服再開，原生保存actor的相同DP期限及4HP保留，在absolute741（扣減前601）不回復、742（600）回到5HP，期限不變。兩次正常stop／exit0、players/errors/OOM為0。這確認原生時機與受影響保存資料；沒有證明native process clock重置、完整main、跨模組完整同tick順序、客戶端或自動非玩家支援，詳見[探針說明](../tests/native/warmth/README.md#g236-duration-timing-and-same-world-restart)。
+
+## 搖瓶完成的額外資料保存適配
+
+G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/350) 的單一修復：`food/runtime.js:completePending` 使用已核對的目前手持瓶，經既有 `copyEatingVariant` 保留 API 可見名稱、RawMessage lore、keepOnDeath／lockMode、Adventure 放置／破壞限制和可讀寫的動態欄位；只重建已知由煙火持有的 lore，重設 uses=0 與隨機 variant。失敗回復目前的原生 pending stack，不回寫開始食用時已過期的旗標／限制快照。[原有真main回歸](../tests/scenario/test_pending_seasoning_metadata.mjs)已在當前來源依賴執行，覆蓋目前 metadata、主副手失敗回復和拒絕新 variant 後重試；原生操作／保存範圍見[專用探針](../tests/native/seasoning-metadata/README.md)。
+
+[2026-11-05 原生觀察](../tests/native/seasoning-metadata/observed.json)已確認一次主手 native use 的開始／完成相隔80ticks；成品保存上述公開欄位，同時重設owned lore／uses／variant，放入原生箱子、正常停服／同世界重開後仍為相同metadata。測試使用BDS1.26.60.6、server2.12.0-beta、server-ui2.2.0、gametest1.0.0-beta及已審閱Cookery1.6.4，Beta APIs／POI／upcoming creator features已開。自有來源程式未改寫，獨立診斷BP/RP身份／entry overlay已列明；這不是正式G222整組候選或一般玩家副手操作的驗收。沒有重跑未變的重金屬／圖騰實驗。
+
+這是**擁有者資料保護要求下的額外適配，不是 Java 缺口計數**。固定 Java1.1.1 的 [NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java)／[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/PendingSeasoningItem.java) `finishUsingItem` 本身也建立新 SPECIAL stack，只轉 ingredients／隨機 variant，沒有複製名稱與任意 metadata。跨種類成功轉換沿既有公開欄位投影，不等於同種類 `ItemStack.clone()` 的完整原生複製；未知 NBT、不可讀欄位及其他 pack 私有資料不在已證明範圍。原料、產量、次數上限與隨機機率不變。
 
 ## 指南內容的歷史來源索引
 
@@ -87,7 +141,7 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | T1.3-1／#214 | 餐盤／食譜交易失敗或花椒採收掉落不明時，保留物品資料與所有權，不覆寫外來物品、不重複退款／採收、不遺失內容 | 餐盤、串譜、作物與世界；未知結果／故障注入和同候選真人流程仍需對照 |
 | T1.3-2／#217 | 烤架與貼牆廚具架碰撞／選取符合 Java，避免空氣阻擋與靠牆點不中 | 烤架、料理架；已有來源承接不代替四朝向與貼牆實際結果 |
 | T1.3-3／#220 | 20 種既定 THREE 路線烤串在站立、第一人稱主手食用時，逐口模型與手臂投影符合 Java | 食用與呈現；精確食品／路線與鏡頭條件不擴張成全食品驗收 |
-| T1.3-4／#222 | 熟史萊姆串與神秘串背包圖示按 Java 五幀、每幀 4 tick 動畫呈現 | 固定動態 inventory icon；與任意三槽 GUI 缺口分開 |
+| T1.3-4／#222 | 熟史萊姆串與神秘串背包圖示按 Java 五幀、每幀 4 tick 動畫呈現 | 固定動態 inventory icon；與任意三食材每stack圖示缺口分開 |
 | T1.3-5／#232 | 放置／取回餐盤、錄製食譜與 Cookery 書轉換在併發或 API 回應不明時保留物品所有權與資料，避免覆寫、遺失及複製 | 餐盤、串譜、Cookery；G155 來源承接不等於 API 故障及真人路徑都已驗收 |
 
 ## 來源與後續更新
@@ -122,10 +176,58 @@ Regression events exercise actual main.js subscriptions, successful and failed
 ignition, redundant ignition/extinguish silence, thread/disassembly exclusivity,
 block insertion category, negative player position and pitch extrema. No new
 OGG, texture, model, use timing, cancellation or debit policy is introduced.
-The optional Cookery cuisine-seasoning audience/category mismatch remains
-separate and unfixed; native eating/burp duplication and listening acceptance
-also remain open. Test doubles do not establish that a player heard the sound.
+G220 fixes the Cookery cuisine-seasoning audience/category mismatch in
+`food/cookery_cuisine_runtime.js`. Both the
+[NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java#L22-L23)
+and [Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/SeasoningUse.java#L22-L23)
+references broadcast from the player's BlockPos in PLAYERS, at .85/1. The
+adapter now uses the existing dimension-wide `useSound` route and a
+`kg_imm.cuisine_season` alias in `player`, reusing the season sample. Grill
+seasoning retains the `block` alias. The registered runtime callbacks in
+[immersion_audio](../tests/legacy/test_immersion_audio.mjs) cover pot/stockpot
+success, the final bottle use, negative player coordinates and silence for
+missing host capability, empty seasoning, changed hand, repeated input and a
+rejected commit. No saved data or debit rules change. Native eating/burp
+duplication, actual loudness, attenuation and category-slider behavior remain
+unverified. Test doubles do not establish that a player heard the sound.
 
 ## T3.3 oil POI 接續（2026-11-03）
 
 G212 候選從已發布 G208 接入原生查缸、Java z/y/x 順序和嚴格流體讀寫。保留 [原329草稿](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/329) 的舊證據與版本衝突，不沿用其 G208–210 release identities。Beta APIs／POI 兩項旗標為必要條件；全部 block/item/存檔鍵與包 UUID 保留。來源測試與[原生交易／同世界重開](../tests/native/oil-poi/observed.json)已完成：四餅→四桶＋四渣、滿缸等待、損壞資料拒絕及重開後只結算一次。原生測試只帶指定Cookery配套；完整家族存檔／回退與真人畫面、聲音、多人效能仍待完成。
+
+<a id="heavy-metal-expiry"></a>
+## T3.3 重金屬到期結算（2026-11-05）
+
+G221 修正已重現的最後一 tick 競態：tick9 的重金屬期限為10，舊程式先取消致命傷，tick10 常規清理刪掉效果後，延後結算就放棄。結果保留原生命且沒有中毒。Java 1.1.1 [NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java)／[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/seasoning/AdvancedSeasoningHandler.java) 均在 `onDeath` 立即消耗重金屬、設1HP及添加12000tick中毒。現在沿既有受傷入口，在取消前先確認 claim 與效果寫入；生命／聲光仍按 Bedrock 限制延後一 tick。未取消傷害的失敗會恢復原效果與 claim，不新增保存鍵或遷移。
+
+[原生觀察](../tests/native/heavy-metal/observed.json)直接執行未改寫的 handler／effect writer：BDS1.26.60.6、server2.12.0-beta、Beta APIs與upcoming creator features已開；native豬受到100傷害時，before-hurt讀到暫時計算的-90HP，立即讀回效果轉換及claim，cancel=true，native恢復10HP，下一tick變成1HP。正常停服／同世界重開後保留相同中毒期限、無關warmth、claim及1HP。這是隔離能力與受影響保存資料的證據；真main事件、到期及失敗回復另由上述ESM情境覆蓋，不是完整家族、原生圖騰／剩餘absorption、其他addon仲裁或客戶端聲畫等價證明。
+
+<a id="heavy-metal-damage-order"></a>
+### 吸收生命與原生圖騰順序（2026-11-06）
+
+Java 兩分支先扣實際剩餘吸收生命，再檢查原生圖騰，只有仍要死亡才進 `AdvancedSeasoningHandler.onDeath`。已從 Mojang 官方1.20.1／1.21.1 client JAR及 mappings核對 `LivingEntity.hurt`：`actuallyHurt` 先計吸收值，`checkTotemDeathProtection` 成功則跳過 `die`。Forge／NeoForge 的死亡掛鉤分別在 [Forge `die`](https://github.com/MinecraftForge/MinecraftForge/blob/d13dd327bdc75c010f3358992e80e7e92f51e030/patches/minecraft/net/minecraft/world/entity/LivingEntity.java.patch)／[NeoForge `die`](https://github.com/neoforged/NeoForge/blob/624c929f49920c250166e2a8df7af87f16d220ef/patches/net/minecraft/world/entity/LivingEntity.java.patch)。原生圖騰成功不會由重金屬添加中毒；NeoForge 的一般重金屬使用預設 [PROTECTED_BY_TOTEM cure](https://github.com/neoforged/NeoForge/blob/624c929f49920c250166e2a8df7af87f16d220ef/src/main/java/net/neoforged/neoforge/common/EffectCures.java)，亦會被該圖騰清除。官方JAR／mappings來源記在[本次觀察](../tests/native/heavy-metal/damage-order-observed.json)。
+
+G221 的歷史原生對照重現以下兩個差異；部分盾仍未修正，圖騰優先由下述 G238 來源修復接續：
+
+- 兩隻10HP原生豬同時取得吸收I，其中一隻先受3點傷害。再各受13點傷害時，兩個 before-hurt 均讀到 -3HP、amp0、期限378ticks，現行 handler 都不取消；完整盾的豬存活1HP，部分盾的豬死亡，漏掉原作應有的重金屬救援。測試中 `getComponents()` 沒有吸收量元件，`getComponent('minecraft:absorption')` 回傳空值。[Effect](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/effect?view=minecraft-bedrock-experimental) 只提供等級／期限等欄位，不能由它推得剩餘盾量。
+- 10HP原生模擬玩家副手持圖騰、受100點傷害：不帶重金屬的 control 消耗圖騰並存活；帶重金屬時，handler 先取消傷害、添加中毒，圖騰仍留在副手。這與 Java 的原生圖騰優先不同。
+
+所選引擎的 [before-hurt](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entityhurtbeforeevent?view=minecraft-bedrock-experimental) 位於原生吸收／圖騰處理之前，沒有剩餘吸收值或最終圖騰結果；[after-hurt／after-death](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-experimental) 不能取消最終死亡。這限制了部分盾修復，**不代表無法實讀兩手圖騰並讓原生先處理**：上述舊 probe 已在 before-hurt 讀到真副手圖騰。讓路與清理是兩件事；持有物只能決定優先路徑，效果清理仍須下述真實成功治療訊號。舊4案本身未改 runtime 或 LIVE，原始失敗不改寫。
+
+#### 原生圖騰成功訊號的來源調查（2026-11-05）
+
+官方 1.26.60.5 [server 2.12.0-beta bindings](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/metadata/script_modules/%40minecraft/server-bindings_2.12.0-beta.json) 已提供 `entityHeal` 與 `EntityHealCause.TotemOfUndying`。成功後事件能確認原生圖騰治療，不應把「before-hurt 沒有結果」擴大成所有公開 API 都無法得知成功。它仍不是可取消的最終死亡階段；同份 bindings 沒有暴露剩餘吸收值。
+
+G233 將原 G230 清理來源原樣整合至 G232 主線；來源候選沿用同一個正值 `TotemOfUndying` after-heal 路徑，清除存活實體的 16 種已核對預設可治療效果及其隱藏層：煙火的 heavy_metal、dragon_blood、numb、invincible，以及 Cookery 的 flatulence、tundra_strider、warmth、satiated_shield、vigor、sulfur、mustard、preservation、hinder、projectile_dodge、instant_smelting、vitality。保留不可治療中毒、重金屬 claim 與未知名稱效果；G227 的窄範圍版本身份不改寫。來源為釘選 [Grilling ModEffects](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModEffects.java)、[Cookery ModEffects](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/init/ModEffects.java) 與 [BaseEffect](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c/src/main/java/com/github/ysbbbbbb/kaleidoscopecookery/effect/BaseEffect.java)，配合 NeoForge 的預設 PROTECTED_BY_TOTEM cure；不涵蓋其他 Java 模組事後修改 cure 或否決移除的情形。
+
+效果保存移除確認後，既有 owner 請求生命群組重設、停止麻痺姿勢。成功原生圖騰先撤銷較早的龍血待補生命、彈射物閃避與重金屬待結算，防止效果剛過期或保存移除失敗時，舊回呼仍補傳送或覆蓋新生命結果；保存寫入失敗時不冒稱已清除效果。龍血的事件前綴原先讀取不存在的 `PERSISTED_KEY.DRAGON_HEALTH_PREFIX`，本次改用已存在且對應 player.json 的 `LOCKED_DRAGON_HEALTH_EVENT_PREFIX`，不新增 player 覆寫。這修正成功圖騰後的效果殘留與舊延後結算問題，不改 before-hurt 傷害取消決策，**G233 當時仍有部分盾漏救與重金屬搶先圖騰；目前圖騰修復見下段，部分盾仍未修正**。API 情境中的 fresh-runtime reload 只證明保存值可由新模組讀回；生命群組與姿勢只驗證請求，不等同原生生命上限、磁碟重啟或客戶端畫面驗收。
+
+G233 當時沒有讓手持圖騰先行，其原因是尚未驗證這條路徑；假設其他訂閱者之後取消治療，亦不是已重現的原生死亡結果。G238 現在直接修正原 owner：確定致命且主手／副手真持原生圖騰時，合適的傷害先交原生，當場不消耗重金屬、不寫 claim、不自行清理效果。只放背包的圖騰不算可用；void／override／selfDestruct 保留重金屬原處理，不能見圖騰就對所有 cause 跳過。普通無圖騰、已確認 Totem cure、寫入失敗與排程撤銷的情境保留，正式 main 註冊事件整檔35項通過。
+
+排除 override 有實際 Java 路徑：兩分支 [CursedSkewerItem](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/CursedSkewerItem.java) 用 ordinary_skewer／Float.MAX_VALUE，而作者共同 [bypasses_invulnerability tag](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/common/src/main/resources/data/minecraft/tags/damage_type/bypasses_invulnerability.json) 明確包含該傷害。Mojang兩版圖騰檢查都先拒絕此 tag；Java原生圖騰不擋它，重金屬的LivingDeath仍可救。Bedrock既有平凡owner映射為override；已就地修正原碼誤稱保留Java圖騰的註解，沒有改平凡傷害或新增旁路。
+
+G238 的[窄原生觀察](../tests/native/heavy-metal/totem-priority-observed.json)於2026-11-06 04:50 HKT完成39項：BDS1.26.60.6／server2.12.0-beta、server-ui2.2.0、gametest1.0.0-beta，gametest及upcoming_creator_features實際保存為1；來源固定100b6fde（與受檢3862b992同tree）。[原observer](../tests/native/heavy-metal/totem_priority_probe.js)直接載入正式 effect/runtime 的已註冊傷害／after-heal入口，使用真native Players／applyDamage；QA另用1.0身份，不冒稱完整候選載入。entityAttack的主／副手，以及magic／fall／none副手均先耗原生圖騰、產生正值TotemOfUndying治療；Heavy／Warmth隨後清除，無中毒或claim。void／平凡實際override maxfloat／selfDestruct帶Heavy時均保留手持圖騰、付款並救回1HP；無圖騰／只在背包同樣保留Heavy救援，背包圖騰不變。
+
+**不符合Java的原生結果亦保留**：void／selfDestruct無Heavy controls沒有圖騰治療，玩家死亡、圖騰仍在；override／maxfloat無Heavy control則耗掉圖騰且產生正值TotemOfUndying治療，仍死亡且Warmth未清。後者不等同Java ordinary_skewer先拒圖騰，且證明正值治療不保證存活；既有清理還要求存活生命值，未把該control誤清。這個control差異不改標成全Java等價，沒有為它新增傷害旁路或復活。
+
+本次正常stop／exit0、players0／errors空／OOM0，自己的QA世界已清且槽已交還。未重跑剩餘盾或舊保存；未驗其他addon後續否決、所有cause、client聲畫或完整家族保存。修復未新增屬性、interval、盾量追蹤、復活或版本例外，部分盾漏救仍未修正。

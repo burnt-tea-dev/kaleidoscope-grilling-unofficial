@@ -158,7 +158,7 @@ python3 world_ids.py \
   --source-manifest <private-stopped-backup-file-manifest> \
   --manifest-db-prefix 'worlds/<world-name>/db/' \
   --snapshot-archive-sha256 <verified-backup-archive-sha256> \
-  --key-lock <checkout>/tools/guards/save-compat.lock.json \
+  --catalog <checkout>/tools/guards/當前 runtime catalog \
   --scratch-root <private-temporary-directory> > <private-result.json> 2> <private-error.log>
 ```
 

@@ -4,7 +4,7 @@
   "candidate_version": [
     2,
     8,
-    217
+    241
   ],
   "client_acceptance": false,
   "production_ready": false,
@@ -58,10 +58,10 @@
     "No plate bounds or screen coordinates enter the pose derivation.",
     "Source Java pose may clip full plate contents; usability and fidelity require separate native review.",
     "Do not reuse this version for different runtime bytes.",
-    "The original G211/P114 diagnostic preserved P106 body bytes. This local latest-main derivative is not a private pairing or native acceptance of current hosts."
+    "The original G211/P114 diagnostic preserved P106 body bytes. This current-main derivative is not a private pairing or native acceptance of current hosts."
   ],
-  "candidate_status": "local_unpublished; version not reserved remotely",
-  "source_base_commit": "389b9b5cdfafae631f84d6b66cd30fe82cfdf0a2",
+  "candidate_status": "source_candidate; approved Blockbench pose preserved; native client not observed",
+  "source_base_commit": "790b96ed19cccb2049eb6b4093d6aa54450fffef",
   "original_diagnostic": {
     "source_commit": "5b9cb8fc0120b269a1397c6739a67fdb7dc6850c",
     "grilling_version": [

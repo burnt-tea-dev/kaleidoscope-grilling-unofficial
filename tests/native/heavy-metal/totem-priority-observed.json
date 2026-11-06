@@ -1,0 +1,1901 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-06T04:50:17+08:00",
+  "probe_execution_passed": true,
+  "targeted_totem_priority_passed": true,
+  "complete_java_parity": false,
+  "scope": "New G238 held-totem priority and existing confirmed after-heal cure via registered effect/runtime handlers. Native applyDamage and QA SimulatedPlayers; not complete main startup, family, client or LIVE validation.",
+  "source_commit": "100b6fde3f68081d211f27a560999ac1cb73f94f",
+  "checked_head": "3862b992a47a96835094d2bf5ff72ea1a747f669",
+  "source_version": [
+    2,
+    8,
+    238
+  ],
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "production_files": {
+    "heavy_metal_damage_runtime.js": "e4165af81e712d303041c08fd5b64891873689b8903e92f572d003e4bcda0d2e",
+    "heavy_metal_damage_core.js": "85b914abc6db504dd90144cc40a522e752bd55c9e64f36bce866bf1bae817c6a",
+    "effect/runtime.js": "eadf95b0bb7a949c5655e57a1b4f4994ab9e4f525f5fc8589830a385527d80ce",
+    "effect_state_runtime.js": "aea5667cac1185de8a8d30a93c2b48c5406e7ef2f42015c897f14e7e8e416dc0",
+    "effect_lifecycle_core.js": "61569db6c70e81d5c36e50ae44a90eb105629c33781c48e799b230cd8bc55b28",
+    "core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad"
+  },
+  "probe_sha256": "6fa3a8a17b0a13b2739004bfb44240f7606b38c182befd0379d92a2a8bbac0eb",
+  "diagnostic_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    }
+  ],
+  "diagnostic_pack_version": [
+    1,
+    0,
+    0
+  ],
+  "experiments": {
+    "experiments_ever_used": 1,
+    "gametest": 1,
+    "saved_with_toggled_experiments": 1,
+    "upcoming_creator_features": 1
+  },
+  "player_definition_override": false,
+  "unchanged_owned_player_definition_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "isolation": {
+    "memory_max_bytes": 2684354560,
+    "memory_high_bytes": 2147483648,
+    "memory_swap_max_bytes": 0,
+    "private_network": true,
+    "ip_address_deny": "any",
+    "shared_maintenance_lock": true,
+    "disk_admission_reserve_bytes": 2147483648
+  },
+  "observation": {
+    "passed": true,
+    "phase": "totem-priority",
+    "checks": [
+      {
+        "name": "isolated QA has no external players",
+        "passed": true
+      },
+      {
+        "name": "entityAttack off native control consumes the held totem and survives",
+        "passed": true
+      },
+      {
+        "name": "entityAttack off control emits a positive native TotemOfUndying heal",
+        "passed": true
+      },
+      {
+        "name": "entityAttack off real handler yields without cancelling or claiming",
+        "passed": true
+      },
+      {
+        "name": "entityAttack off native totem wins without Heavy Metal poisoning",
+        "passed": true
+      },
+      {
+        "name": "entityAttack off actual after-heal cures Heavy Metal and Warmth",
+        "passed": true
+      },
+      {
+        "name": "entityAttack main native control consumes the held totem and survives",
+        "passed": true
+      },
+      {
+        "name": "entityAttack main control emits a positive native TotemOfUndying heal",
+        "passed": true
+      },
+      {
+        "name": "entityAttack main real handler yields without cancelling or claiming",
+        "passed": true
+      },
+      {
+        "name": "entityAttack main native totem wins without Heavy Metal poisoning",
+        "passed": true
+      },
+      {
+        "name": "entityAttack main actual after-heal cures Heavy Metal and Warmth",
+        "passed": true
+      },
+      {
+        "name": "magic off native control consumes the held totem and survives",
+        "passed": true
+      },
+      {
+        "name": "magic off control emits a positive native TotemOfUndying heal",
+        "passed": true
+      },
+      {
+        "name": "magic off real handler yields without cancelling or claiming",
+        "passed": true
+      },
+      {
+        "name": "magic off native totem wins without Heavy Metal poisoning",
+        "passed": true
+      },
+      {
+        "name": "magic off actual after-heal cures Heavy Metal and Warmth",
+        "passed": true
+      },
+      {
+        "name": "fall off native control consumes the held totem and survives",
+        "passed": true
+      },
+      {
+        "name": "fall off control emits a positive native TotemOfUndying heal",
+        "passed": true
+      },
+      {
+        "name": "fall off real handler yields without cancelling or claiming",
+        "passed": true
+      },
+      {
+        "name": "fall off native totem wins without Heavy Metal poisoning",
+        "passed": true
+      },
+      {
+        "name": "fall off actual after-heal cures Heavy Metal and Warmth",
+        "passed": true
+      },
+      {
+        "name": "none off native control consumes the held totem and survives",
+        "passed": true
+      },
+      {
+        "name": "none off control emits a positive native TotemOfUndying heal",
+        "passed": true
+      },
+      {
+        "name": "none off real handler yields without cancelling or claiming",
+        "passed": true
+      },
+      {
+        "name": "none off native totem wins without Heavy Metal poisoning",
+        "passed": true
+      },
+      {
+        "name": "none off actual after-heal cures Heavy Metal and Warmth",
+        "passed": true
+      },
+      {
+        "name": "void keeps the existing Heavy Metal cancellation attempt",
+        "passed": true
+      },
+      {
+        "name": "void does not consume the held totem",
+        "passed": true
+      },
+      {
+        "name": "void keeps the existing effect payment",
+        "passed": true
+      },
+      {
+        "name": "override keeps the existing Heavy Metal cancellation attempt",
+        "passed": true
+      },
+      {
+        "name": "override does not consume the held totem",
+        "passed": true
+      },
+      {
+        "name": "override keeps the existing effect payment",
+        "passed": true
+      },
+      {
+        "name": "selfDestruct keeps the existing Heavy Metal cancellation attempt",
+        "passed": true
+      },
+      {
+        "name": "selfDestruct does not consume the held totem",
+        "passed": true
+      },
+      {
+        "name": "selfDestruct keeps the existing effect payment",
+        "passed": true
+      },
+      {
+        "name": "no totem preserves ordinary Heavy Metal rescue",
+        "passed": true
+      },
+      {
+        "name": "backpack totem preserves ordinary Heavy Metal rescue",
+        "passed": true
+      },
+      {
+        "name": "backpack totem is untouched",
+        "passed": true
+      },
+      {
+        "name": "all native Players disconnected",
+        "passed": true
+      }
+    ],
+    "samples": [
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 85,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1286,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 85,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 86,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1286,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1286,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 93,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1294,
+                  "amp": 0
+                },
+                "heavy_metal": {
+                  "until": 1294,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 93,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 94,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1294,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1294,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1294,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1294,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": false,
+        "hand": "main",
+        "before": [
+          {
+            "tick": 101,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": "minecraft:totem_of_undying",
+              "off": null,
+              "effects": {
+                "warmth": {
+                  "until": 1302,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 101,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 102,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": "minecraft:totem_of_undying",
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1302,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1302,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": true,
+        "hand": "main",
+        "before": [
+          {
+            "tick": 109,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": "minecraft:totem_of_undying",
+              "off": null,
+              "effects": {
+                "warmth": {
+                  "until": 1310,
+                  "amp": 0
+                },
+                "heavy_metal": {
+                  "until": 1310,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 109,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 110,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": "minecraft:totem_of_undying",
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1310,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1310,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1310,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1310,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "magic",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 117,
+            "cause": "magic",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1318,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 117,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 118,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1318,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1318,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "magic",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 125,
+            "cause": "magic",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1326,
+                  "amp": 0
+                },
+                "heavy_metal": {
+                  "until": 1326,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 125,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 126,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1326,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1326,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1326,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1326,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "fall",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 133,
+            "cause": "fall",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1334,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 133,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 134,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1334,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1334,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "fall",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 141,
+            "cause": "fall",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1342,
+                  "amp": 0
+                },
+                "heavy_metal": {
+                  "until": 1342,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 141,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 142,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1342,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1342,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1342,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1342,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "none",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 149,
+            "cause": "none",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1350,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 149,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 150,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1350,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1350,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "none",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 157,
+            "cause": "none",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1358,
+                  "amp": 0
+                },
+                "heavy_metal": {
+                  "until": 1358,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 157,
+            "cause": "TotemOfUndying",
+            "healing": 91,
+            "totem": true,
+            "state": {
+              "health": 1,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          },
+          {
+            "tick": 158,
+            "cause": "Regeneration",
+            "healing": 1,
+            "totem": false,
+            "state": {
+              "health": 2,
+              "main": null,
+              "off": null,
+              "effects": {},
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1358,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1358,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1358,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1358,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 2,
+          "main": null,
+          "off": null,
+          "effects": {},
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "void",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 165,
+            "cause": "void",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1366,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": true,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1366,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 0,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1366,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 0,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1366,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "void",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 173,
+            "cause": "void",
+            "damage": 100,
+            "cancel": true,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1374,
+                  "amp": 0
+                },
+                "heavy_metal_poisoning": {
+                  "until": 12174,
+                  "amp": 0
+                }
+              },
+              "claim": "{\"version\":1,\"until\":1374,\"amp\":0,\"time\":174}",
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1374,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1374,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1374,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12174,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1374,\"amp\":0,\"time\":174}",
+          "backpack": null
+        },
+        "result": {
+          "health": 1,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1374,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12174,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1374,\"amp\":0,\"time\":174}",
+          "backpack": null
+        },
+        "nativeControlTotemUsed": false
+      },
+      {
+        "cause": "override",
+        "damage": 3.4028234663852886e+38,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 181,
+            "cause": "override",
+            "damage": 3.4028234663852886e+38,
+            "cancel": false,
+            "state": {
+              "health": -3.4028234663852886e+38,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1382,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [
+          {
+            "tick": 181,
+            "cause": "TotemOfUndying",
+            "healing": 3.4028234663852886e+38,
+            "totem": true,
+            "state": {
+              "health": 0,
+              "main": null,
+              "off": null,
+              "effects": {
+                "warmth": {
+                  "until": 1382,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "died": true,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1382,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 0,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1382,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 0,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1382,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "override",
+        "damage": 3.4028234663852886e+38,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 189,
+            "cause": "override",
+            "damage": 3.4028234663852886e+38,
+            "cancel": true,
+            "state": {
+              "health": -3.4028234663852886e+38,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1390,
+                  "amp": 0
+                },
+                "heavy_metal_poisoning": {
+                  "until": 12190,
+                  "amp": 0
+                }
+              },
+              "claim": "{\"version\":1,\"until\":1390,\"amp\":0,\"time\":190}",
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1390,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1390,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1390,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12190,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1390,\"amp\":0,\"time\":190}",
+          "backpack": null
+        },
+        "result": {
+          "health": 1,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1390,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12190,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1390,\"amp\":0,\"time\":190}",
+          "backpack": null
+        },
+        "nativeControlTotemUsed": true
+      },
+      {
+        "cause": "selfDestruct",
+        "damage": 100,
+        "heavy": false,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 197,
+            "cause": "selfDestruct",
+            "damage": 100,
+            "cancel": false,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1398,
+                  "amp": 0
+                }
+              },
+              "claim": null,
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": true,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1398,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 0,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1398,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "result": {
+          "health": 0,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1398,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        }
+      },
+      {
+        "cause": "selfDestruct",
+        "damage": 100,
+        "heavy": true,
+        "hand": "off",
+        "before": [
+          {
+            "tick": 205,
+            "cause": "selfDestruct",
+            "damage": 100,
+            "cancel": true,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": "minecraft:totem_of_undying",
+              "effects": {
+                "warmth": {
+                  "until": 1406,
+                  "amp": 0
+                },
+                "heavy_metal_poisoning": {
+                  "until": 12206,
+                  "amp": 0
+                }
+              },
+              "claim": "{\"version\":1,\"until\":1406,\"amp\":0,\"time\":206}",
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1406,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1406,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 10,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1406,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12206,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1406,\"amp\":0,\"time\":206}",
+          "backpack": null
+        },
+        "result": {
+          "health": 1,
+          "main": null,
+          "off": "minecraft:totem_of_undying",
+          "effects": {
+            "warmth": {
+              "until": 1406,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12206,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1406,\"amp\":0,\"time\":206}",
+          "backpack": null
+        },
+        "nativeControlTotemUsed": false
+      },
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": true,
+        "hand": null,
+        "before": [
+          {
+            "tick": 213,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": true,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": null,
+              "effects": {
+                "warmth": {
+                  "until": 1414,
+                  "amp": 0
+                },
+                "heavy_metal_poisoning": {
+                  "until": 12214,
+                  "amp": 0
+                }
+              },
+              "claim": "{\"version\":1,\"until\":1414,\"amp\":0,\"time\":214}",
+              "backpack": null
+            }
+          }
+        ],
+        "heals": [],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1414,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1414,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": null
+        },
+        "applied": true,
+        "immediate": {
+          "health": 10,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1414,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12214,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1414,\"amp\":0,\"time\":214}",
+          "backpack": null
+        },
+        "result": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1414,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12214,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1414,\"amp\":0,\"time\":214}",
+          "backpack": null
+        }
+      },
+      {
+        "cause": "entityAttack",
+        "damage": 100,
+        "heavy": true,
+        "hand": "backpack",
+        "before": [
+          {
+            "tick": 221,
+            "cause": "entityAttack",
+            "damage": 100,
+            "cancel": true,
+            "state": {
+              "health": -90,
+              "main": null,
+              "off": null,
+              "effects": {
+                "warmth": {
+                  "until": 1422,
+                  "amp": 0
+                },
+                "heavy_metal_poisoning": {
+                  "until": 12222,
+                  "amp": 0
+                }
+              },
+              "claim": "{\"version\":1,\"until\":1422,\"amp\":0,\"time\":222}",
+              "backpack": "minecraft:totem_of_undying"
+            }
+          }
+        ],
+        "heals": [],
+        "died": false,
+        "input": {
+          "health": 10,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1422,
+              "amp": 0
+            },
+            "heavy_metal": {
+              "until": 1422,
+              "amp": 0
+            }
+          },
+          "claim": null,
+          "backpack": "minecraft:totem_of_undying"
+        },
+        "applied": true,
+        "immediate": {
+          "health": 10,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1422,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12222,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1422,\"amp\":0,\"time\":222}",
+          "backpack": "minecraft:totem_of_undying"
+        },
+        "result": {
+          "health": 1,
+          "main": null,
+          "off": null,
+          "effects": {
+            "warmth": {
+              "until": 1422,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 12222,
+              "amp": 0
+            }
+          },
+          "claim": "{\"version\":1,\"until\":1422,\"amp\":0,\"time\":222}",
+          "backpack": "minecraft:totem_of_undying"
+        }
+      }
+    ],
+    "playersAfter": 0,
+    "scope": "Unchanged registered effect-runtime damage and after-heal handlers with native Players and native applyDamage. Forced-source checks preserve the existing cancellation/effect attempt, not a new guarantee against uncancellable forced death. No remaining-absorption, complete main startup, client or LIVE claim."
+  },
+  "known_limits": [
+    "The no-Heavy override/Float.MAX_VALUE control consumed its totem and emitted positive TotemOfUndying healing but still died. Warmth remained because the existing cure rejects nonliving health. This is not Java Ordinary damage rejecting the totem before consumption.",
+    "Void and selfDestruct controls died with the held totem retained and no Totem heal. Heavy controls survived at one health with the held totem retained, poisoning and claim.",
+    "Remaining absorption, later external cancellation, all other causes, complete family startup and client visuals/audio were not tested. Earlier absorption/save observations were not repeated."
+  ],
+  "shutdown": {
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "exit_code": 0,
+    "players_after": 0,
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak_bytes": 729309184
+  },
+  "cleanup": {
+    "own_engine_and_qa_removed": true,
+    "source_and_evidence_retained": true,
+    "slot_released": true
+  },
+  "live_modified": false
+}

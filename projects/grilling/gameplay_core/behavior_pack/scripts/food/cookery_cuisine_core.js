@@ -64,30 +64,6 @@ export function planSeasoningUse({ingredients=[],uses=0,creative=false}={}){
  const next=before+1;
  return {ok:true,ingredients:values,before,nextUses:Math.min(SEASONING_MAX_USES,next),replaceEmpty:next>=SEASONING_MAX_USES,mutate:true};
 }
-function sig(row){
- if(!row)return '';
- return JSON.stringify({
-  id:String(row.id??''),amount:Math.max(0,Math.floor(Number(row.amount)||0)),
-  name:String(row.name??''),lore:Array.isArray(row.lore)?row.lore:[],
-  props:row.props&&typeof row.props==='object'?row.props:{},
-  damage:Number.isFinite(Number(row.damage))?Number(row.damage):null
- });
-}
-export function inventoryGains(before=[],after=[]){
- const out=[],n=Math.max(before.length,after.length);
- for(let slot=0;slot<n;slot++){
-  const b=before[slot],a=after[slot];if(!a?.id)continue;
-  let gained=0;
-  if(!b?.id||b.id!==a.id)gained=Math.max(0,Number(a.amount)||0);
-  else{
-   const bCopy={...b,amount:0},aCopy={...a,amount:0};
-   if(sig(bCopy)===sig(aCopy)||(Number(a.amount)||0)>(Number(b.amount)||0))
-    gained=Math.max(0,(Number(a.amount)||0)-(Number(b.amount)||0));
-  }
-  if(gained>0)out.push({slot,id:a.id,count:gained});
- }
- return out;
-}
 export function metadataPlan(kind,state={}){
  const normalized=normalizeCuisineState(state);
  if(kind==='pot')return {seasoning:[...normalized.seasoning],hotTicks:potHotTicks(normalized.oilType||'default')};

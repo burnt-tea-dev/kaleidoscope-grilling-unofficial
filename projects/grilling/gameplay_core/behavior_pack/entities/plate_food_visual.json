@@ -16,7 +16,7 @@
           "type": "int",
           "range": [
             0,
-            231
+            232
           ],
           "default": 0,
           "client_sync": true

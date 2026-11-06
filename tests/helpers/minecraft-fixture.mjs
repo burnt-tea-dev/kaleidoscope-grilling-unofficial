@@ -470,6 +470,7 @@ export function createFixture(options = {}) {
   const enumValues = names => Object.freeze(Object.fromEntries(names.map(name => [name, name])));
   f.server = {
     world, system, ItemStack, BlockPermutation, EquipmentSlot, GameMode, ItemComponentTypes, EnchantmentType, MolangVariableMap,
+    EntityHealCause: Object.freeze({Heal:'Heal',Regeneration:'Regeneration',SelfHeal:'SelfHeal',TotemOfUndying:'TotemOfUndying'}),
     EntityComponentTypes: {Inventory: 'minecraft:inventory', Equippable: 'minecraft:equippable', Health: 'minecraft:health', Item: 'minecraft:item'},
     CommandPermissionLevel: enumValues(['Any', 'GameDirectors', 'Admin', 'Host', 'Owner']),
     CustomCommandParamType: enumValues(['String', 'Integer', 'Float', 'Boolean', 'PlayerSelector', 'EntitySelector', 'Position', 'Enum']),

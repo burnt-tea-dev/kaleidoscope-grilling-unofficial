@@ -33,6 +33,10 @@ export function buildCookeryOilPot(type,count,template=undefined){
  const normalizedCount=Math.max(0,Math.min(cap,Math.floor(Number(count)||0)));
  try{
   const out=createPublicOilPot(ItemStack,normalizedType,normalizedCount,template);
+  // A portable cross-ID projection cannot clone the native item. Preserve
+  // Grilling's readable properties here; other packs' private data is not read.
+  if(template&&template.typeId!==out.typeId)for(const key of getItemPropertyIds(template))
+   setItemProperty(out,key,getItemProperty(template,key));
   // Legacy Grilling properties are retired only in this pack's scope.
   setItemProperty(out,HOST_COUNT_KEY,undefined);
   setItemProperty(out,GRILLING_TYPE_KEY,undefined);

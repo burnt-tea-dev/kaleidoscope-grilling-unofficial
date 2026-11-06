@@ -31,3 +31,38 @@ assert.equal(metadataPlan('pot',{oilType:'secret_chili'}).hotTicks,12000);
 assert.equal(metadataPlan('pot',{oilType:'premium_chili'}).hotTicks,24000);
 assert.equal(metadataPlan('stockpot',{}).hotTicks,1200);
 console.log('Authoritative Cookery output contract + default pot heat: PASS');
+
+// Regression: a foreign item acquired during a Cookery interaction is NOT an
+// authoritative Cookery output. Execute the real subscribed runtime, not an
+// extracted source fragment. The fixture does not simulate BDS/client.
+import test from 'node:test';
+import {createFixture} from '../helpers/minecraft-fixture.mjs';
+import {cuisineStateKey} from '../../projects/grilling/gameplay_core/behavior_pack/scripts/food/cookery_cuisine_core.js';
+
+for(const provider of ['absent','receipt_only'])test('Cookery '+provider+' never decorates unrelated inventory gains',async()=>{
+ const f=createFixture();
+ try{
+  await f.load('food/cookery_cuisine_runtime.js');
+  if(provider==='receipt_only')f.emit('system.afterEvents.scriptEventReceive',{
+   sourceType:'Server',id:'kaleidoscope_cookery:api_ready',
+   message:JSON.stringify({api:1,capabilities:['cuisine_output_receipt_v2']})
+  });
+  const player=f.player(),station=f.block('kaleidoscope_cookery:stockpot',{x:2,y:64,z:3});
+  const unrelated=f.item('external:owned_food',1,{
+   nameTag:'external owner',rawLore:[{text:'external metadata retained'}],
+   components:{'minecraft:food':{nutrition:6,saturationModifier:'normal'}}
+  });
+  const originalLore=unrelated.getRawLore();
+  f.emit('world.beforeEvents.playerInteractWithBlock',{
+   block:station,player,itemStack:undefined,cancel:false,isFirstEvent:true
+  });
+  player.inventory.setItem(3,unrelated); // Unrelated addon delivery, not pot takeout.
+  f.tick(1);
+  const actual=player.inventory.getItem(3);
+  assert.equal(actual?.typeId,'external:owned_food');
+  assert.equal(actual?.nameTag,'external owner');
+  assert.deepEqual(actual?.getRawLore(),originalLore);
+  assert.equal(f.world.getDynamicProperty(cuisineStateKey(station)),undefined);
+  assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
