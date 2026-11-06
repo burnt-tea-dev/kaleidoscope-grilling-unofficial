@@ -3,6 +3,8 @@
 
 Explicit --apply is source authoring, not a ZIP patch or native acceptance.
 The separate plate_camera_pose diagnostic remains strictly read-only.
+The calibration's candidate_version records its historical source identity,
+not the current pack version; the affine pose check survives later releases.
 """
 import argparse
 import copy
@@ -70,15 +72,14 @@ def main():
     parser.add_argument('--apply', action='store_true', help='explicit canonical source authoring only')
     args = parser.parse_args()
     profile = json.loads(PROFILE.read_text())
-    if json.loads((ROOT/'baseline.json').read_text())['version'] != profile['candidate_version']:
-        raise SystemExit('Candidate version differs from the source profile')
+    version = json.loads((ROOT/'baseline.json').read_text())['version']
     original = json.loads(POSE.read_text())
     result = derive(original, profile)
     if args.apply:
         POSE.write_text(json.dumps(result, indent=2)+'\n')
     elif original != result:
         raise SystemExit('FP pose differs from reviewed affine source; explicit --apply required')
-    print(json.dumps({'profile': profile['profile'], 'profile_sha256': hashlib.sha256(PROFILE.read_bytes()).hexdigest(), 'version':profile['candidate_version'], 'client':False,'production_ready':False,'wrote_source':args.apply}))
+    print(json.dumps({'profile': profile['profile'], 'profile_sha256': hashlib.sha256(PROFILE.read_bytes()).hexdigest(), 'version':version, 'calibration_version':profile['candidate_version'], 'source_base_commit':profile['source_base_commit'], 'client':False,'production_ready':False,'wrote_source':args.apply}))
 
 if __name__ == '__main__':
     main()
