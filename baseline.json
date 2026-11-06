@@ -5,7 +5,7 @@
   "version": [
     2,
     8,
-    240
+    241
   ],
   "runtime": {
     "BP": "projects/grilling/gameplay_core/behavior_pack",
@@ -20,7 +20,7 @@
           "version": [
             2,
             8,
-            240
+            241
           ]
         },
         {
@@ -57,11 +57,11 @@
   },
   "source_trees": {
     "BP": {
-      "sha256": "200d84445f173c8690b28214db3086f792b99775999dd18144b79a86268f2033",
+      "sha256": "b734052d2fac19eda5f4596d8a8a360ea343d46f9d22fd0ead99e899ef32650d",
       "files": 797
     },
     "RP": {
-      "sha256": "938ba7c5440913141d8cd3c6770255997ca90c257f378982391758cecdc9b635",
+      "sha256": "8f5edf9f0bbc0b693a83514485c10eb92352a0b8b9a317741c06ab0d4f7ee253",
       "files": 3547
     }
   },

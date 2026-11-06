@@ -692,3 +692,54 @@ print(json.dumps(configure_player(player)))`;
  for(const statement of updates)Function('v','q',statement)(variables,actor);
  assert.equal(Boolean(variables.kg_held_oil_brush_main_active),false);
 });
+
+
+test('Java idle candidate solves full affine chain without a screen box or layout mutation',()=>{
+ runPython('python3',['-c',String.raw`
+import sys,json,copy,random,hashlib,subprocess
+from pathlib import Path
+sys.path.insert(0,'tools')
+import build_plate_pose as b
+import plate_camera_pose as m
+p=json.loads(b.PROFILE.read_text());doc=json.loads(b.POSE.read_text())
+result=b.derive(doc,p)
+assert result==doc
+changed_profile=copy.deepcopy(p)
+changed_profile['java']['display_right_rotation']=[0,-134,0]
+try: b.derive(doc,changed_profile); raise AssertionError('changed Java display accepted')
+except ValueError: pass
+bad=copy.deepcopy(doc)
+bad['animations']['animation.kg_plate_held.fp_right']['bones']['plate_pose']['rotation'][0]+=1
+try: b.derive(bad,p); raise AssertionError('rotation mismatch accepted')
+except ValueError: pass
+# Change only legacy FP offsets/scales. Full source solve must recover candidate.
+legacy=copy.deepcopy(doc)
+for hand in ['right','left']:
+ pose=legacy['animations']['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose']
+ pose['position']=[99,-99,12];pose['scale']=[.4]*3
+assert b.derive(legacy,p)==doc
+unchanged=copy.deepcopy(result)
+for hand in ['right','left']:
+ key='animation.kg_plate_held.fp_'+hand
+ for field in ['position','scale']:
+  unchanged['animations'][key]['bones']['plate_pose'][field]=legacy['animations'][key]['bones']['plate_pose'][field]
+assert unchanged==legacy
+rng=random.Random(211)
+for hand,sign in [('right',1),('left',-1)]:
+ pose=result['animations']['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose']
+ arm,origin,item=m.holder(hand)
+ for _ in range(100):
+  J=[rng.uniform(-20,20) for i in range(3)]
+  u=[-J[0],-J[1]-8,J[2]]
+  v=m.transform(m.rotation(pose['rotation']),[pose['scale'][i]*u[i] for i in range(3)])
+  v=m.transform(arm,[v[i]+(1,-1,1)[i]*pose['position'][i]+item[i] for i in range(3)])
+  v=[v[i]+origin[i] for i in range(3)];v[0]-=sign*p['host']['attachable_x_offset']
+  actual=[m.SCALE*v[0],m.SCALE*(m.Y_SHIFT-v[1])-m.EYE,m.SCALE*v[2]]
+  r=m.transform(m.rotation([0,-135*sign,0]),[.4*x for x in J])
+  target=[sign*.56*16+r[0],-.52*16+3.75+r[1],.72*16-r[2]]
+  assert max(abs(actual[i]-target[i]) for i in range(3))<1e-7
+before=b.POSE.read_bytes()
+subprocess.run([sys.executable,'tools/build_plate_pose.py'],check=True,capture_output=True)
+assert b.POSE.read_bytes()==before
+`],{cwd:pathOf(new URL('../../',import.meta.url)),stdio:'pipe'});
+});

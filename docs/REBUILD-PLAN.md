@@ -614,6 +614,14 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 - 每個 PR：從 Java 原模型在 Blockbench 建 Bedrock 模型（`.bbmodel` 存 `assets-src/blockbench/`）→ 匯出 → 改用原生狀態機制 → 刪除舊烘焙 geometry 與「投影」腳本 → staging 截圖對照 Java 截圖（同角度）。
 - 驗收：`largest_geometry_kib ≤ 512`；`rp_total_mib` 明顯下降；對照截圖附在 PR。
 
+餐盤第一人稱的局部修正沿用 #332／#333 的來源變換：`tools/plate_camera_pose.py`
+只作唯讀座標診斷，停用依包圍盒改寫姿態；`tools/build_plate_pose.py` 依
+`data/plate-idle-calibration.json` 反求 FP 位置與宿主縮放補償，不改旋轉、layout、
+第三人稱或幾何。G241 承接擁有者已確認的 Blockbench 姿態，動畫逐位元組保留
+#333 `a6a978e` 的版本，未為全盤入鏡推遠餐盤。既有校準只涵蓋 1.26.60.4、
+P106/G206、標準寬身 Steve 的靜止非 VR 狀態，不代表新版宿主、TACZ 動作或
+Java 實機通過。來源／編輯器結果與引擎畫面分開記錄；此次不操作客戶端或部署。
+
 **T4.3 影子 ID 退役**（走 SAVE-COMPAT 流程，最高風險）
 - 前置：先確認該 variant 的實際能力已由替代路徑承接。T3.4 的早扣份 spike 已失敗，現行所需時長 variant 繼續保留；不能為了達成 ID 數量目標刪除它們。
 - 確實移除有保存內容的定義時，先對受影響的既有 stack／容器實作必要轉換，保留其可讀 metadata，驗證實際讀寫與重啟；需要離線改寫才沿 §5.6 使用停服副本。不另加兩週等待、全世界逐 ID 歸零或 `id-retirements.json` 登錄門檻。
@@ -957,10 +965,12 @@ EOF
 
 ## Held-preview coordinates: diagnostic contract v2
 
-This is a tooling/math correction, **not a new runtime pose**. No generated pack,
-manifest, version, geometry, or animation asset changes. Native shield hold-outs
-have not passed; Java equivalence is not established. Do not use this PR to
-approve, regenerate, publish, or install a pose package.
+This section records the tooling-only #332 correction, **not acceptance of a
+new runtime pose**. That correction changed no generated pack, manifest, version,
+geometry, or animation asset. Its native shield hold-outs did not pass; Java
+engine equivalence was not established. The later bounded affine candidate is
+described under T4.2; it does not erase these failed controls or establish current
+host rendering. The accepted Blockbench preview is not engine acceptance.
 
 ### Proven coordinate mismatch
 
