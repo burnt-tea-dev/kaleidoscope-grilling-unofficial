@@ -452,19 +452,125 @@ test('generated plate consumer reads owning-player data for each hand and hides 
 
 }
 
-test('published camera model reproduces the old clipping and fits the complete body in both hand regions',()=>{
- const script=`import sys,json,itertools,math,copy
-sys.path.insert(0,'tools')
-from plate_camera_pose import project,POSE,HAND_FOV
-poses=json.loads(POSE.read_text())['animations'];points=list(itertools.product([-7,7],[-2,0],[-7,7]));t=math.tan(math.radians(HAND_FOV/2))
-old={'right':[-2.15601965,4.53282703,-1.52083612],'left':[-15.039,1.232,11.6]}
-for hand,sign in [('right',1),('left',-1)]:
- pose=poses['animation.kg_plate_held.fp_'+hand]['bones']['plate_pose'];before=copy.deepcopy(pose);before['position']=old[hand]
- previous=project(points,before,hand);assert min(p[1] for p in previous)<-t
- actual=project(points,pose,hand);assert all(.08*t*4/3<=sign*x<=.9*t*4/3 and -.65*t<=y<=.25*t and z>.4 for x,y,z in actual)
- assert pose['scale']==[.4,.4,.4]
-print('old bottom clipping and new two-hand geometric fit passed; native client pending')`;
- assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:10000}).toString(),/fit passed/);
+test('held preview BB5 matrix and read-only contract are not Java/native acceptance',()=>{
+ const script=String.raw`"""Independent BB5 import/Animate matrix regression; no engine acceptance claim."""
+import hashlib
+import importlib.util
+import math
+from pathlib import Path
+import subprocess
+import sys
+import unittest
+import tempfile
+import json
+
+ROOT = Path.cwd()
+spec = importlib.util.spec_from_file_location('preview', ROOT/'tools/plate_camera_pose.py')
+preview = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(preview)
+
+
+def mm(a, b):
+    return [[sum(a[i][k]*b[k][j] for k in range(4)) for j in range(4)] for i in range(4)]
+
+
+def matrix(diag=(1, 1, 1), translation=(0, 0, 0)):
+    return [[diag[0],0,0,translation[0]], [0,diag[1],0,translation[1]], [0,0,diag[2],translation[2]], [0,0,0,1]]
+
+
+def rotation(v):
+    x,y,z = map(math.radians, v)
+    sx,cx,sy,cy,sz,cz=math.sin(x),math.cos(x),math.sin(y),math.cos(y),math.sin(z),math.cos(z)
+    rx=[[1,0,0,0],[0,cx,-sx,0],[0,sx,cx,0],[0,0,0,1]]
+    ry=[[cy,0,sy,0],[0,1,0,0],[-sy,0,cy,0],[0,0,0,1]]
+    rz=[[cz,-sz,0,0],[sz,cz,0,0],[0,0,1,0],[0,0,0,1]]
+    return mm(mm(rz,ry),rx)
+
+
+def apply(m, p):
+    return [sum(m[i][j]*list(p+[1])[j] for j in range(4)) for i in range(3)]
+
+
+def explicit_bb_animate(point, pivot, position, angles, scale):
+    # Independently replay official importer, then BB Animate, then preview.
+    # Source identity: docs/REBUILD-PLAN.md (actual BB5.2.2 hash).
+    bp=[-pivot[0],pivot[1],pivot[2]]
+    bpos=[-position[0],position[1],position[2]]
+    brot=[-angles[0],-angles[1],angles[2]]
+    model=mm(mm(matrix(translation=[-bp[0],24-bp[1],bp[2]]),matrix(diag=(-1,-1,1))),matrix(translation=[-x for x in bp]))
+    animated=mm(mm(mm(matrix(translation=[bp[i]+bpos[i] for i in range(3)]),rotation(brot)),matrix(diag=scale)),matrix(translation=[-x for x in bp]))
+    return apply(mm(mm(model,animated),matrix(diag=(-1,1,1))),point)
+
+
+class CoordinateTests(unittest.TestCase):
+    def test_asymmetric_vertex_catches_double_x_reflection(self):
+        self.assertEqual(preview.raw_bound_point([3,28,-2]),[3,-4,-2])
+        self.assertEqual(preview.bound_binding_offset([1,15.5,3]),[1,8.5,3])
+
+    def test_explicit_bb_import_and_animate_equals_raw_direct(self):
+        for pivot in ([0,24,0],[1,15.5,3],[-4,11,2]):
+            for angles in ([0,0,0],[91,65,-43],[1,176,-2.5],[19,-37,71]):
+                for point in ([7,39,-1],[-5,17,0],[3,28,-2]):
+                    pos=[5.3,-2.2,.4];scale=[.4,.7,1.2]
+                    expected=explicit_bb_animate(list(point),pivot,pos,angles,scale)
+                    local=preview.raw_bound_point(point,pivot)
+                    actual=preview.transform(preview.rotation(angles),[local[i]*scale[i] for i in range(3)])
+                    offset=preview.bound_binding_offset(pivot)
+                    actual=[actual[i]+[pos[0],-pos[1],pos[2]][i]+offset[i] for i in range(3)]
+                    for a,b in zip(actual,expected):self.assertAlmostEqual(a,b,places=10)
+
+    def test_raw_bound_api_matches_explicit_bb_and_holder(self):
+        pose={'position':[-13.5,-5.8,5.1],'rotation':[1,176,-2.5],'scale':[1,1,1]}
+        for hand in ('left','right'):
+            raw=[-5,39,-1];pivot=[1,15.5,3]
+            p=explicit_bb_animate(raw,pivot,pose['position'],pose['rotation'],pose['scale'])
+            arm,origin,item=preview.holder(hand)
+            p=preview.transform(arm,[p[i]+item[i] for i in range(3)])
+            p=[p[i]+origin[i] for i in range(3)]
+            world=[-preview.SCALE*p[0],preview.SCALE*(preview.Y_SHIFT-p[1])-preview.EYE,preview.SCALE*p[2]]
+            expected=[-world[0]/world[2],world[1]/world[2],world[2]]
+            for a,b in zip(preview.project_raw_bound_point(raw,pivot,pose,hand),expected):self.assertAlmostEqual(a,b,places=10)
+
+    def test_catalog_path_uses_corrected_asymmetric_coordinates(self):
+        previous=preview.RP
+        try:
+            with tempfile.TemporaryDirectory() as folder:
+                preview.RP=Path(folder)
+                models=preview.RP/'models/entity';models.mkdir(parents=True)
+                bones=[{'name':'grip','pivot':[0,24,0]}, {'name':'plate_pose','parent':'grip','pivot':[0,24,0]}, {'name':'slot_0','parent':'plate_pose','pivot':[0,24,0],'cubes':[{'origin':[2,25,3],'size':[1,1,1]}]}]
+                (models/'plate_held_test.geo.json').write_text(json.dumps({'minecraft:geometry':[{'bones':bones}]}))
+                points=preview.local_points({'animations':{'animation.kg_plate_held.layout':{'bones':{}}}})
+                self.assertEqual([(min(p[i] for p in points),max(p[i] for p in points)) for i in range(3)],[(2,3),(-2,-1),(3,4)])
+        finally:preview.RP=previous
+
+    def test_zero_pose_pivot_cancels_before_holder(self):
+        pose={'position':[0,0,0],'rotation':[0,0,0],'scale':[1,1,1]}
+        expected=preview.project_raw_bound_point([5,30,2],[0,24,0],pose,'left')
+        for pivot in ([1,15.5,3],[-4,11,2],[9,31,-6]):
+            actual=preview.project_raw_bound_point([5,30,2],pivot,pose,'left')
+            for a,b in zip(actual,expected):self.assertAlmostEqual(a,b,places=10)
+
+    def test_retired_writers_fail_explicitly(self):
+        for call in (lambda:preview.generate(),lambda:preview.generate(True),lambda:preview.fitted({})):
+            with self.assertRaisesRegex(RuntimeError,'retired'):call()
+
+    def test_cli_diagnostic_and_retired_check_never_write_asset(self):
+        before=hashlib.sha256(preview.POSE.read_bytes()).hexdigest()
+        for args,code in [([],0),(['--diagnose'],0),(['--check'],2)]:
+            r=subprocess.run([sys.executable,str(ROOT/'tools/plate_camera_pose.py'),*args],capture_output=True,text=True,cwd=ROOT)
+            self.assertEqual(r.returncode,code,r.stderr)
+            self.assertIn('READ_ONLY_DIAGNOSTIC' if code==0 else 'contract is retired',r.stdout+r.stderr)
+        self.assertEqual(hashlib.sha256(preview.POSE.read_bytes()).hexdigest(),before)
+        report=preview.diagnose()
+        self.assertFalse(report['native_acceptance']);self.assertFalse(report['java_equivalence'])
+
+
+suite=unittest.defaultTestLoader.loadTestsFromTestCase(CoordinateTests)
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+assert result.wasSuccessful()
+print('seven independent coordinate/no-write regressions passed; no native acceptance')
+`;
+ assert.match(runPython('python3',['-c',script],{cwd:pathOf(new URL('../../',import.meta.url)),timeout:120000}).toString(),/seven independent coordinate\/no-write regressions passed/);
 });
 
 test('TACZ keeps cubic keyframes constant and releases the occupied arm through animation weight',()=>{
