@@ -1,5 +1,6 @@
 import {canonicalFoodId} from './eating_profile_ids.js';
 import {canonicalLoreForComparison} from './bottle_lore_core.js';
+import {secretGuiProgress} from './secret_gui_core.js';
 // Versioned, fail-closed projection of metadata exposed by the stable ItemStack API.
 // This is not a serializer for inaccessible Java NBT or other packs' private data.
 import {getItemProperty,getItemPropertyIds,setItemProperty,getItemRawLore,setItemLore} from './core/persist.js';
@@ -68,8 +69,13 @@ export function restoreSkewerMetadata(data,createStack,enchantmentType){
 export function ingredientContentSignature(row){
  if(!row?.native&&!('name' in (row??{}))&&!('lore' in (row??{}))&&!('props' in (row??{})))return String(canonicalFoodId(row?.signature??row?.id??''));
  const n=row.native??{};
+ // The per-slot GUI cache is presentation, not a different ingredient. Keep
+ // the exact snapshot for restoration while comparing the original progress.
+ const lore=(n.rawLore??row.lore??[]).map(x=>typeof x==='string'?{text:x}:x);
+ const comparableLore=canonicalFoodId(row.id)==='kaleidoscope_grilling:secret_skewer'
+  ?lore.map(x=>secretGuiProgress(x)?.base??x):lore;
  return metadataSignature({id:canonicalFoodId(row.id),name:n.name??row.name??'',
-  rawLore:(n.rawLore??row.lore??[]).map(x=>typeof x==='string'?{text:x}:x),props:n.props??row.props??{},
+  rawLore:comparableLore,props:n.props??row.props??{},
   damage:n.damage??0,enchantments:n.enchantments??[],keepOnDeath:n.keepOnDeath??false,
   lockMode:n.lockMode??'none',canDestroy:n.canDestroy??[],canPlaceOn:n.canPlaceOn??[]});
 }

@@ -1,5 +1,7 @@
 {
   "ui_defs": [
-    "ui/kg_grilling_hud.json"
+    "ui/kg_grilling_hud.json",
+    "ui/kg_secret_gui.json",
+    "ui/kg_secret_gui_common.json"
   ]
 }
