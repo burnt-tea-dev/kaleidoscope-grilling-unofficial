@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "status": "PREPARED_NOT_RUN",
+  "runtime_base": "00712e790e3f78834e4089749878eaca8beaf4e2",
+  "runtime_changes": false,
+  "entry": "scripts/ordinary_network_food_probe.js",
+  "source": "tests/native/heavy-metal/ordinary_network_food_probe.js",
+  "roles": {
+    "subject": "qaNetPlain",
+    "idle": "qaNetHeavy"
+  },
+  "driver": {
+    "required_input": "native-use-v11-inventory-transaction",
+    "actions": true,
+    "share_resource_packs": true,
+    "actions_per_case": [
+      "use_item",
+      "release_item"
+    ],
+    "initial_loading_end_sent_is_acceptance": false
+  },
+  "events": {
+    "prepare": "grilling_qa:prepare_ordinary_network_food",
+    "ordinary_arm": "grilling_qa:arm_ordinary_network_food",
+    "conditional_milk_arm": "grilling_qa:arm_ordinary_network_milk"
+  },
+  "markers": {
+    "ready": "GRILLING_QA_FOOD_READY",
+    "armed": "GRILLING_QA_FOOD_INPUT_READY",
+    "release": "GRILLING_QA_FOOD_RELEASE",
+    "conditional_milk_ready": "GRILLING_QA_FOOD_CONTROL_READY",
+    "cases_done": "GRILLING_QA_NETWORK_CASES_DONE",
+    "final": "GRILLING_QA_RESULT"
+  },
+  "timing_from_unchanged_items": {
+    "kaleidoscope_grilling:ordinary_skewer": {
+      "use_seconds": 5.0,
+      "native_ticks": 100,
+      "can_always_eat": true,
+      "animation": "eat"
+    },
+    "kaleidoscope_grilling:ordinary_skewer_java_three_alt": {
+      "use_seconds": 4.5,
+      "native_ticks": 90,
+      "can_always_eat": true,
+      "animation": "eat"
+    },
+    "kaleidoscope_grilling:ordinary_skewer_native_plain": {
+      "use_seconds": 1.25,
+      "native_ticks": 25,
+      "can_always_eat": true,
+      "animation": "eat"
+    }
+  },
+  "ordinary_watchdog_ticks": 160,
+  "conditional_milk_watchdog_ticks": 100,
+  "after_release_settle_ticks": 8,
+  "disconnect_wait_max_ticks": 600,
+  "ordinary": {
+    "factory": "integration_stack_core.prepareProducedFood",
+    "base_id": "kaleidoscope_grilling:ordinary_skewer",
+    "amount": 1,
+    "metadata": {
+      "kind": "cuisine",
+      "hotTicks": 0,
+      "seasoning": []
+    },
+    "mode": "Creative",
+    "health": 10,
+    "hunger": 10,
+    "saturation": 0,
+    "offhand": "minecraft:totem_of_undying",
+    "custom_effects": {},
+    "native_effects": []
+  },
+  "milk_condition": "Only if the single Ordinary case lacks a native itemCompleteUse; preserve that case, never retry it. Native milk plus night_vision only. No golden apple or absorption."
+}
