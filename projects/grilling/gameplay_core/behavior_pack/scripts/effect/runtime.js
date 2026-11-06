@@ -112,7 +112,7 @@ function applyOrdinary(player){
  ordinaryFatalFeedback(player);
  // Java uses damage and Heavy Metal can rescue it. Ordinary's damage type is
  // tagged bypasses_invulnerability, which Java totems reject before LivingDeath.
- system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'override'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
+ system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'selfDestruct'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
 
 world.afterEvents.entityHeal.subscribe(event=>{

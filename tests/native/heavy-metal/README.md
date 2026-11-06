@@ -39,3 +39,17 @@ a repair. It needs one normal stop and does not repeat the expiry/save cycle.
 actual-Player capability observation. Its native event witnesses are positive,
 but the predicate marks both full-shield survival and spent-shield death fatal.
 It does not repair or replace this handler and changes no production runtime.
+
+`ordinary_maxfloat_probe.js` prepares the remaining Ordinary cause observation.
+The older Totem-priority probe used 100 damage for selfDestruct; only override
+used Float.MAX_VALUE. That result does not settle selfDestruct at the actual
+Ordinary amount. Use the candidate's real `applyOrdinary` and registered
+food/effect handlers with two native Survival Players, one at a time, through
+the unchanged 25-tick `ordinary_skewer_native_plain` food definition. Require a
+native completion and one max-float hit, an untouched offhand totem and no
+TotemOfUndying healing. Without Heavy Metal the Player must die; with it the
+existing handler must pay before cancelling and rescue to 1HP. Do not replace
+native methods or callbacks, infer remaining shields, replay damage or add a
+Player overlay. This is not complete main startup, saved-state, armor/resistance
+bypass or client validation. Execution still requires the shared owner's slot;
+source preparation alone is not a native result or an exported runtime release.
