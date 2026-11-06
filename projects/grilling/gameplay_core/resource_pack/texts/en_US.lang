@@ -307,6 +307,8 @@ ui.kaleidoscope_grilling.advanced_rack.not_found=No Advanced Rack within 8 block
 ui.kaleidoscope_grilling.advanced_rack.hint=Use the exact shelf slot directly: held item inserts, empty hand picks up. Sneak-click an occupied slot to swap; sneak-click an empty slot empty-handed to clear its filter. /kaleidoscope_grilling:rack returns matching items.
 
 tooltip.kaleidoscope_grilling.skewer.progress=§8Hand-threaded skewer %s/%s
+tooltip.kaleidoscope_grilling.secret_skewer.raw=Raw
+tooltip.kaleidoscope_grilling.secret_skewer.cooked=Cooked
 tooltip.kaleidoscope_grilling.skewer.ingredient=§7Ingredient %s:
 
 ## Grilling inventory display names; plain name keys remain usable in guides.

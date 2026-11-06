@@ -210,6 +210,62 @@ test('placed grill cooks and returns exactly three beef skewers through player c
   assert.equal(f.drops.length,0);assert.equal(f.grillState().phase,0);
  }finally{f.dispose();}
 });
+// Raw-to-cooked IDs change; native ownership metadata must not.
+async function oneBeefReadyForExtraction(f,raw){
+ f.p.main=raw;f.interact();
+ assert.equal(f.contents.getItem(0)?.typeId,N+'raw_beef_skewer');
+ const oil=await f.load('oil/cookery_oil_pot_adapter.js');
+ f.p.main=oil.buildCookeryOilPot('canola',1);assert.ok(f.p.main);f.interact();
+ f.p.main=undefined;
+ for(let flip=1;flip<=4;flip++){
+  f.interact();assert.equal(f.grillState().flips,flip);
+  for(let tick=0;tick<20;tick++){f.tick();f.component(N+'grill_tick','onTick',{block:f.grill});}
+ }
+ assert.equal(f.grillState().phase,2);
+ const food=await f.load('food/food_state_adapter.js'),bottle=f.item(N+'special_seasoning');
+ food.setFoodSeasonings(bottle,[N+'green_chili_powder',N+'sichuan_pepper',N+'onion_powder']);
+ f.data.setItemProperty(bottle,N+'uses',15);f.p.main=bottle;f.interact();
+ assert.equal(f.grillState().seasoned,true);f.p.main=undefined;f.p.isSneaking=true;
+}
+test('cooked beef from a normal grill preserves native ownership and foreign metadata',async()=>{
+ const f=await placedGrillFixture();
+ try{
+  const raw=f.item(N+'raw_beef_skewer',1,{
+   nameTag:'Named by another addon',keepOnDeath:true,lockMode:'slot',
+   canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],
+   rawLore:[{text:'foreign: preserve my note'}]
+  });
+  f.data.setItemProperty(raw,'foreign:owner','retained');
+  await oneBeefReadyForExtraction(f,raw);f.interact();
+  const cooked=f.p.inventory.items().find(x=>x?.typeId===N+'grilled_beef_skewer');
+  assert.ok(cooked,'the cooked serving must be delivered');
+  assert.equal(cooked.amount,1);assert.equal(cooked.nameTag,raw.nameTag);
+  assert.equal(cooked.keepOnDeath,true);assert.equal(cooked.lockMode,'slot');
+  assert.deepEqual(cooked.getCanDestroy(),['minecraft:stone']);
+  assert.deepEqual(cooked.getCanPlaceOn(),['minecraft:dirt']);
+  assert.ok(cooked.getRawLore().some(line=>line.text==='foreign: preserve my note'));
+  assert.equal(f.data.getItemProperty(cooked,'foreign:owner'),'retained');
+  assert.equal(f.contents.getItem(0),undefined);assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
+test('unwritable cooked fields leave the original raw skewer on its grill and permit retry',async()=>{
+ const f=await placedGrillFixture(),original=f.ItemStack.prototype.setCanDestroy;
+ try{
+  await oneBeefReadyForExtraction(f,f.item(N+'raw_beef_skewer',1));
+  f.ItemStack.prototype.setCanDestroy=function(list){
+   if(this.typeId===N+'grilled_beef_skewer')throw Error('unavailable cooked native field');
+   return original.call(this,list);
+  };
+  f.interact();
+  assert.equal(f.contents.getItem(0)?.typeId,N+'raw_beef_skewer');
+  assert.equal(f.grillState().seasoned,true);
+  assert.equal(f.p.inventory.items().some(x=>x?.typeId===N+'grilled_beef_skewer'),false);
+  assert.equal(f.drops.length,0);
+  f.ItemStack.prototype.setCanDestroy=original;f.interact();
+  assert.equal(f.contents.getItem(0),undefined);
+  assert.equal(f.p.inventory.items().filter(x=>x?.typeId===N+'grilled_beef_skewer').length,1);
+ }finally{f.ItemStack.prototype.setCanDestroy=original;f.dispose()}
+});
 test('normal grill before event plus native component flips exactly once and cancels vanilla use',async()=>{
  const f=await nativeGrillInteractionFixture();
  try{
@@ -538,5 +594,118 @@ for(const field of [secretIngredientsKey,cookedIngredientsKey])test('native four
   assert.deepEqual(state,stateBefore);assert.deepEqual(f.grillInventory.items().map(stack=>stack&&f.snapshot.captureSkewerMetadata(stack)),before);
   assert.equal(f.data.getItemProperty(f.grillInventory.getItem(1),field),'{bad');
   assert.equal(f.drops.length,0);
+ }finally{f.dispose()}
+});
+
+const stageKey=cooked=>'tooltip.kaleidoscope_grilling.secret_skewer.'+(cooked?'cooked':'raw');
+const stageLine=cooked=>({rawtext:[{text:cooked?'§r§6':'§r§8'},{translate:stageKey(cooked)},{text:'§r'}]});
+function stageRows(f,stack){return f.data.getItemRawLore(stack).filter(line=>line?.rawtext?.[1]?.translate?.startsWith('tooltip.kaleidoscope_grilling.secret_skewer.'));}
+test('Secret tooltip follows threading, cooking, cooling and reheating without changing ingredient order or variants',async()=>{
+ const f=await nativeSecretFixture();
+ const gui=await f.load('secret_gui_core.js');
+ const labelsOf=stack=>f.data.getItemRawLore(stack).slice(0,4).map(line=>gui.secretGuiProgress(line)?.base??line);
+ try{
+  const ingredients=['minecraft:apple','minecraft:beef','minecraft:carrot'];f.p.off=f.item('minecraft:stick',1);
+  for(const [index,id] of ingredients.entries()){
+   const input=f.item(id,4);if(index===0)input.nameTag='Named apple';f.p.main=input;
+   assert.equal(f.admit().cancel,true);f.flush();assert.equal(f.p.main.amount,3);
+   assert.deepEqual(gui.secretGuiProgress(f.data.getItemRawLore(f.p.off)[0]).base.with,[String(index+1),'3']);
+  }
+  const food=await f.load('food/food_state_adapter.js'),state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
+  const variants=await f.load('secret_visual_state_core.js'),oil=await f.load('oil/cookery_oil_pot_adapter.js');
+  const raw=f.p.off,rows=f.data.getItemProperty(raw,secretIngredientsKey),models=f.data.getItemProperty(raw,variants.SECRET_MODEL_VARIANTS_KEY);
+  assert.deepEqual(stageRows(f,raw),[stageLine(false)]);
+  const labels=labelsOf(raw);
+  assert.deepEqual(labels[0].with,['3','3']);
+  assert.deepEqual(labels.slice(1).map(line=>line.rawtext[0].with),[['1'],['2'],['3']]);
+  assert.deepEqual(labels[1].rawtext[2],{text:'Named apple'});assert.deepEqual(JSON.parse(rows).map(row=>row.id),ingredients);
+  f.p.off=undefined;f.p.isSneaking=false;
+  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+  const interact=()=>{const e=f.emit('world.beforeEvents.playerInteractWithBlock',{block:grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});assert.equal(e.cancel,true);f.flush();};
+  f.p.main=f.item('minecraft:flint_and_steel');interact();f.p.main=raw;interact();
+  f.p.main=oil.buildCookeryOilPot('canola',1);interact();f.p.main=undefined;
+  for(let flip=0;flip<4;flip++){interact();for(let tick=0;tick<20;tick++){f.tick();f.component(N+'grill_tick','onTick',{block:grill});}}
+  assert.equal(state.readGrillState(grill).phase,2);
+  const bottle=f.item(N+'special_seasoning');food.setFoodSeasonings(bottle,[N+'green_chili_powder']);f.p.main=bottle;interact();
+  f.p.main=undefined;f.p.isSneaking=true;interact();
+  const cooked=f.p.inventory.items().find(stack=>stack?.typeId.startsWith(N+'secret_skewer'));assert.ok(cooked);
+  assert.equal(cooked.amount,1);assert.equal(f.data.getItemProperty(cooked,secretCookedKey),true);
+  assert.deepEqual(JSON.parse(f.data.getItemProperty(cooked,cookedIngredientsKey)).map(row=>row.id),['minecraft:apple','minecraft:cooked_beef','minecraft:carrot']);
+  assert.equal(f.data.getItemProperty(cooked,secretIngredientsKey),rows);assert.equal(f.data.getItemProperty(cooked,variants.SECRET_MODEL_VARIANTS_KEY),models);
+  assert.deepEqual(labelsOf(cooked),labels);assert.deepEqual(stageRows(f,cooked),[]);
+  f.system.currentTick=food.hotUntil(cooked)+1;food.refreshHotLore(cooked);
+  assert.equal(food.hotUntil(cooked),0);assert.deepEqual(stageRows(f,cooked),[stageLine(true)]);
+  food.setHotFood(cooked,200);assert.deepEqual(stageRows(f,cooked),[]);
+  assert.equal(f.data.getItemProperty(cooked,secretIngredientsKey),rows);assert.equal(f.data.getItemProperty(cooked,variants.SECRET_MODEL_VARIANTS_KEY),models);
+  assert.equal(storage.stationContainer(grill).getItem(0),undefined);
+ }finally{f.dispose()}
+});
+for(const cooked of [false,true])test('saved cold Secret tooltip restores once in a fresh world graph, cooked='+cooked,async()=>{
+ const original=await nativeSecretFixture();let saved;
+ try{const stack=original.secret();original.data.setItemProperty(stack,secretCookedKey,cooked);saved={id:stack.typeId,amount:stack.amount,nameTag:stack.nameTag,lore:stack.getRawLore(),world:original.snapshotProperties(),props:original.snapshot.captureSkewerMetadata(stack).props};}finally{original.dispose()}
+ const f=await nativeSecretFixture({worldProperties:saved.world});
+ try{
+  f.p.main=f.item(saved.id,saved.amount,{nameTag:saved.nameTag,lore:saved.lore});
+  f.emit('world.afterEvents.playerInventoryItemChange',{player:f.p,slot:0});f.tick();
+  assert.deepEqual(stageRows(f,f.p.main),[stageLine(cooked)]);assert.equal(f.p.main.amount,3);assert.equal(f.p.main.nameTag,saved.nameTag);
+  assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.main).props,saved.props);
+  const before=f.p.main.getRawLore(),jobs=await f.load('hot_lore_runtime.js');
+  f.emit('world.afterEvents.playerInventoryItemChange',{player:f.p,slot:0});f.tick();
+  assert.deepEqual(f.p.main.getRawLore(),before);assert.equal(jobs.pendingHeatTooltipJobs(),0);
+ }finally{f.dispose()}
+});
+test('Secret tooltip preserves full foreign lore and near-matching translated lines',async()=>{
+ const f=await nativeSecretFixture();
+ try{
+  const food=await f.load('food/food_state_adapter.js'),near=stageLine(false);near.rawtext[1].with=['foreign'];
+  const lore=[near,...Array.from({length:18},(_,i)=>({text:'Foreign '+i}))],stack=f.secret();f.data.setItemLore(stack,lore);
+  const before=f.snapshot.captureSkewerMetadata(stack);food.refreshHotLore(stack);
+  assert.deepEqual(f.snapshot.captureSkewerMetadata(stack),before);
+  assert.equal(food.needsColdSecretTooltip(stack),false);
+  f.p.off=stack;f.tick(100);const jobs=await f.load('hot_lore_runtime.js');assert.equal(jobs.pendingHeatTooltipJobs(),0);
+ }finally{f.dispose()}
+});
+test('Secret tooltip background refresh waits for active eating in either hand',async()=>{
+ const {createEatingLab,routes}=await import('../helpers/eating-lab.mjs');
+ const lab=await createEatingLab();
+ try{
+  const route=routes.find(row=>row.base===N+'secret_skewer'&&row.kind==='base'),jobs=await lab.f.load('hot_lore_runtime.js');
+  for(const hand of ['main','off']){
+   const actor=lab.actor(route,hand),before=actor.p[hand].getRawLore();actor.begin();
+   lab.f.emit('world.afterEvents.playerInventoryItemChange',{player:actor.p,slot:0});actor.advance(24);
+   lab.assertUsing(actor);assert.deepEqual(actor.p[hand].getRawLore(),before);
+   actor.event('itemStopUse',route.duration-24);actor.advance(25);
+   assert.equal(actor.p[hand].amount,1);assert.deepEqual(stageRows({data:lab.data},actor.p[hand]),[stageLine(false)]);
+   const start=lab.f.writes.length;lab.f.tick(100);
+   assert.equal(jobs.pendingHeatTooltipJobs(),0);assert.equal(lab.f.writes.slice(start).filter(row=>row.method==='setEquipment').length,0);
+   actor.retire();
+  }
+ }finally{lab.f.dispose()}
+});
+test('Secret tooltip background refresh does not invalidate pending disassembly',async()=>{
+ const f=await newlyThreadedSecretFixture(false);
+ try{
+  const stack=f.p.off;f.data.setItemLore(stack,f.data.getItemRawLore(stack).filter(line=>line.rawtext?.[1]?.translate!==stageKey(false)));f.p.off=stack;
+  // The existing twentieth-tick offhand scan admits the job before the hand
+  // action. Both become due on the following tick, exercising their ordering.
+  f.tick(20-f.system.currentTick%20);const jobs=await f.load('hot_lore_runtime.js');assert.ok(jobs.pendingHeatTooltipJobs()>0);
+  assert.deepEqual(stageRows(f,f.p.off),[]);assert.equal(f.disassemble().cancel,true);f.tick();f.flush();
+  assert.equal(f.p.off,undefined);assert.deepEqual(f.materialCounts(),{'minecraft:stick':3,'minecraft:apple':1,'minecraft:carrot':1,'minecraft:bread':1});
+ }finally{f.dispose()}
+});
+test('Secret tooltip cooling reserves both public and private carriers before adding a badge',async()=>{
+ const f=await nativeSecretFixture({currentTick:200});
+ try{
+  const food=await f.load('food/food_state_adapter.js'),api=await f.load('host_api/food_api_core.js');
+  for(const count of [0,17,18]){
+  const stack=f.secret(),lore=Array.from({length:count},(_,i)=>({text:'Foreign '+i}));
+  f.data.setItemProperty(stack,food.HOT_UNTIL_KEY,100);f.data.setItemLore(stack,lore);
+  api.writePublicFood(stack,{v:1,hotUntil:100,seasoning:[N+'onion_powder']});assert.equal(stack.getRawLore().length,count+2);
+  const before=f.snapshot.captureSkewerMetadata(stack);food.refreshHotLore(stack);
+  assert.equal(food.hotUntil(stack),0);assert.deepEqual(food.readFoodSeasonings(stack),[N+'onion_powder']);
+  assert.deepEqual(f.data.getItemRawLore(stack).filter(line=>!api.isFoodPayloadLine(line)),count<18?[...lore,stageLine(true)]:lore);
+  assert.deepEqual(f.snapshot.captureSkewerMetadata(stack).props,Object.fromEntries(Object.entries(before.props).filter(([key])=>key!==food.HOT_UNTIL_KEY)));
+  assert.equal(stack.amount,3);assert.equal(stack.nameTag,before.name);assert.equal(food.needsColdSecretTooltip(stack),false);
+  }
  }finally{f.dispose()}
 });

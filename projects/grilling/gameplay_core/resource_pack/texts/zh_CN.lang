@@ -286,6 +286,8 @@ ui.kaleidoscope_grilling.advanced_rack.not_found=8 格内没有高级厨具架
 ui.kaleidoscope_grilling.advanced_rack.hint=直接点击架上的对应槽位：手持物品存入，空手取出。潜行点击已占用槽位交换；空手潜行点击空槽清除筛选。/kaleidoscope_grilling:rack 归还符合筛选的物品。
 
 tooltip.kaleidoscope_grilling.skewer.progress=§8手工穿串 %s/%s
+tooltip.kaleidoscope_grilling.secret_skewer.raw=生
+tooltip.kaleidoscope_grilling.secret_skewer.cooked=熟
 tooltip.kaleidoscope_grilling.skewer.ingredient=§7原料 %s：
 
 ## Grilling inventory display names; plain name keys remain usable in guides.

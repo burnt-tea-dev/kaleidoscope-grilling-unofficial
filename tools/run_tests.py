@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # tests remain available via --full; they no longer block every feature PR.
 SMOKE_TESTS = (
     'tests/scenario/test_skewer_item_snapshot.mjs',
+    'tests/scenario/test_secret_inventory_icon.mjs',
     'tests/legacy/test_core.mjs',
     'tests/legacy/test_plate_transactions.mjs',
     'tests/legacy/test_oil_transactions.mjs',
@@ -21,10 +22,15 @@ SMOKE_TESTS = (
     'tests/legacy/test_food_finish.mjs',
     'tests/legacy/test_food_snapshot.mjs',
     'tests/legacy/test_bottle_raw_lore.mjs',
+    'tests/scenario/test_pending_seasoning_metadata.mjs',
     'tests/legacy/test_java_survival_parity.mjs',
     'tests/legacy/test_java_heat_deadlines.mjs',
     'tests/legacy/test_cookery_output_contract_core.mjs',
     'tests/legacy/test_cuisine_quality_java.mjs',
+    'tests/legacy/test_immersion_audio.mjs',
+    'tests/scenario/test_heavy_metal_rescue.mjs',
+    'tests/scenario/test_warmth_heat_sources.mjs',
+    'tests/scenario/test_held_snapshot_recovery.mjs',
     'tests/legacy/test_skewer_compat_core.mjs',
     'tests/legacy/test_secret_compat_core.mjs',
     'tests/legacy/test_rack_aim_hit.mjs',

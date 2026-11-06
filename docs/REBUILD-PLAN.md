@@ -1,10 +1,13 @@
 # 煙火（Kaleidoscope Grilling）基岩版移植：重建執行計畫
 
+> **2026-11-04 現行決定**：存檔相容鎖、只增不減及逐 ID 退役收據已移除；相關說明以 [SAVE-COMPAT](SAVE-COMPAT.md) 為準。真人驗收不是門檻，改用針對實際功能的精簡自動化驗證。完整世界備份只留最新一份。禁止逐版堆補丁、特定包組合與環境特化；修復須回到功能負責來源。下方已完成階段保留歷史，不重新施加其舊鎖或等待條件。
+
+
 > **讀者**：接手執行的 AI 代理與維護者。**權威順序**：`AGENTS.md`（行為規則）→ 本文件（工作內容與順序）→ `docs/SAVE-COMPAT.md`（存檔硬規則）。三者與舊文件衝突時，以這三份為準；舊文件（`docs/STATUS-A*.md`、`docs/RELEASE-NOTES-*`、`docs/audit/*`、`history/` 等）只當歷史參考，**不是指令**。
 >
 > **建立**：2026-10-18，基準 commit `4d5fb095`（G155／2.8.155）。
 >
-> **一句話目標**：把一個靠「版本層疊補丁＋見證測試」維持的移植，換成**一份以 Bedrock 原生機制實作、按 Java 1.1.1 功能域組織、可以放心刪改的 runtime**；同時保證 luosen 存檔裡玩家的東西一件都不會消失。
+> **一句話目標**：把一個靠「版本層疊補丁＋見證測試」維持的移植，換成**一份以 Bedrock 原生機制實作、按 Java 1.1.1 功能域組織、可以放心刪改的 runtime**；同時保證 正式世界 存檔裡玩家的東西一件都不會消失。
 
 ---
 
@@ -15,7 +18,7 @@
 2. [已就位的護欄與禁止模式](#2-已就位的護欄與禁止模式)
 3. [目標架構（終態）](#3-目標架構終態)
 4. [分階段執行（P0–P7）](#4-分階段執行p0p7)
-5. [伺服器與 luosen 存檔作業手冊](#5-伺服器與-luosen-存檔作業手冊)
+5. [伺服器與 正式世界 存檔作業手冊](#5-伺服器與-正式世界-存檔作業手冊)
 6. [senluo-family-integration-private 收斂方針](#6-senluo-family-integration-private-收斂方針)
 7. [視覺還原方法（逐表面）](#7-視覺還原方法逐表面)
 8. [邏輯還原方法（Java → Bedrock 對照）](#8-邏輯還原方法java--bedrock-對照)
@@ -31,12 +34,12 @@
 1. **一次只做一個任務（T-x.y），一個任務一個 PR。** PR 標題以任務編號開頭，例如 `T2.3: remove committed build artifacts`。
 2. **每個任務都有「驗收條件」**。沒有全部達成就不能標完成，不能用「測試通過」代替「玩法正確」。
 3. **P2 之前不准改 runtime 行為**；P2 的所有 PR 依 §4 P2 共通驗收證明 BP/RP 位元組不變。T2.8 僅依該任務的明示例外變更 RP，仍須完整 staging 驗收。
-4. **任何 item／block／entity／state 值／persisted key 的移除**只能走 `docs/SAVE-COMPAT.md` 的退役流程。護欄會擋。
-5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。棘輪會擋。
-6. **luosen 是正式玩家世界**。任何改動 luosen 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
-7. **不要修改作者 Cookery 包的檔案**，不要把私有整合的內容放進公開 repo。（§6）
+4. **保存資料的變更**依 `docs/SAVE-COMPAT.md` 做相關功能驗證；不再使用存檔相容鎖。
+5. **不准新增**：`verify_a*.py`、`augment_a*.py`、`tools/gNNN_*.py`、`docs/STATUS-*.md`、版本前綴模組（`aNNNN_*.js`）、版本前綴模型目錄、只為了視覺路線而存在的 item ID、新的全域 `playerInteractWithBlock` 監聽、新的 `system.runInterval`。這些是實作規則，不另設棘輪 PR 門檻。
+6. **正式世界 是正式玩家世界**。任何改動 正式世界 的動作都要：停服完整備份 → staging 驗證 → 部署 → 讀回確認 → 保留一份可完整回滾的上一版。（§5）
+7. **保留作者原始歸檔，不公開完整作者檔案或私有整合內容**。已授權的宿主適配沿公開來源契約與現有 Core 本機組裝流程，使用者自行提供合法原包；適配輸出須有新配對身份與來源紀錄。（§6）
 8. **遇到計畫沒寫的決策**：停下，把選項寫進 PR 描述的「需要擁有者決定」段落，不要自行假設後繼續大規模工作。
-9. 報告用語：`來源已實作`／`CI 通過`／`staging 驗證`／`已部署 luosen`／`真人驗收`五級分開寫，不可混用。
+9. 報告用語依 `AGENTS.md` §6；按實際來源、檢查與部署狀態分開寫，不另加完成門檻。
 
 ---
 
@@ -73,40 +76,26 @@
 4. **用替換物品 ID 來挑動畫**：`prepareEatingItems` 每 tick 檢查手上的串，必要時用 `_native_plain`／`_java_three_alt` 影子物品**替換玩家手上的 ItemStack**，只為了選另一套進食動畫／時長。這會：觸發背包事件、造成不同 ID 不能堆疊、所有配方／餐盤／烤架判斷都要先 `canonicalFoodId` 還原、斷線或崩潰時玩家可能留著影子物品。
 5. **以烘焙幾何追求視覺**：把 Java 物品模型的每一種狀態（每種食材組合、每一口、每個姿勢）烘焙成獨立 geometry，數 MB 一個檔，還要用一整套「投影路線」、校準、見證文件去維護。Bedrock 原生其實有 render controller 的貼圖陣列、bone 可見度、part_visibility、entity property 驅動等機制，可以用小得多的資產表達同樣的狀態。
 6. **私有整合補宿主**：家族整合（senluo-family-integration-private）在部署時修補作者 Cookery 宿主，公開 runtime 又依賴這些修補（「家族整合提供的砧板／油壺／炒鍋…不能當作只安裝作者 Cookery 就有的功能」），形成兩個 repo 之間沒有測試的隱性契約。
-7. **流程成本壓過工程**：每個修正都要換版本、20 分鐘 CI、整套家族准入、停服部署 luosen、寫證據文件。工程時間被流程吃掉，沒有時間做正確的結構修正。
+7. **流程成本壓過工程**：每個修正都要換版本、20 分鐘 CI、整套家族准入、停服部署 正式世界、寫證據文件。工程時間被流程吃掉，沒有時間做正確的結構修正。
 
 ### 1.3 已確認可以安全保留的資產
 
 - Java 原作 1.1.1（`breezeth-CN/KaleidoscopeGrilling@9a1acdab`）的素材已逐位元匯入於 `projects/grilling/source_snapshots/`，`source_manifest.json` 有逐檔雜湊與授權。**這是視覺還原的唯一正確來源**，保留。
 - `development/gameplay_core/fixtures/java-*` 中由 Java 原碼萃取的資料（配方、熱度期限、效果、HUD 尺寸、進食曲線、音效）有價值，**重新整理為 `data/java/` 的單一資料表**後保留（T2.3）。
-- BP/RP UUID、所有 item／block／entity ID、persisted key：存檔相依，**全部保留**（護欄已鎖）。
+- BP/RP UUID、item／block／entity ID、persisted key：涉及保存資料，依 [SAVE-COMPAT](SAVE-COMPAT.md) 驗證實際受影響的讀寫與重啟；不使用逐 ID 鎖或退役登記。
 - 已存在的交易安全觀念（先快照、寫入失敗回滾、不吞物品）：觀念保留，實作收斂到 `core/transaction.js` 一處（T3.2）。
 
 ---
 
 ## 2. 已就位的護欄與禁止模式
 
-### 2.1 護欄（P0 已完成；現行 PR 只強制存檔相容）
+### 2.1 現行檢查與保存保護
 
-> 現行簡化策略（2026-11-03）：`guards.yml` 在 PR 檢查存檔 ID、儲存元件及 pack 身份，並與 base lock 對照一次；`growth_ratchet` 與其自測、release baseline、bridge export 和過往相容性候選改為手動發布前驗證。此策略取代本節舊的「每個 PR 全量必跑」描述。既有真人世界上線前的備份與存檔不丟失要求不變。
+2026-11-04 擁有者已移除存檔相容鎖、逐 ID 退役登記及其 required CI；`guards.yml` 已刪除。保存變更只按 [SAVE-COMPAT](SAVE-COMPAT.md) 驗證實際受影響的資料，不要求新增 ID 更新鎖或先提交退役收據。
 
-| 護欄 | 檔案 | 擋什麼 |
-| --- | --- | --- |
-| 存檔相容鎖 | `tools/guards/save_compat.py`、`save-compat.lock.json`、`id-retirements.json` | 任何 item／block／block state 值／entity／persisted key 字面值／pack UUID 的消失；CI 另用 base 分支的 lock 再查，手改 lock 藏不住 |
-| 膨脹棘輪 | `tools/guards/growth_ratchet.py`、`growth-ratchet.json` | 24 項反模式計數只能下降；CI 另用 base 分支的上限再查，PR 不能自己調高上限 |
-| 受保護檔案 | `guards.yml` | 刪除護欄、`AGENTS.md`、本計畫、`SAVE-COMPAT.md` 會直接失敗 |
-| 標籤不提供旁路 | `guards.yml` | PR label 不會跳過 base 分支的存檔鎖或棘輪上限比較；不得在任務 PR 中自行放寬護欄 |
+PR 的實際檢查由 [ci.yml](../.github/workflows/ci.yml) 定義：可載入 JSON、核心玩法測試、指南圖示與要塞戰利品檢查。針對修改先跑能區分故障的測試，已有相同輸入的有效結果便重用；不要求每次在本機重跑整套 CI。
 
-規則：
-
-- 每個 PR 結束前在本機跑：
-  ```sh
-  python3 tools/guards/test_guards.py
-  python3 tools/guards/save_compat.py check
-  python3 tools/guards/growth_ratchet.py check
-  ```
-- 清理讓計數下降後，在同一個 PR 執行 `python3 tools/guards/growth_ratchet.py tighten` 鎖住新上限。
-- 新增合法 ID 後，在同一個 PR 執行 `python3 tools/guards/save_compat.py update`。
+既有 `growth_ratchet.py`、其自測及過往相容性測試仍可手動使用，不是普通 PR 的新增門檻。輸出 runtime 改變時，依 `baseline.json`、`tools/baseline_gate.py` 及 append-only `release-history.json` 固定新配對身份；部署前的備份、相關原生功能及存檔驗證仍有效。
 
 ### 2.2 禁止模式（看到就拒絕）
 
@@ -119,9 +108,9 @@
 | F5 | 新的全域 `world.beforeEvents.playerInteractWithBlock` 等監聽 | block／item custom components；或 `core/events.js` 的唯一路由 |
 | F6 | 新的 `system.runInterval` | `core/scheduler.js` 的唯一排程器（分攤、按需） |
 | F7 | 把建置產物、截圖、log commit 進 repo | GitHub Actions artifact／Releases |
-| F8 | 修改作者 Cookery 的檔案或在部署時注入 runtime | `compat/cookery` 介面卡＋能力探測（§6） |
+| F8 | 改寫作者原始歸檔、公開完整作者腳本，或把自有玩法藏進私有覆蓋／部署補丁 | 自有功能回 canonical owner；已授權宿主適配沿公開契約＋Core 本機組裝（§6） |
 | F9 | 以模板字串重新拼出 persisted key | `core/persist_keys.js` 逐字字面值（SAVE-COMPAT） |
-| F10 | 在 luosen 直接試錯 | staging 世界（§5.4） |
+| F10 | 在 正式世界 直接試錯 | staging 世界（§5.4） |
 | F11 | 把「BDS 載入成功／hash 一致／測試數」寫成「已還原」 | §0 第 9 條五級用語 |
 | F12 | 烘焙超過 512 KB 的單一 geometry | 原生狀態機制（§7） |
 | F13 | 新增或擴充 `player.json` 覆寫 | 先走決策 D6；預設不覆寫 |
@@ -226,14 +215,14 @@ scripts/
   - `*_native_plain`（42）、`*_java_three_alt`（22）：進食路線影子物品，動畫改由 player property 選擇 → **全部退役**，替代為對應基礎 ID。
   - `*_cuisine_q0–3`（12）：料理品質。Java `CuisineQualitySupport` 是 stack 上的 Cookery `Quality`，會以 `QualityUtils.modifyFoodProperties` 改變營養、以 `quality.getRatio()` 縮放效果時間、並加一行 tooltip；不是不同物品。Bedrock 的 `minecraft:food` 營養綁在 item ID，所以現行用 4 個 ID 表達 4 種營養。目標：基礎 ID＋item dynamic property 記品質＋lore 顯示，營養差額與效果時間在 `onConsume` 由腳本補正（以基礎營養為最低品質，腳本只加不減，避免原生結算後再扣）→ **退役** 12 個 ID（若擁有者在 D5 決定背包圖示必須不同則保留並改由產生器管理）。
   - `special_seasoning_r*_v*`（64）、`partial/pending_seasoning_f1–8`（16）：先在 P4 盤點 Java 背包圖示實際有幾種外觀，再決定保留數量；保留的改由產生器產出。
-- 不完整、自訂秘製串的**背包圖示**依三格食材變化：Bedrock 無法按 stack 動態合成背包圖示，這是平台限制。終態：通用秘製串圖示＋名稱／lore 列出三格食材；手持、放置、進食畫面則依 property 正確呈現。寫進 `docs/KNOWN-ISSUES.md`，不再用影子 ID 嘗試。
+- 不完整、自訂秘製串的**背包圖示**依三格食材變化：原生icon component只有固定鍵；目前新增每slot JSONUI顯示快取／Java原圖層路徑，保留原ID及雙手穿料。來源、實際原生資料及尚未觀察的client繪製只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不把固定icon setter的限制推成所有client路線均不可能，也不新增影子ID。
 
 ### 3.6 CI 與發布
 
-- `ci.yml`（每 PR，目標 < 3 分鐘）：guards → `node --test tests/unit tests/scenario` → `tsc --noEmit --checkJs`（用 `@minecraft/server` 型別檢查 JS）→ `eslint` → `python3 tools/validate.py`（靜態包驗證，§9.3）→ `python3 tools/build.py` 產出 `.mcaddon` 上傳為 workflow artifact（**不 commit**）。
-- `gametest.yml`（每晚＋手動）：下載 BDS、載入正式 BP/RP＋`tests/gametest` BP，跑 `/gametest runall`，解析 log。
-- `release.yml`（手動）：從已通過 CI 的 tag 建包、上傳 GitHub Release、寫 SHA256。
-- 版本號：語意版本。玩法／資產變更 bump minor 或 patch；文件／工具不 bump。**不再使用 G/T/W 代號與 `STATUS` 文件**；家族配對關係記在家族 repo 的單一 lock 檔。
+- 現行 PR 檢查見 [ci.yml](../.github/workflows/ci.yml) 與 §2.1；完整過渡測試由該 workflow 的手動輸入選擇，並非每個 PR 必跑。
+- 原生 BDS／保存驗證沿既有隔離流程及共同持有人的時段安排；本庫沒有已啟用的 `gametest.yml` 每晚流程，不能把它當成現況或以載入成功代替玩法。
+- 發布與組裝見 [RELEASING](RELEASING.md)，實際手動 workflows 以 `.github/workflows/` 為準；不提交建置產物。
+- 輸出版本與配對以 `baseline.json`、manifest 和追加發布歷史為準；runtime 改變須用全新配對身份，文件／工具且輸出不變時不升包。G/T/W 僅是既有版本簡稱，不另維護易過期的版本表；家族 lock 只作來源提醒，精確相依與保存要求仍有效。
 
 ### 3.7 文件保留清單（與 §3.1 一致）
 
@@ -256,7 +245,7 @@ scripts/
 - T0.5 伺服器唯讀盤點工具 `tools/ops/server_inventory.py` ✅
 - **分支保護核對**：確認 GitHub main 將 `Rebuild guards` 設為 required check，並以 GitHub 設定讀回為準；無法讀取時記為未能驗證。PR label 不提供任何護欄旁路。
 
-### P1：凍結與盤點（不改任何 runtime、不改 luosen）
+### P1：凍結與盤點（不改任何 runtime、不改 正式世界）
 
 **T1.1 凍結功能開發**
 - 步驟：在 README 頂端加一行「重建進行中，P3 前只接受 P0 等級存檔安全修補」；`.github/release-request.json` 保持 `publication_request=false`。
@@ -279,22 +268,22 @@ scripts/
 - 不要做：不要把這些 PR 的程式碼 cherry-pick 進來。
 
 **T1.4 伺服器唯讀盤點**（需要伺服器存取，§5.1）
-- 步驟：在伺服器執行 `tools/ops/server_inventory.py --server-root <luosen 所在 BDS 根>`，輸出存為 `tools/ops/receipts/luosen-inventory-<日期>.json`。**移除其中任何私密路徑或憑證後**才 commit；若有疑慮只 commit 摘要。
-- 驗收：收據列出 luosen 啟用的完整 BP/RP 順序、每包版本與雜湊、未解析 UUID、重複版本、player 覆寫衝突。
+- 步驟：在伺服器執行 `tools/ops/server_inventory.py --server-root <BDS_ROOT>`，輸出存為 `<INVENTORY_RECEIPT>.json`。**移除其中任何私密路徑或憑證後**才 commit；若有疑慮只 commit 摘要。
+- 驗收：收據列出 正式世界 啟用的完整 BP/RP 順序、每包版本與雜湊、未解析 UUID、重複版本、player 覆寫衝突。
 - 不要做：不要動 world 檔、不要重啟。
 
-**T1.5 luosen 基準備份（LKG-0）**（§5.3）
+**T1.5 正式世界 基準備份（LKG-0）**（§5.3）
 - 驗收：一份停服、完整、可還原的備份，記錄 SHA256、大小、時間、對應的 pack 組合收據；並在**另一台機器或另一個磁碟**有副本。
 
 **T1.6 世界 ID 普查（離線、只讀副本）**（§5.6）
 - 步驟：在 LKG-0 的**副本**上跑 ID 普查工具，統計每個 `kaleidoscope_grilling:*` item／block／entity 的數量與所在位置類型（玩家背包、容器、隱藏庫存實體、掉落物、方塊調色盤），以及 world dynamic property 中各 key 前綴的筆數。
-- 驗收：`tools/ops/receipts/luosen-id-census-<日期>.json`。這份數據決定 P4 退役的優先順序與風險。
+- 驗收：`<ID_CENSUS_RECEIPT>.json`。這份數據決定 P4 退役的優先順序與風險。
 
 **T1.7 私有整合盤點**（需要私有 repo 存取，§6.1）
 - 驗收：`docs/` 不放私有內容；在私有 repo 產出 `INVENTORY.md`：它修改了哪些 Cookery 檔案、注入了哪些腳本、對外提供了哪些 API、公開 runtime 依賴其中哪些。
 
 **T1.8 staging 伺服器**（§5.4）
-- 驗收：BSM 內有 `luosen-staging`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 luosen 相同；能正常開服、進入、重啟。
+- 驗收：BSM 內有 `<STAGING_SERVER>`（不同 port，不對外公告），世界來自 LKG-0 副本，pack 組合與 正式世界 相同；能正常開服、進入、重啟。
 
 **P1 出口條件**：T1.2–T1.10 全部完成。T1.4 的 pack 組合盤點與 489 個 content log warning 分類已由 #240 完成；T1.5 的 LKG-0、還原與獨立副本收據見 #241。這些交付不代替修正版 T1.6 的真實副本重跑、私有整合盤點或 T1.8 staging 驗收。T1.4–T1.8 若因權限暫時無法進行，P2 可以先開始（P2 不改 runtime），但 **P3 之前必須完成**。
 
@@ -360,8 +349,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 - 以 `@minecraft/server` 的型別為準，只實作用到的子集；**不 mock 任何 runtime 模組**，透過 import map 把 `@minecraft/server` 換成 harness。
 - 驗收：用 harness 跑通「放烤架→點火→放 3 串生牛肉串→時間推進→取出熟串」的完整流程測試。
 
-**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（把 `tools/guards/save-compat.lock.json` 的 `persisted_key_literals` 全部逐字集中，含各 namespace 的 key 與前綴；清單與數量以執行任務時的鎖為準，舊模組改為 import 這裡的常數）、`persist.js`、`transaction.js`（已將 `owned_item_transaction_core.js` 的共用交易實作遷入；呼叫端直接使用此核心 owner）、`storage.js`（已將原 `family_station_storage.js` 實作遷入；呼叫端直接使用此核心 owner，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
-- 驗收：`save_compat` 保留既有 key；若發現已在用但漏鎖的字面值，只補錄該既有 key，不改 key 或存檔格式。既有 core owner 測試覆蓋：寫入失敗回滾、容器滿時剩餘掉落、metadata 完整保留。
+**T3.2 `core/` 建立**：`ids.js`（由 BP items/blocks/entities 產生並檢查一致）、`persist_keys.js`（保存鍵與前綴的常數 owner，舊模組直接 import；不從已刪除的存檔鎖生成另一份清單）、`persist.js`、`transaction.js`（已將 `owned_item_transaction_core.js` 的共用交易實作遷入；呼叫端直接使用此核心 owner）、`storage.js`（已將原 `family_station_storage.js` 實作遷入；呼叫端直接使用此核心 owner，不改 key／實體 ID）、`events.js`、`scheduler.js`、`player_props.js`、`item_meta.js`。
+- 驗收：保護本次受影響的實際保存行為，不新增 key 鎖。既有 core owner 測試覆蓋寫入失敗回滾、容器滿時剩餘掉落及公開 metadata 保留；不可讀的原生欄位不冒稱已驗證。
 
 **T3.3 逐域搬遷**（每個域一個 PR，順序：`grill` → `skewer` → `plate` → `recipe` → `seasoning` → `oil` → `rack` → `food`/`effect` → `crops` → `world` → `advancement` → `compat` → `guide`）
 
@@ -371,8 +360,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 3. 該域的方塊改用 custom component（block JSON 加 component 宣告），刪除對應的全域監聽。
 4. 該域所有計時移入 `core/scheduler.js` 或方塊 `onTick`。
 5. `npx tsc --noEmit` 對新檔通過；舊 `tests/legacy/` 中該域的測試刪除。
-6. 棘輪 tighten：`script_modules`、`version_prefixed_script_modules`、`global_*`、`run_intervals` 應下降。
-7. 打包後在 **staging** 跑該域的人工檢查清單（§9.5），結果貼在 PR。
+6. 移除該域不再使用的舊呼叫與重複路徑；不因拆分另設棘輪 PR 門檻。
+7. 來源通過必要 CI／合併後，由共同持有人安排受影響功能的原生及保存驗證；未觀察的真人聲畫明列未知，不作完成門檻。
 
 **T3.4 進食系統重寫**（跨 skewer/food/plate，單獨一個 PR，高風險）
 - 刪除 `prepareEatingItems` 換手持物品的機制；進食動畫選擇改為：`itemStartUse` 時寫 player property（profile、hand、random alt），attachable 動畫控制器讀 `q.property`（必要時 `c.owning_entity`）。
@@ -394,6 +383,8 @@ python3 tools/guards/growth_ratchet.py check && python3 tools/guards/growth_ratc
 <a id="t3-5-property-slimming"></a>
 
 #### T3.5 玩家屬性瘦身計畫（2026-10-30）
+
+當前自有欄位以 [BP player property宣告](../projects/grilling/gameplay_core/behavior_pack/entities/player.json) 為準；下方T3.5-b的27格是當時中間階段，不能當作目前總數。正式共用writer與歷史C-1原型的界線、提交失敗回復見 [PARITY](PARITY.md#手持快照的提交失敗回復)；原型仍供獨立診斷，不因它未被main載入就刪除其已保留證據。
 
 **原始計畫範圍（2026-10-30）**：展開既有 T3.5／D6 的盤點、協議設計、實作順序及驗收。最初的計畫 PR 未改 runtime；以下 G201 盤點及原型紀錄保留其觀察日期。現行實作見本節的 2026-11-01 更新，不改寫 T3.4 已記錄的時長 variant 與直接離線不補結算決定。
 
@@ -418,6 +409,40 @@ provider 先準備兩手，既有 dispatcher 或一 tick 食物迴圈一次提�
 TACZ 同持副手還需要骨骼仲裁：原包 452 個槍械動畫修改 `leftArm`。合成器對這些左臂通道加入原生 `q.is_item_equipped('off_hand')` 條件；副手有物品時 rotation／position 取加成中性 0、scale 取 1，空副手使用原數值，保留所有 keyframe／插值、右臂與槍械事件。這讓副手交回原版／IE／煙火路由，持槍兼拿盤時左臂會按副手持物呈現，而非同時握槍；實際槍械與進食畫面仍待整批驗證。依據為[官方逐骨骼動畫／Molang 通道規則](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/visualreference/actor_animation.v1.8.0?view=minecraft-bedrock-stable)，不是已測過此組合的社群結論。原包另有一個完整 53-bone 模型後重複附加自己的尾段，造成 JSON extra-data 錯誤；只在原包與該檔 SHA 同時固定、尾段逐字為原合法模型 suffix 時去除重複，完整模型與所有 bone 保留。
 
 CLI、Core 本機安裝器與私有來源應共同呼叫 `compose_files`；有 TACZ 時除了兩份 player，還需採用其 85 份動畫和一份模型修補，不能只呼叫舊的兩檔 `compose` 就宣告相容。所有作者內容僅在使用者本機生成；來源工具改動未更動已凍結的 G206 自有 BP/RP，TACZ／IE 的實際相容輸出另用新的配對身份。
+
+##### T3.5-e／D6：TACZ 相容責任邊界（2026-11-03）
+
+**原版 TACZ 不可變**：TACZ 作者 Release 7854487／1.0.3 的完整原始 archive 及其 SHA256 是唯讀輸入；不得改上游、覆寫作者原包、改槍械玩法／傷害／彈藥／後座／裝填／事件／配件邏輯，亦不得把重組的作者資產冒充 TACZ 官方更新發布。原始 TACZ 單獨安裝時不依賴煙火或家族修復包。與作者原版相關的缺陷由 TACZ 自身或其上游負責；本專案只調整共存界面。
+
+**明確的 canonical owner**：
+
+| owner | 可修改及驗收的範圍 | 不得接管的範圍 |
+| --- | --- | --- |
+| **Grilling 核心功能代理** | 煙火穿串、烤架、調料瓶、餐盤、進食、音畫；煙火自己的四格 property writer／reader、attachable、animation 與相容出口 | 不直接編修或提交 TACZ 作者內容；不為了修餐盤改槍械動作／模型，也不寫私有 family lock |
+| **家族整合代理（T3.5-e／D6 唯一 owner）** | 選定宿主 player BP／RP、合併 TACZ／IE／Grilling 路由、完整有效 property schema（≤32）、衝突仲裁、相容輸出及安裝/回退接線；單一 `compose_files` 入口 | 不重寫煙火內部玩法，不擅改原作者 TACZ 遊戲邏輯；不僅靠包優先權遮蓋衝突 |
+| **TACZ 作者及原包** | 原生槍械機制、所有槍械動作、原始模型／動畫與授權來源 | 不由煙火代理「代為修復」或把原包變成專案的派生發行版 |
+| **dot／實機驗收** | 在同一配對候選驗證純 TACZ 正對照、加入家族後的槍械 FP／TP、雙手、副手佔用/空置、切槽、裝填／射擊／瞄準、皮膚、存檔與效能；按原圖／原聲／日誌回報 | 不以 API、Blockbench、無玩家 BDS 或兩包合計 28 格推論正式客戶端與完整家族通過 |
+
+**相容輸出與「不修改 TACZ」的精確定義**：目前 `tools/compose_held_player.py` 雖存放在 Grilling 公開倉庫，**功能責任仍歸家族整合代理**，不能有第二個分支再實作一份競爭合成器。它只讀經 SHA 固定的作者 archive，在**本機獨立輸出目錄**生成配對 player、必要 animation／controller 及固定 preimage 的模型相容副本；不修改 archive 本體。現有實作在約 85 份 TACZ 動畫檔中分離 452 個 `leftArm` 通道，並處理一個有重複尾段的原包模型 JSON；這些派生檔**不是位元組原封不動的 TACZ**。空副手必須保留 TACZ 原有雙手槍姿勢；副手持物時左臂按可驗的骨骼仲裁交還宿主／IE／Grilling，這是目前明確列出的**副手視覺仲裁差異**，不是對槍械功能成功的宣稱；合成器為保留宿主原生變數、槍械攻擊姿勢與缺失的步行 alias 所作其他整合處理，亦須在同一差異清單中揭露。任何額外改動需單獨列明、由整合 owner 審查與實機比對；若無法證實不破壞 TACZ，阻塞相容宣稱，不以犧牲 TACZ 行為換取「煙火 PASS」。
+
+**交付邊界**：整合 owner 保留原包 SHA、生成器版本／差異清單、輸出 SHA、有效玩家 schema、明確回退路線及完整家族／TACZ／IE 的正式實測；四格煙火 + 24 格 TACZ = 28 只是**指定兩包的小計**。功能 PR 只交付自己的 canonical runtime；家族整合 PR 及私有接線負責配對與改版，dot 只對封存的**同一候選**驗收。未通過前 `client=false`、`production_ready=false`；不自行更新私有 family lock，不部署 LIVE。
+
+
+##### T3.5-e／P0：公開發行先有通用最小安裝路徑，特殊整合不得倒置為核心相依
+
+**目前實作（2026-11-06 核對）**：[Core公開最小入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已提供Grilling＋本機適配Cookery的四包組裝，不要求Tavern、世界名酒、IE、TACZ或私有整合。真作者輸入重建、來源／鍋具測試、直接CLI及重複組裝已完成；精確來源、輸入及結果只由[Core驗證記錄](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/validation-public-minimal.json)的`grilling_source`、`source_checks`與`retained_native_evidence`持有。G238圖騰優先的新窄原生，以及先前公開四包同QA首次載入／保存重啟／回退，均按各自實測身份與未變路徑重用；沒有將舊四包結果改稱這次G238完整新世界PASS。
+
+**公開交付分三層**：Core原始碼工具已提供[v0.37.0預發布下載](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases/tag/v0.37.0)；使用者提供合法原Cookery後，可沿上述入口在本機重建四包候選。下載後直接匯入的遊戲成品包仍未交付，作者Cookery及適配archive繼續留在使用者本機，不在工具Release中。三者分開回報，已發布Grilling遊戲下載另查[RELEASING](RELEASING.md#公開下載與來源開發主線)；成品交付限制不表示保存驗證尚未做。未觀察的真實輸入、聲畫或多人範圍保留未知，不另成等待真人的門檻。
+
+> **2026-11-04 歷史快照（保留當時觀察，不作現行待辦）**：[Core 的公開最小安裝入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已實作 Grilling＋本機適配 Cookery 的四包候選；`build_owned_family_recipe.py::install_public_pair` 明確只選這四包，並使用既有玩家資源合成器。Tavern、世界名酒、IE、TACZ 與私有整合不是必要安裝項。歷史 full-family 配方及 IE 安裝工具是另一條選用路徑，不能當成公開最小入口的要求。**尚未完成**的是公開成品交付及該最小候選的引擎功能／保存重啟驗證；目前仍需本機適配 Cookery，不能宣稱普通兩個原包直接匯入即可完整使用。實際入口、輸入與證據由上述 Core 文件維護。
+
+- **P0：公開核心（基礎版）**。目標只要求 Grilling 自有 BP/RP、指定可取得的 Cookery 正式相依與公開可重現的必要接入機制，以及引擎／實驗設定；**不要求** Tavern、世界名酒、Immersive Eating、TACZ、私有修復包、私有 family lock 或森羅伺服器。本機公開工具及其原始碼Release已交付，Cookery接入與已完成／未確認驗證查上述Core記錄；直接匯入遊戲成品包及作者archive界線見上文；不得把複雜步驟改寫成「單獨匯入即用」或假設玩家擁有我們的環境。優先設計為只需正常下載／匯入或可選的公開一鍵組裝，不上傳作者完整素材。
+- **P1：選用第三方相容**。IE、TACZ 與其他已知會佔用 `minecraft:player`、渲染控制器、腳本 API 或其他資產路徑的 Addon，採用**獨立、可辨識、明確選擇的相容 profile／adapter**。沒有安裝該 Addon 時，不載入其專用條件、資源或修補；某特定 TACZ 版本的動畫、槍械、模型及材質修正不得寫入 Grilling 公開核心。支援新版本需核對實際接口／來源差異及新增可審查 profile；舊 SHA 不是「所有 TACZ 版本通用」。
+- **P2：森羅完整家族／伺服器**。高優先權修復包、完整 28 格指定組合、私服 UI 與 family lock 只屬這一 profile 的驗收及部署；不能成為 P0 公開核心的必要入口，也不能用完整家族 BDS 成功取代一般安裝驗收。
+- **相容性實作原則**。共用邏輯只依穩定 API／公開能力契約，而不是硬編碼「森羅已安裝第 N 包」；缺少可選 provider 時不應損壞基本玩法或存檔。對會整份覆寫的 `minecraft:player`／FP controller 等引擎衝突，先保留所選宿主完整定義，檢查實際生效的欄位、控制器與骨骼；已知版本以可審查的選用 adapter 產生本機合併副本，未知衝突要清楚拒絕或標示未支援，**不可盲目合併、靜默覆蓋或聲稱任意 Addon 均相容**。作者原包與玩家存檔維持唯讀／可回滾。
+- **公開版可發布的最低出口**。以空白世界和一般下載流程驗證 Minecraft＋Cookery＋Grilling（不含 IE／TACZ／Tavern／世界名酒／私包）：正常啟動、依賴能力、取材→穿串→烤油→撒料→食用→餐盤／存檔重開、第一／第三人稱及兩手、日誌及基本效能；另一組再驗 IE／TACZ 為可選 addon 的存在／缺席及移除。每組保留完整 BP/RP 身份，針對真正改動做引擎功能與保存驗證；官方素材來源、相依版本與必要步驟寫在公開安裝說明。森羅整包的結果不能代替最小安裝路徑的結果；證據與完成標準依現行擁有者簡化規則。
+
+**優先順序**：P0已具不依賴家族專用組裝的公開入口及工具下載，使用者仍在本機完成Cookery接入；直接匯入成品包的限制保留，不藉此發布完整作者archive。T3.5-e整合owner負責通用公開入口；Grilling功能owner負責基本玩法不依賴選用Addon。後續沿Core記錄重用仍有效的驗證，只補實際改動或具體故障所需範圍，與TACZ專項動畫及完整家族分開回報。
 
 **已取得的原型真人證據**：dot r9／1.0.8 在 1.26.60.4 的單人限定重測，四格重登約 3.269–3.702 秒、完整 client 重開約 0.808–1.253 秒後自動恢復，沒有手動 replay；這是捕獲區間，非 renderer 精確時間。舊 pose0／4／8 在正對照及四格都裁切，所有五串／形狀／熟度仍未獲完整畫面證明。多人、可視距離、食用、音效與 TACZ 尚未因此通過。
 
@@ -533,11 +558,11 @@ TACZ 的共名動畫、模型、材質及貼圖 alias 亦無不同值，但 init
 animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端確認。原包與分析留私有，
 沒有安裝、重新發布作者包或宣稱 TACZ 相容。
 
-##### D. 實作與交付順序
+##### D. 實作與交付順序（截至2026-11-01的來源快照）
 
-各子任務仍是一個任務一個 PR；有依賴時明列，沿用既有工具與測試，不新增每版驗證器或 STATUS 文件。
+各子任務一個任務一個 PR；有依賴時明列，沿用既有工具與測試，不新增每版驗證器或 STATUS 文件。下表保留當時的來源與證據，並非目前整組、安裝或正在執行狀態。
 
-| 子任務 | 交付 | 完成條件／目前狀態 |
+| 子任務 | 當時交付範圍 | 當時狀態（歷史） |
 | --- | --- | --- |
 | T3.5-a 盤點與預算 | 32 欄清單、權威資料、reader／writer、容量分析、目標版本 | **本次來源盤點及計畫完成**；完整整合包盤點仍待 T3.5-e，不宣稱實機驗收 |
 | T3.5-b 動作欄壓縮 | 唯一 writer、共同 schema、6→1 controls、保留兩時計，總數 27 | 來源已實作 27 格；延遲／故障／雙手回歸及隔離 native writer 通過。完整家族／存檔／目標客戶端仍待；27 不是 TACZ 相容終點 |
@@ -545,7 +570,7 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 | T3.5-d 逐 owner 遷移 | 通過原型後搬移既有手持 owner，重建而非保存視覺快取 | 2026-11-01 已移往共同快照 writer／reader，來源 4 格；保存鍵保留、由物品 metadata 重建。正式整包／真人仍待，不用來源完成代填驗收 |
 | T3.5-e 玩家定義與 TACZ 整合 | 依 D6 決定共用 owner，產生一份有效 BP player schema 及相容的 RP 玩家／FP 路由 | 2026-11-01 已有自有 player extension 與原包雜湊固定的合成器；選定 TACZ 與煙火為 28 格。正式 private overlay、全集合及真人出口仍須完成 |
 
-若新通道不通過，保留已驗證的 27 槽改進並記錄阻塞原因；再評估煙火與 TACZ 的共同預算，不能將煙火 ≤8 目標宣告完成或削減餐盤功能。本次沒有修改 TACZ、Tavern、World Liquor 或家族共用包；跨 repo 的 owner 落實依 D6 與相應整合工作進行。
+當時的回退方案是：若新通道不通過，保留已驗證的 27 槽改進並記錄阻塞原因，再評估煙火與 TACZ 的共同預算。這不是要求目前來源退回27格；當前欄位及writer只查[實際player schema與PARITY](PARITY.md#手持快照的提交失敗回復)，來源身份查[baseline](../baseline.json)，公開配對入口查[RELEASING](RELEASING.md)。完整家族整組、保存／部署結果由擁有者工作區的共同部署入口 `OWNER-COORDINATION.md` 維護，本公開計畫不複製其私有內容或版本快照。下表歷史中的「真人出口」只保留當時未知的聲畫範圍，不是目前的等待或完成門檻；P4及完整玩法仍按各項實際證據判斷，不能由屬性數或單項預算代填完成。
 
 ##### E. 驗收、存檔與回滾
 
@@ -577,9 +602,11 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 **P3 出口條件**：
 - 棘輪：`global_block_interact_handlers ≤ 1`、`global_break_handlers ≤ 1`、`global_explosion_handlers ≤ 1`、`script_event_listeners ≤ 1`、`run_intervals ≤ 2`、`version_prefixed_script_modules = 0`、`source_text_slicing_tests = 0`。
 - 每個域都有 unit＋scenario 測試；`tests/legacy/` 為空。
-- staging 完整走過 §9.5 全清單並記錄；luosen 部署 2.9.0（§5.5）。
+- staging 完整走過 §9.5 全清單並記錄；正式世界 部署 2.9.0（§5.5）。
 
 ### P4：視覺重建與影子 ID 退役
+
+**已核實的範圍**：單檔模型大小預算已達，觀察日期、來源範圍及其限制由[ARCHITECTURE的模型預算](ARCHITECTURE.md#視覺與跨包接口)持有；這不等同本階段所有表面或整體圖像完成，不為重做已達數字而另開模型改造。
 
 **T4.1 視覺盤點表**：以 `data/java/` 的物品清單產生 `docs/PARITY.md` 的視覺子表：每個物品 × {背包圖示、第一人稱、第三人稱、放置、進食}，記 Java 參考（模型路徑）與 Bedrock 實作方式（§7）。
 
@@ -588,16 +615,15 @@ animate、持槍路由與家族共用 FP controller 尚未合併或經客戶端�
 - 驗收：`largest_geometry_kib ≤ 512`；`rp_total_mib` 明顯下降；對照截圖附在 PR。
 
 **T4.3 影子 ID 退役**（走 SAVE-COMPAT 流程，最高風險）
-- 前置：T1.6 普查數據；T3.4 的 runtime 遷移已在 luosen 運行 ≥ 2 週（讓多數玩家物品已被自動換回）。
-- 步驟：重新普查 → 離線改寫工具在 staging 副本執行（§5.6）→ 收據顯示影子 ID 數量歸零 → staging 載入／互動／重啟 → `id-retirements.json` 登錄 → 刪除影子 item JSON 與相關 attachable → 部署 luosen（停服＋備份＋離線改寫＋開服讀回）。
-- 驗收：luosen 改寫收據；開服後再普查一次影子 ID=0、基礎 ID 數量＝改寫前基礎＋影子；玩家回報無物品遺失。
-- 不要做：不要只靠 runtime 遷移就刪除定義（沒上線的玩家、沒打開的箱子都還有舊物品）。
+- 前置：先確認該 variant 的實際能力已由替代路徑承接。T3.4 的早扣份 spike 已失敗，現行所需時長 variant 繼續保留；不能為了達成 ID 數量目標刪除它們。
+- 確實移除有保存內容的定義時，先對受影響的既有 stack／容器實作必要轉換，保留其可讀 metadata，驗證實際讀寫與重啟；需要離線改寫才沿 §5.6 使用停服副本。不另加兩週等待、全世界逐 ID 歸零或 `id-retirements.json` 登錄門檻。
+- 驗收與部署依 [SAVE-COMPAT](SAVE-COMPAT.md) 及既有完整備份流程；未上線玩家、未開啟容器的實際保存內容也不能無聲丟失。真人回報不是完成前提。
 
 ### P5：功能還原補完
 
-依 `docs/PARITY.md` 中狀態不是「真人驗收」的列，按玩家影響排序逐列處理：先核心循環（取得食材→穿串→烤→調味→吃→效果），再機器（榨油機、大缸、料理架），再世界（花椒樹、作物、戰利品、成就），最後周邊（指南、HUD）。
+依 `docs/PARITY.md` 的已重現故障與未實作功能，按玩家影響排序逐列處理：先核心循環（取得食材→穿串→烤→調味→吃→效果），再機器（榨油機、大缸、料理架），再世界（花椒樹、作物、戰利品、成就），最後周邊（指南、HUD）。僅缺真人聲畫不能當作來源故障，也不因此重跑相同的有效自動化或已否定能力證據。
 
-每列一個 PR：Java 原碼位置（§8）→ 差異描述 → 測試 → 實作 → staging → 更新 PARITY 該列。
+每個具體功能問題一個 PR：Java 原碼位置（§8）→ 可觀察反例 → 測試與原 owner 修正 → 必要 CI／合併 → 共同持有人安排相關原生／保存驗證。PARITY 保留每一步的實際證據與尚缺範圍。
 
 ### P6：家族整合收斂（可在 P3 後並行）
 
@@ -612,70 +638,60 @@ owner，先做工具／乾淨原包、原生、保存與回退驗證，再發公
 
 ### P7：常態維護
 
-- 每個變更：一個 PR、CI < 3 分鐘、CHANGELOG 一行。
-- 玩法變更：staging 驗證後才部署 luosen；部署頻率依 D2。
+- 每個具體變更沿既有PR流程，依實際影響完成必要CI，重用相同輸入下仍有效的檢查；有玩家可見變更才更新相應CHANGELOG。三分鐘是舊效率目標，不是CI通過、合併或部署門檻。
+- 玩法變更完成來源PR／CI／合併，再由共同持有人安排相關原生、保存與整批部署；工具／文件未改runtime時不升包、不建立遊戲候選或重啟LIVE。
 - Java 上游更新：`tools/java_extract/` 重新萃取 → diff `data/java/` → 依差異開 PR。
-- 每季：普查 luosen 一次、跑 `persist.audit()`、檢查棘輪是否可再收緊。
+- 保存資料只針對實際改動或具體故障，沿[SAVE-COMPAT](SAVE-COMPAT.md)驗證受影響讀寫及重啟；不因季曆固定全世界普查、要求`persist.audit()`或收緊棘輪。本段修正計畫指令，不代表已查到或停止任何實際季度排程。
 
 ---
 
-## 5. 伺服器與 luosen 存檔作業手冊
+## 5. 伺服器與 正式世界 存檔作業手冊
 
-> 以下 `<BDS>` 代表 luosen 的 BDS 根目錄。2026-10-19 盤點實測：BSM 以 Docker 容器執行（`dmedina559/bedrock-server-manager:3.10.6`，容器名 `bsm-container`），資料卷 `bsm_data` 掛在主機 `/var/lib/docker/volumes/bsm_data/_data`（容器內 `/root/bedrock-server-manager`）。所以 `<BDS>` = `/var/lib/docker/volumes/bsm_data/_data/servers/luosen`，世界 = `<BDS>/worlds/Bedrock level`。家族範本裡的 `/srv/bsm/...` 不是這台的實際路徑；`/srv/src`、`addon_quality`、`family_bundle` 的實際位置仍待確認。
+> 本節使用通用範例：`<BDS>` 是正式伺服器根目錄，`<WORLD_NAME>` 是世界目錄名稱，`<BSM_CONTAINER>`／`<BSM_IMAGE>`／`<BSM_DATA_VOLUME>` 分別代表管理容器、映像與資料卷，`<HOST_DATA_ROOT>`／`<CONTAINER_DATA_ROOT>` 是兩側掛載位置。實際值只留在擁有者的受控部署紀錄，不放在公開文件；使用前依授權目標填入，不能直接照抄範例。
 
-### 5.0 luosen 盤點紀錄（2026-10-19；各收據分別標示時點）
+### 5.0 盤點紀錄與來源邊界
 
-> 下表保留最初盤點的環境描述，不能當作此刻 LIVE 的讀回。後續完整盤點與 warning 分類見 #240 的 `tools/ops/receipts/luosen-inventory-20261019.json`；#241 的 `luosen-lkg0-backup-20261019.json` 已記錄 LKG-0 對應的完整 26 BP／24 RP 順序、版本與樹雜湊，其首位私有 BP／RP 為 1.0.59。T1.9 與 T1.10 的離線比對應綁定這份 LKG-0 的實際包身份，保留下表的 1.0.57 為歷史對照。
+歷史盤點不是目前正式環境的讀回。T1.9／T1.10 的離線比對仍須綁定 LKG-0 完整備份紀錄中的精確候選包身份，不能拿其他版本代替。完整 BP/RP 順序、版本、樹雜湊、最高優先權修復包、宿主差異、資源餘量與設定，應從對應候選的受控盤點與備份紀錄取得。公開文件只保留會影響修復的通用判斷：
 
-來源：擁有者電腦以 SSH 唯讀收集的 metadata（未停服、未寫入、不含憑證與世界資料庫內容）。原始報告不進公開 repo（含主機名稱與 port）；以下只記錄對重建有影響的事實。
-
-| 項目 | 實測 | 對計畫的影響 |
-| --- | --- | --- |
-| BDS 版本 | 伺服器內附 vanilla pack 到 1.26.52 | GameTest／staging 用同版本 BDS |
-| 世界啟用 | **26 個 BP、24 個 RP**；manifest 全部可解析、相依沒有缺 | 排查衝突時要看整個組合，不只家族包 |
-| 腳本包 | 25 個 BP 帶 script 模組，`@minecraft/server` 版本從 1.13.0 到 2.10.0 混用 | 伺服器腳本負載高；煙火的逐 tick 迴圈與 16 個 interval 會和其他 24 個腳本包搶 tick 預算（伺服器設定 `script-watchdog-slow-threshold=10`、`spike=100`） |
-| **最高優先權包** | 第 1 位是「森羅私有修復支援 1.0.57」BP（純 data）＋RP；**RP 相依 Tavern、Grilling、World Liquor、A Magic Way、Java Saturation、Immersive Eating** | 相依宣告本身不能證明私有包內有哪些與 Grilling 同路徑的檔案。若有同路徑資產，較高優先權可能使 Grilling 的修正不生效；**實際覆蓋範圍與是否造成畫面未變，待 T1.9 逐檔清單與對照確認**。 |
-| Cookery | 作者 Cookery 1.6.2（BP 第 12 位）；其中 `scripts/api/cuisine_api_host.js`、`board_api_core.js`、`food_api_core.js` 與本 repo `host_api/` 同名檔**逐位元相同** | 需確認作者官方 1.6.2 發布包是否本來就含這些檔（作者採納）或是部署時被注入（宿主修補）（T1.10） |
-| 改版的第三方包 | 「森羅廚房：國味」標示「相容修補 1.0.55；作者原版 1.0.6」、版本號改成 1.0.10657；「Java Saturation」「UI Queue」「FP decode」都帶「Senluo HUD／Senluo FP decode」標記與改過的版本號 | 家族對第三方包也做了修補版，這些都屬於 §6 要收斂的私有整合範圍；HUD 通道衝突（`KT_HUD!` 原始碼外露）與這幾個包有關 |
-| 另一個進食包 | 「Kaleidoscope Immersive Eating 1.1.0」BP＋RP 同時啟用 | 與煙火自己的進食動畫／投影可能重疊；T3.4 與 D6 必須把它列入相容驗證（staging 第 11 項） |
-| 主機資源 | 16 GB RAM、可用約 4.2 GB；**2 GB swap 已用盡**；同時有 2 個 `bedrock_server` 程序 | 記憶體吃緊；巨型 geometry 與高頻腳本會放大問題。staging 伺服器要確認記憶體足夠再開，必要時先停掉另一個 BDS |
-| 磁碟 | 248 GB 中約 33 GB 可用 | 每份停服備份的大小要先量；保留策略（§5.3）要配合可用空間 |
-| content log | 該次盤點尾段 1228 行：0 個 error、**489 個 warning** | #240 收據已完成八類分類；分類不等於已修復全部 warning 的根因或完成性能／真人驗收。 |
-| 伺服器設定 | survival、easy、`allow-cheats=true`、`tick-distance=4`、`view-distance=8`、`max-players=10`、content log 有開 | — |
+- 同一實體或資產可能被高優先權包覆蓋，應逐檔確認實際生效來源，不能由相依宣告猜測。
+- 宿主腳本須和合法取得的作者原始版本比對，區分作者能力與本機適配；自有修復回到 canonical owner，私有整合只保留必要跨包連接。
+- 多個進食或玩家動畫 provider 可能衝突，相關相容驗證使用明確選定的候選組合。
+- 啟動測試伺服器或備份前，確認記憶體、磁碟與程序使用狀況；公開摘要不包含實際主機容量、程序數量、服務設定或連線資料。
+- content log 的分類不是修復或效能驗收；保留實際檢查範圍與尚未完成的結果。
 
 新增 P1 任務：
 
-- **T1.9 私有包覆蓋清單**：列出「森羅私有修復支援」RP（與 BP）中每個與 Grilling RP／BP **同路徑**的檔案，逐一分類：(a) 已在 Grilling 修好、私有包是舊版 → 從私有包移除；(b) 私有包修的是 Grilling 的真 bug → 移進 Grilling canonical；(c) 跨包整合 → 依 §6。驗收：覆蓋 Grilling 的檔案數歸零，或每個都有分類與去處。
-- **T1.10 Cookery 原版比對**：取得作者官方 Cookery 1.6.2 發布包，比對伺服器上那份的逐檔雜湊。驗收：列出伺服器版與官方版不同的每個檔案及來源。若有任何注入，計畫 §6.2 的「B 宿主修補」要把它們全部移除。
+- **T1.9 私有包覆蓋清單**：列出 `<PRIVATE_SUPPORT_PACK>` RP（與 BP）中每個與 Grilling RP／BP **同路徑**的檔案，逐一分類：(a) 已在 Grilling 修好、私有包是舊版 → 從私有包移除；(b) 私有包修的是 Grilling 的真 bug → 移進 Grilling canonical；(c) 跨包整合 → 依 §6。驗收：覆蓋 Grilling 的檔案數歸零，或每個都有分類與去處。
+- **T1.10 Cookery 原版比對**：取得作者官方 `<COOKERY_VERSION>` 發布包，比對伺服器上那份的逐檔雜湊。驗收：列出伺服器版與官方版不同的每個檔案及來源。若有任何注入，計畫 §6.2 的「B 宿主修補」要把它們全部移除。
 
 ### 5.1 存取
 
 - SSH 金鑰由擁有者提供；**金鑰、密碼、BSM token 一律不得寫入任何 repo、PR、issue、log 或收據**。
 - 進入伺服器後第一步：
   ```sh
-  hostname; date; free -h; df -h /var/lib/docker
-  docker ps --format '{{.Names}} {{.Image}} {{.Status}}'
-  ls /var/lib/docker/volumes/bsm_data/_data/servers/
+  date; free -h; df -h <HOST_DATA_ROOT>
+  docker inspect <BSM_CONTAINER> --format '{{.State.Status}}'
+  ls <HOST_DATA_ROOT>/servers/
   grep -E '^(level-name|server-port)=' <BDS>/server.properties
   ```
 
 ### 5.2 唯讀盤點
 
 ```sh
-python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventory.json
+python3 tools/ops/server_inventory.py --server-root <BDS> > <TEMP_DIR>/server-inventory.json
 ```
 重點看 `problems`：未安裝的 UUID、同 UUID 多版本、相依不滿足、多個包覆寫 `minecraft:player`。
 
-### 5.3 停服完整備份（每次改動 luosen 之前）
+### 5.3 停服完整備份（每次改動 正式世界 之前）
 
-1. 公告玩家 → 透過 BSM 正常停止 luosen（不要 kill）。
+1. 公告玩家 → 透過 BSM 正常停止 正式世界（不要 kill）。
 2. 確認程序已結束、`<BDS>/worlds/<level>/db/LOCK` 不被占用。
-3. 打包（luosen 的附加包都裝在世界目錄內的 `behavior_packs/`、`resource_packs/`，會一起備份）：
+3. 打包（正式世界 的附加包都裝在世界目錄內的 `behavior_packs/`、`resource_packs/`，會一起備份）：
    ```sh
-   cd <BDS> && tar --zstd -cpf <備份目錄>/luosen-<YYYYMMDD-HHMM>-<目的>.tar.zst \
-     "worlds/Bedrock level" server.properties permissions.json allowlist.json 2>/dev/null
+   cd <BDS> && tar --zstd -cpf <備份目錄>/<WORLD_NAME>-<YYYYMMDD-HHMM>-<目的>.tar.zst \
+     "worlds/<WORLD_NAME>" server.properties permissions.json allowlist.json 2>/dev/null
    ```
-   `<備份目錄>` 由擁有者指定，**不要放在 bsm_data 卷內**（同一磁碟故障會一起遺失）；先 `du -sh "<BDS>/worlds/Bedrock level"` 確認空間。
+   `<備份目錄>` 由擁有者指定，**不要放在 <BSM_DATA_VOLUME> 資料卷內**（同一磁碟故障會一起遺失）；先 `du -sh "<BDS>/worlds/<WORLD_NAME>"` 確認空間。
 4. `sha256sum` 寫入同名 `.sha256`；記錄大小。
 5. 解壓到臨時目錄抽驗 `level.dat` 存在、`db/` 檔數一致。
 6. 複製一份到伺服器以外的位置（擁有者指定）。
@@ -683,17 +699,17 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 ### 5.4 staging 伺服器
 
-- 在 BSM 建立 `luosen-staging`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
-- 世界：從最新備份解壓。pack：與 luosen 相同組合（26 BP／24 RP，含私有修復支援包與 Immersive Eating），再換上候選版本。
+- 在 BSM 建立 `<STAGING_SERVER>`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
+- 世界：從最新備份解壓。pack：與 正式世界 相同組合（依受控盤點確認的完整 BP/RP 集合），再換上候選版本。
 - 主機記憶體吃緊（§5.0）：開 staging 前看 `free -h`；可用記憶體不足時先和擁有者確認是否暫停另一個 BDS。
 - 每次驗證流程：開服（看 content log 無錯誤）→ 進服 → 執行 §9.5 檢查 → 正常停服 → 再開服 → 抽查資料仍在。
-- staging 世界用完可重置，**永遠不要把 staging 世界複製回 luosen**。
+- staging 世界用完可重置，**永遠不要把 staging 世界複製回 正式世界**。
 
-### 5.5 部署到 luosen
+### 5.5 部署到 正式世界
 
 1. 前置：候選版本已 CI 通過、已在 staging 驗證、已打 tag／release。
 2. §5.3 備份。
-3. 以家族既有工具（`family_bundle`／`family_guard`／BSM 准入）安裝完整家族組合；**不手動拷貝單一包**。
+3. 以家族既有工具（`<FAMILY_INSTALLER>`／`<ADMISSION_TOOL>`）安裝完整家族組合；**不手動拷貝單一包**。
 4. 開服；看 content log；確認世界啟用的 pack 版本（再跑一次 §5.2，比對收據）。
 5. 進服抽查核心循環。
 6. 寫部署收據（時間、版本組合、備份檔名與 SHA256、驗證結果）到家族 repo 的單一部署紀錄檔。
@@ -712,7 +728,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
   - world dynamic properties（LevelDB 中 dynamic properties 記錄）→ 依 `persist_keys.js` 前綴統計。
 - 普查輸出：每個 ID × 位置類型 × 數量；每個 key 前綴筆數；找不到對應方塊的站點 key 數。
 - 改寫規則：只改 `Name`（必要時 `Damage`/`Block` 欄位），保留 `Count`、`tag`、`CanPlaceOn` 等全部欄位；方塊調色盤改名需同時處理 state 對應。
-- 安全規則：**只在停服備份的副本上執行**；改寫前後各普查一次；收據必須滿足「舊 ID＝0、新 ID 增量＝舊 ID 原量」；然後才在 staging 開服驗證，再於 luosen 停服狀態套用**同一工具同一參數**。
+- 安全規則：**只在停服備份的副本上執行**；改寫前後各普查一次；收據必須滿足「舊 ID＝0、新 ID 增量＝舊 ID 原量」；然後才在 staging 開服驗證，再於 正式世界 停服狀態套用**同一工具同一參數**。
 - 工具本身要有單元測試（用小型合成世界或從 staging 匯出的單一 chunk）。
 
 ---
@@ -721,7 +737,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 
 > 本計畫撰寫時無法存取該私有 repo；2026-10-20 已確認來源可讀，私有 `INVENTORY.md` 仍是未完成草稿。來源存取不再是 T1.7 全面停工的理由；具體契約、分類與去處須在私有庫補齊，不能因已有草稿就將 T1.7、T1.9 或 T1.10 標為完成。
 >
-> 伺服器盤點（§5.0）記錄了最高優先權的「森羅私有修復支援 1.0.57」BP＋RP；其 RP manifest 相依 Tavern／Grilling／World Liquor／A Magic Way／Java Saturation／Immersive Eating。**相依宣告不等同於已確認的檔案覆蓋**，實際與 Grilling 同路徑的檔案及其內容仍待 T1.9 盤點。同時存在數個改過版本號的第三方修補包（國味相容修補、Java Saturation／UI Queue 的 Senluo HUD 版、Senluo FP decode）。T1.9、T1.10 與 T1.7 一起完成。
+> 依 §5.0 的受控盤點與候選身份，先確認最高優先權支援包的實際覆蓋、相依與本機適配來源。依 T1.7／T1.9／T1.10 完成基線、逐檔覆蓋分類與作者原版比對；不能由包名或相依宣告推定具體覆蓋，也不能將某一環境的組合寫成通用要求。
 
 ### 6.1 盤點（T1.7）
 
@@ -737,7 +753,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 類別 | 去處 |
 | --- | --- |
 | A 遊戲邏輯 | 移入對應公開 repo（例如 `grilling/compat/cookery/`），以能力探測啟用；不能公開的（作者授權問題）改為不需要 |
-| B 宿主修補（改 Cookery 檔案） | 依 T6.1 的新決定，首批改為公開來源宣告＋Core 本機接入工具，使用者提供乾淨作者包，不發布完整作者腳本。持續向作者提出 API 需求；作者提供等效能力後，逐項移除對應接入點。不能公開的能力依介面卡降級，未驗證處寫進 KNOWN-ISSUES。 |
+| B 宿主適配 | 沿 T6.1 的公開來源宣告＋Core 本機接入工具，使用者提供乾淨作者包，不發布完整作者腳本。作者提供等效能力後，移除對應舊接入點；作者聯絡另需明確授權。不能公開的能力依介面卡降級，未驗證處寫進 KNOWN-ISSUES。 |
 | C 部署設定 | 留在私有 repo，只剩設定檔與部署腳本 |
 | D 憑證 | 不放 repo；伺服器上的權限受控檔案 |
 
@@ -762,7 +778,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 餐盤（1–5 串） | `SkewerPlateRenderer` | 同上模式：顯示實體 5 個 slot bone＋5 個 render controller；朝向用 block state 傳給實體 property | `plate_food_visual` 烘焙＋投影 |
 | 固定串手持 | Java item model（`models/item/fixed_skewers/*`） | 每個物品一個 attachable，geometry 用 Blockbench 從 Java item model 轉出（通常是 2D 精靈擠出）；第一／第三人稱位移在 attachable 動畫或 geometry 的 item_display_transforms 對齊 Java `display` | 多代 `aNNN_hand` 幾何 |
 | 秘製串手持（任意 3 食材） | `SecretSkewerItem`、`SkewerColorProvider` | 共用 attachable：3 個食材 bone，貼圖陣列（全部食材精靈拼成的 atlas 或陣列）以 player property `secret_main_0..2`／`secret_off_0..2` 索引；竹籤一個 bone | 1.8 MB `secret_held` 烘焙＋多段校準 |
-| 秘製串背包圖示 | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | **平台限制**：Bedrock 無法依 stack 合成圖示 → 通用圖示＋lore 列食材（KNOWN-ISSUES） | 影子 ID 嘗試 |
+| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | 目前未有已證可用的逐stack圖示合成入口；通用圖示＋lore是降級，範圍與未完成處只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
 | 失敗串 | `FailedSkewerData` | 與秘製串相同 attachable，換貼圖陣列 | 7.3 MB `failure_skewer_held` |
 | 進食動畫 | `SkewerEatingAnimation`、`SkewerEatingPiece`、`EnderPearlEatingAnimation` | attachable 動畫＋動畫控制器，條件 `q.is_using_item`＋`q.property('…:eat_profile')`；一口一口的消失用 bone 可見度（`q.property('…:eat_piece')`），不是 150 個 bite 幾何 | `a22_bites` 150 幾何、影子 ID 換手 |
 | 調料瓶（放置） | `SeasoningBottleRenderer` | block geometry＋state（內容量階段），4 個瓶位用 permutation | 保留，整理 |
@@ -871,7 +887,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 編號 | 問題 | 建議預設 | 影響 |
 | --- | --- | --- | --- |
 | D1 | Java 對照版本 | NeoForge 1.21.1 分支、上游 commit `9a1acdab`（1.1.1）；新版本由 P7 流程跟進 | 所有還原工作的基準 |
-| D2 | luosen 部署頻率（現行 AGENTS 有「每個候選都部署」的常設授權） | 重建期間只在 **P3 結束、P4 每次退役、P5 每批** 部署；P0 級存檔安全修補隨時部署 | 降低 luosen 風險與流程成本 |
+| D2 | 正式世界 部署頻率（現行 AGENTS 有「每個候選都部署」的常設授權） | 重建期間只在 **P3 結束、P4 每次退役、P5 每批** 部署；P0 級存檔安全修補隨時部署 | 降低 正式世界 風險與流程成本 |
 | D3 | HUD（進食條、調料、油鍋、機器） | 重建期間**停用**，P5 最後以家族共用 JSON UI 通道重做或放棄 | 移除最大的 UI 衝突來源 |
 | D4 | 是否開始 TypeScript | 否；用 JS＋`// @ts-check`＋`tsc --checkJs`，避免建置步驟 | 降低 AI 執行複雜度 |
 | D5 | 料理品質與調料瓶的背包圖示是否必須不同 | 品質：否（用 lore）；調料瓶：依 Java 實際外觀數量保留最少變體 | 影子 ID 退役範圍 |
@@ -887,7 +903,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 
 | 風險 | 可能性 | 衝擊 | 對策 |
 | --- | --- | --- | --- |
-| 清理時誤刪 ID 導致 luosen 玩家物品消失 | 中 | 極高 | 存檔相容鎖＋base 比較＋退役流程＋普查＋停服備份 |
+| 清理時誤刪 ID 導致 正式世界 玩家物品消失 | 中 | 極高 | 存檔相容鎖＋base 比較＋退役流程＋普查＋停服備份 |
 | 重構改變行為而沒被發現 | 高 | 高 | 先寫 scenario 測試；staging 清單；GameTest |
 | AI 代理遇到困難又開始疊補丁 | 高 | 高 | 棘輪＋禁止模式＋AGENTS.md；PR 審查看棘輪輸出 |
 | 離線改寫工具破壞 LevelDB | 低 | 極高 | 只在副本執行；改寫前後普查；staging 驗證；備份可 15 分鐘回滾 |
@@ -936,7 +952,7 @@ EOF
 - **canonical runtime**：`baseline.json` 指向的唯一 BP/RP。
 - **影子 ID**：為了選動畫／圖示而存在、Java 沒有的 item ID。
 - **LKG**：last known good，完整可還原的停服備份。
-- **staging**：與 luosen 同組合的測試伺服器，世界來自備份副本。
+- **staging**：與 正式世界 同組合的測試伺服器，世界來自備份副本。
 - **退役**：依 SAVE-COMPAT 流程移除一個持久化 identifier。
 
 ## Held-preview coordinates: diagnostic contract v2

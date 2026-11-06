@@ -99,7 +99,7 @@ function cookedStack(raw,state){
  }else{
   const out=customSkewerCookedId(ingredientSnapshot(raw))||RAW_TO_COOKED[raw.typeId];
   if(!out)return failedStack(raw,MYSTERIOUS_ID);
-  stack=new ItemStack(out,1);copyCustomData(raw,stack);
+  stack=copyCustomData(raw,new ItemStack(out,1));
  }
  setHot(stack,state.heatTicks);setSeasonings(stack,state.seasonings??[]);
  try{setItemProperty(stack,PersistedKey.SEASONED,state.seasoned)}catch{}

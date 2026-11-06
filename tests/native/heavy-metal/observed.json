@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-05T00:55:40+08:00",
+  "scope": "Isolated native before-hurt Heavy Metal payment and affected saved effects; not full family or client",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "server_module": "2.12.0-beta",
+  "source_base_commit": "4b206eeb93e76b0fe82fd75c4ab148512817ebad",
+  "production_handler_sha256": "8c84e073233c6539efac374a4182a61118bd76e351ecf9f655ae7caeb2db97b8",
+  "production_effect_writer_sha256": "8ef5577bf4796955b292d5810b02d3e53e0c06bdeddd631e5369dddc0247d550",
+  "probe_sha256": "fe295760c7162dd2cb9c8bb601d77192cd5f7249915b4c725d575beee4f0d326",
+  "saved_experiments": {
+    "experiments_ever_used": 1,
+    "gametest": 1,
+    "saved_with_toggled_experiments": 1,
+    "upcoming_creator_features": 1
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "passed": true,
+      "reason": "complete",
+      "normal_stop": true,
+      "returncode": 0,
+      "rows": [
+        {
+          "kind": "before_hurt",
+          "provisional": -90,
+          "damage": 100,
+          "handled": true,
+          "cancel": true,
+          "effects": {
+            "warmth": {
+              "until": 19000,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 30000,
+              "amp": 0
+            }
+          },
+          "claim": true
+        },
+        {
+          "kind": "apply_damage_return",
+          "applied": true,
+          "hp": 10
+        },
+        {
+          "kind": "complete",
+          "stage": 1,
+          "ok": true,
+          "hp": 1,
+          "effects": {
+            "warmth": {
+              "until": 19000,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 30000,
+              "amp": 0
+            }
+          },
+          "players": 0
+        }
+      ],
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 700825600
+    },
+    {
+      "stage": 2,
+      "passed": true,
+      "reason": "complete",
+      "normal_stop": true,
+      "returncode": 0,
+      "rows": [
+        {
+          "kind": "complete",
+          "stage": 2,
+          "ok": true,
+          "hp": 1,
+          "effects": {
+            "warmth": {
+              "until": 19000,
+              "amp": 0
+            },
+            "heavy_metal_poisoning": {
+              "until": 30000,
+              "amp": 0
+            }
+          },
+          "players": 0
+        }
+      ],
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 704847872
+    }
+  ],
+  "live_modified": false,
+  "client": false,
+  "limits": [
+    "No native totem or remaining-absorption arbitration tested",
+    "Main event routing and rollback are ESM scenarios",
+    "No client sound or totem-screen parity claimed"
+  ]
+}

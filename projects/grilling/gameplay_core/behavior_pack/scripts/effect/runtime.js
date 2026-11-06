@@ -1,5 +1,5 @@
 import {readPlayerControl} from '../core/player_props.js';
-import {readEffects,writeEffects} from "../effect_state_runtime.js";
+import {readEffects,writeEffects,cureTotemEffects} from "../effect_state_runtime.js";
 import {now} from "../core/actions.js";
 import {FX_KEY,mergeEffectApplication} from "../effect_lifecycle_core.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
@@ -9,7 +9,7 @@ import {forgetDragonHealth,nativeDragonHealth} from "../dragon_native_health.js"
 import {awardMetalToleranceFailed,awardOrdinaryChallenge,ordinaryChallengeOutcome} from "../advancement/advancement_challenge_runtime.js";
 import {DANGEROUS_FOODS,hasFoodUse} from "../food/runtime.js";
 import {invincibleAmbientFeedback,invincibleDamageFeedback,ordinaryFatalFeedback,ordinaryShieldFeedback} from "../immersion_effect_feedback.js";
-import {system,world} from "@minecraft/server";
+import {system,world,EntityHealCause} from "@minecraft/server";
 import {abandonProjectileDodge,forgetProjectileDodge,reserveProjectileDodge,settleProjectileDodge} from "../projectile_dodge_runtime.js";
 import {forgetHeavyMetalRescue,handleHeavyMetalBeforeHurt} from "../heavy_metal_damage_runtime.js";
 import {tryProjectileDodgeMovement} from "../projectile_dodge_movement_runtime.js";
@@ -22,7 +22,12 @@ import {forgetNumbVisual,updateNumbVisual} from "../numb_visual_runtime.js";
 const VIGOR_LAST=new Map();
 const SNEAK_LAST=new Map();
 
-const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:campfire','minecraft:soul_campfire','minecraft:magma']);
+const HEAT_BLOCKS=new Set(['minecraft:fire','minecraft:soul_fire','minecraft:lava','minecraft:flowing_lava','minecraft:magma']);
+// These Bedrock blocks encode Java's LIT=true in their type, not a state.
+const LIT_HEAT_BLOCKS=new Set([
+ 'minecraft:lit_furnace','minecraft:lit_smoker','minecraft:lit_blast_furnace',
+ 'minecraft:lit_redstone_lamp','minecraft:lit_redstone_ore','minecraft:lit_deepslate_redstone_ore','minecraft:redstone_torch'
+]);
 
 const TUNDRA_BLOCKS=new Set(['minecraft:snow','minecraft:snow_layer','minecraft:snow_block','minecraft:powder_snow','minecraft:ice','minecraft:packed_ice','minecraft:blue_ice','minecraft:frosted_ice']);
 
@@ -105,9 +110,22 @@ function applyOrdinary(player){
  if(outcome==='shield'){awardOrdinaryChallenge(player,outcome);ordinaryShieldFeedback(player);return}
  if(outcome==='spear')awardOrdinaryChallenge(player,outcome);
  ordinaryFatalFeedback(player);
- // Java uses damage, not generic kill: Heavy Metal and native totems retain their damage/death route.
+ // Java uses damage and Heavy Metal can rescue it. Ordinary's damage type is
+ // tagged bypasses_invulnerability, which Java totems reject before LivingDeath.
  system.run(()=>{try{player.applyDamage(3.4028234663852886e38,{cause:'override'})}catch(error){console.warn('[Grilling ordinary damage] '+error)}});
 }
+
+world.afterEvents.entityHeal.subscribe(event=>{
+ if(event.healSource?.cause!==EntityHealCause.TotemOfUndying||!(event.healing>0))return;
+ try{
+  const entity=event.healedEntity;
+  if(entity.isValid===false||!(entity.getComponent('minecraft:health')?.currentValue>0))return;
+  // A native totem may follow an earlier rescue in this tick. Its result owns
+  // health now, independently of whether any curable custom effect remains.
+  forgetHeavyMetalRescue(entity);forgetProjectileDodge(entity);forgetDragonHealth(entity.id);
+  cureTotemEffects(entity);
+ }catch(error){console.warn('[Grilling native totem cure] '+error)}
+});
 
 world.afterEvents.entityDie.subscribe(e=>{forgetProjectileDodge(e.deadEntity);forgetHeavyMetalRescue(e.deadEntity)});
 
@@ -146,8 +164,22 @@ world.afterEvents.entityHurt.subscribe(e=>{
  }catch{} // A removed actor/projectile must not abort other damage subscribers.
 });
 
+function warmthHeatSource(block){
+ if(HEAT_BLOCKS.has(block.typeId)||LIT_HEAT_BLOCKS.has(block.typeId))return true;
+ if(block.typeId===GRILL_ID)return readState(block).lit;
+ if(block.typeId==='minecraft:campfire'||block.typeId==='minecraft:soul_campfire')return block.permutation.getState('extinguished')===false;
+ return block.permutation.getState('lit')===true;
+}
+
 function nearHeat(player){
- const p=player.location,d=player.dimension;for(let x=-2;x<=2;x++)for(let y=-1;y<=1;y++)for(let z=-2;z<=2;z++){try{const b=d.getBlock({x:Math.floor(p.x)+x,y:Math.floor(p.y)+y,z:Math.floor(p.z)+z});if(!b)continue;if(HEAT_BLOCKS.has(b.typeId))return true;if(b.typeId===GRILL_ID&&readState(b).lit)return true;if(['minecraft:furnace','minecraft:smoker','minecraft:blast_furnace'].includes(b.typeId)&&b.permutation.getState('lit')===true)return true}catch{}}return false;
+ const p=player.location,d=player.dimension;
+ for(let x=-2;x<=2;x++)for(let y=-1;y<=1;y++)for(let z=-2;z<=2;z++){
+  try{
+   const block=d.getBlock({x:Math.floor(p.x)+x,y:Math.floor(p.y)+y,z:Math.floor(p.z)+z});
+   if(block&&warmthHeatSource(block))return true;
+  }catch{}
+ }
+ return false;
 }
 
 function fleeCreepers(player){
@@ -170,7 +202,9 @@ const fx=readFx(p);
   const sneak=!!p.isSneaking,was=SNEAK_LAST.get(p.id)??false;if(sneak&&!was&&fx.flatulence){p.applyImpulse({x:0,y:.75,z:0});const dimension=p.dimension;interactionParticleBurst(dimension,p.location,'flatulence');try{const origin=flatulenceSoundOrigin(p);if(origin){const pitch=flatulenceSoundPitch();if(pitch!==undefined)dimension.playSound(FLATULENCE_SOUND_ID,origin,{volume:1,pitch})}}catch{}}SNEAK_LAST.set(p.id,sneak);
   if(system.currentTick%5===0){if(fx.mustard)fleeCreepers(p);if(fx.sulfur)repelPhantoms(p)}
   if(fx.tundra_strider){try{const b=p.getBlockStandingOn();if(b&&TUNDRA_BLOCKS.has(b.typeId)){const v=p.getVelocity(),factor=tundraFactor(b.typeId);p.applyImpulse({x:v.x*(factor-1),y:0,z:v.z*(factor-1)});if(b.typeId==='minecraft:powder_snow'&&v.y<.02)p.applyImpulse({x:0,y:Math.min(.16,Math.max(.04,-v.y+.04)),z:0})}}catch{}}
-  if(system.currentTick%20===0&&fx.warmth){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
+  // Java checks before decrementing the duration. The world clock has already
+  // advanced for this tick, so restore that one tick from the stored deadline.
+  if(fx.warmth&&(fx.warmth.until-now()+1)%20===0){const hp=p.getComponent('minecraft:health');if(hp&&hp.currentValue<hp.effectiveMax){if(nearHeat(p))hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+1));else if(p.dimension.id==='minecraft:nether'&&Math.random()<.25)hp.setCurrentValue(Math.min(hp.effectiveMax,hp.currentValue+.5))}}
   const db=fx.dragon_blood;nativeDragonHealth(p,db?.amp);
   updateNumbVisual(p,!!fx.numb&&!hasFoodUse(p.id)&&!(readPlayerControl(p,'season_phase')>0),system.currentTick);
 }

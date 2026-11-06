@@ -59,6 +59,18 @@ export function milkEffects(value,t){
  const fx=activeEffects(value,t);
  return fx.heavy_metal_poisoning?{heavy_metal_poisoning:fx.heavy_metal_poisoning}:{};
 }
+/** Pinned Grilling 1.1.1 and Cookery NeoForge effects inherit the default
+ * PROTECTED_BY_TOTEM cure. Poisoning opts out. Unknown saved names have no
+ * verified cure contract here and must not be guessed.
+ */
+export const TOTEM_CURED_EFFECTS=Object.freeze(['heavy_metal','dragon_blood','numb','invincible',
+ 'tundra_strider','satiated_shield','mustard','preservation','hinder','projectile_dodge',
+ 'instant_smelting','vitality','flatulence','warmth','vigor','sulfur']);
+export function totemEffects(value,t){
+ const fx=activeEffects(value,t);
+ for(const name of TOTEM_CURED_EFFECTS)delete fx[name];
+ return fx;
+}
 // Bedrock string dynamic properties are limited to 32767 UTF-8 bytes. Reject
 // before a setter is called; never truncate a valid chain or erase prior state.
 export const MAX_EFFECT_PAYLOAD_BYTES=32767;

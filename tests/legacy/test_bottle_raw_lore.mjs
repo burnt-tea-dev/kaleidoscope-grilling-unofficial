@@ -96,6 +96,69 @@ for(const fault of ['throw','reject','dropCustom','wrongCount','dropToken'])test
  assert.ok(b.f.logs.some(row=>row.text.includes('[Grilling block action]')),'refusal surfaced through the registered event');
 });
 
+// EMPTY -> PENDING is a real item-identity transition. Neither the player's
+// original native metadata nor a foreign RawMessage belongs to Grilling.
+async function emptyBottlePromotionFixture(){
+ const f=createFixture();await f.load('main.js');f.startup();f.tick(1);
+ const data=await f.load('core/persist.js'),storage=await f.load('core/storage.js');
+ const placed=await f.load('seasoning/seasoning_block_adapter.js');
+ const snap=await f.load('skewer_item_snapshot.js');
+ const player=f.player(),block=f.block('kaleidoscope_grilling:seasoning_bottle_1',{x:0,y:0,z:0});
+ f.block('minecraft:stone',{x:0,y:-1,z:0});
+ const original=f.item('kaleidoscope_grilling:empty_seasoning_bottle',1,{
+  nameTag:'Owned bottle',keepOnDeath:true,lockMode:'slot',
+  canDestroy:['minecraft:stone'],canPlaceOn:['minecraft:dirt'],
+  rawLore:[{text:'foreign: leave this message unchanged'}]
+ });
+ data.setItemProperty(original,'foreign:owner','retained');
+ const inventory=storage.stationContainer(block);inventory.setItem(0,original);
+ assert.equal(placed.writePlacedSeasoningStack(block,[{kind:'empty',ingredients:[],uses:0,variant:0}]),true);
+ function interact(){
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{player,block,itemStack:player.main,blockFace:'Up',isFirstEvent:true,cancel:false});
+  assert.equal(event.cancel,true);f.tick(1);
+ }
+ function add(id,count=4){player.main=f.item(id,count);interact();}
+ return {f,player,block,inventory,data,original,interact,add,snapshot:s=>snap.captureSkewerMetadata(s)};
+}
+const promotionBase=['kaleidoscope_grilling:green_chili_powder','kaleidoscope_grilling:sichuan_pepper','kaleidoscope_grilling:onion_powder'];
+test('placing all three base seasonings preserves the original EMPTY bottle native metadata through PENDING and pickup',async()=>{
+ const b=await emptyBottlePromotionFixture();
+ try{
+  for(const id of promotionBase){b.add(id);assert.equal(b.player.main.amount,3);}
+  const bottle=b.inventory.getItem(0);
+  assert.equal(bottle.typeId,'kaleidoscope_grilling:pending_seasoning_f3');
+  assert.equal(bottle.nameTag,'Owned bottle');assert.equal(bottle.keepOnDeath,true);
+  assert.equal(bottle.lockMode,'slot');assert.deepEqual(bottle.getCanDestroy(),['minecraft:stone']);
+  assert.deepEqual(bottle.getCanPlaceOn(),['minecraft:dirt']);
+  assert.equal(b.data.getItemProperty(bottle,'foreign:owner'),'retained');
+  assert.ok(bottle.getRawLore().some(line=>line.text==='foreign: leave this message unchanged'));
+  b.player.inventory.setItem(4,b.player.main);b.player.main=undefined;b.interact();
+  assert.equal(b.player.main?.typeId,bottle.typeId);
+  assert.equal(b.player.main?.keepOnDeath,true);
+  assert.equal(b.data.getItemProperty(b.player.main,'foreign:owner'),'retained');
+  assert.equal(b.inventory.getItem(0),undefined);assert.equal(b.f.drops.length,0);
+ }finally{b.f.dispose()}
+});
+test('failed native setter during EMPTY to PENDING keeps the partial bottle and ingredient for retry',async()=>{
+ const b=await emptyBottlePromotionFixture(),originalSetter=b.f.ItemStack.prototype.setCanPlaceOn;
+ try{
+  b.add(promotionBase[0]);b.add(promotionBase[1]);
+  const prior=b.snapshot(b.inventory.getItem(0)),projection=b.f.snapshotProperties();
+  b.player.main=b.f.item(promotionBase[2],4);
+  b.f.ItemStack.prototype.setCanPlaceOn=function(list){
+   if(this.typeId==='kaleidoscope_grilling:pending_seasoning_f3')throw Error('native bottle metadata unavailable');
+   return originalSetter.call(this,list);
+  };
+  b.interact();
+  assert.deepEqual(b.snapshot(b.inventory.getItem(0)),prior);
+  assert.equal(b.player.main.amount,4);assert.equal(b.f.drops.length,0);
+  for(const [key,value] of Object.entries(projection))assert.deepEqual(b.f.world.getDynamicProperty(key),value);
+  b.f.ItemStack.prototype.setCanPlaceOn=originalSetter;b.interact();
+  assert.equal(b.inventory.getItem(0)?.typeId,'kaleidoscope_grilling:pending_seasoning_f3');
+  assert.equal(b.player.main.amount,3);
+ }finally{b.f.ItemStack.prototype.setCanPlaceOn=originalSetter;b.f.dispose()}
+});
+
 // The retained food-tooltip rules share this lore behavior suite.
 test('food maxim lore preserves every translated and custom item message',async t=>{
  const f=createFixture();t.after(()=>f.dispose());

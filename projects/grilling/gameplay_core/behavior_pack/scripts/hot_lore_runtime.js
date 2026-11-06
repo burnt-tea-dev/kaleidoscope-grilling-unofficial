@@ -4,13 +4,14 @@ import {world,system,EquipmentSlot} from '@minecraft/server';
 import {TimedWorkQueue} from './timed_work_queue.js';
 import {playerInventory,getOffHand} from './core/player_io.js';
 import {peekStationContainer} from './core/storage.js';
-import {hotUntil,refreshHotLore} from './food/food_state_adapter.js';
+import {hotUntil,refreshHotLore,needsColdSecretTooltip} from './food/food_state_adapter.js';
+import {hasFoodUse} from './food/runtime.js';
+import {hasPendingHandAction} from './skewer/runtime.js';
 const queue=new TimedWorkQueue(),jobs=new Map(),opened=new Map(),scans=new Map();
 let lastWarning=-1200;
 function warn(error){if(system.currentTick-lastWarning>=1200){lastWarning=system.currentTick;console.warn('[Grilling heat tooltip] '+error)}}
 function enqueue(key,read,write,owner){
- let stack;try{stack=read()}catch{return}
- if(!stack||hotUntil(stack)<=0){queue.cancel(key);jobs.delete(key);return;}
+ try{const stack=read();if(!stack||(hotUntil(stack)<=0&&!needsColdSecretTooltip(stack))){queue.cancel(key);jobs.delete(key);return;}}catch{return}
  jobs.set(key,{read,write,owner});queue.schedule(key,system.currentTick);
 }
 function playerSlot(player,slot){
@@ -49,11 +50,14 @@ world.afterEvents.playerSpawn.subscribe(e=>system.run(()=>scanPlayer(e.player)))
 world.afterEvents.playerLeave.subscribe(e=>{opened.delete(e.playerId);for(const [k,j] of jobs)if(j.owner===e.playerId){jobs.delete(k);queue.cancel(k)}});
 system.run(()=>{for(const player of onlinePlayers())scanPlayer(player)});
 every('hot_lore_runtime:1',()=>{
- // Only hot slots have repeating jobs. Cold inventories are not rescanned each tick.
+ // Hot slots repeat; old cold Secrets receive one missing stage badge.
  for(const key of queue.take(system.currentTick,64)){
   const job=jobs.get(key);if(!job)continue;
+  // A lore change alters the captured use identity. Keep the job, but wait for
+  // the owner to finish eating or its already-admitted deferred hand action.
+  if(job.owner&&(hasFoodUse(job.owner)||hasPendingHandAction(job.owner))){queue.schedule(key,system.currentTick+20);continue;}
   try{
-   const source=job.read();if(!source||hotUntil(source)<=0){jobs.delete(key);continue}
+   const source=job.read();if(!source||(hotUntil(source)<=0&&!needsColdSecretTooltip(source))){jobs.delete(key);continue}
    const next=source.clone(),before=JSON.stringify(source.getRawLore());refreshHotLore(next);
    if(JSON.stringify(next.getRawLore())!==before||hotUntil(next)!==hotUntil(source))job.write(next);
    if(hotUntil(next)>0)queue.schedule(key,system.currentTick+20);else jobs.delete(key);

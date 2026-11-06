@@ -44,21 +44,25 @@ Cookery 的公開宿主使用同一份 helper，卻仍在自己的腳本環境�
 
 ## 保存與交易邊界
 
-烤架、料理架與調料瓶的隱藏庫存實體裝著真實 ItemStack。它們的 identifier、容量、component schema 與 ownership 受 `save-compat.lock.json` 保護；普通「清理實體」不能刪它們或縮減庫存。
+烤架、料理架與調料瓶的隱藏庫存實體裝著真實 ItemStack。這些實體持有玩家物品；普通「清理實體」不能刪它們或縮減庫存。原存檔相容鎖已移除，變更以相關保存測試與一份可用備份確認。
 
-目前有 world／entity／item dynamic properties、保存 envelope、claim、批次／回復記錄及其他 persisted key。完整字面值／前綴以 [save-compat.lock.json](../tools/guards/save-compat.lock.json) 的 `persisted_key_literals` 為準，不抄固定舊數量。未知交付不能當失敗重試；外來槽位與 metadata 不因本次回滾被覆寫。API 讀回也不證明磁碟 flush 或任意 crash 原子性。
+目前有 world／entity／item dynamic properties、保存 envelope、claim、批次／回復記錄及其他 persisted key。當前 key 以 `core/persist_keys.js` 為準；需要世界普查時，由 `tools/ops/runtime_inventory.py` 讀取當前來源，不維護第二份鎖清單。未知交付不能當失敗重試；外來槽位與 metadata 不因本次回滾被覆寫。API 讀回也不證明磁碟 flush 或任意 crash 原子性。
 
 P3 將保存鍵集中與交易收斂時，仍要逐字保留既有 key／ID／UUID。任何退役走 [SAVE-COMPAT](SAVE-COMPAT.md) 的完整流程；文件改名或目錄整理不是例外。
 
 ## 視覺與跨包接口
 
-目前 player property、held transport、RP controller 與 attachable 共同呈現食物／瓶／盤。Grilling 仍有自己的 `entities/player.json`；共用 player owner 與其他進食包相容屬 T3.4／D6，本文不把未來方案寫成已部署架構。巨型烘焙模型、影子 item ID 與多代路線也仍在 runtime；P2 文件收斂沒有退役它們。
+食物／瓶／盤的手持與放置表面由 player property、held transport、RP controller 與 attachable 配合呈現；背包／快捷欄圖示是另一條路徑，任意三食材每 stack 的圖示仍有[已列明缺口](PARITY.md#秘製串背包圖示gui-display)。烘焙幾何、影子 item ID 與不同呈現路線仍有保留，但不能把它們一概寫成目前仍有超大單檔。
+
+**單檔模型預算（2026-11-06 核對的來源快照）**：已核對的最大 geometry 為523686 bytes，低於512 KiB。G237到G238的RP只有manifest身份變更，沿用相同幾何輸入的有效結果，沒有為此再掃全庫。這只代表單檔大小預算已達；每個表面的Java外觀、動畫與其他差距仍按[PARITY](PARITY.md)核對，不代表P4或整體視覺已完成。
+
+Grilling原始BP仍提供自己的`entities/player.json`；[Core公開最小入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已用本庫合成器，將指定原版player接入Grilling既有RP，要求唯一有效BP player owner及完整RP player。這是已實作的本機組裝路徑；與其他進食包／TACZ共存仍依選定profile及實際接口核對，不能據此宣稱任意組合或客戶端畫面已通過。公開入口的建置及各份原生／保存證據只查[Core驗證記錄](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/validation-public-minimal.json)。
 
 manifest 的 Cookery 相依只表示包身份要求，不證明每項 adapter／宿主能力已存在。公開接口的來源、認證界線與 failure behavior 以 [BEDROCK-INTEGRATION-API](BEDROCK-INTEGRATION-API.md) 為準；指南只使用既有 Cookery 書的一個煙火入口與六個根類。原作者完整包、私有整合邏輯與機密不放入這裡。
 
 ## CI 與證據
 
-[ci.yml](../.github/workflows/ci.yml) 跑既有 guards、baseline、tracked JSON、保留玩法測試、指南／戰利品宣告、Java 萃取與保留工具回歸；[guards.yml](../.github/workflows/guards.yml) 另以 base lock／ratchet 保護規則。baseline 與 bridge 的必要驗證保留；T2.4 退役舊工具不代表放寬 runtime 身份或輸出約束。
+CI的實際觸發條件與檢查範圍直接查[ci.yml](../.github/workflows/ci.yml)，本文不另列步驟清單。結果只證明該次來源與所執行測試涵蓋的行為，不代替完整BDS、存檔重啟或客戶端效果。發布時的runtime身份、BP/RP配對及輸出一致性沿既有[release baseline](../.github/workflows/baseline.yml)與[baseline gate](../tools/baseline_gate.py)確認；保存變更依[SAVE-COMPAT](SAVE-COMPAT.md)驗證實際受影響的讀寫與重啟。退役的存檔相容鎖不恢復，工具退役亦不放寬這些保存／身份界線。
 
 保留測試包含純規則，以及 #250 以[受控外部 API 邊界](../tests/helpers/README.md)執行 canonical ESM、已註冊事件與排程的情境；loader 只解析外部依賴，不切割、改寫或替換正式模組。具體覆蓋與未補場景見 [分類補充](../tests/legacy/classification.json) 的 `native_scenario_addendum`；受控 API 結果仍不等於完整 BDS／Player 流程。需要 native binding 的 census 合成測試另有隔離入口；既有工具能執行不代表真實 LKG 重跑或 staging 已通過。實際來源、CI、staging、部署、真人證據分開記錄。
 

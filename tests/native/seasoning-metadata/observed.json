@@ -1,0 +1,333 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-05T01:55:43+08:00",
+  "scope": "Owner-requested additional preservation of exposed metadata during native pending-to-special bottle conversion and same-world chest reload; not a Java missing-feature claim",
+  "source_commit_at_probe": "9fbb6a85e606c84566cbc55377e4705e24fbde28",
+  "original_repair_head": "e37d1bc4ece17fec7dafcb9621471474d75199fe",
+  "declared_source_version_before_freeze": [
+    2,
+    8,
+    221
+  ],
+  "source_food_runtime_sha256": "68c6c9bc5e85e69ae5bb3ed7a6fa87fbcba7b6e84ed7d94c499a8a8b3a63dc0d",
+  "probe_sha256": "c057d460b5594167b6fa203a370b4d10dc45841da200e7b1738dd6e6f034b579",
+  "bds": "1.26.60.6",
+  "engine_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+  "modules": [
+    {
+      "name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    },
+    {
+      "name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    }
+  ],
+  "diagnostic_manifests": {
+    "BP": {
+      "format_version": 2,
+      "header": {
+        "name": "Kaleidoscope Grilling BP",
+        "description": "森羅物語：煙火 非官方基岩版；需要公開版 Cookery 1.6.4",
+        "uuid": "e435e4a4-ee52-401c-97aa-f3625f45f22c",
+        "version": [
+          0,
+          0,
+          1
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          60
+        ]
+      },
+      "modules": [
+        {
+          "type": "data",
+          "uuid": "d2214583-1cd8-41d1-9c01-a92ab4716ba9",
+          "version": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "type": "script",
+          "language": "javascript",
+          "entry": "scripts/s1-probe-entry.js",
+          "uuid": "0601295a-f26d-41d0-88a3-19e7ef860eda",
+          "version": [
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "uuid": "257b7945-b086-4068-bc52-247b8e4aa272",
+          "version": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+          "version": [
+            1,
+            6,
+            4
+          ]
+        },
+        {
+          "module_name": "@minecraft/server",
+          "version": "2.12.0-beta"
+        },
+        {
+          "module_name": "@minecraft/server-ui",
+          "version": "2.2.0"
+        },
+        {
+          "module_name": "@minecraft/server-gametest",
+          "version": "1.0.0-beta"
+        }
+      ]
+    },
+    "RP": {
+      "format_version": 2,
+      "header": {
+        "name": "Kaleidoscope Grilling RP",
+        "description": "森羅物語：煙火 非官方基岩版；需要公開版 Cookery 1.6.4",
+        "uuid": "257b7945-b086-4068-bc52-247b8e4aa272",
+        "version": [
+          0,
+          0,
+          1
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          60
+        ]
+      },
+      "modules": [
+        {
+          "type": "resources",
+          "uuid": "58ac0e2d-82d5-4089-883f-b6e7d15767a8",
+          "version": [
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+          "version": [
+            1,
+            6,
+            4
+          ]
+        }
+      ],
+      "capabilities": [
+        "pbr"
+      ]
+    }
+  },
+  "cookery_dependencies": {
+    "BP": {
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "version": [
+        1,
+        6,
+        4
+      ]
+    },
+    "RP": {
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "version": [
+        1,
+        6,
+        4
+      ]
+    }
+  },
+  "saved_experiments": {
+    "experiments_ever_used": 1,
+    "gametest": 1,
+    "poi": 1,
+    "saved_with_toggled_experiments": 1,
+    "upcoming_creator_features": 1
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "passed": true,
+      "stop_reason": "complete",
+      "normal_stop": true,
+      "returncode": 0,
+      "rows": [
+        {
+          "kind": "start",
+          "accepted": true,
+          "before": {
+            "amount": 1,
+            "name": "Retained bottle",
+            "keepOnDeath": true,
+            "lockMode": "inventory",
+            "canDestroy": [
+              "glass"
+            ],
+            "canPlaceOn": [
+              "andesite",
+              "polished_diorite",
+              "stone",
+              "diorite",
+              "granite",
+              "polished_andesite",
+              "polished_granite"
+            ],
+            "foreign": "retained",
+            "foreignLore": "[{\"text\":\"Foreign bottle note\"},{\"translate\":\"item.apple.name\"}]"
+          }
+        },
+        {
+          "kind": "native_event",
+          "event": "itemStartUse",
+          "tick": 441,
+          "id": "kaleidoscope_grilling:pending_seasoning_f3",
+          "useDuration": 80
+        },
+        {
+          "kind": "native_event",
+          "event": "itemCompleteUse",
+          "tick": 521,
+          "id": "kaleidoscope_grilling:pending_seasoning_f3",
+          "useDuration": 0
+        },
+        {
+          "kind": "native_event",
+          "event": "itemStopUse",
+          "tick": 521,
+          "id": "kaleidoscope_grilling:pending_seasoning_f3",
+          "useDuration": 0
+        },
+        {
+          "kind": "complete",
+          "stage": 1,
+          "ok": true,
+          "id": "kaleidoscope_grilling:special_seasoning_r8_v4",
+          "envelope": {
+            "amount": 1,
+            "name": "Retained bottle",
+            "keepOnDeath": true,
+            "lockMode": "inventory",
+            "canDestroy": [
+              "glass"
+            ],
+            "canPlaceOn": [
+              "andesite",
+              "polished_diorite",
+              "stone",
+              "diorite",
+              "granite",
+              "polished_andesite",
+              "polished_granite"
+            ],
+            "foreign": "retained",
+            "foreignLore": "[{\"text\":\"Foreign bottle note\"},{\"translate\":\"item.apple.name\"}]"
+          },
+          "uses": 0,
+          "variant": 4
+        },
+        {
+          "kind": "disconnected",
+          "players": 0
+        }
+      ],
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "peak": 877109248,
+      "client": false,
+      "LIVE_modified": false
+    },
+    {
+      "stage": 2,
+      "passed": true,
+      "stop_reason": "complete",
+      "normal_stop": true,
+      "returncode": 0,
+      "rows": [
+        {
+          "kind": "complete",
+          "stage": 2,
+          "ok": true,
+          "id": "kaleidoscope_grilling:special_seasoning_r8_v4",
+          "envelope": {
+            "amount": 1,
+            "name": "Retained bottle",
+            "keepOnDeath": true,
+            "lockMode": "inventory",
+            "canDestroy": [
+              "glass"
+            ],
+            "canPlaceOn": [
+              "andesite",
+              "polished_diorite",
+              "stone",
+              "diorite",
+              "granite",
+              "polished_andesite",
+              "polished_granite"
+            ],
+            "foreign": "retained",
+            "foreignLore": "[{\"text\":\"Foreign bottle note\"},{\"translate\":\"item.apple.name\"}]"
+          },
+          "uses": 0,
+          "variant": 4
+        },
+        {
+          "kind": "disconnected",
+          "players": 0
+        }
+      ],
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "peak": 877748224,
+      "client": false,
+      "LIVE_modified": false
+    }
+  ],
+  "passed": true,
+  "live_modified": false,
+  "client": false,
+  "limits": [
+    "Cross-type projection covers fields visible to this API owner, not arbitrary inaccessible NBT or other packs private state",
+    "Foreign property means a non-Grilling key exposed to the current API owner",
+    "Model tests cover offhand and failed-write rollback; native probe covers one mainhand success and chest reload",
+    "No ordinary-player input, client audiovisual or full-family deployment claim"
+  ]
+}
