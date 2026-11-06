@@ -62,6 +62,14 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 
 目前沒有已連接的遊戲client。背包每slot與HUD hotbar的binding實際供值、UI hook載入、換槽後畫面及其他resource pack的同名UI衝突仍未觀察；不將來源或BDS載入當成完整圖示還原PASS，也不另排人驗等待。原始失敗及範圍見[issue166](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/166)。原生庫存保存、手持模型及固定五幀圖示各有自己的證據範圍。
 
+## 涼拌折耳根的製作交付
+
+兩個Java分支的[Forge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/ColdHouttuyniaCraftingRecipe.java)／[NeoForge](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/food/ColdHouttuyniaCraftingRecipe.java)都在四個已占用製作格中核對三份折耳根與一個至少含2點高級辣椒油的油壺，產出一份涼拌折耳根，複製原油壺後扣2點作餘物。Bedrock既有適配仍是主手至少三根、副手油壺、蹲下點工作台；這不是Java原生四格製作視窗。原料數、油量與成品數不改。
+
+正式main的[製作場景](../tests/scenario/test_cold_houttuynia_transaction.mjs)在舊來源重現三項：成品庫存寫入已套用後拋錯，舊give改丟地上而多一份；滿包drop已套用後拋錯，再spawn第二份；正常用完油轉空壺時，丟失本包可讀的附加DP。修復移除原cold owner的舊give，直接使用既有 `core/transaction.js` 與output planner；先回收可確認的成品才退款，無法確認drop時不補發或退款，沿用既有未確認交易阻擋重試的行為。最後三根釋出的主手格可接成品，滿包仍可掉落一份。油壺adapter在跨ID時保留本包可讀properties，仍清理原已知legacy油鍵；不讀取其他包私有資料，也不聲稱可複製不可見NBT。
+
+G240的新五個真main場景與受影響的既有油交易／公開API共93項通過。這是API故障模型及來源行為證據，不是BDS自然故障。2026-11-06 BDS1.26.60.6／server2.12.0-beta的[29項原生觀察](../tests/native/cold-houttuynia/observed.json)確認真craft函式、native Player／ItemStack／庫存／副手／drop的三個健康流程，空壺保留本包DP／name／raw lore／flags，存chest同QA正常重啟後資料一致；兩階段normal stop／exit0、players／errors／OOM皆0，QA已清。這使用最小外部pot內容，並非真人shiftclick、作者pot component互動、Java工作台或完整新家族候選的驗證；精確範圍見[窄測說明](../tests/native/cold-houttuynia/README.md)。
+
 ## 進度獎勵與領取紀錄
 
 目前的 `advancement/advancement_runtime.js:awardOneShotAdvancement` 先以既有進度DP寫入並讀回pending，再嘗試一次原生`addExperience`；成功後將同一DP寫成布林true。已完成、pending、未知值或讀取失敗都拒絕再次發獎。若XP呼叫或完成寫入的結果不明，保留pending，不用命令fallback或自動重試；這是「最多嘗試一次」，不是XP與DP的跨API原子交易，也沒有恢復未發XP的功能。

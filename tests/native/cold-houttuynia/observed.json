@@ -1,0 +1,207 @@
+{
+  "observed_at": "2026-11-06T02:45:09Z",
+  "source_commit": "93b87ea00f22ddc3ba3057d060576fff9a9a40c0",
+  "engine_version": "1.26.60.6",
+  "modules": {
+    "@minecraft/server": "2.12.0-beta",
+    "@minecraft/server-gametest": "1.0.0-beta",
+    "@minecraft/server-ui": "2.2.0"
+  },
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "diagnostic_identity_only": true,
+  "diagnostic_version": [
+    1,
+    0,
+    0
+  ],
+  "complete_exported_game_candidate_tested": false,
+  "external_pot_content": "Minimal original IDs with native max_stack_size1 and allow_off_hand, not full author Cookery interaction components",
+  "production_files_sha256": {
+    "food/cold_houttuynia_runtime.js": "a74f2454880a2a635b87b48785324bcd20a595e197364eb16d8232983ce9bc6f",
+    "oil/cookery_oil_pot_adapter.js": "43cf41b13adc4897196851af6cdecdebbd8563c722fef71980dcb129d98d9cb1",
+    "core/transaction.js": "2f721353b67b2514d0acb8d4ed1f1c3fcdd85e1b7177b9652f1157acebe9738d",
+    "core/actions.js": "57446d7e52d9a7d8b128510e23a8bfd0a2938c98dd5318ebf10baf663a0fa6d1",
+    "host_api/oil_api_core.js": "26fb0d08566314fe5d0644eb371ce1f6694c85d291ed69b482045a5b194f362c",
+    "skewer_item_snapshot.js": "4c2e660dd0cfcc00ffefed5192f3021b9a85da5be10dbdd7346076e05818a439",
+    "core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3"
+  },
+  "stages": [
+    {
+      "passed": true,
+      "reason": "complete",
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 408719360,
+      "phase": "write",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "case 0 uses native unstackable oil pots",
+          "passed": true
+        },
+        {
+          "name": "case 0 real crafting owner commits once",
+          "passed": true
+        },
+        {
+          "name": "case 0 creates exactly one cold dish",
+          "passed": true
+        },
+        {
+          "name": "case 0 consumes three roots or reuses their freed main slot",
+          "passed": true
+        },
+        {
+          "name": "case 0 consumes exactly two premium oil points",
+          "passed": true
+        },
+        {
+          "name": "case 0 preserves native pot name lore flags and own dynamic data",
+          "passed": true
+        },
+        {
+          "name": "case 1 uses native unstackable oil pots",
+          "passed": true
+        },
+        {
+          "name": "case 1 real crafting owner commits once",
+          "passed": true
+        },
+        {
+          "name": "case 1 creates exactly one cold dish",
+          "passed": true
+        },
+        {
+          "name": "case 1 consumes three roots or reuses their freed main slot",
+          "passed": true
+        },
+        {
+          "name": "case 1 consumes exactly two premium oil points",
+          "passed": true
+        },
+        {
+          "name": "case 1 preserves native pot name lore flags and own dynamic data",
+          "passed": true
+        },
+        {
+          "name": "exhaustion returns the native empty-pot identity",
+          "passed": true
+        },
+        {
+          "name": "all unrelated native stacks stay unchanged",
+          "passed": true
+        },
+        {
+          "name": "case 2 uses native unstackable oil pots",
+          "passed": true
+        },
+        {
+          "name": "case 2 real crafting owner commits once",
+          "passed": true
+        },
+        {
+          "name": "case 2 creates exactly one cold dish",
+          "passed": true
+        },
+        {
+          "name": "case 2 consumes three roots or reuses their freed main slot",
+          "passed": true
+        },
+        {
+          "name": "case 2 consumes exactly two premium oil points",
+          "passed": true
+        },
+        {
+          "name": "case 2 preserves native pot name lore flags and own dynamic data",
+          "passed": true
+        },
+        {
+          "name": "full inventory produces one native drop",
+          "passed": true
+        },
+        {
+          "name": "all unrelated native stacks stay unchanged",
+          "passed": true
+        },
+        {
+          "name": "native chest receives exact affected item data",
+          "passed": true
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "players_after": 0
+    },
+    {
+      "passed": true,
+      "reason": "complete",
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 408719360,
+      "phase": "reload",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "same saved world preserves exact pot and ingredient metadata after normal restart",
+          "passed": true
+        },
+        {
+          "name": "the exhausted empty pot retains native dynamic data after restart",
+          "passed": true
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "players_after": 0
+    }
+  ],
+  "passed": true,
+  "temporary_world_removed": true,
+  "client": false,
+  "live_modified": false,
+  "scope": "Real tryCraftColdHouttuynia owner, native inventory/offhand/drop and same QA saved-world reload. Minimal external Cookery pot content supplies original IDs/max-stack/allow-offhand; no author component interaction, actual sneak-click input, full family, natural API failure or client claim.",
+  "source_fault_models": {
+    "baseline_source": "2d3f860d0925dae6122f14e4b08e2a5f163703f1",
+    "regressions": "tests/scenario/test_cold_houttuynia_transaction.mjs",
+    "before": "3 failures: normal exhausted-pot DP lost, inventory applied then threw created 2 dishes, drop applied then threw created 2 dishes",
+    "after": "93 affected new and existing oil transaction/API scenarios passed",
+    "natural_bds_api_failures_claimed": false
+  }
+}
