@@ -129,7 +129,7 @@ for(const base of ['kaleidoscope_grilling:mysterious_skewer','kaleidoscope_grill
  assert.deepEqual(input,before);assert.equal(input.native.id,actual);
  assert.equal(data.getItemProperty(stack,'kaleidoscope_grilling:skewer_ingredients'),stored,'completion never rewrites the original ingredient payload');
  f.tick();assert.equal(damage.length,base.endsWith('ordinary_skewer')?1:0);
- if(damage.length)assert.deepEqual(damage[0],[3.4028234663852886e38,{cause:'override'}]);
+ if(damage.length)assert.deepEqual(damage[0],[3.4028234663852886e38,{cause:'selfDestruct'}]);
 });
 test('non-edible variants do not gain finish behavior through canonical aliases or extensions',()=>{
  resetSecretCompatRegistry();const base='kaleidoscope_grilling:mysterious_skewer',actual=eatingItemId(base,true);assert(registerSecretIngredientBehavior({input:base,behavior:extension('canonical',111)}));

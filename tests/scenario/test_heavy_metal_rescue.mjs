@@ -142,6 +142,41 @@ for(const cause of ['override','void','selfDestruct'])test(cause+' keeps Heavy M
   assert.ok(f.saved().heavy_metal_poisoning);assert.equal(f.p.off.typeId,'minecraft:totem_of_undying');
  }finally{f.dispose()}
 });
+for(const hand of ['main','off'])for(const heavy of [false,true])test('Ordinary uses the totem-bypassing native damage route with '+hand+'hand totem and '+(heavy?'Heavy Metal':'no rescue'),async()=>{
+ const f=await rescueFixture(1000);
+ try{
+  const effects=await f.load('effect/runtime.js');
+  f.p[hand]=new f.ItemStack('minecraft:totem_of_undying');
+  if(!heavy)f.p.setDynamicProperty(f.effectCore.FX_KEY,JSON.stringify({warmth:f.before.warmth}));
+  const requests=[],cancellations=[];
+  f.p.applyDamage=(amount,options)=>{
+   requests.push({amount,options});
+   // Only deliver the measured provisional-health API boundary to the real
+   // registered handler. Native death, totem use and resistance are not modeled.
+   f.hp.currentValue=-amount;let canceled=false;
+   const event={hurtEntity:f.p,damage:amount,damageSource:options};
+   Object.defineProperty(event,'cancel',{get:()=>canceled,set:value=>{
+    canceled=value;if(value)f.hp.currentValue=20;
+   }});
+   f.emit('world.beforeEvents.entityHurt',event);
+   cancellations.push(canceled);
+   return true;
+  };
+  effects.applyOrdinary(f.p);
+  assert.equal(requests.length,0,'Ordinary retains its scheduled native damage call');
+  f.tick();
+  assert.deepEqual(requests,[{amount:3.4028234663852886e38,options:{cause:'selfDestruct'}}]);
+  assert.deepEqual(cancellations,[heavy]);
+  assert.equal(f.p[hand].typeId,'minecraft:totem_of_undying','the owner never edits the held item');
+  if(heavy){
+   assert.ok(f.saved().heavy_metal_poisoning);assert.equal(f.saved().heavy_metal,undefined);
+   f.tick();assert.equal(f.hp.currentValue,1);
+  }else{
+   assert.deepEqual(f.saved(),{warmth:f.before.warmth});
+   assert.equal(f.p.getDynamicProperty(f.claims.HEAVY_METAL_CLAIM_KEY),undefined);
+  }
+ }finally{f.dispose()}
+});
 test('a totem in the backpack does not suppress Heavy Metal protection',async()=>{
  const f=await rescueFixture(1000);
  try{
@@ -149,6 +184,18 @@ test('a totem in the backpack does not suppress Heavy Metal protection',async()=
   assert.equal(f.hurt().cancel,true);f.tick();assert.equal(f.hp.currentValue,1);
   assert.ok(f.saved().heavy_metal_poisoning);
   assert.equal(f.p.inventory.getItem(5).typeId,'minecraft:totem_of_undying');
+ }finally{f.dispose()}
+});
+for(const [outcome,random] of [['shield',0],['spear',1]])test('Ordinary retains the invincibility '+outcome+' outcome before native damage',async t=>{
+ const f=await rescueFixture(1000);
+ try{
+  const effects=await f.load('effect/runtime.js');
+  t.mock.method(Math,'random',()=>random);
+  f.p.setDynamicProperty(f.effectCore.FX_KEY,JSON.stringify({invincible:{until:1000,amp:0}}));
+  const damage=[];f.p.applyDamage=(...args)=>{damage.push(args);return true};
+  effects.applyOrdinary(f.p);f.tick();
+  assert.equal(f.saved().invincible,undefined);
+  assert.deepEqual(damage,outcome==='shield'?[]:[[3.4028234663852886e38,{cause:'selfDestruct'}]]);
  }finally{f.dispose()}
 });
 test('ordinary healing, zero healing and missing after-heal cannot infer a totem cure',async()=>{

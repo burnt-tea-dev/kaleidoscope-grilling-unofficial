@@ -1,0 +1,336 @@
+{
+  "observed_date": "2026-11-06",
+  "normal_stop_at": "2026-11-06 12:58:34 HKT",
+  "source_ref": "07f2a7602a38e4625f8497dc5a915ef1fd70ac5f",
+  "source_base": "cde22d873e2b084fd393bf5c400e045126ddeee6",
+  "engine": {
+    "version": "1.26.60.6",
+    "archive_sha256": "cbbd5414fa6a310353ed1fc76a0ba691c3fd1ea852fd04bb76764ee4c1afdb98",
+    "executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+    "official_archive_executable_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad"
+  },
+  "api_modules": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.12.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.2.0"
+    }
+  ],
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "production_source_sha256": {
+    "heavy_metal_damage_runtime.js": "e4165af81e712d303041c08fd5b64891873689b8903e92f572d003e4bcda0d2e",
+    "heavy_metal_damage_core.js": "85b914abc6db504dd90144cc40a522e752bd55c9e64f36bce866bf1bae817c6a",
+    "effect/runtime.js": "9e24b21ce5cfb961560779c7b6c7876f5de1094ec7802bd3eac8509ea72e464e",
+    "food/runtime.js": "68c6c9bc5e85e69ae5bb3ed7a6fa87fbcba7b6e84ed7d94c499a8a8b3a63dc0d",
+    "effect_state_runtime.js": "aea5667cac1185de8a8d30a93c2b48c5406e7ef2f42015c897f14e7e8e416dc0",
+    "effect_lifecycle_core.js": "61569db6c70e81d5c36e50ae44a90eb105629c33781c48e799b230cd8bc55b28",
+    "core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad"
+  },
+  "probe_sha256": "4907de8e631fd49681700782bdc634fa703e956217b5c39320158678469baeca",
+  "unchanged_own_player_sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d",
+  "new_player_overlay": false,
+  "QA_identity": [
+    1,
+    0,
+    0
+  ],
+  "diagnostic_not_complete_candidate": true,
+  "first_attempt": {
+    "reached_damage_observation": false,
+    "reason": "Fixture omitted the existing Ordinary animation variant selected by unchanged production food preparation. Not a cause counterexample.",
+    "errors": [
+      "[2026-11-06 12:56:14:577 ERROR] [Scripting] [Grilling Ordinary max-float native QA BP] Error: Invalid item identifier 'kaleidoscope_grilling:ordinary_skewer_java_three_alt'.    at <anonymous> (eating_item_runtime.js:25)"
+    ],
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "cleanup": {
+      "normal_stop": true,
+      "engine_and_temporary_world_removed": true,
+      "probe_not_completed": true,
+      "players_after": null,
+      "engine_main_pid": 0,
+      "cleanup_inside_shared_lock": true,
+      "live_modified": false
+    },
+    "source_ref": "fdfc9583be93e9ad57e7ff769534eb2d334aa623"
+  },
+  "result": {
+    "passed": true,
+    "reason": "complete",
+    "normal_stop_requested": true,
+    "quit_correctly": true,
+    "returncode": 0,
+    "report": {
+      "passed": true,
+      "phase": "ordinary-maxfloat",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "no Heavy Metal real native food completes and consumes its serving",
+          "passed": true
+        },
+        {
+          "name": "no Heavy Metal actual Ordinary delivers exactly one selfDestruct max-float hit",
+          "passed": true
+        },
+        {
+          "name": "no Heavy Metal held totem remains and no native totem heal is emitted",
+          "passed": true
+        },
+        {
+          "name": "no Heavy Metal dies without cancellation or a claim",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal real native food completes and consumes its serving",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal actual Ordinary delivers exactly one selfDestruct max-float hit",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal held totem remains and no native totem heal is emitted",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal real registered handler cancels and reserves its claim",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal pays once before cancellation and rescues to 1 HP",
+          "passed": true
+        },
+        {
+          "name": "Heavy Metal leaves unrelated Warmth active",
+          "passed": true
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "samples": [
+        {
+          "heavy": false,
+          "entry": "native food use and itemCompleteUse",
+          "food": [
+            {
+              "event": "itemStartUse",
+              "tick": 88,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 100
+            },
+            {
+              "event": "itemCompleteUse",
+              "tick": 188,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0
+            },
+            {
+              "event": "itemStopUse",
+              "tick": 188,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0
+            }
+          ],
+          "before": [
+            {
+              "tick": 188,
+              "cause": "selfDestruct",
+              "damage": 3.4028234663852886e+38,
+              "cancel": false,
+              "state": {
+                "health": -3.4028234663852886e+38,
+                "time": 189,
+                "main": null,
+                "off": "minecraft:totem_of_undying",
+                "effects": {
+                  "warmth": {
+                    "until": 1286,
+                    "amp": 0
+                  }
+                },
+                "claim": null
+              }
+            }
+          ],
+          "heals": [],
+          "died": true,
+          "input": {
+            "health": 10,
+            "time": 89,
+            "main": "kaleidoscope_grilling:ordinary_skewer",
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1286,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "useAccepted": true,
+          "death": {
+            "tick": 188,
+            "cause": "selfDestruct"
+          },
+          "result": {
+            "health": 0,
+            "time": 194,
+            "main": null,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1286,
+                "amp": 0
+              }
+            },
+            "claim": null
+          }
+        },
+        {
+          "heavy": true,
+          "entry": "native food use and itemCompleteUse",
+          "food": [
+            {
+              "event": "itemStartUse",
+              "tick": 201,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 100
+            },
+            {
+              "event": "itemCompleteUse",
+              "tick": 301,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0
+            },
+            {
+              "event": "itemStopUse",
+              "tick": 301,
+              "id": "kaleidoscope_grilling:ordinary_skewer",
+              "useDuration": 0
+            }
+          ],
+          "before": [
+            {
+              "tick": 301,
+              "cause": "selfDestruct",
+              "damage": 3.4028234663852886e+38,
+              "cancel": true,
+              "state": {
+                "health": -3.4028234663852886e+38,
+                "time": 302,
+                "main": null,
+                "off": "minecraft:totem_of_undying",
+                "effects": {
+                  "warmth": {
+                    "until": 1399,
+                    "amp": 0
+                  },
+                  "heavy_metal_poisoning": {
+                    "until": 12302,
+                    "amp": 0
+                  }
+                },
+                "claim": "{\"version\":1,\"until\":1399,\"amp\":0,\"time\":302}"
+              }
+            }
+          ],
+          "heals": [],
+          "died": false,
+          "input": {
+            "health": 10,
+            "time": 202,
+            "main": "kaleidoscope_grilling:ordinary_skewer",
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1399,
+                "amp": 0
+              },
+              "heavy_metal": {
+                "until": 1399,
+                "amp": 0
+              }
+            },
+            "claim": null
+          },
+          "useAccepted": true,
+          "result": {
+            "health": 1,
+            "time": 307,
+            "main": null,
+            "off": "minecraft:totem_of_undying",
+            "effects": {
+              "warmth": {
+                "until": 1399,
+                "amp": 0
+              },
+              "heavy_metal_poisoning": {
+                "until": 12302,
+                "amp": 0
+              }
+            },
+            "claim": "{\"version\":1,\"until\":1399,\"amp\":0,\"time\":302}"
+          }
+        }
+      ],
+      "playersAfter": 0,
+      "scope": "Actual native default Ordinary food use with its existing production preparation/animation variants and registered food/effect handlers, including the candidate applyOrdinary selfDestruct max-float call. No callback invocation, replacement methods, remaining-shield estimate, damage replay, resurrection or new Player overlay. Does not establish armor/resistance bypass, all Java parity, complete main startup, persistence, client or LIVE behavior."
+    },
+    "errors": [],
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 433356800,
+    "client": false,
+    "native_player": "QA SimulatedPlayer; actual native default Ordinary food use and registered food/effect handlers",
+    "live_modified": false
+  },
+  "cleanup": {
+    "engine_and_temporary_world_removed": true,
+    "normal_stop": true,
+    "players_after": 0,
+    "cleanup_inside_shared_lock": true,
+    "live_modified": false,
+    "shared_lock_acquired_then_released": true
+  },
+  "narrow_native_totem_bypass_and_heavy_rescue_verified": true,
+  "full_java_parity": false,
+  "armor_resistance_bypass_verified": false,
+  "saved_world_restart_tested": false,
+  "client": false,
+  "live_modified": false
+}

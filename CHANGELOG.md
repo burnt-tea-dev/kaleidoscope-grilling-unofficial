@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.242 平凡串的圖騰繞過
+
+- 原平凡串owner只將傷害cause由override改為selfDestruct；Float.MAX_VALUE、延後排程與既有無敵／重金屬入口不變。保留G240冷菜修復與G241餐盤姿勢，不重用舊草稿G240身份。
+- BDS1.26.60.6真Player兩次各100tick原生食用完成、扣1份後，無Heavy死亡但圖騰未耗／無治療；有Heavy先付款再救1HP且保留圖騰。12項窄檢查通過。首場漏帶既有進食variant的fixture錯誤另保留，詳見PARITY；未證護甲／抗性繞過、部分盾或完整Java parity，尚未隨家族部署。
+
 ## 2.8.241 餐盤第一人稱姿態來源
 
 - 承接已確認的 #333 Blockbench 姿態，僅變更左右第一人稱的 position／scale；旋轉、第三人稱、幾何、餐盤食材配置與互動不變。
