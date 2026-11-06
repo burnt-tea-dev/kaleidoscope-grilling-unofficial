@@ -1,0 +1,44 @@
+{
+  "repository": "breezeth-CN/KaleidoscopeGrilling",
+  "commit": "9a1acdab27698457bec16c9362678e574895a28c",
+  "path": "common/src/main/resources/assets/kaleidoscope_grilling/textures/item/custom_skewer_gui_16/",
+  "assets": [
+    {
+      "name": "food_1_1.png",
+      "upstream_blob": "5e010a98872ff0e332313a817dfcb5ad08f6fcf1",
+      "sha256": "ef176716ef39dd70466f61606956fa0c990807e4344abc0f76c919482bdff8b3"
+    },
+    {
+      "name": "food_1_2.png",
+      "upstream_blob": "146ab0b98f11abae3d5e4a24c6492f2707c00bf4",
+      "sha256": "7eb4d9d24dfd30c43eb0e56fde2416d9ba7a287f897042b2a401de099164f592"
+    },
+    {
+      "name": "food_2_1.png",
+      "upstream_blob": "ff44e3df0a424a5d46d91cd2111c2f86fd2f4191",
+      "sha256": "6fef500e00e504cc09d1302b5956597b89aa02f7925121e3b2947b9eee744aaa"
+    },
+    {
+      "name": "food_2_2.png",
+      "upstream_blob": "e601748a5e46b68857deae20da2374f540c36bdb",
+      "sha256": "04ac8c53f416489e90c42c9c1cd2e654fa2c0601a9b46260777c0cb490154b60"
+    },
+    {
+      "name": "food_3_1.png",
+      "upstream_blob": "cace8b4bc40b3dc5d25d970d09758b7e9ceab4e6",
+      "sha256": "8c419134623ab65c5311e298c29be645f064d821c09121b3d68b1576556620f2"
+    },
+    {
+      "name": "food_3_2.png",
+      "upstream_blob": "270cda48104737823b112d7cb3ffac03279eb634",
+      "sha256": "59b437ae3bfcabc549577885d362212474bcf752c74a4382eeb993fd4cfb912f"
+    },
+    {
+      "name": "stick.png",
+      "upstream_blob": "2029b26d540de5091f9ebbadf7506ea9a3948e82",
+      "sha256": "7809d5de46dadb17af1220ae00ff82d9aea7008d8f05fe114a4d0868da153bcd"
+    }
+  ],
+  "asset_license": "CC BY-NC-SA 4.0; projects/grilling/LICENSE-ASSETS",
+  "java_code_license": "BSD; data/java/LICENSE-CODE"
+}

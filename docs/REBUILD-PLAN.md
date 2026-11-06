@@ -215,7 +215,7 @@ scripts/
   - `*_native_plain`（42）、`*_java_three_alt`（22）：進食路線影子物品，動畫改由 player property 選擇 → **全部退役**，替代為對應基礎 ID。
   - `*_cuisine_q0–3`（12）：料理品質。Java `CuisineQualitySupport` 是 stack 上的 Cookery `Quality`，會以 `QualityUtils.modifyFoodProperties` 改變營養、以 `quality.getRatio()` 縮放效果時間、並加一行 tooltip；不是不同物品。Bedrock 的 `minecraft:food` 營養綁在 item ID，所以現行用 4 個 ID 表達 4 種營養。目標：基礎 ID＋item dynamic property 記品質＋lore 顯示，營養差額與效果時間在 `onConsume` 由腳本補正（以基礎營養為最低品質，腳本只加不減，避免原生結算後再扣）→ **退役** 12 個 ID（若擁有者在 D5 決定背包圖示必須不同則保留並改由產生器管理）。
   - `special_seasoning_r*_v*`（64）、`partial/pending_seasoning_f1–8`（16）：先在 P4 盤點 Java 背包圖示實際有幾種外觀，再決定保留數量；保留的改由產生器產出。
-- 不完整、自訂秘製串的**背包圖示**依三格食材變化：Bedrock 無法按 stack 動態合成背包圖示，這是平台限制。終態：通用秘製串圖示＋名稱／lore 列出三格食材；手持、放置、進食畫面則依 property 正確呈現。寫進 `docs/KNOWN-ISSUES.md`，不再用影子 ID 嘗試。
+- 不完整、自訂秘製串的**背包圖示**依三格食材變化：原生icon component只有固定鍵；目前新增每slot JSONUI顯示快取／Java原圖層路徑，保留原ID及雙手穿料。來源、實際原生資料及尚未觀察的client繪製只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不把固定icon setter的限制推成所有client路線均不可能，也不新增影子ID。
 
 ### 3.6 CI 與發布
 

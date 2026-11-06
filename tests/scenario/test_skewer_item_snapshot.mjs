@@ -602,18 +602,20 @@ const stageLine=cooked=>({rawtext:[{text:cooked?'§r§6':'§r§8'},{translate:st
 function stageRows(f,stack){return f.data.getItemRawLore(stack).filter(line=>line?.rawtext?.[1]?.translate?.startsWith('tooltip.kaleidoscope_grilling.secret_skewer.'));}
 test('Secret tooltip follows threading, cooking, cooling and reheating without changing ingredient order or variants',async()=>{
  const f=await nativeSecretFixture();
+ const gui=await f.load('secret_gui_core.js');
+ const labelsOf=stack=>f.data.getItemRawLore(stack).slice(0,4).map(line=>gui.secretGuiProgress(line)?.base??line);
  try{
   const ingredients=['minecraft:apple','minecraft:beef','minecraft:carrot'];f.p.off=f.item('minecraft:stick',1);
   for(const [index,id] of ingredients.entries()){
    const input=f.item(id,4);if(index===0)input.nameTag='Named apple';f.p.main=input;
    assert.equal(f.admit().cancel,true);f.flush();assert.equal(f.p.main.amount,3);
-   assert.deepEqual(f.data.getItemRawLore(f.p.off)[0].with,[String(index+1),'3']);
+   assert.deepEqual(gui.secretGuiProgress(f.data.getItemRawLore(f.p.off)[0]).base.with,[String(index+1),'3']);
   }
   const food=await f.load('food/food_state_adapter.js'),state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
   const variants=await f.load('secret_visual_state_core.js'),oil=await f.load('oil/cookery_oil_pot_adapter.js');
   const raw=f.p.off,rows=f.data.getItemProperty(raw,secretIngredientsKey),models=f.data.getItemProperty(raw,variants.SECRET_MODEL_VARIANTS_KEY);
   assert.deepEqual(stageRows(f,raw),[stageLine(false)]);
-  const labels=f.data.getItemRawLore(raw).slice(0,4);
+  const labels=labelsOf(raw);
   assert.deepEqual(labels[0].with,['3','3']);
   assert.deepEqual(labels.slice(1).map(line=>line.rawtext[0].with),[['1'],['2'],['3']]);
   assert.deepEqual(labels[1].rawtext[2],{text:'Named apple'});assert.deepEqual(JSON.parse(rows).map(row=>row.id),ingredients);
@@ -630,7 +632,7 @@ test('Secret tooltip follows threading, cooking, cooling and reheating without c
   assert.equal(cooked.amount,1);assert.equal(f.data.getItemProperty(cooked,secretCookedKey),true);
   assert.deepEqual(JSON.parse(f.data.getItemProperty(cooked,cookedIngredientsKey)).map(row=>row.id),['minecraft:apple','minecraft:cooked_beef','minecraft:carrot']);
   assert.equal(f.data.getItemProperty(cooked,secretIngredientsKey),rows);assert.equal(f.data.getItemProperty(cooked,variants.SECRET_MODEL_VARIANTS_KEY),models);
-  assert.deepEqual(f.data.getItemRawLore(cooked).slice(0,4),labels);assert.deepEqual(stageRows(f,cooked),[]);
+  assert.deepEqual(labelsOf(cooked),labels);assert.deepEqual(stageRows(f,cooked),[]);
   f.system.currentTick=food.hotUntil(cooked)+1;food.refreshHotLore(cooked);
   assert.equal(food.hotUntil(cooked),0);assert.deepEqual(stageRows(f,cooked),[stageLine(true)]);
   food.setHotFood(cooked,200);assert.deepEqual(stageRows(f,cooked),[]);

@@ -1,0 +1,239 @@
+{
+  "observed_at": "2026-11-06T00:45:44Z",
+  "source_commit": "d6d0ae93397d3ad6dc8d750497ac636067c0a124",
+  "engine_version": "1.26.60.6",
+  "modules": {
+    "@minecraft/server": "2.12.0-beta",
+    "@minecraft/server-ui": "2.2.0",
+    "@minecraft/server-gametest": "1.0.0-beta"
+  },
+  "experiments": {
+    "gametest": 1,
+    "upcoming_creator_features": 1,
+    "experiments_ever_used": 1,
+    "saved_with_toggled_experiments": 1
+  },
+  "diagnostic_identity_only": true,
+  "diagnostic_version": [
+    1,
+    0,
+    0
+  ],
+  "changed_exported_game_candidate_tested": false,
+  "production_files_sha256": {
+    "secret_gui_core.js": "81e6a7994c6bbc9921cde44805ffef0d8c3563b3a5a49bf1d6b4958df129172f",
+    "secret_gui_state.js": "15144c9bf3caafe9ecd1e10cb2ed61ceda226043f7c0e25e3eb16c485a895bc4",
+    "skewer/ingredient_state.js": "f52fc1752d38913400c418593d273b2dc2695d1fd8730a2a8913ff5226ecf898",
+    "hot_lore_runtime.js": "e61d05b3f4ed0b42e3bc55423eadfdcbc77fae61324bb8085cfb715d8c7d42be",
+    "food/food_state_adapter.js": "81e32f50537904b753f3454c009e49ff42dab06b19d395f9b20b09f428d9e00e",
+    "skewer_item_snapshot.js": "4c2e660dd0cfcc00ffefed5192f3021b9a85da5be10dbdd7346076e05818a439",
+    "core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3"
+  },
+  "direct_native_lore": {
+    "directSetLoreError": null,
+    "formatCodeUnits": 98,
+    "rawLore": [
+      {
+        "text": "§aForeign original lore"
+      },
+      {
+        "rawtext": [
+          {
+            "with": [
+              "3",
+              "3"
+            ],
+            "translate": "tooltip.kaleidoscope_grilling.skewer.progress"
+          },
+          {
+            "text": "§r§k§r§9§r§a§r§b§r§r§k§0§a§r§r§k§1§e§r§r§k§2§b§r§r§k§3§4§r§r§k§4§b§r§r§k§5§0§r§r§k§6§6§r§r§k§7§0§r"
+          }
+        ]
+      },
+      {
+        "rawtext": [
+          {
+            "text": "Original "
+          },
+          {
+            "translate": "item.apple.name"
+          }
+        ]
+      },
+      {
+        "text": "§r§0§r§1§r§2§d§9§8§0§0§f§7§8§3§d§a§3§2§3§8§2§r"
+      }
+    ]
+  },
+  "stages": [
+    {
+      "passed": true,
+      "reason": "complete",
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 541667328,
+      "phase": "write",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "actual setLore accepts the complete formatting cache",
+          "passed": true
+        },
+        {
+          "name": "actual getRawLore keeps the wrapped progress and complete decoded cache",
+          "passed": true
+        },
+        {
+          "name": "native readback is stable for needsSecretGuiCache",
+          "passed": true
+        },
+        {
+          "name": "a second refresh leaves native lore unchanged",
+          "passed": true
+        },
+        {
+          "name": "slot 0 emits a real native inventory change",
+          "passed": true
+        },
+        {
+          "name": "slot 0 has its own expected cache",
+          "passed": true
+        },
+        {
+          "name": "slot 0 preserves ID count name flags and all gameplay properties",
+          "passed": true
+        },
+        {
+          "name": "slot 0 preserves every original lore row including the private carrier",
+          "passed": true
+        },
+        {
+          "name": "slot 0 native cached stack no longer needs a refresh",
+          "passed": true
+        },
+        {
+          "name": "slot 1 emits a real native inventory change",
+          "passed": true
+        },
+        {
+          "name": "slot 1 has its own expected cache",
+          "passed": true
+        },
+        {
+          "name": "slot 1 preserves ID count name flags and all gameplay properties",
+          "passed": true
+        },
+        {
+          "name": "slot 1 preserves every original lore row including the private carrier",
+          "passed": true
+        },
+        {
+          "name": "slot 1 native cached stack no longer needs a refresh",
+          "passed": true
+        },
+        {
+          "name": "slot 2 emits a real native inventory change",
+          "passed": true
+        },
+        {
+          "name": "slot 2 has its own expected cache",
+          "passed": true
+        },
+        {
+          "name": "slot 2 preserves ID count name flags and all gameplay properties",
+          "passed": true
+        },
+        {
+          "name": "slot 2 preserves every original lore row including the private carrier",
+          "passed": true
+        },
+        {
+          "name": "slot 2 native cached stack no longer needs a refresh",
+          "passed": true
+        },
+        {
+          "name": "the registered queue stops rewriting unchanged cold stacks",
+          "passed": true
+        },
+        {
+          "name": "reordering two same-ID native inventory stacks preserves their independent data",
+          "passed": true
+        },
+        {
+          "name": "native chest transfer preserves exact cached item data",
+          "passed": true
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "players_after": 0
+    },
+    {
+      "passed": true,
+      "reason": "complete",
+      "normal_stop_requested": true,
+      "quit_correctly": true,
+      "returncode": 0,
+      "errors": [],
+      "memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0
+      },
+      "memory_peak": 541667328,
+      "phase": "reload",
+      "checks": [
+        {
+          "name": "isolated QA has no external Players",
+          "passed": true
+        },
+        {
+          "name": "same saved world keeps exact lore metadata name count and flags after restart",
+          "passed": true
+        },
+        {
+          "name": "reloaded slot 0 keeps a stable native cache",
+          "passed": true
+        },
+        {
+          "name": "reloaded slot 1 keeps a stable native cache",
+          "passed": true
+        },
+        {
+          "name": "reloaded slot 2 keeps a stable native cache",
+          "passed": true
+        },
+        {
+          "name": "all native Players disconnected",
+          "passed": true
+        }
+      ],
+      "players_after": 0
+    }
+  ],
+  "passed": true,
+  "temporary_world_removed": true,
+  "client": false,
+  "live_modified": false,
+  "scope": "Actual ItemStack lore cache and registered inventory queue, chest transfer and same diagnostic saved-world restart. The source runtime scripts are unchanged; QA manifests/entry/minimal content differ from the complete exported game candidate. No actual JSONUI slot binding, hook loading, rendered pixels or complete family result."
+}

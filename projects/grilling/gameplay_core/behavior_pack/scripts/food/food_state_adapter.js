@@ -9,6 +9,7 @@ import {metadataSignature} from '../skewer_item_snapshot.js';
 import {readPublicFood,writePublicFood,isFoodPayloadLine,FOOD_PAYLOAD_KEY,bucketHotUntil,publicFoodLoreRows} from '../host_api/food_api_core.js';
 import {cuisineQualityOfItem,cuisineQualityPayloadMatches,validCuisineQuality} from '../host_api/cuisine_quality_core.js';
 import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
+import {needsSecretGuiCache,refreshSecretGuiCache} from '../secret_gui_state.js';
 
 export const HOT_UNTIL_KEY=PersistedKey.HOT_UNTIL;
 function now(){try{return Number(world.getAbsoluteTime())||system.currentTick}catch{return system.currentTick}}
@@ -56,7 +57,7 @@ function withSecretStage(stack,lore,hot,reserved=0){
 export function needsColdSecretTooltip(stack){
  if(canonicalFoodId(stack?.typeId)!=='kaleidoscope_grilling:secret_skewer'||hotUntil(stack)>0)return false;
  const lore=getItemRawLore(stack);
- return metadataSignature(lore)!==metadataSignature(withSecretStage(stack,lore,false));
+ return metadataSignature(lore)!==metadataSignature(withSecretStage(stack,lore,false))||needsSecretGuiCache(stack);
 }
 function clearExpiredHeat(stack,base){
  const portable=readPublicFood(stack);if(portable.present&&!portable.valid)return stack;
@@ -85,7 +86,7 @@ function clearExpiredHeat(stack,base){
  }
  return stack;
 }
-export function refreshHotLore(stack){
+function refreshHeatLore(stack){
  if(!stack)return stack;
  const until=hotUntil(stack);
  if(until<=0){
@@ -109,6 +110,9 @@ export function refreshHotLore(stack){
   base.push(heatLore(sec));setItemLore(stack,base);
  }catch{}
  return stack;
+}
+export function refreshHotLore(stack){
+ return refreshSecretGuiCache(refreshHeatLore(stack));
 }
 export function setHotFood(stack,ticks){
  if(!stack||!Number.isFinite(ticks)||ticks<=0)return stack;

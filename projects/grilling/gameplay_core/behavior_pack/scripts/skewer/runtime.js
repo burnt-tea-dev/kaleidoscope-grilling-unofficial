@@ -1,5 +1,6 @@
 import {getItemLore,getItemProperty,getItemPropertyIds,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {foodFacts} from "../food_snapshot_core.js";
+import {readRowsFromKey,readSkewerRows,readEffectiveSkewerRows,isSecretCooked} from "./ingredient_state.js";
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {SECRET_COOKED_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_CREATOR_KEY,SECRET_ID,SKEWER_INGREDIENTS_KEY,UNFINISHED_ID,appendOutcome,canAppendConfigured,expectedSize,isConfiguredIngredient,isDisassemblableRaw,secretFood} from "./skewering_core.js";
 import {captureTwoHandIntent,primitiveStackProps,twoHandIntentStillCurrent} from "../core/interaction_intent_adapter.js";
@@ -72,23 +73,7 @@ function behaviorRemainder(behavior){
  return out;
 }
 
-function readRowsFromKey(stack,key){
- const raw=getItemProperty(stack,key);if(raw===undefined)return [];
- if(typeof raw!=='string')throw Error('Grilling: invalid ingredient data');
- const rows=JSON.parse(raw);
- if(!Array.isArray(rows)||rows.length>3||rows.some(x=>!x||typeof x.id!=='string'))throw Error('Grilling: invalid ingredient rows');
- return rows;
-}
-
-function readSkewerRows(stack){return readRowsFromKey(stack,SKEWER_INGREDIENTS_KEY)}
-
 function validSecretIngredientRows(rows){return Array.isArray(rows)&&rows.length===3&&rows.every(row=>row&&/^[a-z0-9_.-]+:[a-z0-9_./-]+$/.test(row.id)&&(!row.native||(row.native.version===1&&row.native.id===row.id)))}
-
-function isSecretCooked(stack){try{return canonicalFoodId(stack?.typeId)===SECRET_ID&&getItemProperty(stack,SECRET_COOKED_KEY)===true}catch{return false}}
-
-// Default item/plate semantics follow Cooked. A grill renderer may explicitly
-// request cached cooked rows at visual stage >=4 without finishing the item.
-function readEffectiveSkewerRows(stack,preferCookedSnapshot=isSecretCooked(stack)){if(preferCookedSnapshot){const cooked=readRowsFromKey(stack,SECRET_COOKED_INGREDIENTS_KEY);if(cooked.length)return cooked}return readSkewerRows(stack)}
 
 function rowLabel(row){return String(row.id??'').replace(/^.*:/,'').replaceAll('_',' ')}
 
