@@ -708,9 +708,9 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 ### 5.4 staging 伺服器
 
 - 在 BSM 建立 `luosen-staging`：同版本 BDS、不同 port、`allowlist` 只含擁有者與測試帳號。
-- 世界：從最新備份解壓。pack：與 luosen 相同組合（26 BP／24 RP，含私有修復支援包與 Immersive Eating），再換上候選版本。
+- 世界及pack：按當次家族部署設定，從一致停服備份建立同一個測試副本，使用當次完整候選組合與順序；數量／版本查該候選清單，不沿用§5.0的歷史26 BP／24 RP。
 - 主機記憶體吃緊（§5.0）：開 staging 前看 `free -h`；可用記憶體不足時先和擁有者確認是否暫停另一個 BDS。
-- 每次驗證流程：開服（看 content log 無錯誤）→ 進服 → 執行 §9.5 檢查 → 正常停服 → 再開服 → 抽查資料仍在。
+- 驗證流程依家族[UPDATE-WORKFLOW](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/main/family/UPDATE-WORKFLOW.md)：沿用相同輸入下有效結果，針對改動功能及受影響保存資料驗證，同一副本正常保存／重啟。§9.5聲畫觀察可選，不要求真人進服才能部署。
 - staging 世界用完可重置，**永遠不要把 staging 世界複製回 luosen**。
 
 ### 5.5 部署到 luosen
@@ -786,7 +786,7 @@ python3 tools/ops/server_inventory.py --server-root <BDS> > /tmp/luosen-inventor
 | 餐盤（1–5 串） | `SkewerPlateRenderer` | 同上模式：顯示實體 5 個 slot bone＋5 個 render controller；朝向用 block state 傳給實體 property | `plate_food_visual` 烘焙＋投影 |
 | 固定串手持 | Java item model（`models/item/fixed_skewers/*`） | 每個物品一個 attachable，geometry 用 Blockbench 從 Java item model 轉出（通常是 2D 精靈擠出）；第一／第三人稱位移在 attachable 動畫或 geometry 的 item_display_transforms 對齊 Java `display` | 多代 `aNNN_hand` 幾何 |
 | 秘製串手持（任意 3 食材） | `SecretSkewerItem`、`SkewerColorProvider` | 共用 attachable：3 個食材 bone，貼圖陣列（全部食材精靈拼成的 atlas 或陣列）以 player property `secret_main_0..2`／`secret_off_0..2` 索引；竹籤一個 bone | 1.8 MB `secret_held` 烘焙＋多段校準 |
-| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | 目前未有已證可用的逐stack圖示合成入口；通用圖示＋lore是降級，範圍與未完成處只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
+| 秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | G239已有逐slot JSONUI來源、Java原圖層及原生資料／保存結果；client binding／繪製尚未觀察，範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)。保留雙手穿料，不新增製作視窗 | 影子 ID 嘗試 |
 | 失敗串 | `FailedSkewerData` | 與秘製串相同 attachable，換貼圖陣列 | 7.3 MB `failure_skewer_held` |
 | 進食動畫 | `SkewerEatingAnimation`、`SkewerEatingPiece`、`EnderPearlEatingAnimation` | attachable 動畫＋動畫控制器，條件 `q.is_using_item`＋`q.property('…:eat_profile')`；一口一口的消失用 bone 可見度（`q.property('…:eat_piece')`），不是 150 個 bite 幾何 | `a22_bites` 150 幾何、影子 ID 換手 |
 | 調料瓶（放置） | `SeasoningBottleRenderer` | block geometry＋state（內容量階段），4 個瓶位用 permutation | 保留，整理 |
@@ -841,7 +841,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 情境 | `tests/scenario/` | 經真實 runtime＋fake world 的玩家流程，含故障注入 | 每域 3–8 | 每 PR |
 | 靜態包驗證 | `tools/validate.py` | §9.3 規則 | 1 支 | 每 PR |
 | GameTest | `tests/gametest/` | 在真 BDS 內放方塊、模擬互動、推進 tick、斷言 | 核心循環 10–20 | 每晚 |
-| 人工 | §9.5 清單 | 畫面、手感、聲音 | 每次部署 | staging |
+| 人工 | §9.5 場景參考 | 畫面、手感、聲音 | 按需選用，非部署前置 | staging；未觀察處照實保留 |
 
 ### 9.2 寫測試的規則
 
@@ -873,9 +873,9 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 | 純邏輯 `.mjs` | `test_core.mjs`、`test_a24_core.mjs`、`test_a25_core.mjs`、`test_plate_transactions.mjs`、`test_oil_transactions.mjs`、`test_rack_transactions.mjs` 等 | 移 `tests/legacy/`，P3 各域完成後刪除 |
 | 護欄 | `tools/guards/test_guards.py`、`tools/test_baseline_gate.py` | 保留 |
 
-### 9.5 staging 人工檢查清單（每次部署前）
+### 9.5 staging 聲畫觀察場景（按需選用）
 
-以表格記錄 ✔／✘／備註，附截圖：
+這些是可選場景，不是每次部署必跑的清單，也不等待真人驗收。觀察實際發生時，記錄候選、結果與截圖；功能／保存驗證仍按當次改動及既有流程執行：
 1. 取得食材（砧板、磨盤、作物收成、刀具掉落）。
 2. 穿串：固定配方 1 組、秘製串（3 種不同食材）、失敗串。
 3. 烤架：放置、點火、刷油、放 3 串、翻面、調味、取出熟串、燒焦、拆除（內容物掉落）、爆炸取消。
@@ -911,7 +911,7 @@ Java 參考：`https://github.com/breezeth-CN/KaleidoscopeGrilling/tree/9a1acdab
 
 | 風險 | 可能性 | 衝擊 | 對策 |
 | --- | --- | --- | --- |
-| 清理時誤刪 ID 導致 luosen 玩家物品消失 | 中 | 極高 | 存檔相容鎖＋base 比較＋退役流程＋普查＋停服備份 |
+| 清理時誤刪 ID 導致 luosen 玩家物品消失 | 中 | 極高 | 核對實際受影響資料，按需驗證保存讀寫／重啟，保留唯一一致停服備份及正常回滾流程；不恢復ID相容鎖或逐ID退役登錄 |
 | 重構改變行為而沒被發現 | 高 | 高 | 先寫 scenario 測試；staging 清單；GameTest |
 | AI 代理遇到困難又開始疊補丁 | 高 | 高 | 棘輪＋禁止模式＋AGENTS.md；PR 審查看棘輪輸出 |
 | 離線改寫工具破壞 LevelDB | 低 | 極高 | 只在副本執行；改寫前後普查；staging 驗證；備份可 15 分鐘回滾 |
