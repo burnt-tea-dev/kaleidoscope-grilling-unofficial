@@ -68,7 +68,7 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 
 正式main的[製作場景](../tests/scenario/test_cold_houttuynia_transaction.mjs)在舊來源重現三項：成品庫存寫入已套用後拋錯，舊give改丟地上而多一份；滿包drop已套用後拋錯，再spawn第二份；正常用完油轉空壺時，丟失本包可讀的附加DP。修復移除原cold owner的舊give，直接使用既有 `core/transaction.js` 與output planner；先回收可確認的成品才退款，無法確認drop時不補發或退款，沿用既有未確認交易阻擋重試的行為。最後三根釋出的主手格可接成品，滿包仍可掉落一份。油壺adapter在跨ID時保留本包可讀properties，仍清理原已知legacy油鍵；不讀取其他包私有資料，也不聲稱可複製不可見NBT。
 
-新五個真main場景與受影響的既有油交易／公開API共93項通過。這是API故障模型及來源行為證據，不是BDS自然故障、真人輸入或Java工作台操作已驗證；原生測試範圍見[窄測說明](../tests/native/cold-houttuynia/README.md)。
+G240的新五個真main場景與受影響的既有油交易／公開API共93項通過。這是API故障模型及來源行為證據，不是BDS自然故障。2026-11-06 BDS1.26.60.6／server2.12.0-beta的[29項原生觀察](../tests/native/cold-houttuynia/observed.json)確認真craft函式、native Player／ItemStack／庫存／副手／drop的三個健康流程，空壺保留本包DP／name／raw lore／flags，存chest同QA正常重啟後資料一致；兩階段normal stop／exit0、players／errors／OOM皆0，QA已清。這使用最小外部pot內容，並非真人shiftclick、作者pot component互動、Java工作台或完整新家族候選的驗證；精確範圍見[窄測說明](../tests/native/cold-houttuynia/README.md)。
 
 ## 進度獎勵與領取紀錄
 

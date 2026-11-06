@@ -23,3 +23,8 @@ API write/drop failures are injected only by the existing source scenario
 fixture. They are not claimed as natural BDS failures. This probe does not
 simulate a real shift-click input, execute the Java crafting grid, render a
 client or validate the full family. Current behavior is documented in PARITY.
+
+[Observed results](observed.json): 2026-11-06 write 25 and same-world reload 4
+checks passed. Both normal stops, players/errors/OOM zero; peak 408719360 bytes.
+The native-tested production scripts match the fixed source recorded in the
+result; manifests and the diagnostic entry/content differ from a game export.
