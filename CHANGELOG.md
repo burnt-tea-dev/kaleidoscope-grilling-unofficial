@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.243 原生物品圖示基底與秘製圖層成本
+
+- 修正共用item_renderer同名定義漏掉type、renderer及native bindings，導致一般背包、快捷列與bundle圖示連鎖失效。從固定Mojang參考保留原生基底；不修改物品或雙手操作。
+- 每slot八份always hover收為一份visible binding，以原生collection factory配置僅標記串建立秘製圖層；拆短重複的texture expression，Java原貼圖不變。生成資料回歸與既有庫存／穿料情境通過，尚無部署後client讀回或實測FPS，詳見PARITY。
+
 ## 2.8.242 平凡串的圖騰繞過
 
 - 原平凡串owner只將傷害cause由override改為selfDestruct；Float.MAX_VALUE、延後排程與既有無敵／重金屬入口不變。保留G240冷菜修復與G241餐盤姿勢，不重用舊草稿G240身份。
