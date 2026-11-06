@@ -1,4 +1,4 @@
-"""Exercise the packet admission expression from the canonical UI data.
+"""Exercise content admission and clearing from the canonical UI data.
 
 Only JSONUI's string subtraction/equality boundary is substituted here. This
 checks which factory inputs the declaration skips, not native construction
@@ -24,13 +24,19 @@ def ignored(expression, text):
 
 
 class EatingHudAdmission(unittest.TestCase):
-    def test_factory_skips_foreign_and_end_messages_but_keeps_real_food_packets(self):
-        packet = json.loads(UI.read_text())['kg_eating_packet']
-        expression = packet.get('ignored')
+    def test_factory_keeps_clearing_packets_and_skips_unrelated_image_subtrees(self):
+        data = json.loads(UI.read_text())
+        packet = data['kg_eating_packet']
+        self.assertNotIn('ignored', packet, 'Every message must still replace the previous factory child')
+        self.assertEqual(data['kg_eating_factory']['factory']['control_ids']['hud_actionbar_text'],
+                         'kg_eating_packet@kaleidoscope_grilling_hud.kg_eating_packet')
+        content = packet['controls'][0]['eating_content']
+        expression = content.get('ignored')
         self.assertIsInstance(expression, str, 'Skip unrelated packets before entering the image subtree')
         for text in ['', 'Ordinary actionbar', 'KT_HUD!test;', '!js.message', 'KG_HUD!END;']:
             with self.subTest(text=text):
                 self.assertTrue(ignored(expression, text))
+                self.assertFalse(ignored(packet['visible'], text), 'Clearing packets remain hidden')
         script = """
 import {javaEatingHudFrame,validEatingHudPacket} from './projects/grilling/gameplay_core/behavior_pack/scripts/java_eating_hud_core.js';
 const packets=[];

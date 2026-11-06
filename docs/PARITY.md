@@ -52,9 +52,9 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 
 ## 進食HUD的訊息入口與額外工作
 
-G142已讓食材圖像用原生ignored條件裁剪，但kg_eating_packet根節點只有visible；普通actionbar、Tavern訊息及END仍會進入這個工廠，再逐一判斷子圖層。G244把既有base圖層相同的ignored條件前移至packet根節點，使非G進食訊息與END在進入子樹前略過。原visible條件、有效G packet、圖像／填充選擇、觸控位置與0.2秒到期均保留，未改BP發送頻率或新增cache／timer。
+G142已讓食材圖像用原生ignored條件裁剪，但普通actionbar、Tavern訊息及END仍會進入工廠，再逐一判斷子圖層。G245把原base圖層已有的ignored條件放到單一eating_content群組，在進入圖像子樹前略過。每筆訊息仍保留輕量kg_eating_packet及原factory替換／0.2秒到期配置，讓END和普通訊息繼續清掉上一份HUD；不採根節點ignored的G244草稿，避免改動這個清場路徑。原visible條件、全部圖像／填充選擇與觸控位置不變，未改BP發送頻率或新增cache／timer。
 
-[入口情境](../tools/test_eating_hud_ui.py)直接讀canonical UI中的ignored式，並使用正式javaEatingHudFrame產生90／100tick的起始、25tick邊界與完成packet；修前因根層沒有ignored失敗，修後普通訊息／END略過而有效食用packet保留。測試僅代替JSONUI字串減法／比較邊界，不是native UI parser、建構耗時或FPS測量。此修復只限定普通訊息造成的額外工廠工作，不能用來宣稱全程掉幀／發熱已解。既有client位置、外露資料碼、延遲及所有食品／兩手畫面限制仍保留。
+[入口情境](../tools/test_eating_hud_ui.py)直接讀canonical UI中的ignored式，並使用正式javaEatingHudFrame產生90／100tick的起始、25tick邊界與完成packet；普通訊息／END略過圖層而有效食用packet保留，根packet保持可建立且清場訊息為隱藏。測試僅代替JSONUI字串減法／比較邊界，不是native UI parser、建構耗時或FPS測量。此修復只限定普通訊息造成的額外工廠工作，不能用來宣稱全程掉幀／發熱已解。既有client位置、外露資料碼、延遲及所有食品／兩手畫面限制仍保留。
 
 ## 秘製串背包圖示（GUI display）
 
