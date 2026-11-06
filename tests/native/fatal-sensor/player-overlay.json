@@ -1,0 +1,38 @@
+{
+  "description": {
+    "properties": {
+      "grilling_qa:sensor_event": {"type": "int", "range": [0, 2], "default": 0, "client_sync": false}
+    }
+  },
+  "component_groups": {
+    "grilling_qa:observe_any": {
+      "minecraft:damage_sensor": {
+        "triggers": [{"deals_damage": "yes", "on_damage": {"event": "grilling_qa:ack_any", "target": "self"}}]
+      }
+    },
+    "grilling_qa:observe_fatal": {
+      "minecraft:damage_sensor": {
+        "triggers": [{"deals_damage": "yes", "on_damage": {"filters": {"test": "has_damage", "value": "fatal"}, "event": "grilling_qa:ack_fatal", "target": "self"}}]
+      }
+    }
+  },
+  "events": {
+    "grilling_qa:observe_none": {
+      "remove": {"component_groups": ["grilling_qa:observe_any", "grilling_qa:observe_fatal"]},
+      "set_property": {"grilling_qa:sensor_event": 0}
+    },
+    "grilling_qa:observe_any": {
+      "remove": {"component_groups": ["grilling_qa:observe_fatal"]},
+      "add": {"component_groups": ["grilling_qa:observe_any"]},
+      "set_property": {"grilling_qa:sensor_event": 0}
+    },
+    "grilling_qa:observe_fatal": {
+      "remove": {"component_groups": ["grilling_qa:observe_any"]},
+      "add": {"component_groups": ["grilling_qa:observe_fatal"]},
+      "set_property": {"grilling_qa:sensor_event": 0}
+    },
+    "grilling_qa:ack_any": {"set_property": {"grilling_qa:sensor_event": 1}},
+    "grilling_qa:ack_fatal": {"set_property": {"grilling_qa:sensor_event": 2}},
+    "grilling_qa:reset_sensor": {"set_property": {"grilling_qa:sensor_event": 0}}
+  }
+}
