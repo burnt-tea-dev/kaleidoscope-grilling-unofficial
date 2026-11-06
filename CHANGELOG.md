@@ -1,5 +1,14 @@
 # 變更摘要
 
+## 2.8.245 普通提示略過進食HUD圖層
+
+- 把原base圖層已有的ignored條件放到單一內容群組，普通actionbar、其他addon訊息與END略過圖層。保留輕量packet、原factory替換及0.2秒到期，避免改變清場；全部原圖像與位置、有效G進食packet及BP發送皆保留。
+- 入口情境讀實際UI式並呼叫正式formatter，確認一般訊息／END隱藏、有效進食保留；僅模型邊界證據，未量測native UI建構或FPS，不把這項來源修正稱為全程卡頓已解。
+
+## 2.8.244 根節點略過草稿（未採用）
+
+- 已凍結但未發布／部署。為保留原factory每筆訊息替換舊packet的清場路徑，未採用根節點ignored；由G245改在內容群組略過。原身份與history保留，不重用版本。
+
 ## 2.8.243 原生物品圖示基底與秘製圖層成本
 
 - 修正共用item_renderer同名定義漏掉type、renderer及native bindings，導致一般背包、快捷列與bundle圖示連鎖失效。從固定Mojang參考保留原生基底；不修改物品或雙手操作。
