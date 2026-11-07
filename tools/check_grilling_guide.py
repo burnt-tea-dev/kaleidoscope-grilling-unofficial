@@ -144,6 +144,9 @@ def check_roasted_wing_flow(s,payload):
     match=re.search(r"export const REVISION = '([^']+)';",publisher)
     require(match and match[1]==s['revision'],'Catalog/publisher revision mismatch')
     require(payload['version']==s['version'],'Catalog/payload version mismatch')
+    for entry in s['entries']:
+        for loc in LOCALES:
+            require(isinstance(payload['names'][loc].get(entry['id']),str) and payload['names'][loc][entry['id']], 'Guide entry name missing '+entry['id']+' '+loc)
     recipe=load(GAME/'recipes/roasted_chicken_wing.json')['minecraft:recipe_furnace']
     labels={'furnace':'Furnace','smoker':'Smoker','campfire':'Campfire','soul_campfire':'Soul Campfire'}
     require(set(recipe['tags'])==set(labels),'Roasted wing station set changed')

@@ -109,13 +109,17 @@ def check(root=ROOT):
         check_pack_structure(folder, manifest, pack, baseline['version'])
         assert manifest['header']['uuid'] == baseline['packs'][pack]['uuid']
         assert manifest['header']['version'] == baseline['version'], 'bridge. export changed the locked version'
-        assert manifest['header']['name'] == 'Kaleidoscope Grilling ' + pack, 'stale version-labelled pack name'
+        assert manifest['header']['name'] == 'pack.name', 'pack name must use the localization key'
+        assert manifest['header']['description'] == 'pack.description', 'pack description must use the localization key'
         own_uuids = {row['uuid'] for row in baseline['packs'].values()}
         host_dependencies = [dep for dep in baseline['packs'][pack]['dependencies']
                              if 'uuid' in dep and dep['uuid'] not in own_uuids]
         assert len(host_dependencies) == 1, 'Grilling requires one reviewed Cookery pack per side'
         cookery = '.'.join(map(str, host_dependencies[0]['version']))
-        assert 'Cookery '+cookery in manifest['header']['description'], 'stale displayed Cookery requirement'
+        for locale in ('en_US', 'zh_CN', 'zh_TW'):
+            lang = dict(line.split('=', 1) for line in (folder / 'texts' / f'{locale}.lang').read_text(encoding='utf-8-sig').splitlines() if '=' in line and not line.startswith('#'))
+            assert lang.get('pack.name', '').strip(), f'{pack} {locale} pack.name missing'
+            assert 'Cookery '+cookery in lang.get('pack.description', ''), 'stale displayed Cookery requirement'
         assert all(m['version'] == baseline['version'] for m in manifest['modules'])
         assert tuple(map(int, config['targetVersion'].split('.'))) >= tuple(manifest['header']['min_engine_version'])
         json_count = 0

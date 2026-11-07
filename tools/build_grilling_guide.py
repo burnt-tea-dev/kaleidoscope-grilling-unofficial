@@ -71,16 +71,20 @@ def validate_source(s):
     return counts
 
 def build_payload(s):
+    names={l:dict(s['names'][l]) for l in LOCALES}
     out={'api':1,'id':s['module_id'],'version':s['version'],'order':s['order'],'icon':s['icon'],
          'titleKey':'title','introKey':'intro','allKey':'all','selectKey':'select','backKey':'back','languageNoteKey':'language_note',
          'showAll':False,'showIds':False,'showKinds':False,'showCategoryOnEntry':False,
-         'categories':[],'entries':[],'names':s['names'],'text':{l:dict(s['ui'][l]) for l in LOCALES}}
+         'categories':[],'entries':[],'names':names,'text':{l:dict(s['ui'][l]) for l in LOCALES}}
     for c in s['categories']:
         row={'id':c['id'],'labelKey':c['id'],'fallback':c['title']['en_US'],'icon':c['icon']}
         if c.get('parent'):row['parent']=c['parent']
         out['categories'].append(row)
         for l in LOCALES:out['text'][l][c['id']]=c['title'][l]
     for e in s['entries']:
+        for l in LOCALES:
+            names[l].setdefault(e['id'],e['title'][l])
+            if not isinstance(names[l][e['id']],str) or not names[l][e['id']].strip():raise ValueError('Entry name missing '+e['id'])
         row={k:e[k] for k in ('id','icon','kinds','categories')}
         row['category']=e['categories'][0]
         row['mechanics']=e['body']['zh_TW'];row['mechanicsByLocale']=e['body']
