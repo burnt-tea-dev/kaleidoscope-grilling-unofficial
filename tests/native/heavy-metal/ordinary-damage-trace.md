@@ -12,6 +12,14 @@ Keep `bd55874c1984bfc0070b78164a9fa6a86226814d` as the original food fixture
 reference and `00712e790e3f78834e4089749878eaca8beaf4e2` as the runtime source.
 Use only the shared owner's new small G diagnostic copy, never canonical
 scripts, LIVE, the retired policy checkout or another line's stopped world.
+The installer rejects Git checkouts, including other linked worktrees, before
+any mutation. It checks the supplied path and all resolved write destinations,
+so a QA-looking symlink cannot lead into a source checkout. The normal QA runs
+location is outside Git and remains supported. This closes the 0feb ingress
+bug; it does not change TRACED, the helper/probe or successful installation
+output. An already-running 0feb trial on a correct QA copy remains valid and
+must not be replaced or replayed for this tool correction.
+
 Before BDS starts, on the ordinary copied scripts directory run:
 
 ```sh
@@ -105,3 +113,16 @@ The previous r2 did not capture this return/exception and is not retrospectively
 assigned any of these API outcomes. This no-Heavy case cannot prove Heavy
 interception/payment failure. No root receipt, new human approval, full backup,
 old CI replay or extra native matrix is required for SOURCE READY delivery.
+
+## Installer boundary regression
+
+`test_ordinary_damage_trace_install.py` executes the real installer against a
+separate temporary linked Git worktree and an outside path resolving into it.
+The final write boundary is replaced with a recorder that stops before writing;
+rejection must happen before that boundary is reached. A normal non-Git copy
+must still install, with every output byte and installation report equal to the
+fixed 0feb installer. This changes no native trace evidence or gameplay check.
+
+```sh
+python3 tests/native/heavy-metal/test_ordinary_damage_trace_install.py
+```

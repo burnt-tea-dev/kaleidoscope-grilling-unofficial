@@ -7,6 +7,7 @@ real module implementations against the same Minecraft API model.
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -29,7 +30,26 @@ def instrument_source(source):
     return "import {recordOrdinaryDamageTrace} from '../ordinary_damage_trace.js';\n"+source.replace(ORIGINAL, TRACED, 1)
 
 
+def reject_git_checkouts(paths):
+    checked = set()
+    for path in paths:
+        # Check both path spellings and every resolved destination. Walking
+        # lexical parents also catches a checkout directory symlinked outward.
+        for view in (path.absolute(), path.resolve()):
+            directory = view if view.is_dir() else view.parent
+            for parent in (directory, *directory.parents):
+                if parent in checked or not parent.is_dir():
+                    continue
+                checked.add(parent)
+                result = subprocess.run(['git','-C',str(parent),'rev-parse','--git-dir'],
+                                        stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+                if result.returncode == 0:
+                    raise ValueError('Git checkout target is not a diagnostic copy: '+str(parent))
+
+
 def install(scripts):
+    files = ['ordinary_network_food_probe.js','ordinary_damage_trace.js','ordinary_damage_trace_probe.js']
+    reject_git_checkouts([scripts, scripts/'effect/runtime.js', *(scripts/name for name in files)])
     scripts = scripts.resolve()
     if scripts == SCRIPTS.resolve() or SCRIPTS.resolve() in scripts.parents:
         raise ValueError('Use a stopped diagnostic copy, never canonical scripts')
@@ -39,8 +59,7 @@ def install(scripts):
     original = (SCRIPTS/'effect/runtime.js').read_bytes()
     if target.read_bytes() != original:
         raise ValueError('Diagnostic effect runtime differs from the fixed original')
-    additions = {name:(FIXTURES/name).read_bytes() for name in [
-        'ordinary_network_food_probe.js','ordinary_damage_trace.js','ordinary_damage_trace_probe.js']}
+    additions = {name:(FIXTURES/name).read_bytes() for name in files}
     for name, data in additions.items():
         p = scripts/name
         if p.exists() and p.read_bytes() != data:
