@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "status": "SOURCE_READY_NOT_RUN",
+  "runtime_base": "00712e790e3f78834e4089749878eaca8beaf4e2",
+  "runtime_changes": false,
+  "entry": "scripts/entity_kill_probe.js",
+  "copy_beside_main": ["entity_kill_probe.js", "entity_kill_gate.js"],
+  "engine": "BDS 1.26.60.6",
+  "server_api": "2.12.0-beta",
+  "roles": {"plain": "qaNetPlain", "conditional_heavy": "qaNetHeavy"},
+  "driver": {
+    "source": "root r16 frozen v11; unchanged ten files and helper",
+    "actions": true,
+    "share_resource_packs": true,
+    "requested_actions": [],
+    "purpose_of_actions": "initial_loading_end and stationary frames only",
+    "selected_slot_wire_readback_gate": false
+  },
+  "event": "grilling_qa:entity_kill_capability",
+  "markers": {
+    "hook_ready": "GRILLING_QA_ENTITY_KILL_READY",
+    "call": "GRILLING_QA_ENTITY_KILL_CALL",
+    "plain_gate": "GRILLING_QA_ENTITY_KILL_GATE",
+    "cases_done": "GRILLING_QA_NETWORK_CASES_DONE",
+    "final": "GRILLING_QA_RESULT"
+  },
+  "initial_conditions": {
+    "mode": "Creative; preconfigured, never changed",
+    "health": 10,
+    "alive_before_initialization": true,
+    "mainhand": null,
+    "offhand": "minecraft:totem_of_undying",
+    "offhand_amount": 1,
+    "plain_custom_effects": {},
+    "native_effects": [],
+    "claim": null,
+    "conditional_heavy": {"effect": "heavy_metal", "ticks": 1200, "amplifier": 0},
+    "gamerules": {"naturalRegeneration": false, "keepInventory": true, "doMobSpawning": false}
+  },
+  "no_input_prepare_ticks": 2,
+  "after_call_settle_ticks": 8,
+  "disconnect_wait_max_ticks": 600,
+  "heavy_admission": "Alive Plain input AND same-actor native death AND positive beforeHurt AND preserved native offhand totem without TotemOfUndying heal. Otherwise stop, Heavy NOT_RUN.",
+  "heavy_success": "Native positive beforeHurt cancelled at observer, original Heavy cost and matching persistent claim already present, same actor settles at 1HP with paid state, no native death or normal respawn and untouched totem.",
+  "playersAfter": "world.getAllPlayers().length after CASES_DONE and normal driver SIGTERM/leave; must be 0 before final RESULT succeeds",
+  "scope": "Independent Entity.kill capability only, not food_finish or an Ordinary repair. No runtime/API wrapper, manual cancellation, alternate cause/command, use/consume, retry or resurrection. Negative results apply only to this engine/API/Player/context."
+}

@@ -276,6 +276,10 @@ G238舊probe的selfDestruct只給100傷害，只有override才用Float.MAX_VALUE
 
 這個selected Script.Dimension.runCommand／selector／Creative SimulatedPlayer／既有G Player配置未建立成功kill與合格可取消hurt／Heavy付款救援，故不採為替代入口、不發布空G243。這不證明Entity.kill、其他origin、所有命令／cause或未來版本均失敗；本輪依限定問題做一次即停。創造模式食用差距仍未修，已確認的G242 Survival玩法保留。
 
+#### 獨立Entity.kill能力入口（2026-11-07，SOURCE READY／未測）
+
+前述命令kill與後續network food／0feb原call trace各留原scope，不能代替Entity.kill結果。選定BDS1.26.60.6對應的官方server2.12beta型別宣告kill(): boolean，但true也可能含已死亡實體；沒有Creative／可取消beforeHurt契約，entityRemove before event也沒有cancel。[固定QA來源與事件契約](../tests/native/heavy-metal/entity-kill.md)只準備一個不同接口問題：完整main一次，原Creative真network Player qaNetPlain在alive／HP10／無Heavy與claim、空主手／原生副手totem下只調一次player.kill，記原return或exception及8tick hurt／heal／death／HP／totem／effects／claim。只有Plain真death、正值beforeHurt且totem未耗才允許qaNetHeavy的一次同API；須正式handler真取消／付款及1HP無death／respawn才算保命。沒有Native結果、不採為Ordinary修法，不升包／候選，不重播舊觀察；陰性只限該接口／引擎／Player／context。
+
 #### 被動原生fatal sensor新路徑（2026-11-06，未採用）
 
 官方[has_damage:fatal](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/filters/has_damage?view=minecraft-bedrock-stable)及[damage_sensor](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/entitycomponents/minecraftcomponent_damage_sensor?view=minecraft-bedrock-stable)提供另一個待驗入口，並未承諾Player或護盾／圖騰時序。[新窄對照](../tests/native/fatal-sensor/README.md)在BDS1.26.60.6／server2.12beta以真Survival Player、固定Mojang原Player及QA-only被動overlay執行，無Heavy handler或傷害取消。28個控制條件成立，無條件sensor、JSON property及data-driven event均有正向witness，因此不是沒有接到原生事件。

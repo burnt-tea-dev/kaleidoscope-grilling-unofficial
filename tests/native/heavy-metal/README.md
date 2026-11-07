@@ -1,5 +1,11 @@
 # Isolated Heavy Metal payment probe
 
+The independent [Entity.kill capability fixture](entity-kill.md) is SOURCE
+READY only for original G247 Creative network Players. It imports full main
+once, calls Plain's direct API once, and permits Heavy only after native death,
+positive beforeHurt and an untouched totem. It does not reopen command kill or
+change the previous probes' scope. The shared owner alone schedules its BDS QA.
+
 Never install this diagnostic on a player server. It changes a small flat-world
 area and creates one native pig. It imports the unchanged production Heavy Metal
 handler, effect writer and their dependencies under a diagnostic pack identity.
