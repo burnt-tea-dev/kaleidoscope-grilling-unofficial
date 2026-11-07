@@ -1,5 +1,11 @@
 # 變更摘要
 
+## 2.8.248 包資訊多語與指南名稱填充
+
+- manifest name/description 改用 `pack.name`/`pack.description` 多語鍵；BP 補上缺失的 `texts/*.lang` 與 `languages.json`。
+- 指南 payload 的 `names` 欄位從 entry title 自動填充缺項，check 與 test 驗證完整覆蓋三語。
+- bridge_project.py 更新斷言接受多語鍵並驗證 lang 檔；版本號 2.8.247 → 2.8.248 同步 baseline、manifests、configs。
+
 ## 2.8.245 普通提示略過進食HUD圖層
 
 - 把原base圖層已有的ignored條件放到單一內容群組，普通actionbar、其他addon訊息與END略過圖層。保留輕量packet、原factory替換及0.2秒到期，避免改變清場；全部原圖像與位置、有效G進食packet及BP發送皆保留。
