@@ -213,12 +213,14 @@ function sting(entity){
 
 function settleLeafDrops(block,plan){
  if(!block||block.typeId!==PEPPER_LEAVES_ID||!plantMutationAllowed(block))return false;
+ const tileDrops=world.gameRules.doTileDrops;
+ if(typeof tileDrops!=='boolean')throw Error('Pepper leaf drop game rule unavailable');
  const before=block.permutation,steps=[{
   apply(){block.setType('minecraft:air');return block.typeId==='minecraft:air';},
   rollback(){block.setPermutation(before);return samePlantPermutation(block.permutation,before);}
  }];
  for(const [id,count] of [[PEPPER_LEAVES_ID,plan.leaves],[PEPPER_SAPLING_ID,plan.saplings],['minecraft:stick',plan.sticks],[SICHUAN_PEPPER_ID,plan.pepper]]){
-  if(!count)continue;
+  if(!tileDrops||!count)continue;
   let entity,attempted=false,acknowledged=false;
   steps.push({
    apply(){
