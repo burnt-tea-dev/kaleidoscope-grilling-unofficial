@@ -189,6 +189,15 @@ export function createFixture(options = {}) {
     setCanPlaceOn(value) { this.canPlaceOn = [...value]; }
     getComponent(id) {
       id = id.includes(':') ? id : `minecraft:${id}`;
+      if (id === 'minecraft:durability' && this.components[id]) {
+        const component = this.components[id];
+        // Native methods are not item data and must not enter cloned snapshots.
+        Object.defineProperty(component, 'getDamageChance', {configurable: true, value(level = 0) {
+          if (!Number.isInteger(level) || level < 0 || level > 3) throw Error('Invalid Unbreaking level');
+          return 100 / (level + 1);
+        }});
+        return component;
+      }
       if (id === 'minecraft:enchantable') return {
         getEnchantments: () => copy(this._enchantments),
         getEnchantment: type => copy(this._enchantments.find(e => e.type.id === (type.id ?? type))),

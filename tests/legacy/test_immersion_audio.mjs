@@ -106,10 +106,11 @@ async function interactionFixture(){
  f.use=()=>{f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});f.flush()};
  return f;
 }
-test('accepted ignition and extinguish use Java volume and two independent extinguish pitch draws; redundant actions are silent',async()=>{
+test('ignition respects tool durability and Unbreaking while preserving Java sounds and redundant-use silence',async()=>{
  const f=await interactionFixture(),random=Math.random;
  try{
   Math.random=()=>.25;f.p.main=f.item('minecraft:flint_and_steel');f.use();
+  assert.equal(f.p.main.getComponent('minecraft:durability').damage,1);
   const ignition=f.sounds.filter(s=>s.sound==='fire.ignite');assert.equal(ignition.length,1);
   assert.deepEqual(ignition[0].options,{volume:1,pitch:.9});assert.deepEqual(ignition[0].location,{x:-1.5,y:80.5,z:.5});
   f.use();assert.equal(f.sounds.filter(s=>s.sound==='fire.ignite').length,1);
@@ -118,6 +119,19 @@ test('accepted ignition and extinguish use Java volume and two independent extin
   const fizz=f.sounds.filter(s=>s.sound==='random.fizz');assert.equal(fizz.length,1);
   assert.deepEqual(fizz[0].options,{volume:.5,pitch:3});assert.deepEqual(fizz[0].location,ignition[0].location);
   f.use();assert.equal(f.sounds.filter(s=>s.sound==='random.fizz').length,1);
+  const tool=f.item('minecraft:flint_and_steel',1,{nameTag:'Lasting spark',enchantments:[{id:'unbreaking',level:3}]}),durability=tool.getComponent('minecraft:durability');
+  durability.damage=durability.maxDurability-1;
+  f.p.main=tool;Math.random=()=>.75;f.use();
+  assert.equal(f.p.main?.typeId,'minecraft:flint_and_steel','Unbreaking can preserve the last durability point');
+  assert.equal(f.p.main.nameTag,'Lasting spark');
+  assert.equal(f.p.main.getComponent('minecraft:durability').damage,durability.damage);
+  assert.equal(f.sounds.filter(s=>s.sound==='fire.ignite').length,2);
+  const saved=f.p.main;
+  f.p.main=f.item('minecraft:iron_shovel');f.use();
+  f.p.main=saved;Math.random=()=>0;f.use();
+  assert.equal(f.p.main,undefined,'an accepted damage roll still breaks at the normal limit');
+  assert.equal(f.sounds.filter(s=>s.sound==='random.break').length,1);
+  assert.equal(f.sounds.filter(s=>s.sound==='fire.ignite').length,3);
  }finally{Math.random=random;f.dispose()}
 });
 test('thread, disassemble and grill insert emit exactly one action-specific category after successful mutation',async()=>{
