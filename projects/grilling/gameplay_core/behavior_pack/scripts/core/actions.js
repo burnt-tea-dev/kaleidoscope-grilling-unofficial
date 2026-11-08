@@ -27,8 +27,8 @@ function planDamagedHand(player,hand,amount=1){
   const level=stack.getComponent('minecraft:enchantable')?.getEnchantment('unbreaking')?.level??0;
   const chance=durability.getDamageChance(level)/100;
   if(!Number.isFinite(chance)||chance<0||chance>1)return {ok:false,reason:'durability_error'};
-  // Player ignition uses Java hurtAndBreak, including Unbreaking. Prepare its
-  // accepted damage before committing either the tool or the grill state.
+  // Player tool use follows Java hurtAndBreak, including Unbreaking. Prepare
+  // accepted damage before committing either the tool or its target state.
   let damage=0;for(let i=0;i<Math.max(0,Math.floor(Number(amount)||0));i++)if(chance>=1||Math.random()<chance)damage++;
   if(damage===0)return {ok:true,before,next:before.clone(),mutate:false,broken:false};
   const plan=nextDurability(durability.damage,durability.maxDurability,damage);

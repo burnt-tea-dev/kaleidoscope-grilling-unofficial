@@ -3,7 +3,9 @@ import {onBeforeBlockBreak} from '../core/events.js';
 import {every,onlinePlayers} from '../core/scheduler.js';
 import {PepperContactWork} from '../pepper_contact_work.js';
 import {world,system,ItemStack,BlockPermutation} from '@minecraft/server';
-import {getMainHand,getOffHand,setHand,isCreative} from '../core/player_io.js';
+import {getMainHand,getOffHand,captureWritableHand,isCreative} from '../core/player_io.js';
+import {planDamagedHand} from '../core/actions.js';
+import {ownedItemStep} from '../core/transaction.js';
 import {registerPlantFertilizer,interactWithPlantFertilizer,plantMutationAllowed,commitPlantSteps,samePlantPermutation} from '../plant_fertilizer.js';
 import {
  PEPPER_LOG_ID,PEPPER_LEAVES_ID,PEPPER_SAPLING_ID,SICHUAN_PEPPER_ID,PEPPER_WORLDGEN_SEED_ID,
@@ -101,15 +103,6 @@ function heldAxe(player){
  const m=getMainHand(player);if(isAxe(m))return {hand:'main',stack:m};
  const o=getOffHand(player);if(isAxe(o))return {hand:'off',stack:o};
  return null;
-}
-function damageTool(player,entry){
- if(!entry||isCreative(player))return;
- try{
-  const stack=entry.stack,d=stack.getComponent('minecraft:durability');if(!d)return;
-  const next=(Number(d.damage)||0)+1;
-  if(next>=Number(d.maxDurability||0))setHand(player,entry.hand,undefined);
-  else{d.damage=next;setHand(player,entry.hand,stack)}
- }catch{}
 }
 function enchantLevel(stack,id){
  try{return Math.max(0,Number(stack?.getComponent('minecraft:enchantable')?.getEnchantment(id)?.level??0)||0)}catch{return 0}
@@ -305,11 +298,21 @@ system.beforeEvents.startup.subscribe(init=>{
  init.blockComponentRegistry.registerCustomComponent(LOG_COMPONENT_ID,{
   onPlayerInteract(event){
    try{
-    const player=event.player,block=event.block;if(!player)return;
+    const player=event.player,block=event.block;if(!player||block.typeId!==PEPPER_LOG_ID||!plantMutationAllowed(block))return;
     const axe=heldAxe(player);if(!axe)return;
-    const axis=pepperLogAxis(state(block,'minecraft:block_face','up'));
-    block.setPermutation(BlockPermutation.resolve('minecraft:stripped_oak_log',{pillar_axis:axis}));
-    damageTool(player,axe);
+    const tool=planDamagedHand(player,axe.hand);if(!tool.ok)return;
+    const before=block.permutation,axis=pepperLogAxis(before.getState('minecraft:block_face'));
+    const stripped=createOwnedPlantWrite({
+     read:()=>block.permutation,write:value=>block.setPermutation(value),same:samePlantPermutation,
+     before,after:BlockPermutation.resolve('minecraft:stripped_oak_log',{pillar_axis:axis})
+    });
+    let debit;
+    if(tool.mutate){
+     const held=captureWritableHand(player,axe.hand);
+     debit=ownedItemStep({read:held.read,write:held.write,before:tool.before,after:tool.next});
+    }
+    if(!commitPlantSteps(block,plantFertilizerSteps(debit,[stripped])))return;
+    if(tool.broken)try{player.playSound('random.break')}catch{}
     block.dimension.playSound('dig.wood',block.location,{volume:.8,pitch:1.1});
    }catch{}
   }
