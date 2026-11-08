@@ -193,16 +193,26 @@ await scenario('placed persistent leaves start unripe and connected natural leav
  assert.equal(natural.permutation.getState(persistentState),false);
 });
 
-await scenario('tile drops disabled still clears harvested fruit; creative empty hand also harvests normally',f=>{
+await scenario('tile drops controls harvest, player breaking and natural decay without preventing leaf removal',f=>{
  const player=f.player(),block=leaf(f);
  f.world.gameRules.doTileDrops=false;
  randomAt(0,()=>interact(f,block,player));
  expectDrops(f,[]);assert.equal(block.permutation.getState(fruitState),false);
  assert.equal(f.sounds.length,1);
+ const broken=leaf(f,{x:3}),decayed=leaf(f,{x:6});
+ assert.equal(breakLeaf(f,broken,player).cancel,true);
+ randomAt(0,()=>f.tick());
+ randomAt(0,()=>f.component(leafComponent,'onRandomTick',{block:decayed}));
+ assert.equal(broken.typeId,'minecraft:air');assert.equal(decayed.typeId,'minecraft:air');
+ expectDrops(f,[]);
  f.world.gameRules.doTileDrops=true;
  const creative=f.player({gameMode:f.GameMode.Creative});
  randomAt(.5,()=>interact(f,leaf(f,{x:1}),creative));
  expectDrops(f,[[pepperLoot,harvestMax]]);
+ const enabled=leaf(f,{x:6});
+ randomAt(0,()=>f.component(leafComponent,'onRandomTick',{block:enabled}));
+ assert.equal(enabled.typeId,'minecraft:air');
+ expectDrops(f,[[pepperLoot,harvestMax],[saplingLoot,1],[stickLoot,1],[pepperLoot,1]]);
 });
 
 await scenario('breaking dispatch is deferred, honors prior cancellation, and settles duplicate events once',f=>{
