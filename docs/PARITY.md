@@ -282,13 +282,14 @@ G238舊probe的selfDestruct只給100傷害，只有override才用Float.MAX_VALUE
 
 本場正常stop／exit0、players／errors／OOM皆0，QA已清／時段已還；沒有重啟、保存格式變更或runtime採用。G240及原圖騰優先修復不變，部分盾缺口仍在。此結果只限列明的引擎／Player定義／被動component與entityAttack cases，不推成所有Player或版本均不支持。
 
-
 ### 裝滿料理架重新放置
 
-G248／PR #382 修正點支撐方塊時未送達既有 rack owner 的路由。2026-11-06 隔離原生觀察固定來源 head `99674927ab6d24f1586292baef9e1ae0d060faf8`、tree `23094ddc954374feca5fa7354b66241c3f29e3e1`。後續文件更新不改 runtime 或 G248 身分。六面、拆回、附魔與失敗情境的既有 API 測試仍是另一層證據。
+PR #382 的原 G248 草稿修正點支撐方塊時未送達既有 rack owner 的路由。2026-11-06 隔離原生觀察固定來源 head `99674927ab6d24f1586292baef9e1ae0d060faf8`、tree `23094ddc954374feca5fa7354b66241c3f29e3e1`。當時後續文件提交沒有修改該 runtime 或草稿身份。六面、拆回、附魔與失敗情境的既有 API 測試仍是另一層證據。
 
 引擎為[官方 BDS 1.26.60.6](https://www.minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-1.26.60.6.zip)，Build 52886190。ZIP SHA-256 `cbbd5414fa6a310353ed1fc76a0ba691c3fd1ea852fd04bb76764ee4c1afdb98`；binary SHA-256 `ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad`。全新雲端測試世界僅綁 loopback，保留 online-mode 與空 allowlist；未使用客戶端、LIVE 或使用者電腦。診斷 BP/RP 使用獨立且兩次啟動相同的身分，載入原 rack runtime 與其依賴，不載 production main 或 Cookery；3822 個沿用檔逐一核對原來源，另有 4 個明列的診斷 manifest／entry／probe 檔，安裝後 3826 檔雜湊再次相符。
 
 真實 Survival SimulatedPlayer 以 canonical codec 製作的 packed rack fixture 點石頭向上面；本次沒有原生拆架生成這件 fixture。後置 owner 取消時觀察到 native before-event、下一 tick cancel 仍為 true，沒有放置事件／方塊、物品扣除或 storage ledger。允許時觀察到一次 native before-event 與一次 playerPlaceBlock，原 block_placer 扣除一件並恢復 slots 5／8 的兩件 flint_and_steel、占用篩選及空鎖定 slot 6；名稱、raw lore、字串／數值／布林／向量 DP、耐久與冒險模式限制保留。沒有直接 setblock 架子或呼叫其放置 handler。正常 stop 後重啟同一個磁碟世界，透過非創建讀取確認 payload、filters、方塊狀態及持久 owner token 相同。兩階段各自通過，兩次退出皆為 0、stop 前皆為 0 玩家，無內容／腳本 error。
 
 第一／第二階段 log SHA-256 分別為 `96c6a2546c044fa656dee0ce3b6c1fd0fdd170ee13c9cf3ae85e9f41b99998d9`、`4c51b5c72bf5de2adea88d6049285db8aa73e6e6e1e208e8aec6a0a3cef34993`。這是 rack 域的原生放置與保存結果，不是整包 admission、舊玩家存檔遷移或視覺驗收。沒有單獨計數取消後的 orphan helper，也未以另一架子替換已取消的目標；不把它擴稱所有競爭情境的證明。六面中只有向上面進行原生觀察，調味品與附魔的原生案例、其他 addon 仲裁、完整 main／家族與客戶端仍不在本次範圍。
+
+2026-11-08 與 main `d2883392071ef23fc10c8d165df9ec7403025a75` 的包資訊／指南語系來源合流，料理架 runtime 與上述已測 head 逐位元組相同；因兩側都曾使用 G248，合流採用全新 G249 配對身份。原草稿 G248 history 雜湊與提交保留，G249 另行凍結來源；不把舊窄原生結果重標為 G249 全包／完整 main、家族、客戶端或 LIVE 驗收。
