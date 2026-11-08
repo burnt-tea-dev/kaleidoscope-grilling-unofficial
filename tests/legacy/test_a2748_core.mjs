@@ -42,15 +42,6 @@ t('harvest gives one or two pepper',()=>{
  assert.equal(harvestedPepperCount(.5),2);
 });
 
-t('log face maps to vanilla pillar axis for stripping',()=>{
- assert.equal(pepperLogAxis('up'),'y');
- assert.equal(pepperLogAxis('down'),'y');
- assert.equal(pepperLogAxis('east'),'x');
- assert.equal(pepperLogAxis('west'),'x');
- assert.equal(pepperLogAxis('north'),'z');
- assert.equal(pepperLogAxis('south'),'z');
-});
-
 t('leaf break plan follows Java shears/silk and fortune chances',()=>{
  assert.deepEqual(pepperLeafBreakPlan({shears:true,hasPepper:true}),{leaves:1,saplings:0,sticks:0,pepper:1});
  assert.deepEqual(pepperLeafBreakPlan({silkTouch:true}),{leaves:1,saplings:0,sticks:0,pepper:0});
@@ -126,6 +117,50 @@ const interact=(f,block,player)=>f.component(leafComponent,'onPlayerInteract',{b
 function breakLeaf(f,block,player,itemStack,cancel=false){
  return f.emit('world.beforeEvents.playerBreakBlock',{block,player,itemStack,cancel});
 }
+
+await scenario('pepper log stripping keeps axis and charges the held axe with Unbreaking and rollback',f=>{
+ const logId='kaleidoscope_grilling:pepper_log',component='kaleidoscope_grilling:pepper_log_logic';
+ let x=20;
+ const log=(face='up')=>f.block(logId,{x:x++,y:0,z:0},{states:{'minecraft:block_face':face}});
+ const strip=(block,player)=>f.component(component,'onPlayerInteract',{block,player});
+ for(const [index,[face,axis]] of Object.entries([['up','y'],['down','y'],['east','x'],['west','x'],['north','z'],['south','z']])){
+  assert.equal(pepperLogAxis(face),axis);
+  const hand=index%2?'off':'main',other=hand==='main'?'off':'main';
+  const player=f.player({[hand]:f.item('minecraft:iron_axe'),[other]:f.item('minecraft:stick',3)}),block=log(face);
+  strip(block,player);
+  assert.equal(block.typeId,'minecraft:stripped_oak_log');assert.equal(block.permutation.getState('pillar_axis'),axis);
+  assert.equal(player[hand].getComponent('minecraft:durability').damage,1);
+  assert.equal(player[other].amount,3);
+ }
+ const axe=f.item('minecraft:diamond_axe',1,{nameTag:'Lasting axe',enchantments:[{id:'unbreaking',level:3}]}),durability=axe.getComponent('minecraft:durability');
+ durability.damage=durability.maxDurability-1;
+ const player=f.player({main:axe}),protectedLog=log(),beforeWrites=f.writes.length;
+ randomAt(.75,()=>strip(protectedLog,player));
+ assert.equal(protectedLog.typeId,'minecraft:stripped_oak_log');
+ assert.equal(player.main?.typeId,axe.typeId,'Unbreaking preserves the last durability point');
+ assert.equal(player.main.nameTag,axe.nameTag);assert.equal(player.main.getComponent('minecraft:durability').damage,durability.damage);
+ assert.equal(f.writes.slice(beforeWrites).some(write=>write.target===player.inventory),false,'protected use must not replace the held axe');
+ randomAt(0,()=>strip(log(),player));
+ assert.equal(player.main,undefined,'accepted damage still breaks at the normal limit');
+ for(const mode of ['unbreakable','creative']){
+  const tool=axe.clone();if(mode==='unbreakable')tool.getComponent('minecraft:durability').unbreakable=true;
+  const free=f.player({main:tool,gameMode:mode==='creative'?f.GameMode.Creative:f.GameMode.Survival}),block=log();
+  randomAt(0,()=>strip(block,free));
+  assert.equal(block.typeId,'minecraft:stripped_oak_log');assert.equal(free.main.getComponent('minecraft:durability').damage,durability.damage);
+ }
+ // A failed block or hand write must not leave a paid axe or a free stripped log.
+ for(const faultTarget of ['block','hand']){
+  const tool=f.item('minecraft:iron_axe',1,{damage:7}),owner=f.player({main:tool}),block=log('west');
+  const soundCount=f.sounds.length;
+  if(faultTarget==='block')f.faults.failNext(block,'setPermutation',{phase:'after'});
+  else f.faults.failNext(owner.inventory,'setItem',{phase:'after'});
+  strip(block,owner);
+  assert.equal(block.typeId,logId);assert.equal(block.permutation.getState('minecraft:block_face'),'west');
+  assert.equal(owner.main.getComponent('minecraft:durability').damage,7);assert.equal(f.sounds.length,soundCount);
+  strip(block,owner);
+  assert.equal(block.typeId,'minecraft:stripped_oak_log');assert.equal(owner.main.getComponent('minecraft:durability').damage,8);
+ }
+});
 
 await scenario('empty-hand harvest dispatch gives Java one-or-two pepper and preserves either leaf kind',f=>{
  assert.deepEqual({min:harvestMin,max:harvestMax},{min:1,max:2});
