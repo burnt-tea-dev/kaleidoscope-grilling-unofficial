@@ -6,7 +6,7 @@ import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState 
 import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey} from "../core/storage.js";
 import {hasSolidTop} from "../blockSupport.js";
 import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY} from "../seasoning/seasoning_contract_core.js";
-import {getItemProperty,setItemLore,setItemProperty} from "../core/persist.js";
+import {getItemProperty,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalFoodId} from "../eating_profile_ids.js";
 import {SECRET_COOKED_KEY,SECRET_ID} from "../skewer/skewering_core.js";
@@ -25,7 +25,7 @@ import {captureSkewerMetadata,metadataSignature} from "../skewer_item_snapshot.j
 import {COOKERY_FILLED_ID as COOKERY_FILLED,planCookeryOilPotConsumption} from "../oil/cookery_oil_pot_adapter.js";
 import {isSpecialSeasoningId} from "../seasoning/special_seasoning_visual_core.js";
 import {retargetSpecialSeasoningStack,specialSeasoningVariant} from "../seasoning/special_seasoning_visual_runtime.js";
-import {seasoningLore} from "../localized_lore_core.js";
+import {replaceSeasoningUsesLore} from "../bottle_lore_core.js";
 import {isExtinguishTool} from "./grill_input_core.js";
 import {ensureOilHandPublished} from "../oil_api_client.js";
 import {awardGleamingWithOil} from "../advancement/advancement_event_runtime.js";
@@ -236,7 +236,9 @@ function planSeasoningBottle(player,hand,needed){
  // Both Java block callers use the consuming season overload in Creative too.
  const nextUses=uses+needed;
  if(nextUses>=16)return {ok:true,ingredients,uses:nextUses,before,next:new ItemStack(EMPTY_SEASONING_ID,1),mutate:true};
- const next=retargetSpecialSeasoningStack(stack,nextUses,specialSeasoningVariant(stack));if(!next)return {ok:false,reason:'visual_state'};setUses(next,nextUses);try{setItemLore(next,seasoningLore(16-nextUses,ingredients.length))}catch{}
+ const next=retargetSpecialSeasoningStack(stack,nextUses,specialSeasoningVariant(stack));if(!next)return {ok:false,reason:'visual_state'};setUses(next,nextUses);
+ // Sprinkling changes uses only; keep the bottle's custom and ingredient lore.
+ try{setItemLore(next,replaceSeasoningUsesLore(getItemRawLore(next),16-nextUses))}catch{return {ok:false,reason:'visual_state'}}
  return {ok:true,ingredients,uses:nextUses,before,next,mutate:true};
 }
 
