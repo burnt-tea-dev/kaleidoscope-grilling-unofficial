@@ -123,6 +123,23 @@ function savedSecretFixture(){
  return {saved,restored,restoredRecords};
 }
 function restoreDefaultWorld(){configureItemDataWorld({getDynamicProperty:key=>records.get(key),setDynamicProperty:(key,value)=>records.set(key,value)})}
+test('repeated item reconstruction reuses immutable records without world writes',()=>{
+ const saved=new Map();let writes=0;
+ configureItemDataWorld({getDynamicProperty:key=>saved.get(key),setDynamicProperty:(key,value)=>{writes++;saved.set(key,value)}});
+ try{
+  const source=new Stack('minecraft:apple');source.nameTag='Kept name';
+  setItemLore(source,[{translate:'item.apple.name'},{text:'Foreign lore'}]);
+  for(const [key,value] of Object.entries({'foreign:a':false,'foreign:b':{x:1,y:2,z:3},'foreign:c':'retained'}))setItemProperty(source,key,value);
+  const snapshot=captureSkewerMetadata(source),before=[...saved];writes=0;
+  for(let i=0;i<100;i++)assert.deepEqual(captureSkewerMetadata(restore(snapshot)),snapshot);
+  assert.equal(writes,0,'display/item reconstruction must not rewrite an existing immutable record');
+  assert.deepEqual([...saved],before);
+  setItemProperty(source,'foreign:c','changed');
+  assert.equal(writes,1,'new metadata must still be persisted');
+  assert.equal(getItemProperty(source,'foreign:c'),'changed');
+  assert.deepEqual(captureSkewerMetadata(restore(snapshot)),snapshot,'the older item remains readable');
+ }finally{restoreDefaultWorld()}
+});
 test('saved stackable secret reopens its world record without rewriting item or metadata',()=>{
  try{
   const {saved,restored,restoredRecords}=savedSecretFixture();

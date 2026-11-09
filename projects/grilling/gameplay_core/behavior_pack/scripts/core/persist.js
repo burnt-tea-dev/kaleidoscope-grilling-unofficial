@@ -24,11 +24,13 @@ function store(stack,data){
  const lore=visibleRaw(stack),keys=Object.keys(data).sort();
  if(!keys.length){stack.setLore(lore);return;}
  const payload=JSON.stringify(Object.fromEntries(keys.map(k=>[k,data[k]])));
- let salt=0,id;
- while(true){id=hash(payload,2166136261+salt)+hash(payload,2246822507+salt);const old=getWorldProperty(world,KEY+id);if(old===undefined||old===payload)break;salt++;}
+ let salt=0,id,old;
+ while(true){id=hash(payload,2166136261+salt)+hash(payload,2246822507+salt);old=getWorldProperty(world,KEY+id);if(old===undefined||old===payload)break;salt++;}
  // Never overwrite a player's visible lore to make room for our token.
  if(lore.length>=20)throw Error('Grilling metadata requires one free lore line');
- setWorldProperty(world,KEY+id,payload);
+ // Display/item reconstruction can revisit this immutable payload every tick.
+ // A byte-identical record already owns the token; only new records need a write.
+ if(old!==payload)setWorldProperty(world,KEY+id,payload);
  stack.setLore([...lore,{text:PREFIX+Array.from(id,c=>'§'+c).join('')+'§r'}]);
 }
 export function getItemProperty(stack,id){if(!stack)return undefined;return stack.maxAmount>1?metadata(stack)[id]:stack.getDynamicProperty(id);}
