@@ -171,7 +171,7 @@ test('grill does not accept a seasoning dose when the native use-count write is 
  inventory.setItem(0,f.item(N+'raw_beef_skewer'));
  const bottle=f.item(N+'special_seasoning_r8_v0',1,{nameTag:'Owned bottle',rawLore:foreignLore('grill')});
  food.setFoodSeasonings(bottle,ingredients);
- data.setItemProperty(bottle,SEASONING_USES_KEY,0);
+ data.setItemProperty(bottle,SEASONING_USES_KEY,1);
  data.setItemProperty(bottle,SEASONING_VARIANT_KEY,0);
  p.main=bottle;
  const before=snapshot.captureSkewerMetadata(p.main);
@@ -179,11 +179,18 @@ test('grill does not accept a seasoning dose when the native use-count write is 
   const event=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block:grill,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
   assert.equal(event.cancel,true);f.tick(1);
  };
- const setter=f.ItemStack.prototype.setDynamicProperty;
+ const setCanPlaceOn=f.ItemStack.prototype.setCanPlaceOn;
  let rejected=0;
- const rejection=t.mock.method(f.ItemStack.prototype,'setDynamicProperty',function(key,value){
-  if(key===SEASONING_USES_KEY&&value===1&&this.typeId.startsWith(N+'special_seasoning')){rejected++;return;}
-  return setter.call(this,key,value);
+ // Intercept newly constructed variant stacks at the actual fixture API
+ // boundary, as in the existing pending-to-special metadata scenario.
+ const rejection=t.mock.method(f.ItemStack.prototype,'setCanPlaceOn',function(values){
+  setCanPlaceOn.call(this,values);
+  if(!this.typeId.startsWith(N+'special_seasoning'))return;
+  const nativeSet=this.setDynamicProperty;
+  this.setDynamicProperty=(key,value)=>{
+   if(key===SEASONING_USES_KEY&&value===2){rejected++;return;}
+   return nativeSet(key,value);
+  };
  });
  interact();
  assert.ok(rejected>0,'the variant tried to debit exactly one seasoning use');
@@ -193,6 +200,6 @@ test('grill does not accept a seasoning dose when the native use-count write is 
  rejection.mock.restore();
  interact();
  assert.equal(state.readGrillState(grill).seasoned,true,'a verified retry can season the grill');
- assert.equal(data.getItemProperty(p.main,SEASONING_USES_KEY),1);
+ assert.equal(data.getItemProperty(p.main,SEASONING_USES_KEY),2);
  assert.deepEqual(food.readFoodSeasonings(p.main),ingredients);
 });
