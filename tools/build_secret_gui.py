@@ -126,6 +126,10 @@ def ui(data):
     # modifications property and passes that error to its derived controls.
     renderer = json.loads((FIX/'native-item-renderer.json').read_text())['item_renderer']
     renderer.update({
+        # Non-collection callers (selected-item icon, furnace result, chest
+        # slots) never declare a collection name; resolve to an empty one
+        # instead of reporting a missing ancestor variable on every state.
+        '$item_collection_name|default':'',
         'propagate_alpha':False,
         'controls':[{'kg_secret_recipe_source@kg_secret_gui.slot_overlay':{}}]
     })

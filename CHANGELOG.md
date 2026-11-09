@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.257 原生物品渲染器變數預設
+
+- `common.item_renderer` 的完整原生定義補上 `$item_collection_name` 空字串預設；沒有 collection 的原生呼叫端（背包 selected icon、箱子與熔爐產物）不再對每個狀態輸出 missing ancestor variable 警告。有傳入 collection 的畫面仍使用實際值，secret overlay、五條原生 binding 與圖層不變。
+- 僅改 UI 生成器與輸出；secret GUI／素材離線測試通過。未做客戶端渲染驗收，警告是否完全消失需以實際 client log 確認。
+
 ## 2.8.256 低記憶體來源優化
 
 - 物品與展示還原遇到既有、逐位元相同的不可變 metadata 記錄時，省去重複 world dynamic property 寫入；保留碰撞處理、lore、保存格式及舊物品可讀性。既有情境還原三欄位物品 100 次，由 300 次重寫降為 0；新值仍正常保存。
