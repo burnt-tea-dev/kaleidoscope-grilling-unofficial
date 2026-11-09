@@ -1,5 +1,12 @@
 # 變更摘要
 
+## 2.8.256 低記憶體來源優化
+
+- 物品與展示還原遇到既有、逐位元相同的不可變 metadata 記錄時，省去重複 world dynamic property 寫入；保留碰撞處理、lore、保存格式及舊物品可讀性。既有情境還原三欄位物品 100 次，由 300 次重寫降為 0；新值仍正常保存。
+- 刪除現行調料瓶已不引用的 16 張大型舊貼圖；保留正在使用的 palette、geometry、UV 與 render controller。減少 141,184 來源位元組；88 MiB 只是被移除的未引用來源像素量，不是客戶端實測 RAM 節省。
+- 封包驗證發現前版 pack.description 仍寫 Cookery 1.6.4，現已與既有 1.6.6 依賴同步。未發布的 G255 審核候選保留原基線紀錄，最終候選使用新 G256 身份。
+- 既有核心玩法 682 項離線測試通過；新 BP/RP 配對身份同步 manifests、baseline 與 bridge config。範圍、剩餘記錄增長風險及驗證限制見 [低記憶體審核](docs/LOW-MEMORY-AUDIT.md)，本輪未執行 BDS、客戶端或 LIVE。
+
 ## 2.8.253 花椒木去皮保留工具附魔
 
 - 移除花椒木去皮另行固定扣耐久的舊路徑，改用既有工具 planner；Unbreaking／unbreakable／Creative 免扣時不改手持物品，實際耗盡仍正常破損。工具與原木透過既有交易一起提交，失敗不留下免費去皮或多扣耐久。
