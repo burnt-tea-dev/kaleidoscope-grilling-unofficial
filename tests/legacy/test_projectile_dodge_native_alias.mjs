@@ -39,3 +39,23 @@ test('split wool color is an identity discriminator without a generic global col
  assert.equal(classify('minecraft:blue_wool',{color:'blue'}).blocksMotion,true);
  assert.equal(classify('minecraft:blue_wool',{color:'white'}).supported,false);
 });
+
+test('cold import defers unused alias lookups and reuses the first needed block lookup',async()=>{
+ const stringify=JSON.stringify;let tupleEncodes=0;
+ JSON.stringify=function(value,...rest){if(Array.isArray(value))tupleEncodes++;return stringify.call(this,value,...rest)};
+ try{
+  const {classifyProjectileDodgeGroundCell:cold}=await import('../../projects/grilling/gameplay_core/behavior_pack/scripts/projectile_dodge_ground_core.js?cold-alias-cost');
+  assert.equal(tupleEncodes,0,'loading the world without a dodge must not encode every block alias');
+  assert.equal(cold({typeId:'minecraft:unknown_floor',states:{}}).supported,false);
+  assert.equal(cold({typeId:'minecraft:stone',states:{}}).supported,false);
+  assert.equal(cold({typeId:'minecraft:stone',states:null}).reason,'ground_block_states_unavailable');
+  assert.equal(cold({typeId:'minecraft:stone',states:new Proxy({},{ownKeys(){throw Error('unreadable')}})}).reason,'ground_block_states_unavailable');
+  assert.equal(tupleEncodes,0,'unavailable or unsupported states do not prepare an alias lookup');
+  assert.equal(cold({typeId:'minecraft:stone',states:{stone_type:'stone'}}).blocksMotion,true);
+  assert.equal(tupleEncodes,2,'first stone lookup encodes its one immutable tuple and the observed tuple');
+  tupleEncodes=0;
+  assert.equal(cold({typeId:'minecraft:stone',states:{stone_type:'stone'}}).blocksMotion,true);
+  assert.equal(tupleEncodes,1,'repeat lookup reuses the immutable accepted tuple');
+  assert.equal(cold({typeId:'minecraft:stone',states:{stone_type:'granite'}}).supported,false);
+ }finally{JSON.stringify=stringify}
+});
