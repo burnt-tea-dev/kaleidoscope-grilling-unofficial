@@ -1,5 +1,16 @@
 # Native Minecraft test boundary
 
+## Running checks
+
+`python tools/run_tests.py` runs the focused core checks used by PR CI. For a
+local repair, pass the affected test file directly, for example
+`python tools/run_tests.py tests/legacy/test_food_finish.mjs`. Reuse a successful
+result when the tested inputs have not changed.
+
+The entire transitional suite is available only with
+`python tools/run_tests.py --full`; it is not the default or an extra release
+requirement. `--smoke` remains an alias for the default core checks.
+
 `minecraft-fixture.mjs` supplies a deterministic test double for the external
 `@minecraft/server` API. It does not simulate a Bedrock client or replace BDS
 acceptance testing.

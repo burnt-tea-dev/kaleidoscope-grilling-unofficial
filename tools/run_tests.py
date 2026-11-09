@@ -1,4 +1,6 @@
-"""Run gameplay unit and runtime scenarios, including remaining transition tests.
+"""Run focused gameplay checks, or the named test files.
+
+The complete transitional suite runs only when --full is requested.
 
 Only the external Minecraft API boundary is substituted. Engine and client
 acceptance are separate from these deterministic behavior tests.
@@ -44,16 +46,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     scope = parser.add_mutually_exclusive_group()
     scope.add_argument('--smoke', action='store_true', help='Run the focused per-PR gameplay checks')
-    scope.add_argument('--full', action='store_true', help='Run all legacy and current gameplay checks (default)')
+    scope.add_argument('--full', action='store_true', help='Explicitly run all legacy and current gameplay checks')
+    parser.add_argument('tests', nargs='*', type=Path, help='Run only these test files instead of the default core checks')
     args = parser.parse_args()
-    if args.smoke:
-        tests = [ROOT / name for name in SMOKE_TESTS]
-        missing = [str(path) for path in tests if not path.is_file()]
-        if missing:
-            raise RuntimeError(f'Smoke test fixtures missing: {missing}')
-    else:
+    if args.tests and (args.smoke or args.full):
+        parser.error('Choose test files or a suite flag, not both')
+    if args.full:
         directories = [ROOT / 'tests' / name for name in ('unit', 'scenario', 'legacy')]
         tests = sorted({path for directory in directories for pattern in ('test_*.mjs', '*.test.mjs') for path in directory.glob(pattern)})
+    else:
+        tests = [ROOT / name for name in (args.tests or SMOKE_TESTS)]
+    missing = [str(path) for path in tests if not path.is_file()]
+    if missing:
+        raise RuntimeError(f'Test files missing: {missing}')
     if not tests:
         raise RuntimeError('No gameplay tests found')
     subprocess.run(
