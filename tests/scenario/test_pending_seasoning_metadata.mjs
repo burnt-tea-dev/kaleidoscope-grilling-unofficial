@@ -158,3 +158,48 @@ test('one bottle keeps foreign lore from filling through every nonfinal grill do
  }
  assert.equal(f.drops.length,0);
 });
+
+test('grill does not accept a seasoning dose when the native use-count write is silently rejected',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());
+ await f.load('main.js');f.startup();f.tick(1);
+ const p=f.player(),data=await f.load('core/persist.js'),food=await f.load('food/food_state_adapter.js');
+ const state=await f.load('grill/grill_state_adapter.js'),storage=await f.load('core/storage.js');
+ const logic=await f.load('core_logic.js'),snapshot=await f.load('skewer_item_snapshot.js');
+ const grill=f.block(N+'grill',{x:3,y:0,z:0});
+ f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({...logic.initialState(),lit:true,phase:2,flips:4,heatTicks:1200}));
+ const inventory=storage.stationContainer(grill);
+ inventory.setItem(0,f.item(N+'raw_beef_skewer'));
+ const bottle=f.item(N+'special_seasoning_r8_v0',1,{nameTag:'Owned bottle',rawLore:foreignLore('grill')});
+ food.setFoodSeasonings(bottle,ingredients);
+ data.setItemProperty(bottle,SEASONING_USES_KEY,1);
+ data.setItemProperty(bottle,SEASONING_VARIANT_KEY,0);
+ p.main=bottle;
+ const before=snapshot.captureSkewerMetadata(p.main);
+ const interact=()=>{
+  const event=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block:grill,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
+  assert.equal(event.cancel,true);f.tick(1);
+ };
+ const setCanPlaceOn=f.ItemStack.prototype.setCanPlaceOn;
+ let rejected=0;
+ // Intercept newly constructed variant stacks at the actual fixture API
+ // boundary, as in the existing pending-to-special metadata scenario.
+ const rejection=t.mock.method(f.ItemStack.prototype,'setCanPlaceOn',function(values){
+  setCanPlaceOn.call(this,values);
+  if(!this.typeId.startsWith(N+'special_seasoning'))return;
+  const nativeSet=this.setDynamicProperty;
+  this.setDynamicProperty=(key,value)=>{
+   if(key===SEASONING_USES_KEY&&value===2){rejected++;return;}
+   return nativeSet(key,value);
+  };
+ });
+ interact();
+ assert.ok(rejected>0,'the variant tried to debit exactly one seasoning use');
+ assert.equal(state.readGrillState(grill).seasoned,false,'the grill must not be seasoned for free');
+ assert.deepEqual(snapshot.captureSkewerMetadata(p.main),before,'failed debit retains the whole input bottle');
+ assert.equal(inventory.getItem(0).typeId,N+'raw_beef_skewer','grill contents remain available');
+ rejection.mock.restore();
+ interact();
+ assert.equal(state.readGrillState(grill).seasoned,true,'a verified retry can season the grill');
+ assert.equal(data.getItemProperty(p.main,SEASONING_USES_KEY),2);
+ assert.deepEqual(food.readFoodSeasonings(p.main),ingredients);
+});
