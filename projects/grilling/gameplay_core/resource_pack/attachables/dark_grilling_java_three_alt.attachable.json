@@ -417,7 +417,16 @@
         "food_222": "textures/items/minced_houttuynia",
         "food_223": "textures/items/potato_slice",
         "food_224": "textures/items/carrot_dice",
-        "food_225": "textures/items/raw_mantou_slice"
+        "food_225": "textures/items/raw_mantou_slice",
+        "food_217_frame_0": "textures/secret_food_animation/food_217_frame_0",
+        "food_217_frame_1": "textures/secret_food_animation/food_217_frame_1",
+        "food_217_frame_2": "textures/secret_food_animation/food_217_frame_2",
+        "food_217_frame_3": "textures/secret_food_animation/food_217_frame_3",
+        "food_217_frame_4": "textures/secret_food_animation/food_217_frame_4",
+        "food_217_frame_5": "textures/secret_food_animation/food_217_frame_5",
+        "food_217_frame_6": "textures/secret_food_animation/food_217_frame_6",
+        "food_217_frame_7": "textures/secret_food_animation/food_217_frame_7",
+        "food_217_frame_8": "textures/secret_food_animation/food_217_frame_8"
       },
       "geometry": {
         "model_0": "geometry.kg_failure_held.mysterious_skewer_0",

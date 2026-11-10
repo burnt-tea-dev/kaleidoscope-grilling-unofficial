@@ -1871,6 +1871,17 @@
             "Texture.food_223",
             "Texture.food_224",
             "Texture.food_225"
+          ],
+          "Array.tea_frames": [
+            "Texture.food_217_frame_0",
+            "Texture.food_217_frame_1",
+            "Texture.food_217_frame_2",
+            "Texture.food_217_frame_3",
+            "Texture.food_217_frame_4",
+            "Texture.food_217_frame_5",
+            "Texture.food_217_frame_6",
+            "Texture.food_217_frame_7",
+            "Texture.food_217_frame_8"
           ]
         }
       },
@@ -1881,7 +1892,7 @@
         }
       ],
       "textures": [
-        "Array.food[v.kg_failure_helper_index]"
+        "v.kg_failure_helper_index == 217 ? Array.tea_frames[math.mod(math.floor(q.time_stamp / 2), 9)] : Array.food[v.kg_failure_helper_index]"
       ],
       "part_visibility": [
         {
