@@ -1,0 +1,97 @@
+{
+  "groups": {
+    "tableware": {
+      "category": "items",
+      "name": "kaleidoscope_cookery:itemGroup.name.tableware",
+      "icon": "minecraft:bowl",
+      "labels": {
+        "en_US": "Tableware & Packaging",
+        "zh_CN": "餐具与包材",
+        "zh_TW": "餐具與包材"
+      }
+    },
+    "appliances": {
+      "name": "kaleidoscope_tavern:itemGroup.name.appliances",
+      "category": "items",
+      "icon": "minecraft:crafting_table",
+      "labels": {
+        "en_US": "Kitchen Equipment",
+        "zh_CN": "餐饮设备",
+        "zh_TW": "餐飲設備"
+      }
+    },
+    "ingredients": {
+      "category": "items",
+      "name": "kaleidoscope_cookery:itemGroup.name.ingredients",
+      "icon": "minecraft:carrot",
+      "labels": {
+        "en_US": "Ingredients",
+        "zh_CN": "食材",
+        "zh_TW": "食材"
+      }
+    },
+    "foods": {
+      "name": "kaleidoscope_cookery:itemGroup.name.foods",
+      "category": "items",
+      "icon": "minecraft:bread",
+      "labels": {
+        "en_US": "Prepared Food",
+        "zh_CN": "料理",
+        "zh_TW": "料理"
+      }
+    },
+    "guides": {
+      "name": "kaleidoscope_tavern:itemGroup.name.guides",
+      "category": "items",
+      "icon": "minecraft:book",
+      "labels": {
+        "en_US": "Guides & Recipes",
+        "zh_CN": "指南与食谱",
+        "zh_TW": "指南與食譜"
+      }
+    },
+    "crops": {
+      "name": "kaleidoscope_tavern:itemGroup.name.tavern_cultivation",
+      "category": "nature",
+      "icon": "minecraft:sweet_berries",
+      "labels": {
+        "en_US": "Crops & Seeds",
+        "zh_CN": "作物与种子",
+        "zh_TW": "作物與種子"
+      }
+    },
+    "building": {
+      "category": "construction",
+      "name": "kaleidoscope_cookery:itemGroup.name.building",
+      "icon": "minecraft:bricks",
+      "labels": {
+        "en_US": "Building Materials",
+        "zh_CN": "建材",
+        "zh_TW": "建材"
+      }
+    },
+    "plants": {
+      "category": "nature",
+      "name": "kaleidoscope_cookery:itemGroup.name.plants",
+      "icon": "minecraft:fern",
+      "labels": {
+        "en_US": "Plants",
+        "zh_CN": "花草与植栽",
+        "zh_TW": "花草與植栽"
+      }
+    }
+  },
+  "group_moves": {
+    "kaleidoscope_cookery:itemGroup.name.tools": "tableware",
+    "kaleidoscope_cookery:itemGroup.name.cooking_stations": "appliances",
+    "kaleidoscope_cookery:itemGroup.name.storage_utility": "appliances",
+    "kaleidoscope_cookery:itemGroup.name.ingredients": "ingredients",
+    "kaleidoscope_cookery:itemGroup.name.foods": "foods",
+    "kaleidoscope_cookery:itemGroup.name.recipe_pages": "guides",
+    "kaleidoscope_cookery:itemGroup.name.crops": "crops"
+  },
+  "items": {
+    "kaleidoscope_grilling:pepper_log": "building",
+    "kaleidoscope_grilling:pepper_leaves": "plants"
+  }
+}

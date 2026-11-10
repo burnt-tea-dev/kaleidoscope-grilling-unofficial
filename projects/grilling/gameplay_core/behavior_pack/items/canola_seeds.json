@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_grilling:canola_seeds",
       "menu_category": {
         "category": "nature",
-        "group": "kaleidoscope_cookery:itemGroup.name.crops"
+        "group": "kaleidoscope_tavern:itemGroup.name.tavern_cultivation"
       }
     },
     "components": {

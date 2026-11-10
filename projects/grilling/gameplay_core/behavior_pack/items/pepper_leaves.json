@@ -4,8 +4,8 @@
     "description": {
       "identifier": "kaleidoscope_grilling:pepper_leaves",
       "menu_category": {
-        "category": "equipment",
-        "group": "kaleidoscope_cookery:itemGroup.name.other_blocks"
+        "category": "nature",
+        "group": "kaleidoscope_cookery:itemGroup.name.plants"
       }
     },
     "components": {

@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_grilling:beef_chunks",
       "menu_category": {
-        "category": "equipment",
+        "category": "items",
         "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
       }
     },

@@ -1,5 +1,10 @@
 # 變更摘要
 
+## 2.8.258 創造物品按用途分類
+
+- 料理、食材、餐飲設備、餐具與食譜改放「物品」；花椒木歸建材，花椒葉與作物歸自然。同名共用分類採一致的原版圖示與繁中／簡中／英文短標籤；分類資料由 `data/creative-groups.json` 經 `python tools/build_creative_catalog.py` 重產。
+- 保留原有 90 個創造項目、各群內順序與隱藏實作；只改 menu_category、原生分類表與分類翻譯。配方、metadata、ID、JS 玩法及其他資產不變。生成結果可重現且 JSON 可讀；未執行客戶端或正式服驗收。
+
 ## 2.8.257 原生物品渲染器變數預設
 
 - `common.item_renderer` 的完整原生定義補上 `$item_collection_name` 空字串預設；沒有 collection 的原生呼叫端（背包 selected icon、箱子與熔爐產物）不再對每個狀態輸出 missing ancestor variable 警告。有傳入 collection 的畫面仍使用實際值，secret overlay、五條原生 binding 與圖層不變。

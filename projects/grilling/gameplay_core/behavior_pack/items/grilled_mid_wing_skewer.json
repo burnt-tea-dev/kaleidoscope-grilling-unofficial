@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_grilling:grilled_mid_wing_skewer",
       "menu_category": {
-        "category": "equipment",
+        "category": "items",
         "group": "kaleidoscope_cookery:itemGroup.name.foods"
       }
     },

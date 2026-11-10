@@ -3,12 +3,26 @@
   "minecraft:crafting_items_catalog": {
     "categories": [
       {
-        "category_name": "equipment",
+        "category_name": "construction",
         "groups": [
           {
             "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.tools",
-              "icon": "kaleidoscope_cookery:iron_kitchen_knife"
+              "name": "kaleidoscope_cookery:itemGroup.name.building",
+              "icon": "minecraft:bricks"
+            },
+            "items": [
+              "kaleidoscope_grilling:pepper_log"
+            ]
+          }
+        ]
+      },
+      {
+        "category_name": "items",
+        "groups": [
+          {
+            "group_identifier": {
+              "name": "kaleidoscope_cookery:itemGroup.name.tableware",
+              "icon": "minecraft:bowl"
             },
             "items": [
               "kaleidoscope_grilling:empty_seasoning_bottle"
@@ -16,28 +30,20 @@
           },
           {
             "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.cooking_stations",
-              "icon": "kaleidoscope_cookery:stove"
+              "name": "kaleidoscope_tavern:itemGroup.name.appliances",
+              "icon": "minecraft:crafting_table"
             },
             "items": [
               "kaleidoscope_grilling:grill",
               "kaleidoscope_grilling:oil_press",
-              "kaleidoscope_grilling:big_vat"
-            ]
-          },
-          {
-            "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.storage_utility",
-              "icon": "kaleidoscope_cookery:fruit_basket"
-            },
-            "items": [
+              "kaleidoscope_grilling:big_vat",
               "kaleidoscope_grilling:advanced_rack"
             ]
           },
           {
             "group_identifier": {
               "name": "kaleidoscope_cookery:itemGroup.name.ingredients",
-              "icon": "kaleidoscope_cookery:flour"
+              "icon": "minecraft:carrot"
             },
             "items": [
               "kaleidoscope_grilling:beef_chunks",
@@ -88,7 +94,7 @@
           {
             "group_identifier": {
               "name": "kaleidoscope_cookery:itemGroup.name.foods",
-              "icon": "kaleidoscope_cookery:mantou"
+              "icon": "minecraft:bread"
             },
             "items": [
               "kaleidoscope_grilling:grilled_beef_skewer",
@@ -129,18 +135,8 @@
           },
           {
             "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.other_blocks",
-              "icon": "kaleidoscope_cookery:oil_block"
-            },
-            "items": [
-              "kaleidoscope_grilling:pepper_log",
-              "kaleidoscope_grilling:pepper_leaves"
-            ]
-          },
-          {
-            "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.recipe_pages",
-              "icon": "kaleidoscope_cookery:master_recipe_page"
+              "name": "kaleidoscope_tavern:itemGroup.name.guides",
+              "icon": "minecraft:book"
             },
             "items": [
               "kaleidoscope_grilling:skewer_recipe_book"
@@ -153,8 +149,17 @@
         "groups": [
           {
             "group_identifier": {
-              "name": "kaleidoscope_cookery:itemGroup.name.crops",
-              "icon": "kaleidoscope_cookery:rice"
+              "name": "kaleidoscope_cookery:itemGroup.name.plants",
+              "icon": "minecraft:fern"
+            },
+            "items": [
+              "kaleidoscope_grilling:pepper_leaves"
+            ]
+          },
+          {
+            "group_identifier": {
+              "name": "kaleidoscope_tavern:itemGroup.name.tavern_cultivation",
+              "icon": "minecraft:sweet_berries"
             },
             "items": [
               "kaleidoscope_grilling:canola_seeds",

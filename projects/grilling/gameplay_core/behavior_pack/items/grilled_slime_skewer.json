@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_grilling:grilled_slime_skewer",
       "menu_category": {
-        "category": "equipment",
+        "category": "items",
         "group": "kaleidoscope_cookery:itemGroup.name.foods"
       }
     },

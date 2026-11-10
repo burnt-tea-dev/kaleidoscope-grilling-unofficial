@@ -4,8 +4,8 @@
     "description": {
       "identifier": "kaleidoscope_grilling:empty_seasoning_bottle",
       "menu_category": {
-        "category": "equipment",
-        "group": "kaleidoscope_cookery:itemGroup.name.tools"
+        "category": "items",
+        "group": "kaleidoscope_cookery:itemGroup.name.tableware"
       }
     },
     "components": {

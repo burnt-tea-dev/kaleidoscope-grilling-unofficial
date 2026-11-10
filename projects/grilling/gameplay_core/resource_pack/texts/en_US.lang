@@ -901,3 +901,11 @@ guide.kg.body.kg_a1:guide_millstone.4=Recipes: canola seeds→canola powder; oni
 guide.kg.body.kg_a1:guide_millstone.5=Sichuan Pepper goes directly into the bottle. Dragon Egg Powder uses a kitchen knife on a dragon egg. Vanilla redstone and gunpowder also go in directly. A finished seasoning needs Green Chili Powder, Sichuan Pepper and Onion Powder.
 guide.kg.body.kg_a1:guide_millstone.6=Not turning? Check the intact footprint, adult worker, riders and another millstone binding. If no worker is found within 30 seconds, the input is returned. Sneak-use empty-handed releases a worker. Inputs rejected? The family compatibility pack must include the extension-input fix; unpatched Cookery 1.6.1 registers recipes but rejects these inputs.
 ## END GRILLING GUIDE A3 (generated)
+kaleidoscope_cookery:itemGroup.name.tableware=Tableware & Packaging
+kaleidoscope_tavern:itemGroup.name.appliances=Kitchen Equipment
+kaleidoscope_cookery:itemGroup.name.ingredients=Ingredients
+kaleidoscope_cookery:itemGroup.name.foods=Prepared Food
+kaleidoscope_tavern:itemGroup.name.guides=Guides & Recipes
+kaleidoscope_tavern:itemGroup.name.tavern_cultivation=Crops & Seeds
+kaleidoscope_cookery:itemGroup.name.building=Building Materials
+kaleidoscope_cookery:itemGroup.name.plants=Plants

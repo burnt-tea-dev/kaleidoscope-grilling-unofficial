@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_grilling:potato_beef_stew",
       "menu_category": {
-        "category": "equipment",
+        "category": "items",
         "group": "kaleidoscope_cookery:itemGroup.name.foods"
       }
     },

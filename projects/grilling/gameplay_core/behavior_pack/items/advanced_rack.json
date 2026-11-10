@@ -4,8 +4,8 @@
     "description": {
       "identifier": "kaleidoscope_grilling:advanced_rack",
       "menu_category": {
-        "category": "equipment",
-        "group": "kaleidoscope_cookery:itemGroup.name.storage_utility"
+        "category": "items",
+        "group": "kaleidoscope_tavern:itemGroup.name.appliances"
       }
     },
     "components": {
