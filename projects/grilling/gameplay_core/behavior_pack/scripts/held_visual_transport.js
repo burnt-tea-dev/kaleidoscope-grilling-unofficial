@@ -15,11 +15,16 @@ export const SNAPSHOT_CONTROLLER='controller.animation.kg_held_snapshot.carrier'
 export const WORD_MAX=684244;
 export const REFRESH_TICKS=100;
 export const variableName=(hand,index)=>'v.kg_held_'+(hand==='main'?'m':'o')+index;
-export function heldWordMolang(hand,index,owner='q'){
+export function heldSnapshotReadyMolang(owner='q'){
  const scope=owner.startsWith('c.owning_entity->')?'c.owning_entity->':'';
  const prop=owner+".property('"+FRAME_PROPERTY+"')";
- const ready=owner+".has_property('"+FRAME_PROPERTY+"') && "+prop+' > 0 && '+scope+FRAME_VARIABLE+' == '+prop;
- return '('+ready+' ? '+scope+variableName(hand,index)+' : 0)';
+ // The property authorizes a request; FRAME_VARIABLE identifies the last
+ // complete client commit. Advancing the request must not clear that commit.
+ return owner+".has_property('"+FRAME_PROPERTY+"') && "+prop+' > 0 && '+scope+FRAME_VARIABLE+' > 0';
+}
+export function heldWordMolang(hand,index,owner='q'){
+ const scope=owner.startsWith('c.owning_entity->')?'c.owning_entity->':'';
+ return '('+heldSnapshotReadyMolang(owner)+' ? '+scope+variableName(hand,index)+' : 0)';
 }
 export function snapshotExpression(frame,main,off){
  if(!Number.isInteger(frame)||frame<1||frame>FRAME_MAX)throw Error('Invalid held snapshot frame');
@@ -46,7 +51,7 @@ export function createSnapshotPublisher(currentTick=()=>0){
     state={frame:Number.isInteger(saved)&&saved>=0&&saved<=FRAME_MAX?saved:0};states.set(player.id,state);
    }
    // A failed newer submit may already have changed the native frame. Rebuild
-   // even when the hand returns to older sent data, rather than leaving it hidden.
+   // even when the hand returns to older sent data, rather than leaving it stale.
    if(!state.pending&&state.sent?.signature===signature){
     if(currentTick()-state.lastBroadcastTick<REFRESH_TICKS)return false;
     send(player,state.sent);state.lastBroadcastTick=currentTick();return true;

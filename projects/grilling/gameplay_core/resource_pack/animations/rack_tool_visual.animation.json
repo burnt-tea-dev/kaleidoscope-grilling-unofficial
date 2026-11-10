@@ -10,12 +10,7 @@
             -17.3877183349,
             -132.186261181
           ],
-          "scale": "q.property('kaleidoscope_grilling:model') == 0 ? 0.1979898987 : q.property('kaleidoscope_grilling:model') == 1 ? 0.1979898987 : q.property('kaleidoscope_grilling:model') == 2 ? 0.1979898987 : q.property('kaleidoscope_grilling:model') == 3 ? 0.1979898987 : q.property('kaleidoscope_grilling:model') == 4 ? 0.1903749026 : 0.1898353133",
-          "position": [
-            "q.property('kaleidoscope_grilling:model') == 0 ? 0.2537661804 : q.property('kaleidoscope_grilling:model') == 1 ? 0.2537661804 : q.property('kaleidoscope_grilling:model') == 2 ? 0.2537661804 : q.property('kaleidoscope_grilling:model') == 3 ? 0.2537661804 : q.property('kaleidoscope_grilling:model') == 4 ? -0.1220029713 : -0.1216571721",
-            "q.property('kaleidoscope_grilling:model') == 0 ? -0.07 : q.property('kaleidoscope_grilling:model') == 1 ? -0.07 : q.property('kaleidoscope_grilling:model') == 2 ? -0.07 : q.property('kaleidoscope_grilling:model') == 3 ? -0.07 : q.property('kaleidoscope_grilling:model') == 4 ? -0.0 : -0.1342338374",
-            "q.property('kaleidoscope_grilling:model') == 0 ? -0.1183331133 : q.property('kaleidoscope_grilling:model') == 1 ? -0.1183331133 : q.property('kaleidoscope_grilling:model') == 2 ? -0.1183331133 : q.property('kaleidoscope_grilling:model') == 3 ? -0.1183331133 : q.property('kaleidoscope_grilling:model') == 4 ? 0.0568909198 : 0.056729671"
-          ]
+          "scale": 0.75
         }
       }
     }

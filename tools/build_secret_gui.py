@@ -19,9 +19,9 @@ STYLES = (0, 4, 6)
 
 def source_data():
     script = """
-import {SECRET_GUI_HEADER,secretGuiDigitMarker} from './projects/grilling/gameplay_core/behavior_pack/scripts/secret_gui_core.js';
+import {SECRET_GUI_HEADER,SECRET_GUI_EMPTY_FOOD,secretGuiDigitMarker} from './projects/grilling/gameplay_core/behavior_pack/scripts/secret_gui_core.js';
 import {SECRET_GUI_COLORS} from './projects/grilling/gameplay_core/behavior_pack/scripts/secret_gui_color_data.js';
-console.log(JSON.stringify({header:SECRET_GUI_HEADER,markers:Array.from({length:8},(_,i)=>Array.from({length:16},(_,n)=>secretGuiDigitMarker(i,n))),colors:SECRET_GUI_COLORS}));
+console.log(JSON.stringify({header:SECRET_GUI_HEADER,empty:SECRET_GUI_EMPTY_FOOD,markers:Array.from({length:8},(_,i)=>Array.from({length:16},(_,n)=>secretGuiDigitMarker(i,n))),colors:SECRET_GUI_COLORS}));
 """
     return json.loads(subprocess.check_output(['node', '--input-type=module', '-e', script], cwd=ROOT))
 
@@ -69,7 +69,7 @@ def bindings():
     return [
         {'binding_type':'collection_details', 'binding_collection_name':'$item_collection_name'},
         {'binding_name':'#hover_text', 'binding_type':'collection', 'binding_collection_name':'$item_collection_name',
-         'binding_name_override':'#kg_secret_recipe', 'binding_condition':'visible'}
+         'binding_name_override':'#kg_secret_recipe', 'binding_condition':'always_when_visible'}
     ]
 
 
@@ -84,7 +84,9 @@ def ui(data):
         for variant in range(2):
             choices = [n for n in range(8) if ((n >> slot) & 1) == variant]
             chosen = '('+' or '.join(present(data['markers'][6][n]) for n in choices)+')'
-            texture = "('"+TEXTURES+"/food_' + #kg_style + '_' + (#kg_food_hi * 16 + #kg_food_lo))"
+            food = '(#kg_food_hi * 16 + #kg_food_lo)'
+            present_food = '('+food+' < '+str(data['empty'])+')'
+            texture = "('"+TEXTURES+"/food_' + #kg_style + '_' + ("+present_food+' * '+food+'))'
             controls.append({'food_'+str(slot)+'_'+str(variant):{
                 'type':'image', 'size':['100%', '100%'], 'texture':'#texture',
                 'uv':[(slot*2+variant)*16,0], 'uv_size':[16,16],
@@ -95,27 +97,27 @@ def ui(data):
                     {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot), 'target_property_name':'#kg_food_hi'},
                     {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot+1), 'target_property_name':'#kg_food_lo'},
                     {'binding_type':'view', 'source_property_name':style, 'target_property_name':'#kg_style'},
-                    {'binding_type':'view', 'source_property_name':chosen, 'target_property_name':'#visible'},
+                    {'binding_type':'view', 'source_property_name':'('+chosen+' and '+present_food+')', 'target_property_name':'#visible'},
                     {'binding_type':'view', 'source_property_name':texture, 'target_property_name':'#texture'}
                 ]
             }})
     view = {'namespace':'kg_secret_gui', 'icon':{
-        'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls
+        'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls,
+        'bindings':[{'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
+                     'source_property_name':'#kg_secret_active', 'target_property_name':'#visible'}]
     }, 'slot_overlay':{
-        'type':'stack_panel', 'size':['100%', '100%'],
+        'type':'panel', 'size':['100%', '100%'],
         # Native cursor/selected-item callers have global bindings and no
-        # collection. Do not invent a slot or enter its collection factory.
+        # collection. Do not invent a slot for those callers.
         '$item_collection_name|default':'',
         'ignored':"($item_collection_name = '')",
-        'collection_name':'$item_collection_name',
-        # The native collection-factory pattern creates zero icon subtrees for
-        # unmarked slots and one for a marked secret. The source stays present
-        # so replacing a normal item with a secret updates without hovering.
-        'factory':{'name':'kg_secret_icon_factory', 'control_name':'kg_secret_gui.icon'},
+        # Stay in the real slot's collection context. A second collection
+        # factory inserts a synthetic row between this source and its images.
+        # Keep the source present when the native icon turns transparent.
+        'controls':[{'composed_icon@kg_secret_gui.icon':{}}],
         'property_bag':{'#kg_secret_recipe':'', '#kg_secret_active':False},
         'bindings':bindings()+[
-            {'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#kg_secret_active'},
-            {'binding_type':'view', 'source_property_name':'(#kg_secret_active * 1)', 'target_property_name':'#collection_length'}
+            {'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#kg_secret_active'}
         ]
     }}
     # Retain the native renderer contract; derived callers may replace bindings.
@@ -166,17 +168,17 @@ def main():
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     generated = outputs()
-    different = [str(p.relative_to(ROOT)) for p, value in generated.items() if not p.exists() or p.read_bytes() != value]
+    different = [p for p, value in generated.items() if not p.exists() or p.read_bytes() != value]
     if args.check:
         if different:
-            raise SystemExit('Secret GUI generation differs: '+', '.join(different[:5]))
+            raise SystemExit('Secret GUI generation differs: '+', '.join(str(p.relative_to(ROOT)) for p in different[:5]))
     else:
         for path in (RP/TEXTURES).glob('*.png'):
             if path not in generated:
                 path.unlink()
-        for path, value in generated.items():
+        for path in different:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(value)
+            path.write_bytes(generated[path])
     print(json.dumps({'generated_files':len(generated), 'different':len(different), 'check':args.check}))
 
 

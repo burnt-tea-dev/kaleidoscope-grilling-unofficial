@@ -58,10 +58,10 @@
     ],
     "animate": [
       {
-        "kg_held_oil_brush_main": "(q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_m11 : 0) == 225 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"
+        "kg_held_oil_brush_main": "(q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame > 0 ? v.kg_held_m11 : 0) == 225 && q.is_item_name_any('slot.weapon.mainhand','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"
       },
       {
-        "kg_held_oil_brush_off": "(q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame == q.property('kaleidoscope_grilling:held_frame') ? v.kg_held_o11 : 0) == 225 && q.is_item_name_any('slot.weapon.offhand','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"
+        "kg_held_oil_brush_off": "(q.has_property('kaleidoscope_grilling:held_frame') && q.property('kaleidoscope_grilling:held_frame') > 0 && v.kg_held_frame > 0 ? v.kg_held_o11 : 0) == 225 && q.is_item_name_any('slot.weapon.offhand','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"
       }
     ]
   },

@@ -270,7 +270,7 @@ message.kaleidoscope_grilling.press_vat_full=Nearby vat lacks capacity; progress
 message.kaleidoscope_grilling.press_wrong_vat=Nearby vat contains another fluid; progress was retained
 message.kaleidoscope_grilling.press_no_vat=No nearby vat can receive canola oil; progress was retained
 
-senluo.public.food.v1=
+senluo.public.food.v1=§r
 senluo.public.projection.v1=
 message.kg.oil_unavailable=Oil-pot data could not be confirmed; the item and contents are retained. Try again shortly.
 message.kg.oil_sync_pending=Synchronizing the legacy oil pot. Try again shortly.

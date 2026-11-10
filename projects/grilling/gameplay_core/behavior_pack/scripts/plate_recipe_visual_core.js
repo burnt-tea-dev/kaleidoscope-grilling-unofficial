@@ -7,6 +7,8 @@ import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
 import {secretVisualState} from './secret_visual_state.js';
 import {decodeSecretVisual,SECRET_MODEL_VARIANTS_KEY} from './secret_visual_state_core.js';
 import {SECRET_GUI_COLORS} from './secret_gui_color_data.js';
+import {secretGuiVariantBits} from './secret_gui_core.js';
+export {secretGuiVariantBits} from './secret_gui_core.js';
 import {getItemProperty} from './core/persist.js';
 
 export const PLATE_FOOD_VISUAL_TYPE='kaleidoscope_grilling:plate_food_visual';
@@ -28,25 +30,6 @@ export function vatAnimationFrame(tick){return Number.isFinite(tick)&&tick>=0?Ma
 export function vatPremiumPlan(block){
  const level=block?.permutation.getState('kaleidoscope_grilling:vat_level');
  return block?.typeId==='kaleidoscope_grilling:big_vat'&&block.permutation.getState('kaleidoscope_grilling:vat_fluid')==='premium_chili'&&Number.isInteger(level)&&level>=1&&level<=4?{level}:undefined;
-}
-function javaStringHash(value){let hash=0;for(let i=0;i<value.length;i++)hash=(Math.imul(hash,31)+value.charCodeAt(i))|0;return hash;}
-// SkeweringHandler.guiVariantBits preserves saved 4..9 values, with its Java
-// int hash fallback for legacy/missing values. This projection never repairs
-// or rewrites a stack's metadata, and uses raw IDs even for cooked snapshots.
-export function secretGuiVariantBits(ingredients,raw){
- let variants;try{variants=typeof raw==='string'?JSON.parse(raw):raw}catch{}
- let bits=0;
- for(let slot=0;slot<3;slot++){
-  const value=Number.isInteger(variants?.[slot])?variants[slot]|0:0;let bit;
-  if(value>=4&&value<=9)bit=Math.floor((value-4)/3);
-  else{
-   let hash=(31*(slot+1)+value)|0,id=ingredients[slot]?.id;
-   if(typeof id==='string')hash=(Math.imul(31,hash)+javaStringHash(id))|0;
-   hash^=hash>>>16;hash=Math.imul(hash,0x7FEB352D);hash^=hash>>>15;bit=hash&1;
-  }
-  bits|=bit<<slot;
- }
- return bits;
 }
 export function secretGuiIconPlan(stack,readIngredients){
  if(canonicalFoodId(stack?.typeId)!==SECRET)return undefined;

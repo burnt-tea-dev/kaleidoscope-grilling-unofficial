@@ -6,6 +6,7 @@ import {prepareProducedFood,publicStackFingerprint,samePublicStack,stableJson,ut
 import {replaceSeasoningData,registerProducer,producerFor,registerProjectionDescriptor,registerHeldVisual,secretVisualIndex,integrationRegistrySnapshot,restoreIntegrationRegistry} from './integration_registry_core.js';
 import {stationProjection} from './station_projection_core.js';
 import {readPublicFood} from './host_api/food_api_core.js';
+import {foodTime} from './food/food_state_adapter.js';
 import {normalizeFreshFortress,fortressReplacementAt} from './fortress_generation_core.js';
 import {grillingConfig} from './server_config_runtime.js';
 import {PERSISTED_KEY as PersistedKey} from './core/persist_keys.js';
@@ -52,7 +53,7 @@ function decorate(request){
  producerFor(request.producerId,request.kind,request.expected?.id);
  return commitOperation(request,()=>{
   const slot=targetSlot(request.target),before=slot.get();if(!samePublicStack(before,request.expected))throw Error('output changed');
-  const next=prepareProducedFood(before,{...request.metadata,kind:request.kind},Number(world.getAbsoluteTime()),grillingConfig());
+  const next=prepareProducedFood(before,{...request.metadata,kind:request.kind},foodTime(),grillingConfig());
   const expected=publicStackFingerprint(next);
   return {apply(){slot.set(next);if(!samePublicStack(slot.get(),expected))throw Error('output write readback');},rollback(){slot.set(before);if(!samePublicStack(slot.get(),request.expected))throw Error('output rollback readback');},result:{decorated:true,output:{id:next.typeId,amount:next.amount},metadata:readPublicFood(next).state}};
  });
@@ -81,7 +82,7 @@ export function handleIntegrationRequest(request){
  if(!ready||storageFault)throw Error(storageFault||'API not ready');
  if(!request||request.api!==1||typeof request.requestId!=='string'||!/^[a-zA-Z0-9_.:/-]{1,64}$/.test(request.requestId))throw Error('request schema');
  switch(request.op){
-  case 'discover':{const config=grillingConfig();return {api:1,capabilities:['output_metadata_v1','public_stack_projection_v1','held_catalog_alias_v1','fresh_fortress_batch_v1','producer_sequence_receipt_v1','seasoning_data_roots_v1'],vanillaFortressCallbackInstalled:false,arbitraryRuntimeTextures:false,smeltedFood:{enabled:config.enableSmeltedFoodHeat,seconds:config.smeltedFoodSeconds}};}
+  case 'discover':{const config=grillingConfig();return {api:1,capabilities:['output_metadata_v1','public_stack_projection_v1','held_catalog_alias_v1','fresh_fortress_batch_v1','producer_sequence_receipt_v1','seasoning_data_roots_v1'],foodClock:{offset:foodTime()-system.currentTick},vanillaFortressCallbackInstalled:false,arbitraryRuntimeTextures:false,smeltedFood:{enabled:config.enableSmeltedFoodHeat,seconds:config.smeltedFoodSeconds}};}
   case 'replace_seasoning_data':return persistRegistration(()=>replaceSeasoningData(request.roots));
   case 'register_producer':return persistRegistration(()=>registerProducer(request.registration));
   case 'register_projection':return persistRegistration(()=>registerProjectionDescriptor(request.registration));

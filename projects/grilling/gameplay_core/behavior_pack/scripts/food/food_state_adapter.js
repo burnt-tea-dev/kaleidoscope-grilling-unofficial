@@ -1,4 +1,4 @@
-import {getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
+import {getWorldProperty,setWorldProperty,getItemProperty,setItemProperty,getItemPropertyIds,getItemLore,getItemRawLore,setItemLore} from '../core/persist.js';
 import {world,system} from '@minecraft/server';
 import {SEASONING_LIST_KEY,normalizeSeasoningList} from '../seasoning/seasoning_contract_core.js';
 import {readRawFoodLore,isHeatLore,applyFoodMaxim} from '../hud/food_tooltip_core.js';
@@ -12,7 +12,31 @@ import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {needsSecretGuiCache,refreshSecretGuiCache} from '../secret_gui_state.js';
 
 export const HOT_UNTIL_KEY=PersistedKey.HOT_UNTIL;
-function now(){try{return Number(world.getAbsoluteTime())||system.currentTick}catch{return system.currentTick}}
+// Keep every saved deadline in its existing coordinate system. Capture the
+// old clock once; later loads reuse the offset, never rebase to daylight again.
+world.afterEvents.worldLoad.subscribe(()=>{
+ const key=PersistedKey.FOOD_CLOCK_OFFSET,stored=getWorldProperty(world,key);
+ if(stored!==undefined){
+  if(!Number.isSafeInteger(stored))throw Error('Grilling food clock offset unreadable');
+  return;
+ }
+ const tick=system.currentTick,absolute=world.getAbsoluteTime();
+ // The previous food-state owner used currentTick when absolute time was 0.
+ const legacy=absolute===0?tick:absolute;
+ if(!Number.isSafeInteger(legacy)||legacy<0)throw Error('Grilling legacy food clock unreadable');
+ const offset=legacy-tick;
+ setWorldProperty(world,key,offset);
+ if(getWorldProperty(world,key)!==offset)throw Error('Grilling food clock offset readback');
+});
+// Selected-engine saved-world records show currentTick continuing after a
+// normal stop/start. It is not the same origin as the old daylight deadlines.
+export function foodTime(){
+ const offset=getWorldProperty(world,PersistedKey.FOOD_CLOCK_OFFSET);
+ if(!Number.isSafeInteger(offset))throw Error('Grilling food clock not initialized');
+ const time=system.currentTick+offset;
+ if(!Number.isSafeInteger(time)||time<0)throw Error('Grilling food clock out of range');
+ return time;
+}
 export function readFoodQuality(stack){
  const portable=readPublicFood(stack);
  return cuisineQualityPayloadMatches(stack?.typeId,portable)&&portable.valid?portable.state.quality:undefined;
@@ -41,7 +65,7 @@ export function setFoodSeasonings(stack,list){
  return stack;
 }
 export function hotUntil(stack){const p=readPublicFood(stack);if(p.present)return p.valid?p.state.hotUntil:0;try{return Number(getItemProperty(stack,HOT_UNTIL_KEY)??0)}catch{return 0}}
-export function isHotFood(stack){return hotUntil(stack)>now()}
+export function isHotFood(stack){return hotUntil(stack)>foodTime()}
 function foodProperties(stack){return getItemPropertyIds(stack).sort().map(key=>[key,getItemProperty(stack,key)])}
 function withSecretStage(stack,lore,hot,reserved=0){
  if(canonicalFoodId(stack?.typeId)!=='kaleidoscope_grilling:secret_skewer')return lore;
@@ -55,7 +79,9 @@ function withSecretStage(stack,lore,hot,reserved=0){
  return base;
 }
 export function needsColdSecretTooltip(stack){
- if(canonicalFoodId(stack?.typeId)!=='kaleidoscope_grilling:secret_skewer'||hotUntil(stack)>0)return false;
+ const id=canonicalFoodId(stack?.typeId);
+ if(id==='kaleidoscope_grilling:unfinished_skewer')return needsSecretGuiCache(stack);
+ if(id!=='kaleidoscope_grilling:secret_skewer'||hotUntil(stack)>0)return false;
  const lore=getItemRawLore(stack);
  return metadataSignature(lore)!==metadataSignature(withSecretStage(stack,lore,false))||needsSecretGuiCache(stack);
 }
@@ -98,7 +124,7 @@ function refreshHeatLore(stack){
  }
  let base;
  try{base=getItemRawLore(stack).filter(line=>!isHeatLore(line))}catch{return stack}
- const left=Math.max(0,until-now());
+ const left=Math.max(0,until-foodTime());
  // Do not swallow an unverified expiry rollback: callers must not persist a
  // damaged working copy after its public seasoning/variant record was removed.
  if(left<=0)return clearExpiredHeat(stack,base);
@@ -120,7 +146,7 @@ export function setHotFood(stack,ticks){
  try{
   const portable=readPublicFood(stack);if(portable.present&&!portable.valid)return stack;
   before=stack.getRawLore();priorHot=getItemProperty(stack,HOT_UNTIL_KEY);
-  const time=now(),until=bucketHotUntil(time+Math.max(1,Math.floor(ticks)));
+  const time=foodTime(),until=bucketHotUntil(time+Math.max(1,Math.floor(ticks)));
   const left=Math.max(0,until-time),sec=Math.ceil(left/20);
   const lore=withSecretStage(stack,getItemRawLore(stack).filter(line=>!isHeatLore(line)),true);
   // Stackable metadata needs a carrier. A cosmetic badge must not consume its line.

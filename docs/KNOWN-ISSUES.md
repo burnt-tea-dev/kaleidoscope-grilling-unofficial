@@ -23,12 +23,13 @@
 | GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |
 | SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；每stack背包圖示另查下列SKEWER-GUI |
 | SKEWER-CONTENTS | 玩家曾回報配方不合、穿料後只見竹籤與吃空氣；G151／152 有取得契約、短配方、內容、圖像及共同資料守衛修補 | 正常取得→1／2／3 料穿製→烤製→盤／手持→食用／保存；空／不完整串不能被重複穿外層，合法零營養仍遵循原作。任意 stack icon 另驗 |
+| PLATE-FOOD-OWNER | 2026-11-10 來源草稿：餐盤允許帶 raw／grilled skewer 標籤的外部食品，舊存盤路徑讀原生 food，但食用結算只查自家 FOOD_DATA；未收錄的合法可食串可扣份而不加營養。改由既有 dynamicFood 統一存盤與結算，普通串讀 foodFacts，秘製串保留原食材算法；移除餐盤重複 resolver | 僅直接審閱來源；依擁有者禁令沒有新增或執行測試，沒有新遊戲觀察。未提交、發行或部署；不宣稱舊「只見竹籤／吃空氣」已重現或已還原 |
 | CLIENT-HUD | 曾無森羅 UI、外露 `KT_HUD!` 資料、位置錯及秒級延遲；G245提前略過普通訊息／END的圖像群組，保留原packet清場，詳見[入口範圍](PARITY.md#進食hud的訊息入口與額外工作) | 觸控／Desktop、全食品、兩手、連吃、取消、END 隱藏與真實延遲仍未全面觀察；入口模型／BDS載入不是client建構耗時、FPS或發熱改善證據 |
 | EATING-OWNER | G143 修 owning-player property 環境、副手進度、末段隱藏、RawMessage 等價比較及失敗掃描節流 | 近鏡放大、末段平片、換槽／重登、瓶子與食物 preparation 並存仍需當前驗收；不猜改 Java 曲線掩蓋失敗 |
 | GRILL-DEFERRED-OWNER | G125 延後重讀 cancel 並核 type／permutation／owner／完整物品；舊四個原生 API 診斷用代用容器 | 後續 listener 取消爆炸、排程後換方塊、合法計時中拆爐；須保留整個 customBreak、容器內容與玩家結果 |
 | ITEM-DELIVERY | G125 在扣料前核站點身份，保留滿包 planner、實際交付讀回與不明結果隔離 | 榨油機延後扣料、串譜／穿串／拆串滿包、外來槽位和掉落回收未知；未確認回收不得退原料或重發 |
 | SEASONING-DATA-RELOAD | G124 合併目前資料根，取料／效果／HUD 共用 resolver，保存失敗恢復；不自動讀 Java datapack | 後根覆寫、錯誤根不部分生效、舊食物依新映射、未知 kind 與 provider 缺席；真人效果仍待驗 |
-| SKEWER-GUI | 新client的modifications及cursor缺collection入口已在生成器修復；cursor保留原生圖示、真格子保留逐串圖層；已證及未證範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display)，不是三格製作視窗 | 尚無本次修正後client／畫面／幀率讀回；新log無位置Invalid expression仍未定位。雙手操作、資料保存與原圖層保留 |
+| SKEWER-GUI | 2026-11-10玩家圖片仍見副手2/3木棒、3/3固定圖與世界大肉。來源草稿補上Unfinished圖示producer／既有更新入口，每次穿料即附當前圖示資料，空位不畫；GUI consumer退役中間factory並直接讀真slot。具體來源與歷史範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display) | 未跑任何測試、未部署、沒有新畫面；3/3固定圖與世界大肉的完整根因尚未確定，未猜改手持校準姿勢。cursor仍保留原生圖示；未知外部食材仍受現有catalogue限制 |
 | SEASONING-FLOW | 舊 LIVE 取瓶失敗；RawMessage／材料數與後續動作有來源修補，未有完整同瓶驗收 | 同瓶放三種必要 base→取回 PENDING→持續 80 tick→SPECIAL→向有串烤架撒料；核材料、uses、取消／換槽／重登，不能用改配方或即時轉換通過 |
 | SEASONING-EXPLOSION-CANCEL | G117 延後工作僅在 cancel 明確 false 時繼續；取消／event 讀失敗保留瓶、ItemStack、容器及保存記錄 | 在瓶 handler 後取消爆炸，驗內容與 ownership；未取消爆炸的原作毀損規則不變。API 模型不是原生事件結果 |
 | PLATE-SATURATION | G116 餐盤在寫 hunger 後重取 saturation／effectiveMax，失敗回滾；舊 trace 曾在 hunger 10→13 後仍用 cap 10 | 重現相同飢餓／食物及原生 cap 條件，核一次營養結算、不吞物品、不虛構 max；同候選 Player／client 待驗 |
@@ -68,3 +69,5 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 [T1.3-1 至 T1.3-5](PARITY.md#舊-pr-保留需求)完整保留交易所有權、碰撞／選取、20 種 THREE 食用、固定五幀 icon 及併發餐盤／食譜需求。舊 PR 關閉是工作整理，不是修復或驗收。
 
 原始回報與更細的歷史限定保留於[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)、[PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)及[公開下載稽核](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md)。舊工具／workflow 風險以 T2.4 後的實際入口為準，不能把已退役的驗證鏈描述成仍在執行；玩家缺口不因工具退役而被刪除。
+
+2026-11-10 **HEAT-DECAY 來源草稿（保存審閱後）**：玩家回報烤五花肉串「煙火氣 1:00」不衰減。撤回直接以 `system.currentTick` 解讀舊期限的前稿；[`foodTime()`](../projects/grilling/gameplay_core/behavior_pack/scripts/food/food_state_adapter.js) 首次世界載入保存單一 `food_clock_offset = getAbsoluteTime() − currentTick`，此後使用 `currentTick + offset`，後續載入不重新取日夜原點。保留切換當刻的舊剩餘時長，不重寫每件物品；producer、合併、tooltip、食用及[公開 API](BEDROCK-INTEGRATION-API.md#實際出料與逐堆變體)使用同基準。正常停服重開的 tick 接續依據，是既有 BDS 1.26.60.6 的 driver、不同 PID、正常退出及同世界 DB 紀錄；不宣稱所有引擎版本永久保持。到期時刻本身不逐秒改寫；未追蹤的容器、掉落及餐盤內容仍在取出／讀取時計算，並非全世界每秒清理 metadata。沒有新增 timer、逐件遷移或清空玩家資料，原先已由錯誤時計造成的歷史剩餘偏差也無從追回。本稿只有來源／既有紀錄審閱，未執行測試、生成、提交或部署，沒有本次方案的保存或玩家畫面證據；不稱熱食故障已觀察修復。

@@ -249,7 +249,7 @@ message.kaleidoscope_grilling.press_vat_full=附近大缸容量不足，压榨�
 message.kaleidoscope_grilling.press_wrong_vat=附近大缸内容类型不符，压榨进度已保留
 message.kaleidoscope_grilling.press_no_vat=附近没有可接收菜籽油的大缸，压榨进度已保留
 
-senluo.public.food.v1=
+senluo.public.food.v1=§r
 senluo.public.projection.v1=
 message.kg.oil_unavailable=油壺資料尚未確認，物品與油量已保留。請稍後再試。
 message.kg.oil_sync_pending=正在同步舊油壺資料，請稍後再操作。

@@ -19,7 +19,7 @@ def schema():
     source = ('import * as s from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               'import {heldVisualPropertyNames} from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               "const fields=Object.fromEntries(['main','off'].flatMap(hand=>heldVisualPropertyNames(hand).map((key,i)=>[key,{variable:s.variableName(hand,i),read:s.heldWordMolang(hand,i),ownerRead:s.heldWordMolang(hand,i,'c.owning_entity->q')}])));"
-              'process.stdout.write(JSON.stringify({fields,frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));')
+              "process.stdout.write(JSON.stringify({fields,ready:s.heldSnapshotReadyMolang(),ownerReady:s.heldSnapshotReadyMolang('c.owning_entity->q'),frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));")
     return json.loads(subprocess.check_output(['node', '--input-type=module', '-e', source], text=True))
 
 
@@ -29,12 +29,21 @@ READ = re.compile(r"((?:c\.owning_entity->)?(?:q|query))\.(property|has_property
 
 def document(value):
     if isinstance(value, str):
+        # Update the existing generated gate, not native item identity, marker,
+        # bite/terminal visibility or other animation conditions around it.
+        for owner in ('q', 'query', 'c.owning_entity->q', 'c.owning_entity->query'):
+            prop = owner + ".property('" + SCHEMA['frame'] + "')"
+            scope = 'c.owning_entity->' if owner.startswith('c.') else ''
+            requested = owner + ".has_property('" + SCHEMA['frame'] + "') && " + prop + ' > 0 && ' + scope + SCHEMA['frameVariable'] + ' == ' + prop
+            ready = SCHEMA['ownerReady' if scope else 'ready']
+            if owner.endswith('query'):
+                ready = ready.replace('q.', 'query.')
+            value = value.replace(requested, ready)
         def replace(match):
             owner, operation, key = match.groups()
             if operation == 'has_property':
-                prop = owner + ".property('" + SCHEMA['frame'] + "')"
-                scope = 'c.owning_entity->' if owner.startswith('c.') else ''
-                return '(' + owner + ".has_property('" + SCHEMA['frame'] + "') && " + prop + ' > 0 && ' + scope + SCHEMA['frameVariable'] + ' == ' + prop + ')'
+                ready = SCHEMA['ownerReady' if owner.startswith('c.') else 'ready']
+                return '(' + (ready.replace('q.', 'query.') if owner.endswith('query') else ready) + ')'
             return SCHEMA['fields'][key]['ownerRead' if owner.startswith('c.') else 'read'].replace('q.', 'query.') if owner.endswith('query') else SCHEMA['fields'][key]['ownerRead' if owner.startswith('c.') else 'read']
         return READ.sub(replace, value)
     if isinstance(value, list):

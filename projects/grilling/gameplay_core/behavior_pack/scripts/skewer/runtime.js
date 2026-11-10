@@ -10,7 +10,6 @@ import {creatorLore} from "../localized_lore_core.js";
 import {refreshHotLore} from "../food/food_state_adapter.js";
 import {resolveSecretSmokedId} from "../secret_compat_core.js";
 import {secretEatingRows} from "../secret_eating_core.js";
-import {FOOD_DATA} from "../eating_data_lookup.js";
 import {captureWritableHand,getMainHand as heldMain,getOffHand as heldOff,isCreative as creative,playerInventory as mainContainer} from "../core/player_io.js";
 import {canUseSecretSkewer} from "../food/runtime.js";
 import {skewerIngredientDecision} from "../skewer_compat_core.js";
@@ -115,7 +114,13 @@ function secretEatingData(stack){
  }catch{return undefined;}
 }
 
-function dynamicFood(stack){return canonicalFoodId(stack?.typeId)===SECRET_ID?secretEatingData(stack)?.food:FOOD_DATA[stack?.typeId]}
+function dynamicFood(stack){
+ if(canonicalFoodId(stack?.typeId)===SECRET_ID)return secretEatingData(stack)?.food;
+ // Plates accept tagged skewers beyond our fixed recipes. Read the restored
+ // item's food definition so admission, ranking and settlement agree.
+ const food=foodFacts(stack);
+ return food.edible?food:undefined;
+}
 
 function isEdible(stack){if(stack?.typeId==='kaleidoscope_grilling:sweet_potato_powder')return false;try{return foodFacts(stack).edible}catch{return false}}
 
@@ -149,7 +154,9 @@ function threadCurrent(player){
  const variants=JSON.stringify(appendedModelVariants(off.typeId==='minecraft:stick'?undefined:getItemProperty(off,SECRET_MODEL_VARIANTS_KEY),rows.length));
  setItemProperty(next,SECRET_MODEL_VARIANTS_KEY,variants);
  if(getItemProperty(next,SECRET_MODEL_VARIANTS_KEY)!==variants)throw Error('Grilling: skewer model variants were not saved');
- if(outcome.kind==='secret'){setSecretCreator(next,player);refreshHotLore(next);}
+ if(outcome.kind==='secret')setSecretCreator(next,player);
+ // Publish the icon with the same owned hand transaction as every insertion.
+ refreshHotLore(next);
  if(getItemProperty(next,SKEWER_INGREDIENTS_KEY)!==JSON.stringify(nextRows))throw new Error('Grilling: skewer data was not saved');
  if(outcome.kind==='secret'&&!getItemProperty(next,SECRET_CREATOR_KEY))throw new Error('Grilling: creator data was not saved');
  const free=creative(player),nextMain=free?food:reducedStack(food),outputs=[];

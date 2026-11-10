@@ -11,10 +11,18 @@ Public source: https://github.com/KaleidoscopeMods/KaleidoscopeCookery
 License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
 https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-Changes: source PNG pixels are unchanged. Bedrock alpha-edge shells, authored
-held display transforms, state selectors and runtime transport were added.
+Changes: source PNG inputs are unchanged. Placed oil details omit the pixels
+already drawn by Cookery's block; the original emissive model retains its
+alpha and authored bounds. Bedrock alpha-edge shells, authored held display
+transforms, state selectors and runtime transport were added.
 Derived resource geometry and copied art retain CC BY-NC-SA 4.0.
 No endorsement by the original authors is implied.
+
+Placed model reference: KaleidoscopeCookery commit
+4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c,
+src/main/resources/assets/kaleidoscope_cookery/models/block/oil_pot.json.
+The native block owns its shell, lid, handle and spout; Grilling's helper owns
+only typed-oil color details and the premium oil's authored emissive faces.
 
 Mojang generated-item display reference: extracted unchanged from the official
 Minecraft 1.21.1 client archive (URL and SHA1 in the adjacent source fixture).
