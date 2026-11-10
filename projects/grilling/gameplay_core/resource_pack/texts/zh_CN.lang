@@ -880,3 +880,11 @@ guide.kg.body.kg_a1:guide_millstone.4=支持：油菜籽→菜籽粉；洋葱→
 guide.kg.body.kg_a1:guide_millstone.5=花椒直接加入调料瓶，不需要磨粉；龙蛋粉要用厨房刀对龙蛋使用。原版红石粉和火药也直接加入。调料瓶的必备三料是青辣椒粉、花椒、洋葱粉。
 guide.kg.body.kg_a1:guide_millstone.6=不会转：检查成年工作者是否在完整磨盘上、是否被骑乘或被别的石磨占用；30 秒内没有可用工作者会退回原料。潜行空手使用释放工作者。不能入料：确认家族兼容包包含石磨扩展配方输入修复；旧版厨房 1.6.1 仅登记配方仍无法投入这些材料。
 ## END GRILLING GUIDE A3 (generated)
+kaleidoscope_cookery:itemGroup.name.tableware=餐具与包材
+kaleidoscope_tavern:itemGroup.name.appliances=餐饮设备
+kaleidoscope_cookery:itemGroup.name.ingredients=食材
+kaleidoscope_cookery:itemGroup.name.foods=料理
+kaleidoscope_tavern:itemGroup.name.guides=指南与食谱
+kaleidoscope_tavern:itemGroup.name.tavern_cultivation=作物与种子
+kaleidoscope_cookery:itemGroup.name.building=建材
+kaleidoscope_cookery:itemGroup.name.plants=花草与植栽

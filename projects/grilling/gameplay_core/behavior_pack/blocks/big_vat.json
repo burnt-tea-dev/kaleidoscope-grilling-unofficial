@@ -4,8 +4,8 @@
     "description": {
       "identifier": "kaleidoscope_grilling:big_vat",
       "menu_category": {
-        "category": "equipment",
-        "group": "kaleidoscope_cookery:itemGroup.name.cooking_stations"
+        "category": "items",
+        "group": "kaleidoscope_tavern:itemGroup.name.appliances"
       },
       "states": {
         "kaleidoscope_grilling:vat_level": [
