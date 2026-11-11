@@ -92,7 +92,7 @@ def configure_player(player, extension=None):
         for alias, condition in entry.items():
             weight = 'v.' + alias + '_active'
             initial = weight + ' = 0;'
-            update = weight + ' = q.is_in_ui ? 0 : (' + condition + ');'
+            update = weight + ' = q.is_in_ui ? 0 : (' + SCHEMA['frameVariable'] + ' > 0 ? (' + condition + ') : 0);'
             if initial not in scripts['initialize']:
                 scripts['initialize'].append(initial)
             if update not in scripts.setdefault('pre_animation', []):

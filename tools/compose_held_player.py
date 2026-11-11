@@ -246,15 +246,22 @@ def compose_riding(files, controller, bundle, controller_path):
     choose = '0'
     for condition, index in reversed(conditions):
         choose = f'({condition}) ? {index} : ({choose})'
+    # Skin previews also evaluate pre_animation, without necessarily having
+    # gameplay actors or queryable bones. Only a real motorcycle rider needs
+    # the skin query. Keep branch bodies explicit, rather than putting actor
+    # queries at the end of a boolean expression. The composed BP above owns
+    # action_property, so an additional has_property probe is unnecessary.
     scripts.setdefault('pre_animation', []).extend([
         'variable.ordertocook_drive_variant = 0;',
-        '!q.is_in_ui && !q.is_persona_or_premium_skin ? { '
+        'variable.ordertocook_drive_tp = 0;',
+        'q.is_in_ui ? 0 : { '
+        f"q.is_riding_any_entity_of_type('{contract['entity_type']}') ? {{ "
+        '(!variable.is_first_person && !q.is_spectator && !q.is_persona_or_premium_skin) ? { '
         "variable.otc_right_origin = q.bone_origin('rightArm'); "
         "variable.otc_left_origin = q.bone_origin('leftArm'); "
-        'variable.ordertocook_drive_variant = ' + choose + '; };',
-        'variable.ordertocook_drive_tp = q.is_in_ui ? 0 : '
-        f"(!variable.is_first_person && !q.is_spectator && q.is_riding_any_entity_of_type('{contract['entity_type']}') "
-        f"&& variable.ordertocook_drive_variant > 0 && q.has_property('{name}'));"
+        'variable.ordertocook_drive_variant = ' + choose + '; '
+        'variable.ordertocook_drive_tp = variable.ordertocook_drive_variant > 0; '
+        '}; }; };'
     ])
     player['animations'] = merge_identical(player['animations'], contract['animations'])
     # Native riding and drive must not both own the same body/limb channels.
