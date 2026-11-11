@@ -1948,5 +1948,15 @@
       "sha256": "db427717daddbe805edc8b1c1b5e8e819d56ddfc76edad1ee2f3d98f8f2a0570",
       "files": 3531
     }
+  },
+  "2.8.264": {
+    "BP": {
+      "sha256": "1c7568638b2dd028965b0a3bdd41ce0b2e719461969491065f54c629103ac172",
+      "files": 801
+    },
+    "RP": {
+      "sha256": "1e955e0a1a2f653ba4b0872cf37a98523acfdee0733ee3ae8f0da142464b062c",
+      "files": 3531
+    }
   }
 }
