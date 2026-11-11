@@ -1,5 +1,9 @@
 # 變更摘要
 
+## 2.8.267
+
+- Integrate the placed and held plate-body UV direction fixes from PR #398 and #400, preserving the existing food geometry and seasoning motion. Local source only; game rendering remains unobserved.
+
 ## 2.8.261 本機撒料動作修正
 
 - 成功撒料沿同一動作入口播放原作10 tick主臂動作，扣料仍由實際使用手負責；耗盡或換物不提前清掉動作。

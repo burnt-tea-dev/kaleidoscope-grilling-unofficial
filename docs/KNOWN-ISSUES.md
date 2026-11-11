@@ -23,6 +23,7 @@
 | GRILL-DISPLAY-FACING | 舊 helper 將 Java pose rotation 直接取負作 entity yaw，北／南食材柄與放置方向相反；G182 對出生與後續 teleport 同用 `rotation-180`，東／西等價結果不變 | 四個 cardinal 實際查看三槽、四次翻面、區塊重載與 helper respawn；API fixture 已覆蓋位置與 yaw，但未證明實際 geometry／動畫畫面 |
 | SECRET-INGREDIENT-VISUALS | G182 追加八種 Java 既有食材的 218–225 視覺索引、七階段色板、GUI color data 與 helper geometry；舊 food／hand-bank marker、油與失敗串 owner 不重新編號 | 八食材逐種穿串、雙手、未完成／失敗串、烤架、餐盤、七階段及保存重載的實際顏色與形狀；每stack背包圖示另查下列SKEWER-GUI |
 | SKEWER-CONTENTS | 玩家曾回報配方不合、穿料後只見竹籤與吃空氣；G151／152 有取得契約、短配方、內容、圖像及共同資料守衛修補 | 正常取得→1／2／3 料穿製→烤製→盤／手持→食用／保存；空／不完整串不能被重複穿外層，合法零營養仍遵循原作。任意 stack icon 另驗 |
+| PLATE-BODY-UV | 2026-11-11來源整合PR398／400的盤體六面UV方向；放置模型與手持bank僅改body，既有食物record／骨架／座標／材質與動作保留。原模型提供者對照固定Java及Cookery1.4.1，root直接審PR差異與現行consumer | 本輪未執行測試或新模型／遊戲觀察；上游Blockbench證據不是Minecraft畫面，也未證動態閃爍、食物接觸或持握完成。部署查整合者的確切候選，不以PR草稿版本推論已安裝 |
 | PLATE-FOOD-OWNER | 2026-11-10 來源草稿：餐盤允許帶 raw／grilled skewer 標籤的外部食品，舊存盤路徑讀原生 food，但食用結算只查自家 FOOD_DATA；未收錄的合法可食串可扣份而不加營養。改由既有 dynamicFood 統一存盤與結算，普通串讀 foodFacts，秘製串保留原食材算法；移除餐盤重複 resolver | 僅直接審閱來源；依擁有者禁令沒有新增或執行測試，沒有新遊戲觀察。未提交、發行或部署；不宣稱舊「只見竹籤／吃空氣」已重現或已還原 |
 | CLIENT-HUD | 曾無森羅 UI、外露 `KT_HUD!` 資料、位置錯及秒級延遲；G245提前略過普通訊息／END的圖像群組，保留原packet清場，詳見[入口範圍](PARITY.md#進食hud的訊息入口與額外工作) | 觸控／Desktop、全食品、兩手、連吃、取消、END 隱藏與真實延遲仍未全面觀察；入口模型／BDS載入不是client建構耗時、FPS或發熱改善證據 |
 | EATING-OWNER | G143 修 owning-player property 環境、副手進度、末段隱藏、RawMessage 等價比較及失敗掃描節流 | 近鏡放大、末段平片、換槽／重登、瓶子與食物 preparation 並存仍需當前驗收；不猜改 Java 曲線掩蓋失敗 |
