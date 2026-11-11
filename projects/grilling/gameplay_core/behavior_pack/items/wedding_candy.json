@@ -4,8 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_grilling:wedding_candy",
       "menu_category": {
-        "category": "items",
-        "group": "kaleidoscope_cookery:itemGroup.name.foods"
+        "category": "none"
       }
     },
     "components": {

@@ -27,7 +27,7 @@ import {awardSeasoningMilestones} from "../advancement/advancement_event_runtime
 import {interactionParticleBurst} from "../immersion_particles_runtime.js";
 import {refreshPlacedBottleAfterPickup} from "../presentation/placed_visual_runtime.js";
 import {hasSolidTop} from "../blockSupport.js";
-import {captureInteractionIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
+import {captureBottlePlacementIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
 function bottleDataFromItem(stack){
  if(!isNativeBottleItem(stack))throw new Error('Unknown item cannot become a seasoning bottle');
  const kind=isSpecialSeasoningId(stack?.typeId)?'special':isPendingSeasoningId(stack?.typeId)?'pending':'empty';
@@ -51,7 +51,12 @@ function bottleItem(data,originalEmpty){
 
 function setBottleVisual(block,count){
  const target=count>0?'kaleidoscope_grilling:seasoning_bottle_'+Math.max(1,Math.min(SEASONING_MAX_BOTTLES,count)):'minecraft:air';
- if(block.typeId!==target)block.setType(target);
+ if(block.typeId===target)return;
+ if(count<=0){block.setType(target);return}
+ // Changing COUNT in Java retains FACING. Keep the same native direction when
+ // Bedrock represents that count by another bottle block ID.
+ const facing=block.permutation.getState('minecraft:cardinal_direction')??'south';
+ block.setPermutation(BlockPermutation.resolve(target,{'minecraft:cardinal_direction':facing}));
 }
 
 function nativeBottles(block,options){return readNativeBottles(block,bottleDataFromItem,bottleItem,options)}
@@ -159,7 +164,30 @@ const bottleInteractionSupports=new Set([
  'grass_block','podzol','rooted_dirt','netherrack','end_stone','obsidian','bedrock'
 ].map(id=>'minecraft:'+id));
 
-const pendingBottlePlacements=new Set();
+// One owner for input capture and the existing deferred placement transaction.
+const pendingBottlePlacements=new Map();
+
+export function captureBottlePlacementInput(e){
+ const player=e.player;if(!player)return;
+ const previous=pendingBottlePlacements.get(player.id);
+ // A native callback may arrive first. It can receive its one source capture
+ // until the deferred transaction starts; never retarget an already paired use.
+ if(previous?.queued&&(!previous.native||previous.input||previous.tick!==system.currentTick))return;
+ // A later input supersedes an unconsumed capture, including non-bottle use.
+ if(!previous?.queued)pendingBottlePlacements.delete(player.id);
+ if(e.cancel||e.blockFace!=='Up'||!isNativeBottleItem(e.itemStack))return;
+ try{
+  const intent=captureBottlePlacementIntent(player,e.itemStack);if(!intent)return;
+  const input={intent,dimension:e.block.dimension.id,hit:{...e.block.location},
+   pending:isPendingSeasoningId(e.itemStack.typeId),sneaking:player.isSneaking};
+  if(previous?.queued){previous.input=input;return}
+  const pending={input,tick:system.currentTick,queued:false};
+  pendingBottlePlacements.set(player.id,pending);
+  // Captures are usable only by the native placement in this input's tick.
+  // No polling or persisted per-player identity is introduced.
+  system.run(()=>{if(pendingBottlePlacements.get(player.id)===pending&&!pending.queued)pendingBottlePlacements.delete(player.id)});
+ }catch{if(!previous?.queued)pendingBottlePlacements.delete(player.id)}
+}
 
 function tryScheduleOffhandBottleInteraction(e){
  if(e.cancel||e.isFirstEvent!==true||e.itemStack!=null||e.blockFace!=='Up')return false;
@@ -174,8 +202,12 @@ function tryScheduleOffhandBottleInteraction(e){
   const support=e.block;
   if(!bottleInteractionSupports.has(support.typeId)||!hasSolidTop(support))return false;
   const block=support.above();if(!block||block.typeId!=='minecraft:air')return false;
-  const intent=captureInteractionIntent(player,off);if(intent?.hand!=='off')return false;
-  const proposed=BlockPermutation.resolve(SEASONING_BLOCK);
+  const intent=captureBottlePlacementIntent(player,off);if(intent?.hand!=='off')return false;
+  // Capture Java's horizontal getOpposite() at this input, before a deferred
+  // placement can observe the player turning. Native placement uses its trait.
+  const yaw=player.getRotation().y;if(!Number.isFinite(yaw))return false;
+  const facing=['north','east','south','west'][((Math.floor(yaw/90+.5)%4)+4)%4];
+  const proposed=BlockPermutation.resolve(SEASONING_BLOCK,{'minecraft:cardinal_direction':facing});
   if(!queueBottlePlacement(player,block,intent,proposed))return false;
   e.cancel=true;return true;
  }catch{return false}
@@ -185,32 +217,32 @@ function scheduleNativeBottlePlacement(e){
  if(e.cancel)return;e.cancel=true;
  const player=e.player;if(!player||e.face!=='Up')return;
  const mode=player.getGameMode();if(mode!==GameMode.Survival&&mode!==GameMode.Creative)return;
- // This native placement event has no hand/itemStack. Never guess between
- // two bottles sharing its block route, even when their metadata differs.
- let intent;
- try{
-  const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
-  const isBottle=isNativeBottleItem;
-  const mainBottle=isBottle(main),offBottle=isBottle(off);
-  if(mainBottle===offBottle)return;
-  const hand=offBottle?'off':'main',held=offBottle?off:main;
-  if(isPendingSeasoningId(held.typeId)&&!player.isSneaking)return;
-  intent=captureInteractionIntent(player,held);
-  if(intent?.hand!==hand)return;
- }catch{return} // An unreadable hand cannot establish a unique source.
+ // Native placement supplies the destination/permutation, but no source hand.
+ // Pair the real interaction and native destination in either callback order.
+ // Without both callbacks in this tick the deferred transaction does nothing.
+ const previous=pendingBottlePlacements.get(player.id);if(previous?.queued)return;
+ const pending=previous?.tick===system.currentTick?previous:{tick:system.currentTick,queued:false};
+ pending.native=true;
  const support=e.block.below();if(!hasSolidTop(support))return;
- queueBottlePlacement(player,e.block,intent,e.permutationToPlace);
+ queueBottlePlacement(player,e.block,undefined,e.permutationToPlace,pending);
 }
 
 // Both entry points preserve the original stack/hand, snapshots and transaction.
 // One pending action per player prevents duplicate callbacks, including rollback.
-function queueBottlePlacement(player,targetBlock,intent,proposed){
- const key=player.id;if(typeof key!=='string'||!key||pendingBottlePlacements.has(key))return false;
+function queueBottlePlacement(player,targetBlock,capturedIntent,proposed,captured){
+ const key=player.id;if(typeof key!=='string'||!key||pendingBottlePlacements.get(key)?.queued)return false;
  const target=bottleTargetSnapshot(targetBlock),below=bottleTargetSnapshot(targetBlock.below()),dimension=targetBlock.dimension,location={...targetBlock.location},slot=player.selectedSlotIndex;
- pendingBottlePlacements.add(key);
+ const pending=captured??{queued:false};pending.queued=true;pendingBottlePlacements.set(key,pending);
  try{system.run(()=>{
   let block,current,freshPreflight=false;
   try{
+   const input=pending.input,intent=input?.intent??capturedIntent;
+   if(pending.native){
+    if(!input||input.dimension!==dimension.id)return;
+    const hit=input.hit;
+    if(location.x!==hit.x||location.z!==hit.z||(location.y!==hit.y&&location.y!==hit.y+1))return;
+    if(input.pending&&(!input.sneaking||!player.isSneaking))return;
+   }
    if(player.isValid===false||player.dimension.id!==dimension.id||player.selectedSlotIndex!==slot||!interactionIntentStillCurrent(player,intent))return;
    // A released sneak must not turn a later ordinary use into a queued place.
    if(isPendingSeasoningId(heldByHand(player,intent.hand)?.typeId)&&!player.isSneaking)return;

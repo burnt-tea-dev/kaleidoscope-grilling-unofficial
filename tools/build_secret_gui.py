@@ -1,7 +1,8 @@
 """Generate inventory presentation from the pinned Java masks and GUI palette.
 
-The hook decorates the existing item renderer; it owns no inventory buttons or
-gameplay input. Missing per-slot cache leaves the native item renderer visible.
+Collection slots choose between a native renderer and composed Java masks.
+The native renderer stays unchanged for cursor/global callers. No gameplay input
+or inventory button is owned here.
 """
 from pathlib import Path
 import argparse
@@ -68,15 +69,31 @@ def digit(markers, field):
 def bindings():
     return [
         {'binding_type':'collection_details', 'binding_collection_name':'$item_collection_name'},
-        {'binding_name':'#hover_text', 'binding_type':'collection', 'binding_collection_name':'$item_collection_name',
+        {'binding_name':'$hover_text_binding_name', 'binding_type':'collection', 'binding_collection_name':'$item_collection_name',
          'binding_name_override':'#kg_secret_recipe', 'binding_condition':'always_when_visible'}
     ]
 
 
+def recipe_binding(expression, target):
+    # Every named source belongs to this slot, never another repeated slot.
+    return {'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
+            'resolve_sibling_scope':True, 'source_property_name':expression,
+            'target_property_name':target}
+
+
 def ui(data):
     active = present(data['header'])
-    controls = [{'stick':{'type':'image', 'texture':TEXTURES+'/stick', 'size':['100%', '100%'],
-                         'bilinear':False, 'layer':0}}]
+    source = {'type':'panel', 'size':['100%', '100%'],
+        'property_bag':{'#kg_secret_recipe':'', '#kg_secret_active':False},
+        'bindings':bindings()+[
+            {'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#kg_secret_active'}]}
+    native = json.loads((FIX/'native-item-renderer.json').read_text())['item_renderer']
+    native_slot = {**native, 'size':['100%', '100%']}
+    native_slot['bindings'] = native['bindings'] + [recipe_binding('(not #kg_secret_active)', '#visible')]
+    controls = [{'kg_secret_recipe_source':source}, {'native_icon':native_slot},
+                {'stick':{'type':'image', 'texture':TEXTURES+'/stick', 'size':['100%', '100%'],
+                          'bilinear':False, 'layer':0,
+                          'bindings':[recipe_binding('#kg_secret_active', '#visible')]}}]
     for slot in range(3):
         # Decode small numeric properties first. Do not expand the complete
         # recipe arithmetic into each texture-path expression.
@@ -93,53 +110,24 @@ def ui(data):
                 'allow_debug_missing_texture':False, 'bilinear':False, 'layer':3-slot,
                 'property_bag':{'#kg_secret_recipe':'', '#kg_food_hi':0, '#kg_food_lo':0, '#kg_style':0},
                 'bindings':[
-                    {'binding_type':'view', 'source_control_name':'kg_secret_recipe_source', 'source_property_name':'#kg_secret_recipe', 'target_property_name':'#kg_secret_recipe'},
+                    recipe_binding('#kg_secret_recipe', '#kg_secret_recipe'),
                     {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot), 'target_property_name':'#kg_food_hi'},
                     {'binding_type':'view', 'source_property_name':digit(data['markers'], 2*slot+1), 'target_property_name':'#kg_food_lo'},
                     {'binding_type':'view', 'source_property_name':style, 'target_property_name':'#kg_style'},
-                    {'binding_type':'view', 'source_property_name':'('+chosen+' and '+present_food+')', 'target_property_name':'#visible'},
+                    {'binding_type':'view', 'source_property_name':'(('+active+') and '+chosen+' and '+present_food+')', 'target_property_name':'#visible'},
                     {'binding_type':'view', 'source_property_name':texture, 'target_property_name':'#texture'}
                 ]
             }})
-    view = {'namespace':'kg_secret_gui', 'icon':{
-        'type':'panel', 'size':['100%', '100%'], 'alpha':1.0, 'controls':controls,
-        'bindings':[{'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
-                     'source_property_name':'#kg_secret_active', 'target_property_name':'#visible'}]
-    }, 'slot_overlay':{
+    view = {'namespace':'kg_secret_gui', 'slot_renderer':{
         'type':'panel', 'size':['100%', '100%'],
-        # Native cursor/selected-item callers have global bindings and no
-        # collection. Do not invent a slot for those callers.
-        '$item_collection_name|default':'',
-        'ignored':"($item_collection_name = '')",
-        # Stay in the real slot's collection context. A second collection
-        # factory inserts a synthetic row between this source and its images.
-        # Keep the source present when the native icon turns transparent.
-        'controls':[{'composed_icon@kg_secret_gui.icon':{}}],
-        'property_bag':{'#kg_secret_recipe':'', '#kg_secret_active':False},
-        'bindings':bindings()+[
-            {'binding_type':'view', 'source_property_name':'('+active+')', 'target_property_name':'#kg_secret_active'}
-        ]
-    }}
-    # Retain the native renderer contract; derived callers may replace bindings.
-    # Only its own drawing becomes transparent for a marked secret; the child
-    # icon keeps its alpha. This does not replace container controls or inputs.
-    # This is a complete same-name definition, not an inheritance patch.
-    # Emit the alpha view binding directly: a custom renderer rejects the
-    # modifications property and passes that error to its derived controls.
-    renderer = json.loads((FIX/'native-item-renderer.json').read_text())['item_renderer']
-    renderer.update({
-        # Non-collection callers (selected-item icon, furnace result, chest
-        # slots) never declare a collection name; resolve to an empty one
-        # instead of reporting a missing ancestor variable on every state.
-        '$item_collection_name|default':'',
-        'propagate_alpha':False,
-        'controls':[{'kg_secret_recipe_source@kg_secret_gui.slot_overlay':{}}]
-    })
-    renderer['bindings'].append({
-        'binding_type':'view', 'source_control_name':'kg_secret_recipe_source',
-        'source_property_name':'(not #kg_secret_active)', 'target_property_name':'#alpha'
-    })
-    hook = {'namespace':'common', 'item_renderer':renderer}
+        '$hover_text_binding_name|default':'#hover_text', 'controls':controls}}
+    # Change the collection-slot renderer choice at its actual owner. Preserve
+    # the complete native input-panel definition, including buttons and focus.
+    container = json.loads((ROOT/'data/native_inventory_slot.json').read_text())['container_item']
+    container['$item_renderer|default'] = 'kg_secret_gui.slot_renderer'
+    # Do not redefine common.item_renderer: global/cursor callers inherit the
+    # game's own native definition, without our collection-slot children.
+    hook = {'namespace':'common', 'container_item':container}
     return view, hook
 
 

@@ -1958,5 +1958,15 @@
       "sha256": "7ea16641231deef0262c06be6d28a403ae10e9c4c3305ed0c5f45cbe2b62b281",
       "files": 3531
     }
+  },
+  "2.8.260": {
+    "BP": {
+      "sha256": "fc53701a66441d4e8c2b8b35a32bf10ec7ee218ec31daafde342cf2af8977a4d",
+      "files": 801
+    },
+    "RP": {
+      "sha256": "62f74dfdefcdbb94d2206457937146419f0fc4a39d75825a8f64dd57425738f1",
+      "files": 3531
+    }
   }
 }

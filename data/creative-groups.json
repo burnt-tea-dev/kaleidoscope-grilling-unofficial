@@ -1,97 +1,647 @@
 {
-  "groups": {
-    "tableware": {
-      "category": "items",
-      "name": "kaleidoscope_cookery:itemGroup.name.tableware",
-      "icon": "minecraft:bowl",
-      "labels": {
-        "en_US": "Tableware & Packaging",
-        "zh_CN": "餐具与包材",
-        "zh_TW": "餐具與包材"
-      }
+  "schema": 1,
+  "namespace": "kaleidoscope_grilling",
+  "sources": [
+    {
+      "minecraft": "1.20.1",
+      "loader": "Forge",
+      "repository": "breezeth-CN/KaleidoscopeGrilling",
+      "commit": "9a1acdab27698457bec16c9362678e574895a28c",
+      "caller": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModCreativeTabs.java",
+      "registration_order": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+      "block_items": "forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java"
     },
-    "appliances": {
-      "name": "kaleidoscope_tavern:itemGroup.name.appliances",
-      "category": "items",
-      "icon": "minecraft:crafting_table",
-      "labels": {
-        "en_US": "Kitchen Equipment",
-        "zh_CN": "餐饮设备",
-        "zh_TW": "餐飲設備"
-      }
-    },
-    "ingredients": {
-      "category": "items",
-      "name": "kaleidoscope_cookery:itemGroup.name.ingredients",
-      "icon": "minecraft:carrot",
-      "labels": {
-        "en_US": "Ingredients",
-        "zh_CN": "食材",
-        "zh_TW": "食材"
-      }
-    },
-    "foods": {
-      "name": "kaleidoscope_cookery:itemGroup.name.foods",
-      "category": "items",
-      "icon": "minecraft:bread",
-      "labels": {
-        "en_US": "Prepared Food",
-        "zh_CN": "料理",
-        "zh_TW": "料理"
-      }
-    },
-    "guides": {
-      "name": "kaleidoscope_tavern:itemGroup.name.guides",
-      "category": "items",
-      "icon": "minecraft:book",
-      "labels": {
-        "en_US": "Guides & Recipes",
-        "zh_CN": "指南与食谱",
-        "zh_TW": "指南與食譜"
-      }
-    },
-    "crops": {
-      "name": "kaleidoscope_tavern:itemGroup.name.tavern_cultivation",
-      "category": "nature",
-      "icon": "minecraft:sweet_berries",
-      "labels": {
-        "en_US": "Crops & Seeds",
-        "zh_CN": "作物与种子",
-        "zh_TW": "作物與種子"
-      }
-    },
-    "building": {
-      "category": "construction",
-      "name": "kaleidoscope_cookery:itemGroup.name.building",
-      "icon": "minecraft:bricks",
-      "labels": {
-        "en_US": "Building Materials",
-        "zh_CN": "建材",
-        "zh_TW": "建材"
-      }
-    },
-    "plants": {
-      "category": "nature",
-      "name": "kaleidoscope_cookery:itemGroup.name.plants",
-      "icon": "minecraft:fern",
-      "labels": {
-        "en_US": "Plants",
-        "zh_CN": "花草与植栽",
-        "zh_TW": "花草與植栽"
-      }
+    {
+      "minecraft": "1.21.1",
+      "loader": "NeoForge",
+      "repository": "breezeth-CN/KaleidoscopeGrilling",
+      "commit": "9a1acdab27698457bec16c9362678e574895a28c",
+      "caller": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModCreativeTabs.java",
+      "registration_order": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModItems.java",
+      "block_items": "neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/registry/ModBlocks.java"
     }
+  ],
+  "selected_source": {
+    "minecraft": "1.20.1",
+    "loader": "Forge"
   },
-  "group_moves": {
-    "kaleidoscope_cookery:itemGroup.name.tools": "tableware",
-    "kaleidoscope_cookery:itemGroup.name.cooking_stations": "appliances",
-    "kaleidoscope_cookery:itemGroup.name.storage_utility": "appliances",
-    "kaleidoscope_cookery:itemGroup.name.ingredients": "ingredients",
-    "kaleidoscope_cookery:itemGroup.name.foods": "foods",
-    "kaleidoscope_cookery:itemGroup.name.recipe_pages": "guides",
-    "kaleidoscope_cookery:itemGroup.name.crops": "crops"
-  },
-  "items": {
-    "kaleidoscope_grilling:pepper_log": "building",
-    "kaleidoscope_grilling:pepper_leaves": "plants"
-  }
+  "projection": "One Java main tab -> one native Items group. Equipment/prepared states, raw recipes, fixed cooked recipes, then actual registration order. Prepared-stack gaps do not change IDs or expose hidden implementations.",
+  "tabs": [
+    {
+      "id": "kaleidoscope_grilling:main",
+      "title": "itemGroup.kaleidoscope_grilling.main",
+      "category": "items",
+      "group": "kaleidoscope_grilling:itemGroup.main",
+      "icon": "kaleidoscope_grilling:grill",
+      "labels": {
+        "en_US": "Kaleidoscope Grilling",
+        "zh_CN": "森罗物语：烟火",
+        "zh_TW": "森羅物語・煙火"
+      },
+      "entries": [
+        {
+          "java": "kaleidoscope_grilling:grill",
+          "bedrock": "kaleidoscope_grilling:grill",
+          "state": "default",
+          "position": 1
+        },
+        {
+          "java": "kaleidoscope_grilling:oil_press",
+          "bedrock": "kaleidoscope_grilling:oil_press",
+          "state": "default",
+          "position": 2
+        },
+        {
+          "java": "kaleidoscope_grilling:big_vat",
+          "bedrock": "kaleidoscope_grilling:big_vat",
+          "state": "default",
+          "position": 3
+        },
+        {
+          "java": "kaleidoscope_grilling:advanced_rack",
+          "bedrock": "kaleidoscope_grilling:advanced_rack",
+          "state": "default",
+          "position": 4
+        },
+        {
+          "java": "kaleidoscope_grilling:skewer_recipe_book",
+          "bedrock": "kaleidoscope_grilling:skewer_recipe_book",
+          "state": "recipeResult=raw_beef_skewer",
+          "gap": "Native catalog cannot seed the Java recipe-result stack data.",
+          "position": 5
+        },
+        {
+          "java": "kaleidoscope_grilling:empty_seasoning_bottle",
+          "bedrock": "kaleidoscope_grilling:empty_seasoning_bottle",
+          "state": "default",
+          "position": 6
+        },
+        {
+          "java": "kaleidoscope_grilling:special_seasoning",
+          "bedrock": "kaleidoscope_grilling:special_seasoning",
+          "state": "seasonings=[green_chili_powder,sichuan_pepper,onion_powder]",
+          "gap": "Native catalog cannot seed the three-seasoning stack data.",
+          "position": 7
+        },
+        {
+          "java": "kaleidoscope_cookery:oil_pot",
+          "bedrock": null,
+          "state": "oil=canola,amount=64",
+          "bedrock_projection": null,
+          "unavailable": "Three prepared stacks of one foreign item need stack data; do not add a hard dependency or expose an empty substitute.",
+          "position": 8
+        },
+        {
+          "java": "kaleidoscope_cookery:oil_pot",
+          "bedrock": null,
+          "state": "oil=secret_chili,amount=64",
+          "bedrock_projection": null,
+          "unavailable": "Three prepared stacks of one foreign item need stack data; do not add a hard dependency or expose an empty substitute.",
+          "position": 9
+        },
+        {
+          "java": "kaleidoscope_cookery:oil_pot",
+          "bedrock": null,
+          "state": "oil=premium_chili,amount=64",
+          "bedrock_projection": null,
+          "unavailable": "Three prepared stacks of one foreign item need stack data; do not add a hard dependency or expose an empty substitute.",
+          "position": 10
+        },
+        {
+          "java": "kaleidoscope_grilling:canola_oil_bucket",
+          "bedrock": "kaleidoscope_grilling:canola_oil_bucket",
+          "state": "default",
+          "position": 11
+        },
+        {
+          "java": "kaleidoscope_grilling:secret_chili_oil_bucket",
+          "bedrock": "kaleidoscope_grilling:secret_chili_oil_bucket",
+          "state": "default",
+          "position": 12
+        },
+        {
+          "java": "kaleidoscope_grilling:premium_chili_oil_bucket",
+          "bedrock": "kaleidoscope_grilling:premium_chili_oil_bucket",
+          "state": "default",
+          "position": 13
+        },
+        {
+          "java": "kaleidoscope_grilling:secret_skewer",
+          "bedrock": "kaleidoscope_grilling:secret_skewer",
+          "state": "creativePreview=true; cooked=false; rotating three ingredient sets",
+          "unavailable": "Existing secret-skewer implementations are hidden; the native catalog cannot create the Java animated preview stack.",
+          "position": 14
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_beef_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_beef_skewer",
+          "state": "default",
+          "position": 15
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_pork_belly_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_pork_belly_skewer",
+          "state": "default",
+          "position": 16
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_chicken_skin_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_chicken_skin_skewer",
+          "state": "default",
+          "position": 17
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_mid_wing_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_mid_wing_skewer",
+          "state": "default",
+          "position": 18
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_squid_tentacle_skewer",
+          "state": "default",
+          "position": 19
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_fish_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_fish_skewer",
+          "state": "default",
+          "position": 20
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_sweet_potato_sheet_skewer",
+          "state": "default",
+          "position": 21
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_potato_slice_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_potato_slice_skewer",
+          "state": "default",
+          "position": 22
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_caterpillar_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_caterpillar_skewer",
+          "state": "default",
+          "position": 23
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_mushroom_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_mushroom_skewer",
+          "state": "default",
+          "position": 24
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_bun_slice_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_bun_slice_skewer",
+          "state": "default",
+          "position": 25
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_ender_pearl_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_ender_pearl_skewer",
+          "state": "default",
+          "position": 26
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_meatball_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_meatball_skewer",
+          "state": "default",
+          "position": 27
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_slime_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_slime_skewer",
+          "state": "default",
+          "position": 28
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_meat_and_bone_skewer",
+          "state": "default",
+          "position": 29
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_fried_egg_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_fried_egg_skewer",
+          "state": "default",
+          "position": 30
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_gluten_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_gluten_skewer",
+          "state": "default",
+          "position": 31
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_lamb_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_lamb_skewer",
+          "state": "default",
+          "position": 32
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_golden_skewer",
+          "bedrock": "kaleidoscope_grilling:raw_golden_skewer",
+          "state": "default",
+          "position": 33
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_beef_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_beef_skewer",
+          "state": "default",
+          "position": 34
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_pork_belly_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_pork_belly_skewer",
+          "state": "default",
+          "position": 35
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_chicken_skin_skewer",
+          "state": "default",
+          "position": 36
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_mid_wing_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_mid_wing_skewer",
+          "state": "default",
+          "position": 37
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_squid_tentacle_skewer",
+          "state": "default",
+          "position": 38
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_fish_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_fish_skewer",
+          "state": "default",
+          "position": 39
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_sweet_potato_sheet_skewer",
+          "state": "default",
+          "position": 40
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_potato_slice_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_potato_slice_skewer",
+          "state": "default",
+          "position": 41
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_caterpillar_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_caterpillar_skewer",
+          "state": "default",
+          "position": 42
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_mushroom_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_mushroom_skewer",
+          "state": "default",
+          "position": 43
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_bun_slice_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_bun_slice_skewer",
+          "state": "default",
+          "position": 44
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_ender_pearl_skewer",
+          "state": "default",
+          "position": 45
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_meatball_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_meatball_skewer",
+          "state": "default",
+          "position": 46
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_slime_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_slime_skewer",
+          "state": "default",
+          "position": 47
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_meat_and_bone_skewer",
+          "state": "default",
+          "position": 48
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_fried_egg_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_fried_egg_skewer",
+          "state": "default",
+          "position": 49
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_gluten_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_gluten_skewer",
+          "state": "default",
+          "position": 50
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_lamb_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_lamb_skewer",
+          "state": "default",
+          "position": 51
+        },
+        {
+          "java": "kaleidoscope_grilling:grilled_golden_skewer",
+          "bedrock": "kaleidoscope_grilling:grilled_golden_skewer",
+          "state": "default",
+          "position": 52
+        },
+        {
+          "java": "kaleidoscope_grilling:ordinary_skewer",
+          "bedrock": "kaleidoscope_grilling:ordinary_skewer",
+          "state": "default",
+          "position": 53
+        },
+        {
+          "java": "kaleidoscope_grilling:mysterious_skewer",
+          "bedrock": "kaleidoscope_grilling:mysterious_skewer",
+          "state": "cooked custom [apple,beef_chunks,brown_mushroom]; failed source",
+          "gap": "Existing default ID cannot seed the Java failure-source and ingredient metadata.",
+          "position": 54
+        },
+        {
+          "java": "kaleidoscope_grilling:dark_grilling",
+          "bedrock": "kaleidoscope_grilling:dark_grilling",
+          "state": "creative failed source=raw_beef_skewer",
+          "gap": "Existing default ID cannot seed the Java failure-source metadata.",
+          "position": 55
+        },
+        {
+          "java": "kaleidoscope_grilling:beef_chunks",
+          "bedrock": "kaleidoscope_grilling:beef_chunks",
+          "state": "default",
+          "position": 56
+        },
+        {
+          "java": "kaleidoscope_grilling:chicken_skin",
+          "bedrock": "kaleidoscope_grilling:chicken_skin",
+          "state": "default",
+          "position": 57
+        },
+        {
+          "java": "kaleidoscope_grilling:chicken_wing",
+          "bedrock": "kaleidoscope_grilling:chicken_wing",
+          "state": "default",
+          "position": 58
+        },
+        {
+          "java": "kaleidoscope_grilling:squid_tentacle",
+          "bedrock": "kaleidoscope_grilling:squid_tentacle",
+          "state": "default",
+          "position": 59
+        },
+        {
+          "java": "kaleidoscope_grilling:houttuynia",
+          "bedrock": "kaleidoscope_grilling:houttuynia",
+          "state": "default",
+          "position": 60
+        },
+        {
+          "java": "kaleidoscope_grilling:minced_houttuynia",
+          "bedrock": "kaleidoscope_grilling:minced_houttuynia",
+          "state": "default",
+          "position": 61
+        },
+        {
+          "java": "kaleidoscope_grilling:carrot_dice",
+          "bedrock": "kaleidoscope_grilling:carrot_dice",
+          "state": "default",
+          "position": 62
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+          "bedrock": "kaleidoscope_grilling:raw_sweet_potato_sheet",
+          "state": "default",
+          "position": 63
+        },
+        {
+          "java": "kaleidoscope_grilling:potato_slice",
+          "bedrock": "kaleidoscope_grilling:potato_slice",
+          "state": "default",
+          "position": 64
+        },
+        {
+          "java": "kaleidoscope_grilling:raw_mantou_slice",
+          "bedrock": "kaleidoscope_grilling:raw_mantou_slice",
+          "state": "default",
+          "position": 65
+        },
+        {
+          "java": "kaleidoscope_grilling:green_chili_powder",
+          "bedrock": "kaleidoscope_grilling:green_chili_powder",
+          "state": "default",
+          "position": 66
+        },
+        {
+          "java": "kaleidoscope_grilling:sichuan_pepper",
+          "bedrock": "kaleidoscope_grilling:sichuan_pepper",
+          "state": "default",
+          "position": 67
+        },
+        {
+          "java": "kaleidoscope_grilling:onion_powder",
+          "bedrock": "kaleidoscope_grilling:onion_powder",
+          "state": "default",
+          "position": 68
+        },
+        {
+          "java": "kaleidoscope_grilling:houttuynia_powder",
+          "bedrock": "kaleidoscope_grilling:houttuynia_powder",
+          "state": "default",
+          "position": 69
+        },
+        {
+          "java": "kaleidoscope_grilling:totem_powder",
+          "bedrock": "kaleidoscope_grilling:totem_powder",
+          "state": "default",
+          "position": 70
+        },
+        {
+          "java": "kaleidoscope_grilling:dragon_egg_powder",
+          "bedrock": "kaleidoscope_grilling:dragon_egg_powder",
+          "state": "default",
+          "position": 71
+        },
+        {
+          "java": "kaleidoscope_grilling:oil_cake",
+          "bedrock": "kaleidoscope_grilling:oil_cake",
+          "state": "default",
+          "position": 72
+        },
+        {
+          "java": "kaleidoscope_grilling:oil_residue",
+          "bedrock": "kaleidoscope_grilling:oil_residue",
+          "state": "default",
+          "position": 73
+        },
+        {
+          "java": "kaleidoscope_grilling:canola_powder",
+          "bedrock": "kaleidoscope_grilling:canola_powder",
+          "state": "default",
+          "position": 74
+        },
+        {
+          "java": "kaleidoscope_grilling:red_chili_powder",
+          "bedrock": "kaleidoscope_grilling:red_chili_powder",
+          "state": "default",
+          "position": 75
+        },
+        {
+          "java": "kaleidoscope_grilling:onion",
+          "bedrock": "kaleidoscope_grilling:onion",
+          "state": "default",
+          "position": 76
+        },
+        {
+          "java": "kaleidoscope_grilling:sweet_potato",
+          "bedrock": "kaleidoscope_grilling:sweet_potato",
+          "state": "default",
+          "position": 77
+        },
+        {
+          "java": "kaleidoscope_grilling:roasted_sweet_potato",
+          "bedrock": "kaleidoscope_grilling:roasted_sweet_potato",
+          "state": "default",
+          "position": 78
+        },
+        {
+          "java": "kaleidoscope_grilling:sweet_potato_powder",
+          "bedrock": "kaleidoscope_grilling:sweet_potato_powder",
+          "state": "default",
+          "position": 79
+        },
+        {
+          "java": "kaleidoscope_grilling:roasted_chicken_wing",
+          "bedrock": "kaleidoscope_grilling:roasted_chicken_wing",
+          "state": "default",
+          "position": 80
+        },
+        {
+          "java": "kaleidoscope_grilling:cold_houttuynia",
+          "bedrock": "kaleidoscope_grilling:cold_houttuynia",
+          "state": "default",
+          "position": 81
+        },
+        {
+          "java": "kaleidoscope_grilling:sugared_tomato",
+          "bedrock": "kaleidoscope_grilling:sugared_tomato",
+          "state": "default",
+          "position": 82
+        },
+        {
+          "java": "kaleidoscope_grilling:pepper_honey",
+          "bedrock": "kaleidoscope_grilling:pepper_honey",
+          "state": "default",
+          "position": 83
+        },
+        {
+          "java": "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "bedrock": "kaleidoscope_grilling:houttuynia_stir_fried_pork",
+          "state": "default",
+          "position": 84
+        },
+        {
+          "java": "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "bedrock": "kaleidoscope_grilling:green_pepper_squid_tentacles",
+          "state": "default",
+          "position": 85
+        },
+        {
+          "java": "kaleidoscope_grilling:braised_chicken_wings",
+          "bedrock": "kaleidoscope_grilling:braised_chicken_wings",
+          "state": "default",
+          "position": 86
+        },
+        {
+          "java": "kaleidoscope_grilling:potato_beef_stew",
+          "bedrock": "kaleidoscope_grilling:potato_beef_stew",
+          "state": "default",
+          "position": 87
+        },
+        {
+          "java": "kaleidoscope_grilling:sour_spicy_noodles",
+          "bedrock": "kaleidoscope_grilling:sour_spicy_noodles",
+          "state": "default",
+          "condition": "Java ModList.isLoaded(kaleidoscope_tavern)",
+          "gap": "Native catalogs are static; retain the current port entry without making Tavern a hard dependency.",
+          "position": 88
+        },
+        {
+          "java": "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "bedrock": "kaleidoscope_grilling:red_sweet_potato_porridge",
+          "state": "default",
+          "position": 89
+        },
+        {
+          "java": "kaleidoscope_grilling:canola_seeds",
+          "bedrock": "kaleidoscope_grilling:canola_seeds",
+          "state": "default",
+          "position": 90
+        },
+        {
+          "java": "kaleidoscope_grilling:pepper_log",
+          "bedrock": "kaleidoscope_grilling:pepper_log",
+          "state": "default",
+          "position": 91
+        },
+        {
+          "java": "kaleidoscope_grilling:pepper_leaves",
+          "bedrock": "kaleidoscope_grilling:pepper_leaves",
+          "state": "default",
+          "position": 92
+        },
+        {
+          "java": "kaleidoscope_grilling:pepper_sapling",
+          "bedrock": "kaleidoscope_grilling:pepper_sapling",
+          "state": "default",
+          "position": 93
+        }
+      ]
+    }
+  ],
+  "bedrock_additions": [],
+  "hidden": [
+    {
+      "bedrock": "kaleidoscope_grilling:unfinished_skewer",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:pending_seasoning",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:skewer_plate",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:canola_oil_brush",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:secret_chili_oil_brush",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:premium_chili_oil_brush",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    },
+    {
+      "bedrock": "kaleidoscope_grilling:wedding_candy",
+      "reason": "Explicit exclusion in ModCreativeTabs.buildContents; persisted definition is retained."
+    }
+  ]
 }

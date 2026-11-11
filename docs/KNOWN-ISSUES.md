@@ -29,8 +29,8 @@
 | GRILL-DEFERRED-OWNER | G125 延後重讀 cancel 並核 type／permutation／owner／完整物品；舊四個原生 API 診斷用代用容器 | 後續 listener 取消爆炸、排程後換方塊、合法計時中拆爐；須保留整個 customBreak、容器內容與玩家結果 |
 | ITEM-DELIVERY | G125 在扣料前核站點身份，保留滿包 planner、實際交付讀回與不明結果隔離 | 榨油機延後扣料、串譜／穿串／拆串滿包、外來槽位和掉落回收未知；未確認回收不得退原料或重發 |
 | SEASONING-DATA-RELOAD | G124 合併目前資料根，取料／效果／HUD 共用 resolver，保存失敗恢復；不自動讀 Java datapack | 後根覆寫、錯誤根不部分生效、舊食物依新映射、未知 kind 與 provider 缺席；真人效果仍待驗 |
-| SKEWER-GUI | 2026-11-10玩家圖片仍見副手2/3木棒、3/3固定圖與世界大肉。來源草稿補上Unfinished圖示producer／既有更新入口，每次穿料即附當前圖示資料，空位不畫；GUI consumer退役中間factory並直接讀真slot。具體來源與歷史範圍只查[PARITY](PARITY.md#秘製串背包圖示gui-display) | 未跑任何測試、未部署、沒有新畫面；3/3固定圖與世界大肉的完整根因尚未確定，未猜改手持校準姿勢。cursor仍保留原生圖示；未知外部食材仍受現有catalogue限制 |
-| SEASONING-FLOW | 舊 LIVE 取瓶失敗；RawMessage／材料數與後續動作有來源修補，未有完整同瓶驗收 | 同瓶放三種必要 base→取回 PENDING→持續 80 tick→SPECIAL→向有串烤架撒料；核材料、uses、取消／換槽／重登，不能用改配方或即時轉換通過 |
+| SKEWER-GUI | 2026-11-10 follow-up來源：真正slot內以native icon／食材mask的sibling可見條件互斥，退役父custom renderer的alpha路徑；hover接caller參數。四個穿串attachable改接Java display局部變換、明確置中，刪舊相機校準檔。來源與歷史只查[PARITY](PARITY.md#秘製串背包圖示gui-display) | 未測試、未部署、沒有新遊戲畫面；未確認3/3固定圖與大肉消失，局部display修正不證明兩引擎全相機等價。cursor仍原生；外部食材受既有catalogue限制；creative分類／＋展開仍未解 |
+| SEASONING-FLOW | [2026-11-11真caller對照](PARITY.md#調料瓶完整操作鏈2026-11-11來源對照)：配料／80tick／每串扣次數原已接線；副手多餘搖臂及耗盡metadata來源已修。後續蹲下續行、普通互動主手先行及瓶群方向／count保向接點已改；native放瓶只收可唯一辨認的真原物品，同資料雙瓶仍拒絕，事件配對／外部取消未確認；副手撒料表現仍有差距 | 舊LIVE與G222觀察只作歷史。本批僅本機來源提交，未測試／遠端交付／部署；完整操作、四向、耗盡資料與舊保存未新觀察；來源接線不代表完整還原。reload／保存／爆炸分開，不以配方修改、即時轉換或新timer代替 |
 | SEASONING-EXPLOSION-CANCEL | G117 延後工作僅在 cancel 明確 false 時繼續；取消／event 讀失敗保留瓶、ItemStack、容器及保存記錄 | 在瓶 handler 後取消爆炸，驗內容與 ownership；未取消爆炸的原作毀損規則不變。API 模型不是原生事件結果 |
 | PLATE-SATURATION | G116 餐盤在寫 hunger 後重取 saturation／effectiveMax，失敗回滾；舊 trace 曾在 hunger 10→13 後仍用 cap 10 | 重現相同飢餓／食物及原生 cap 條件，核一次營養結算、不吞物品、不虛構 max；同候選 Player／client 待驗 |
 | HANDHELD-SATURATION | G117 修手持提前結算的舊 cap；與 G116 餐盤路徑是兩個問題 | hunger／saturation 10／10、兩份熟牛肉串、25 tick 後停止，並以 10／2 對照；核新 cap、metadata、重複事件及寫入失敗回滾 |

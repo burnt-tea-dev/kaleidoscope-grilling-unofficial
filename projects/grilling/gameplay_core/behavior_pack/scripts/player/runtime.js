@@ -2,10 +2,10 @@ import {resetPlayerPresentation,forgetPlayerPresentation} from '../core/player_p
 import {onBeforeBlockBreak} from '../core/events.js';
 import {GRILL_ID} from "../eating_data_lookup.js";
 import {isSeasoningBlockId as isSeasoningBlock} from "../seasoning/seasoning_contract_core.js";
-import {captureInteractionIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
+import {captureBlockInteractionIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
 import {message} from "../core/actions.js";
 import {handleGrill,scheduleGrillPlayerBreak,tickGrill} from "../grill/runtime.js";
-import {bottleActionSnapshot,bottleActionStillCurrent,handleSeasoningBlock,scheduleNativeBottleBreak,scheduleNativeBottlePlacement,tickNativeBottleSupport,tryScheduleOffhandBottleInteraction} from "../seasoning/runtime.js";
+import {bottleActionSnapshot,bottleActionStillCurrent,captureBottlePlacementInput,handleSeasoningBlock,scheduleNativeBottleBreak,scheduleNativeBottlePlacement,tickNativeBottleSupport,tryScheduleOffhandBottleInteraction} from "../seasoning/runtime.js";
 import {system,world} from "@minecraft/server";
 import {forgetFoodUse,forgetPlayerFood,tickPlayerFood} from "../food/runtime.js";
 import {forgetEffectMovement,forgetPlayerEffects,tickPlayerEffects} from "../effect/runtime.js";
@@ -77,11 +77,22 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
 onBlockInteraction('main',e=>{
  if(e.block?.typeId===GRILL_ID&&e.player?.id)recentGrillBeforeInteractions.set(e.player.id,{block:grillBlockKey(e.block),tick:system.currentTick});
  if(e.cancel)return;
+ const grillTarget=e.block.typeId===GRILL_ID,customTarget=grillTarget||isSeasoningBlock(e.block.typeId);
+ let intent;
+ if(customTarget){
+  try{
+   const main=captureWritableHand(e.player,'main').before,off=captureWritableHand(e.player,'off').before;
+   // NeoForge skips ordinary block use when sneaking with either hand occupied.
+   // Return before skewer/block cancellation so the original item can continue.
+   if(e.player.isSneaking&&(main!==undefined||off!==undefined))return;
+   // useWithoutItem runs on MAIN_HAND before an offhand item gets its turn.
+   intent=captureBlockInteractionIntent(e.player,e.itemStack);
+  }catch{e.cancel=true;return}
+ }
  if(tryScheduleOffhandBottleInteraction(e))return;
  if(tryScheduleBeefBoardOverride(e))return;
  const skewerInput=skewerAction(e.player,e.itemStack??heldMain(e.player));
  if(skewerInput){e.cancel=true;if(isInitialBlockPress(e.isFirstEvent))scheduleSkewerAction(e.player,skewerInput);return}
- const grillTarget=e.block.typeId===GRILL_ID,customTarget=grillTarget||isSeasoningBlock(e.block.typeId);
  const sortTarget=e.player.isSneaking&&!e.itemStack&&STORAGE_SORT_BLOCKS.has(e.block.typeId);
  if(!isInitialBlockPress(e.isFirstEvent)){if(customTarget||sortTarget)e.cancel=true;return}
  if(sortTarget){
@@ -89,9 +100,14 @@ onBlockInteraction('main',e=>{
   system.run(()=>{const b=dim.getBlock(loc),c=b?.getComponent('minecraft:inventory')?.container;if(!c)return;compactSkewerContainer(c,false)});return;
  }
  if(!customTarget)return;
- e.cancel=true;const p=e.player,loc={...e.block.location},dim=e.block.dimension,intent=customTarget?captureInteractionIntent(p,e.itemStack):null,bottleCapture=isSeasoningBlock(e.block.typeId)?bottleActionSnapshot(e.block):undefined;
+ e.cancel=true;if(!intent)return;
+ const p=e.player,loc={...e.block.location},dim=e.block.dimension,bottleCapture=isSeasoningBlock(e.block.typeId)?bottleActionSnapshot(e.block):undefined;
  scheduleHandAction(p,()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
 },{"priority":100});
+
+// The existing router runs observers after all its handling routes. Capture
+// this router's cancellation decision; do not retain a native event object.
+onBlockInteraction('bottle_placement_input',captureBottlePlacementInput,{observe:true});
 
 onBeforeBlockBreak('player/runtime.js:0',e=>{
  if(e.cancel)return;

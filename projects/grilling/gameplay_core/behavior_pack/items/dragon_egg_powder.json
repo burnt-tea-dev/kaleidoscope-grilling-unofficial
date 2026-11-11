@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_grilling:dragon_egg_powder",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
+        "group": "kaleidoscope_grilling:itemGroup.main"
       }
     },
     "components": {

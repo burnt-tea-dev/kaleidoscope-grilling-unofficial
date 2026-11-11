@@ -1661,10 +1661,10 @@
             "tp_left": "c.is_first_person == 0 && c.item_slot == 'off_hand'"
           },
           {
-            "fp_idle_calibrated_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && v.kg_owner_eat_hand == 1 && c.item_slot == 'main_hand') == 0"
+            "fp_idle_right": "c.is_first_person == 1 && c.item_slot == 'main_hand' && (q.is_using_item && v.kg_owner_eat_hand == 1 && c.item_slot == 'main_hand') == 0"
           },
           {
-            "fp_idle_calibrated_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && v.kg_owner_eat_hand == 2 && c.item_slot == 'off_hand') == 0"
+            "fp_idle_left": "c.is_first_person == 1 && c.item_slot == 'off_hand' && (q.is_using_item && v.kg_owner_eat_hand == 2 && c.item_slot == 'off_hand') == 0"
           }
         ],
         "initialize": [
@@ -1688,12 +1688,12 @@
         ]
       },
       "animations": {
-        "fp_right": "animation.kg_a287.skewer_fp_right",
-        "fp_left": "animation.kg_a287.skewer_fp_left",
-        "tp_right": "animation.kg_a287.skewer_tp_right",
-        "tp_left": "animation.kg_a287.skewer_tp_left",
-        "fp_idle_calibrated_right": "animation.kg_secret_held.fp_idle_calibrated_1_26_52_3_right",
-        "fp_idle_calibrated_left": "animation.kg_secret_held.fp_idle_calibrated_1_26_52_3_left"
+        "fp_right": "animation.kg_secret_held.display_unfinished_skewer_fp_right",
+        "fp_left": "animation.kg_secret_held.display_unfinished_skewer_fp_left",
+        "tp_right": "animation.kg_secret_held.display_unfinished_skewer_tp_right",
+        "tp_left": "animation.kg_secret_held.display_unfinished_skewer_tp_left",
+        "fp_idle_right": "animation.kg_secret_held.display_unfinished_skewer_fp_right",
+        "fp_idle_left": "animation.kg_secret_held.display_unfinished_skewer_fp_left"
       },
       "render_controllers": [
         "controller.render.kg_secret_held.stick",

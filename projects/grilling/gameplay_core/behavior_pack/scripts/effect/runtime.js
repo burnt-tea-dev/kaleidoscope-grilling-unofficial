@@ -31,6 +31,12 @@ const LIT_HEAT_BLOCKS=new Set([
 
 const TUNDRA_BLOCKS=new Set(['minecraft:snow','minecraft:snow_layer','minecraft:snow_block','minecraft:powder_snow','minecraft:ice','minecraft:packed_ice','minecraft:blue_ice','minecraft:frosted_ice']);
 
+// Native finish-use and the ChineseFood guide producer share these rewards.
+export const COOKERY_TEA_EFFECTS = {
+ "kaleidoscope_chinesefood:dianhong_tea": {"effect":"tundra_strider","duration":9600},
+ "kaleidoscope_chinesefood:hk_milk_tea": {"effect":"hinder","duration":9600}
+};
+
 function readFx(entity){try{return readEffects(entity)}catch{return {}}}
 
 function writeFx(entity,fx,options){try{return writeEffects(entity,fx,options)}catch{return {}}}
@@ -43,6 +49,13 @@ function fxApply(entity,name,ticks,amp=0){
  try{const fx=readEffects(entity);fx[name]=mergeEffectApplication(fx[name],ticks,amp,now());return writeEffects(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})[name]}
  catch(error){console.warn('[Grilling effect application] '+name+': '+error);return undefined}
 }
+
+// The native event already carries the consumed item and the actual drinker
+// across addon item namespaces. No second private effect store or relay is needed.
+world.afterEvents.itemCompleteUse.subscribe(({source,itemStack})=>{
+ const reward=COOKERY_TEA_EFFECTS[itemStack?.typeId];
+ if(reward&&source.typeId==='minecraft:player')fxApply(source,reward.effect,reward.duration);
+});
 
 function fxClear(entity,name){const fx=readFx(entity);delete fx[name];writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
 

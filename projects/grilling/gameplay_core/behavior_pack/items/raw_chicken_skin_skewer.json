@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_grilling:raw_chicken_skin_skewer",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
+        "group": "kaleidoscope_grilling:itemGroup.main"
       }
     },
     "components": {

@@ -12,13 +12,13 @@ import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {needsSecretGuiCache,refreshSecretGuiCache} from '../secret_gui_state.js';
 
 export const HOT_UNTIL_KEY=PersistedKey.HOT_UNTIL;
-// Keep every saved deadline in its existing coordinate system. Capture the
-// old clock once; later loads reuse the offset, never rebase to daylight again.
-world.afterEvents.worldLoad.subscribe(()=>{
+// Cookery's startup script-event request can precede our worldLoad callback.
+// Both entry points use the same persisted origin; never rebase a saved clock.
+function foodClockOffset(){
  const key=PersistedKey.FOOD_CLOCK_OFFSET,stored=getWorldProperty(world,key);
  if(stored!==undefined){
   if(!Number.isSafeInteger(stored))throw Error('Grilling food clock offset unreadable');
-  return;
+  return stored;
  }
  const tick=system.currentTick,absolute=world.getAbsoluteTime();
  // The previous food-state owner used currentTick when absolute time was 0.
@@ -27,12 +27,13 @@ world.afterEvents.worldLoad.subscribe(()=>{
  const offset=legacy-tick;
  setWorldProperty(world,key,offset);
  if(getWorldProperty(world,key)!==offset)throw Error('Grilling food clock offset readback');
-});
+ return offset;
+}
+world.afterEvents.worldLoad.subscribe(foodClockOffset);
 // Selected-engine saved-world records show currentTick continuing after a
 // normal stop/start. It is not the same origin as the old daylight deadlines.
 export function foodTime(){
- const offset=getWorldProperty(world,PersistedKey.FOOD_CLOCK_OFFSET);
- if(!Number.isSafeInteger(offset))throw Error('Grilling food clock not initialized');
+ const offset=foodClockOffset();
  const time=system.currentTick+offset;
  if(!Number.isSafeInteger(time)||time<0)throw Error('Grilling food clock out of range');
  return time;

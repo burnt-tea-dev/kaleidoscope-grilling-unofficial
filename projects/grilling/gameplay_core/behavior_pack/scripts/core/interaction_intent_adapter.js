@@ -11,6 +11,29 @@ export function captureInteractionIntent(player,eventStack){
  return captureInteractionIntentFromStacks(eventStack,getMainHand(player),getOffHand(player),player.selectedSlotIndex);
 }
 
+// Ordinary block use starts with Java's main-hand/default-block caller. An
+// empty main hand takes that path before an offhand item; equal stacks also
+// keep main-hand priority. Preserve both native snapshots for deferred writes.
+export function captureBlockInteractionIntent(player,eventStack){
+ const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
+ const signature=stackIntentSignature(eventStack);
+ const mainFirst=main===undefined||eventStack==null||(main!==undefined&&off!==undefined
+  &&stackIntentSignature(main)===signature&&stackIntentSignature(off)===signature);
+ return captureInteractionIntentFromStacks(mainFirst?main:eventStack,main,off,player.selectedSlotIndex,!!mainFirst);
+}
+
+// Native placement has no hand. Only its paired event's uniquely matching
+// stack can establish a source; ordinary block main-hand priority is not proof.
+export function captureBottlePlacementIntent(player,eventStack){
+ if(!eventStack)return null;
+ const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
+ const signature=stackIntentSignature(eventStack);
+ const mainMatches=main!==undefined&&stackIntentSignature(main)===signature;
+ const offMatches=off!==undefined&&stackIntentSignature(off)===signature;
+ if(mainMatches===offMatches)return null;
+ return captureInteractionIntentFromStacks(eventStack,main,off,player.selectedSlotIndex);
+}
+
 export function interactionIntentStillCurrent(player,intent){
  return interactionIntentMatchesStacks(intent,getMainHand(player),getOffHand(player),player.selectedSlotIndex);
 }
