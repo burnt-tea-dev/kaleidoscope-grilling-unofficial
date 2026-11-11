@@ -318,7 +318,7 @@ function handleGrill(block,player,hand='main'){
   if(result.ok){
    if(!commitGrillAndHand(block,state,result.state,player,hand,bottle.before,bottle.next,bottle.mutate)){interactionFailure(player,'§c撒料交易失敗，調料與烤架已嘗試回滾');return}
    javaInteractionFeedback(player,'grill_ready_to_take',[],true);blockSound(block,'season',.85);
-   try{beginSeasoningMotion(player,hand);player.playAnimation('animation.kg_imm.player.season.'+hand,{blendOutTime:0})}catch{}
+   try{beginSeasoningMotion(player)}catch{}
   }return;
  }
  if(id&&(Object.hasOwn(RAW_TO_COOKED,id)||isCompatRawSkewer(ingredientSnapshot(held))||(id===SECRET_ID&&!isSecretCooked(held)&&readSkewerRows(held).length===3))){

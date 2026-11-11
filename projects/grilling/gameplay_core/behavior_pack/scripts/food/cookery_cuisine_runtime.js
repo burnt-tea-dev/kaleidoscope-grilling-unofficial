@@ -124,7 +124,7 @@ function applySeasoning(player,block){
   if(result.rollbackErrors)console.warn('[Grilling] seasoning rollback failed: '+result.rollbackErrors);
   interactionFailure(player,result.rollbackErrors?'§c操作失敗且回滾不完整，請查看 Content Log':'§c操作未完成，調料與鍋具狀態已回復');return true;
  }
- try{beginSeasoningMotion(player,'main');player.playAnimation('animation.kg_imm.player.season.main',{blendOutTime:0})}catch{}
+ try{beginSeasoningMotion(player)}catch{}
  useSound(player,'cuisine_season',.85,1);
  return true;
 }
