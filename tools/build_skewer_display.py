@@ -1,13 +1,13 @@
 """Generate threaded-skewer item-space poses from the original Java display.
 
-The native item-slot binding supplies the holder and camera. No fitted camera,
-engine-version offset, player skeleton, gameplay code or test is run here.
-Java ItemTransform.apply uses rotationXYZ and mirrors Y/Z angles and X
-translation for the left hand. Bedrock channels apply X then Y then Z.
+The Java display frame and Bedrock item-slot binding frame are different.
+Threaded skewers use the same Java display and mesh conversion as the existing
+native skewer poses. Reuse that shared owner rather than applying Java display
+in the wrong coordinate system. No geometry, camera fit or engine offset changes.
 """
 import argparse
 import json
-import math
+import copy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,30 +17,25 @@ ITEMS = ('unfinished_skewer', 'secret_skewer', 'secret_skewer_native_plain',
 PREFIX = 'animation.kg_secret_held.display_'
 
 
-def display_pose(display, left):
-    sign = -1 if left else 1
-    x, y, z = map(math.radians, display['rotation'])
-    y, z = y * sign, z * sign
-    cx, sx, cy, sy, cz, sz = math.cos(x), math.sin(x), math.cos(y), math.sin(y), math.cos(z), math.sin(z)
-    # Java Rx*Ry*Rz, resolved as Bedrock Rz*Ry*Rx. The existing Java element
-    # converter reflects X in geometry and X/Y in rotation channels (CONVERSION).
-    r00, r10 = cy * cz, cx * sz + sx * sy * cz
-    r20, r21, r22 = sx * sz - cx * sy * cz, sx * cz + cx * sy * sz, cx * cy
-    rotation = [-math.degrees(math.atan2(r21, r22)),
-                -math.degrees(math.asin(max(-1, min(1, -r20)))),
-                math.degrees(math.atan2(r10, r00))]
-    tx, ty, tz = display['translation']
-    return {'loop': True, 'bones': {
-        'skewer_pose': {'position': [-sign * tx, ty, tz],
-                        'rotation': [round(v, 10) for v in rotation],
-                        'scale': display['scale']},
-        # Java's item renderer centers [0,16]^3 at [8,8,8]. The current bound
-        # mesh is [8-x,24+y,z-8], with pivot [0,24,0]: recenter Y before display.
-        'skewer_model': {'position': [0, -8, 0]}}}
+def display_pose(display, reference_display, native_pose):
+    """Reuse the native frame shared by fixed and threaded Java skewers.
+
+    The referenced Java model has the same display transform and the same
+    converted mesh coordinates. Java display is not a Bedrock binding-local
+    transform: the holder basis and origin must also be accounted for. The
+    existing native skewer poses already own that conversion for each hand.
+    Do not apply Java display a second time or recenter its mesh again.
+    """
+    if display != reference_display:
+        raise ValueError('Java skewer display changed; derive and preview its native holder frame')
+    return copy.deepcopy(native_pose)
 
 
 def outputs(java_root):
     models = java_root / 'common/src/main/resources/assets/kaleidoscope_grilling/models/item'
+    frames = json.loads((ROOT / 'data/java/model_frames.json').read_text())['models']
+    reference = frames['common/src/main/resources/assets/kaleidoscope_grilling/models/item/secret_skewer.json']['data']['display']
+    native = json.loads((RP / 'animations/a287_skewer_held.animation.json').read_text())['animations']
     animations = {}
     result = {}
     for item in ITEMS:
@@ -49,7 +44,10 @@ def outputs(java_root):
         for view, java_view in [('fp', 'firstperson'), ('tp', 'thirdperson')]:
             for hand, java_hand in [('right', 'righthand'), ('left', 'lefthand')]:
                 name = PREFIX + source + '_' + view + '_' + hand
-                animations[name] = display_pose(display[java_view + '_' + java_hand], hand == 'left')
+                animations[name] = display_pose(
+                    display[java_view + '_' + java_hand],
+                    reference[java_view + '_' + java_hand],
+                    native['animation.kg_a287.skewer_' + view + '_' + hand])
         path = RP / 'attachables' / (item + '.attachable.json')
         doc = json.loads(path.read_text())
         desc = doc['minecraft:attachable']['description']
@@ -79,7 +77,7 @@ def main():
     for path, value in outputs(args.java_root).items():
         path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
         print(path.relative_to(ROOT))
-    # Its four consumers now use the Java-derived item-space display above.
+    # Its four consumers use the shared native skewer frame above.
     (RP / 'animations/secret_idle_fp_calibration.animation.json').unlink(missing_ok=True)
 
 

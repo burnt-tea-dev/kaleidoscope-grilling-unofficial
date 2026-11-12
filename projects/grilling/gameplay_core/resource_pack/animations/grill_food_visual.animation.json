@@ -12,7 +12,7 @@
           ],
           "position": [
             0,
-            "math.sin(180*v.flip_progress)*q.property('kaleidoscope_grilling:hop')/1000*16",
+            "v.grill_rest + math.sin(180*v.flip_progress)*q.property('kaleidoscope_grilling:hop')/1000*16",
             0
           ]
         }
