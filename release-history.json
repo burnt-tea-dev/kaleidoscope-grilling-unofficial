@@ -1998,5 +1998,15 @@
       "sha256": "15768d1732abc373d71b920630a4ef94dff4040096dd80817ecf2ad35845f4d6",
       "files": 3531
     }
+  },
+  "2.8.270": {
+    "BP": {
+      "sha256": "5eb834e86ec34c3507f2faeeb510fe2b794c47cdb22156481fc2947abefaaebe",
+      "files": 801
+    },
+    "RP": {
+      "sha256": "e6f04a2a565b3f70cddea4e00fbcfb1ef62d2661e0cd5dd184a62c639f10caad",
+      "files": 3533
+    }
   }
 }

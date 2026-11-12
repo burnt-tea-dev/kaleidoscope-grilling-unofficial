@@ -1,3 +1,7 @@
+## 2.8.270 — 2026-11-12
+
+Carry the authorized 20261112 source-repair handoff into the maintained Grilling line while keeping the reviewed facing chain: give the seasoning-bottle variants their real empty base model and render controller, port the per-permutation collision and selection boxes by their actual rotation angles (local east 270 / west 90 differ from the handoff mirror order), add the oil texture with its flipbook animation, play the premium cauldron as the Java 38-frame ping-pong at two ticks per step and correct the large vat UVs. Local source integration and a fresh release identity only: no tests, no client observation, no publication and no deployment.
+
 # 變更摘要
 
 ## 2.8.267
