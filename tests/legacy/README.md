@@ -1,6 +1,8 @@
 # 重建期保留測試
 
-## PR250／PR251 additive reconciliation
+本頁保留測試遷移的歷史分類與當時缺口；下方數量不是目前測試清單。現行命令及 targeted／smoke／full 的選擇見[測試指引](../README.md)。
+
+## PR250／PR251 additive reconciliation（歷史）
 
 All 93 existing entrypoints and their pure assertions remain. Native ESM scenarios are now
 consolidated into the existing plate, oil, rack, bottle, food-finish and snapshot suites;
@@ -24,12 +26,8 @@ client acceptance and the broader P3/P4 work remain unclaimed.
 其中有些使用明確的物品資料或儲存 callback 來檢查 metadata、失敗回滾與輸出規則；
 這些結果不代表 Minecraft 事件、原生容器、staging 或真人畫面已驗收。
 
-```sh
-python3 tools/run_tests.py
-```
-
-runner 執行這個目錄內全部 `test_*.mjs` 與 `*.test.mjs`，不設失敗例外清單，
-也不加 VM 選項。P3 每個域以 Java 規則建立 unit／scenario 測試後，刪除對應的
+當時的 runner 執行這個目錄內全部 `test_*.mjs` 與 `*.test.mjs`，不設失敗例外清單，
+也不加 VM 選項；目前預設只跑 smoke，完整發現需明確選擇 `--full`。P3 每個域以 Java 規則建立 unit／scenario 測試後，刪除對應的
 legacy 測試；不要把這裡的舊 Bedrock 實作當成 Java 正確答案。
 
 ## 逐檔決定與未覆蓋規則
