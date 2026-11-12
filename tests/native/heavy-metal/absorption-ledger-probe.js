@@ -1,5 +1,5 @@
 // Isolated, observational probe only. Does not import or call the production rescue handler.
-import {world,system,GameMode} from '@minecraft/server';
+import {world,system,GameMode,EquipmentSlot,ItemStack} from '@minecraft/server';
 import {spawnSimulatedPlayer} from '@minecraft/server-gametest';
 
 const PREFIX='[GRILLING_ABSORPTION_LEDGER] ';
@@ -98,7 +98,8 @@ system.runTimeout(async()=>{
   const resistant=addPig('armor_resistance',16);
   const interference=addPig('external_health_change',20);
   const player=spawnSimulatedPlayer({dimension,x:24.5,y:64,z:8.5},'AbsorptionLedgerPlayer',GameMode.Survival);
-  players.push(player);targets.set(player.id,{name:'simulated_player',phase:'setup',interferenceApplied:false});
+  players.push(player);targets.set(player.id,{name:'armor_control',phase:'setup',interferenceApplied:false});
+  player.getComponent('minecraft:equippable')?.setEquipment(EquipmentSlot.Chest,new ItemStack('minecraft:iron_chestplate'));
   await wait(30);
   for(const entity of [fresh,spent,reapplied,resistant,interference,player]){
    targets.get(entity.id).phase='initial_effect';
@@ -134,7 +135,7 @@ system.runTimeout(async()=>{
   await wait(2);
   player.applyDamage(3,{cause:'entityAttack'});
   await wait(3);
-  emit('summary',{ok:true,scenarios:['effect_add','fresh_lethal_control','spend_then_lethal','effect_reapply','resistance_control','external_health_change','simulated_player_control'],observedEffectAdds:rows.filter(row=>row.kind==='effect_add').length,observations:rows.length,players:world.getAllPlayers().length,productionHandlerImported:false,eventCancellation:false,runtimeChanged:false});
+  emit('summary',{ok:true,scenarios:['effect_add','fresh_lethal_control','spend_then_lethal','effect_reapply','resistance_control','external_health_change','armor_control'],observedEffectAdds:rows.filter(row=>row.kind==='effect_add').length,observations:rows.length,players:world.getAllPlayers().length,productionHandlerImported:false,eventCancellation:false,runtimeChanged:false});
  }catch(error){
   emit('failure',{error:String(error),stack:error?.stack,players:world.getAllPlayers().length});
  }finally{
