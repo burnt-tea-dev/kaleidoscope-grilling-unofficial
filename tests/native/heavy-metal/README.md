@@ -130,7 +130,7 @@ The probe observes:
 - provisional health and damage in `world.beforeEvents.entityHurt`;
 - actual health and effect state in `world.afterEvents.entityHurt`;
 - native death and a simulated Player control;
-- fresh shield, partly spent shield, reapplication, resistance and an intentionally ordered external health modification.
+- fresh shield, partly spent shield, reapplication, resistance, an armored simulated Player and an intentionally ordered external health modification.
 
 It records a candidate absorption delta only when after-hurt health remains positive. It marks zero-HP overkill as ambiguous and never writes the candidate into gameplay state. The external-health-change case demonstrates why an after-hurt health delta may be contaminated by another addon. Event subscription ordering is recorded, not assumed to be globally stable.
 
