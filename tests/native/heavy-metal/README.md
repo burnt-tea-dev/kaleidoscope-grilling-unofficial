@@ -117,3 +117,21 @@ zero errors/OOM/Players, and QA is removed before returning the slot, before CI.
 This selected script-command configuration is not adopted as an Ordinary repair.
 No second origin, Entity.kill, cause sweep or replay follows this observation;
 the result does not rule out all other native capabilities or versions.
+
+
+## Remaining absorption ledger probe (2026-11-12)
+
+`absorption-ledger-probe.js` is an isolated observational probe for issue #406. It does not import the production Heavy Metal handler, cancel damage, write effect state or claim a repair.
+
+Run it only in a fresh disposable BDS 1.26.60.6 world with `@minecraft/server 2.12.0-beta`, `@minecraft/server-gametest 1.0.0-beta`, Beta APIs and Upcoming Creator Features enabled. Use an isolated diagnostic pack identity and the same controlled BDS environment as the existing Heavy Metal probes. Do not install it on LIVE or a player world.
+
+The probe observes:
+- `world.afterEvents.effectAdd` for absorption application and reapplication;
+- provisional health and damage in `world.beforeEvents.entityHurt`;
+- actual health and effect state in `world.afterEvents.entityHurt`;
+- native death and a simulated Player control;
+- fresh shield, partly spent shield, reapplication, resistance, an armored simulated Player and an intentionally ordered external health modification.
+
+It records a candidate absorption delta only when after-hurt health remains positive. It marks zero-HP overkill as ambiguous and never writes the candidate into gameplay state. The external-health-change case demonstrates why an after-hurt health delta may be contaminated by another addon. Event subscription ordering is recorded, not assumed to be globally stable.
+
+A successful diagnostic means only that observations were captured and cleanup completed. It does not establish that a persistent remaining-shield ledger is safe. Script reload, already-active absorption at load, expiry, entity unload/reload, armor/resistance variants and cross-addon callback ordering remain explicit review gates. The current production false-negative is retained until the owner approves a conservative implementation with native evidence.
