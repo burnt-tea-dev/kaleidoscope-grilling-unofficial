@@ -352,3 +352,18 @@ PR #382 的原 G248 草稿修正點支撐方塊時未送達既有 rack owner 的
 data逐列保存93個 Java stack 位置、ID、Bedrock ID及條件。三個填滿油壺與動態祕製串預覽無可直接等價的原生catalog項，已記gap，沒有創造空壺替代、換ID或公開隱藏實作。食譜預設結果、三調料組合及失敗料理來源metadata也不能由普通catalog預填。89個現有可投影入口依原序生成；原作明確排除的婚禮喜糖只改創造可見性，定義、配方、ID與存量metadata保留。酸辣粉的Java可選Tavern條件記在原列；native catalog仍為靜態，保留原port項而不新增Tavern硬相依。
 
 本題正常生成分類相關定義及語系，未跑測試、lint、CI、Native或client。「＋不展開」尚未確診，也未更動共用UI。原生群組並非原樣新增Java頂部分頁；實際client呈現未確認。
+
+
+## 調料瓶空底面與四向放置
+
+固定 Java `empty_seasoning_bottle.json` 的 `spice_empty` 是 Y=0.5、5×5、雙面的不透明底片，不是可省略的空元素。共享手持幾何在八個既有 ingredient layer 均為零時顯示此面；放置沿原 transient helper 的 mode=0 顯示同一底片，不在有內容的瓶底疊加。可編輯來源在 `assets-src/blockbench/seasoning-bottle/empty-base.bbmodel`；原 PNG、既有手持變換及所有 item/entity ID 不變。
+
+五個既有瓶方塊採 `minecraft:cardinal_direction`，初放方向與 Java `getHorizontalDirection().getOpposite()` 一致；增減瓶數保存此狀態，內容 helper 的位置與 yaw 同時旋轉。方塊 permutation 對碰撞／選取盒做反向變換，保留先前世界軸邊界，這不另宣稱其邊界與 Java 相同。本批整合時，本 repo 已審査的 east／west 变换角度與交接包相反，因此四個方向的碰撞／選取盒依各 permutation 的實際旋轉值配對移植，使盒界跟隨本地朝向選序；單瓶與疊加第一瓶為對稱盒，各向數值相同。原有兩個測試入口覆蓋四方向放置、1→4→0 瓶交易、空底 helper、四方向副手放置及盒界數值；只是假 API 邊界，沒有執行 renderer 或磁碟存檔重啟。
+
+Blockbench 5.2.2 已查看 1–4 瓶 × 四方向的原模型／舊版／候選布局及去殼底片診斷。布局來源對照不等於真實方塊放置；去殼圖不證明遊戲玻璃排序。左右手各第一／第三人稱 before/candidate 已開看，但左第一人稱參照右臂且裁切瓶身，不能作左手引擎驗收。多玩家、動態內容、光照／透明材質、既有世界載入與實際 Java 同角度畫面仍未完成；版本、CI、整合及部署另行協調。
+
+## 油液體原圖與 premium 大缸幀序
+
+`tools/build_oil_fluid_textures.py` 唯讀核對官方 Java 1.21.1 client archive，再依固定 Java `ClientSetup.registerFluidExtensions` 的三組 tint 生成既有六張 still/flow 圖與六張首幀；保留原 alpha、像素尺寸及 `.mcmeta` 時間／序列，不重畫、不平滑、不新增物品或方塊 ID。工具需 `--java-client` 指向合法原 client archive，預設只檢查，`--write` 才更新來源。Archive 本身不進 repo。
+
+premium still 原圖為20張，序列0→19→1，共38步，每步2tick。既有大缸 helper 改用此幀序與20格 UV 分母，原 property 名稱不變、範圍縮至0–19；固定每16tick輪32幀的來源已移除。既有油交易測試入口也覆蓋四液位、兩個完整週期的 helper property 呼叫。這是來源幀序與 API 邊界結果；client 的atlas時鐘／伺服器property延遲、helper預算下跳幀、材質／光照與動態實機畫面尚未驗收。大缸UV端點的獨立修復與普通液面的0.001方塊高度差另列，不由貼圖修正代填完成。

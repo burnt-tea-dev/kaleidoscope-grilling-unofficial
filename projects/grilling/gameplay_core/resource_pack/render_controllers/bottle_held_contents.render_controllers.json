@@ -25,6 +25,9 @@
           "shell": true
         },
         {
+          "empty_base": "v.kg_bottle_layer_0 == 0 && v.kg_bottle_layer_1 == 0 && v.kg_bottle_layer_2 == 0 && v.kg_bottle_layer_3 == 0 && v.kg_bottle_layer_4 == 0 && v.kg_bottle_layer_5 == 0 && v.kg_bottle_layer_6 == 0 && v.kg_bottle_layer_7 == 0"
+        },
+        {
           "pending_0_color_1": "v.kg_bottle_layer_0 == 1"
         },
         {

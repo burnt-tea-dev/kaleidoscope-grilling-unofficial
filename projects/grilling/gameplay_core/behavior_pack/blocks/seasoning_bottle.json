@@ -77,6 +77,30 @@
               0,
               0
             ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -4,
+              0,
+              -4
+            ],
+            "size": [
+              8,
+              13,
+              8
+            ]
           }
         }
       },
@@ -88,6 +112,30 @@
               0,
               270,
               0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -4,
+              0,
+              -4
+            ],
+            "size": [
+              8,
+              13,
+              8
             ]
           }
         }
@@ -101,6 +149,30 @@
               180,
               0
             ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -4,
+              0,
+              -4
+            ],
+            "size": [
+              8,
+              13,
+              8
+            ]
           }
         }
       },
@@ -112,6 +184,30 @@
               0,
               90,
               0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -4,
+              0,
+              -4
+            ],
+            "size": [
+              8,
+              13,
+              8
             ]
           }
         }

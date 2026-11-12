@@ -26,7 +26,11 @@ export function recipeIconModel(stack){
  const id=canonicalFoodId(stack?.typeId);return Object.hasOwn(RECIPE_ICON_MODELS,id)?RECIPE_ICON_MODELS[id]:undefined;
 }
 export function recipeAnimationFrame(tick){return Number.isFinite(tick)&&tick>=0?Math.floor(tick/4)%5:0;}
-export function vatAnimationFrame(tick){return Number.isFinite(tick)&&tick>=0?Math.floor(tick/16)%32:0;}
+// Java 1.21.1 lava_still: 20 images, 0..19 then 18..1, two ticks each.
+export function vatAnimationFrame(tick){
+ const step=Number.isFinite(tick)&&tick>=0?Math.floor(tick/2)%38:0;
+ return step<20?step:38-step;
+}
 export function vatPremiumPlan(block){
  const level=block?.permutation.getState('kaleidoscope_grilling:vat_level');
  return block?.typeId==='kaleidoscope_grilling:big_vat'&&block.permutation.getState('kaleidoscope_grilling:vat_fluid')==='premium_chili'&&Number.isInteger(level)&&level>=1&&level<=4?{level}:undefined;

@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "format_version": "5.0",
+    "model_format": "bedrock",
+    "box_uv": false
+  },
+  "name": "empty_bottle_base",
+  "model_identifier": "kaleidoscope_grilling.empty_bottle_base",
+  "resolution": {
+    "width": 32,
+    "height": 32
+  },
+  "elements": [
+    {
+      "name": "empty_bottle_base",
+      "uuid": "5cee2c15-3020-4d1f-8f46-2f0117c5e1a6",
+      "type": "cube",
+      "box_uv": false,
+      "from": [
+        -2.5,
+        0.5,
+        -2.5
+      ],
+      "to": [
+        2.5,
+        0.5,
+        2.5
+      ],
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            16,
+            16,
+            21,
+            21
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            16,
+            21,
+            21
+          ],
+          "texture": 0
+        },
+        "north": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": null
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": null
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": null
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": null
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "empty_base",
+      "uuid": "a823e7d5-8715-4c71-b55b-468cc9e5bb60",
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "outliner": [
+    {
+      "uuid": "a823e7d5-8715-4c71-b55b-468cc9e5bb60",
+      "children": [
+        "5cee2c15-3020-4d1f-8f46-2f0117c5e1a6"
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "name": "spice_jar.png",
+      "id": "0",
+      "uuid": "1b418e24-0a65-4319-aa54-424557ffc4ac",
+      "width": 32,
+      "height": 32,
+      "uv_width": 32,
+      "uv_height": 32,
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAD2UlEQVRYhb1Xz28TRxh93jj2stiN88PBVhKxDYpDRIKiSFUPkRoQSkQPlTgAUk9UAiH13qoSJy78EwEE5YIUDgQhJMilQoJD1QpVEBRs1LBpEtbYiWOyjtk4ZM1hszM7O7sTIyjvst98b3a+t+N5365DDxYK18PNoRYE4OEfj/Q9iqIE8e13fjkTxAHA0UNJEY0wAEzfm5nxEud+PHXwys1bL1oVZWj6xg09aIGzPtJbYxGsVWrCwoyAT8HL1xsAgI5YE1Yq2zvZDcJvG++E90ufKsABLf5x+GwCvIiHrS8v4HXJJLHxvrGlyRnIPnlSdRNXgBeNLJDVq8JxvhBqTED/yEig1f5PhC73ddZFE/42xHa69OiqkD9x8jchHwaAb/dF8eebTYY4fkDB/X/t7RxWmvBP1f+U/6ctCQvsBgkAU7xbsU+vUxxAYHEAmJyaxeTUrG/csAA3lqri09vTzPPnTw8yV7e4hgUsm+93nQwAi1vB/p6cmg0UEyigI2IHXTLtygNxsXXcOH960PdJ3WKEAlZ8DvmcYRvjaSV4VyYSVLDfUze6A8zL6IfDcdx9apDx4Vg40IYzZVvczIOHDRUKQujI77eFfWDsmniB0Qt7SVxZWUCsYz8mJibIb/gqe1y4vgQAEXWII+T+URJnIjz/jTzK5RwRXqQzMpdLZpJUQE17RgirJQUAMLOPSS5Xo3zSsvm/TMr7FXVDz9GXVHK/HRdzRSrADeltXrhYUWJ5Z9sBkKvw/gV2N4gAa7UgvHHd8ue9RYNE5PUm33wYexPARhlSeydJhlK9qOfnAQBxJGCgjK8kyneFerFct/nx8XGuadTr9Nytrx1DqRhBKk3beXdmC0u5ZgCAhI0yp8opbi3mYIDnneK6lfN9KjdKxQiXc4rPPY+yZ0DpG2MmSj0ZZvydwvJpieV3QyLTxYwHDm0ijHmaqM7zTWUYayRer05j2MNrF78X+vznn351TQbg2RC7D3T69IE09flQhD9Yo3IfidVu3udqP/1DIqt9HJ9UB6mAWsHVB+SdPqBTnz+rUZ+nrDgA4LH5kuS0JerzdMyOtWyR5EyNzjXT9s9Q1GapADckU9wH8pIh5PUKvxtuyPoyW88JrIq4DxSsNSGff+fvcwdN+VXfvIRowg5irj7Q0kviBOyP5U6pleR6Q/tI3Cbbb8vUHupztW2LxLU2e/3tVDvJbamqS8BmmVNVf7vTB1ZzKKPK8fP1NwCAnLWIksn7XCvt+NyIIlLi12/WNABAdO6Vpw8kPX2gnfX5mHKAGWekHmasDnt8Hme/tLvUEWa8OfA1PgDBtUuSeo7rhAAAAABJRU5ErkJggg==",
+      "mode": "bitmap",
+      "saved": true
+    }
+  ]
+}

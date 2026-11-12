@@ -7,7 +7,8 @@
   {
     "flipbook_texture": "textures/blocks/java_oil/canola_flow",
     "atlas_tile": "kg_a23_canola_oil_flow",
-    "replicate": 2
+    "replicate": 2,
+    "ticks_per_frame": 1
   },
   {
     "flipbook_texture": "textures/blocks/java_oil/secret_chili_still",
@@ -17,17 +18,58 @@
   {
     "flipbook_texture": "textures/blocks/java_oil/secret_chili_flow",
     "atlas_tile": "kg_a23_secret_chili_oil_flow",
-    "replicate": 2
+    "replicate": 2,
+    "ticks_per_frame": 1
   },
   {
     "flipbook_texture": "textures/blocks/java_oil/premium_chili_still",
     "atlas_tile": "kg_a23_premium_chili_oil",
-    "ticks_per_frame": 16
+    "ticks_per_frame": 2,
+    "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      18,
+      17,
+      16,
+      15,
+      14,
+      13,
+      12,
+      11,
+      10,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1
+    ]
   },
   {
     "flipbook_texture": "textures/blocks/java_oil/premium_chili_flow",
     "atlas_tile": "kg_a23_premium_chili_oil_flow",
-    "ticks_per_frame": 10,
+    "ticks_per_frame": 3,
     "replicate": 2
   },
   {

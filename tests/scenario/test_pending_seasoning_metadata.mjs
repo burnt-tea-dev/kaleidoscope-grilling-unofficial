@@ -106,6 +106,88 @@ test('pending completion refuses a rejected variant refresh and can retry',async
  assert.deepEqual(data.getItemRawLore(p.main),[...foreignLore('retained'),...finishedLore]);
 });
 
+// These scenarios exercise the actual bottle transactions and helper API calls.
+// The fake boundary does not render block transformations or glass materials.
+for(const [facing,rotation] of [['north',0],['east',90],['south',180],['west',270]])test('bottle '+facing+' placement, stack, empty helpers and pickup keep orientation',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
+ const p=f.player({main:f.item(N+'empty_seasoning_bottle',1,{nameTag:'Bottle 1'})});
+ const support=f.block('minecraft:stone',{x:0,y:-1,z:0}),block=f.block('minecraft:air',{x:0,y:0,z:0});
+ const moves=[];const spawn=p.dimension.spawnEntity;
+ t.mock.method(p.dimension,'spawnEntity',function(type,location){
+  const e=spawn.call(this,type,location);
+  if(type===N+'placed_seasoning_visual'){
+   const teleport=e.teleport;
+   e.teleport=function(location,opts){moves.push({id:e.id,location:structuredClone(location),rotation:structuredClone(opts.rotation)});return teleport.call(this,location,opts)};
+  }
+  return e;
+ });
+ f.component('senluo:grilling_bottle_place','beforeOnPlayerPlace',{player:p,block,face:'Up',permutationToPlace:f.BlockPermutation.resolve(N+'seasoning_bottle_1',{'minecraft:cardinal_direction':facing}),cancel:false});
+ f.tick(1);assert.equal(p.main,undefined);assert.equal(block.permutation.getState('minecraft:cardinal_direction'),facing);
+ function interact(){const e=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});assert.equal(e.cancel,true);f.tick(1)}
+ for(let count=2;count<=4;count++){
+  p.main=f.item(N+'empty_seasoning_bottle',1,{nameTag:'Bottle '+count});interact();
+  assert.equal(block.typeId,N+'seasoning_bottle_'+count);assert.equal(block.permutation.getState('minecraft:cardinal_direction'),facing);assert.equal(p.main,undefined);
+ }
+ f.tick(6);
+ const helpers=p.dimension.getEntities({type:N+'placed_seasoning_visual'});
+ assert.equal(helpers.length,4);
+ const expected={north:[[4,5],[-3,4],[3.5,-3.25],[-4.25,-3.25]],east:[[-5,4],[-4,-3],[3.25,3.5],[3.25,-4.25]],south:[[-4,-5],[3,-4],[-3.5,3.25],[4.25,3.25]],west:[[5,-4],[4,3],[-3.25,-3.5],[-3.25,4.25]]}[facing];
+ for(let i=0;i<4;i++){
+  assert.equal(helpers[i].getProperty(N+'mode'),0);assert.equal(helpers[i].getProperty(N+'fill'),0);assert.equal(helpers[i].getProperty(N+'ready'),true);
+  assert.deepEqual(helpers[i].location,{x:.5+expected[i][0]/16,y:0,z:.5+expected[i][1]/16});
+  assert.equal(moves.filter(m=>m.id===helpers[i].id).at(-1).rotation.y,-rotation);
+ }
+ for(let count=4;count>=1;count--){
+  p.main=undefined;interact();assert.equal(p.main.nameTag,'Bottle '+count);
+  if(count>1){assert.equal(block.typeId,N+'seasoning_bottle_'+(count-1));assert.equal(block.permutation.getState('minecraft:cardinal_direction'),facing)}
+  else assert.equal(block.typeId,'minecraft:air');
+ }
+ f.tick(6);assert.equal(p.dimension.getEntities({type:N+'placed_seasoning_visual'}).length,0);assert.equal(f.drops.length,0);
+});
+
+for(const [yaw,facing] of [[0,'north'],[90,'east'],[180,'south'],[-90,'west']])test('supplemental offhand bottle at yaw '+yaw+' faces '+facing,async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
+ const p=f.player({off:f.item(N+'empty_seasoning_bottle',1,{nameTag:'Offhand kept'})});p.setRotation({x:0,y:yaw});
+ const support=f.block('minecraft:stone',{x:0,y:-1,z:0}),block=f.block('minecraft:air',{x:0,y:0,z:0});
+ const e=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block:support,itemStack:undefined,blockFace:'Up',isFirstEvent:true,cancel:false});
+ assert.equal(e.cancel,true);f.tick(1);assert.equal(p.off,undefined);assert.equal(block.typeId,N+'seasoning_bottle_1');assert.equal(block.permutation.getState('minecraft:cardinal_direction'),facing);
+});
+
+test('bottle visual permutations retain the original world-aligned interaction boxes',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ for(const name of ['seasoning_bottle',...Array.from({length:4},(_,i)=>'seasoning_bottle_'+(i+1))]){
+  const definition=JSON.parse(await readFile(new URL('../../projects/grilling/gameplay_core/behavior_pack/blocks/'+name+'.json',import.meta.url),'utf8'))['minecraft:block'];
+  assert.equal(definition.description.traits['minecraft:placement_direction'].y_rotation_offset,180);
+  assert.equal(definition.permutations.length,4);
+  for(const permutation of definition.permutations){
+   const c=permutation.components,r=c['minecraft:transformation'].rotation[1]*Math.PI/180;
+   for(const key of ['minecraft:collision_box','minecraft:selection_box']){
+    const source=definition.components[key],box=c[key],o=box.origin,s=box.size;
+    const points=[];for(const x of [o[0],o[0]+s[0]])for(const z of [o[2],o[2]+s[2]])points.push([x*Math.cos(r)-z*Math.sin(r),x*Math.sin(r)+z*Math.cos(r)]);
+    for(let axis=0;axis<2;axis++){
+     const k=axis===0?0:2,min=Math.min(...points.map(p=>p[axis])),max=Math.max(...points.map(p=>p[axis]));
+     assert.ok(Math.abs(min-source.origin[k])<1e-8,name+' min '+key);
+     assert.ok(Math.abs(max-source.origin[k]-source.size[k])<1e-8,name+' max '+key);
+    }
+    assert.equal(o[1],source.origin[1]);assert.equal(s[1],source.size[1]);
+   }
+  }
+ }
+});
+
+test('failed bottle count permutation restores facing, original stack and source hand',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());await f.load('main.js');f.startup();f.tick(1);
+ const p=f.player({main:f.item(N+'empty_seasoning_bottle',1,{nameTag:'Source hand'})});
+ const block=f.block(N+'seasoning_bottle_1',{x:0,y:0,z:0},{states:{'minecraft:cardinal_direction':'east'}});f.block('minecraft:stone',{x:0,y:-1,z:0});
+ const storage=await f.load('core/storage.js'),placed=await f.load('seasoning/seasoning_block_adapter.js');
+ const container=storage.stationContainer(block);container.setItem(0,f.item(N+'empty_seasoning_bottle',1,{nameTag:'Original'}));
+ placed.writePlacedSeasoningStack(block,[{kind:'empty',ingredients:[],uses:0,variant:0}]);
+ f.faults.failNext(block,'setPermutation',{phase:'after',predicate:perm=>perm.type.id===N+'seasoning_bottle_2'});
+ const event=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});assert.equal(event.cancel,true);f.tick(1);
+ assert.equal(f.faults.pending.length,0);assert.equal(block.typeId,N+'seasoning_bottle_1');assert.equal(block.permutation.getState('minecraft:cardinal_direction'),'east');
+ assert.equal(container.getItem(0).nameTag,'Original');assert.equal(container.getItem(1),undefined);assert.equal(p.main.nameTag,'Source hand');assert.equal(f.drops.length,0);
+});
+
 test('one bottle keeps foreign lore from filling through every nonfinal grill dose',async t=>{
  const f=createFixture();t.after(()=>f.dispose());
  await f.load('main.js');f.startup();f.tick(1);

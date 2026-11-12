@@ -785,3 +785,24 @@ test('full inventory drops all crafted bucket remainders near the crafter',async
  assert.equal(f.drops.reduce((total,drop)=>total+drop.getComponent('minecraft:item').itemStack.amount,0),35);
  assert.ok(f.drops.every(drop=>JSON.stringify(drop.location)===JSON.stringify(player.location)));
 });
+
+test('premium vat helper uses the Java two-tick 20-image ping-pong sequence at every level',async t=>{
+ const f=createFixture();t.after(()=>f.dispose());
+ f.player();
+ const rules=await f.load('plate_recipe_visual_core.js');
+ const presentation=await f.load('station_contents_visual_runtime.js');
+ const sequence=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1];
+ for(const tick of [NaN,-1,Infinity])assert.equal(rules.vatAnimationFrame(tick),0);
+ const observers=[{dimensionId:f.dimension.id,x:0,y:0,z:0}];
+ const blocks=Array.from({length:4},(_,i)=>f.block(N+'big_vat',{x:i*2,y:0,z:0},{states:{[N+'vat_level']:i+1,[N+'vat_fluid']:'premium_chili'}}));
+ for(let time=0;time<152;time++){
+  const expected=sequence[Math.floor(time/2)%38];assert.equal(rules.vatAnimationFrame(time),expected);
+  for(const block of blocks)presentation.syncStationContentsVisual(block,observers);
+  const helpers=f.dimension.getEntities({type:N+'vat_premium_visual'});assert.equal(helpers.length,4);
+  for(let i=0;i<4;i++){
+   assert.equal(helpers[i].getProperty(N+'ready'),true);assert.equal(helpers[i].getProperty(N+'level'),i+1);
+   assert.equal(helpers[i].getProperty(N+'frame'),expected);
+  }
+  f.tick(1);
+ }
+});
