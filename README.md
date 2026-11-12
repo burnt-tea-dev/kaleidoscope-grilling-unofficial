@@ -33,12 +33,7 @@ Kaleidoscope Grilling 的 Minecraft 基岩版移植：從準備食材、穿串�
 
 需要 Python 3 與 Node.js；CI 使用 Python 3.12／Node.js 22。正式來源在 [`projects/grilling/gameplay_core`](projects/grilling/gameplay_core/)，Java 配方、時長和效果資料在 [`data/java`](data/java/)。
 
-先讀 [AGENTS.md](AGENTS.md) 與[重建計畫](docs/REBUILD-PLAN.md)，再執行相關功能測試及基本檢查：
-
-```sh
-python3 tools/baseline_gate.py check
-python3 tools/guards/growth_ratchet.py check
-```
+先讀 [AGENTS.md](AGENTS.md) 與[重建計畫](docs/REBUILD-PLAN.md) 確認任務範圍，再按[測試指引](tests/README.md)選擇與改動相關的既有測試。普通 PR 的常設檢查由 CI 執行；完整歷史回歸與發布檢查按需執行。
 
 [`baseline.json`](baseline.json) 記錄來源版本、精確相依及實驗要求。保留既有物品與存檔身份；不要用增加物品變體、平行互動監聽或逐版補丁代替共用功能修復。
 
@@ -52,4 +47,4 @@ python3 tools/guards/growth_ratchet.py check
 
 原始程式碼採 [BSD-3-Clause](data/java/LICENSE-CODE)，原始及衍生美術採 [CC BY-NC-SA 4.0](projects/grilling/LICENSE-ASSETS)；工具另依各自授權。完整出處見 [ATTRIBUTION](projects/grilling/ATTRIBUTION.md) 與 [第三方授權總表](THIRD_PARTY_NOTICES.md)。
 
-**發布阻擋：** 目前 canonical BP/RP 尚未把授權文件一同封裝。倉庫內有授權文件不等於玩家安裝包已收到它們。`baseline_gate.py check --release` 現在會要求 BP 內含 `LICENSE-CODE`、`LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`，RP 內含 `LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`；完成封裝及下一個版本基線更新前，不得建立或發布新安裝包。詳見 [第三方授權總表](THIRD_PARTY_NOTICES.md)。
+發布前執行 `python3 tools/baseline_gate.py check --release`，確認配對來源及隨包授權聲明：BP 內含 `LICENSE-CODE`、`LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`，RP 內含 `LICENSE-ASSETS`、`THIRD_PARTY_NOTICES.md`。完整發布步驟見[安裝與發布](docs/RELEASING.md)。

@@ -10,7 +10,7 @@
 
 ## 2. 開工前
 
-- 通用任務路由、協作與驗證依家族共用的 [pstack 代理入口](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/5bc82d3d60e1837306eeb3f0ae4da64c7df4b392/family/UPDATE-WORKFLOW.md#pstack-代理入口)；本檔保留煙火的功能與重建約束。
+- 開發、驗證與 ready PR 交付直接依上游 playbook，入口為家族共用的 [pstack 代理入口](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口)；Codex 在使用任何 pstack 技能前先讀入口連結的主機適配。
 - 讀本檔及 `docs/REBUILD-PLAN.md` §0，確認任務編號、前置與相關開放 PR；隔離分支保留未提交工作。一個任務一個 PR，標題包含任務編號。真正相依的 PR 才堆疊，不重做其他代理已負責的功能。
 - 未完成的前置或真正的產品決策須說明依據與建議；可逆的實作選擇按已有授權完成，不因舊流程增加等待。不能把推測或建議寫成使用者已確認的決策。
 
@@ -38,15 +38,7 @@
 - 視覺：用 Bedrock 原生狀態機制（render controller 陣列、bone 可見度、entity/player property、block permutation）；單一 geometry ≤ 512 KB；平台做不到的寫進 `docs/KNOWN-ISSUES.md`。
 - 先找檔案再讀局部範圍；不要反覆讀整份大文件或巨型 log。重複的診斷沒有新資訊時，換一個證據來源。
 
-## 6. 回報用語（不可混用）
-
-`來源已實作` → `CI 通過` → `staging 驗證` → `已部署 luosen`。
-
-- BDS 載入成功、雜湊一致、測試數量都**不等於**玩法或畫面已還原。
-- 本機或未推送的工作不是「已交付」；推送後讀回遠端才算。
-- 回報包含：做了什麼、怎麼驗證、還剩什麼不確定。驗收以相關自動化功能測試為準；真人驗收不作門檻，不反覆等待或要求 dot。未觀察的聲畫不冒稱完成。
-
-## 7. 仍然有效的專案規範
+## 6. 專案規範
 
 - 指南：遵循 `docs/GUIDE-STANDARD.md`——在既有 Cookery 書內只有一個煙火入口與六個料理分類，不新增實體書物品，不替換宿主檔案。
 - 已授權的宿主適配沿公開來源契約與現有 Core 本機組裝流程，使用者自行提供合法原包；保留原始輸入，為變更輸出固定新配對身份。自有玩法修回 canonical owner，私有只留必要跨包連接；作者完整腳本與原包不公開。

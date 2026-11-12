@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       full_legacy_suite:
-        description: 'Also run every transitional legacy gameplay test'
+        description: 'Run every transitional legacy gameplay test instead of smoke'
         type: boolean
         required: false
         default: false
@@ -40,6 +40,7 @@ jobs:
           set -euo pipefail
           git ls-files -z -- '*.json' | xargs -0 -r python tools/check_json.py
       - name: Check core player-visible gameplay
+        if: github.event_name != 'workflow_dispatch' || !inputs.full_legacy_suite
         run: python tools/run_tests.py
       - name: Full legacy regression suite (requested manually, not a PR gate)
         if: github.event_name == 'workflow_dispatch' && inputs.full_legacy_suite

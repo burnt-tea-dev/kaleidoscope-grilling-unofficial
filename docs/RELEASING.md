@@ -68,11 +68,11 @@ TEST 比上述 stable 更舊，不是降版建議。兩者都要求作者 [Cooke
 
 ## 現行驗證與世界作業
 
-開發任務使用 [pstack 代理入口](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/5bc82d3d60e1837306eeb3f0ae4da64c7df4b392/family/UPDATE-WORKFLOW.md#pstack-代理入口)，並遵守 [AGENTS.md](../AGENTS.md) 與現行重建計畫。普通 PR 由 [ci.yml](../.github/workflows/ci.yml) 檢查可載入 JSON、核心玩法及現行 UI／指南／戰利品；本機只重現受影響範圍，命令見 [tests/README.md](../tests/README.md)。完整歷史回歸與 growth ratchet 留在手動發布檢查，不是普通 PR 或文件修改的常設門檻。
+開發任務使用 [pstack 代理入口](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口)，並遵守 [AGENTS.md](../AGENTS.md) 與現行重建計畫。普通 PR 由 [ci.yml](../.github/workflows/ci.yml) 檢查可載入 JSON、核心玩法及現行 UI／指南／戰利品；本機只重現受影響範圍，命令見 [tests/README.md](../tests/README.md)。完整歷史回歸與 growth ratchet 留在手動發布檢查，不是普通 PR 或文件修改的常設門檻。
 
 輸出 runtime 未變的工具／文件工作不凍結新遊戲版本、不組裝候選或部署。真正發布仍保留配對身份、授權聲明、完整來源及 `baseline_gate.py check --release`；P2 純結構整理沿現行計畫證明相應 runtime 範圍不變。
 
-世界作業只在任務已授權的環境，依[家族更新流程](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/5bc82d3d60e1837306eeb3f0ae4da64c7df4b392/family/UPDATE-WORKFLOW.md#pstack-代理入口)及 [REBUILD-PLAN §5](REBUILD-PLAN.md#5-伺服器與-luosen-存檔作業手冊) 執行。保留最新一份完整一致回退，使用同一停服存檔副本驗證首次載入與重啟，再由既有工具安裝及讀回。真人驗收不作完成門檻；尚未觀察的聲畫如實標示。staging 世界不得複製回正式世界，主機路徑、憑證與玩家資料保持私有。
+世界作業只在任務已授權的環境，依[家族更新流程](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口)及 [REBUILD-PLAN §5](REBUILD-PLAN.md#5-伺服器與-luosen-存檔作業手冊) 執行。保留最新一份完整一致回退，使用同一停服存檔副本驗證首次載入與重啟，再由既有工具安裝及讀回。真人驗收不作完成門檻；尚未觀察的聲畫如實標示。staging 世界不得複製回正式世界，主機路徑、憑證與玩家資料保持私有。
 
 [先前的 P2／staging 操作文字](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/e43c0a4752ccd68057c91b6b5b46ec524b17a3a2/docs/RELEASING.md#p2-的必要驗證)保留在歷史提交；下方 dated 驗收記錄保留原樣，不增加今天的門檻。
 
