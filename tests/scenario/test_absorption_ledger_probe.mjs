@@ -15,7 +15,7 @@ test('absorption ledger probe observes effect, before-hurt and after-hurt withou
 });
 
 test('probe distinguishes fresh, spent, re-applied, resistance and external-health cases', () => {
-  for (const name of ['fresh_absorption', 'spent_absorption', 'effect_reapply', 'armor_resistance', 'external_health_change', 'simulated_player']) {
+  for (const name of ['fresh_absorption', 'spent_absorption', 'effect_reapply', 'armor_resistance', 'external_health_change', 'armor_control']) {
     assert.ok(source.includes(name), 'missing diagnostic case: ' + name);
   }
   assert.match(source, /overkillAmbiguous/);
