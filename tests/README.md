@@ -1,9 +1,23 @@
 # Transitional behavior tests
 
-Run `python3 tools/run_tests.py`. Each retained file runs in an isolated Node
-test process; all 93 existing entrypoints are discovered with no skip list.
-These tests characterize canonical source behavior during P2. They do not prove
-BDS compatibility, visual parity, staging success, or player acceptance.
+Run only the existing test files that exercise the changed behavior during local
+diagnosis. The runner accepts one or more repository-relative test paths:
+
+```sh
+python3 tools/run_tests.py tests/scenario/test_skewer_item_snapshot.mjs
+```
+
+`python3 tools/run_tests.py` (or `--smoke`) runs the focused `SMOKE_TESTS` selection
+used by ordinary PR CI. `python3 tools/run_tests.py --full` explicitly discovers
+all current `test_*.mjs` and `*.test.mjs` files in `tests/unit`, `tests/scenario`
+and `tests/legacy`; it includes the smoke files, so do not run both suites for
+the same unchanged input. Named files cannot be combined with a suite flag.
+
+Each selected file runs in an isolated Node test process using the shared loader.
+These checks exercise canonical source behavior at a substituted Minecraft API
+boundary. They do not prove BDS compatibility, visual parity, staging success,
+or player acceptance. Reuse valid results for unchanged inputs; run the full
+suite only for a concrete broader regression risk or the manual release check.
 
 - `legacy/` contains directly imported gameplay rules and native-ESM scenarios.
   Replace these with domain tests during P3 rather than preserving version names.
@@ -35,7 +49,7 @@ metadata persistence, fault injection, and scheduling.
 
 ## Deferred hand actions and the core skewer flow
 
-The existing `legacy/test_skewer_item_snapshot.mjs` entrypoint now drives
+The existing `scenario/test_skewer_item_snapshot.mjs` entrypoint drives
 `main.js` subscribers for fresh Secret disassembly and grill insertion, with
 both animation settings and the random alternate route. Other cases change the
 selected slot, main hand, or offhand metadata before dispatch, and inject a
@@ -169,7 +183,7 @@ report, pending independent review and native reproduction. Its 105 recipe
 scenarios are not duplicated here. Shared exposure to hand-route identity
 changes does not establish a common cause with the final-model flash.
 
-The single entrypoint discovers `tests/unit`, `tests/scenario` and the remaining
+The `--full` selection discovers `tests/unit`, `tests/scenario` and the remaining
 `tests/legacy` cases. Domain migration moves the existing tests instead of
 keeping a second copy. `tests/scenario/test_skewer_item_snapshot.mjs` exercises
 the actual skewer/grill callbacks through the shared Minecraft fixture.
