@@ -2008,5 +2008,15 @@
       "sha256": "e6f04a2a565b3f70cddea4e00fbcfb1ef62d2661e0cd5dd184a62c639f10caad",
       "files": 3533
     }
+  },
+  "2.8.271": {
+    "BP": {
+      "sha256": "403e7bb082f7b4708aa8ecefb5a13ec743e08e7e6f9242d58e0eb9fd97b60f1d",
+      "files": 801
+    },
+    "RP": {
+      "sha256": "3ff280542766752ce8c0427a7d08d17b2fd07cc1154e1a41a7299ab1c643d92a",
+      "files": 3533
+    }
   }
 }
