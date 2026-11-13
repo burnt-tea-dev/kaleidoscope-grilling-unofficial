@@ -118,7 +118,8 @@ function connectedToPepperLog(start){
    const p={x:cur.x+dx,y:cur.y+dy,z:cur.z+dz},k=p.x+'|'+p.y+'|'+p.z;if(seen.has(k))continue;seen.add(k);
    let b;try{b=d.getBlock(p)}catch{unloaded=true;continue}
    if(!b){unloaded=true;continue;}
-   if(b.typeId===PEPPER_LOG_ID)return true;
+   // Our stripping action produces oak logs, which remain Java LOGS support.
+   if(b.typeId===PEPPER_LOG_ID||b.typeId==='minecraft:stripped_oak_log')return true;
    if(b.typeId===PEPPER_LEAVES_ID)queue.push({...p,dist:cur.dist+1});
   }
  }
