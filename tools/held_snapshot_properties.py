@@ -19,7 +19,7 @@ def schema():
     source = ('import * as s from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               'import {heldVisualPropertyNames} from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               "const fields=Object.fromEntries(['main','off'].flatMap(hand=>heldVisualPropertyNames(hand).map((key,i)=>[key,{variable:s.variableName(hand,i),read:s.heldWordMolang(hand,i),ownerRead:s.heldWordMolang(hand,i,'c.owning_entity->q')}])));"
-              "process.stdout.write(JSON.stringify({fields,ready:s.heldSnapshotReadyMolang(),ownerReady:s.heldSnapshotReadyMolang('c.owning_entity->q'),frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));")
+              "process.stdout.write(JSON.stringify({fields,presentation:s.HELD_PRESENTATION_FIELDS,ready:s.heldSnapshotReadyMolang(),ownerReady:s.heldSnapshotReadyMolang('c.owning_entity->q'),frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));")
     return json.loads(subprocess.check_output(['node', '--input-type=module', '-e', source], text=True))
 
 
@@ -55,6 +55,7 @@ def document(value):
 
 def player_extension():
     variables = [row['variable'].replace('v.', 'variable.', 1) for row in SCHEMA['fields'].values()]
+    variables.extend(row['variable'].replace('v.', 'variable.', 1) for row in SCHEMA['presentation'].values())
     variables.append(SCHEMA['frameVariable'].replace('v.', 'variable.', 1))
     animate = []
     animations = {SCHEMA['animation']: SCHEMA['animation'], SCHEMA['controller']: SCHEMA['controller']}

@@ -387,10 +387,13 @@ def main():
     behavior = json.loads((args.composed_behavior or BASE / 'behavior_pack/entities/player.json').read_text())
     controllers = json.loads(args.host_render_controllers.read_bytes()) if args.host_render_controllers else None
     if args.composed_behavior:
-        if args.tacz or not args.riding or controllers is None or args.host_render_controllers_target is None:
-            parser.error('An existing complete player pair needs riding/controller inputs, without a second TACZ merge')
-        files = {'BP/entities/player.json': behavior, 'RP/entity/player.entity.json': json.loads(raw)}
-        compose_riding(files, controllers, args.riding, args.host_render_controllers_target)
+        if args.tacz or (args.riding and (controllers is None or args.host_render_controllers_target is None)):
+            parser.error('An existing complete player pair accepts optional riding/controller inputs, without a second TACZ merge')
+        # Retain the selected complete pair, including already composed riding.
+        # New shared fields still come from the same held-presentation owner.
+        files = {'BP/entities/player.json': behavior, 'RP/entity/player.entity.json': configure_player(json.loads(raw))}
+        if args.riding:
+            compose_riding(files, controllers, args.riding, args.host_render_controllers_target)
     else:
         files = compose_files(behavior, json.loads(raw), args.tacz, riding=args.riding, render_controllers=controllers,
                               render_controller_path=args.host_render_controllers_target)

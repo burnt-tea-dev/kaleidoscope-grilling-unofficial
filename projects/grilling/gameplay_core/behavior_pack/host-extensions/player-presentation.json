@@ -27,6 +27,10 @@
       "variable.kg_held_o9": "public",
       "variable.kg_held_o10": "public",
       "variable.kg_held_o11": "public",
+      "variable.tacz_held_view": "public",
+      "variable.tacz_held_action": "public",
+      "variable.tacz_held_offset": "public",
+      "variable.tacz_held_kick_offset": "public",
       "variable.kg_held_frame": "public"
     },
     "initialize": [
@@ -54,6 +58,10 @@
       "variable.kg_held_o9 = 0;",
       "variable.kg_held_o10 = 0;",
       "variable.kg_held_o11 = 0;",
+      "variable.tacz_held_view = 0;",
+      "variable.tacz_held_action = 0;",
+      "variable.tacz_held_offset = 0;",
+      "variable.tacz_held_kick_offset = 0;",
       "variable.kg_held_frame = 0;"
     ],
     "animate": [
