@@ -90,7 +90,7 @@ function componentFor(cfg){
     if(!behavior.survive(below?.typeId??'',light)){
      const age=ageOf(block,cfg.ageState),count=age>=cfg.maxAge?matureCount(cfg):1;
      event.dimension.setBlockType(block.location,'minecraft:air');
-     dropAt(block,cfg.outputId,count);
+     if(world.gameRules.doTileDrops)dropAt(block,cfg.outputId,count);
      return;
     }
     const age=ageOf(block,cfg.ageState);if(age>=cfg.maxAge)return;
