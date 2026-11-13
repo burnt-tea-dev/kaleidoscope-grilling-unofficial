@@ -1,19 +1,15 @@
 import {readEffects,writeEffects} from '../effect_state_runtime.js';
 import {world,system} from '@minecraft/server';
-import {
- FX_KEY,effectsForStandaloneFood,nextPersistentUntil
-} from './standalone_food_effect_core.js';
+import {effectsForStandaloneFood} from './standalone_food_effect_core.js';
+import {mergeEffectApplication} from '../effect_lifecycle_core.js';
 
 function now(){
  try{return Number(world.getAbsoluteTime())||system.currentTick}catch{return system.currentTick}
 }
 const readFx=readEffects,writeFx=writeEffects;
 function applyPersistent(entity,effect){
- const t=now(),fx=readFx(entity),current=Number(fx[effect.effect]?.until)||0;
- fx[effect.effect]={
-  until:nextPersistentUntil(t,current,effect.ticks),
-  amp:Number(effect.amplifier)||0
- };
+ const t=now(),fx=readFx(entity);
+ fx[effect.effect]=mergeEffectApplication(fx[effect.effect],effect.ticks,effect.amplifier??0,t);
  writeFx(entity,fx);
 }
 function applyNative(entity,effect){
