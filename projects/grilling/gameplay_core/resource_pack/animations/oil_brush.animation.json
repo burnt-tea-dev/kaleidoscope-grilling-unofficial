@@ -198,14 +198,14 @@
         },
         "brush": {
           "position": [
-            "v.kg_oil_brush_active ? (1.13) : (0)",
+            "v.kg_oil_brush_active ? (-1.13) : (0)",
             "v.kg_oil_brush_active ? (-11.59094308) : (0)",
             "v.kg_oil_brush_active ? (8.02713003) : (0)"
           ],
           "rotation": [
             "v.kg_oil_brush_active ? (90.0) : (0)",
-            "v.kg_oil_brush_active ? (-65.0) : (0)",
-            "v.kg_oil_brush_active ? (-90.0) : (0)"
+            "v.kg_oil_brush_active ? (65.0) : (0)",
+            "v.kg_oil_brush_active ? (90.0) : (0)"
           ],
           "scale": [
             "v.kg_oil_brush_active ? (0.68) : (1)",
