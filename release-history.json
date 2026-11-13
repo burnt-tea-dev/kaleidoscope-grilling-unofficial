@@ -2018,5 +2018,15 @@
       "sha256": "3ff280542766752ce8c0427a7d08d17b2fd07cc1154e1a41a7299ab1c643d92a",
       "files": 3533
     }
+  },
+  "2.8.272": {
+    "BP": {
+      "sha256": "416a95a6db768b98f3fa766ed8a025bd02f683f60a3c368ff4ed8988c7df1310",
+      "files": 801
+    },
+    "RP": {
+      "sha256": "2a1fd63b878b2a8d125dca6d87f9f2aedba86d89c0569f318ed4f96868f17d4d",
+      "files": 3533
+    }
   }
 }
