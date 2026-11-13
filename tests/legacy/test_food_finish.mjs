@@ -467,3 +467,61 @@ for(const hand of ['main','off'])test(`delayed properties preserve ${hand}-hand 
  lab.f.emit('world.afterEvents.playerSpawn',{player:a.p,initialSpawn:false});a.advance(2);assert.equal(a.p.getProperty(CONTROLS_PROPERTY),0);
  assert.equal(lab.data.getItemProperty(a.p[hand],'foreign:timeline'),'retained');
 });
+
+// Java EffectFoodItem / DualEffectFoodItem apply MobEffectInstance through
+// addEffect. Higher custom levels here are supported integration inputs, not
+// levels claimed to be granted by a built-in survival food.
+const standaloneRewards=[
+ ['roasted_sweet_potato','warmth',600],['wedding_candy','invincible',300],
+ ['pepper_honey','numb',1200],['red_sweet_potato_porridge','flatulence',900],
+ ['red_sweet_potato_porridge','warmth',900],['sour_spicy_noodles','warmth',900]
+];
+for(const [food,effect,duration] of standaloneRewards)for(const kind of ['stronger-longer','hidden-tail','equal-refresh'])test(`standalone food merges ${food}/${effect} ${kind}`,async t=>{
+ const f=createFixture({currentTick:100});t.after(()=>f.dispose());
+ await f.load('food/standalone_food_effect_runtime.js');
+ const state=await f.load('effect_state_runtime.js'),p=f.player();
+ const initial=kind==='stronger-longer'?{until:3000,amp:2}:kind==='hidden-tail'?{until:500,amp:1,hidden:{until:3000,amp:0}}:{until:200,amp:0};
+ state.writeEffects(p,{[effect]:initial,unrelated:{until:4000,amp:0}});
+ f.emit('world.afterEvents.itemCompleteUse',{source:p,itemStack:f.item('kaleidoscope_grilling:'+food)});
+ const expected=kind==='equal-refresh'?{until:100+duration,amp:0}:initial;
+ assert.deepEqual(state.readEffects(p)[effect],expected);
+ assert.deepEqual(state.readEffects(p).unrelated,{until:4000,amp:0});
+ if(kind==='hidden-tail'){
+  f.tick(401);
+  assert.deepEqual(state.readEffects(p)[effect],{until:3000,amp:0},'the weaker saved tail still applies after the stronger head expires');
+ }
+});
+for(const hand of ['main','off'])test(`standalone food retains a chain earned through registered ${hand}-hand secret completion and reload`,async t=>{
+ const f=createFixture({currentTick:100});t.after(()=>f.dispose());await f.load('main.js');
+ const data=await f.load('core/persist.js'),state=await f.load('effect_state_runtime.js');
+ const compat=await f.load('secret_compat_core.js');
+ const {SECRET_BEHAVIOR_REGISTER_EVENT}=await f.load('secret_compat_runtime.js');
+ f.emit('system.afterEvents.scriptEventReceive',{sourceType:'Server',id:SECRET_BEHAVIOR_REGISTER_EVENT,message:JSON.stringify({input:'minecraft:apple',behavior:{mode:'replace',effects:[
+  {kind:'persistent_fx',effect:'warmth',ticks:1900,amplifier:0},
+  {kind:'persistent_fx',effect:'warmth',ticks:400,amplifier:1}
+ ]}})});
+ assert.ok(compat.secretIngredientRegistration({id:'minecraft:apple'}));
+ const stack=f.item('kaleidoscope_grilling:secret_skewer_java_three_alt');
+ data.setItemProperty(stack,'kaleidoscope_grilling:skewer_ingredients',JSON.stringify([
+  {id:'minecraft:apple',edible:true,nutrition:4,saturation:.3},
+  {id:'minecraft:carrot',edible:true,nutrition:3,saturation:.6},
+  {id:'minecraft:potato',edible:true,nutrition:1,saturation:.3}
+ ]));
+ const p=f.player({[hand]:stack});
+ f.emit('world.afterEvents.itemStartUse',{source:p,itemStack:stack.clone(),useDuration:90});f.tick(90);
+ p[hand]=undefined; // Explicit native-input boundary: the single serving was consumed.
+ f.emit('world.afterEvents.itemCompleteUse',{source:p,itemStack:stack.clone(),useDuration:0});
+ const time=f.world.getAbsoluteTime(),expected={until:time+400,amp:1,hidden:{until:time+1900,amp:0}};
+ assert.deepEqual(state.readEffects(p).warmth,expected,'the real ingredient callback earns the chain without seeding the ledger');
+ const potato=f.item('kaleidoscope_grilling:roasted_sweet_potato');p[hand]=potato;
+ f.emit('world.afterEvents.itemStartUse',{source:p,itemStack:potato.clone(),useDuration:32});f.tick(32);
+ p[hand]=undefined;
+ f.emit('world.afterEvents.itemCompleteUse',{source:p,itemStack:potato.clone(),useDuration:0});
+ assert.deepEqual(state.readEffects(p).warmth,expected);
+ const {FX_KEY}=await f.load('effect_lifecycle_core.js'),saved=p.getDynamicProperty(FX_KEY);
+ const reload=createFixture({currentTick:time+401});t.after(()=>reload.dispose());
+ const restored=reload.player();restored.setDynamicProperty(FX_KEY,saved);
+ const reloadedState=await reload.load('effect_state_runtime.js');
+ assert.deepEqual(reloadedState.readEffects(restored).warmth,{until:time+1900,amp:0});
+ assert.equal(p[hand],undefined,'the original serving is not recreated');
+});
