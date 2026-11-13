@@ -303,4 +303,45 @@ await scenario('creative breaking removes the leaf without survival loot',f=>{
  assert.equal(block.typeId,'minecraft:air');expectDrops(f,[]);
 });
 
+// A player can strip every trunk block of a normal pepper tree. Java leaves
+// retain log support because stripped oak is in the vanilla LOGS tag. Drive
+// actual growth, strip and random-tick callbacks; no renderer is simulated.
+for(const hand of ['main','off'])await scenario(`fully stripped pepper tree keeps its natural leaves and fruit (${hand} axe)`,f=>{
+ const logId='kaleidoscope_grilling:pepper_log',saplingId='kaleidoscope_grilling:pepper_sapling';
+ const sapling=f.block(saplingId,{x:0,y:1,z:0},{states:{'kaleidoscope_grilling:stage':1}}),d=sapling.dimension;
+ f.block('minecraft:dirt',{x:0,y:0,z:0});
+ d.getLightLevel=()=>15; // Documented API input: loaded, unobstructed daylight.
+ randomAt(0,()=>f.component('kaleidoscope_grilling:pepper_sapling_logic','onRandomTick',{block:sapling}));
+ const logs=[...d.blocks.values()].filter(b=>b.typeId===logId),leaves=[...d.blocks.values()].filter(b=>b.typeId===leafId);
+ assert.equal(logs.length,3);assert.ok(leaves.length>0);
+ const player=f.player({[hand]:f.item('minecraft:iron_axe')});
+ for(const block of logs)f.component('kaleidoscope_grilling:pepper_log_logic','onPlayerInteract',{block,player});
+ assert.ok(logs.every(b=>b.typeId==='minecraft:stripped_oak_log'));
+ assert.equal([...d.blocks.values()].some(b=>b.typeId===logId),false,'no unstripped log can mask lost support');
+ assert.equal(player[hand].getComponent('minecraft:durability').damage,logs.length);
+ randomAt(.99,()=>{for(const block of leaves)f.component(leafComponent,'onRandomTick',{block});});
+ assert.ok(leaves.every(b=>b.typeId===leafId),'stripping must not trigger natural leaf decay');
+ assert.ok(leaves.every(b=>b.permutation.getState(persistentState)===false),'support must not turn natural leaves persistent');
+ expectDrops(f,[]);
+ const picker=f.player();randomAt(0,()=>interact(f,leaves[0],picker));
+ expectDrops(f,[[pepperLoot,harvestMin]]);
+ assert.equal(leaves[0].permutation.getState(fruitState),false);
+});
+for(const distance of [1,6,7])await scenario(`stripped log support preserves the six-block decay boundary (distance ${distance})`,f=>{
+ const log=f.block('kaleidoscope_grilling:pepper_log',{x:0,y:0,z:0});
+ for(let x=1;x<=distance;x++)leaf(f,{x,ripe:false});
+ const target=log.dimension.getBlock({x:distance,y:0,z:0}),player=f.player({main:f.item('minecraft:iron_axe')});
+ f.component('kaleidoscope_grilling:pepper_log_logic','onPlayerInteract',{block:log,player});
+ assert.equal(log.typeId,'minecraft:stripped_oak_log');
+ randomAt(.99,()=>f.component(leafComponent,'onRandomTick',{block:target}));
+ assert.equal(target.typeId,distance<=6?leafId:'minecraft:air');
+ expectDrops(f,[]);
+ if(distance<=6){
+  log.setType('minecraft:air');
+  randomAt(.99,()=>f.component(leafComponent,'onRandomTick',{block:target}));
+  assert.equal(target.typeId,'minecraft:air','actually removing the supporting log still permits decay');
+  expectDrops(f,[]);
+ }
+});
+
 console.log('Pepper Tree core and registered runtime scenarios: '+n+'/'+n);
