@@ -22,18 +22,6 @@ export function captureBlockInteractionIntent(player,eventStack){
  return captureInteractionIntentFromStacks(mainFirst?main:eventStack,main,off,player.selectedSlotIndex,!!mainFirst);
 }
 
-// Native placement has no hand. Only its paired event's uniquely matching
-// stack can establish a source; ordinary block main-hand priority is not proof.
-export function captureBottlePlacementIntent(player,eventStack){
- if(!eventStack)return null;
- const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
- const signature=stackIntentSignature(eventStack);
- const mainMatches=main!==undefined&&stackIntentSignature(main)===signature;
- const offMatches=off!==undefined&&stackIntentSignature(off)===signature;
- if(mainMatches===offMatches)return null;
- return captureInteractionIntentFromStacks(eventStack,main,off,player.selectedSlotIndex);
-}
-
 export function interactionIntentStillCurrent(player,intent){
  return interactionIntentMatchesStacks(intent,getMainHand(player),getOffHand(player),player.selectedSlotIndex);
 }

@@ -27,7 +27,8 @@ import {awardSeasoningMilestones} from "../advancement/advancement_event_runtime
 import {interactionParticleBurst} from "../immersion_particles_runtime.js";
 import {refreshPlacedBottleAfterPickup} from "../presentation/placed_visual_runtime.js";
 import {hasSolidTop} from "../blockSupport.js";
-import {captureBottlePlacementIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
+import {interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
+import {captureInteractionIntentFromStacks} from "../core/interaction_intent_core.js";
 function bottleDataFromItem(stack){
  if(!isNativeBottleItem(stack))throw new Error('Unknown item cannot become a seasoning bottle');
  const kind=isSpecialSeasoningId(stack?.typeId)?'special':isPendingSeasoningId(stack?.typeId)?'pending':'empty';
@@ -167,6 +168,19 @@ const bottleInteractionSupports=new Set([
 // One owner for input capture and the existing deferred placement transaction.
 const pendingBottlePlacements=new Map();
 
+function captureBottlePlacementIntent(player){
+ const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
+ const hand=isNativeBottleItem(main)?'main':isNativeBottleItem(off)?'off':undefined;
+ if(!hand)return null;
+ const source=hand==='main'?main:off;
+ // Main-hand PENDING consumes ordinary use by starting the shake; it does not
+ // yield to an offhand bottle merely because placement was rejected.
+ if(isPendingSeasoningId(source.typeId)&&!player.isSneaking)return null;
+ // This is our chosen debit source, not a claim about the native event's hand.
+ // The existing intent keeps both full clones and the selected slot for commit.
+ return captureInteractionIntentFromStacks(source,main,off,player.selectedSlotIndex,hand==='main');
+}
+
 export function captureBottlePlacementInput(e){
  const player=e.player;if(!player)return;
  const previous=pendingBottlePlacements.get(player.id);
@@ -177,9 +191,9 @@ export function captureBottlePlacementInput(e){
  if(!previous?.queued)pendingBottlePlacements.delete(player.id);
  if(e.cancel||e.blockFace!=='Up'||!isNativeBottleItem(e.itemStack))return;
  try{
-  const intent=captureBottlePlacementIntent(player,e.itemStack);if(!intent)return;
+  const intent=captureBottlePlacementIntent(player);if(!intent)return;
   const input={intent,dimension:e.block.dimension.id,hit:{...e.block.location},
-   pending:isPendingSeasoningId(e.itemStack.typeId),sneaking:player.isSneaking};
+   pending:isPendingSeasoningId(heldByHand(player,intent.hand)?.typeId),sneaking:player.isSneaking};
   if(previous?.queued){previous.input=input;return}
   const pending={input,tick:system.currentTick,queued:false};
   pendingBottlePlacements.set(player.id,pending);
@@ -202,7 +216,7 @@ function tryScheduleOffhandBottleInteraction(e){
   const support=e.block;
   if(!bottleInteractionSupports.has(support.typeId)||!hasSolidTop(support))return false;
   const block=support.above();if(!block||block.typeId!=='minecraft:air')return false;
-  const intent=captureBottlePlacementIntent(player,off);if(intent?.hand!=='off')return false;
+  const intent=captureBottlePlacementIntent(player);if(intent?.hand!=='off')return false;
   // Capture Java's horizontal getOpposite() at this input, before a deferred
   // placement can observe the player turning. Native placement uses its trait.
   const yaw=player.getRotation().y;if(!Number.isFinite(yaw))return false;
@@ -215,10 +229,11 @@ function tryScheduleOffhandBottleInteraction(e){
 
 function scheduleNativeBottlePlacement(e){
  if(e.cancel)return;e.cancel=true;
- const player=e.player;if(!player||e.face!=='Up')return;
+ const player=e.player;if(!player||e.face!=='Up'||e.permutationToPlace.type.id!==SEASONING_BLOCK)return;
  const mode=player.getGameMode();if(mode!==GameMode.Survival&&mode!==GameMode.Creative)return;
- // Native placement supplies the destination/permutation, but no source hand.
- // Pair the real interaction and native destination in either callback order.
+ // All recognized bottle items place SEASONING_BLOCK; the paired input owns
+ // our debit hand, not a claim about the unreported native hand. Keep native
+ // destination/permutation admission paired with that bottle input.
  // Without both callbacks in this tick the deferred transaction does nothing.
  const previous=pendingBottlePlacements.get(player.id);if(previous?.queued)return;
  const pending=previous?.tick===system.currentTick?previous:{tick:system.currentTick,queued:false};

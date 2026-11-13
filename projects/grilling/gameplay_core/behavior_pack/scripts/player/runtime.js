@@ -1,7 +1,7 @@
 import {resetPlayerPresentation,forgetPlayerPresentation} from '../core/player_props.js';
 import {onBeforeBlockBreak} from '../core/events.js';
 import {GRILL_ID} from "../eating_data_lookup.js";
-import {isSeasoningBlockId as isSeasoningBlock} from "../seasoning/seasoning_contract_core.js";
+import {SEASONING_BLOCK_IDS,isSeasoningBlockId as isSeasoningBlock} from "../seasoning/seasoning_contract_core.js";
 import {captureBlockInteractionIntent,interactionIntentStillCurrent} from "../core/interaction_intent_adapter.js";
 import {message} from "../core/actions.js";
 import {handleGrill,scheduleGrillPlayerBreak,tickGrill} from "../grill/runtime.js";
@@ -74,10 +74,10 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
  blockComponentRegistry.registerCustomComponent('senluo:grilling_bottle_place',{beforeOnPlayerPlace:scheduleNativeBottlePlacement,onTick(e){try{tickNativeBottleSupport(e.block)}catch(error){console.warn('[Grilling bottle support recovery] '+error)}}});
 });
 
-onBlockInteraction('main',e=>{
+function handleBlockInteraction(e){
  if(e.block?.typeId===GRILL_ID&&e.player?.id)recentGrillBeforeInteractions.set(e.player.id,{block:grillBlockKey(e.block),tick:system.currentTick});
  if(e.cancel)return;
- const grillTarget=e.block.typeId===GRILL_ID,customTarget=grillTarget||isSeasoningBlock(e.block.typeId);
+ const grillTarget=e.block.typeId===GRILL_ID,bottleTarget=isSeasoningBlock(e.block.typeId),customTarget=grillTarget||bottleTarget;
  let intent;
  if(customTarget){
   try{
@@ -86,12 +86,15 @@ onBlockInteraction('main',e=>{
    // Return before skewer/block cancellation so the original item can continue.
    if(e.player.isSneaking&&(main!==undefined||off!==undefined))return;
    // useWithoutItem runs on MAIN_HAND before an offhand item gets its turn.
-   intent=captureBlockInteractionIntent(e.player,e.itemStack);
+   // The bottle consumes its main-hand branch even for invalid ingredients.
+   // A Bedrock event item must not send that action straight to the off hand.
+   intent=captureBlockInteractionIntent(e.player,bottleTarget?main:e.itemStack);
   }catch{e.cancel=true;return}
  }
  if(tryScheduleOffhandBottleInteraction(e))return;
  if(tryScheduleBeefBoardOverride(e))return;
- const skewerInput=skewerAction(e.player,e.itemStack??heldMain(e.player));
+ // Ordinary bottle use consumes the block action before hand-only threading.
+ const skewerInput=!bottleTarget&&skewerAction(e.player,e.itemStack??heldMain(e.player));
  if(skewerInput){e.cancel=true;if(isInitialBlockPress(e.isFirstEvent))scheduleSkewerAction(e.player,skewerInput);return}
  const sortTarget=e.player.isSneaking&&!e.itemStack&&STORAGE_SORT_BLOCKS.has(e.block.typeId);
  if(!isInitialBlockPress(e.isFirstEvent)){if(customTarget||sortTarget)e.cancel=true;return}
@@ -103,10 +106,14 @@ onBlockInteraction('main',e=>{
  e.cancel=true;if(!intent)return;
  const p=e.player,loc={...e.block.location},dim=e.block.dimension,bottleCapture=isSeasoningBlock(e.block.typeId)?bottleActionSnapshot(e.block):undefined;
  scheduleHandAction(p,()=>{try{const target=dim.getBlock(loc);if(bottleCapture&&!bottleActionStillCurrent(target,bottleCapture))return;handleCustomBlockInteraction(target,p,intent)}catch(error){console.warn('[Grilling block action] '+error);try{interactionFailure(p,'§c操作未完成；請查看紀錄並核對原料')}catch{}}});
-},{"priority":100});
+}
 
-// The existing router runs observers after all its handling routes. Capture
-// this router's cancellation decision; do not retain a native event object.
+// Transfer bottle routing ahead of hand-only item actions. The general route
+// excludes these targets, so a single bottle gesture has only one block owner.
+onBlockInteraction('seasoning_bottle',handleBlockInteraction,{priority:0,blocks:SEASONING_BLOCK_IDS});
+onBlockInteraction('main',e=>{if(!isSeasoningBlock(e.block.typeId))handleBlockInteraction(e)},{priority:100});
+
+// Keep the input/native pairing: the placer has no item or hand of its own.
 onBlockInteraction('bottle_placement_input',captureBottlePlacementInput,{observe:true});
 
 onBeforeBlockBreak('player/runtime.js:0',e=>{
