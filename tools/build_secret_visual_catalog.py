@@ -1,7 +1,8 @@
 """Reproduce configured Grilling ingredient visuals without changing saved indices.
 
-Run after editing the explicit source manifest, then use --check in CI. Existing
-217 palette assets and all existing geometry identifiers remain byte-preserved.
+Run after editing the explicit source inputs. Equal, non-provisional palette
+PNGs share a path within each style; food indices and texture keys stay intact.
+Use --palettes-only to regenerate just these PNGs and their existing maps.
 No external pack, network fetch, runtime item ID, or player channel is added.
 """
 from pathlib import Path
@@ -47,14 +48,59 @@ def gui_color(palette, style):
     return sum((sum(c >> shift & 255 for c in colors)//4) << shift for shift in (16,8,0))
 
 
+def build_palettes(output):
+    legacy = json.loads((FIX/'legacy-palettes.json').read_text())
+    manifest = json.loads((FIX/'ingredients.json').read_text())
+    rows = legacy['items']
+    assert [r['index'] for r in rows] == list(range(1,218))
+    assert [r['index'] for r in manifest['items']] == list(range(218,226))
+    white_raw = (FIX/'white_concrete.png').read_bytes()
+    assert hashlib.sha256(white_raw).hexdigest() == legacy['base_texture']['sha256'] == manifest['base_texture_sha256']
+    white = Image.open(io.BytesIO(white_raw)).convert('RGBA')
+    assert white.size == (16,16)
+    for row in manifest['items']:
+        raw = (RP/(row['texture']+'.png')).read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == row['texture_sha256'], row['id']
+        sprite = Image.open(io.BytesIO(raw)).convert('RGBA')
+        assert sprite.size == (16,16), row['id']
+        rows.append({**row, 'palette': sample_grid(sprite)})
+
+    textures, obsolete = {}, []
+    for style in range(7):
+        paths_by_content = {}
+        for row in rows:
+            index = row['index']
+            path = f'textures/secret_food_palette/food_{index}_{style}'
+            data = atlas(row['palette'], white, style)
+            # A provisional missing-particle fallback is not evidence that two
+            # real ingredients have the same visual source. Leave it separate.
+            provisional = row.get('source', {}).get('kind') == 'unresolved_java_particle_provider_fallback'
+            shared = path if provisional else paths_by_content.setdefault(data, path)
+            textures[f'food_{index}_s{style}'] = shared
+            if shared == path:
+                output[RP/(path+'.png')] = data
+            else:
+                obsolete.append(RP/(path+'.png'))
+    for folder in ('attachables', 'entity'):
+        for path in (RP/folder).glob('*.json'):
+            data = json.loads(output.get(path, path.read_bytes()))
+            changed = False
+            for kind in ('minecraft:attachable', 'minecraft:client_entity'):
+                if kind not in data:
+                    continue
+                mapping = data[kind]['description'].get('textures', {})
+                if 'food_217_s6' in mapping:
+                    mapping.update(textures)
+                    changed = True
+            if changed:
+                output[path] = dump(data)
+    return obsolete
+
+
 def build():
     manifest = json.loads((FIX/'ingredients.json').read_text())
     rows = manifest['items']
     assert [r['index'] for r in rows] == list(range(218,226))
-    white_raw = (FIX/'white_concrete.png').read_bytes()
-    assert hashlib.sha256(white_raw).hexdigest() == manifest['base_texture_sha256']
-    white = Image.open(io.BytesIO(white_raw)).convert('RGBA')
-    assert white.size == (16,16)
     output = {}
     catalog_path = BP/'scripts/secret_visual_catalog.js'
     source = catalog_path.read_text()
@@ -76,8 +122,6 @@ def build():
         if row['id'] in catalog:
             assert catalog[row['id']] == index
         catalog[row['id']] = index
-        for style in range(7):
-            output[RP/f'textures/secret_food_palette/food_{index}_{style}.png'] = atlas(palette,white,style)
         new_colors = [gui_color(palette,s) for s in range(7)]
         if len(colors) == index: colors.append(new_colors)
         else:
@@ -104,10 +148,6 @@ def build():
             for kind in ('minecraft:attachable','minecraft:client_entity'):
                 if kind not in data: continue
                 desc=data[kind]['description'];textures=desc.get('textures',{});geos=desc.get('geometry',{})
-                if 'food_217_s6' in textures:
-                    for row in rows:
-                        for style in range(7):textures[f"food_{row['index']}_s{style}"]=f"textures/secret_food_palette/food_{row['index']}_{style}"
-                    changed=True
                 if 'food_217' in textures:
                     for row in rows:textures[f"food_{row['index']}"]=row['texture']
                     if not any(k.startswith('piece_') for k in geos):raise ValueError(str(path)+' missing helper geometry owner')
@@ -154,17 +194,24 @@ def build():
 
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true');args=parser.parse_args()
-    output=build()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true')
+    parser.add_argument('--palettes-only', action='store_true');args=parser.parse_args()
+    output={} if args.palettes_only else build()
+    obsolete=build_palettes(output)
     # Consumer expression updater is deliberately separate from asset sampling.
-    from secret_visual_consumers import update_consumers
     mismatches=[]
     for path,data in output.items():
         if path.exists() and path.read_bytes()==data:continue
         if args.check:mismatches.append(str(path.relative_to(ROOT)))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
-    if args.check:mismatches.extend(update_consumers(ROOT, check=True))
-    else:update_consumers(ROOT)
+    for path in obsolete:
+        if path.exists():
+            if args.check:mismatches.append(str(path.relative_to(ROOT)))
+            else:path.unlink()
+    if not args.palettes_only:
+        from secret_visual_consumers import update_consumers
+        if args.check:mismatches.extend(update_consumers(ROOT, check=True))
+        else:update_consumers(ROOT)
     if mismatches:raise SystemExit('Out-of-date secret visuals: '+', '.join(mismatches))
     print(f'{len(output)} generated/updated outputs; '+('check passed' if args.check else 'written'))
 
