@@ -18,6 +18,9 @@ TACZ_SHA256 = '1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486'
 TACZ_BP = 'TACZBehavi/entities/plalyer.json'
 TACZ_RP = 'TACZResour/entity/player.entity.json'
 FP = 'controller.render.player.first_person'
+RIDING_GEOMETRY = ('variable.ordertocook_drive_tp ? '
+    '(variable.ordertocook_drive_variant == 2 ? Geometry.otc_riding_slim : Geometry.otc_riding_classic) '
+    ': Geometry.default')
 ASSIGNMENT = re.compile(r'^\s*(?:v|variable)\.([\w]+)\s*=')
 OFFHAND_RESERVED = "q.is_item_equipped('off_hand')"
 BROKEN_MODEL = 'models/entity/7sf3y8pgug/5q9tvlnhgh/lmkxjsnrit/jfgkkrr92y/y7rwInQT2sq3l6gu.json'
@@ -208,6 +211,43 @@ def repair_model(raw):
     return value
 
 
+def compose_riding_render_controllers(files, controller, contract, controller_path):
+    """Generate skin routes for both initial riding and a retained player pair."""
+    path = Path(controller_path)
+    if path.is_absolute() or '..' in path.parts or path.parts[:2] != ('RP', 'render_controllers'):
+        raise ValueError('Replace the selected controller in its original RP path')
+    matched = 0
+    if 'controller.render.player.third_person' not in controller['render_controllers']:
+        raise ValueError('Riding needs the effective native third-person controller as well as the host FP controller')
+    for selected in controller['render_controllers'].values():
+        geometry = selected.get('geometry', '')
+        if geometry.lower() != 'geometry.default' and geometry != RIDING_GEOMETRY:
+            continue
+        selected['geometry'] = RIDING_GEOMETRY
+        # Later wildcard matches win. Copy the actual limb and clothes gates,
+        # not a general arm flag, to each new skin/overlay segment.
+        # Rebuild our children from current parents, including retained routes.
+        # Keeping old children would duplicate them or retain an obsolete gate.
+        parts = [{name: gate for name, gate in row.items()
+                  if name not in contract['part_visibility']}
+                 for row in selected.get('part_visibility', [])]
+        parts = [row for row in parts if row]
+        selected['part_visibility'] = parts
+        inherited = []
+        for child, parent in contract['part_visibility'].items():
+            gate = True
+            for row in parts:
+                for pattern, condition in row.items():
+                    if re.fullmatch(re.escape(pattern).replace(r'\*', '.*'), parent):
+                        gate = condition
+            inherited.append({child: gate})
+        parts.extend(inherited)
+        matched += 1
+    if not matched:
+        raise ValueError('Selected render controllers have no native skin geometry route')
+    files[controller_path] = controller
+
+
 def compose_riding(files, controller, bundle, controller_path):
     """Extend this same player and its selected skin render controllers.
 
@@ -215,9 +255,6 @@ def compose_riding(files, controller, bundle, controller_path):
     native skin frames in third-person motorcycle riding select new meshes.
     """
     root = Path(bundle).resolve()
-    path = Path(controller_path)
-    if path.is_absolute() or '..' in path.parts or path.parts[:2] != ('RP', 'render_controllers'):
-        raise ValueError('Replace the selected controller in its original RP path')
     contract = json.loads((root / 'player-riding.json').read_bytes())
     if contract.get('schema') != 1:
         raise ValueError('Riding needs the OTC schema1 export')
@@ -281,30 +318,7 @@ def compose_riding(files, controller, bundle, controller_path):
     files['RP/animation_controllers/ordertocook_native_riding.json'] = {
         'format_version': '1.10.0', 'animation_controllers': wrappers}
     scripts['animate'].append('otc_player_riding')
-    matched = 0
-    if 'controller.render.player.third_person' not in controller['render_controllers']:
-        raise ValueError('Riding needs the effective native third-person controller as well as the host FP controller')
-    for selected in controller['render_controllers'].values():
-        if selected.get('geometry', '').lower() != 'geometry.default':
-            continue
-        selected['geometry'] = ('variable.ordertocook_drive_tp ? '
-            '(variable.ordertocook_drive_variant == 2 ? Geometry.otc_riding_slim : Geometry.otc_riding_classic) '
-            ': Geometry.default')
-        # Later wildcard matches win. Copy the actual limb and clothes gates,
-        # not a general arm flag, to each new skin/overlay segment.
-        parts = selected.setdefault('part_visibility', [])
-        inherited = []
-        for child, parent in contract['part_visibility'].items():
-            gate = True
-            for row in parts:
-                for pattern, condition in row.items():
-                    if re.fullmatch(re.escape(pattern).replace(r'\*', '.*'), parent):
-                        gate = condition
-            inherited.append({child: gate})
-        parts.extend(inherited)
-        matched += 1
-    if not matched:
-        raise ValueError('Selected render controllers have no native skin geometry route')
+    compose_riding_render_controllers(files, controller, contract, controller_path)
     for relative in contract['files']:
         path = Path(relative)
         if path.is_absolute() or '..' in path.parts or path.parts[0] != 'RP':
@@ -313,7 +327,6 @@ def compose_riding(files, controller, bundle, controller_path):
             raise ValueError('Riding asset conflicts with another owner: ' + relative)
         files[relative] = json.loads((root / path).read_bytes())
     files['RP/MOJANG-RIDING-LICENSE.md'] = (root / 'MOJANG-VANILLA-LICENSE.md').read_text()
-    files[controller_path] = controller
 
 
 def compose_files(behavior, host_player, tacz_archive=None, *, riding=None, render_controllers=None,
@@ -374,6 +387,7 @@ def main():
     parser.add_argument('--host-sha256', required=True)
     parser.add_argument('--tacz', type=Path)
     parser.add_argument('--riding', type=Path, help='User-local OTC player-riding export')
+    parser.add_argument('--riding-renderer', type=Path, help="Replay only render controllers from the retained pair's schema1 riding descriptor")
     parser.add_argument('--host-render-controllers', type=Path)
     parser.add_argument('--host-render-controllers-target', help='Original RP/render_controllers/... path to replace in place')
     parser.add_argument('--composed-behavior', type=Path, help='Existing selected complete BP player; extend this pair without rebuilding IE/TACZ')
@@ -386,7 +400,24 @@ def main():
         parser.error('Choose a new local output directory')
     behavior = json.loads((args.composed_behavior or BASE / 'behavior_pack/entities/player.json').read_text())
     controllers = json.loads(args.host_render_controllers.read_bytes()) if args.host_render_controllers else None
-    if args.composed_behavior:
+    if args.riding_renderer:
+        if (not args.composed_behavior or args.tacz or args.riding or controllers is None
+                or args.host_render_controllers_target is None):
+            parser.error('Riding renderer replay needs a retained complete pair and its controller, without a second player composition')
+        contract = json.loads(args.riding_renderer.read_bytes())
+        if contract.get('schema') != 1:
+            raise ValueError('Riding needs the OTC schema1 export')
+        player = json.loads(raw)['minecraft:client_entity']['description']
+        if (player.get('identifier') != 'minecraft:player'
+                or any(player['geometry'].get('otc_riding_' + variant) != row['geometry']
+                       for variant, row in contract['variants'].items())
+                or player['animations'].get('otc_player_riding') != contract['animations']['otc_player_riding']
+                or player['scripts']['animate'].count('otc_player_riding') != 1):
+            raise ValueError('Renderer replay needs the matching already connected riding player')
+        # Emit only the controller. Never configure or serialize retained players.
+        files = {}
+        compose_riding_render_controllers(files, controllers, contract, args.host_render_controllers_target)
+    elif args.composed_behavior:
         if args.tacz or (args.riding and (controllers is None or args.host_render_controllers_target is None)):
             parser.error('An existing complete player pair accepts optional riding/controller inputs, without a second TACZ merge')
         # Retain the selected complete pair, including already composed riding.
@@ -405,7 +436,7 @@ def main():
         path.write_bytes(data); hashes[name] = hashlib.sha256(data).hexdigest()
     receipt = {'schema': 1, 'host_player_sha256': args.host_sha256,
                'tacz_archive_sha256': TACZ_SHA256 if args.tacz else None,
-               'player_properties': len(files['BP/entities/player.json']['minecraft:entity']['description']['properties']),
+               'player_properties': len(files.get('BP/entities/player.json', behavior)['minecraft:entity']['description']['properties']),
                'tacz_resource_overrides': [name for name in files if name not in ('BP/entities/player.json', 'RP/entity/player.entity.json')],
                'outputs': hashes, 'client': False, 'production_ready': False}
     (args.output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
