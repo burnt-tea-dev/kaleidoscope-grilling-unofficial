@@ -62,8 +62,11 @@ def player_extension():
     for hand, slot in [('main', 'mainhand'), ('off', 'offhand')]:
         alias = 'kg_held_oil_brush_' + hand
         animations[alias] = 'animation.kg_oil_brush.player.' + hand
-        marker = SCHEMA['fields']['kaleidoscope_grilling:secret_' + hand + '_piece']['read']
-        animate.append({alias: marker + " == 225 && q.is_item_name_any('slot.weapon." + slot + "','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"})
+        # configure_player gates these local words with the commit frame.
+        # The request property is checked by the one snapshot writer, before
+        # any word is committed; a player reader need not query it again.
+        marker = SCHEMA['fields']['kaleidoscope_grilling:secret_' + hand + '_piece']['variable']
+        animate.append({alias: marker + " == 225 ? q.is_item_name_any('slot.weapon." + slot + "','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled') : 0"})
     return {'schema': 1, 'identifier': 'minecraft:player',
             'scripts': {'variables': {name: 'public' for name in variables},
                         'initialize': [name + ' = 0;' for name in variables], 'animate': animate},
@@ -87,17 +90,26 @@ def configure_player(player, extension=None):
         if statement not in scripts.setdefault('initialize', []):
             scripts['initialize'].append(statement)
     for entry in extension['scripts']['animate']:
-        # Skin previews also run pre_animation without a gameplay actor. UI
-        # models keep the native arm pose; only world rendering reads held data.
-        # Initialized local weights also keep the animation phase actor-free.
+        # Fresh player/preview models have no committed local snapshot. Read
+        # that first, before any query; is_in_ui only selects the UI pose.
+        # Initialized local weights keep the animation phase actor-free.
         for alias, condition in entry.items():
             weight = 'v.' + alias + '_active'
             initial = weight + ' = 0;'
-            update = weight + ' = q.is_in_ui ? 0 : (' + SCHEMA['frameVariable'] + ' > 0 ? (' + condition + ') : 0);'
+            update = weight + ' = ' + SCHEMA['frameVariable'] + ' > 0 ? (q.is_in_ui ? 0 : (' + condition + ')) : 0;'
             if initial not in scripts['initialize']:
                 scripts['initialize'].append(initial)
-            if update not in scripts.setdefault('pre_animation', []):
-                scripts['pre_animation'].append(update)
+            pre = scripts.setdefault('pre_animation', [])
+            owned = re.compile(r'^\s*(?:v|variable)\.' + re.escape(alias) + r'_active\s*=')
+            previous = [i for i, line in enumerate(pre) if isinstance(line, str) and owned.match(line)]
+            if previous:
+                # Re-composing a complete input must retire this owner's old
+                # property reader instead of leaving two active writers.
+                pre[previous[0]] = update
+                for i in reversed(previous[1:]):
+                    del pre[i]
+            else:
+                pre.append(update)
             cached = {alias: weight}
             if cached not in scripts.setdefault('animate', []):
                 scripts['animate'].append(cached)
