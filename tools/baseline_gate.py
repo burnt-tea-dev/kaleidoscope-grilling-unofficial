@@ -272,6 +272,8 @@ def main():
   if version not in history and history and tuple(config['version'])<=max(tuple(map(int,v.split('.'))) for v in history):fail('release version must advance')
   try:claim_release(ROOT,config['version'],trees,config['repository'])
   except ReleaseClaimError as error:fail(str(error))
+  from bridge_project import sync_project_names
+  sync_project_names(ROOT)
   history[version]=trees;config['source_trees']=trees
   history_path.write_text(json.dumps(history,indent=2)+'\n');(ROOT/'baseline.json').write_text(json.dumps(config,indent=2)+'\n')
   print('Frozen '+version);return

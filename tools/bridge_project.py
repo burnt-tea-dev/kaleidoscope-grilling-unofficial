@@ -40,6 +40,23 @@ def numeric_version(value):
     return tuple(value)
 
 
+def project_names(version):
+    return ('Kaleidoscope Grilling ' + '.'.join(map(str, version)) + ' Canonical Baseline',
+            'Kaleidoscope_Grilling_' + '_'.join(map(str, version)) + '_Canonical')
+
+
+def sync_project_names(root=ROOT):
+    version = numeric_version(load(root / 'baseline.json')['version'])
+    configs = [(root / relative, load(root / relative)) for relative in
+               ('config.json', 'projects/grilling/gameplay_core/config.json')]
+    for _, config in configs:
+        plugins = config['compiler']['plugins']
+        assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
+        config['name'], plugins[0][1]['packName'] = project_names(version)
+    for path, config in configs:
+        path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
 def check_pack_structure(folder, manifest, pack, version):
     """Validate executable pack declarations without a historical verifier chain."""
     assert numeric_version(manifest['header']['version']) == tuple(version), f'{pack}: header version drift'
@@ -92,7 +109,7 @@ def check(root=ROOT):
     assert config['bridge']['formatVersion'] == 1, 'prevent automatic formatVersionCorrection insertion'
     plugins = config['compiler']['plugins']
     assert len(plugins) == 1 and plugins[0][0] == 'simpleRewrite', 'canonical packs must not use gameplay or format transforms'
-    expected_name = 'Kaleidoscope_Grilling_' + '_'.join(map(str, baseline['version'])) + '_Canonical'
+    expected_name = project_names(baseline['version'])[1]
     assert plugins[0][1]['packName'] == expected_name, 'bridge build name drifted from canonical version'
     nested = load(root / 'projects/grilling/gameplay_core/config.json')
     assert nested['compiler']['plugins'] == plugins, 'nested bridge compiler differs from canonical export'

@@ -9,7 +9,7 @@
 | canonical BP | `projects/grilling/gameplay_core/behavior_pack/` |
 | canonical RP | `projects/grilling/gameplay_core/resource_pack/` |
 | 身份與相依 | [baseline.json](../baseline.json)：目前 BP/RP UUID、版本、Cookery 相依與來源樹身份 |
-| bridge 工程 | [config.json](../config.json) 指向同一 BP/RP；匯出檢查不等於發布或 client 驗收 |
+| bridge 工程 | [config.json](../config.json) 指向同一 BP/RP；既有 `tools/baseline_gate.py freeze` 從 baseline.version 同步兩份工程的顯示與輸出名稱。`tools/bridge_project.py --build <source.zip>` 保留原名稱與內容校驗，產物是自有來源匯出，不是原作者 archive；匯出檢查不等於發布或 client 驗收 |
 | Java 來源 | `projects/grilling/source_snapshots/` 與 `source_manifest.json` 保留逐檔來源；主要 pin 為 `9a1acdab…`，另有明列 fork 來源，不把所有素材偽稱同一來源 |
 | Java 資料表 | [data/java](../data/java/)；[tools/java_extract](../tools/java_extract/README.md) 可由釘選上游重新萃取，P2 不改 runtime 去讀它們 |
 | 工程護欄 | `tools/guards/`、`tools/baseline_gate.py`；存檔與 bytes 邊界見 [SAVE-COMPAT](SAVE-COMPAT.md) |

@@ -1,4 +1,5 @@
 import {readPlayerControl} from '../core/player_props.js';
+import {onScriptEvent} from '../core/events.js';
 import {readEffects,writeEffects,cureTotemEffects} from "../effect_state_runtime.js";
 import {now} from "../core/actions.js";
 import {FX_KEY,mergeEffectApplication} from "../effect_lifecycle_core.js";
@@ -31,7 +32,7 @@ const LIT_HEAT_BLOCKS=new Set([
 
 const TUNDRA_BLOCKS=new Set(['minecraft:snow','minecraft:snow_layer','minecraft:snow_block','minecraft:powder_snow','minecraft:ice','minecraft:packed_ice','minecraft:blue_ice','minecraft:frosted_ice']);
 
-// Native finish-use and the ChineseFood guide producer share these rewards.
+// Tea consumption and the ChineseFood guide producer share these rewards.
 export const COOKERY_TEA_EFFECTS = {
  "kaleidoscope_chinesefood:dianhong_tea": {"effect":"tundra_strider","duration":9600},
  "kaleidoscope_chinesefood:hk_milk_tea": {"effect":"hinder","duration":9600}
@@ -50,11 +51,28 @@ function fxApply(entity,name,ticks,amp=0){
  catch(error){console.warn('[Grilling effect application] '+name+': '+error);return undefined}
 }
 
-// The native event already carries the consumed item and the actual drinker
-// across addon item namespaces. No second private effect store or relay is needed.
+function applyTeaEffects(player,itemId){
+ const reward=COOKERY_TEA_EFFECTS[itemId];
+ if(reward&&player.typeId==='minecraft:player')fxApply(player,reward.effect,reward.duration);
+}
+
 world.afterEvents.itemCompleteUse.subscribe(({source,itemStack})=>{
- const reward=COOKERY_TEA_EFFECTS[itemStack?.typeId];
- if(reward&&source.typeId==='minecraft:player')fxApply(source,reward.effect,reward.duration);
+ applyTeaEffects(source,itemStack?.typeId);
+});
+
+onScriptEvent('effect/runtime.js:tea-autofed',event=>{
+ if(event.id!=='aww:evt'||event.sourceType!=='Server'||
+    typeof event.message!=='string'||event.message.length>2048)return;
+ let value;try{value=JSON.parse(event.message)}catch{return}
+ if(!value||typeof value!=='object'||Array.isArray(value)||
+    value.v!==1||value.t!=='autofed'||typeof value.p!=='string'||!value.p||
+    typeof value.id!=='string'||!Object.prototype.hasOwnProperty.call(COOKERY_TEA_EFFECTS,value.id)||
+    !Number.isFinite(value.n)||value.n<=0)return;
+ let player;try{player=world.getEntity(value.p)}catch{return}
+ if(!player?.isValid||player.typeId!=='minecraft:player')return;
+ // AWW already committed one serving, nutrition and its container return.
+ // n is nutrition, not a count; only restore the tea's existing effect.
+ applyTeaEffects(player,value.id);
 });
 
 function fxClear(entity,name){const fx=readFx(entity);delete fx[name];writeFx(entity,fx,{refreshProjectileDodge:name==='projectile_dodge'})}
