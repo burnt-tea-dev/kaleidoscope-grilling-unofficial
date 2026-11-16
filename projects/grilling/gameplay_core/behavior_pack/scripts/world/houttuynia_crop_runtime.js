@@ -1,4 +1,4 @@
-import {system,ItemStack} from '@minecraft/server';
+import {world,system,ItemStack} from '@minecraft/server';
 import {registerPlantFertilizer,interactWithPlantFertilizer} from '../plant_fertilizer.js';
 import {
  CROP_ID,HOUTTUYNIA_ID,COMPONENT_ID,AGE_STATE,RED_STATE,MAX_AGE,
@@ -72,7 +72,7 @@ system.beforeEvents.startup.subscribe(init=>{
      const age=Number(state(block,AGE_STATE,0))||0;
      const count=age>=MAX_AGE?1+matureBonusCount(0,[Math.random()]):1;
      event.dimension.setBlockType(block.location,'minecraft:air');
-     event.dimension.spawnItem(new ItemStack(HOUTTUYNIA_ID,count),{x:block.location.x+.5,y:block.location.y+.25,z:block.location.z+.5});
+     if(world.gameRules.doTileDrops)event.dimension.spawnItem(new ItemStack(HOUTTUYNIA_ID,count),{x:block.location.x+.5,y:block.location.y+.25,z:block.location.z+.5});
      return;
     }
     const age=Number(state(block,AGE_STATE,0))||0;
