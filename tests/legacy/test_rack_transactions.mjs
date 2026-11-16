@@ -114,8 +114,9 @@ function click(f, b, slot, options = {}) {
  const {player: p = f.holder, oblique = 0, ...eventOptions} = options;
  const direction = b.permutation.getState('minecraft:cardinal_direction');
  const x = slot < 5 ? layout.RACK_SEASONING_X[slot] : layout.RACK_TOOL_X[slot - 5];
- const at = layout.rackDisplayPose(b, x, slot < 5 ? 12 / 16 : layout.RACK_TOOL_VISUAL_Y,
-  slot < 5 ? .35 : layout.RACK_TOOL_VISUAL_Z).location;
+ // Aim at the original selection cells; Java display anchors are not hit cells.
+ const at = layout.rackDisplayPose(b, x, slot < 5 ? 12 / 16 : (layout.RACK_TOOL_ROW_MIN + layout.RACK_ROW_BOUNDARY) / 2,
+  slot < 5 ? .35 : 3 / 16).location;
  const outward = {north: {x: 0, z: -1}, south: {x: 0, z: 1}, east: {x: 1, z: 0}, west: {x: -1, z: 0}}[direction];
  p.eye = {x: at.x + outward.x * 2 + outward.z * oblique, y: at.y,
   z: at.z + outward.z * 2 - outward.x * oblique};

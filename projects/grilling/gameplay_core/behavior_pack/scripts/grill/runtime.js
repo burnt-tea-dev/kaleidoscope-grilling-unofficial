@@ -5,7 +5,7 @@ import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState as readState} from "./grill_state_adapter.js";
 import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey} from "../core/storage.js";
 import {hasSolidTop} from "../blockSupport.js";
-import {SEASONING_LIST_KEY,SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY,SEASONING_VARIANT_KEY} from "../seasoning/seasoning_contract_core.js";
+import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY} from "../seasoning/seasoning_contract_core.js";
 import {getItemProperty,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
 import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 import {canonicalFoodId} from "../eating_profile_ids.js";
@@ -21,11 +21,11 @@ import {planInventoryInsert,slotWrite} from "../rack_transfer_plan.js";
 import {acknowledgedDrop,commitStationTransfer} from "../grill_transfer.js";
 import {interactionFailure,javaInteractionFeedback} from "../core/interaction_feedback.js";
 import {blockSound,grillFireSound,removeGrillAudio,updateGrillAudio} from "../immersion_audio_runtime.js";
-import {captureSkewerMetadata,metadataSignature,restoreSkewerMetadata} from "../skewer_item_snapshot.js";
+import {captureSkewerMetadata,metadataSignature} from "../skewer_item_snapshot.js";
 import {COOKERY_FILLED_ID as COOKERY_FILLED,planCookeryOilPotConsumption} from "../oil/cookery_oil_pot_adapter.js";
 import {isSpecialSeasoningId} from "../seasoning/special_seasoning_visual_core.js";
 import {retargetSpecialSeasoningStack,specialSeasoningVariant} from "../seasoning/special_seasoning_visual_runtime.js";
-import {isOwnedBottleLore,isOwnedSeasoningUsesLore,replaceSeasoningUsesLore} from "../bottle_lore_core.js";
+import {replaceSeasoningUsesLore} from "../bottle_lore_core.js";
 import {isExtinguishTool} from "./grill_input_core.js";
 import {ensureOilHandPublished} from "../oil_api_client.js";
 import {awardGleamingWithOil} from "../advancement/advancement_event_runtime.js";
@@ -237,16 +237,7 @@ function planSeasoningBottle(player,hand,needed){
  const nextUses=uses+needed;
  if(nextUses>=16){
   try{
-   // The owner requires the same bottle's public metadata even though Java
-   // creates a fresh empty stack. Clear only Grilling's spent filling state.
-   const empty=captureSkewerMetadata(stack);empty.id=EMPTY_SEASONING_ID;
-   for(const key of [SEASONING_LIST_KEY,SEASON_USES_KEY,SEASONING_VARIANT_KEY])if(empty.props)delete empty.props[key];
-   if(empty.props&&!Object.keys(empty.props).length)delete empty.props;
-   if(empty.rawLore){
-    empty.rawLore=empty.rawLore.filter(line=>!isOwnedBottleLore(line)&&!isOwnedSeasoningUsesLore(line));
-    if(!empty.rawLore.length)delete empty.rawLore;
-   }
-   const next=restoreSkewerMetadata(empty,(type,amount)=>new ItemStack(type,amount),type=>new EnchantmentType(type));
+   const next=new ItemStack(EMPTY_SEASONING_ID,1);
    return {ok:true,ingredients,uses:nextUses,before,next,mutate:true};
   }catch{return {ok:false,reason:'visual_state'}}
  }
