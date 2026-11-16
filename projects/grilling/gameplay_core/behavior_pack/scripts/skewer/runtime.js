@@ -9,7 +9,7 @@ import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {creatorLore} from "../localized_lore_core.js";
 import {refreshHotLore} from "../food/food_state_adapter.js";
 import {resolveSecretSmokedId} from "../secret_compat_core.js";
-import {secretEatingRows} from "../secret_eating_core.js";
+import {secretEatingData as readSecretEatingData,dynamicFood as readDynamicFood} from "../secret_eating_core.js";
 import {captureWritableHand,getMainHand as heldMain,getOffHand as heldOff,isCreative as creative,playerInventory as mainContainer} from "../core/player_io.js";
 import {canUseSecretSkewer} from "../food/runtime.js";
 import {skewerIngredientDecision} from "../skewer_compat_core.js";
@@ -103,24 +103,8 @@ function setCookedIngredientRows(stack,rows){
  if(getItemProperty(stack,SECRET_COOKED_INGREDIENTS_KEY)!==value)throw Error('Grilling: cooked ingredient data was not saved');return stack;
 }
 
-function secretEatingData(stack){
- try{
-  const original=readSkewerRows(stack),cooked=isSecretCooked(stack),raw=secretEatingRows(original,id=>new ItemStack(id,1));
-  if(!raw)return undefined;
-  const rows=cooked?secretEatingRows(readEffectiveSkewerRows(stack),id=>new ItemStack(id,1)):raw;
-  if(!rows)return undefined;
-  const food=secretFood(rows,cooked,original);
-  return Number.isFinite(food.nutrition)&&Number.isFinite(food.saturation)?{rows,food}:undefined;
- }catch{return undefined;}
-}
-
-function dynamicFood(stack){
- if(canonicalFoodId(stack?.typeId)===SECRET_ID)return secretEatingData(stack)?.food;
- // Plates accept tagged skewers beyond our fixed recipes. Read the restored
- // item's food definition so admission, ranking and settlement agree.
- const food=foodFacts(stack);
- return food.edible?food:undefined;
-}
+function secretEatingData(stack){return readSecretEatingData(stack,id=>new ItemStack(id,1));}
+function dynamicFood(stack){return readDynamicFood(stack,id=>new ItemStack(id,1));}
 
 function isEdible(stack){if(stack?.typeId==='kaleidoscope_grilling:sweet_potato_powder')return false;try{return foodFacts(stack).edible}catch{return false}}
 
