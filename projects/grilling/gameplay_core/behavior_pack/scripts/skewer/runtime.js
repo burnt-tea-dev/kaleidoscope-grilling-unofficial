@@ -137,6 +137,7 @@ function threadOutcome(player){
 }
 
 function canDisassembleOff(player){const off=heldOff(player);return !!off&&isDisassemblableRaw(off.typeId,isSecretCooked(off))&&(off.typeId===UNFINISHED_ID||readSkewerRows(off).length>0)}
+function canDisassembleMain(player){const main=heldMain(player);return main?.typeId===UNFINISHED_ID&&readSkewerRows(main).length>0}
 
 function threadCurrent(player){
  const main=captureWritableHand(player,'main'),other=captureWritableHand(player,'off');
@@ -174,13 +175,24 @@ function threadCurrent(player){
  return true;
 }
 
-function disassembleOff(player){
- const other=captureWritableHand(player,'off'),off=other.before;if(!off||!canDisassembleOff(player))return false;
- const rows=readSkewerRows(off),outputs=rows.map(restoreIngredient);
+function disassembleHand(player,hand){
+ const captured=captureWritableHand(player,hand),stack=captured.before;
+ if(!stack||!(hand==='main'?canDisassembleMain(player):canDisassembleOff(player)))return false;
+ const rows=readSkewerRows(stack),outputs=rows.map(restoreIngredient);
  if(outputs.some(item=>!item))throw new Error('Grilling: an ingredient cannot be restored');
  outputs.push(new ItemStack('minecraft:stick',1));
- const delivery=prepareOutputDelivery(player,outputs),next=reducedStack(off);
- const debit=ownedItemStep({read:()=>other.read(),write:stack=>other.write(stack),before:off,after:next,canRestore:delivery.canRestoreInputs});
+ const next=reducedStack(stack);let startingItems;
+ if(hand==='main'){
+  const container=mainContainer(player);if(!container)throw Error('Grilling: output inventory unavailable');
+  startingItems=Array.from({length:container.size},(_,i)=>container.getItem(i)?.clone());
+  const slot=player.selectedSlotIndex;
+  if(nativeItemSignature(startingItems[slot])!==nativeItemSignature(stack))throw Error('Grilling: disassembly hand changed');
+  // The last main-hand skewer frees an inventory slot. Delivery must own the
+  // post-debit contents, including rollback, rather than restoring the old skewer.
+  startingItems[slot]=next?.clone();
+ }
+ const delivery=prepareOutputDelivery(player,outputs,startingItems);
+ const debit=ownedItemStep({read:()=>captured.read(),write:value=>captured.write(value),before:stack,after:next,canRestore:delivery.canRestoreInputs});
  if(!transactionStatus(commitPlayerItemTransaction(world,player,[debit,...delivery.steps],{tick:system.currentTick,label:'disassembly'}),'disassembly')){interactionFailure(player,'§c拆串未完成；已回復可確認的原料，未確認交易請查看紀錄');return false}
  useSound(player,'skewer_disassemble',.8);
  return true;
@@ -200,13 +212,18 @@ function scheduleSkewerAction(player,action){
  const operation={tick:system.currentTick,action,intent};THREAD_LAST.set(id,operation);
  scheduleHandAction(player,()=>{
   if(THREAD_LAST.get(id)!==operation||!twoHandIntentStillCurrent(player,intent))return;
-  try{if(action==='disassemble')disassembleOff(player);else threadCurrent(player)}
-  catch(error){console.warn('[Grilling skewer action] '+error);try{interactionFailure(player,'§c操作未完成；請確認原料與副手狀態')}catch{}}
+  try{if(action==='disassemble')disassembleHand(player,'off');else if(action==='disassemble_main')disassembleHand(player,'main');else threadCurrent(player)}
+  catch(error){console.warn('[Grilling skewer action] '+error);try{interactionFailure(player,'§c操作未完成；請確認原料與手持狀態')}catch{}}
  });return true;
 }
 
 function skewerAction(player,itemStack){
- if(player.isSneaking)return canDisassembleOff(player)?'disassemble':null;
+ if(player.isSneaking){
+  // Java's global offhand handler wins first. Only UnfinishedSkewerItem.use
+  // additionally disassembles its own main hand; fixed and secret skewers do not.
+  if(canDisassembleOff(player))return 'disassemble';
+  return itemStack?.typeId===UNFINISHED_ID&&canDisassembleMain(player)?'disassemble_main':null;
+ }
  const main=heldMain(player);if(!main||!itemStack||itemStack.typeId!==main.typeId)return null;
  return threadOutcome(player)?.ok?'thread':null;
 }

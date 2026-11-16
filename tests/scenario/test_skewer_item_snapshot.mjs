@@ -386,6 +386,77 @@ async function newlyThreadedSecretFixture(animations=true){
  };
  return Object.assign(f,{disassemble,materialCounts});
 }
+// Java 1.1.1 @9a1acdab27698457bec16c9362678e574895a28c:
+// UnfinishedSkewerItem.use L41-52 uses its own hand; SkeweringHandler's
+// onRightClickItem L39-60 gives offhand disassembly priority. These callbacks
+// exercise source dispatch, not whether a native client emits air itemUse.
+async function unfinishedDisassemblyFixture(hand='main',amount=1,full=false){
+ const f=await nativeSecretFixture(),apple=f.item('minecraft:apple');
+ apple.nameTag='Saved ingredient';apple.keepOnDeath=true;apple.setCanDestroy(['minecraft:leaves']);
+ f.data.setItemLore(apple,[{translate:'item.apple.name'},{text:'Keep this lore'}]);
+ f.data.setItemProperty(apple,'foreign:ingredient','retained');
+ const expected=f.snapshot.captureSkewerMetadata(apple);
+ f.p.main=apple;f.p.off=f.item(N+'unfinished_skewer');
+ assert.equal(f.admit().cancel,true);f.flush();assert.equal(f.p.off.typeId,N+'unfinished_skewer');
+ const skewer=f.p.off;skewer.amount=amount;f.p.off=undefined;f.p.main=undefined;f.p[hand]=skewer;
+ if(full)for(let slot=0;slot<f.p.inventory.size;slot++)if(hand!=='main'||slot!==f.p.selectedSlotIndex)f.p.inventory.setItem(slot,f.item('minecraft:stone',64));
+ f.p.isSneaking=true;const block=f.block('minecraft:stone',{x:0,y:80,z:0});
+ const disassemble=()=>f.emit('world.beforeEvents.playerInteractWithBlock',{block,player:f.p,itemStack:f.p.main,blockFace:'North',isFirstEvent:true,cancel:false});
+ const outputs=()=>[...f.p.inventory.items(),...f.drops.filter(drop=>drop.isValid).map(drop=>drop.itemStack)].filter(Boolean);
+ return Object.assign(f,{expected,skewer,disassemble,outputs});
+}
+test('unfinished disassembly uses the selected hand and post-debit inventory without losing ingredient metadata',async()=>{
+ for(const hand of ['main','off'])for(const amount of [1,2])for(const full of [false,true]){
+  const f=await unfinishedDisassemblyFixture(hand,amount,full);
+  try{
+   assert.equal(f.disassemble().cancel,true);f.flush();
+   const items=f.outputs(),apples=items.filter(s=>s.typeId==='minecraft:apple'),sticks=items.filter(s=>s.typeId==='minecraft:stick');
+   assert.equal(apples.length,1);assert.equal(apples[0].amount,1);assert.deepEqual(f.snapshot.captureSkewerMetadata(apples[0]),f.expected);
+   assert.equal(sticks.length,1);assert.equal(sticks[0].amount,1);
+   if(amount===2){assert.equal(f.p[hand].typeId,N+'unfinished_skewer');assert.equal(f.p[hand].amount,1);assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p[hand]),f.snapshot.captureSkewerMetadata(f.skewer));}
+   else assert.notEqual(f.p[hand]?.typeId,N+'unfinished_skewer');
+   if(full){
+    const expectedDrops=hand==='main'&&amount===1?1:2;
+    assert.equal(f.drops.filter(drop=>drop.isValid).length,expectedDrops);
+    assert.equal(items.filter(s=>s.typeId==='minecraft:stone').reduce((n,s)=>n+s.amount,0),(f.p.inventory.size-(hand==='main'?1:0))*64);
+   }else assert.equal(f.drops.filter(drop=>drop.isValid).length,0);
+  }finally{f.dispose()}
+ }
+});
+test('main-hand unfinished disassembly preserves offhand priority and does not broaden fixed-skewer or normal-use behavior',async()=>{
+ const f=await unfinishedDisassemblyFixture();
+ try{
+  const original=f.snapshot.captureSkewerMetadata(f.p.main);
+  f.p.isSneaking=false;assert.equal(f.disassemble().cancel,false);f.flush();assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.main),original);
+  f.p.isSneaking=true;f.p.off=f.p.main;
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.p.off,undefined);assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.main),original);
+  f.p.main=f.item(N+'raw_fish_skewer_native_plain');assert.equal(f.disassemble().cancel,false);f.flush();assert.equal(f.p.main.typeId,N+'raw_fish_skewer_native_plain');
+ }finally{f.dispose()}
+});
+test('main-hand unfinished disassembly rejects a changed slot or either hand metadata',async()=>{
+ for(const changed of ['selected slot','main metadata','offhand metadata']){
+  const f=await unfinishedDisassemblyFixture();
+  try{
+   f.p.off=f.item('minecraft:carrot');assert.equal(f.disassemble().cancel,true);
+   if(changed==='selected slot')f.p.selectedSlotIndex=1;
+   else{const hand=changed==='main metadata'?'main':'off',replacement=f.p[hand];replacement.nameTag='Changed after admission';f.p[hand]=replacement;}
+   const beforeMain=f.snapshot.captureSkewerMetadata(f.p.inventory.getItem(0)),beforeOff=f.snapshot.captureSkewerMetadata(f.p.off);
+   f.flush();assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.inventory.getItem(0)),beforeMain);assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.off),beforeOff);
+   assert.equal(f.outputs().filter(s=>s.typeId==='minecraft:apple').length,0);
+   f.p.selectedSlotIndex=0;assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.outputs().filter(s=>s.typeId==='minecraft:apple').length,1);
+  }finally{f.dispose()}
+ }
+});
+test('main-hand unfinished disassembly restores its input after rejected delivery and permits retry',async()=>{
+ const f=await unfinishedDisassemblyFixture();
+ try{
+  const original=f.snapshot.captureSkewerMetadata(f.p.main);
+  f.faults.failNext(f.p.inventory,'setItem',{phase:'before',predicate:(_slot,stack)=>stack?.typeId==='minecraft:apple'});
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.faults.pending.length,0);
+  assert.deepEqual(f.snapshot.captureSkewerMetadata(f.p.main),original);assert.equal(f.outputs().filter(s=>s.typeId==='minecraft:apple').length,0);
+  assert.equal(f.disassemble().cancel,true);f.flush();assert.equal(f.outputs().filter(s=>s.typeId==='minecraft:apple').length,1);
+ }finally{f.dispose()}
+});
 for(const [animations,random] of [[true,.25],[true,.75],[false,.75]])test(`newly threaded Secret can be immediately disassembled with animations=${animations}, random=${random}`,async()=>{
  const f=await newlyThreadedSecretFixture(animations),originalRandom=Math.random;
  try{
