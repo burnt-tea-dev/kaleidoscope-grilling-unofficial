@@ -9,4 +9,4 @@ For current releases, use:
 - `tools/fixtures/cookery-160-reference.json` and `tools/check_cookery160_host.py` for the Cookery 1.6.0 source review
 - Canonical baseline, station-storage, family-knife and guide checks used by current CI
 
-The old `tools/family_candidate.py` and `tools/apply_family_profile.py` belong to those historical candidates. They are not current build/install entry points. Do not run an old overlay over the canonical runtime. A later host UUID/data migration still needs its own saved-world and native acceptance.
+The retired [2.8.9 candidate builder](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/e43c0a4752ccd68057c91b6b5b46ec524b17a3a2/tools/family_candidate.py) remains available with its historical checkout. Current candidate checks use the [family workflow](../../.github/workflows/family-candidate.yml) and [canonical baseline gate](../../tools/baseline_gate.py). Do not run an old overlay over the canonical runtime. A later host UUID/data migration still needs its own saved-world and native acceptance.

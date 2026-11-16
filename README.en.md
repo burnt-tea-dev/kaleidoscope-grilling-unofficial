@@ -33,13 +33,7 @@ Resource strings and guide data provide **English, Simplified Chinese and Tradit
 
 Requires Python 3 and Node.js. CI uses Python 3.12 and Node.js 22. Canonical code is in [`projects/grilling/gameplay_core`](projects/grilling/gameplay_core/); Java recipe, duration and effect data are in [`data/java`](data/java/).
 
-Read [AGENTS.md](AGENTS.md) and the [rebuild plan](docs/REBUILD-PLAN.md), then run the existing feature tests and baseline checks:
-
-```sh
-python3 tools/baseline_gate.py check
-python3 tools/guards/save_compat.py check
-python3 tools/guards/growth_ratchet.py check
-```
+Read [AGENTS.md](AGENTS.md) and the [rebuild plan](docs/REBUILD-PLAN.md) for the task scope, then use the [test guide](tests/README.md) to select existing tests for the affected behavior. CI runs the standard PR checks; full historical regression and release checks run when needed.
 
 [`baseline.json`](baseline.json) records source versions, exact dependencies and experiment requirements. Preserve existing item and save identities. Do not replace shared feature repairs with extra item variants, parallel interaction listeners or version-by-version patch layers.
 
@@ -53,4 +47,4 @@ Original project: [KaleidoscopeGrilling by breezeth](https://github.com/breezeth
 
 Original code: [BSD-3-Clause](data/java/LICENSE-CODE). Original and derivative art: [CC BY-NC-SA 4.0](projects/grilling/LICENSE-ASSETS). Tools have their respective licenses. See [ATTRIBUTION](projects/grilling/ATTRIBUTION.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full attribution.
 
-**Release blocker:** License notices have not yet been packaged with the canonical BP/RP. Files present in the repository are not necessarily included in player installation packages. `baseline_gate.py check --release` requires BP to include `LICENSE-CODE`, `LICENSE-ASSETS`, and `THIRD_PARTY_NOTICES.md`, and RP to include `LICENSE-ASSETS` and `THIRD_PARTY_NOTICES.md`. Do not create or publish a new installer until packaging is fixed and the next baseline updated. See [third-party notices](THIRD_PARTY_NOTICES.md).
+Before release, run `python3 tools/baseline_gate.py check --release` to validate the paired source and packaged license notices: BP must contain `LICENSE-CODE`, `LICENSE-ASSETS`, and `THIRD_PARTY_NOTICES.md`; RP must contain `LICENSE-ASSETS` and `THIRD_PARTY_NOTICES.md`. See [installation and release](docs/RELEASING.md) for the complete release procedure.
