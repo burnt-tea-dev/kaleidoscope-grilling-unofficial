@@ -51,8 +51,8 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 - **WARMTH-HEAT-SOURCES**：G234熱源與G236時機／同世界正常重啟已有原生觀察；結果與仍未驗證的範圍只查[PARITY](PARITY.md#溫暖效果的熱源判斷)。跨模組完整同tick順序、客戶端與自動非玩家實體仍非完整Java等價。
 
 - **ADVANCEMENT-CLAIM**：目前owner、單次XP／重複與pending拒絕的原生觀察，以及仍有的限制只查[PARITY](PARITY.md#進度獎勵與領取紀錄)。未實作未發XP恢復，不宣稱跨API原子性或真人結果。
-- **天然要塞**：公開 integration API 不提供 vanilla 新區塊／要塞生成回呼；不能用附近方塊猜歷史，也不能以人工搭建的原生測試冒充自然 25% 替換完成。見 [API](BEDROCK-INTEGRATION-API.md#新生成宿主)。
-- **平台差異**：真自訂流體、Numb 準星、Pepper entityInside、任意食品／smoking 回呼、Create／Maid 等 Java 模組各自列為未支援或待評估。按計畫和實際 API 決定，不由舊 README 永久宣告放棄，也不杜撰等價能力。
+- **天然要塞**：公開 integration API 的新生成／25% 替換協議是既有擴展，不能用附近方塊猜歷史。固定 Java `FortressHouttuyniaHandler` 的現行要求是要塞箱 bonus loot，main 已有原生 loot wrapper；[既有 #405](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/405) 修正 PARITY 的過時分類。新生成協議未完成不等於這個 Java loot 功能缺失，詳見下方重審及 [API](BEDROCK-INTEGRATION-API.md#新生成宿主)。
+- **平台能力與替代實作**：真自訂流體、Numb 準星、Pepper 接觸、任意食品／smoking 回呼和 Create／Maid 分項見下方重審。Pepper 接觸已有分桶 AABB 路徑；其物理近似仍有差距。不得把「沒有同名 API」、尚未實測或沒有第三方 provider 一律寫成永久無法實現。
 - **視覺全量**：全物品第一人稱／側面貼圖、瓶／盤／串完整操作仍未閉合。舊 G17 editor captures、代表瓶預覽、隔離兩食品片及零玩家 BDS 都只保留原範圍。
 - **效能**：曾有 slowdown／記憶體警告及有限 profiling，沒有約定的完整通過預算。圖像裁剪、logging 成功或來源計數下降不是 FPS、延遲或 Watchdog 改善的實測。
 - **擁有者決策**：D3 HUD、D5 背包圖示、D6 player 覆寫及其他 D1–D10 仍由 [REBUILD-PLAN](REBUILD-PLAN.md#10-待擁有者決定事項) 管理。T2.6 不代替決策或變更 runtime。
@@ -68,3 +68,67 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 [T1.3-1 至 T1.3-5](PARITY.md#舊-pr-保留需求)完整保留交易所有權、碰撞／選取、20 種 THREE 食用、固定五幀 icon 及併發餐盤／食譜需求。舊 PR 關閉是工作整理，不是修復或驗收。
 
 原始回報與更細的歷史限定保留於[收斂前 BUGS](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/BUGS.md)、[PARITY-MATRIX](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PARITY-MATRIX.md)及[公開下載稽核](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md)。舊工具／workflow 風險以 T2.4 後的實際入口為準，不能把已退役的驗證鏈描述成仍在執行；玩家缺口不因工具退役而被刪除。
+
+## 2026-11-16：能力、取捨與實作成本重審
+
+範圍：公開 main `e43c0a4752ccd68057c91b6b5b46ec524b17a3a2` 的 PARITY、上列所有已知問題、現行 REBUILD-PLAN、ARCHITECTURE、BEDROCK-INTEGRATION-API、GUIDE-STANDARD、canonical BP/RP 與 20 個 open PR 的實際 changed filenames。Java 仍固定 `breezeth-CN/KaleidoscopeGrilling@9a1acdab27698457bec16c9362678e574895a28c`。本節記錄來源審查與可實作路線；玩家操作、客戶端及原生效能沒有在本輪執行。
+
+目前 BP manifest 選擇 `@minecraft/server 2.12.0-beta`、引擎最低 `1.26.60`。2026-11-16 查閱的官方 stable／experimental 文件只用於候選能力調查；文件中新出現的 API 不代表當前候選已具有它。任何新 API 路徑先以既有版本的型別／原生能力核對，再接原 owner；不以升級假設、特定伺服器分支或全世界掃描掩蓋缺口。
+
+下表「待整合」指已有來源或具體可實作方案；「部分」指已有行為但有列明差異；「保留取捨」指已有明確決策／失敗來源；「待評估」指等價路線尚未證明。沒有一項因單一 API 缺席而宣稱所有 Bedrock 組合皆不可能。路徑相對於 `projects/grilling/gameplay_core/behavior_pack/`，RP 路徑另標。
+
+| 功能／原標記 | 重審結論與來源 | 改善路線及成本界線 |
+| --- | --- | --- |
+| 秘製串：任意食品完成回呼／smoking | **部分**。Java `SecretSkewerItem.finishFoodAndEffect` 逐食材執行 `finishUsingItem`，再恢復營養；`scripts/secret_compat_runtime.js` 和 integration registry 只承接已登記資料／行為。 | `ItemFoodComponent` 可讀營養等公開欄位；`ItemCustomComponent.onConsume/onCompleteUse` 接自有物品。任意第三方私有 callback 不會由讀 component 自動重播；使用既有 provider 契約擴充明列能力。避免替每種食品新增掃描器或猜 smoking 配方。 |
+| 原生合成後返桶 | **部分**。`PREMIUM-OIL-CRAFT-REMAINDER` 已沿 `playerCraftRecipe` 按實際結果返桶；Java 工作台原槽與 Bedrock 背包／掉落位置不同。 | 保留事件式交付。若採新容器 API，須先證明原合成槽資料和取消時序可取得；不能把 after-event 當作原子合成交易。 |
+| 90／100／25 tick 食用與時長物品 variant | **保留取捨**。Java `MultiBiteSkewerItem` 每次使用選 profile；本 repo 原生早扣份 spike 已觀察到再次原生扣份，故 variant 仍有實際用途。 | 現有事件式 preparation 已停止每 tick 重讀未變手持。候選 `use_duration`／`onReleaseUse` 要核對目標版本及原生完成扣份；不能只因新文件存在就刪 ID。 |
+| 直接斷線食用結算 | **保留已接受差異**。Java `onPlayerLoggedOut` 即時結算；已保存的 Bedrock 原生觀察為 disconnect 無 stop、before-leave 寫入受限、延後 Player 失效。 | 仍依 T3.4 決策處理；不以每 tick 提前扣份補償。只在可證實的新事件時序／可寫入能力改變時重開實作。 |
+| Pepper `entityInside`／踩上 | **部分，原「未支援」過廣**。`scripts/pepper_contact_work.js` 已有 AABB 分桶、每 tick 16 實體／64 probe 上限；`world/pepper_tree_runtime.js` 已處理載入／離開與 20 tick 刺傷。 | Java 葉內 `makeStuckInBlock(0.8,0.75,0.8)` 目前以 Slowness I／10 tick 近似，踩上也走同一緩速函式，且 `applyDamage(1)` 未指定 Java sweet-berry cause。應在原 leaf owner 分開踩上／內部接觸並驗動量／傷害種類，協調正在改此檔的 #411；不重建全維度輪詢。官方 `onEntity` 是實體送來的命名事件，不能直接視為通用 enter／inside 事件。 |
+| 椒葉支撐、作物掉落及油渣施肥 | **部分／已有改善 PR**：#411 補剝皮橡木支撐；#409 保留 `doTileDrops`。`OIL-RESIDUE-PLANTS` 的 `plant_fertilizer.js` 明列 29 類適配；竹子以 16 高上限近似缺少的 Java stage，樹／蘑菇等 feature、外部植物仍未通用。 | 沿現有 random tick／事件入口整合已知修復；其他植物可在原 adapter 擴充明列 block permutation、空間條件和交付回復。能寫方塊不等於能重播任意原版／第三方骨粉 feature；先核來源及含水層原生結果，不另開世界掃描。本次避開既有 owner 的 source files。 |
+| 三種油的真正流體註冊 | **原生註冊路徑仍待評估；桶／大缸已有替代**。官方 `LiquidType`／`BlockFluidContainerComponent` 提供既有液體與容器能力，未提供自訂 Java Fluid registry 的對應註冊介面。 | 方塊狀態、具名 tick、桶和流體 provider 能繼續改善有限互動；這些不能證明原生傳播、游泳、尋路、Create 管線皆等價。保留原 oil owner，先定義要還原的具體行為及有界工作量。 |
+| 榨油機尋缸 | **已有性能／順序改善 PR #329**。原 `oil/oil_machine_runtime.js` 最多逐讀 405 座標，PR 改 POI 候選再核實方塊與資料，保留 Java 遍歷選擇順序。 | 直接審查／整合該 PR；Beta／POI 實驗是實際依賴。候選數下降不代稱 TPS 提升；完整交易和當前家族尚需原生核對。 |
+| Numb 準星與身體動畫 | **部分**。`scripts/numb_visual_runtime.js` 已有原生身體 pose；Java `NumbCrosshairMixin` 只在第一人稱把準星平移為半徑 24 GUI 座標單位、角速度 2.2rad/s 的圓周。 | `ScreenDisplay` 支援 HUD 可見度，沒有準星平移方法；候選為原有 JSON UI 的準星圖層動畫和狀態通道。`Camera` 搖晃會改視野／瞄準，不能當作只移動準星的等價替代。先核 client UI 和觸控／第三人稱條件，動畫在 client 執行，避免逐 tick camera 命令。 |
+| Heavy Metal 部分吸收盾／Creative Ordinary | **部分**。`heavy_metal_damage_runtime.js`、`effect/runtime.js` 與 PARITY 保留具體失敗；#407 已有原生吸收盾候選調查。 | `entityHurt`、`entityHeal`、effect 讀取及傷害選項可組合調查；須保留圖騰先後及已發生的吸收值，不以名義 amplifier 充當剩餘盾。沿 #407，不新增旁路復活或再造 probe。 |
+| 持續效果鏈／附魔金蘋果 | **已有改善 PR #410／#413**。前者重用有限 Java merge，後者修正原生再生時長。 | 接現有 food owner；與本次 descriptor 解碼快取不共檔，不把來源差異寫成平台限制。 |
+| 未完成串主手拆解／空氣使用 | **部分／已有 #412**。主手 block 互動可用同一 owned transaction；該 PR 已修。沒有 use behavior 的 unfinished item 是否原生產生 air `itemUse` 仍獨立待確認。 | `onUse`／`onUseOn`／before block 事件可各有作用；不能手動 emit 假事件便聲稱原生 air-use 完成，也不能為事件加入可食用行為改變姿勢／玩法。 |
+| 秘製串背包圖示／游標圖示 | **部分**。`scripts/secret_gui_state.js`、RP JSON UI 和生成器已有逐 slot 圖層；缺 collection 的 cursor 路徑保留原生圖示。 | 可沿現有狀態通道重用原 sprite layers；新版通用 icon／property API 必先確認任意 stack、容器／游標與目標版本。避免再加 variants、無條件所有 slot 子樹或全背包每 tick 重寫。 |
+| 手持／放置模型、貼圖、動畫 | **來源實作與畫面缺口分開**。餐盤方向 #398/#400、動態邊緣 #399、茶圖層 #396/#397、薄片 #395、油刷 #408 已有 source PR。 | 原生 render controller、bone visibility、Molang 和 block permutations 可承接。優先原 owner／生成器共用素材，不用更多 baked geometry 掩蓋 pose 錯誤；精確畫面仍依 Blockbench 和第一／第三人稱觀察。 |
+| 被動準星 HUD | **已退役實作取捨**。`scripts/hud/crosshair_hud_runtime.js` 的 register 已為 no-op，沒有被動玩家 poll；進食 HUD 是另一條現有通道。 | 不把 no-op 誤作目前每 tick 效能成本。恢復能力時沿既有 HUD 接口／D3 決策，避免新增 actionbar 競爭。 |
+| Warmth 熱源查找 | **可研究優化，尚未替換**。`scripts/effect/runtime.js` 保留 5×3×5、原 `lit` 狀態及 grill DP；最多 75 次 `getBlock`。 | 官方 `Dimension.getBlocks/containsBlock` 可原生篩選型別／tag／permutation，但沒有任意 `lit` 狀態通配條件。僅列已知 vanilla IDs 會漏外來 lit 方塊；先證明完整候選集合和卸載邊界再換，不能以縮短程式碼犧牲行為。 |
+| Projectile ground 啟動索引 | **已有性能 PR #391**。不可變 alias 索引可延後到真正需要時建立。 | 合併現有候選並保留低記憶體原生驗證；不另外建立啟動掃描或重做其基準。 |
+| 共用事件 router 每次分派複製路由 | **本次接入 Core SDK 0.1.1**。來源 [Core #64](https://github.com/burnt-tea-dev/senluo-bedrock-core/pull/64)／`c7f340f148b91b30a2e9cdffe90f04ad893e1849`；透過現有 `tools/sync_core_sdk.py` 產生 `scripts/host_api/event_router.js`。 | 路由清單在訂閱／解除訂閱時換新，事件保留當次快照，避免每次事件展開副本；取消、priority、observer、解除自身和 pack 隔離不變。block interact 的必要 filter 陣列仍保留，沒有新 API／全域監聽。 |
+| 自訂效果重複 JSON 解碼 | **本次來源已改善**：`scripts/effect_state_runtime.js:dodgeDescriptor` 只保留最後一份原字串及 descriptor，命中也回傳獨立小物件。 | 每次必要的 DP 讀取、原文比對、世代、時間與扣款仍由原 owner 執行。不同原文立即取代單筆快取；無效 JSON 與不存在效果同樣可命中。下方列可重現的操作數，沒有原生速度宣稱。 |
+| `player.json`／手持同步 | **已實作低槽替代，整合仍需核對**。現行共同快照路徑和自有 extension 已取代早期 32 格描述。 | 沿 Core／家族單一有效 player definition；API property 能同步資料不代表第三方玩家定義可同時覆寫。遵守現有 schema／動畫路由，不為本次快取加欄位。 |
+| Fortress Houttuynia 戰利品 | **原缺失標記過時，已有 #405**。重新讀固定 Java `FortressHouttuyniaHandler`：`nether_bridge` 新增 65% bonus pool、1–2 rolls、每次1–3；main 已有同義 loot wrapper／bonus JSON。 | 新區塊／25% 替換的舊 integration 協議不能當成本 Java 類別的未完成標準。優先整合 #405；自然開箱分布及其他 pack 同名 loot 覆寫仍待驗。 |
+| Create／Touhou Little Maid 等選用模組 | **外部依賴／provider 未移植**。Java `compat/create`、`compat/touhoulittlemaid` 依靠對方機械／AI API；不是 Grilling 所有食物都缺失。 | Bedrock 實體行為、容器及既有 script provider 可實作明列能力，但缺少對應 Bedrock owner 時不能冒稱已聯動。按能力契約接入、按需執行，不移植整個外部模組或掃描任意機器。 |
+| 鍋具、瓶→烤架→盤→食用、料理架、指南及獎勵 | **已有實作／仍有列明缺口**。本頁各穩定 ID、PARITY 和現行 owner 保留更細範圍。`ADVANCEMENT-CLAIM` 未實作未發 XP 恢復；指南宿主 v1 的 32 分類、單層父類及製程多語 map 限制是 provider 契約。 | XP 與 claim 的兩次 API 寫入不能宣稱 crash 原子性；只在可判斷實際交付時設計恢復。指南沿原宿主改善分類／本地化接口；重建獨立 UI 會改操作契約。API 模型、局部原生及來源成功不互相代替；未有新錄影也不重列為「引擎做不到」。本次只用既有定點檢查，不新增 tests／CI／fixtures。 |
+
+### 枚舉覆蓋與未聲稱的範圍
+
+上表 23 群是能力與改善工作的聚合，**不是 23 個物品，也不是全物品、全操作或全 API 已驗收**。輸入包括 PARITY 主表 23 個功能列、本頁原有 27 個穩定 ID，以及後續列明的三個能力 ID；每個原條目保留自己的失敗、來源與待驗條件。相同問題在多份現行文件重複描述時只聚合一次，沒有以歷史狀態文件的數量充當覆蓋率。
+
+| 現行原條目 | 本次重審承接群 |
+| --- | --- |
+| `RACK-PACKED-PLACEMENT`、`COLD-HOUTTUYNIA-DELIVERY`、`SKEWER-CONTENTS`、`GRILL-DEFERRED-OWNER`、`ITEM-DELIVERY`、`SEASONING-DATA-RELOAD`、`SEASONING-FLOW`、`SEASONING-EXPLOSION-CANCEL`、`PLATE-SATURATION`、`HANDHELD-SATURATION`、`PLATE-USE-ARBITRATION`、`JAVA-POT-LIFECYCLE`、`CUISINE-CONSERVATION` | 鍋具／完整製作交付群；跨作者 callback 另由秘製串與 provider 群承接 |
+| `HAND-ACTION-PREPARATION`、`EATING-ACCEPTANCE` | 食用時長 variant、直接離線及未完成串互動群 |
+| `GRILL-DISPLAY-FACING`、`SECRET-INGREDIENT-VISUALS`、`EATING-OWNER`、`PLATE-PLACED-DISPLAY`、`PLATE-HELD-CONTENTS／DECODE`、`HELD-SNAPSHOT-RECOVERY` | 手持／放置模型群；快照與同步另接 player definition 群 |
+| `CLIENT-HUD`、`SKEWER-GUI`、計畫 D3／D5 | 被動準星 HUD、現有進食通道、背包／游標圖示群；未復原的聲畫與延遲仍保留 |
+| `PREMIUM-OIL-CRAFT-REMAINDER`、`OIL-NAMED-TICK` | 原生返桶、榨油機尋缸及既有命名排程群 |
+| `PLAYER-PROPERTY-SLIMMING`、計畫 T3.5／D6、ARCHITECTURE 的唯一 player owner | player definition／手持同步群 |
+| `HEAVY-METAL-COMMIT`、`WARMTH-HEAT-SOURCES`、`ADVANCEMENT-CLAIM` | Heavy Metal、Warmth、自訂效果解碼及進度獎勵群 |
+| `OIL-RESIDUE-PLANTS`、PARITY 作物／天然生成列 | 椒葉／油渣適配、Pepper 接觸及 Fortress loot 群 |
+| BEDROCK-INTEGRATION-API 的任意 callback、圖像別名、新生成歷史限制；GUIDE-STANDARD 的分類／本地化限制 | 秘製串 provider、GUI／模型、Fortress 舊擴展及指南群 |
+
+REBUILD-PLAN 的已完成歷史階段、舊 source-VM／診斷鏈、公開下載舊版本與安裝安全限制仍按原文件管理，不視為當前引擎缺少玩法 API；存檔與授權規則也不當作功能缺失。來源中 `unsupported`／`unavailable` 的資料損壞、已卸載方塊或未知交付拒絕，是保留資料的守衛；除非有對應玩家能力缺口，不能按關鍵字自動算作未移植。尚未逐項執行所有食材、裝置、多人時序或第三方作者模組；有限 Java 直接讀取範圍見下列來源，其他數值仍依既有固定 `data/java/`，不宣稱重新執行全 Java 基準。
+
+### 本次解碼成本與資料界線
+
+在未改寫 production module 的既有 `createFixture` ESM 邊界執行實際 `main.js`，單玩家持續 100 ticks，效果原文為 `warmth:{until:100000,amp:0}` 與 `projectile_dodge:{until:100000,amp:1}`。只計數傳入這份原文的 `JSON.parse`，不以其他 JSON 工作混入改善數字：修改前 **500 次**，修改後 **101 次**（減少 399 次，79.8%）。兩邊原生 DP 邊界讀取同為 **100 次**、保留效果原文相同、health 同為20、fixture 記錄 write count 同為6、error log 皆空。
+
+另用真正 `readEffects` 同 tick 讀1000次，這份原文 parse **1001→2**、DP讀取仍為1；100輪 read／write／advance tick 的 parse **499→99**、DP讀取同為99。這些是限定輸入的 JavaScript 操作數，不是 Bedrock CPU、TPS、FPS、裝置記憶體或實機載入量測。不同玩家交替不同原文可能沒有命中；快取始終只保留一份原文，不按玩家／效果數量增長。
+
+臨時檢查另核同 tick 外部改寫、200tick效果扣款、無效JSON拋錯、恢復有效資料、清空及 until／amp 數值轉換連續失敗後恢復原世代；原讀取和資料保護結果不變。既有6個玩法檢查檔194項通過（heavy-metal、warmth、food-finish、a2732、a2749、projectile-dodge-movement）。接入 Core SDK 0.1.1 後再跑既有 skewer-item-snapshot、board-api、food-finish 三個檢查檔，233項通過；這與前述194項有重疊，不相加計數。來源沒有新增測試、fixture、CI、排程器、持久欄位、物品ID、模型或動畫。本次依公開 main／20個開放PR的精確來源歷史凍結配對來源候選 2.8.267；BP/RP UUID及Cookery／Script API相依保持。這不是實際安裝版本核實或發布／部署，整合到更新家族來源時仍須保留其既有修改並分配適用身份。
+
+官方能力參照（2026-11-16 查閱）：[BlockCustomComponent](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/blockcustomcomponent?view=minecraft-bedrock-stable)、[BlockComponentEntityEvent](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/blockcomponententityevent?view=minecraft-bedrock-experimental)、[BlockFilter](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/blockfilter?view=minecraft-bedrock-stable)、[Dimension](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/dimension?view=minecraft-bedrock-stable)、[ItemFoodComponent](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/itemfoodcomponent?view=minecraft-bedrock-experimental)、[ItemCustomComponent](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/itemcustomcomponent?view=minecraft-bedrock-experimental)、[WorldAfterEvents](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-experimental)、[ScreenDisplay](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/screendisplay?view=minecraft-bedrock-stable)、[Camera](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/camera?view=minecraft-bedrock-stable)、[LiquidType](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/liquidtype?view=minecraft-bedrock-stable)、[BlockFluidContainerComponent](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/blockfluidcontainercomponent?view=minecraft-bedrock-stable)。
+
+重新直接讀取的固定 Java 原碼：[PepperLeavesBlock](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/PepperLeavesBlock.java)、[NumbCrosshairMixin](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/mixin/NumbCrosshairMixin.java)、[MultiBiteSkewerItem](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/MultiBiteSkewerItem.java)、[SecretSkewerItem](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SecretSkewerItem.java)、[FortressHouttuyniaHandler](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/world/FortressHouttuyniaHandler.java)。其餘 Java 類別／配方詳見已固定來源的 `data/java/`。
