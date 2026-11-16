@@ -33,6 +33,9 @@ export function retargetSpecialSeasoningStack(stack,uses,variant=specialSeasonin
   const out=id===stack.typeId?stack.clone():copyMetadata(stack,new ItemStack(id,1));
   setItemProperty(out,SEASONING_USES_KEY,used);
   setItemProperty(out,SEASONING_VARIANT_KEY,v);
+  // Native setters can silently reject a write. Do not return a visual
+  // replacement that the grill could credit without charging its uses.
+  if(getItemProperty(out,SEASONING_USES_KEY)!==used||getItemProperty(out,SEASONING_VARIANT_KEY)!==v)return undefined;
   return out;
  }catch{return undefined}
 }

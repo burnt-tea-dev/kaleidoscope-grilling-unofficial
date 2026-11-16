@@ -48,6 +48,81 @@ def gui_color(palette, style):
     return sum((sum(c >> shift & 255 for c in colors)//4) << shift for shift in (16,8,0))
 
 
+def sprite_frames(row):
+    source = row['sprite']
+    raw = (ROOT/source['path']).read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == row['source']['sha256'], row['id']
+    image = Image.open(io.BytesIO(raw)).convert('RGBA')
+    animation = json.loads((ROOT/source['animation_path']).read_text())['animation']
+    # These pinned inputs use the default square frames in vertical order.
+    assert set(animation) == {'frametime'} and animation['frametime'] > 0
+    width, height = image.size
+    assert width == 16 and height % width == 0, row['id']
+    return [image.crop((0, y, width, y+width)) for y in range(0, height, width)], animation['frametime']
+
+
+def build_animated_helpers(output):
+    legacy = json.loads((FIX/'legacy-palettes.json').read_text())
+    gui_path = BP/'scripts/secret_gui_color_data.js'
+    gui_source = output.get(gui_path, gui_path.read_bytes()).decode()
+    gui_source = gui_source.replace('tools/build_scene_visuals.py', 'tools/build_secret_visual_catalog.py')
+    colors = json.loads(gui_source.split('Object.freeze(',1)[1].split('.map(Object.freeze)',1)[0])
+    controllers = {'controller.render.kg_secret_held.piece': 'v.kg_secret_piece_index',
+                   'controller.render.kg_failure_held.helper': 'v.kg_failure_helper_index'}
+    for row in legacy['items']:
+        if 'sprite' not in row:
+            continue
+        index = row['index']
+        frames, ticks = sprite_frames(row)
+        palette = sample_grid(frames[0])
+        colors[index] = [gui_color(palette, style) for style in range(7)]
+        texture_keys = [f'food_{index}_frame_{i}' for i in range(len(frames))]
+        textures = {key: f'textures/secret_food_animation/{key}' for key in texture_keys}
+        for key, frame in zip(texture_keys, frames):
+            stream = io.BytesIO()
+            frame.save(stream, format='PNG', compress_level=9)
+            output[RP/(textures[key]+'.png')] = stream.getvalue()
+        alpha_frames = [[list(frame.getchannel('A').crop((0,y,16,y+1)).tobytes())
+                         for y in range(16)] for frame in frames]
+        identifier = row['sprite']['helper_geometry']
+        geometry = piece_geometry(identifier, [main_faces(), *span_cubes(spans_from_alpha(alpha_frames),16,16)])
+        # Preserve the existing identifier and bank, plus every unrelated mesh.
+        for path in (RP/'models/entity').glob('secret_helper_sprites*.geo.json'):
+            data = json.loads(output.get(path, path.read_bytes()))
+            rows = data['minecraft:geometry']
+            match = next((i for i,g in enumerate(rows) if g['description']['identifier'] == identifier), None)
+            if match is not None:
+                rows[match] = geometry
+                header = {k:v for k,v in data.items() if k != 'minecraft:geometry'}
+                output[path] = (json.dumps(header,separators=(',',':'))[:-1]+',"minecraft:geometry":[\n'+
+                                ',\n'.join(json.dumps(g,separators=(',',':')) for g in rows)+'\n]}\n').encode()
+                break
+        else:
+            raise ValueError('Missing existing helper geometry: '+identifier)
+        for path in (RP/'attachables').glob('*.json'):
+            data = json.loads(output.get(path, path.read_bytes()))
+            desc = data['minecraft:attachable']['description']
+            names = [name for entry in desc.get('render_controllers', [])
+                     for name in ([entry] if isinstance(entry, str) else entry)]
+            if any(name in controllers for name in names):
+                desc['textures'].update(textures)
+                output[path] = dump(data)
+        for path in (RP/'render_controllers').glob('*.json'):
+            data = json.loads(output.get(path, path.read_bytes()))
+            changed = False
+            for name, controller in data['render_controllers'].items():
+                if name in controllers:
+                    array = f'Array.food_{index}_frames'
+                    controller['arrays']['textures'][array] = ['Texture.'+key for key in texture_keys]
+                    frame_index = f'math.mod(math.floor((c.owning_entity->q.life_time) * 20 / {ticks}), {len(frames)})'
+                    variable = controllers[name]
+                    controller['textures'] = [f'{variable} == {index} ? {array}[{frame_index}] : Array.food[{variable}]']
+                    changed = True
+            if changed:
+                output[path] = dump(data)
+    output[gui_path] = (gui_source.split('Object.freeze(',1)[0]+'Object.freeze('+json.dumps(colors,separators=(',',':'))+'.map(Object.freeze));\n').encode()
+
+
 def build_palettes(output):
     legacy = json.loads((FIX/'legacy-palettes.json').read_text())
     manifest = json.loads((FIX/'ingredients.json').read_text())
@@ -58,6 +133,10 @@ def build_palettes(output):
     assert hashlib.sha256(white_raw).hexdigest() == legacy['base_texture']['sha256'] == manifest['base_texture_sha256']
     white = Image.open(io.BytesIO(white_raw)).convert('RGBA')
     assert white.size == (16,16)
+    for row in rows:
+        if 'sprite' in row:
+            # Java's particle sampler reads the first logical sprite frame.
+            row['palette'] = sample_grid(sprite_frames(row)[0][0])
     for row in manifest['items']:
         raw = (RP/(row['texture']+'.png')).read_bytes()
         assert hashlib.sha256(raw).hexdigest() == row['texture_sha256'], row['id']
@@ -190,6 +269,10 @@ def build():
                             lambda m:m[1]+json.dumps(json.loads('['+m[2]+']'),separators=(',',':')),text)
                 rendered=text.encode()
             output[path]=rendered
+    build_animated_helpers(output)
+    attribution = (PACK.parent/'ATTRIBUTION.md').read_bytes()
+    for side in (BP, RP):
+        output[side/'ATTRIBUTION.md'] = attribution
     return output
 
 

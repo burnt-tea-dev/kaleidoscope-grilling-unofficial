@@ -8762,35 +8762,29 @@
     {
       "id": "kaleidoscope_cookery:mystery_tea",
       "index": 217,
-      "palette": [
-        10840671,
-        9921377,
-        8080210,
-        8080210,
-        10840671,
-        9921377,
-        8080210,
-        7225411,
-        9921377,
-        9593711,
-        8080210,
-        7225411,
-        10647693,
-        9463161,
-        8080210,
-        7487030
-      ],
       "source": {
-        "kind": "public_cookery_1.6.1_bedrock_sprite",
-        "source_url": "https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial/files/9123386",
-        "archive_sha256": "5b01865d4dd9a455cd80dae4ddc94dc45964e074025f7d24c6f0c5e35f0fbe52",
-        "source_path": "textures/items/kc_mystery_tea.png",
+        "kind": "pinned_java_cookery_animated_particle_sprite",
+        "repository": "KaleidoscopeMods/KaleidoscopeCookery",
+        "commits": {
+          "Forge1.20.1": "2f4e386ce23f49a385ddf003c67fc6415c55417a",
+          "NeoForge1.21.1": "4d39e36cfa749939ba5f9d6d3b715ef9a984cb9c"
+        },
+        "model_path": "src/generated/resources/assets/kaleidoscope_cookery/models/item/mystery_tea.json",
+        "model_git_blob": "4447ea7860c5aefb1f351a3d5ee2a82f88045b7d",
+        "texture_path": "src/main/resources/assets/kaleidoscope_cookery/textures/item/mystery_tea.png",
+        "texture_git_blob": "8db420ec5420be355fd5e0b3fdc7329fb0739149",
         "sha256": "ba3ee47dd6ce50ed5983796f0e98672534b215f9ffffad93f72226ced4cd9d72",
+        "animation_git_blob": "7e77c648581ac09200ac8edbd468d9ad51713c86",
         "license": "CC BY-NC-SA 4.0",
         "attribution": "Kaleidoscope Official Production Team",
-        "bedrock_adaptation": "Loyallay",
         "java_particle_parity": false,
+        "static_particle_source_reviewed": true,
         "native_renderer_accepted": false
+      },
+      "sprite": {
+        "path": "assets-src/secret-food/mystery_tea.png",
+        "animation_path": "assets-src/secret-food/mystery_tea.png.mcmeta",
+        "helper_geometry": "geometry.kg_secret_held.piece_169"
       }
     }
   ],

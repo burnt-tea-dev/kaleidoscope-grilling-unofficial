@@ -5,7 +5,25 @@ inputs from this repository's `61efa642cbb29983e149a7fa7d81146ebca73037`, at
 `development/gameplay_core/fixtures/secret-food-palettes.json`. Its
 `recovered_from` field records that identity. These are the original sampled
 colors and source limitations, not new artwork or a claim of complete Java
-item-color parity. The retired importer/build framework is not required.
+item-color parity. Slot 217 now uses the Java sprite described below. The
+retired importer/build framework is not required.
+
+Slot 217 reads the pinned Java mystery-tea sprite and animation metadata from
+`assets-src/secret-food/`. The Forge and NeoForge sources have the same texture
+Git blob. The producer samples the first logical 16x16 frame for its palette
+and GUI colors, not the complete 16x144 animation strip. Normal full generation
+retains all nine frames, converts the author's two ticks to 0.1 seconds using
+the owning entity's native `query.life_time`, and builds helper
+side spans across those square frames using `generated_food_sprite.py`. It
+replaces only the existing `piece_169` mesh, retains its identifier and bank,
+and extends the six existing helper attachables and two controllers. No food
+slot, hand marker or player channel changes.
+
+Use the existing full command below for this combined source change.
+`--palettes-only` updates the tea palette but does not produce its helper
+geometry, animation frames or GUI color row. Full generation also copies the
+canonical `projects/grilling/ATTRIBUTION.md` into each pack. Client playback,
+transparent-face ordering and complete Java behavior remain unconfirmed.
 
 `ingredients.json` pins eight existing Grilling ingredients to append-only slots
 218–225. Models and PNGs were independently fetched from Java 1.1.1 commit
