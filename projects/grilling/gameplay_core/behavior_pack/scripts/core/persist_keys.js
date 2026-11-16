@@ -32,6 +32,7 @@ export const GRILL_STATE_PREFIX='kaleidoscope_grilling:g_';
 export const GUI_COLOR_PREFIX='kaleidoscope_grilling:gui_color_';
 export const HEAVY_METAL_CLAIM_KEY='kaleidoscope_grilling:heavy_metal_claim';
 export const HOT_UNTIL_KEY='kaleidoscope_grilling:hot_until';
+export const FOOD_CLOCK_OFFSET_KEY='kaleidoscope_grilling:food_clock_offset';
 export const INTEGRATION_OPERATION_PREFIX='kaleidoscope_grilling:integration_operation:';
 export const INTEGRATION_REGISTRY_KEY='kaleidoscope_grilling:integration_registry_v1';
 export const MODEL_VARIANTS_KEY='kaleidoscope_grilling:model_variants';
@@ -110,6 +111,7 @@ export const PERSISTED_KEY=Object.freeze({
  GUI_COLOR_PREFIX:GUI_COLOR_PREFIX,
  HEAVY_METAL_CLAIM:HEAVY_METAL_CLAIM_KEY,
  HOT_UNTIL:HOT_UNTIL_KEY,
+ FOOD_CLOCK_OFFSET:FOOD_CLOCK_OFFSET_KEY,
  INTEGRATION_OPERATION_PREFIX:INTEGRATION_OPERATION_PREFIX,
  INTEGRATION_REGISTRY:INTEGRATION_REGISTRY_KEY,
  MODEL_VARIANTS:MODEL_VARIANTS_KEY,

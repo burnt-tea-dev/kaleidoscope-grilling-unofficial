@@ -1,10 +1,29 @@
+## 2.8.272 — 2026-11-13
+
+Take only burnt-tea-dev/kaleidoscope-grilling-unofficial PR #408 head b02f0b585222e378cc2ced057db39cb62012a734 for the canola oil brush: mirror the brushed-side bone cubes onto the correct side planes with their UV faces, flip the active first-person `brush` bone offset and rotation signs, and add the matching Blockbench authoring file under assets-src. Applied forward on the 2.8.271 line this host actually has installed, so the newest seasoning, player and dependency content stays intact. Local source integration and a fresh paired release identity only: no tests, no client observation, no publication and no deployment.
+
+## 2.8.270 — 2026-11-12
+
+Carry the authorized 20261112 source-repair handoff into the maintained Grilling line while keeping the reviewed facing chain: give the seasoning-bottle variants their real empty base model and render controller, port the per-permutation collision and selection boxes by their actual rotation angles (local east 270 / west 90 differ from the handoff mirror order), add the oil texture with its flipbook animation, play the premium cauldron as the Java 38-frame ping-pong at two ticks per step and correct the large vat UVs. Local source integration and a fresh release identity only: no tests, no client observation, no publication and no deployment.
+
 # 變更摘要
 
-## 2.8.267 效果解碼與共用事件路由減量
+## 2.8.267
 
-- 效果快照重用單筆原文解碼結果，保留即時DP讀取、原文變更、扣款世代與轉換失敗行為；限定100tick真main API情境的相同效果原文parse由500降至101，DP讀取同為100。不是原生CPU／TPS量測。
-- 由固定Core SDK0.1.1來源同步事件router，訂閱變更時才建立新路由清單；分派保留當次快照、順序、取消與observer語義。
-- 在既有KNOWN-ISSUES重審23項能力／取捨／性能路線，修正Pepper接觸與要塞loot的過廣缺失描述；既有檢查通過。配對來源身份為2.8.267，未發布或部署，未做BDS／客戶端／LIVE驗收。
+- Integrate the placed and held plate-body UV direction fixes from PR #398 and #400, preserving the existing food geometry and seasoning motion. Local source only; game rendering remains unobserved.
+
+## 2.8.261 本機撒料動作修正
+
+- 成功撒料沿同一動作入口播放原作10 tick主臂動作，扣料仍由實際使用手負責；耗盡或換物不提前清掉動作。
+- 保留80 tick混合、原輸入優先序及真物品資料。副手自然事件及實際第一／第三人稱畫面尚未觀察。
+- 正常來源固化，未執行測試、CI或遠端交付；測試服部署另有明確結果才算完成。
+
+## 2.8.260 本機整合草稿
+
+- 整合原作主分頁分類、滿串 GUI 的同格資料與原生圖互斥，以及 Java display 持物生成源；保留目前來源名稱與隱藏項目。
+- 整合食品時鐘按需初始化、調料瓶蹲下續行／輸入來源／群朝向及 count 保向、耗盡空瓶 metadata，並保留兩茶由既有共享效果 owner 授予的入口。
+- 共享玩家 composer 可擴充已選完整 BP/RP 並收齊騎乘產物；Core SDK pin 指向本批 Core 來源。實際 OTC bundle／完整選包由後續整合處理。
+- 僅正常生成與本機來源固化；沒有執行測試或確認遊戲行為，沒有遠端發布或部署。BP/RP UUID、保存鍵與原輸入保護保留；新配對身份與樹雜湊見 baseline.json，歷史身份不改寫。
 
 ## 2.8.258 創造物品按用途分類
 

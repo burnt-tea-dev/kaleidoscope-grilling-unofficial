@@ -55,11 +55,11 @@ export function stackIntentDescriptor(stack){
  return stack?{empty:false,id:stack.typeId,sig:stackIntentSignature(stack)}:{empty:true,id:null,sig:null};
 }
 
-export function captureInteractionIntentFromStacks(eventStack,mainStack,offStack,selectedSlot){
+export function captureInteractionIntentFromStacks(eventStack,mainStack,offStack,selectedSlot,mainBlockInteraction=false){
  const e=stackIntentDescriptor(eventStack),m=stackIntentDescriptor(mainStack),o=stackIntentDescriptor(offStack);
- const hand=chooseInteractionHand(e,m,o),sig=hand==='off'?o.sig:m.sig;
+ const hand=mainBlockInteraction?'main':chooseInteractionHand(e,m,o),sig=hand==='off'?o.sig:m.sig;
  const intent=makeIntent(hand,sig,selectedSlot);
- interactionSnapshots.set(intent,{event:captureStackIntentSnapshot(eventStack),
+ interactionSnapshots.set(intent,{mainBlockInteraction,event:captureStackIntentSnapshot(eventStack),
   main:captureStackIntentSnapshot(mainStack),off:captureStackIntentSnapshot(offStack)});
  return intent;
 }
@@ -74,9 +74,13 @@ export function interactionIntentMatchesStacks(intent,mainStack,offStack,selecte
   const event=descriptor(saved.event.stack),main=descriptor(saved.main.stack),off=descriptor(saved.off.stack);
   // A closure already captured .hand. Never silently switch it after discovering
   // a restriction-only difference in the unrestricted phase.
-  if(chooseInteractionHand(event,main,off)!==intent.hand)return false;
+  if(saved.mainBlockInteraction){
+   // Java's ordinary block caller chooses MAIN_HAND before offhand fallback.
+   // This is a block-routing decision, never evidence for native placement.
+   if(intent.hand!=='main')return false;
+  }else if(chooseInteractionHand(event,main,off)!==intent.hand)return false;
   if(!event.empty&&event.sig!==(intent.hand==='off'?off.sig:main.sig))return false;
-  if(!event.empty&&!main.empty&&!off.empty&&event.sig===main.sig&&event.sig===off.sig)return false;
+  if(!saved.mainBlockInteraction&&!event.empty&&!main.empty&&!off.empty&&event.sig===main.sig&&event.sig===off.sig)return false;
   return true;
  }
  catch{return false} // A deferred action cannot verify an unreadable hand.

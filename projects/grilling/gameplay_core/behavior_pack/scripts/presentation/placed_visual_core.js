@@ -12,7 +12,7 @@ export function bottlePlan(row,palette={}){
  if(!row)return undefined;
  const special=row.kind==='special',ingredients=Array.isArray(row.ingredients)?row.ingredients.slice(0,8):[];
  const fill=special?Math.ceil((16-integer(row.uses,0,16))/2):ingredients.length;
- if(fill===0)return undefined;
+ if(fill===0)return {mode:0,fill:0,variant:0,colors:[],layers:Array(8).fill(0)};
  return {mode:special?2:1,fill,variant:special?integer(row.variant,0,7):0,
   colors:ingredients.map(id=>Object.hasOwn(palette,id)?palette[id]:FALLBACK_COLORS),
   layers:bottleHeldVisualPlan(special?undefined:PENDING_SEASONING_ID,ingredients)};
@@ -21,7 +21,16 @@ export function oilPlan(state){
  const oil=['canola','secret_chili','premium_chili'].indexOf(state?.type)+1;
  return oil>0&&Number(state?.count)>0?{oil}:undefined;
 }
-export function positions(count){return OFFSETS[integer(count,1,4)-1]}
+// Java SeasoningBottleRenderer rotates 180 - FACING.toYRot() around Y.
+// In world X/Z this gives north (x,z), east (-z,x), south (-x,-z), west (z,-x).
+export function positions(count,rotation=0){
+ const turn=((Math.round(rotation/90)%4)+4)%4;
+ return OFFSETS[integer(count,1,4)-1].map(([x,z])=>turn===1?[-z,x]:turn===2?[-x,-z]:turn===3?[z,-x]:[x,z]);
+}
+export function bottleFacingFromYaw(yaw){
+ if(!Number.isFinite(yaw))throw Error('Grilling: bottle facing unavailable');
+ return ['north','east','south','west'][((Math.floor(yaw/90+.5)%4)+4)%4];
+}
 export function decodeKey(key,dimensionIds){
  const prefixes=[PREFIX+'sb_',PREFIX+'a2736_oilpot_type_'];
  const prefix=prefixes.find(x=>key.startsWith(x));if(!prefix)return undefined;

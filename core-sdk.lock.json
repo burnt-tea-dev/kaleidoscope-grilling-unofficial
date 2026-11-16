@@ -2,9 +2,9 @@
   "schema": 1,
   "repository": "burnt-tea-dev/senluo-bedrock-core",
   "repository_id": 1439792715,
-  "commit": "c7f340f148b91b30a2e9cdffe90f04ad893e1849",
-  "version": "0.1.1",
-  "manifest_sha256": "aa58cb296af1b43ce55d44e68cccecaa957c5de61d3012aa86f3a921dd7def66",
+  "commit": "2fd3d97ced4a33e075b9edc0d509ad15ddb9442e",
+  "version": "0.1.2",
+  "manifest_sha256": "84a4cffd2f0ab66928bca72c94bae7918eef6ba85361c0295c30ff739b8b84fe",
   "files": {
     "scripts/host_api/event_router.js": {
       "source": "src/host_api/event_router.js",

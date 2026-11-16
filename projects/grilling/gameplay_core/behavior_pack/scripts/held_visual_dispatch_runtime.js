@@ -1,7 +1,25 @@
 import {every,onlinePlayers} from './core/scheduler.js';
 import {world,system} from '@minecraft/server';
 import {getMainHand,getOffHand} from './core/player_io.js';
-import {heldVisualKind,writeHeldVisual,forgetHeldVisual,flushHeldVisual,replayHeldVisual,HELD_VISUAL_EMPTY} from './held_visual_transport.js';
+import {onScriptEvent} from './core/events.js';
+import {heldVisualKind,writeHeldVisual,forgetHeldVisual,clearHeldPresentation,flushHeldVisual,replayHeldVisual,HELD_VISUAL_EMPTY,
+ configureHeldPresentation,requestHeldPresentation,receiveHeldPresentation,supportsHeldPresentation,HELD_PRESENTATION_REQUEST,HELD_PRESENTATION_RESPONSE} from './held_visual_transport.js';
+
+// Native messages cross BP VMs; Core's router only multiplexes this BP's
+// subscription. The TACZ responder alone reads its item data and D2 clock.
+configureHeldPresentation({sync(player,viewers){
+ if(!supportsHeldPresentation(getMainHand(player)?.typeId)||player.getComponent('minecraft:health')?.currentValue<=0){
+  clearHeldPresentation(player);return true;
+ }
+ const {row,defer}=requestHeldPresentation(player,viewers);
+ player.runCommand('scriptevent '+HELD_PRESENTATION_REQUEST+' '+JSON.stringify(row));
+ // With no responder yet, retain normal G hands and an empty projection.
+ // After a reply, only a newly sampled reply may publish/replay that pose.
+ return !defer;
+}});
+onScriptEvent('held_visual_dispatch_runtime:presentation',event=>{
+ if(event.id===HELD_PRESENTATION_RESPONSE)receiveHeldPresentation(event,system.currentTick,id=>world.getEntity(id));
+});
 
 // All held-content providers share one player scan and one deduplicated event
 // queue. The periodic fallback covers offhand/equipment changes without adding
@@ -18,7 +36,7 @@ export function reportHeldVisualError(name,player,error){
   errors.set(key,tick+100);console.warn('[Grilling held '+name+'] '+error);
  }
 }
-function refresh(player,force=false){
+function refresh(player,force=false,viewers){
  for(const [name,provider] of providers){
   // A runInterval may start at any world tick after a script reload. Schedule
   // relative to this dispatcher instead of requiring worldTick % period == 0.
@@ -28,7 +46,10 @@ function refresh(player,force=false){
  for(const [hand,read] of [['main',getMainHand],['off',getOffHand]])try{
   if(heldVisualKind(read(player)?.typeId)==='empty')writeHeldVisual(player,hand,'empty',HELD_VISUAL_EMPTY);
  }catch(error){reportHeldVisualError('reset '+hand,player,error)}
- try{flushHeldVisual(player,system.currentTick)}catch(error){reportHeldVisualError('snapshot',player,error)}
+ try{
+  if(viewers===undefined)flushHeldVisual(player,system.currentTick);
+  else replayHeldVisual(player,viewers,system.currentTick);
+ }catch(error){reportHeldVisualError('snapshot',player,error)}
 }
 function flushQueued(){
  scheduled=0;const batch=[...queued.values()];queued.clear();
@@ -36,9 +57,12 @@ function flushQueued(){
  return new Set(batch.map(player=>player.id));
 }
 function replayForViewer(viewer){
- for(const owner of onlinePlayers())if(owner.id!==viewer.id&&owner.dimension.id===viewer.dimension.id)try{replayHeldVisual(owner,[viewer])}catch(error){reportHeldVisualError('viewer replay',owner,error)}
+ // Refresh both hands and the optional projection before targeted replay.
+ for(const owner of onlinePlayers())if(owner.id!==viewer.id&&owner.dimension.id===viewer.dimension.id)try{
+  refresh(owner,true,[viewer]);
+ }catch(error){reportHeldVisualError('viewer replay',owner,error)}
 }
-world.afterEvents.playerDimensionChange.subscribe(e=>{enqueue(e.player);replayForViewer(e.player)});
+world.afterEvents.playerDimensionChange.subscribe(e=>{clearHeldPresentation(e.player);enqueue(e.player);replayForViewer(e.player)});
 function enqueue(player){
  queued.set(player.id,player);if(scheduled)return;
  const token=++sequence;scheduled=token;
@@ -51,9 +75,9 @@ function enqueue(player){
  }
 }
 world.afterEvents.playerInventoryItemChange.subscribe(e=>{for(const p of providers.values())p.inventory?.(e.player.id);enqueue(e.player)});
-world.afterEvents.playerHotbarSelectedSlotChange.subscribe(e=>{for(const p of providers.values())p.hotbar?.(e.player.id);enqueue(e.player)});
+world.afterEvents.playerHotbarSelectedSlotChange.subscribe(e=>{clearHeldPresentation(e.player);for(const p of providers.values())p.hotbar?.(e.player.id);enqueue(e.player)});
 world.afterEvents.playerSpawn.subscribe(e=>{
- forgetHeldVisual(e.player.id);for(const p of providers.values())p.spawn?.(e.player.id);enqueue(e.player);replayForViewer(e.player);
+ forgetHeldVisual(e.player.id);for(const p of providers.values())p.spawn?.(e.player.id);clearHeldPresentation(e.player);enqueue(e.player);replayForViewer(e.player);
 });
 world.afterEvents.playerLeave.subscribe(e=>{
  queued.delete(e.playerId);forgetHeldVisual(e.playerId);

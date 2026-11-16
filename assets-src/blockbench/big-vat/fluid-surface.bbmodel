@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "format_version": "5.0",
+    "model_format": "bedrock",
+    "box_uv": false
+  },
+  "name": "big_vat_fluid_surface",
+  "model_identifier": "kg_a26.big_vat_fluid_surface",
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "fluid_surface",
+      "uuid": "3469050b-a35c-4e85-a0dc-0bd95dac69d3",
+      "type": "cube",
+      "box_uv": false,
+      "from": [
+        -6,
+        5,
+        -6
+      ],
+      "to": [
+        6,
+        5,
+        6
+      ],
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": null
+        },
+        "north": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": null
+        },
+        "south": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": null
+        },
+        "east": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": null
+        },
+        "west": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": null
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "fluid_surface",
+      "uuid": "0874199d-7487-4c9f-bd81-a4addbc5902b",
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "outliner": [
+    {
+      "uuid": "0874199d-7487-4c9f-bd81-a4addbc5902b",
+      "children": [
+        "3469050b-a35c-4e85-a0dc-0bd95dac69d3"
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "name": "canola_still_first.png",
+      "id": "0",
+      "uuid": "3086b237-5475-43a4-bf74-77999d05f958",
+      "width": 16,
+      "height": 16,
+      "uv_width": 16,
+      "uv_height": 16,
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABv0lEQVR4nG2SzW7UQBCEv+4ZO94/FiFFIuLEhefiaXhIxAVQOGSJsiHZjdc7081h7MEL1Mkznu6uqi759PFmf+gNAHMnZ8juBBFEIapg7gCoCF0rbJeB69eR9UKJ90+JIEIeH8UgtCJjQ0hW7lN2wOnPsD9kvu6G8j4GQQXEBbfpYUEQIYQyed0p5qACzyNjgAgwJK8FMRSK2Zx+GKlrKQwqHHpDpTQ1d6IbVS8UzY/HjI9DRAGD0+CX3gRICWLVTtGdzFGB5VIrM4CuEZ57wxzc4HgqE+KrZaAfyo8J5kWnSjEV/ui+3kbaIKjCw3Mmrjrlw7srbu/PPDzl6vq60+qBGXXA7jERVVh1RXPcLJRfx1xotsJmEdmulPunDBhDctpG4AxtUzbWD87LYGxXgfj59sQc+0Pm+0/+i/5MzYonuBtSyQFQXZ+c//scVWgbqeY1UUg2rnHaREXmn3PKfsHgnLw0norncZ5/T5hnpaY1j1Ge6E5yADpVzL3Gd3mlhDFkc9lxrnWevomiCmwWgZs3kWTw/m3Llx8njifDFGITy05fhlK9WSjX28iQnLt9oh+cQ298250vAtdGIWXnN6MoAf2k7g1SAAAAAElFTkSuQmCC",
+      "mode": "bitmap",
+      "saved": true
+    }
+  ]
+}

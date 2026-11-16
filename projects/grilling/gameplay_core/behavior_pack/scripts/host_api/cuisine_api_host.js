@@ -3,11 +3,21 @@ import {scriptEvents} from './event_router.js';
 /** Author-owned output transactions; native food state travels with the actual output. */
 import {world,system,ItemStack,EquipmentSlot,GameMode} from '@minecraft/server';
 import {writePublicFood,readPublicFood,readPublicFoodLore,normalizePublicFood,bucketHotUntil} from './food_api_core.js';
+import {heatLore,isHeatLore} from '../localized_lore_core.js';
 import {canonicalCuisineFoodId,cuisineQualityItemId,cuisineQualityOfItem,cuisineQualityPayloadMatches} from './cuisine_quality_core.js';
 import {PERSISTED_KEY as PersistedKey} from '../core/persist_keys.js';
 export const CUISINE_CAPABILITIES=Object.freeze(['cuisine_output_receipt_v2','secret_ingredient_consume_v1','cuisine_configuration_v1']);
 const CONFIG_KEY=PersistedKey.CUISINE_CONFIG;
 const cuisineEnabled=()=>getWorldProperty(world,CONFIG_KEY)!==false;
+// Connection state from Grilling's existing config bridge. Cookery must never
+// create or persist a second clock origin under its own behavior-pack UUID.
+let foodClockOffset;
+function cuisineTime(){
+ if(!Number.isSafeInteger(foodClockOffset))throw Error('Grilling food clock not connected');
+ const time=system.currentTick+foodClockOffset;
+ if(!Number.isSafeInteger(time)||time<0)throw Error('Grilling food clock out of range');
+ return time;
+}
 const META_PREFIX=PersistedKey.CUISINE_METADATA_PREFIX,RECEIPT_PREFIX=PersistedKey.CUISINE_OUTPUT_PREFIX,RECOVERY_PREFIX=PersistedKey.CUISINE_RECOVERY_PREFIX,CARRIER_PREFIX=PersistedKey.CUISINE_CARRIER_PREFIX;
 const key=b=>b.dimension.id+':'+b.x+','+b.y+','+b.z;
 const station=b=>({dimensionId:b.dimension.id,x:b.x,y:b.y,z:b.z});
@@ -153,12 +163,13 @@ export function readCuisineMetadata(b,data={},kind='pot'){
  const quality=savedCuisineQuality(data),extra=quality===undefined?{}:{quality};
  // Java creates a fresh dark dish after its takeout mixin touched the old result.
  if(data.grillingPot?.phase==='burnt')return {v:1,hotUntil:0,seasoning:[]};
+ const time=cuisineTime();
  if(!cuisineEnabled()){const plain=normalizePublicFood({v:1,hotUntil:0,seasoning:[],...extra});if(!plain)throw Error('cuisine quality invalid');return plain;}
  let state={seasoning:[],oilType:data.grillingOilType??(data.oil?'default':'')};
  const raw=getWorldProperty(world,META_PREFIX+key(b));if(raw!==undefined)state={...state,...JSON.parse(String(raw))};
  const oilType=data.grillingOilType||state.oilType;
  const heat=kind==='stockpot'?1200:oilType==='premium_chili'?24000:oilType==='secret_chili'?12000:1200;
- const result=normalizePublicFood({v:1,hotUntil:bucketHotUntil(Number(world.getAbsoluteTime())+heat),seasoning:[...(state.seasoning??[])],...extra});if(!result)throw Error('cuisine metadata invalid');return result;
+ const result=normalizePublicFood({v:1,hotUntil:bucketHotUntil(time+heat),seasoning:[...(state.seasoning??[])],...extra});if(!result)throw Error('cuisine metadata invalid');return result;
 }
 export function createNativeSuspiciousStew(b,variant=Math.floor(Math.random()*11)){
  if(!Number.isInteger(variant)||variant<0||variant>10)throw Error('stew variant');
@@ -224,7 +235,11 @@ export function deliverCuisineOutput(b,data,id,count,kind,{container,playerId,ta
   const outputMeta=readPublicFood(base);if(outputMeta.present&&!outputMeta.valid)throw Error('native output metadata unreadable');
   if(nativeStack&&(!cuisineQualityPayloadMatches(base.typeId,outputMeta)||outputMeta.state?.quality!==meta.quality))throw Error('native output quality conflict');
   if(outputMeta.valid&&outputMeta.state.nativeVariant!==undefined)meta.nativeVariant=outputMeta.state.nativeVariant;
-  stack=writePublicFood(base,meta);if(meta.hotUntil>Number(world.getAbsoluteTime())&&stack.getRawLore().length<20)stack.setLore([...stack.getRawLore(),{rawtext:[{text:'§c🔥 '},{translate:'tooltip.kaleidoscope_grilling.smoky_warmth'},{text:' '+Math.ceil((meta.hotUntil-Number(world.getAbsoluteTime()))/20)+'s'}]}]);
+  const time=cuisineTime();
+  stack=writePublicFood(base,meta);
+  const lore=stack.getRawLore().filter(row=>!isHeatLore(row));
+  if(meta.hotUntil>time&&lore.length<20)lore.push(heatLore((meta.hotUntil-time)/20));
+  stack.setLore(lore);
  }
  let slot=-1,target,entity,entityObserved=false;
  if(container)for(let i=0;i<container.size;i++)if(!container.getItem(i)){slot=i;break;}
@@ -383,10 +398,11 @@ scriptEvents(system)('cuisine_api_host',e=>{
 });
 
 scriptEvents(system)('cuisine_api_host',e=>{
- if(e.id!=='kaleidoscope_cookery:cuisine_config')return;
- try{const request=JSON.parse(e.message);if(request.api!==1||typeof request.enabled!=='boolean')throw Error('invalid cuisine configuration');
+ if(e.id!=='kaleidoscope_cookery:cuisine_config'||e.sourceType!=='Server')return;
+ try{const request=JSON.parse(e.message);if(request.api!==1||typeof request.enabled!=='boolean'||!Number.isSafeInteger(request.foodClock?.offset))throw Error('invalid cuisine configuration or food clock');
   setWorldProperty(world,CONFIG_KEY,request.enabled);
   if(getWorldProperty(world,CONFIG_KEY)!==request.enabled)throw Error('cuisine configuration readback');
+  foodClockOffset=request.foodClock.offset;
  }catch(error){console.warn('[Cookery cuisine API] configuration retained '+error)}
 });
 system.run(()=>system.sendScriptEvent('kaleidoscope_grilling:cuisine_config_request','{"api":1}'));

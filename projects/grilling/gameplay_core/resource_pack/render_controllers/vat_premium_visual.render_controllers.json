@@ -26,11 +26,11 @@
       "uv_anim": {
         "offset": [
           0,
-          "q.property('kaleidoscope_grilling:frame')/32"
+          "q.property('kaleidoscope_grilling:frame')/20"
         ],
         "scale": [
           1,
-          0.03125
+          0.05
         ]
       }
     }

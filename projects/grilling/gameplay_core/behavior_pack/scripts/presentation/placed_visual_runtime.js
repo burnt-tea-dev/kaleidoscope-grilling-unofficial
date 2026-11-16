@@ -59,9 +59,13 @@ function sync(row,players,afterPickup=false){
  if(!block){clear(row);return}
  if(isSeasoningBlock(block.typeId)){
   const stack=readPlacedSeasoningStack(block).slice(0,4),offsets=positions(stack.length);
+  // Java rotates the parent pose before translating each bottle. Read the
+  // block's sole facing state; south is the native trait's unplaced default.
+  const [rotation,c,s]={north:[0,1,0],east:[90,0,1],south:[180,-1,0],west:[270,0,-1]}[block.permutation.getState('minecraft:cardinal_direction')??'south'];
   for(let i=0;i<4;i++){
    const plan=bottlePlan(stack[i],INGREDIENT_COLORS),o=offsets[i]||[0,0];
-   render(row,dimension,i,SEASON_ENTITY,{x:l.x+.5+o[0]/16,y:l.y,z:l.z+.5+o[1]/16},0,plan);
+   // Converted entity geometry faces south at yaw 0; render negates this angle.
+   render(row,dimension,i,SEASON_ENTITY,{x:l.x+.5+(o[0]*c-o[1]*s)/16,y:l.y,z:l.z+.5+(o[0]*s+o[1]*c)/16},180-rotation,plan);
   }
  }else if(block.typeId===HOST_BLOCK_ID){
   for(const slot of [...row.helpers.keys()])if(slot!==0)dispose(row,slot);

@@ -54,9 +54,13 @@
         "r8v2": "geometry.kg_a2770.seasoning.r8v2",
         "r8v3": "geometry.kg_a2770.seasoning.r8v3",
         "r8v4": "geometry.kg_a2770.seasoning.r8v4",
-        "pending": "geometry.kg_a2770.pending_combined"
+        "pending": "geometry.kg_a2770.pending_combined",
+        "empty": "geometry.kaleidoscope_grilling.empty_bottle_base"
       },
       "render_controllers": [
+        {
+          "controller.render.kaleidoscope_grilling.empty_bottle_base": "q.property('kaleidoscope_grilling:ready') && q.property('kaleidoscope_grilling:mode') == 0"
+        },
         {
           "controller.render.kg_a2770.seasoning": "q.property('kaleidoscope_grilling:ready') && q.property('kaleidoscope_grilling:mode') == 2"
         },

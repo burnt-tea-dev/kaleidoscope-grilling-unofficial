@@ -19,7 +19,7 @@ def schema():
     source = ('import * as s from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               'import {heldVisualPropertyNames} from ' + json.dumps((scripts / 'held_visual_transport.js').as_uri()) + ';'
               "const fields=Object.fromEntries(['main','off'].flatMap(hand=>heldVisualPropertyNames(hand).map((key,i)=>[key,{variable:s.variableName(hand,i),read:s.heldWordMolang(hand,i),ownerRead:s.heldWordMolang(hand,i,'c.owning_entity->q')}])));"
-              'process.stdout.write(JSON.stringify({fields,frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));')
+              "process.stdout.write(JSON.stringify({fields,presentation:s.HELD_PRESENTATION_FIELDS,ready:s.heldSnapshotReadyMolang(),ownerReady:s.heldSnapshotReadyMolang('c.owning_entity->q'),frame:s.FRAME_PROPERTY,max:s.FRAME_MAX,frameVariable:s.FRAME_VARIABLE,animation:s.SNAPSHOT_ANIMATION,controller:s.SNAPSHOT_CONTROLLER}));")
     return json.loads(subprocess.check_output(['node', '--input-type=module', '-e', source], text=True))
 
 
@@ -29,12 +29,21 @@ READ = re.compile(r"((?:c\.owning_entity->)?(?:q|query))\.(property|has_property
 
 def document(value):
     if isinstance(value, str):
+        # Update the existing generated gate, not native item identity, marker,
+        # bite/terminal visibility or other animation conditions around it.
+        for owner in ('q', 'query', 'c.owning_entity->q', 'c.owning_entity->query'):
+            prop = owner + ".property('" + SCHEMA['frame'] + "')"
+            scope = 'c.owning_entity->' if owner.startswith('c.') else ''
+            requested = owner + ".has_property('" + SCHEMA['frame'] + "') && " + prop + ' > 0 && ' + scope + SCHEMA['frameVariable'] + ' == ' + prop
+            ready = SCHEMA['ownerReady' if scope else 'ready']
+            if owner.endswith('query'):
+                ready = ready.replace('q.', 'query.')
+            value = value.replace(requested, ready)
         def replace(match):
             owner, operation, key = match.groups()
             if operation == 'has_property':
-                prop = owner + ".property('" + SCHEMA['frame'] + "')"
-                scope = 'c.owning_entity->' if owner.startswith('c.') else ''
-                return '(' + owner + ".has_property('" + SCHEMA['frame'] + "') && " + prop + ' > 0 && ' + scope + SCHEMA['frameVariable'] + ' == ' + prop + ')'
+                ready = SCHEMA['ownerReady' if owner.startswith('c.') else 'ready']
+                return '(' + (ready.replace('q.', 'query.') if owner.endswith('query') else ready) + ')'
             return SCHEMA['fields'][key]['ownerRead' if owner.startswith('c.') else 'read'].replace('q.', 'query.') if owner.endswith('query') else SCHEMA['fields'][key]['ownerRead' if owner.startswith('c.') else 'read']
         return READ.sub(replace, value)
     if isinstance(value, list):
@@ -46,14 +55,18 @@ def document(value):
 
 def player_extension():
     variables = [row['variable'].replace('v.', 'variable.', 1) for row in SCHEMA['fields'].values()]
+    variables.extend(row['variable'].replace('v.', 'variable.', 1) for row in SCHEMA['presentation'].values())
     variables.append(SCHEMA['frameVariable'].replace('v.', 'variable.', 1))
     animate = []
     animations = {SCHEMA['animation']: SCHEMA['animation'], SCHEMA['controller']: SCHEMA['controller']}
     for hand, slot in [('main', 'mainhand'), ('off', 'offhand')]:
         alias = 'kg_held_oil_brush_' + hand
         animations[alias] = 'animation.kg_oil_brush.player.' + hand
-        marker = SCHEMA['fields']['kaleidoscope_grilling:secret_' + hand + '_piece']['read']
-        animate.append({alias: marker + " == 225 && q.is_item_name_any('slot.weapon." + slot + "','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled')"})
+        # configure_player gates these local words with the commit frame.
+        # The request property is checked by the one snapshot writer, before
+        # any word is committed; a player reader need not query it again.
+        marker = SCHEMA['fields']['kaleidoscope_grilling:secret_' + hand + '_piece']['variable']
+        animate.append({alias: marker + " == 225 ? q.is_item_name_any('slot.weapon." + slot + "','kaleidoscope_cookery:oil_pot','kaleidoscope_cookery:oil_pot_filled') : 0"})
     return {'schema': 1, 'identifier': 'minecraft:player',
             'scripts': {'variables': {name: 'public' for name in variables},
                         'initialize': [name + ' = 0;' for name in variables], 'animate': animate},
@@ -77,17 +90,26 @@ def configure_player(player, extension=None):
         if statement not in scripts.setdefault('initialize', []):
             scripts['initialize'].append(statement)
     for entry in extension['scripts']['animate']:
-        # Skin previews also run pre_animation without a gameplay actor. UI
-        # models keep the native arm pose; only world rendering reads held data.
-        # Initialized local weights also keep the animation phase actor-free.
+        # Fresh player/preview models have no committed local snapshot. Read
+        # that first, before any query; is_in_ui only selects the UI pose.
+        # Initialized local weights keep the animation phase actor-free.
         for alias, condition in entry.items():
             weight = 'v.' + alias + '_active'
             initial = weight + ' = 0;'
-            update = weight + ' = q.is_in_ui ? 0 : (' + condition + ');'
+            update = weight + ' = ' + SCHEMA['frameVariable'] + ' > 0 ? (q.is_in_ui ? 0 : (' + condition + ')) : 0;'
             if initial not in scripts['initialize']:
                 scripts['initialize'].append(initial)
-            if update not in scripts.setdefault('pre_animation', []):
-                scripts['pre_animation'].append(update)
+            pre = scripts.setdefault('pre_animation', [])
+            owned = re.compile(r'^\s*(?:v|variable)\.' + re.escape(alias) + r'_active\s*=')
+            previous = [i for i, line in enumerate(pre) if isinstance(line, str) and owned.match(line)]
+            if previous:
+                # Re-composing a complete input must retire this owner's old
+                # property reader instead of leaving two active writers.
+                pre[previous[0]] = update
+                for i in reversed(previous[1:]):
+                    del pre[i]
+            else:
+                pre.append(update)
             cached = {alias: weight}
             if cached not in scripts.setdefault('animate', []):
                 scripts['animate'].append(cached)

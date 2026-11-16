@@ -5,6 +5,7 @@ import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {canonicalFoodId} from '../eating_profile_ids.js';
+import {dynamicFood} from '../secret_eating_core.js';
 import {useSound} from '../immersion_audio_runtime.js';
 import {itemTranslationKey} from '../hud/skewer_recipe_hud_core.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../skewer_item_snapshot.js';
@@ -18,7 +19,7 @@ import {queueStationContentsVisual} from '../station_contents_visual_queue.js';
 import {interactionFeedback,interactionFailure,javaInteractionFeedback} from '../core/interaction_feedback.js';
 import {world,system,ItemStack,EnchantmentType,BlockPermutation} from '@minecraft/server';
 import {
- UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_COOKED_INGREDIENTS_KEY,SECRET_CREATOR_KEY,secretFood,recipeTable
+ UNFINISHED_ID,SECRET_ID,SKEWER_INGREDIENTS_KEY,SECRET_COOKED_KEY,SECRET_CREATOR_KEY,recipeTable
 } from '../skewer/skewering_core.js';
 import {RAW_SKEWER_TAG,GRILLED_SKEWER_TAG} from '../skewer_compat_core.js';
 import {
@@ -52,18 +53,8 @@ function parseRowsProperty(stack,key,limit=5){
   const rows=JSON.parse(raw);return Array.isArray(rows)?rows.filter(x=>x&&typeof x.id==='string').slice(0,limit):[];
  }catch{return []}
 }
-function skewerFood(stack){
- if(!stack)return {nutrition:0,saturation:0};
- if(canonicalFoodId(stack.typeId)===SECRET_ID){
-  const rows=parseRowsProperty(stack,SKEWER_INGREDIENTS_KEY,3);
-  let cooked=false;try{cooked=getItemProperty(stack,SECRET_COOKED_KEY)===true}catch{}
-  const cookedRows=cooked?parseRowsProperty(stack,SECRET_COOKED_INGREDIENTS_KEY,3):[];
-  return secretFood(cookedRows.length?cookedRows:rows,cooked,rows);
- }
- try{const food=stack.getComponent('minecraft:food');return {nutrition:Math.max(0,Number(food?.nutrition)||0),saturation:Math.max(0,Number(food?.saturationModifier)||0)}}catch{return {nutrition:0,saturation:0}}
-}
 function stackRow(stack){
- const food=skewerFood(stack);
+ const food=dynamicFood(stack,id=>new ItemStack(id,1))??{nutrition:0,saturation:0};
  return {id:stack.typeId,native:captureSkewerMetadata(stack),nutrition:food.nutrition,saturation:food.saturation};
 }
 function restoreStack(row){

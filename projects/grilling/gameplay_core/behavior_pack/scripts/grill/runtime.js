@@ -235,7 +235,12 @@ function planSeasoningBottle(player,hand,needed){
  const ingredients=readSeasonings(stack),before=stack.clone();
  // Both Java block callers use the consuming season overload in Creative too.
  const nextUses=uses+needed;
- if(nextUses>=16)return {ok:true,ingredients,uses:nextUses,before,next:new ItemStack(EMPTY_SEASONING_ID,1),mutate:true};
+ if(nextUses>=16){
+  try{
+   const next=new ItemStack(EMPTY_SEASONING_ID,1);
+   return {ok:true,ingredients,uses:nextUses,before,next,mutate:true};
+  }catch{return {ok:false,reason:'visual_state'}}
+ }
  const next=retargetSpecialSeasoningStack(stack,nextUses,specialSeasoningVariant(stack));if(!next)return {ok:false,reason:'visual_state'};setUses(next,nextUses);
  // Sprinkling changes uses only; keep the bottle's custom and ingredient lore.
  try{setItemLore(next,replaceSeasoningUsesLore(getItemRawLore(next),16-nextUses))}catch{return {ok:false,reason:'visual_state'}}
@@ -304,7 +309,7 @@ function handleGrill(block,player,hand='main'){
   if(result.ok){
    if(!commitGrillAndHand(block,state,result.state,player,hand,bottle.before,bottle.next,bottle.mutate)){interactionFailure(player,'§c撒料交易失敗，調料與烤架已嘗試回滾');return}
    javaInteractionFeedback(player,'grill_ready_to_take',[],true);blockSound(block,'season',.85);
-   try{beginSeasoningMotion(player,hand);player.playAnimation('animation.kg_imm.player.season.'+hand,{blendOutTime:0})}catch{}
+   try{beginSeasoningMotion(player)}catch{}
   }return;
  }
  if(id&&(Object.hasOwn(RAW_TO_COOKED,id)||isCompatRawSkewer(ingredientSnapshot(held))||(id===SECRET_ID&&!isSecretCooked(held)&&readSkewerRows(held).length===3))){

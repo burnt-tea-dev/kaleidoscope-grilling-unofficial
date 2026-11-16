@@ -9,25 +9,29 @@ Java source retains the BSD notice in `data/java/LICENSE-CODE`.
 
 `tools/build_secret_gui.py` uses these masks and the existing pinned GUI palette.
 
-`native-item-renderer.json` retains only Mojang's `common.item_renderer`
-definition from the linked fixed bedrock-samples revision (MIT). A same-name UI
-definition replaces that native base; the generator must preserve its `custom`
-type, `inventory_item_renderer`, layer, default and every native binding. The
-client's selected-item, hotbar and bundle controls inherit that base; callers
-can replace its bindings array. The complete definition uses a direct sixth
-view binding for native alpha, not the unsupported `modifications` property.
-`propagate_alpha: false` leaves the recipe child opaque when the native drawing
-is hidden. `tools/test_secret_gui_ui.py` calls the actual generator with the
-runtime marker source and checks both exported UI files, the native binding
-prefix and alpha/layer wiring. UI-only imports need no image library. This does
-not execute the Minecraft UI parser, establish derived caller data supply or
-render a frame. `native-item-callers.json` retains the selected-icon and
-inventory/hotbar caller definitions from the same Mojang revision. The selected
-icon uses global bindings without `$item_collection_name`; the overlay defaults
-to an empty name and is ignored there, retaining the native cursor icon instead
-of borrowing an unrelated inventory slot. Actual collection callers still enter
-the existing recipe factory. The regression substitutes only variable-default
-and boolean-expression boundaries with these caller inputs.
+`native-item-renderer.json` retains Mojang's `common.item_renderer` definition
+from the linked fixed bedrock-samples revision (MIT). The current generator
+preserves its custom type, renderer, layer, default and native binding prefix
+inside the collection slot's `native_icon`. Its sixth binding uses `#visible`
+and sibling scope; the recipe source, native icon, stick and food masks are
+siblings. No parent custom-renderer alpha or recipe factory is used.
+
+The collection owner is `common.container_item`, whose complete native input
+panel is retained in `data/native_inventory_slot.json`. The generator changes
+only `$item_renderer|default` to `kg_secret_gui.slot_renderer`; buttons, focus,
+counts, durability and overlays retain the native definition. Global/cursor
+callers still inherit Mojang's `common.item_renderer`, which this pack does not
+redefine. `native-item-callers.json` keeps the original selected-icon and
+inventory/hotbar inputs. The selected icon supplies global bindings without a
+collection; the collection callers inherit the container renderer choice.
+
+The same four methods in `tools/test_secret_gui_ui.py` cover exported output,
+native renderer preservation, cursor exclusion and recipe/native separation
+with the original Java layer order. The three historical selector cases now
+read those actual producer locations. The historical alpha-named method keeps
+its identity but addresses the sibling visibility layout. Source/data checks
+do not run Minecraft's UI parser, prove caller rendering or render a frame.
+
 Each generated food/style image packs six 16px masks in one 96x16 strip; the
 six item layers use fixed UV cells and keep independent per-slot recipe data.
 `tools/test_secret_gui_assets.py` runs both original Java composers with only

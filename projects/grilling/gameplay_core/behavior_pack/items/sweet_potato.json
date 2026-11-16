@@ -4,8 +4,8 @@
     "description": {
       "identifier": "kaleidoscope_grilling:sweet_potato",
       "menu_category": {
-        "category": "nature",
-        "group": "kaleidoscope_tavern:itemGroup.name.tavern_cultivation"
+        "category": "items",
+        "group": "kaleidoscope_grilling:itemGroup.main"
       }
     },
     "components": {

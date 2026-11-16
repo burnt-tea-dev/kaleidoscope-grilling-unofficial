@@ -71,9 +71,11 @@ await client.serialized('example:oven', async () => {
 
 `expected` 是 SDK 產生的 `{id, amount, name, lore}` 完整公開快照。JSON key 順序不影響比較；數量、名稱或 lore 變動則拒絕。目標可為 `block_slot`（dimensionId、x/y/z、slot）、`entity_slot`（entityId、slot）或 `player_slot`（playerId、slot）。clone 保留原生物品，從不以同名新建物品替換其原生 aux 或作者資料。
 
-`metadata` 可含 `hotTicks`（cuisine：0–1728000）、`seasoning`（既有公開食物 v1：最多 8 個 item ID）、`nativeVariant`（0–32767）和 `projection: {v:1, provider, data}`。期限採製作時的世界 absolute tick，不取整到秒。furnace／smoker 使用 `enableSmeltedFoodHeat` 與 `smeltedFoodSeconds`；遵循 Java 預設 **false／30 秒**，管理命令沿用 `kaleidoscope_grilling:config`。沒有穩定的原生熔爐出料事件，因此作者仍須從自己的真正製作／取料 callback 呼叫；不把背包增加或容器關閉猜成新製作。
+`metadata` 可含 `hotTicks`（cuisine：0–1728000）、`seasoning`（既有公開食物 v1：最多 8 個 item ID）、`nativeVariant`（0–32767）和 `projection: {v:1, provider, data}`。期限採熱食 owner 的 `foodTime()`，新期限依 Java 向下分桶到 100 tick；不再使用日夜時鐘。furnace／smoker 使用 `enableSmeltedFoodHeat` 與 `smeltedFoodSeconds`；遵循 Java 預設 **false／30 秒**，管理命令沿用 `kaleidoscope_grilling:config`。沒有穩定的原生熔爐出料事件，因此作者仍須從自己的真正製作／取料 callback 呼叫；不把背包增加或容器關閉猜成新製作。
 
-需要在交付前寫入時，可在實際 output 上呼叫 `prepareProducedFood(stack, metadata, world.getAbsoluteTime(), config)`，把返回的 clone 交回作者原本的交付流程。它嚴格拒絕非食物、損壞 payload 及已滿 lore，原物品不先被修改。熱度／調味使用 `senluo.public.food.v1`；逐堆展示使用 `senluo.public.projection.v1` 空翻譯 carrier。這些是公開資料，不能承載秘密。
+需要在交付前寫入時，先以已註冊的 client 取得 `const discovery = await client.request('discover')`；`discovery.foodClock.offset` 是 Grilling 保存於世界的單一時鐘偏移。從 `@minecraft/server` 匯入 `system`，在真正出料當刻呼叫 `prepareProducedFood(stack, metadata, system.currentTick + discovery.foodClock.offset, config)`，把返回的 clone 交回作者原本的交付流程。公開 `hotUntil` 的 consumer 也用這個和相減；不可再與 `world.getAbsoluteTime()` 或未加偏移的 `system.currentTick` 比較，也不可在自己的包中另建偏移。owner 首次載入將偏移設為「舊日夜時間 − 當前遊戲 tick」，後續載入沿用，維持舊期限在切換當刻的剩餘時長；本方案的正常重新開世界能力依據限於既有 BDS 1.26.60.6 完整停服／重開紀錄，並非所有未來引擎永久承諾。helper 嚴格拒絕非食物、損壞 payload 及已滿 lore，原物品不先被修改。熱度／調味使用 `senluo.public.food.v1`；逐堆展示使用 `senluo.public.projection.v1` 空翻譯 carrier。這些是公開資料，不能承載秘密。
+
+2026-11-10 熱食來源草稿的實際 Cookery 接入沿既有 `cuisine_config_request → cuisine_config`，由 Grilling 的 `server_config_runtime.js` 回傳 `{api:1,enabled,foodClock:{offset}}`。Cookery 的 `cuisine_api_host.js` 只保留收到的連線偏移，將 `system.currentTick + offset` 用於實際產出期限與 tooltip，不自行讀寫第二個世界時鐘原點，也不 import Grilling 的 food-state／HUD／secret GUI；未連線時保留出料，不回退另一時計。`board-api.json.copies` 明列無 imports 的 `localized_lore_core.js`，出料把剩餘秒數傳入其純 `heatLore()`；品質／調味仍由原公開食物 codec 保存。此處是未執行的來源契約，未更新發行 pins 或聲稱安裝／保存結果。
 
 註冊 provider 後，作者把實際 data 以 `writePublicProjection` 寫在那堆物品；兩堆同 ID 可有不同 data。來源作者須保證所公布的 nativeVariant 與實際原生物品相符；Grilling 不宣稱能從私人資料反推出它。未註冊／不符 provider、重複 carrier 或損壞值會拒絕展示，helpers 仍不擁有或交付物品。
 

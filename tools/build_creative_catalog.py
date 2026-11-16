@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Grilling's native creative menu from its reviewed purpose groups."""
+"""Generate Grilling's native creative catalog from its literal Java tab plan."""
 import argparse
 import json
 from pathlib import Path
@@ -17,65 +17,51 @@ def planned(root=ROOT):
     root = Path(root)
     baseline = json.loads((root / 'baseline.json').read_bytes())
     bp, rp = (root / baseline['runtime'][side] for side in ('BP', 'RP'))
-    rules = json.loads((root / 'data/creative-groups.json').read_bytes())
-    groups = rules['groups']
-    by_name = {spec['name']: alias for alias, spec in groups.items()}
-    catalog = json.loads((bp / CATALOG).read_bytes())
-    membership, identifiers = {}, {}
-    for category in catalog['minecraft:crafting_items_catalog']['categories']:
-        for group in category['groups']:
-            identifier = group.get('group_identifier', {})
-            key = (category['category_name'], identifier.get('name'))
-            identifiers[key] = identifier
-            for item in group['items']:
-                membership.setdefault(item, key)
+    plan = json.loads((root / 'data/creative-groups.json').read_bytes())
+    previous = json.loads((bp / CATALOG).read_bytes())
+    previous_labels = {group.get('group_identifier', {}).get('name')
+                       for category in previous['minecraft:crafting_items_catalog']['categories']
+                       for group in category['groups']}
     definitions = {}
     for folder, kind in (('items', 'minecraft:item'), ('blocks', 'minecraft:block')):
-        for path in sorted((bp / folder).rglob('*.json')):
+        for path in (bp / folder).rglob('*.json'):
             document = json.loads(path.read_bytes())
             description = document[kind]['description']
-            if description.get('menu_category', {}).get('category') in CATEGORIES:
-                item = description['identifier']
-                definitions.setdefault(item, []).append((path, document, kind))
-                membership.setdefault(item, (description['menu_category']['category'],
-                                             description['menu_category'].get('group')))
-    output, buckets, used = {}, {}, set()
-    for item, (category, name) in membership.items():
-        rows = definitions.get(item, [])
-        if not rows:
-            continue  # Hidden eating/fill variants must never become creative items.
-        alias = (rules['items'].get(item) or rules['group_moves'].get(name)
-                 or by_name.get(name))
-        if alias:
-            spec = groups[alias]
-            category, name = spec['category'], spec['name']
-            identifiers[(category, name)] = {'name': name, 'icon': spec['icon']}
-            used.add(alias)
-            for path, document, kind in rows:
-                menu = document[kind]['description']['menu_category']
-                desired = {**menu, 'category': category, 'group': name}
-                if menu != desired:
-                    document[kind]['description']['menu_category'] = desired
-                    output[path] = encoded(document)
-        buckets.setdefault((category, name), []).append(item)
-    catalog['minecraft:crafting_items_catalog']['categories'] = [
-        {'category_name': category, 'groups': [
-            {'group_identifier': identifiers[key], 'items': items}
-            for key, items in buckets.items() if key[0] == category]}
-        for category in CATEGORIES if any(key[0] == category for key in buckets)]
-    output[bp / CATALOG] = encoded(catalog)
+            definitions.setdefault(description['identifier'], []).append((path, document, kind))
+    output, categories = {}, []
+    for tab in plan['tabs']:
+        members = []
+        for entry in tab['entries']:
+            item = entry.get('bedrock')
+            if not item or entry.get('unavailable'):
+                continue
+            visible = [row for row in definitions.get(item, [])
+                       if row[1][row[2]]['description'].get('menu_category', {}).get('category') in CATEGORIES]
+            if not visible:
+                continue  # Prepared secret-skewer states remain a recorded platform gap.
+            members.append(item)
+            for path, document, kind in visible:
+                description = document[kind]['description']
+                menu = {**description['menu_category'], 'category': tab['category'], 'group': tab['group']}
+                description['menu_category'] = menu
+                output[path] = encoded(document)
+        categories.append({'category_name': tab['category'], 'groups': [{
+            'group_identifier': {'name': tab['group'], 'icon': tab['icon']}, 'items': members}]})
+    # Java's exclusions change creative visibility only, never persisted IDs or metadata.
+    for entry in plan.get('hidden', []):
+        for path, document, kind in definitions.get(entry['bedrock'], []):
+            description = document[kind]['description']
+            description['menu_category'] = {**description.get('menu_category', {}), 'category': 'none'}
+            description['menu_category'].pop('group', None)
+            output[path] = encoded(document)
+    output[bp / CATALOG] = encoded({'format_version': '1.21.60',
+        'minecraft:crafting_items_catalog': {'categories': categories}})
     for locale in ('en_US', 'zh_CN', 'zh_TW'):
         path = rp / 'texts' / (locale + '.lang')
-        labels = {spec['name']: spec['labels'][locale]
-                  for alias, spec in groups.items() if alias in used}
-        lines = path.read_text(encoding='utf-8').splitlines()
-        pending = dict(labels)
-        for index, line in enumerate(lines):
-            key = line.split('=', 1)[0]
-            if key in labels:
-                lines[index] = key + '=' + labels[key]
-                pending.pop(key, None)
-        lines.extend(key + '=' + label for key, label in pending.items())
+        labels = {tab['group']: tab['labels'][locale] for tab in plan['tabs']}
+        lines = [line for line in path.read_text(encoding='utf-8').splitlines()
+                 if line.split('=', 1)[0] not in previous_labels | labels.keys()]
+        lines.extend(key + '=' + value for key, value in labels.items())
         output[path] = ('\n'.join(lines) + '\n').encode()
     return {path: raw for path, raw in output.items() if raw != path.read_bytes()}
 

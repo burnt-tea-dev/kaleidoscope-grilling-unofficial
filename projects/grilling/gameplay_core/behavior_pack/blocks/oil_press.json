@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_grilling:oil_press",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_tavern:itemGroup.name.appliances"
+        "group": "kaleidoscope_grilling:itemGroup.main"
       },
       "states": {
         "kaleidoscope_grilling:cake_count": [

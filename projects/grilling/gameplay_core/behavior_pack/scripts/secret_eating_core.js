@@ -1,4 +1,7 @@
 import {foodFacts,ingredientFoodFacts} from './food_snapshot_core.js';
+import {canonicalFoodId} from './eating_profile_ids.js';
+import {SECRET_ID,secretFood} from './skewer/skewering_core.js';
+import {readSkewerRows,readEffectiveSkewerRows,isSecretCooked} from './skewer/ingredient_state.js';
 import {readPublicFoodLore} from './host_api/food_api_core.js';
 import {cuisineQualityPayloadMatches} from './host_api/cuisine_quality_core.js';
 
@@ -27,4 +30,23 @@ export function secretEatingRows(rows,createItem){
    return result;
   });
  }catch{return undefined;}
+}
+
+export function secretEatingData(stack,createItem){
+ try{
+  const original=readSkewerRows(stack),cooked=isSecretCooked(stack),raw=secretEatingRows(original,createItem);
+  if(!raw)return undefined;
+  const rows=cooked?secretEatingRows(readEffectiveSkewerRows(stack),createItem):raw;
+  if(!rows)return undefined;
+  const food=secretFood(rows,cooked,original);
+  return Number.isFinite(food.nutrition)&&Number.isFinite(food.saturation)?{rows,food}:undefined;
+ }catch{return undefined;}
+}
+
+export function dynamicFood(stack,createItem){
+ if(canonicalFoodId(stack?.typeId)===SECRET_ID)return secretEatingData(stack,createItem)?.food;
+ // Plates accept tagged skewers beyond our fixed recipes. Read the restored
+ // item's food definition so admission, ranking and settlement agree.
+ const food=foodFacts(stack);
+ return food.edible?food:undefined;
 }

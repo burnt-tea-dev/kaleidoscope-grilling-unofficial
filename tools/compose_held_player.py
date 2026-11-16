@@ -18,6 +18,9 @@ TACZ_SHA256 = '1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486'
 TACZ_BP = 'TACZBehavi/entities/plalyer.json'
 TACZ_RP = 'TACZResour/entity/player.entity.json'
 FP = 'controller.render.player.first_person'
+RIDING_GEOMETRY = ('variable.ordertocook_drive_tp ? '
+    '(variable.ordertocook_drive_variant == 2 ? Geometry.otc_riding_slim : Geometry.otc_riding_classic) '
+    ': Geometry.default')
 ASSIGNMENT = re.compile(r'^\s*(?:v|variable)\.([\w]+)\s*=')
 OFFHAND_RESERVED = "q.is_item_equipped('off_hand')"
 BROKEN_MODEL = 'models/entity/7sf3y8pgug/5q9tvlnhgh/lmkxjsnrit/jfgkkrr92y/y7rwInQT2sq3l6gu.json'
@@ -87,6 +90,14 @@ def compose(behavior, host_player, tacz_behavior=None, tacz_player=None):
     # Keep the current engine format; every other overlap must be equal or an
     # additive dictionary. This retains gun events, scripts and all 24 fields.
     bp['minecraft:entity'] = merge_identical(before, gun)
+    # This composer owns the complete modern BP player, including the TACZ
+    # branch used outside Core. The pinned legacy field would invalidate it.
+    components = bp['minecraft:entity']['components']
+    if (components.get('minecraft:pushable') != {'is_pushable': False, 'is_pushable_by_piston': True}
+            or components.get('minecraft:pushable_by_block') != {}
+            or 'minecraft:pushable_by_entity' in components):
+        raise ValueError('TACZ push rules differ from the reviewed native conversion')
+    del components['minecraft:pushable']
     props = bp['minecraft:entity']['description']['properties']
     if len(props) > 32:
         raise ValueError('Effective player property limit exceeded: ' + str(len(props)))
@@ -200,7 +211,126 @@ def repair_model(raw):
     return value
 
 
-def compose_files(behavior, host_player, tacz_archive=None):
+def compose_riding_render_controllers(files, controller, contract, controller_path):
+    """Generate skin routes for both initial riding and a retained player pair."""
+    path = Path(controller_path)
+    if path.is_absolute() or '..' in path.parts or path.parts[:2] != ('RP', 'render_controllers'):
+        raise ValueError('Replace the selected controller in its original RP path')
+    matched = 0
+    if 'controller.render.player.third_person' not in controller['render_controllers']:
+        raise ValueError('Riding needs the effective native third-person controller as well as the host FP controller')
+    for selected in controller['render_controllers'].values():
+        geometry = selected.get('geometry', '')
+        if geometry.lower() != 'geometry.default' and geometry != RIDING_GEOMETRY:
+            continue
+        selected['geometry'] = RIDING_GEOMETRY
+        # Later wildcard matches win. Copy the actual limb and clothes gates,
+        # not a general arm flag, to each new skin/overlay segment.
+        # Rebuild our children from current parents, including retained routes.
+        # Keeping old children would duplicate them or retain an obsolete gate.
+        parts = [{name: gate for name, gate in row.items()
+                  if name not in contract['part_visibility']}
+                 for row in selected.get('part_visibility', [])]
+        parts = [row for row in parts if row]
+        selected['part_visibility'] = parts
+        inherited = []
+        for child, parent in contract['part_visibility'].items():
+            gate = True
+            for row in parts:
+                for pattern, condition in row.items():
+                    if re.fullmatch(re.escape(pattern).replace(r'\*', '.*'), parent):
+                        gate = condition
+            inherited.append({child: gate})
+        parts.extend(inherited)
+        matched += 1
+    if not matched:
+        raise ValueError('Selected render controllers have no native skin geometry route')
+    files[controller_path] = controller
+
+
+def compose_riding(files, controller, bundle, controller_path):
+    """Extend this same player and its selected skin render controllers.
+
+    The native default remains the query source and fallback. Only supported
+    native skin frames in third-person motorcycle riding select new meshes.
+    """
+    root = Path(bundle).resolve()
+    contract = json.loads((root / 'player-riding.json').read_bytes())
+    if contract.get('schema') != 1:
+        raise ValueError('Riding needs the OTC schema1 export')
+    player = files['RP/entity/player.entity.json']['minecraft:client_entity']['description']
+    bp = files['BP/entities/player.json']['minecraft:entity']['description']
+    if player.get('identifier') != 'minecraft:player' or bp.get('identifier') != 'minecraft:player':
+        raise ValueError('Riding needs the selected complete minecraft:player pair')
+    name = contract['action_property']
+    field = {'type': 'int', 'range': [0, contract['action_max']], 'default': 0, 'client_sync': True}
+    bp['properties'] = merge_identical(bp.get('properties', {}), {name: field}, '/player/properties')
+    if len(bp['properties']) > 32:
+        raise ValueError('Effective player property limit exceeded')
+    # Keep the original native skin alias, including the engine's skin binding.
+    if player.get('queryable_geometry', 'default').lower() != 'default':
+        raise ValueError('Selected player already has a different query geometry owner')
+    player['queryable_geometry'] = 'default'
+    scripts = player['scripts']
+    scripts.setdefault('initialize', []).extend([
+        'variable.ordertocook_drive_variant = 0;', 'variable.ordertocook_drive_tp = 0;'])
+    conditions = []
+    for index, (variant, row) in enumerate(contract['variants'].items(), 1):
+        player['geometry']['otc_riding_'+variant] = row['geometry']
+        terms = [f'variable.otc_{side}_origin.{axis} == {pivot[i]}'
+                 for side, pivot in row['arm_pivots'].items() for i, axis in enumerate('xyz')]
+        conditions.append((' && '.join(terms), index))
+    choose = '0'
+    for condition, index in reversed(conditions):
+        choose = f'({condition}) ? {index} : ({choose})'
+    # Skin previews also evaluate pre_animation, without necessarily having
+    # gameplay actors or queryable bones. Only a real motorcycle rider needs
+    # the skin query. Keep branch bodies explicit, rather than putting actor
+    # queries at the end of a boolean expression. The composed BP above owns
+    # action_property, so an additional has_property probe is unnecessary.
+    scripts.setdefault('pre_animation', []).extend([
+        'variable.ordertocook_drive_variant = 0;',
+        'variable.ordertocook_drive_tp = 0;',
+        'q.is_in_ui ? 0 : { '
+        f"q.is_riding_any_entity_of_type('{contract['entity_type']}') ? {{ "
+        '(!variable.is_first_person && !q.is_spectator && !q.is_persona_or_premium_skin) ? { '
+        "variable.otc_right_origin = q.bone_origin('rightArm'); "
+        "variable.otc_left_origin = q.bone_origin('leftArm'); "
+        'variable.ordertocook_drive_variant = ' + choose + '; '
+        'variable.ordertocook_drive_tp = variable.ordertocook_drive_variant > 0; '
+        '}; }; };'
+    ])
+    player['animations'] = merge_identical(player['animations'], contract['animations'])
+    # Native riding and drive must not both own the same body/limb channels.
+    # Wrap only these aliases; all other native, IE and TACZ routes survive.
+    wrappers = {}
+    for alias in ('riding.arms', 'riding.legs', 'riding.root'):
+        original = player['animations'][alias]
+        native = 'otc_native_' + alias.replace('.', '_')
+        key = 'controller.animation.ordertocook.' + native
+        player['animations'][native] = original
+        player['animations'][alias] = key
+        gate = '!variable.ordertocook_drive_tp'
+        if alias == 'riding.arms':
+            gate += " || q.is_item_equipped('main_hand') || q.is_item_equipped('off_hand')"
+        wrappers[key] = {'initial_state': 'default', 'states': {'default': {
+            'animations': [{native: gate}]}}}
+    files['RP/animation_controllers/ordertocook_native_riding.json'] = {
+        'format_version': '1.10.0', 'animation_controllers': wrappers}
+    scripts['animate'].append('otc_player_riding')
+    compose_riding_render_controllers(files, controller, contract, controller_path)
+    for relative in contract['files']:
+        path = Path(relative)
+        if path.is_absolute() or '..' in path.parts or path.parts[0] != 'RP':
+            raise ValueError('Riding asset must remain in the resource pack')
+        if relative in files:
+            raise ValueError('Riding asset conflicts with another owner: ' + relative)
+        files[relative] = json.loads((root / path).read_bytes())
+    files['RP/MOJANG-RIDING-LICENSE.md'] = (root / 'MOJANG-VANILLA-LICENSE.md').read_text()
+
+
+def compose_files(behavior, host_player, tacz_archive=None, *, riding=None, render_controllers=None,
+                  render_controller_path=None):
     """One entry for CLI, local installer and private source generation."""
     overrides = {}
     controllers = {}
@@ -243,7 +373,12 @@ def compose_files(behavior, host_player, tacz_archive=None):
         before = copy.deepcopy(controllers)
         compose_arm_routes(rp, controllers, split)
         overrides.update({name: value for name, value in controllers.items() if value != before[name]})
-    return {'BP/entities/player.json': bp, 'RP/entity/player.entity.json': rp, **overrides}
+    files = {'BP/entities/player.json': bp, 'RP/entity/player.entity.json': rp, **overrides}
+    if riding is not None:
+        if render_controllers is None or render_controller_path is None:
+            raise ValueError('Riding needs the selected host render-controller document')
+        compose_riding(files, render_controllers, riding, render_controller_path)
+    return files
 
 
 def main():
@@ -251,6 +386,11 @@ def main():
     parser.add_argument('--host-player', type=Path, required=True)
     parser.add_argument('--host-sha256', required=True)
     parser.add_argument('--tacz', type=Path)
+    parser.add_argument('--riding', type=Path, help='User-local OTC player-riding export')
+    parser.add_argument('--riding-renderer', type=Path, help="Replay only render controllers from the retained pair's schema1 riding descriptor")
+    parser.add_argument('--host-render-controllers', type=Path)
+    parser.add_argument('--host-render-controllers-target', help='Original RP/render_controllers/... path to replace in place')
+    parser.add_argument('--composed-behavior', type=Path, help='Existing selected complete BP player; extend this pair without rebuilding IE/TACZ')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     raw = args.host_player.read_bytes()
@@ -258,17 +398,45 @@ def main():
         parser.error('Selected host player hash differs')
     if args.output.exists():
         parser.error('Choose a new local output directory')
-    behavior = json.loads((BASE / 'behavior_pack/entities/player.json').read_text())
-    files = compose_files(behavior, json.loads(raw), args.tacz)
+    behavior = json.loads((args.composed_behavior or BASE / 'behavior_pack/entities/player.json').read_text())
+    controllers = json.loads(args.host_render_controllers.read_bytes()) if args.host_render_controllers else None
+    if args.riding_renderer:
+        if (not args.composed_behavior or args.tacz or args.riding or controllers is None
+                or args.host_render_controllers_target is None):
+            parser.error('Riding renderer replay needs a retained complete pair and its controller, without a second player composition')
+        contract = json.loads(args.riding_renderer.read_bytes())
+        if contract.get('schema') != 1:
+            raise ValueError('Riding needs the OTC schema1 export')
+        player = json.loads(raw)['minecraft:client_entity']['description']
+        if (player.get('identifier') != 'minecraft:player'
+                or any(player['geometry'].get('otc_riding_' + variant) != row['geometry']
+                       for variant, row in contract['variants'].items())
+                or player['animations'].get('otc_player_riding') != contract['animations']['otc_player_riding']
+                or player['scripts']['animate'].count('otc_player_riding') != 1):
+            raise ValueError('Renderer replay needs the matching already connected riding player')
+        # Emit only the controller. Never configure or serialize retained players.
+        files = {}
+        compose_riding_render_controllers(files, controllers, contract, args.host_render_controllers_target)
+    elif args.composed_behavior:
+        if args.tacz or (args.riding and (controllers is None or args.host_render_controllers_target is None)):
+            parser.error('An existing complete player pair accepts optional riding/controller inputs, without a second TACZ merge')
+        # Retain the selected complete pair, including already composed riding.
+        # New shared fields still come from the same held-presentation owner.
+        files = {'BP/entities/player.json': behavior, 'RP/entity/player.entity.json': configure_player(json.loads(raw))}
+        if args.riding:
+            compose_riding(files, controllers, args.riding, args.host_render_controllers_target)
+    else:
+        files = compose_files(behavior, json.loads(raw), args.tacz, riding=args.riding, render_controllers=controllers,
+                              render_controller_path=args.host_render_controllers_target)
     args.output.mkdir(parents=True)
     hashes = {}
     for name, value in files.items():
         path = args.output / name; path.parent.mkdir(parents=True, exist_ok=True)
-        data = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+        data = (value if isinstance(value, str) else json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
         path.write_bytes(data); hashes[name] = hashlib.sha256(data).hexdigest()
     receipt = {'schema': 1, 'host_player_sha256': args.host_sha256,
                'tacz_archive_sha256': TACZ_SHA256 if args.tacz else None,
-               'player_properties': len(files['BP/entities/player.json']['minecraft:entity']['description']['properties']),
+               'player_properties': len(files.get('BP/entities/player.json', behavior)['minecraft:entity']['description']['properties']),
                'tacz_resource_overrides': [name for name in files if name not in ('BP/entities/player.json', 'RP/entity/player.entity.json')],
                'outputs': hashes, 'client': False, 'production_ready': False}
     (args.output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')

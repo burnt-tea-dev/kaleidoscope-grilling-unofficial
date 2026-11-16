@@ -2,8 +2,19 @@ import {PROJECTILE_DODGE_GROUND_ROWS} from './projectile_dodge_ground_catalog.js
 import {PROJECTILE_DODGE_OWNED_GROUND_ROWS} from './projectile_dodge_owned_ground_catalog.js';
 const axes=['x','y','z'];
 const intMin=-2147483648,intMax=2147483647;
-const rows=new Map([...PROJECTILE_DODGE_GROUND_ROWS,...PROJECTILE_DODGE_OWNED_GROUND_ROWS].map(row=>[row.typeId,row]));
-const aliasTuples=new Map(PROJECTILE_DODGE_GROUND_ROWS.filter(row=>row.nativeAliases).map(row=>[row.typeId,new Set(row.nativeAliases.tuples.map(tuple=>JSON.stringify(tuple)))]));
+const rows=new Map(),aliasTuples=new Map();
+for(const row of PROJECTILE_DODGE_GROUND_ROWS){
+ rows.set(row.typeId,row);
+ if(row.nativeAliases)aliasTuples.set(row.typeId,row.nativeAliases.tuples);
+}
+for(const row of PROJECTILE_DODGE_OWNED_GROUND_ROWS)rows.set(row.typeId,row);
+// Catalog tuples are deeply frozen. Build their string lookup only if this
+// exact block reaches alias validation; keep the original vanilla-only source.
+function aliasSet(typeId){
+ let value=aliasTuples.get(typeId);
+ if(Array.isArray(value)){value=new Set(value.map(tuple=>JSON.stringify(tuple)));aliasTuples.set(typeId,value);}
+ return value;
+}
 const unsupported=reason=>({supported:false,reason});
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
 const floorInt=value=>Math.floor(value)+0;
@@ -33,7 +44,7 @@ export function classifyProjectileDodgeGroundCell({typeId,states}={}){
   // Legacy aliases are conditional on the COMPLETE declared primary tuple.
   // Independent per-field domains would accept impossible half/direction/color
   // combinations and could grant a different vanilla identity its motion.
-  if(alias&&!aliasTuples.get(typeId).has(JSON.stringify([...alias.primaryKeys,...alias.extraKeys].map(key=>states[key]))))return unsupported('ground_block_states_unsupported');
+  if(alias&&!aliasSet(typeId).has(JSON.stringify([...alias.primaryKeys,...alias.extraKeys].map(key=>states[key]))))return unsupported('ground_block_states_unsupported');
  }catch{return unsupported('ground_block_states_unavailable')}
  return {supported:true,blocksMotion:row.blocksMotion,reason:row.sourceKind?'reviewed_author_source_motion':'reviewed_original_motion'};
 }
