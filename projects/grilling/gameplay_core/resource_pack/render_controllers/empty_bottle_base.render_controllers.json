@@ -1,0 +1,16 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.kaleidoscope_grilling.empty_bottle_base": {
+      "geometry": "Geometry.empty",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ]
+    }
+  }
+}

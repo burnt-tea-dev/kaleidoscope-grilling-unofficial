@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import runpy
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,13 @@ def sync(sdk_root, *, write=False):
             path.write_bytes(raw)
         elif path.read_bytes() != raw:
             raise ValueError('Regenerate SDK consumer: ' + relative)
+    if write:
+        # Core owns both the codec and its non-rendering translation value.
+        merge_food_locale = runpy.run_path(str(sdk_root / 'tools/install_cookery.py'))['merge_food_locale']
+        resource = ROOT / json.loads((ROOT / 'baseline.json').read_text())['runtime']['RP']
+        for locale in json.loads((resource / 'texts/languages.json').read_text()):
+            path = resource / 'texts' / (locale + '.lang')
+            path.write_bytes(merge_food_locale(path.read_bytes()))
     return sdk['version']
 
 

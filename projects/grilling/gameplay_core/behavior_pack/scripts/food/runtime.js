@@ -10,9 +10,9 @@ import {awardEatItHot} from "../advancement/advancement_event_runtime.js";
 import {awardMentalPreparationFailed,awardSeasoningFinishedChallenges} from "../advancement/advancement_challenge_runtime.js";
 import {grillingConfig} from "../server_config_runtime.js";
 import {goldenSkewerFeedback} from "../immersion_effect_feedback.js";
-import {hotUntil,isHotFood as isHot,readFoodSeasonings as readSeasonings,setFoodSeasonings as setSeasonings} from "./food_state_adapter.js";
+import {foodTime as now,hotUntil,isHotFood as isHot,readFoodSeasonings as readSeasonings,setFoodSeasonings as setSeasonings} from "./food_state_adapter.js";
 import {finishedFoodMeta} from "../food_finish_core.js";
-import {copyOne,now} from "../core/actions.js";
+import {copyOne} from "../core/actions.js";
 import {getHand as heldByHand,getMainHand as heldMain,getOffHand as heldOff,isCreative as creative,playerInventory as mainContainer} from "../core/player_io.js";
 import {captureEatingIdentity,commitEating,completedEatingStillCurrent,eatingEventMatches,eatingStillCurrent} from "../core/eating_transaction.js";
 import {SECRET_ID} from "../skewer/skewering_core.js";
@@ -213,7 +213,9 @@ world.afterEvents.itemStartUse.subscribe(e=>{
   stopSoundHandle(PENDING_USES.get(e.source.id)?.audio);
   PENDING_USES.set(e.source.id,{stack:e.itemStack.clone(),hand,use:captureEatingIdentity(e.itemStack,hand,e.source.selectedSlotIndex),audio:seasoningShakeSound(e.source)});
   try{syncSeasoningMotion(e.source,PENDING_USES.get(e.source.id))}catch(error){console.warn('[Grilling seasoning motion] '+error)}
-  try{e.source.playAnimation('animation.kg_a21.player.shake.'+hand,{controller:'kg_seasoning_shake',blendOutTime:0,stopExpression:"!q.is_using_item || !q.is_item_name_any('"+(hand==='off'?'slot.weapon.offhand':'slot.weapon.mainhand')+"','"+e.itemStack.typeId+"')"})}catch{}return}
+  // Java's HumanoidAnvilPressMixin animates only MAIN_HAND. Offhand use still
+  // owns its native duration, sound and completion, without a mirrored arm pose.
+  if(hand==='main')try{e.source.playAnimation('animation.kg_a21.player.shake.main',{controller:'kg_seasoning_shake',blendOutTime:0,stopExpression:"!q.is_using_item || !q.is_item_name_any('slot.weapon.mainhand','"+e.itemStack.typeId+"')"})}catch{}return}
  if(id===PLATE_ID){
   const rows=a25PlateRows(e.itemStack),index=plateHighestNutritionIndex(rows);if(index<0)return;
   const selected=a25RestoreStack(rows[index]),meta=stackMeta(selected),sat=e.source.getComponent('minecraft:player.saturation'),hand=captureInteractionIntent(e.source,e.itemStack).hand;

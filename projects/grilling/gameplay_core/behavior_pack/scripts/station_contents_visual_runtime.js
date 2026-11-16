@@ -98,13 +98,13 @@ export function syncStationContentsVisual(block,observers){
   // Rebuild only derived display state for old saved racks when discovered.
   // Native contents, filters and ownership remain authoritative and unchanged.
   if(c)syncRackDisplay(block,Array.from({length:9},(_,i)=>c.getItem(i)));
-  // Five occupied shelf jars are block bones; all four tools have fixed hooks.
-  // Known tools use source-derived FIXED sprites; tagged extensions keep native equipment.
-  // Four fixed X cells remain; known sprite bounds are centered in the clicked lower row.
-  // Native tagged-item fallback keeps its previous Y anchor; client calibration is separate.
+  // Keep the direct-interaction slot layout. Known tools use Java's FIXED size
+  // and hanging anchor; fitting them into hit cells shrank/recentered the model.
+  // Tagged extensions still use native equipment, whose item basis is separate.
   for(const {slot,stack,x} of advancedRackToolVisuals(i=>c?.getItem(i))){
-   const k='rack/'+slot;seen.add(k);const y=rackToolVisualModel(stack.typeId)===undefined?.35:RACK_TOOL_VISUAL_Y;
-   render(row,block,k,stack,rackDisplayPose(block,x,y,RACK_TOOL_VISUAL_Z),0);
+   const k='rack/'+slot;seen.add(k);const known=rackToolVisualModel(stack.typeId)!==undefined;
+   const y=known?RACK_TOOL_VISUAL_Y:.35,z=known?RACK_TOOL_VISUAL_Z:3/16;
+   render(row,block,k,stack,rackDisplayPose(block,x,y,z),0);
   }
  }else if(block.typeId==='kaleidoscope_grilling:skewer_plate_block'){
   const rows=a25ReadPlateBlock(block);

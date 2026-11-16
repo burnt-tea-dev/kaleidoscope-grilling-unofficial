@@ -2,7 +2,15 @@
   "format_version": "1.26.50",
   "minecraft:block": {
     "description": {
-      "identifier": "kaleidoscope_grilling:seasoning_bottle_1"
+      "identifier": "kaleidoscope_grilling:seasoning_bottle_1",
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ],
+          "y_rotation_offset": 180.0
+        }
+      }
     },
     "components": {
       "minecraft:display_name": "kaleidoscope_grilling.display.block.seasoning_bottle",
@@ -58,6 +66,152 @@
       "minecraft:movable": {
         "movement_type": "immovable"
       }
-    }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              270,
+              0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              180,
+              0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -3
+            ],
+            "size": [
+              6,
+              12.25,
+              6
+            ]
+          }
+        }
+      }
+    ]
   }
 }

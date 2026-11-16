@@ -2,7 +2,7 @@ import {getItemProperty,setItemProperty,getItemPropertyIds,getItemRawLore,setIte
 import {SEASONING_LIST_KEY} from '../seasoning/seasoning_contract_core.js';
 import {heatLore,isHeatLore,creatorLore} from '../localized_lore_core.js';
 import {SECRET_CREATOR_KEY} from './skewering_core.js';
-import {world} from '@minecraft/server';
+import {foodTime as now} from '../food/food_state_adapter.js';
 import {readPublicFood,writePublicFood,isFoodPayloadLine,bucketHotUntil} from '../host_api/food_api_core.js';
 import {weightedHeat,NORMAL_HEAT_WINDOW} from './hot_merge.js';
 import {commitSteps} from '../grill/grill_transaction_core.js';
@@ -12,7 +12,6 @@ const HOT=PersistedKey.HOT_UNTIL;
 const IGNORE=new Set([
  HOT,SEASONING_LIST_KEY,PersistedKey.MODEL_VARIANTS,'SkewerModelVariants',SECRET_CREATOR_KEY
 ]);
-function now(){try{return world.getAbsoluteTime()}catch{return 0}}
 function norm(v){
  if(v===undefined)return null;
  if(typeof v==='number'||typeof v==='string'||typeof v==='boolean'||v===null)return v;

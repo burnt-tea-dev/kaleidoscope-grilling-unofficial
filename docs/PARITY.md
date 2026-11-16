@@ -29,15 +29,15 @@ T3.4後續來源修復把固定烤串的完成事件也交給 `completedEatingSt
 | 正常取得牛肉塊與料理原料 | `SkewerRecipes`、Cookery 加工配方 | `a2727_cookery_host_recipes_runtime.js`、`host_api/board_api_core.js` | 來源已實作：登記及取得契約 | 普通作者包的能力與家族組裝分開；accepted 不代表真玩家加工／拾取成功。SKEWER-CONTENTS | [board_api](../tests/legacy/test_board_api.mjs)、[a2727_core](../tests/legacy/test_a2727_core.mjs)；`data/java/recipes.json`、`cookery.json`；正常取材→穿串待同候選驗收 |
 | 固定配方、秘製串與短配方 | `SkeweringHandler`、`SkewerRecipes`、`SecretSkewerItem` | `a24_skewering_core.js`、`main.js` | 來源已實作：有序配方、內容與交易 | 不能用注入生串代替正常取得；空氣／方塊／實體、換槽、滿包及內容保存待驗 | [a24_core](../tests/legacy/test_a24_core.mjs)、[skewer_item_snapshot](../tests/scenario/test_skewer_item_snapshot.mjs)；`recipes.json`、`gameplay_rules.json`；T1.3-1、T1.3-5 |
 | 烤架點火、油、翻面、撒料、成品 | `GrillBlock(Entity)`、`GrillRenderer` | `a275_grill_input_core.js`、`a276_grill_intent_core.js`、`a277_grill_transaction_core.js`、`grill_visual_runtime.js`、`main.js` | 來源已實作：三槽狀態、交易與四向顯示 yaw | 階段時間不等於總烹調時間；取消／替換後誤拆、同瓶同串全流程及重啟仍需驗收；G182 四向出生／更新公式尚未經實際 renderer 驗收 | [core](../tests/legacy/test_core.mjs)、[a275_core](../tests/legacy/test_a275_core.mjs)、[a277_core](../tests/legacy/test_a277_core.mjs)；四 cardinal 的三槽、翻面與 helper respawn 為 API fixture；`gameplay_rules.json`、`heat.json`；GRILL-DEFERRED-OWNER；T1.3-2 |
-| 調料瓶裝料、搖勻、撒料與 reload | `SeasoningData`、`SeasoningUse`、`AdvancedSeasoningHandler` | `seasoning_registry_core.js`、`seasoning_motion_runtime.js`、`main.js` | 來源已實作：資料 resolver、保存與動作路由 | 同瓶 EMPTY→PENDING→80 tick→SPECIAL→撒料未完整真人閉合；取消爆炸須保留內容；明確 provider 仍是前提 | [a2743_core](../tests/legacy/test_a2743_core.mjs)、[bottle_raw_lore](../tests/legacy/test_bottle_raw_lore.mjs)；`gameplay_rules.json`、`seasoning_colors.json`；SEASONING-FLOW／DATA-RELOAD／EXPLOSION-CANCEL |
+| 調料瓶裝料、搖勻、撒料與 reload | `SeasoningBottleBlock(Entity)`、`PendingSeasoningItem`、`GrillBlock`→`GrillAutomationApi.season`；鍋具另走 `SeasoningUse` | `player/runtime.js`→`seasoning/runtime.js`、`food/runtime.js`、`grill/runtime.js`；既有表現與資料模組 | [2026-11-11 來源對照](#調料瓶完整操作鏈2026-11-11來源對照)：核心配料／80 tick／撒料已接線；移除副手自訂搖臂呼叫，耗盡空瓶改保留公開 metadata；下一批撒料草稿改交共用主臂動作 owner | 蹲下續行與瓶群方向來源已改；2026-11-13 同資料雙瓶來源選擇與普通瓶互動優先已修，原生事件配對／外部取消尚未確認；副手80 tick及撒料畫面未觀察，雙分支主手優先有差異。完整操作、四向／耗盡資料及聲畫未新觀察；provider／reload／爆炸範圍分開 | 既有 [a2743_core](../tests/legacy/test_a2743_core.mjs)、[bottle_raw_lore](../tests/legacy/test_bottle_raw_lore.mjs) 及 Java 資料不作本次執行證據；SEASONING-FLOW／DATA-RELOAD／EXPLOSION-CANCEL |
 | 熱食、營養、作者與合併 | `FoodState`、`HotFoodExpiryHandler`、`HotFoodMerge` | `food_finish_core.js`、`food_snapshot_core.js`、`main.js` | 來源已實作：期限、metadata 與一次結算 | 有限 Java heat bucket 向量不等於完整食用；手持與餐盤要各自核 live saturation 上限與回滾 | [java_heat_deadlines](../tests/legacy/test_java_heat_deadlines.mjs)、[food_snapshot](../tests/legacy/test_food_snapshot.mjs)；`heat.json`、`foods.json`；HANDHELD-SATURATION、PLATE-SATURATION |
 | 食用、停止、換手與離線 | `MultiBiteSkewerItem`、`SkewerEatingAnimation` | `secret_eating_core.js`、`cuisine_eating_core.js`、`main.js` | 來源已實作：會話、進度與結算 | readiness、release grace、完整動畫長度分開；直接離線依[已接受的Java差異](REBUILD-PLAN.md#t3-4-direct-logout-policy)處理；真人斷線、缺少 counter、crash 與副手事件尚未全面驗收 | [a285_core](../tests/legacy/test_a285_core.mjs)、[food_finish](../tests/legacy/test_food_finish.mjs)、[skewer_item_snapshot](../tests/scenario/test_skewer_item_snapshot.mjs)；純規則與受控 API 情境涵蓋 use/start/complete admission、匹配完成的一次結算、效果期限及消耗 metadata；stop/leave、缺少 counter、crash、副手與原生完整流程仍待驗。`eating_profiles.json`、`animation_curves.json`；EATING-ACCEPTANCE；T1.3-3 |
 | 手持／進食模型、聲音與持物 ownership | `SkewerEatingPiece`、`SkewerColorProvider`、各 `*FirstPersonAnimation` | `core/player_props.js`、`held_visual_dispatch_runtime.js`、`secret_visual_state_core.js`、RP attachables／animations | 來源已實作：目前呈現路由與八種新增食材的既有索引擴充 | owning-player 修正不等於近鏡、末段平片、皮膚／FOV、旁觀者、兩手及聲音中斷已正確；八食材雙手／helper 實際畫面仍待驗 | [immersion_audio](../tests/legacy/test_immersion_audio.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；後者執行 225 個索引、owner 與 resource expression，不是 renderer；`animation_curves.json`、`model_frames.json`、`sounds.json`；EATING-OWNER；T1.3-3 |
 | 固定動態背包 icon | `SkewerColorProvider`、原動態 sprites | RP textures／texture animation 定義 | 來源已實作：固定圖像路由 | 熟史萊姆與神秘串五幀、每幀 4 tick 的真人觀察仍需同候選結果；不代替任意 stack GUI | 當前沒有完整自動化情境；`model_frames.json`；T1.3-4 |
 | 任意三食材秘製串背包圖示（GUI display） | `CustomSkewerGuiTexture`、`SkewerGuiDecorator` | `secret_gui_state.js`、生成的 `kg_secret_gui*.json`；手持 renderer 是另一條路徑 | 新client不支援屬性已改直接alpha binding；新增cursor缺collection警告已在生成器排除非格子入口，原G239原生資料證據保留 | [本項範圍與限制](#秘製串背包圖示gui-display)；保留雙手穿料、原ID及64堆疊 | [正式main情境](../tests/scenario/test_secret_inventory_icon.mjs)、[Java原合成器比對](../tools/test_secret_gui_assets.py)、[原生觀察](../tests/native/secret-gui/observed.json)；SKEWER-GUI；issue #166 |
-| 餐盤交易、營養與互動仲裁 | `SkewerPlateBlock(Entity)`、`SkewerPlateItem` | `a25_plate_recipe_core.js`、`a25_plate_recipe_runtime.js`、`plate_transaction_core.js` | 來源已實作：保存、回滾與互動路由 | 放置／取回、點盤誤吃、未知交付、外來槽位及併發必須各自保留；不得用 PR 關閉認定修好 | [a25_core](../tests/legacy/test_a25_core.mjs)、[plate_transactions](../tests/legacy/test_plate_transactions.mjs)；PLATE-SATURATION、PLATE-USE-ARBITRATION；T1.3-1、T1.3-5 |
-| 放置餐盤與牆上串譜顯示 | `SkewerPlateRenderer`、`SkewerRecipeBlockRenderer` | `plate_recipe_visual_core.js`、`a2770_placed_visual_runtime.js`、共享 secret palette | 來源已實作：內容、份數、四朝向與八食材放置色板 | 1–5 份、八食材、真材質、光照、重載與更新待驗；舊 tiny-edge-pixel 觀察保留原身份 | [a2770_core](../tests/legacy/test_a2770_core.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；放置 resource expression 非實際畫面；`model_frames.json`；PLATE-PLACED-DISPLAY |
-| 手持餐盤內容與同步 | `SkewerPlateRenderer` | `plate_held_visual_core.js`、`plate_held_visual_runtime.js`、共享 held transport | 來源已實作：reader、writer、獨立 count | 兩手混持、切槽、重登、skin／FOV、旁觀者及未知外來模型待驗；數學模型不能替代 client | [plate_food_cache](../tests/legacy/test_plate_food_cache.mjs)；僅內容 cache 規則；held transport 事件與畫面仍待驗。PLATE-HELD-CONTENTS／DECODE；`model_frames.json` |
+| 餐盤交易、營養與互動仲裁 | `SkewerPlateBlock(Entity)`、`SkewerPlateItem` | `plate/plate_recipe_core.js`、`plate/plate_recipe_runtime.js`、`skewer/runtime.js:dynamicFood`、`plate_transaction_core.js` | 保存、回滾與互動路由已實作；2026-11-10 來源草稿統一存盤與食用的食品讀取，修正合法標籤食品未列入自家表時扣份卻無營養的路徑，移除舊 skewerFood | 本次僅直接審閱來源，沒有測試或新遊戲觀察；放置／取回、點盤誤吃、未知交付、外來槽位及併發的歷史限制保留；不得用 PR 關閉認定修好 | 既有 [a25_core](../tests/legacy/test_a25_core.mjs)、[plate_transactions](../tests/legacy/test_plate_transactions.mjs) 不作本次證據；PLATE-FOOD-OWNER、PLATE-SATURATION、PLATE-USE-ARBITRATION；T1.3-1、T1.3-5 |
+| 放置餐盤與牆上串譜顯示 | `SkewerPlateRenderer`、`SkewerRecipeBlockRenderer` | `plate_recipe_visual_core.js`、`a2770_placed_visual_runtime.js`、共享 secret palette | 來源已實作：內容、份數、四朝向與八食材放置色板；2026-11-11整合PR398盤體六面UV方向修正 | 1–5 份、八食材、真材質、光照、重載與更新待驗；舊 tiny-edge-pixel 觀察保留原身份 | [a2770_core](../tests/legacy/test_a2770_core.mjs)、[secret_visual_state](../tests/legacy/test_secret_visual_state.mjs)；放置 resource expression 非實際畫面；`model_frames.json`；PLATE-PLACED-DISPLAY |
+| 手持餐盤內容與同步 | `SkewerPlateRenderer` | `plate_held_visual_core.js`、`plate_held_visual_runtime.js`、共享 held transport | 來源已實作：reader、writer、獨立 count；2026-11-11整合PR400手持盤體六面UV方向修正 | 兩手混持、切槽、重登、skin／FOV、旁觀者及未知外來模型待驗；數學模型不能替代 client | [plate_food_cache](../tests/legacy/test_plate_food_cache.mjs)；僅內容 cache 規則；held transport 事件與畫面仍待驗。PLATE-HELD-CONTENTS／DECODE；`model_frames.json` |
 | 油壓、油壺、滿包出料 | `OilPressBlock(Entity)`、`BigVatBlock(Entity)`、`OilFillingHandler` | `oil/oil_machine_core.js`、`oil/oil_machine_runtime.js`、`oil_press_registry.js`、油壺 adapter | 來源已實作：G194以26.60 `isName`命名事件推進，完成後停止重排，保留登記恢復 | 同候選真引擎出油／拆除／卸載／重啟仍待驗；延後身份、交付與回收未知時不退款重發；普通作者安裝與家族能力分開 | [oil_transactions](../tests/legacy/test_oil_transactions.mjs)、[oil_api](../tests/legacy/test_oil_api.mjs)；`gameplay_rules.json`；ITEM-DELIVERY／OIL-NAMED-TICK |
 | 作物、油渣施肥、採果與凋葉 | 各 `*CropBlock`、`CropDropHandler`、`PepperLeavesBlock`；vanilla `BeetrootBlock`、`BambooStalkBlock`、`BambooSaplingBlock`、`KelpBlock` | `plant_fertilizer.js`、`plant_fertilizer_transaction_core.js`、`world/pepper_tree_runtime.js` | 來源已實作：明列植物（含甜菜、竹子、海帶）與交易 | 29 類適配不等於通用骨粉；竹子 stage 無對應狀態、海帶含水層原生讀回、鄰位、光照、果實未知結果及重載仍待 staging | [plant_fertilizer_storage](../tests/legacy/test_plant_fertilizer_storage.mjs)、[a2748_core](../tests/legacy/test_a2748_core.mjs)；`world_data.json`、`gameplay_rules.json`；OIL-RESIDUE-PLANTS；T1.3-1 |
 | 料理架、串譜與支撐 | `AdvancedRack*`、`SkewerRecipeBlock(Entity)` | `a2746_advanced_rack_core.js`、`a2746_advanced_rack_runtime.js`、`a25_plate_recipe_runtime.js` | 來源已實作：取放與保存路由 | 貼牆選取、碰撞、取消、支撐更新時序、一次回收及音效待驗；不趁文件收斂改操作方式 | [rack_transactions](../tests/legacy/test_rack_transactions.mjs)、[rack_aim_hit](../tests/legacy/test_rack_aim_hit.mjs)；`collision_shapes.json`、`gameplay_rules.json`；T1.3-2、T1.3-5 |
@@ -57,6 +57,18 @@ G142已讓食材圖像用原生ignored條件裁剪，但普通actionbar、Tavern
 [入口情境](../tools/test_eating_hud_ui.py)直接讀canonical UI中的ignored式，並使用正式javaEatingHudFrame產生90／100tick的起始、25tick邊界與完成packet；普通訊息／END略過圖層而有效食用packet保留，根packet保持可建立且清場訊息為隱藏。測試僅代替JSONUI字串減法／比較邊界，不是native UI parser、建構耗時或FPS測量。此修復只限定普通訊息造成的額外工廠工作，不能用來宣稱全程掉幀／發熱已解。既有client位置、外露資料碼、延遲及所有食品／兩手畫面限制仍保留。
 
 ## 秘製串背包圖示（GUI display）
+
+**2026-11-10 SKEWER-ICON follow-up，尚未部署的新來源**：前批1／2份producer已由協調者固定到`dd9c3583`，本輪沒有重做。這次改真正的collection-slot consumer：`common.container_item`沿原生renderer參數選擇`kg_secret_gui.slot_renderer`；同一格的資料源、native icon、竹籤與六個食材mask互為siblings，跨control讀取限定sibling scope。native icon用`#visible`與有效原格式標記互斥，不再靠父custom renderer的alpha遮圖；`common.item_renderer`恢復原生定義，cursor/global caller不掛自訂圖層。hover欄位改接caller的`$hover_text_binding_name`，普通格預設`#hover_text`，創造格可沿原caller的`#recipe_hover_text`；不新增creative特例。這只修共用圖示資料接線，不能宣稱分類／＋展開已解。輸入定義在`data/native_inventory_slot.json`，由其記載的官方sample來源抽取；生成器只換renderer選擇，保留原按鈕、焦點、群組overlay與操作。
+
+原圖的大肉帶竹籤、出現在世界第一人稱畫面左側；沿現有caller可定位到副手Secret attachable的idle顯示路徑，未把GUI圖層當成生成世界肉實體。舊`secret_idle_fp_calibration.animation.json`的相機擬合數字與`skewer_model`零偏移不再用於穿串；`tools/build_skewer_display.py`從原Java兩種item model的display生成主副手／第一與第三人稱局部變換，明確處理Java中心[8,8,8]、現有geometry的Y+24與pivot[0,24,0]、rotationXYZ與左手鏡射；四個attachable改接新動畫。native item-slot binding仍負責持有者與相機，原0.8 scale、geometry／UV／食材palette／state controllers及食用路由保留，沒有加入另一組引擎校準數字。這是局部座標來源修正，不是Java／Bedrock全相機座標等價的證明。僅正常生成兩份UI、手持動畫與四份attachable，人工讀來源／產物diff；未跑任何測試、未發行／部署、沒有本輪新遊戲畫面，不能稱3/3及大肉已在client消失。
+
+上方follow-up的完整原生slot輸入固定於官方`15701fa9`／`v1.26.60.5`（2026-10-28）；sample及dev BP／RP的min_engine均為1.26.60，只能確認來源契約。實際當事client版本、其bundle caller等原生UI定義仍未確認，不保證向更早patch相容。功能只需換renderer預設入口；完整owner是為免同名殘缺定義遺失原控制項而採取的既有輸出方式，並非已證明唯一方案，亦帶來整段sample caller的相容風險。
+
+### 前批來源與歷史範圍
+
+**2026-11-10 SKEWER-ICON 來源草稿**：玩家當前圖片顯示副手2/3仍是木棒、3/3仍像固定串，且世界視圖有大肉；不能用下方舊候選的路徑／資料測試稱已好。直接讀碼確認`secret_gui_state.expectedProgress`只接收完整Secret、`threadCurrent`只在Secret分支刷新圖示，舊串更新入口也排除Unfinished。現在逐次穿料即寫入原進度行的圖示資料，1／2份沿用raw palette和Java原GUI masks；255只表示空位，0仍為既有未知食材色板，不改食材保存資料。GUI variant共用原Java雜湊規則，取代背包把缺失variant一律補4的獨立算法。生成器將中間collection factory改為真slot下的直接圖層，持續讀該slot的hover資料；原native renderer、cursor及操作按鈕保留。這是consumer來源調整，尚未證明它就是3/3截圖的全部根因。
+
+手持沿`readEffectiveSkewerRows`／`partialVisualState`→既有held snapshot→`secret_skewer*.attachable`／`unfinished_skewer.attachable`→`secret_held.render_controllers`讀同一份食材；背包圖層不會生成世界實體。大肉目前只追到這條attachable與舊`secret_idle_fp_calibration.animation.json`姿勢，未確定是姿勢、快照或UI／世界情境造成；本次沒有猜改位移／縮放或移除手持功能。僅閱讀與人工審閱diff，正常重產一份UI JSON；沒有新增／執行測試、發行或部署，沒有本次新遊戲觀察。以下G編號及測試敘述保留原歷史範圍，不證明此草稿的畫面。
 
 本項的GUI指背包／快捷欄中每串圖示的繪製，不是輸入三格食材的製作視窗。固定Java `9a1acdab`的[Forge1.20.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/forge-1.20.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)與[NeoForge1.21.1](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/skewer/SkeweringHandler.java)均以雙手逐次穿料、直接更新手上成品；兩分支的`CustomSkewerGuiTexture`／`SkewerGuiDecorator`讀每stack食材、生熟及variant畫圖示。沒有新增三格窗口、關閉返料或自動烹飪的原作要求；`secret_terminal_visibility.py`處理的是食用末段顯示，不能當成製作終端。
 
@@ -104,9 +116,49 @@ G236 接續修正獨立時機差異。Mojang 1.20.1／1.21.1 的 `MobEffectInsta
 
 2026-11-06 的[G236原生觀察](../tests/native/warmth/timing-observed.json)沿未改寫的exported函式通過10＋11項：原生Player在tick87套用40tick效果，elapsed1／13／20／21／40的HP為5／5／5／6／6；同QA正常停服再開，原生保存actor的相同DP期限及4HP保留，在absolute741（扣減前601）不回復、742（600）回到5HP，期限不變。兩次正常stop／exit0、players/errors/OOM為0。這確認原生時機與受影響保存資料；沒有證明native process clock重置、完整main、跨模組完整同tick順序、客戶端或自動非玩家支援，詳見[探針說明](../tests/native/warmth/README.md#g236-duration-timing-and-same-world-restart)。
 
+## 調料瓶完整操作鏈（2026-11-11，來源對照）
+
+本次直接閱讀原作 `9a1acdab27698457bec16c9362678e574895a28c` 的 Forge 1.20.1 與 NeoForge 1.21.1 真類及 caller；2026-11-11 查作者遠端 `main` 仍為該提交。以下互動以 NeoForge 1.21.1 為主，Forge 差異另列，不混成第三種規則。這是來源審閱與本機草稿，沒有測試、生成候選、改版、提交或部署，亦無新客戶端觀察。歷史「未驗收」本身不是新故障。
+
+```text
+空瓶放在結實頂面 → 每次加一份原料 → 三種 base 齊全即成 PENDING
+  → 空手取最上瓶 → 持續使用 80 tick → SPECIAL（uses=0，variant=0..7）
+  → 烤架第二階段、未撒料且有串 → 每根串扣一次 → 用滿16次成空瓶
+```
+
+`main.js` 匯入 `player/runtime.js` 的方塊入口、`seasoning/runtime.js` 的原生瓶交易及 `food/runtime.js` 的原生使用回呼。`SeasoningBottleBlockEntity.add/pop` 對應 `handleSeasoningBlock`：頂瓶最多八份原料；青椒粉、花椒、洋蔥粉三者齊全才由 EMPTY 轉 PENDING，之後仍可加至八份，SPECIAL 拒絕再加。放／疊瓶最多四瓶，取回後減一瓶；放瓶／加料在 Survival 扣一份、Creative 不扣，成功才提交。三種 base 並非固定加入順序，重複原料仍佔容量，不能用改配方或取瓶即完成來縮短流程。
+
+`PendingSeasoningItem.use` 與 `finishUsingItem` 對應 `itemStartUse`／`itemCompleteUse`→`completePending`。既有物品 `use_duration=4.0` 是原生80 tick；不靠額外 timer。放開使用由 `itemStopUse` 清除捕獲會話並停止本地搖瓶聲，同tick完成先保留完成機會，後來的新會話不被舊清理刪除；完成核對原物品、實際手及主手槽位，才用目前瓶的公開資料轉換。換槽後能否收到原生 stop、副手真輸入與再用的事件順序，沒有本輪觀察。PENDING 本身的完成不重查 base，與兩支 Java 相同；base 限制屬於 EMPTY 升級。
+
+烤架的真入口是兩支 `GrillBlock`→`GrillAutomationApi.season(..., false)`，**不是**鍋具的 `SeasoningUse.apply`。現有 `grill/runtime.js` 檢查 phase=2、未撒料、有串、剩餘次數足夠；一次按佔用串數加 uses，Creative 也消耗；不足則整次拒絕，variant 在一般撒料時維持。鍋具 Creative 不扣次數的規則不得套來此處。
+
+聲畫來源已有加料成功聲與 END_ROD、取瓶聲、搖瓶本地可停止聲／其他玩家獨立世界單次聲、完成成功聲／HAPPY_VILLAGER，以及成功撒料聲與10 tick動作。兩支 Java `SeasoningFirstPersonAnimation` 和 `HumanoidAnvilPressMixin` 都僅對 MAIN_HAND 自訂搖臂；本次 `food/runtime.js` 僅在主手啟動 `animation.kg_a21.player.shake.main`，退役依 `hand` 拼接副手搖臂的呼叫。副手的原生使用、聲音和完成仍保留。未改動畫定義或生成產物；未刪除其他來源可能引用的舊資產，也未改共用玩家整合。模型曲線、慣用左手與實際播聲／動畫中止仍未由client確認。
+
+同日經主協調明示延伸授權，R4 耗盡資料保護已修於 `grill/runtime.js:planSeasoningBottle`：以既有 `captureSkewerMetadata`／`restoreSkewerMetadata` 投影改為 EMPTY，僅刪除 `SEASONING_LIST_KEY`／`SEASONING_USES_KEY`／`SEASONING_VARIANT_KEY` 與既有 predicates 識別的 owned bottle／uses lore。名稱、自訂 RawMessage lore、公開旗標／限制及其餘可讀寫動態資料沿原投影保留；原 helper 核對重建後資料，失敗在撒料前拒絕，不建立第二套交易。退役直接 `new ItemStack(EMPTY_SEASONING_ID,1)` 丟資料的分支，仍由原 `commitGrillAndHand` 提交／回復。這是擁有者要求的 Java 額外保護，未測試、未部署、沒有耗盡後client或保存觀察；不可讀資料不在投影保證內。
+
+主協調已收回輸入／方向兩題並串行接入，下列區分來源修正與仍未解的差距；不能稱完整 Java 操作已還原：
+
+- `player/runtime.js` 現在於取消及一般動作前，讓蹲下且任一手持物的瓶／烤架互動續行；雙手空手保留一般路由。普通互動保留NeoForge主手先行與空主手取瓶，雙手相同食材不套原生放瓶的歧義拒絕。原物metadata、雙手和槽位快照仍核對。這是來源修正，未觀察客戶端續行／主副手順序。[NeoForge 1.21.1 互動流程](https://docs.neoforged.net/docs/1.21.1/items/interactionpipeline/)
+- **2026-11-13 來源更新**：`seasoning/runtime.js` 的 `captureBottlePlacementIntent` 在真瓶輸入與原生目的格配對後，按 Java 主手先行選定本次扣取原瓶；同資料雙瓶不再以 signature 歧義拒絕。主手 PENDING 普通使用不建立放置交易，避免跳到副手搶放；原生 proposed 必須是所有瓶物品共同宣告的 `seasoning_bottle_1`，其方向狀態保持。兩個放置入口仍共用原交易、完整雙手 clone、延後核對、存物及扣取／回復；保留原有空主手副手入口與支撐範圍。這是本功能選擇扣物來源，不能聲稱取得了原生事件手別。兩種 callback 同 tick 配對、跨事件取消、拒絕 placement 後的搖瓶使用與副手事件仍未觀察。
+- **2026-11-13 來源更新**：普通瓶目標由既有 block router 的 priority 0 路由交給同一 `handleBlockInteraction`，固定主手處理；後段通用路由排除瓶，避免被穿串、倒油等手持動作先接手。蹲下持物仍續行。這個次序只適用該 router，不代表獨立 itemUse 與 native callback 的跨事件先後已確認。沒有新增測試或遊戲結果；版本與正常完整生成交下一批協調。
+- 五種canonical `seasoning_bottle*.json` 已加原生cardinal／玩家反向trait；瓶殼、內容helper及群offset共用同一方向，保留原模型／UV／大小及Java不隨方向改變的框。原生proposed保留；腳本副手在輸入當下捕獲玩家反向；增減瓶count換ID保留state及整個舊permutation回復。總協調同步原projectile ground表四個瓶子的合法state域，blocksMotion與嚴格比對不變。沒有方向DP；無歷史方向時採原生south預設，未觀察四向、舊保存或實裝同候選。
+- 副手撒料的下一批來源草稿已改為共用的主臂短動作，使用手仍只決定交易扣哪一瓶；80 tick 與雙手入口的實際範圍見[副手撒料與混合](#副手撒料與混合2026-11-11下一批來源草稿)。這不是上一批輸出、已部署修正或 client 觀察。
+
+NeoForge `SeasoningBottleBlock.useWithoutItem` 固定交回主手；Forge `use`／`pickupOne` 按 caller 傳入的 hand 交回。正常空主手取瓶兩者一致；既有 Bedrock helper 的 hand 參數不能當作 Java 兩分支都會讓玩家空副手取瓶的證據。一般方塊同物主手先行是所選Java路由，不作原生放瓶hand證據；雙手同內容的原生使用與真client路由仍未確認，沒有放寬原物資料身份檢查。
+
+### 副手撒料與混合（2026-11-11 下一批來源草稿）
+
+80 tick 屬於 `PendingSeasoningItem.use`→`finishUsingItem` 的混合，不是成品瓶撒料時間。兩支 Java 都對傳入的 hand 呼叫 `startUsingItem`、使用 `UseAnim.NONE`；放開／中斷不轉換成品，完成才建立 SPECIAL、沿用材料並隨機選 variant。現有 `food/runtime.js` 的原生 `itemStartUse`／`itemStopUse`／`itemCompleteUse`、`completedUseStillCurrent`、`writeUseHand` 仍處理捕獲手、取消、主手槽位及目前原瓶；PENDING 與八種 fill 物品維持 `use_duration=4.0`。未加補償 timer、改手槽或恢復副手自訂 shake。這些是來源流程，不能證明目前引擎已為副手發出完整 80 tick 事件。
+
+撒料的真路徑仍是 `player/runtime.js`→`captureBlockInteractionIntent`→`interactionIntentStillCurrent`→`handleGrill(block,player,intent.hand)`→`planSeasoningBottle`／`commitGrillAndHand`。明確對應副手的事件、主手非空且非同資料歧義時，現有來源可把 `hand='off'` 交到同一交易；成功後才進本次修改的 `beginSeasoningMotion(player)`。這不證明引擎自然發出該事件，也不授權繞過 Java 的主手優先：空主手仍先走預設方塊動作。NeoForge1.21.1 的 `GrillBlock.useWithoutItem` 在 phase2 未撒料時消費互動，甚至主手拿不被接受的普通物品也會走這個預設動作，因此通常不會到副手撒料；Forge1.20.1 的對應分支要求 `held.isEmpty()`，普通非空主手可 PASS，再由原版主手物品使用結果決定是否輪到副手。不能把 Forge 可達分支偷偷當成 NeoForge 行為；本題未改輸入優先、蹲下、瓶群方向或同資料雙瓶保護。[所選 NeoForge 互動順序](https://docs.neoforged.net/docs/1.21.1/items/interactionpipeline/)
+
+兩支 Java 的 `SeasoningAnimation.start`／`PlayerAnvilPressMixin` 是不記 hand、固定10 tick 的玩家動作，耗盡或換物不提前取消。`HumanoidAnvilPressMixin` 動慣用主臂；`SeasoningFirstPersonAnimation` 和 `ItemInHandLayerAnvilPressMixin` 只重繪／翻轉該主臂上的 SPECIAL。下一批草稿由既有 `seasoning_motion_runtime.js` 統一寫 `season_hand=1`、啟動 `season.main` 及有限的 FP anchor；既有每玩家 tick 於10 tick清除 phase，不再按使用手的瓶身份／槽位截短。烤架及鍋具兩個真 caller 均交給這一 owner，不再各自播放動畫。扣料和成功交易仍使用原 hand；鍋具原有主手限制及 Creative 不扣料也未放寬。
+
+既有 RP 的 `season.main`／FP anchor／主手 SPECIAL attachables 讀相同 controls；副手瓶不再收到 `season_hand=2` 的自訂翻轉。FP anchor 自身只在主手 SPECIAL 時有權重，沒有把副手瓶投影到主手；撒完耗盡仍可播 TP 主臂短動作，空瓶不套 SPECIAL 翻轉。退役的是 caller 的 `season.off`、由使用手選瓶動作，以及以原瓶身份取消已成功撒料動作的路線；舊資產定義未刪除，沒有新有效 caller。內容仍讀既有真 held snapshot，未增加 player schema、幾何或 Core／private 補丁。當前資產固定右臂；Java 慣用左手、FP 特殊姿態、實際副手事件與畫面尚未確認，不能稱全手別 Java parity。未重產資產、未改版本或 baseline；交 root 下一批統一身份與來源接入。
+
 ## 搖瓶完成的額外資料保存適配
 
-G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/350) 的單一修復：`food/runtime.js:completePending` 使用已核對的目前手持瓶，經既有 `copyEatingVariant` 保留 API 可見名稱、RawMessage lore、keepOnDeath／lockMode、Adventure 放置／破壞限制和可讀寫的動態欄位；只重建已知由煙火持有的 lore，重設 uses=0 與隨機 variant。失敗回復目前的原生 pending stack，不回寫開始食用時已過期的旗標／限制快照。[原有真main回歸](../tests/scenario/test_pending_seasoning_metadata.mjs)已在當前來源依賴執行，覆蓋目前 metadata、主副手失敗回復和拒絕新 variant 後重試；原生操作／保存範圍見[專用探針](../tests/native/seasoning-metadata/README.md)。
+G222 接續 [PR350](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/350) 的單一修復：`food/runtime.js:completePending` 使用已核對的目前手持瓶，經既有 `copyEatingVariant` 保留 API 可見名稱、RawMessage lore、keepOnDeath／lockMode、Adventure 放置／破壞限制和可讀寫的動態欄位；只重建已知由煙火持有的 lore，重設 uses=0 與隨機 variant。失敗回復目前的原生 pending stack，不回寫開始食用時已過期的旗標／限制快照。[原有真main回歸](../tests/scenario/test_pending_seasoning_metadata.mjs)是 G222 當時執行的歷史證據，覆蓋該時 metadata、主副手失敗回復和拒絕新 variant 後重試；原生操作／保存範圍見[專用探針](../tests/native/seasoning-metadata/README.md)。2026-11-11 本題沒有執行這些測試，也不以它們證明同瓶完整流程。
 
 [2026-11-05 原生觀察](../tests/native/seasoning-metadata/observed.json)已確認一次主手 native use 的開始／完成相隔80ticks；成品保存上述公開欄位，同時重設owned lore／uses／variant，放入原生箱子、正常停服／同世界重開後仍為相同metadata。測試使用BDS1.26.60.6、server2.12.0-beta、server-ui2.2.0、gametest1.0.0-beta及已審閱Cookery1.6.4，Beta APIs／POI／upcoming creator features已開。自有來源程式未改寫，獨立診斷BP/RP身份／entry overlay已列明；這不是正式G222整組候選或一般玩家副手操作的驗收。沒有重跑未變的重金屬／圖騰實驗。
 
@@ -293,3 +345,26 @@ PR #382 的原 G248 草稿修正點支撐方塊時未送達既有 rack owner 的
 第一／第二階段 log SHA-256 分別為 `96c6a2546c044fa656dee0ce3b6c1fd0fdd170ee13c9cf3ae85e9f41b99998d9`、`4c51b5c72bf5de2adea88d6049285db8aa73e6e6e1e208e8aec6a0a3cef34993`。這是 rack 域的原生放置與保存結果，不是整包 admission、舊玩家存檔遷移或視覺驗收。沒有單獨計數取消後的 orphan helper，也未以另一架子替換已取消的目標；不把它擴稱所有競爭情境的證明。六面中只有向上面進行原生觀察，調味品與附魔的原生案例、其他 addon 仲裁、完整 main／家族與客戶端仍不在本次範圍。
 
 2026-11-08 與 main `d2883392071ef23fc10c8d165df9ec7403025a75` 的包資訊／指南語系來源合流，料理架 runtime 與上述已測 head 逐位元組相同；因兩側都曾使用 G248，合流採用全新 G249 配對身份。原草稿 G248 history 雜湊與提交保留，G249 另行凍結來源；不把舊窄原生結果重標為 G249 全包／完整 main、家族、客戶端或 LIVE 驗收。
+
+## 創造分頁與原序（2026-11-10，來源草稿）
+
+權威輸入是 [data/creative-groups.json](../data/creative-groups.json)，由 `tools/build_creative_catalog.py` 產生 menu_category、catalog與三語。Java `ModCreativeTabs.buildContents` 的單一 main tab 投影為一個 Items 原生群組，圖示為既有 grill；用途組與跨包重排已退役。順序是設備／預設狀態、生串、熟串、失敗料理、其餘真註冊順序。Forge1.20.1與NeoForge1.21.1在data各記自己的caller；兩者buildContents序列相同，未混合分支玩法。
+
+data逐列保存93個 Java stack 位置、ID、Bedrock ID及條件。三個填滿油壺與動態祕製串預覽無可直接等價的原生catalog項，已記gap，沒有創造空壺替代、換ID或公開隱藏實作。食譜預設結果、三調料組合及失敗料理來源metadata也不能由普通catalog預填。89個現有可投影入口依原序生成；原作明確排除的婚禮喜糖只改創造可見性，定義、配方、ID與存量metadata保留。酸辣粉的Java可選Tavern條件記在原列；native catalog仍為靜態，保留原port項而不新增Tavern硬相依。
+
+本題正常生成分類相關定義及語系，未跑測試、lint、CI、Native或client。「＋不展開」尚未確診，也未更動共用UI。原生群組並非原樣新增Java頂部分頁；實際client呈現未確認。
+
+
+## 調料瓶空底面與四向放置
+
+固定 Java `empty_seasoning_bottle.json` 的 `spice_empty` 是 Y=0.5、5×5、雙面的不透明底片，不是可省略的空元素。共享手持幾何在八個既有 ingredient layer 均為零時顯示此面；放置沿原 transient helper 的 mode=0 顯示同一底片，不在有內容的瓶底疊加。可編輯來源在 `assets-src/blockbench/seasoning-bottle/empty-base.bbmodel`；原 PNG、既有手持變換及所有 item/entity ID 不變。
+
+五個既有瓶方塊採 `minecraft:cardinal_direction`，初放方向與 Java `getHorizontalDirection().getOpposite()` 一致；增減瓶數保存此狀態，內容 helper 的位置與 yaw 同時旋轉。方塊 permutation 對碰撞／選取盒做反向變換，保留先前世界軸邊界，這不另宣稱其邊界與 Java 相同。本批整合時，本 repo 已審査的 east／west 变换角度與交接包相反，因此四個方向的碰撞／選取盒依各 permutation 的實際旋轉值配對移植，使盒界跟隨本地朝向選序；單瓶與疊加第一瓶為對稱盒，各向數值相同。原有兩個測試入口覆蓋四方向放置、1→4→0 瓶交易、空底 helper、四方向副手放置及盒界數值；只是假 API 邊界，沒有執行 renderer 或磁碟存檔重啟。
+
+Blockbench 5.2.2 已查看 1–4 瓶 × 四方向的原模型／舊版／候選布局及去殼底片診斷。布局來源對照不等於真實方塊放置；去殼圖不證明遊戲玻璃排序。左右手各第一／第三人稱 before/candidate 已開看，但左第一人稱參照右臂且裁切瓶身，不能作左手引擎驗收。多玩家、動態內容、光照／透明材質、既有世界載入與實際 Java 同角度畫面仍未完成；版本、CI、整合及部署另行協調。
+
+## 油液體原圖與 premium 大缸幀序
+
+`tools/build_oil_fluid_textures.py` 唯讀核對官方 Java 1.21.1 client archive，再依固定 Java `ClientSetup.registerFluidExtensions` 的三組 tint 生成既有六張 still/flow 圖與六張首幀；保留原 alpha、像素尺寸及 `.mcmeta` 時間／序列，不重畫、不平滑、不新增物品或方塊 ID。工具需 `--java-client` 指向合法原 client archive，預設只檢查，`--write` 才更新來源。Archive 本身不進 repo。
+
+premium still 原圖為20張，序列0→19→1，共38步，每步2tick。既有大缸 helper 改用此幀序與20格 UV 分母，原 property 名稱不變、範圍縮至0–19；固定每16tick輪32幀的來源已移除。既有油交易測試入口也覆蓋四液位、兩個完整週期的 helper property 呼叫。這是來源幀序與 API 邊界結果；client 的atlas時鐘／伺服器property延遲、helper預算下跳幀、材質／光照與動態實機畫面尚未驗收。大缸UV端點的獨立修復與普通液面的0.001方塊高度差另列，不由貼圖修正代填完成。

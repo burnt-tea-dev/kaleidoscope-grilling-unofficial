@@ -5,13 +5,8 @@
 export const RACK_HALF_WIDTH=7/16;
 export const RACK_ROW_BOUNDARY=9/16;
 export const RACK_TOOL_ROW_MIN=5/16;
-// Front selection face of the north rack, measured from the block center.
-// Keep displayed tools on this plane: a forward offset makes oblique aim rays
-// cross another saved cell before they reach the block's selection box.
-export const RACK_TOOL_VISUAL_Z=3/16;
-export const RACK_TOOL_VISUAL_Y=(RACK_TOOL_ROW_MIN+RACK_ROW_BOUNDARY)/2;
-// Half a source pixel of total clearance inside each fitted tool cell.
-export const RACK_TOOL_VISUAL_GAP=.5/16;
+// Display uses Java's hanging anchor, independently of the block's hit cells.
+export {RACK_TOOL_VISUAL_Y,RACK_TOOL_VISUAL_Z} from './rack_tool_visual_data.js';
 // Each Bedrock custom state has at most 16 values: low four bits plus slot 4.
 export const RACK_OCCUPANCY_STATE='kaleidoscope_grilling:seasoning_occupancy';
 export const RACK_OCCUPANCY_HIGH_STATE='kaleidoscope_grilling:seasoning_occupancy_high';

@@ -11,6 +11,17 @@ export function captureInteractionIntent(player,eventStack){
  return captureInteractionIntentFromStacks(eventStack,getMainHand(player),getOffHand(player),player.selectedSlotIndex);
 }
 
+// Ordinary block use starts with Java's main-hand/default-block caller. An
+// empty main hand takes that path before an offhand item; equal stacks also
+// keep main-hand priority. Preserve both native snapshots for deferred writes.
+export function captureBlockInteractionIntent(player,eventStack){
+ const main=captureWritableHand(player,'main').before,off=captureWritableHand(player,'off').before;
+ const signature=stackIntentSignature(eventStack);
+ const mainFirst=main===undefined||eventStack==null||(main!==undefined&&off!==undefined
+  &&stackIntentSignature(main)===signature&&stackIntentSignature(off)===signature);
+ return captureInteractionIntentFromStacks(mainFirst?main:eventStack,main,off,player.selectedSlotIndex,!!mainFirst);
+}
+
 export function interactionIntentStillCurrent(player,intent){
  return interactionIntentMatchesStacks(intent,getMainHand(player),getOffHand(player),player.selectedSlotIndex);
 }

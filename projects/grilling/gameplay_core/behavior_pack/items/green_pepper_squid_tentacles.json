@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_grilling:green_pepper_squid_tentacles",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_cookery:itemGroup.name.foods"
+        "group": "kaleidoscope_grilling:itemGroup.main"
       }
     },
     "components": {
