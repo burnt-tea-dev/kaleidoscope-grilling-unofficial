@@ -62,7 +62,10 @@ function render(row,b,k,stack,at,mode){
  const mesh=(mode===1||(mode===3&&iconModel===undefined&&!customIcon))?plateMeshPlan(stack,reader,frame):undefined;
  const type=vat?VAT_PREMIUM_VISUAL_TYPE:customIcon?CUSTOM_RECIPE_ICON_VISUAL_TYPE:rackModel!==undefined?RACK_TOOL_VISUAL_TYPE:iconModel!==undefined?RECIPE_ICON_VISUAL_TYPE:mesh?PLATE_FOOD_VISUAL_TYPE:TYPE;
  if(old&&(old.entity?.isValid!==true||old.entity.typeId!==type)){if(!discard(row,k))return;old=undefined;}
- const signature=JSON.stringify({item:stack?metadataSignature(captureSkewerMetadata(stack)):undefined,at,mode,type,rackModel,iconModel,customIcon,vat,mesh,frame});if(old?.signature===signature)return;
+ // Dedicated helpers render only the projection below. Their names, lore and
+ // enchantments never reach the entity; serializing them again cannot change
+ // its appearance. Keep full metadata validation for native item fallbacks.
+ const signature=JSON.stringify({item:type===TYPE?metadataSignature(captureSkewerMetadata(stack)):undefined,at,mode,type,rackModel,iconModel,customIcon,vat,mesh,frame});if(old?.signature===signature)return;
  if(!old){
   if(helpers>=grillingConfig().contentsHelpers){if(system.currentTick-lastCapacityWarning>=1200){lastCapacityWarning=system.currentTick;console.warn("[Grilling contents capacity] render budget="+grillingConfig().contentsHelpers+"; storage unaffected; configure contentsHelpers after workload validation")}return;}
   // Reserve before spawning: an exception/unknown return may already have made
@@ -94,14 +97,14 @@ export function syncStationContentsVisual(block,observers){
  if(!observers.some(p=>p.dimensionId===row.dimensionId&&Math.hypot(p.x-block.x,p.y-block.y,p.z-block.z)<=48)){clear(row);if(row.parts.size)work.cleanup.add(key(block));return;}
  const seen=new Set();
  if(block.typeId==='kaleidoscope_grilling:advanced_rack_block'){
-  const c=peekStationContainer(block);
+  const c=peekStationContainer(block),items=c?Array.from({length:9},(_,i)=>c.getItem(i)):[];
   // Rebuild only derived display state for old saved racks when discovered.
   // Native contents, filters and ownership remain authoritative and unchanged.
-  if(c)syncRackDisplay(block,Array.from({length:9},(_,i)=>c.getItem(i)));
+  if(c)syncRackDisplay(block,items);
   // Keep the direct-interaction slot layout. Known tools use Java's FIXED size
   // and hanging anchor; fitting them into hit cells shrank/recentered the model.
   // Tagged extensions still use native equipment, whose item basis is separate.
-  for(const {slot,stack,x} of advancedRackToolVisuals(i=>c?.getItem(i))){
+  for(const {slot,stack,x} of advancedRackToolVisuals(i=>items[i])){
    const k='rack/'+slot;seen.add(k);const known=rackToolVisualModel(stack.typeId)!==undefined;
    const y=known?RACK_TOOL_VISUAL_Y:.35,z=known?RACK_TOOL_VISUAL_Z:3/16;
    render(row,block,k,stack,rackDisplayPose(block,x,y,z),0);
