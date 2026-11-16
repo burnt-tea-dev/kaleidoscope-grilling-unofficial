@@ -144,7 +144,10 @@ test('thread, disassemble and grill insert emit exactly one action-specific cate
   assert.equal(actions.length,1);assert.equal(definitions[actions[0].sound].category,'player');
   assert.deepEqual(actions[0].options,{volume:.7,pitch:1});assert.deepEqual(actions[0].location,{x:-.5,y:80.5,z:2.5});
   assert.equal(f.p.main.amount,1);assert.equal(f.p.off.typeId,N+'raw_fish_skewer');
-  f.p.main=undefined;f.p.isSneaking=true;f.use();
+  f.p.main=undefined;f.p.isSneaking=true;
+  const blockUse=f.emit('world.beforeEvents.playerInteractWithBlock',{block:f.grill,player:f.p,itemStack:f.p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
+  if(!blockUse.cancel)f.emit('world.beforeEvents.itemUse',{source:f.p,itemStack:f.p.off,cancel:false});
+  f.flush();
   actions=f.sounds.filter(s=>s.sound.startsWith('kg_imm.'));assert.equal(actions.length,2);
   assert.equal(definitions[actions[1].sound].category,'player');assert.deepEqual(actions[1].options,{volume:.8,pitch:1});
   assert.deepEqual(actions[1].location,actions[0].location);f.use();assert.equal(f.sounds.filter(s=>s.sound.startsWith('kg_imm.')).length,2);

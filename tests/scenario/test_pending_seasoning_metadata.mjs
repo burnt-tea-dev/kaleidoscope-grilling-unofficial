@@ -117,6 +117,7 @@ test('one bottle keeps foreign lore from filling through every nonfinal grill do
  data.setItemProperty(empty,'foreign:owner','retained');p.main=empty;
  const support=f.block('minecraft:stone',{x:0,y:-1,z:0}),bottleBlock=f.block('minecraft:air',{x:0,y:0,z:0});
  const placed={player:p,block:bottleBlock,face:'Up',permutationToPlace:f.BlockPermutation.resolve(N+'seasoning_bottle_1'),cancel:false};
+ f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block:support,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});
  f.component('senluo:grilling_bottle_place','beforeOnPlayerPlace',placed);assert.equal(placed.cancel,true);f.tick(1);
  assert.equal(bottleBlock.typeId,N+'seasoning_bottle_1');assert.equal(p.main,undefined);
  function interact(block){const e=f.emit('world.beforeEvents.playerInteractWithBlock',{player:p,block,itemStack:p.main,blockFace:'Up',isFirstEvent:true,cancel:false});assert.equal(e.cancel,true);f.tick(1);}

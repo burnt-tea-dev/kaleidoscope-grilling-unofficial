@@ -5,7 +5,7 @@ import {onBlockInteraction} from '../core/events.js';
 import {every} from '../core/scheduler.js';
 import {grillingConfig} from '../server_config_runtime.js';
 import {canonicalFoodId} from '../eating_profile_ids.js';
-import {dynamicFood} from '../skewer/runtime.js';
+import {dynamicFood} from '../secret_eating_core.js';
 import {useSound} from '../immersion_audio_runtime.js';
 import {itemTranslationKey} from '../hud/skewer_recipe_hud_core.js';
 import {captureSkewerMetadata,restoreSkewerMetadata,metadataSignature} from '../skewer_item_snapshot.js';
@@ -54,7 +54,7 @@ function parseRowsProperty(stack,key,limit=5){
  }catch{return []}
 }
 function stackRow(stack){
- const food=dynamicFood(stack)??{nutrition:0,saturation:0};
+ const food=dynamicFood(stack,id=>new ItemStack(id,1))??{nutrition:0,saturation:0};
  return {id:stack.typeId,native:captureSkewerMetadata(stack),nutrition:food.nutrition,saturation:food.saturation};
 }
 function restoreStack(row){
