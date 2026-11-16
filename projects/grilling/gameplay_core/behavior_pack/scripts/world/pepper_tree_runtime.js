@@ -193,14 +193,15 @@ registerPlantFertilizer(PEPPER_SAPLING_ID,(block,journal,random)=>{
  return true;
 });
 
-function sting(entity){
+function sting(entity,inside=false){
  if(!entity||!entity.getComponent('minecraft:health')||entity.typeId==='minecraft:fox'||entity.typeId==='minecraft:bee')return;
- try{entity.addEffect('slowness',10,{amplifier:0,showParticles:false})}catch{}
+ // Java slows only entityInside; stepOn shares the sting cooldown, not movement.
+ if(inside)try{entity.addEffect('slowness',10,{amplifier:0,showParticles:false})}catch{}
  const now=world.getAbsoluteTime();
  try{
   const until=Number(entity.getDynamicProperty(STING_UNTIL)??0);
   if(now<until)return;
-  if(entity.applyDamage(1))entity.setDynamicProperty(STING_UNTIL,now+STING_INTERVAL_TICKS);
+  if(entity.applyDamage(1,{cause:'contact'}))entity.setDynamicProperty(STING_UNTIL,now+STING_INTERVAL_TICKS);
  }catch{}
 }
 
@@ -360,6 +361,6 @@ every('a2748_pepper_tree_runtime:1',()=>{
  eligible:entity=>entity.typeId!=='minecraft:fox'&&entity.typeId!=='minecraft:bee'&&!!entity.getComponent('minecraft:health'),
  bounds:entity=>entity.getAABB(),
  leaf(d,p){const block=at(world.getDimension(d),p);return !block?'unloaded':block.typeId===PEPPER_LEAVES_ID?'leaf':'missing';},
- sting,error:contactError
+ sting:entity=>sting(entity,true),error:contactError
  });
 },1);
