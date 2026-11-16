@@ -54,6 +54,10 @@ P3 將保存鍵集中與交易收斂時，仍要逐字保留既有 key／ID／UU
 
 食物／瓶／盤的手持與放置表面由 player property、held transport、RP controller 與 attachable 配合呈現；背包／快捷欄圖示是另一條路徑，任意三食材每 stack 的圖示仍有[已列明缺口](PARITY.md#秘製串背包圖示gui-display)。烘焙幾何、影子 item ID 與不同呈現路線仍有保留，但不能把它們一概寫成目前仍有超大單檔。
 
+`station_contents_visual_runtime.js` 的專用模型 helper 依實際送出的 model、secret、color、frame、位置與角度判斷是否更新；不再為這些 helper 重讀並排序序列化沒有送往 renderer 的完整物品 metadata。通用原生物品 fallback 保留完整 metadata 檢查。料理架同次刷新讀一次九格快照，供占用狀態及四個工具投影共用；下一次刷新重新讀取，不保存跨次庫存快取，也不更改原物品。
+
+限定 API 邊界量測：一座含四種已知工具的料理架刷新100次，`getItem` 1300→900，物品 `getComponent` 800→0，DP鍵列舉與raw lore讀取各400→0。四方向、工具／占用變更、外來工具fallback、helper寫入失敗後恢復、離開視距、餐盤／串譜及動態frame的26組投影快照相同，原物品與世界資料保留。這是合法metadata與列明故障的來源結果；若無關metadata getter拋錯，專用模型現在不再存取它，因此不再被它阻斷，fallback仍拒絕。未量測原生CPU、FPS、TPS或裝置記憶體，也未改模型／貼圖／動畫或宣稱畫面驗收。既有[Container.getItem](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/container?view=minecraft-bedrock-stable#getitem)與[Entity.setProperty](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#setproperty)能力足以做此收斂，未提高API版本。
+
 **單檔模型預算（2026-11-06 核對的來源快照）**：已核對的最大 geometry 為523686 bytes，低於512 KiB。G237到G238的RP只有manifest身份變更，沿用相同幾何輸入的有效結果，沒有為此再掃全庫。這只代表單檔大小預算已達；每個表面的Java外觀、動畫與其他差距仍按[PARITY](PARITY.md)核對，不代表P4或整體視覺已完成。
 
 Grilling原始BP仍提供自己的`entities/player.json`；[Core公開最小入口](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only)已用本庫合成器，將指定原版player接入Grilling既有RP，要求唯一有效BP player owner及完整RP player。這是已實作的本機組裝路徑；與其他進食包／TACZ共存仍依選定profile及實際接口核對，不能據此宣稱任意組合或客戶端畫面已通過。公開入口的建置及各份原生／保存證據只查[Core驗證記錄](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/main/docs/validation-public-minimal.json)。
