@@ -1,3 +1,7 @@
+## 2.8.280 — 2026-11-17
+
+Separate pepper leaf step contact from the existing inside slowdown, preserve the shared sting cooldown and contact damage cause, reuse the advanced rack slot snapshot, and retain full metadata for native item visuals. Include the two reviewed canonical skewer icon models.
+
 ## 2.8.272 — 2026-11-13
 
 Take only burnt-tea-dev/kaleidoscope-grilling-unofficial PR #408 head b02f0b585222e378cc2ced057db39cb62012a734 for the canola oil brush: mirror the brushed-side bone cubes onto the correct side planes with their UV faces, flip the active first-person `brush` bone offset and rotation signs, and add the matching Blockbench authoring file under assets-src. Applied forward on the 2.8.271 line this host actually has installed, so the newest seasoning, player and dependency content stays intact. Local source integration and a fresh paired release identity only: no tests, no client observation, no publication and no deployment.
