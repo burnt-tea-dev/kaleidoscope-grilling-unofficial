@@ -2,8 +2,12 @@ import {canonicalFoodId} from './eating_profile_ids.js';
 import {GRILL_MODEL_INDEX} from './grill_visual_data.js';
 export const GRILL_FOOD_ENTITY='kaleidoscope_grilling:grill_food_visual';
 export const GRILL_DISPLAY_RANGE_SQ=48*48;
+const GRILL_ANGLES={north:0,east:90,south:180,west:270};
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,Number.isFinite(n)?Math.floor(n):a));
-export const grillVisualKey=block=>[block.dimension.id,block.location.x,block.location.y,block.location.z].join('|');
+export function grillVisualKey(block){
+ const dimensionId=block.dimension.id,p=block.location;
+ return [dimensionId,p.x,p.y,p.z].join('|');
+}
 export function nearGrill(block,observers){
  const p=block.location;
  return observers.some(o=>o.dimensionId===block.dimension.id&&(o.x-p.x-.5)**2+(o.y-p.y)**2+(o.z-p.z-.5)**2<=GRILL_DISPLAY_RANGE_SQ);
@@ -19,7 +23,7 @@ export function grillSlotPlan(stack,state,slot){
  return {model:index===undefined?114:index*6+grillVisualStage(state),flips:clamp(state?.flips,0,4),slot};
 }
 export function grillSlotLocation(block,slot,direction){
- const angles={north:0,east:90,south:180,west:270},angle=angles[direction]??0;
+ const angle=GRILL_ANGLES[direction]??0;
  const dx=(3+slot*5)/16-.5,r=angle*Math.PI/180,p=block.location;
  return {location:{x:p.x+.5+dx*Math.cos(r),y:p.y+5/16,z:p.z+.5+dx*Math.sin(r)},rotation:angle};
 }
@@ -42,12 +46,17 @@ export function createGrillDisplayController({spawn,apply,remove,valid=e=>e.isVa
   clear,
   update(key,block,plans,tick,direction='north'){
    let row=rows.get(key);if(!row){row={helpers:new Map(),seen:tick};rows.set(key,row)}row.seen=tick;
+   let origin;
    for(let slot=0;slot<3;slot++){
     const plan=plans[slot];let old=row.helpers.get(slot);
     if(!plan){discard(row,slot);continue;}
     if(old&&!valid(old.entity)){if(!discard(row,slot))continue;old=undefined;}
-    const pose=grillSlotLocation(block,slot,direction),signature=JSON.stringify({...pose,...plan});
+    // Compare the current pose inputs before doing the unchanged slot's
+    // trigonometry. This snapshot lasts only for this synchronous update.
+    const p=(origin??={location:block.location}).location;
+    const signature=JSON.stringify([p.x,p.y,p.z,GRILL_ANGLES[direction]??0,plan]);
     if(old?.signature===signature)continue;
+    const pose=grillSlotLocation(origin,slot,direction);
     if(!old){if(count>=(typeof maxHelpers==='function'?maxHelpers():maxHelpers)){onCapacity(key,count);continue;}old={entity:spawn(block,pose.location,pose.rotation),signature:''};row.helpers.set(slot,old);count++;}
     try{apply(old.entity,block,pose,plan,key);old.signature=signature;}
     catch{discard(row,slot);}
