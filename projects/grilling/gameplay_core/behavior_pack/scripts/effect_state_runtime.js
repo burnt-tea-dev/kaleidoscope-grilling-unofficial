@@ -75,9 +75,20 @@ function dodgeClock(){try{const time=world.getAbsoluteTime();return Number.isFin
 export function projectileDodgeTime(){
  const time=dodgeClock();if(time===undefined)throw Error('Projectile dodge absolute clock is unavailable');return time;
 }
+// Repeated effect readers share one immutable-string decode, including misses.
+// This caches no actor state: callers still read/compare the actual saved raw
+// value, and every different value replaces the single retained entry.
+let descriptorRaw,descriptorValue;
 function dodgeDescriptor(raw){
- let value;try{value=typeof raw==='string'?JSON.parse(raw).projectile_dodge:undefined}catch{return undefined}
- return value&&Number.isFinite(Number(value.until))?{until:Number(value.until),amp:Math.max(0,Math.floor(Number(value.amp)||0))}:undefined;
+ if(raw!==descriptorRaw){
+  let value;try{value=typeof raw==='string'?JSON.parse(raw).projectile_dodge:undefined}catch{}
+  const next=value&&Number.isFinite(Number(value.until))?{until:Number(value.until),amp:Math.max(0,Math.floor(Number(value.amp)||0))}:undefined;
+  // Commit only after conversion succeeds; malformed numeric objects must
+  // keep throwing on every read instead of becoming a cached missing effect.
+  descriptorRaw=raw;descriptorValue=next;
+ }
+ // Preserve independent descriptors for each actor and claim.
+ return descriptorValue&&{...descriptorValue};
 }
 const dodgeKey=effect=>effect?effect.until+'|'+effect.amp:'';
 function observeDodge(entity,raw){

@@ -2,13 +2,13 @@
   "schema": 1,
   "repository": "burnt-tea-dev/senluo-bedrock-core",
   "repository_id": 1439792715,
-  "commit": "2686875c32ced368f2497976e8430d5938039dbf",
-  "version": "0.1.0",
-  "manifest_sha256": "9a38c4e697b46f34d2694c48f22bcd467eaf1748a2701c1cbdeaa032ae33f610",
+  "commit": "c7f340f148b91b30a2e9cdffe90f04ad893e1849",
+  "version": "0.1.1",
+  "manifest_sha256": "aa58cb296af1b43ce55d44e68cccecaa957c5de61d3012aa86f3a921dd7def66",
   "files": {
     "scripts/host_api/event_router.js": {
       "source": "src/host_api/event_router.js",
-      "sha256": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+      "sha256": "7d289209b059233e0d71a1e87cbb329ccd6f6c963ef75fc0b7260d5ec0bc0aa6"
     },
     "scripts/host_api/food_api_core.js": {
       "source": "src/host_api/food_api_core.js",
