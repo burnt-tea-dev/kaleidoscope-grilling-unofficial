@@ -121,6 +121,20 @@ G182 的資產清理只採用目前 canonical 樹中無字串引用的 846 個�
 
 REBUILD-PLAN 的已完成歷史階段、舊 source-VM／診斷鏈、公開下載舊版本與安裝安全限制仍按原文件管理，不視為當前引擎缺少玩法 API；存檔與授權規則也不當作功能缺失。來源中 `unsupported`／`unavailable` 的資料損壞、已卸載方塊或未知交付拒絕，是保留資料的守衛；除非有對應玩家能力缺口，不能按關鍵字自動算作未移植。尚未逐項執行所有食材、裝置、多人時序或第三方作者模組；有限 Java 直接讀取範圍見下列來源，其他數值仍依既有固定 `data/java/`，不宣稱重新執行全 Java 基準。
 
+### 油壺展示的手槽讀取（G270，2026-11-16）
+
+續查 main `3cdc9cf6300d3790de5b44c12eadf160bdcc53c3` 與全部22個開放PR的檔案後，在原 `scripts/oil_brush_visual_runtime.js:syncOilBrushVisual` 移除同次迴圈對同一手槽的第二次讀取。判別油壺的 ItemStack 直接交既有 `readCookeryOilPot`；下一次同步仍重新讀取。活動刷油的獨立物品身份核對、20tick期限、兩手通道與原生快照傳送不變，不增加跨tick快取、全域事件或排程。
+
+這承接上表「手持／放置模型」群的實作成本改善，**不新增缺口群數，也不把尚未完成的油刷貼圖／第一人稱問題標成已修**。[#408](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/408)持有模型與動畫；[#416](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/pull/416)持有站點展示，兩者都沒有修改本檔或本節。Java原始依據為固定 [OilBrushAnimation](https://github.com/breezeth-CN/KaleidoscopeGrilling/blob/9a1acdab27698457bec16c9362678e574895a28c/neoforge-1.21.1/src/main/java/cn/breezeth/kaleidoscope_grilling/oil/OilBrushAnimation.java#L12-L69)的20tick、主副手與三種油類。實際畫面、Java手臂曲線及模型均沿既有路線，這次沒有改動或重新驗收。
+
+官方 [Container.getItem](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/container?view=minecraft-bedrock-stable#getitem)與 [EntityEquippableComponent.getEquipment](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entityequippablecomponent?view=minecraft-bedrock-stable#getequipment)已提供所需ItemStack。這是原生API使用方式可直接改善的項目，無需升級既有server依賴、換ID、增加helper或把顯示變成庫存寫入。
+
+臨時計數透過現有ESM邊界載入真正production模組，沒有改寫模組或保存新測試。100次雙手idle油壺同步的 `getComponent` **400→200**、主手 `getItem` **200→100**、副手 `getEquipment` **200→100**；該限定路徑的手槽讀取減少50%。六組「主／副手×三種油」各20個活動frame，手槽讀取合計各 **80→60**（25%），活動手的獨立ownership核對保持。兩手非油壺仍為一次主手加一次副手讀取。
+
+前後序列包含四種滿壺狀態、空壺、主副手互換、六組完整20frame、到期、換物取消、明示取消及缺少油metadata；產生的**134份快照請求**、**143個函式回傳**與最終物品／DP／log相同，整個序列SHA256同為 `038b21636add072b037cdcb46e662d4497dac61a08caccdf6da7f046240046cb`。這個有界對照沒有模擬native渲染或宣稱所有故障軌跡相同；被刪除的多餘第二次getter亦不再有獨立失敗點。既有四檔檢查（oil-api、family-oil-food-api、skewer-item-snapshot、held-snapshot-recovery）94/94通過，未新增或修改tests／fixtures／CI。
+
+數字只代表JavaScript請求數，不是FPS、TPS、耗電、CPU或裝置記憶體的實測。公開來源候選使用新配對身份2.8.270；版本歷史保留，Cookery1.6.6／server2.12.0-beta／UUID不變。未執行BDS、client、用戶電腦或LIVE，未發布、合併或部署。
+
 ### 本次解碼成本與資料界線
 
 在未改寫 production module 的既有 `createFixture` ESM 邊界執行實際 `main.js`，單玩家持續 100 ticks，效果原文為 `warmth:{until:100000,amp:0}` 與 `projectile_dodge:{until:100000,amp:1}`。只計數傳入這份原文的 `JSON.parse`，不以其他 JSON 工作混入改善數字：修改前 **500 次**，修改後 **101 次**（減少 399 次，79.8%）。兩邊原生 DP 邊界讀取同為 **100 次**、保留效果原文相同、health 同為20、fixture 記錄 write count 同為6、error log 皆空。

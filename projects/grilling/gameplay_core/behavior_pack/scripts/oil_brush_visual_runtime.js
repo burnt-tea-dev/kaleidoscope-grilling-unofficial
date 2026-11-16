@@ -28,10 +28,11 @@ export function syncOilBrushVisual(player,{idle=true}={}){
  if(!active)motions.delete(player.id);
  let published=!!active;
  for(const hand of ['main','off']){
-  if(!isOilBrushVisualItem(held(player,hand)?.typeId))continue; // Never erase another provider's new item.
+  const stack=held(player,hand);
+  if(!isOilBrushVisualItem(stack?.typeId))continue; // Never erase another provider's new item.
   try{
    if(active&&motion.hand===hand)writeHeldVisual(player,hand,'oilbrush',oilBrushPacket(motion.type,elapsed));
-   else{const state=readCookeryOilPot(held(player,hand)),type=state.empty?0:state.type?2+oilBrushType(state.type):1;writeHeldVisual(player,hand,'oilpot',oilPotIdlePacket(type))}
+   else{const state=readCookeryOilPot(stack),type=state.empty?0:state.type?2+oilBrushType(state.type):1;writeHeldVisual(player,hand,'oilpot',oilPotIdlePacket(type))}
   }
   catch(error){published=false;try{invalidateHeldVisual(player,hand)}catch{};reportHeldVisualError('oil brush '+hand,player,error)}
  }
