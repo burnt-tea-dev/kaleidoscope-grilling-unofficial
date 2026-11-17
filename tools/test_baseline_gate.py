@@ -138,8 +138,13 @@ class ReleaseClaimTests(unittest.TestCase):
         self.git(self.root, 'config', 'user.email', 'fixture@example.invalid')
         self.git(self.root, 'config', 'user.name', 'Release fixture')
         (self.root / 'tools').mkdir()
-        for name in ['baseline_gate.py']:
+        for name in ['baseline_gate.py', 'bridge_project.py']:
             shutil.copy2(Path(__file__).with_name(name), self.root / 'tools' / name)
+        # freeze synchronizes Bridge project names through bridge_project.
+        for relative in ['config.json', 'projects/grilling/gameplay_core/config.json']:
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({'name': 'fixture', 'compiler': {'plugins': [['simpleRewrite', {'packName': 'fixture'}]]}}))
         self.config = {'repository': 'fixture/owned', 'repository_id': 1, 'version': [1, 0, 0], 'runtime': {'BP': 'runtime/BP', 'RP': 'runtime/RP'}, 'packs': {}}
         for side in ['BP', 'RP']:
             folder = self.root / 'runtime' / side

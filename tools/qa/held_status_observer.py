@@ -146,10 +146,11 @@ def install(pack: Path) -> None:
     profile=select_profile(pack)
     receipt=pack.parent/RECEIPT_NAME;backup=pack.parent/BACKUP_NAME
     if receipt.exists() or backup.exists(): fail('existing observer receipt or backup; refusing overwrite')
-    source_file=SOURCE/'scripts/held_visual_transport.js'
     if profile['id'] in ('g206-cache24','g208-cache24'):
+        # select_profile already pinned every file of the frozen release by its
+        # full-tree fingerprint; the live source has moved on since G206/G208.
         target_file=pack/profile['source_file']
-        if not target_file.is_file() or sha(target_file)!=sha(source_file): fail('held_visual_transport.js differs from the reviewed cache transport')
+        if not target_file.is_file(): fail('held_visual_transport.js missing from the reviewed cache transport')
         additions={profile['source_file']:IMPORT+target_file.read_text(encoding='utf-8')+'\n'+profile['observer']}
     else:
         target_file=pack/profile['source_file']
