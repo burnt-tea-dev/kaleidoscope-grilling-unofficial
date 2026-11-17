@@ -31,6 +31,14 @@
       "variable.tacz_held_action": "public",
       "variable.tacz_held_offset": "public",
       "variable.tacz_held_kick_offset": "public",
+      "variable.tacz_held_mount_scope": "public",
+      "variable.tacz_held_mount_muzzle": "public",
+      "variable.tacz_held_mount_stock": "public",
+      "variable.tacz_held_mount_grip": "public",
+      "variable.tacz_held_mount_laser": "public",
+      "variable.tacz_held_mount_extended_mag": "public",
+      "variable.tacz_held_scope_adapter": "public",
+      "variable.tacz_held_scope_view": "public",
       "variable.kg_held_frame": "public"
     },
     "initialize": [
@@ -62,6 +70,14 @@
       "variable.tacz_held_action = 0;",
       "variable.tacz_held_offset = 0;",
       "variable.tacz_held_kick_offset = 0;",
+      "variable.tacz_held_mount_scope = 0;",
+      "variable.tacz_held_mount_muzzle = 0;",
+      "variable.tacz_held_mount_stock = 0;",
+      "variable.tacz_held_mount_grip = 0;",
+      "variable.tacz_held_mount_laser = 0;",
+      "variable.tacz_held_mount_extended_mag = 0;",
+      "variable.tacz_held_scope_adapter = 0;",
+      "variable.tacz_held_scope_view = 0;",
       "variable.kg_held_frame = 0;"
     ],
     "animate": [

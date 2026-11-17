@@ -22,9 +22,17 @@ export const HELD_PRESENTATION_FIELDS=Object.freeze({
  view:Object.freeze({variable:'v.tacz_held_view',type:'int',min:0,max:8388607}),
  action:Object.freeze({variable:'v.tacz_held_action',type:'int',min:0,max:8388607}),
  offset:Object.freeze({variable:'v.tacz_held_offset',type:'float',min:0,max:10}),
- kickOffset:Object.freeze({variable:'v.tacz_held_kick_offset',type:'float',min:0,max:10})
+ kickOffset:Object.freeze({variable:'v.tacz_held_kick_offset',type:'float',min:0,max:10}),
+ mountScope:Object.freeze({variable:'v.tacz_held_mount_scope',type:'int',min:0,max:128}),
+ mountMuzzle:Object.freeze({variable:'v.tacz_held_mount_muzzle',type:'int',min:0,max:128}),
+ mountStock:Object.freeze({variable:'v.tacz_held_mount_stock',type:'int',min:0,max:128}),
+ mountGrip:Object.freeze({variable:'v.tacz_held_mount_grip',type:'int',min:0,max:128}),
+ mountLaser:Object.freeze({variable:'v.tacz_held_mount_laser',type:'int',min:0,max:128}),
+ mountExtendedMag:Object.freeze({variable:'v.tacz_held_mount_extended_mag',type:'int',min:0,max:128}),
+ scopeAdapter:Object.freeze({variable:'v.tacz_held_scope_adapter',type:'int',min:0,max:6}),
+ scopeView:Object.freeze({variable:'v.tacz_held_scope_view',type:'int',min:0,max:1})
 });
-export const HELD_PRESENTATION_EMPTY=Object.freeze({view:0,action:0,offset:0,kickOffset:0});
+export const HELD_PRESENTATION_EMPTY=Object.freeze(Object.fromEntries(Object.keys(HELD_PRESENTATION_FIELDS).map(key=>[key,0])));
 export const HELD_PRESENTATION_REQUEST='kaleidoscope_grilling:held_presentation_request';
 export const HELD_PRESENTATION_RESPONSE='tacz:held_presentation_snapshot';
 export const supportsHeldPresentation=typeId=>typeId==='tacz:kar98'||typeId==='tacz:m1866'||typeId==='tacz:hk_mk23';
