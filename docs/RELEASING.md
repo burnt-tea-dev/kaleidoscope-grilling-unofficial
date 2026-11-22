@@ -66,29 +66,15 @@ TEST 比上述 stable 更舊，不是降版建議。兩者都要求作者 [Cooke
 
 [原下載稽核](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/df0ff11de5fbff8f0c64324d8e2c3bf7d618084b/docs/PUBLIC-DOWNLOAD-INSTALLATION-20261018.md)保留 G138 發布文字混用 G132 證據、T163／G137 與 G138 不匹配、T170／G149／W148 lock 及各作者輸入身份。歷史文字或 receipt 不重新標成另一個候選。
 
-## P2 的必要驗證
+## 現行驗證與世界作業
 
-以 PR 實際 head 為準，執行 [ci.yml](../.github/workflows/ci.yml) 與其必要 workflows。最少保留：
+開發任務使用 [pstack 代理入口](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口)，並遵守 [AGENTS.md](../AGENTS.md) 與現行重建計畫。普通 PR 由 [ci.yml](../.github/workflows/ci.yml) 檢查可載入 JSON、核心玩法及現行 UI／指南／戰利品；本機只重現受影響範圍，命令見 [tests/README.md](../tests/README.md)。完整歷史回歸與 growth ratchet 留在手動發布檢查，不是普通 PR 或文件修改的常設門檻。
 
-```sh
-python3 tools/baseline_gate.py check
-python3 tools/guards/growth_ratchet.py check
-```
+輸出 runtime 未變的工具／文件工作不凍結新遊戲版本、不組裝候選或部署。真正發布仍保留配對身份、授權聲明、完整來源及 `baseline_gate.py check --release`；P2 純結構整理沿現行計畫證明相應 runtime 範圍不變。
 
-計數下降時按計畫在同 PR `tighten`，但不得調高上限或刪 lock 項掩飾差異。PR 附相對 base 的 canonical BP/RP diff，P2 必須為空（T2.8 僅有明示 RP 例外）。測試分流後只引用實際仍存在且被執行的檢查；不恢復舊版本驗證器。
+世界作業只在任務已授權的環境，依[家族更新流程](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口)及 [REBUILD-PLAN §5](REBUILD-PLAN.md#5-伺服器與-luosen-存檔作業手冊) 執行。保留最新一份完整一致回退，使用同一停服存檔副本驗證首次載入與重啟，再由既有工具安裝及讀回。真人驗收不作完成門檻；尚未觀察的聲畫如實標示。staging 世界不得複製回正式世界，主機路徑、憑證與玩家資料保持私有。
 
-文件／工具的有效驗證可以沿用同一來源的成功結果；只有具體新風險才重跑相關檢查。source、CI、staging、部署及真人結果分開報告，不以測試數或包雜湊推論玩法正確。
-
-## 世界作業與 staging
-
-任何正式世界變更前，依 [REBUILD-PLAN §5](REBUILD-PLAN.md#5-伺服器與-luosen-存檔作業手冊) 執行。真實主機、port、路徑、帳號與憑證由私有受控設定提供，不填入公開文件或 receipts。
-
-1. 正常停止伺服器，確認世界 DB 不再占用；完整備份 world、相依 packs 與必要設定，記錄 SHA256／大小。備份放在服務資料卷以外，另保留伺服器以外的副本；驗證可還原。
-2. 若需 ID 普查，只對停止備份的還原副本操作，遵循 [ops README](../tools/ops/README.md)。目前工具建立獨立暫存 DB，沒有改寫模式；`complete=false` 或非零 exit 不能當作舊 ID 已不存在的證據。
-3. staging 使用相同 BDS／完整 pack 組合及 LKG 副本，隔離 port／allowlist；先確認資源足夠。按計畫走開服→真人進入→核心流程→正常停服→重啟→保存抽查。零玩家載入不代替這些步驟。
-4. 按 [§9.5](REBUILD-PLAN.md#95-staging-人工檢查清單每次部署前) 留下同候選場景與截圖：取得、穿串、烤架、食用、餐盤、調料、油／鍋具、料理架、效果、重啟及其他家族包共存。staging 世界永遠不複製回正式世界。
-
-公開 [T1.4 盤點](../tools/ops/receipts/luosen-inventory-20261019.json)、[LKG 備份](../tools/ops/receipts/luosen-lkg0-backup-20261019.json)及 [ID 普查](../tools/ops/receipts/luosen-id-census-20261019.json)各有自己的時間、輸入與限制。工具後來被修正，舊世界結果不自動成為新版工具的重跑結果；備份或部署包身份也不證明 staging 真人流程完成。
+[先前的 P2／staging 操作文字](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/e43c0a4752ccd68057c91b6b5b46ec524b17a3a2/docs/RELEASING.md#p2-的必要驗證)保留在歷史提交；下方 dated 驗收記錄保留原樣，不增加今天的門檻。
 
 ## T1.8／T2.8 驗收補充（2026-10-24）
 

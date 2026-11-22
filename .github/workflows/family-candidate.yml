@@ -23,8 +23,7 @@ jobs:
           node-version: '22'
       - name: Verify current canonical family candidate without installation transforms
         run: |
-          python tools/baseline_gate.py check --release
-          # Full functional source checks run once in Gameplay Core — Canonical.
+          # These read-only checks do not change the inputs to the release gate below.
           python tools/check_station_storage.py
           node tools/check_family_knives.mjs
           python tools/baseline_gate.py check --release --receipt dist/family/source-receipt.json
