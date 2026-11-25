@@ -98,6 +98,57 @@ test('runtime requests a continuous native grill sound and stops each station in
 });
 
 const N='kaleidoscope_grilling:';
+test('grill tick checks missing linked storage once, stops audio and resumes with the saved skewer',async()=>{
+ const f=createFixture({currentTick:1198});
+ try{
+  await f.load('main.js');f.startup();f.flush();
+  const storage=await f.load('core/storage.js'),state=await f.load('grill/grill_state_adapter.js');
+  const grill=f.block(N+'grill',{x:0,y:80,z:0});f.block('minecraft:stone',{x:0,y:79,z:0});
+  const inventory=storage.stationContainer(grill),ledgerKey=storage.storageKey(grill);
+  const entityId=JSON.parse(f.world.getDynamicProperty(ledgerKey)).entity;
+  const saved=f.item(N+'raw_fish_skewer',1,{nameTag:'Saved skewer'});
+  saved.setLore(['Original lore']);inventory.setItem(0,saved);
+  f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({lit:true,phase:1}));
+
+  let missing=false,lookups=0,starts=0,stops=0;
+  const getEntity=f.world.getEntity.bind(f.world),getEntities=f.dimension.getEntities.bind(f.dimension);
+  f.world.getEntity=id=>{
+   if(id===entityId){lookups++;if(missing)return undefined;}
+   return getEntity(id);
+  };
+  f.dimension.getEntities=query=>getEntities(query).filter(entity=>!missing||entity.id!==entityId);
+  f.dimension.playSound=sound=>{
+   assert.equal(sound,'kg_imm.grill_loop');starts++;
+   return {stop(){stops++}};
+  };
+  function tickGrill(){lookups=0;f.component(N+'grill_tick','onTick',{block:grill});return lookups;}
+
+  assert.equal(tickGrill(),1);assert.equal(starts,1);
+  const before=f.snapshotProperties();
+  missing=true;f.system.currentTick++;
+  const firstMissingLookups=tickGrill();
+  assert.equal(stops,1);assert.equal(starts,1);
+  assert.deepEqual(f.snapshotProperties(),before);
+
+  f.system.currentTick++;
+  const secondMissingLookups=tickGrill();
+  assert.equal(stops,1);assert.equal(starts,1);
+  assert.deepEqual(f.snapshotProperties(),before);
+  assert.deepEqual(f.logs.filter(log=>log.level==='warn').map(log=>log.text),[
+   '[Grilling tick] StorageUnavailable: Grilling storage unavailable: linked inventory is unavailable; contents not reset'
+  ]);
+
+  missing=false;f.system.currentTick++;
+  assert.equal(tickGrill(),1);assert.equal(starts,2);assert.equal(stops,1);
+  assert.equal(f.world.getDynamicProperty(ledgerKey),before[ledgerKey]);
+  assert.equal(state.readGrillState(grill).phaseTicks,2);
+  const after=inventory.getItem(0);
+  assert.equal(after.typeId,saved.typeId);assert.equal(after.amount,saved.amount);
+  assert.equal(after.nameTag,saved.nameTag);assert.deepEqual(after.getLore(),saved.getLore());
+  assert.equal(f.drops.length,0);
+  assert.deepEqual([firstMissingLookups,secondMissingLookups],[1,1],'one linked storage lookup per missing tick');
+ }finally{f.dispose()}
+});
 async function interactionFixture(){
  const f=createFixture();await f.load('main.js');f.startup();f.flush();
  f.p=f.player({location:{x:-.2,y:80.9,z:2.1}});
