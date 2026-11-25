@@ -3,7 +3,7 @@ import {onExplosion} from '../core/events.js';
 import {breakDisposition,brush,canExtract,canInsert,flip,initialState,light,normalizeState,outputKind,season,tickState} from "../core_logic.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState as readState} from "./grill_state_adapter.js";
-import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey} from "../core/storage.js";
+import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey,StorageUnavailable} from "../core/storage.js";
 import {hasSolidTop} from "../blockSupport.js";
 import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY} from "../seasoning/seasoning_contract_core.js";
 import {getItemProperty,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
@@ -347,16 +347,25 @@ function burnGrillContents(block,beforeState,nextState){
 // Block ticks resume on chunk reload; no global registration cap or unload deletion.
 function tickGrill(block){
  let audioState,audioOccupied;
+ let clearAudio=false;
  try{
   const before=readState(block),count=occupied(block),result=tickState(before,count,1);
   if(result.events.some(x=>x.kind==='burn_to_charcoal')){burnGrillContents(block,before,result.state);return;}
   audioState=writeTickState(block,before,result.state);audioOccupied=count;
   if(system.currentTick%4===0)grillAmbientParticles(block,audioState.lit);
- }catch(error){if(system.currentTick%1200===0)console.warn('[Grilling tick] '+error)}
- finally{
-  // Tick and audio run synchronously. Reuse this tick's validated inventory;
-  // re-read only after a mutating burn transaction or an interrupted update.
-  try{if(audioState===undefined){audioState=readState(block);audioOccupied=occupied(block);}updateGrillAudio(block,audioState.lit,audioOccupied)}catch{try{removeGrillAudio(block)}catch{}}
+ }catch(error){
+  clearAudio=error instanceof StorageUnavailable;
+  if(system.currentTick%1200===0)console.warn('[Grilling tick] '+error);
+ }finally{
+  // A storage failure already tells us to stop the loop for this tick.
+  // Otherwise reuse the tick's validated inventory unless the update was interrupted or burned the contents.
+  try{
+   if(!clearAudio){
+    if(audioState===undefined){audioState=readState(block);audioOccupied=occupied(block);}
+    updateGrillAudio(block,audioState.lit,audioOccupied);
+   }
+  }catch{clearAudio=true}
+  if(clearAudio)try{removeGrillAudio(block)}catch{}
  }
 }
 
