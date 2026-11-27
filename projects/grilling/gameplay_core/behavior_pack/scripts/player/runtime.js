@@ -69,7 +69,7 @@ world.beforeEvents.playerInteractWithEntity.subscribe(e=>{
 
 // Stable Script API placement capture, including all materialized seasoning IDs.
 system.beforeEvents.startup.subscribe(({blockComponentRegistry})=>{
- blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_tick',{onTick(e){tickGrill(e.block);tickGrillDisplay(e.block)},onPlayerInteract:handleNativeGrillInteraction});
+ blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_tick',{onTick({block}){tickGrillDisplay(block,tickGrill(block))},onPlayerInteract:handleNativeGrillInteraction});
  blockComponentRegistry.registerCustomComponent('kaleidoscope_grilling:grill_legs_tick',{onTick(e){try{const above=e.block.above();if(above&&above.typeId!==GRILL_ID)e.block.setType('minecraft:air')}catch{}}});
  blockComponentRegistry.registerCustomComponent('senluo:grilling_bottle_place',{beforeOnPlayerPlace:scheduleNativeBottlePlacement,onTick(e){try{tickNativeBottleSupport(e.block)}catch(error){console.warn('[Grilling bottle support recovery] '+error)}}});
 });

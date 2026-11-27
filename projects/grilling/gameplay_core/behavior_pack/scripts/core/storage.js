@@ -17,6 +17,9 @@ const storageType=id=>/^kaleidoscope_grilling:seasoning_bottle_[1-4]$/.test(id)?
 export class StorageUnavailable extends Error {
  constructor(reason){super('Grilling storage unavailable: '+reason);this.name='StorageUnavailable';}
 }
+export class LinkedInventoryUnavailable extends StorageUnavailable {
+ constructor(){super('linked inventory is unavailable; contents not reset');}
+}
 const fail=reason=>{throw new StorageUnavailable(reason);};
 export function storageKey(block){
  const {x,y,z}=block.location;
@@ -53,7 +56,8 @@ function resolve(block,r,rebind=true){
  let entity=world.getEntity(r.entity);
  if(!entity){
   const found=candidates(block,STORAGE_TYPES[r.block].entity).filter(e=>ownership(e)?.token===r.token);
-  if(found.length!==1)fail(found.length?'duplicate backing inventories':'linked inventory is unavailable; contents not reset');
+  if(found.length===0)throw new LinkedInventoryUnavailable();
+  if(found.length>1)fail('duplicate backing inventories');
   entity=found[0];
   // Native IDs normally persist. Rebind only to the exact persisted owner token.
   container(entity,r,block);const next={...r,entity:entity.id};

@@ -98,8 +98,8 @@ test('runtime requests a continuous native grill sound and stops each station in
 });
 
 const N='kaleidoscope_grilling:';
-test('grill tick checks missing linked storage once, stops audio and resumes with the saved skewer',async()=>{
- const f=createFixture({currentTick:1198});
+test('grill bounds background lookups for missing linked storage and resumes with the saved skewer',async()=>{
+ const f=createFixture({currentTick:1197});
  try{
   await f.load('main.js');f.startup();f.flush();
   const storage=await f.load('core/storage.js'),state=await f.load('grill/grill_state_adapter.js');
@@ -110,43 +110,62 @@ test('grill tick checks missing linked storage once, stops audio and resumes wit
   saved.setLore(['Original lore']);inventory.setItem(0,saved);
   f.world.setDynamicProperty(state.grillStateKey(grill),JSON.stringify({lit:true,phase:1}));
 
-  let missing=false,lookups=0,starts=0,stops=0;
+  let missing=false,idLookups=0,nearbyLookups=0,starts=0,stops=0;
   const getEntity=f.world.getEntity.bind(f.world),getEntities=f.dimension.getEntities.bind(f.dimension);
   f.world.getEntity=id=>{
-   if(id===entityId){lookups++;if(missing)return undefined;}
+   if(id===entityId){idLookups++;if(missing)return undefined;}
    return getEntity(id);
   };
-  f.dimension.getEntities=query=>getEntities(query).filter(entity=>!missing||entity.id!==entityId);
-  f.dimension.playSound=sound=>{
-   assert.equal(sound,'kg_imm.grill_loop');starts++;
-   return {stop(){stops++}};
+  f.dimension.getEntities=query=>{
+   if(query?.type===N+'inventory_grill_v1')nearbyLookups++;
+   return getEntities(query).filter(entity=>!missing||entity.id!==entityId);
   };
-  function tickGrill(){lookups=0;f.component(N+'grill_tick','onTick',{block:grill});return lookups;}
+  f.dimension.playSound=sound=>{
+   if(sound==='kg_imm.grill_loop'){starts++;return {stop(){stops++}};}
+  };
+  function tickGrill(){f.system.currentTick++;f.component(N+'grill_tick','onTick',{block:grill});}
+  tickGrill();
+  assert.deepEqual([idLookups,nearbyLookups],[1,0]);assert.equal(starts,1);
+  const before=f.snapshotProperties(),expectedWarning=
+   '[Grilling tick] StorageUnavailable: Grilling storage unavailable: linked inventory is unavailable; contents not reset';
+  const warnings=()=>f.logs.filter(log=>log.level==='warn').map(log=>log.text);
 
-  assert.equal(tickGrill(),1);assert.equal(starts,1);
-  const before=f.snapshotProperties();
-  missing=true;f.system.currentTick++;
-  const firstMissingLookups=tickGrill();
+  missing=true;idLookups=nearbyLookups=0;
+  for(let elapsed=0;elapsed<1200;elapsed++)tickGrill();
   assert.equal(stops,1);assert.equal(starts,1);
   assert.deepEqual(f.snapshotProperties(),before);
+  assert.deepEqual(warnings(),[expectedWarning]);
+  assert.deepEqual([idLookups,nearbyLookups],[60,60],'one ID and local query per 20 missing ticks');
 
-  f.system.currentTick++;
-  const secondMissingLookups=tickGrill();
-  assert.equal(stops,1);assert.equal(starts,1);
+  const player=f.player({location:{x:1,y:80,z:0}});
+  idLookups=nearbyLookups=0;tickGrill();
+  assert.deepEqual([idLookups,nearbyLookups],[1,1],'nearby display respects the failed tick lookup');
+  assert.deepEqual(warnings(),[expectedWarning,expectedWarning]);
+  const interact=()=>f.component(N+'grill_tick','onPlayerInteract',{block:grill,player});
+  assert.throws(interact,/linked inventory is unavailable/);
+  assert.deepEqual([idLookups,nearbyLookups],[2,2],'interaction still attempts the original lookup');
+
+  missing=false;
+  for(let elapsed=0;elapsed<19;elapsed++)tickGrill();
+  assert.deepEqual([idLookups,nearbyLookups],[2,2]);
   assert.deepEqual(f.snapshotProperties(),before);
-  assert.deepEqual(f.logs.filter(log=>log.level==='warn').map(log=>log.text),[
-   '[Grilling tick] StorageUnavailable: Grilling storage unavailable: linked inventory is unavailable; contents not reset'
-  ]);
-
-  missing=false;f.system.currentTick++;
-  assert.equal(tickGrill(),1);assert.equal(starts,2);assert.equal(stops,1);
+  tickGrill();
+  assert.equal(starts,2);assert.equal(stops,1);
   assert.equal(f.world.getDynamicProperty(ledgerKey),before[ledgerKey]);
   assert.equal(state.readGrillState(grill).phaseTicks,2);
   const after=inventory.getItem(0);
   assert.equal(after.typeId,saved.typeId);assert.equal(after.amount,saved.amount);
   assert.equal(after.nameTag,saved.nameTag);assert.deepEqual(after.getLore(),saved.getLore());
   assert.equal(f.drops.length,0);
-  assert.deepEqual([firstMissingLookups,secondMissingLookups],[1,1],'one linked storage lookup per missing tick');
+
+  missing=true;tickGrill();assert.equal(stops,2);
+  missing=false;interact();
+  assert.equal(state.readGrillState(grill).flips,1,'normal interaction sees a returning original before the background retry');
+  tickGrill();assert.equal(starts,3,'successful interaction wakes the next audio update');
+
+  f.world.setDynamicProperty(ledgerKey,'{');tickGrill();
+  f.world.setDynamicProperty(ledgerKey,before[ledgerKey]);tickGrill();
+  assert.equal(starts,4,'ledger errors do not enter the missing-inventory retry window');
  }finally{f.dispose()}
 });
 async function interactionFixture(){
