@@ -3,7 +3,7 @@ import {onExplosion} from '../core/events.js';
 import {breakDisposition,brush,canExtract,canInsert,flip,initialState,light,normalizeState,outputKind,season,tickState} from "../core_logic.js";
 import {EnchantmentType,ItemStack,system,world} from "@minecraft/server";
 import {grillStateKey as stateKey,occupiedGrillSlots as occupied,readGrillState as readState} from "./grill_state_adapter.js";
-import {peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey,StorageUnavailable} from "../core/storage.js";
+import {LinkedInventoryUnavailable,peekStationContainer,quarantineStation,retireEmptyStationContainer,stationContainer,storageKey as stationStorageKey,StorageUnavailable} from "../core/storage.js";
 import {hasSolidTop} from "../blockSupport.js";
 import {SEASONING_MAX_USES,SEASONING_USES_KEY as SEASON_USES_KEY} from "../seasoning/seasoning_contract_core.js";
 import {getItemProperty,getItemRawLore,setItemLore,setItemProperty} from "../core/persist.js";
@@ -36,6 +36,9 @@ import {beginSeasoningMotion} from "../seasoning_motion_runtime.js";
 import {commitTwoParty} from "./grill_transaction_core.js";
 import {grillAmbientParticles} from "../immersion_particles_runtime.js";
 const GRILL_LEGS_ID='kaleidoscope_grilling:grill_legs';
+const MISSING_INVENTORY_RETRY_TICKS=20;
+const missingGrills=new Set();
+let missingStorageWindow=-1;
 
 const OIL_TYPES=Object.freeze({canola:{heatTicks:1200},secret_chili:{heatTicks:12000},premium_chili:{heatTicks:24000}});
 
@@ -270,6 +273,7 @@ function commitGrillFlip(block,beforeState,nextState){
 
 function handleGrill(block,player,hand='main'){
  if(!block?.isValid||block.typeId!==GRILL_ID)return;let state=readState(block);const held=heldByHand(player,hand),id=canonicalFoodId(held?.typeId),n=occupied(block);
+ if(missingGrills.size)missingGrills.delete(stationStorageKey(block));
  if(id==='minecraft:flint_and_steel'){
   if(!state.lit){
    const tool=planDamagedHand(player,hand,1),nextState=light(state,true);
@@ -331,7 +335,11 @@ function handleGrill(block,player,hand='main'){
  if(canExtract(state))extract(block,player,player.isSneaking)
 }
 
-world.afterEvents.playerPlaceBlock.subscribe(e=>{if(e.block.typeId===GRILL_ID)resetBlock(e.block,false)});
+world.afterEvents.playerPlaceBlock.subscribe(({block})=>{
+ if(block.typeId!==GRILL_ID)return;
+ if(missingGrills.size)missingGrills.delete(stationStorageKey(block));
+ resetBlock(block,false);
+});
 
 onExplosion('grill/runtime.js:0',scheduleGrillExplosion);
 
@@ -346,16 +354,24 @@ function burnGrillContents(block,beforeState,nextState){
 
 // Block ticks resume on chunk reload; no global registration cap or unload deletion.
 function tickGrill(block){
+ const now=system.currentTick,window=Math.floor(now/MISSING_INVENTORY_RETRY_TICKS);
+ // Remember only failures in the current window, including across chunk unloads.
+ if(window!==missingStorageWindow){missingStorageWindow=window;missingGrills.clear();}
+ if(missingGrills.size&&missingGrills.has(stationStorageKey(block)))return false;
  let audioState,audioOccupied;
  let clearAudio=false;
  try{
   const before=readState(block),count=occupied(block),result=tickState(before,count,1);
   if(result.events.some(x=>x.kind==='burn_to_charcoal')){burnGrillContents(block,before,result.state);return;}
   audioState=writeTickState(block,before,result.state);audioOccupied=count;
-  if(system.currentTick%4===0)grillAmbientParticles(block,audioState.lit);
+  if(now%4===0)grillAmbientParticles(block,audioState.lit);
  }catch(error){
   clearAudio=error instanceof StorageUnavailable;
-  if(system.currentTick%1200===0)console.warn('[Grilling tick] '+error);
+  if(now%1200===0)console.warn('[Grilling tick] '+error);
+  if(error instanceof LinkedInventoryUnavailable){
+   missingGrills.add(stationStorageKey(block));
+   return false;
+  }
  }finally{
   // A storage failure already tells us to stop the loop for this tick.
   // Otherwise reuse the tick's validated inventory unless the update was interrupted or burned the contents.
